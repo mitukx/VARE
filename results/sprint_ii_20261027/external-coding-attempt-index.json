@@ -1,0 +1,1226 @@
+{
+  "attempt_count": 12,
+  "attempts": [
+    {
+      "agent_outcome": "context_exhausted",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/csm_codebook_tying_v1/run/corrected_schema_slots/result.json",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 488.154,
+      "generated_tokens": 81,
+      "generation_protocol": "schema_slots_v1",
+      "independent_grade": null,
+      "max_sampled_process_tree_rss_mib": 4354.28125,
+      "model_repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "protocol_artifacts": [
+        "results/sprint_ii_20261027/external_coding_dev/csm_codebook_tying_v1/campaign-protocol.json"
+      ],
+      "public_test_runs": 0,
+      "reported_public_test_result": null,
+      "resource_abort": null,
+      "stop_reason": "context_budget_exhausted",
+      "swap_growth_final_mib": 0.0,
+      "task_id": "transformers-csm-codebook-embedding-tying-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "list_files"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        }
+      ],
+      "turn_count": 10
+    },
+    {
+      "agent_outcome": "no_tool_call_retries_exhausted",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/csm_codebook_tying_v1/run/corrected_template_raw/result.json",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 24.309,
+      "generated_tokens": 166,
+      "generation_protocol": "raw_v1",
+      "independent_grade": null,
+      "max_sampled_process_tree_rss_mib": 4340.15625,
+      "model_repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "protocol_artifacts": [
+        "results/sprint_ii_20261027/external_coding_dev/csm_codebook_tying_v1/campaign-protocol.json"
+      ],
+      "public_test_runs": 0,
+      "reported_public_test_result": null,
+      "resource_abort": null,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "swap_growth_final_mib": 0.0,
+      "task_id": "transformers-csm-codebook-embedding-tying-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        }
+      ],
+      "turn_count": 4
+    },
+    {
+      "agent_outcome": "no_tool_call_retries_exhausted",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/csm_codebook_tying_v1/run/original_raw/result.json",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 24.488,
+      "generated_tokens": 170,
+      "generation_protocol": "raw_v1",
+      "independent_grade": null,
+      "max_sampled_process_tree_rss_mib": 4360.046875,
+      "model_repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "protocol_artifacts": [
+        "results/sprint_ii_20261027/external_coding_dev/csm_codebook_tying_v1/campaign-protocol.json"
+      ],
+      "public_test_runs": 0,
+      "reported_public_test_result": null,
+      "resource_abort": null,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "swap_growth_final_mib": 0.0,
+      "task_id": "transformers-csm-codebook-embedding-tying-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        }
+      ],
+      "turn_count": 4
+    },
+    {
+      "agent_outcome": "edit_applied_awaiting_independent_grade",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/data_collator_seed_zero_v1/run/7b_schema_slots_v2/attempt/result.json",
+      "edit_applied": true,
+      "edit_attempted": true,
+      "elapsed_seconds": 124.854,
+      "generated_tokens": 184,
+      "generation_protocol": "schema_slots_v2",
+      "independent_grade": {
+        "candidate_sha256": "6c2844e0bc357c88d3030fc5eaf4fb62310964fcc3c1f1f48d0b2ad3b811a262",
+        "classification": "independent_grade_failure",
+        "grade": {
+          "error": "unexpected indent (<unknown>, line 621)",
+          "reason": "source_parse_failure",
+          "success": false
+        },
+        "grader_returncode": 0,
+        "grader_sha256": "abcffdba864462e08163b66044d93e1db1231e8671e82abb901d5b0a0a1ba215"
+      },
+      "max_sampled_process_tree_rss_mib": 4357.84375,
+      "model_repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "protocol_artifacts": [],
+      "public_test_runs": 2,
+      "reported_public_test_result": {
+        "elapsed_seconds": 0.325,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "resource_abort": null,
+      "stop_reason": "agent_finished",
+      "swap_growth_final_mib": 0.0,
+      "task_id": "transformers-data-collator-seed-zero-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": true,
+          "outcome": "edit_applied",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": true,
+          "tool": "run_public_tests"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "finish"
+        }
+      ],
+      "turn_count": 5
+    },
+    {
+      "agent_outcome": "invalid_json_or_schema",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/kernel_config_mps_v1/run/14b_schema_slots_v2/attempt/result.json",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 157.599,
+      "generated_tokens": 525,
+      "generation_protocol": "schema_slots_v2",
+      "independent_grade": null,
+      "max_sampled_process_tree_rss_mib": 2829.375,
+      "model_repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+      "model_snapshot": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+      "protocol_artifacts": [],
+      "public_test_runs": 0,
+      "reported_public_test_result": null,
+      "resource_abort": null,
+      "stop_reason": "invalid_json_or_schema",
+      "swap_growth_final_mib": 640.38,
+      "task_id": "transformers-kernel-config-mps-support-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        }
+      ],
+      "turn_count": 3
+    },
+    {
+      "agent_outcome": "edit_applied_awaiting_independent_grade",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/move_to_device_mapping_type_v1/run/14b_cpu_source_only_v1/attempt1/result.json",
+      "edit_applied": true,
+      "edit_attempted": true,
+      "elapsed_seconds": 1430.718,
+      "generated_tokens": 640,
+      "generation_protocol": "schema_slots_v2",
+      "independent_grade": {
+        "baseline_sha256": "cab95b73a9eada20f0192b89dc6b4544a7495cd958124fe8eab130d327c3e4d4",
+        "candidate_sha256": "162b11cad7963607adfe731addb9cfab85dcd487e6608a1cc99219fbf83af7f8",
+        "classification": "incorrect_repair",
+        "grade": {
+          "error": "SyntaxError: invalid syntax (<unknown>, line 210)",
+          "reason": "grader_execution_failure",
+          "success": false
+        },
+        "grader_returncode": 0,
+        "grader_sha256": "534b9b83f381c0b08c0254361c6ac4f60e9a109de1a4e5fbc5f290029ca61724",
+        "runner_git_diff_limitation": "run_local_agent candidate_diff is empty because this hand-built workspace had no nested .git; source hashes and the separately saved base-to-candidate unified diff provide source integrity."
+      },
+      "max_sampled_process_tree_rss_mib": 8230.953125,
+      "model_repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+      "model_snapshot": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+      "protocol_artifacts": [],
+      "public_test_runs": 3,
+      "reported_public_test_result": {
+        "calls_used": 3,
+        "error": "public test run budget exhausted",
+        "passed": false
+      },
+      "resource_abort": null,
+      "stop_reason": "turn_budget_exhausted",
+      "swap_growth_final_mib": -16.0,
+      "task_id": "transformers-move-to-device-mapping-type-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": true,
+          "outcome": "edit_applied",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "check_syntax"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": true,
+          "outcome": "edit_applied",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "check_syntax"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": true,
+          "outcome": "edit_applied",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "check_syntax"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": true,
+          "outcome": "edit_applied",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": false,
+          "tool": "run_public_tests"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "finish"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": false,
+          "tool": "run_public_tests"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "finish"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": false,
+          "tool": "run_public_tests"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "finish"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": false,
+          "tool": "run_public_tests"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "finish"
+        }
+      ],
+      "turn_count": 20
+    },
+    {
+      "agent_outcome": "turn_budget_exhausted",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/musicgen_cached_position_v1/run/navigation_v1/attempt/result.json",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 461.842,
+      "generated_tokens": 231,
+      "generation_protocol": "schema_slots_v1",
+      "independent_grade": {
+        "grade": {
+          "reason": "cached_length_growth_condition_missing",
+          "success": false
+        },
+        "returncode": 0,
+        "stderr": ""
+      },
+      "max_sampled_process_tree_rss_mib": 4356.203125,
+      "model_repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "protocol_artifacts": [],
+      "public_test_runs": 0,
+      "reported_public_test_result": null,
+      "resource_abort": null,
+      "stop_reason": "turn_budget_exhausted",
+      "swap_growth_final_mib": 0.0,
+      "task_id": "transformers-musicgen-cached-position-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "list_files"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        }
+      ],
+      "turn_count": 20
+    },
+    {
+      "agent_outcome": "turn_budget_exhausted",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/musicgen_cached_position_v1/run/navigation_v2/attempt/result.json",
+      "edit_applied": false,
+      "edit_attempted": true,
+      "elapsed_seconds": 698.075,
+      "generated_tokens": 408,
+      "generation_protocol": "schema_slots_v1",
+      "independent_grade": {
+        "grade": {
+          "reason": "cached_length_growth_condition_missing",
+          "success": false
+        },
+        "returncode": 0,
+        "stderr": ""
+      },
+      "max_sampled_process_tree_rss_mib": 4384.0625,
+      "model_repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "protocol_artifacts": [],
+      "public_test_runs": 0,
+      "reported_public_test_result": null,
+      "resource_abort": null,
+      "stop_reason": "turn_budget_exhausted",
+      "swap_growth_final_mib": 0.0,
+      "task_id": "transformers-musicgen-cached-position-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": false,
+          "outcome": "valid_call_rejected_by_policy",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": false,
+          "outcome": "valid_call_rejected_by_policy",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": false,
+          "outcome": "valid_call_rejected_by_policy",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        }
+      ],
+      "turn_count": 20
+    },
+    {
+      "agent_outcome": "turn_budget_exhausted",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/musicgen_melody_cached_position_v1/run/guidance_v1/attempt/result.json",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 443.114,
+      "generated_tokens": 267,
+      "generation_protocol": "schema_slots_v1",
+      "independent_grade": {
+        "grade": {
+          "reason": "cached_length_growth_condition_missing",
+          "success": false
+        },
+        "returncode": 0,
+        "stderr": ""
+      },
+      "max_sampled_process_tree_rss_mib": 4346.75,
+      "model_repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "protocol_artifacts": [],
+      "public_test_runs": 0,
+      "reported_public_test_result": null,
+      "resource_abort": null,
+      "stop_reason": "turn_budget_exhausted",
+      "swap_growth_final_mib": -8.0,
+      "task_id": "transformers-musicgen-melody-cached-position-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "list_files"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        }
+      ],
+      "turn_count": 20
+    },
+    {
+      "agent_outcome": "turn_budget_exhausted",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/musicgen_melody_cached_position_v1/run/guidance_v2/attempt/result.json",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 745.384,
+      "generated_tokens": 268,
+      "generation_protocol": "schema_slots_v1",
+      "independent_grade": {
+        "grade": {
+          "reason": "cached_length_growth_condition_missing",
+          "success": false
+        },
+        "returncode": 0,
+        "stderr": ""
+      },
+      "max_sampled_process_tree_rss_mib": 4374.953125,
+      "model_repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "protocol_artifacts": [],
+      "public_test_runs": 0,
+      "reported_public_test_result": null,
+      "resource_abort": null,
+      "stop_reason": "turn_budget_exhausted",
+      "swap_growth_final_mib": -8.0,
+      "task_id": "transformers-musicgen-melody-cached-position-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "list_files"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        }
+      ],
+      "turn_count": 20
+    },
+    {
+      "agent_outcome": "argument_slot_token_budget_exhausted",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/superpoint_compile_shadow_v1/run/14b_cpu_schema_slots_v2_v1/attempt2/result.json",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 196.095,
+      "generated_tokens": 1042,
+      "generation_protocol": "schema_slots_v2",
+      "independent_grade": {
+        "candidate_sha256": "453d7ff7a639bcac59ac647cc6b700bdf835c2853c1419bc41a3941a88dd5da1",
+        "classification": "independent_grade_failure",
+        "grade": {
+          "errors": [
+            "keypoint_comprehension_binding_invalid",
+            "descriptor_comprehension_binding_invalid"
+          ],
+          "reason": "compiled_forward_binding_incomplete",
+          "success": false
+        },
+        "grader_returncode": 0,
+        "grader_sha256": "c2ae6f7f0a6d0136b466195fc2090c5fc0925e7048931df30fb0ead5570113f1"
+      },
+      "max_sampled_process_tree_rss_mib": 8203.984375,
+      "model_repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+      "model_snapshot": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+      "protocol_artifacts": [],
+      "public_test_runs": 0,
+      "reported_public_test_result": null,
+      "resource_abort": null,
+      "stop_reason": "argument_slot_token_budget_exhausted",
+      "swap_growth_final_mib": 0.0,
+      "task_id": "transformers-superpoint-compile-local-shadow-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        }
+      ],
+      "turn_count": 3
+    },
+    {
+      "agent_outcome": "turn_budget_exhausted",
+      "artifact": "results/sprint_ii_20261027/external_coding_dev/video_min_frame_v1/run/controller_guidance_v1/attempt/result.json",
+      "edit_applied": false,
+      "edit_attempted": true,
+      "elapsed_seconds": 689.214,
+      "generated_tokens": 782,
+      "generation_protocol": "schema_slots_v1",
+      "independent_grade": {
+        "grade": {
+          "reason": "minimum_fps_count_not_enforced",
+          "safe_expression_probe": {
+            "expected_minimum": 1,
+            "fps": 1,
+            "observed": null,
+            "total_num_frames": 10,
+            "video_fps": 30
+          },
+          "success": false
+        },
+        "returncode": 0,
+        "stderr": ""
+      },
+      "max_sampled_process_tree_rss_mib": 4353.921875,
+      "model_repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "protocol_artifacts": [],
+      "public_test_runs": 2,
+      "reported_public_test_result": {
+        "elapsed_seconds": 0.226,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "resource_abort": null,
+      "stop_reason": "turn_budget_exhausted",
+      "swap_growth_final_mib": -16.0,
+      "task_id": "transformers-video-short-fps-min-frame-20261027-v1",
+      "tool_calls": [
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": false,
+          "outcome": "valid_call_rejected_by_policy",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": false,
+          "outcome": "valid_call_rejected_by_policy",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": true,
+          "tool": "run_public_tests"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "finish"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "read_complete",
+          "passed": null,
+          "tool": "read_lines"
+        },
+        {
+          "applied": false,
+          "outcome": "valid_call_rejected_by_policy",
+          "passed": null,
+          "tool": "replace_lines"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": true,
+          "tool": "run_public_tests"
+        },
+        {
+          "applied": null,
+          "outcome": null,
+          "passed": null,
+          "tool": "finish"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        },
+        {
+          "applied": null,
+          "outcome": "ok",
+          "passed": null,
+          "tool": "search_source"
+        }
+      ],
+      "turn_count": 20
+    }
+  ],
+  "campaign": "VARE Flagship Research Sprint II external coding Development cohort",
+  "schema_version": 1,
+  "task_family_count": 7,
+  "task_pack_count": 8
+}

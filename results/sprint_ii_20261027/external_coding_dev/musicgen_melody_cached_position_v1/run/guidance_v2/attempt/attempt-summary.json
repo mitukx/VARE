@@ -1,0 +1,38 @@
+{
+  "arm": "guidance_v2",
+  "attempted": false,
+  "edit_applied": false,
+  "generated_tokens": 268,
+  "independent_grade": {
+    "reason": "cached_length_growth_condition_missing",
+    "success": false
+  },
+  "journal": {
+    "events": 46,
+    "final_event_sha256": "e1f6ac4c8e6607c231d29ea3112fd682671f6b440df0d4af5a78b3960ed50696",
+    "hash_chain_valid": true
+  },
+  "model_outputs": 20,
+  "public_test_passed": null,
+  "public_test_runs": 0,
+  "resource": {
+    "abort": null,
+    "elapsed_seconds": 748.142,
+    "max_rss_mib": 4374.953125,
+    "preflight": {
+      "memory_pressure_free_percent": 76,
+      "swap_free_mib": 1317.0,
+      "swap_used_mib": 731.0
+    },
+    "swap_growth_mib": -8.0
+  },
+  "source_unchanged": true,
+  "stop_reason": "turn_budget_exhausted",
+  "tool_calls": 20,
+  "tool_names": {
+    "list_files": 1,
+    "read_lines": 2,
+    "search_source": 17
+  },
+  "turns": 20
+}

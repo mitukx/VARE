@@ -12,6 +12,7 @@ from scripts import run_local_agent as local_agent
 from scripts.run_local_agent import (
     candidate_file_sets,
     controller_source_hashes,
+    public_test_binding_error,
     sha256,
     tools_for,
 )
@@ -47,6 +48,38 @@ def test_navigation_interface_is_versioned_and_keeps_lease_bound_edit() -> None:
             tool_interface="lease_bound_navigation_v1",
         )
     }
+
+
+def test_public_test_is_hash_bound_to_task_and_candidate_workspace(tmp_path: Path) -> None:
+    task_root = tmp_path / "task"
+    subject = task_root / "subject"
+    subject.mkdir(parents=True)
+    public_test = subject / "test_public.py"
+    public_test.write_text("def test_example():\n    assert True\n", encoding="utf-8")
+    (task_root / "task.json").write_text(json.dumps({
+        "task_id": "pinned-public-smoke",
+        "source": {},
+        "metadata": {
+            "editable_files": ["sample.py", "test_public.py"],
+            "split": "development",
+        },
+        "prompt": "Fix sample.py.",
+    }), encoding="utf-8")
+    contract = load_agent_task(task_root)
+    workspace = tmp_path / "run" / "workspace"
+    workspace.mkdir(parents=True)
+    (workspace / "sample.py").write_text("value = 1\n", encoding="utf-8")
+    copied_test = workspace / "test_public.py"
+    copied_test.write_bytes(public_test.read_bytes())
+
+    assert contract.input_hashes["test_public.py"] == hashlib.sha256(
+        public_test.read_bytes(),
+    ).hexdigest()
+    assert public_test_binding_error(contract, workspace, {"test_public.py"}) is None
+    copied_test.write_text("def test_example():\n    assert False\n", encoding="utf-8")
+    assert public_test_binding_error(contract, workspace, {"test_public.py"}) == (
+        "workspace public test differs from the task-pinned public test"
+    )
 
 
 def test_navigation_run_identity_includes_all_selected_interface_sources() -> None:

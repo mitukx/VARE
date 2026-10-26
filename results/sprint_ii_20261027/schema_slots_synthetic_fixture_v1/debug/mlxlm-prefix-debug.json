@@ -1,0 +1,152 @@
+{
+  "prompt_count": 685,
+  "prompt_tail": [
+    30150,
+    5521,
+    9258,
+    1172,
+    1181,
+    829,
+    13,
+    151645,
+    198,
+    151644,
+    77091,
+    198
+  ],
+  "sequences": {
+    "list_files": [
+      1607,
+      10931
+    ],
+    "read_lines": [
+      878,
+      18323
+    ],
+    "search_source": [
+      1836,
+      10347
+    ],
+    "replace_lines": [
+      8156,
+      18323
+    ],
+    "check_syntax": [
+      2028,
+      78894
+    ],
+    "run_public_tests": [
+      6108,
+      27074,
+      32509
+    ],
+    "finish": [
+      30150
+    ]
+  },
+  "observed": [
+    {
+      "total_token_count": 685,
+      "prompt_token_count": 685,
+      "suffix": [],
+      "tail": [
+        27074,
+        32509,
+        497,
+        330,
+        30150,
+        5521,
+        9258,
+        1172,
+        1181,
+        829,
+        13,
+        151645,
+        198,
+        151644,
+        77091,
+        198
+      ]
+    },
+    {
+      "total_token_count": 686,
+      "prompt_token_count": 685,
+      "suffix": [
+        1607
+      ],
+      "tail": [
+        32509,
+        497,
+        330,
+        30150,
+        5521,
+        9258,
+        1172,
+        1181,
+        829,
+        13,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        1607
+      ]
+    },
+    {
+      "total_token_count": 687,
+      "prompt_token_count": 685,
+      "suffix": [
+        1607,
+        10931
+      ],
+      "tail": [
+        497,
+        330,
+        30150,
+        5521,
+        9258,
+        1172,
+        1181,
+        829,
+        13,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        1607,
+        10931
+      ]
+    },
+    {
+      "total_token_count": 688,
+      "prompt_token_count": 685,
+      "suffix": [
+        1607,
+        10931,
+        151645
+      ],
+      "tail": [
+        330,
+        30150,
+        5521,
+        9258,
+        1172,
+        1181,
+        829,
+        13,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        1607,
+        10931,
+        151645
+      ]
+    }
+  ],
+  "error": "ValueError: generated tool-choice prefix is outside the allowed vocabulary (length=3, tail=[1607, 10931, 151645])",
+  "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 24, in <module>\n  File \"/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py\", line 797, in generate\n    for response in stream_generate(model, tokenizer, prompt, **kwargs):\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py\", line 734, in stream_generate\n    for n, (token, logprobs, from_draft) in enumerate(token_generator):\n                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py\", line 722, in <genexpr>\n    (token, logprobs, False) for token, logprobs in token_generator\n                                                    ^^^^^^^^^^^^^^^\n  File \"/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py\", line 471, in generate_step\n    next_y, next_logprobs = _step(y)\n                            ^^^^^^^^\n  File \"/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py\", line 423, in _step\n    logits = processor(tokens, logits)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<stdin>\", line 22, in wrapped\n  File \"/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/src/vare/schema_slot_protocol.py\", line 74, in processor\n    allowed = allowed_choice_tokens(generated, sequences, eos_ids)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/src/vare/schema_slot_protocol.py\", line 50, in allowed_choice_tokens\n    raise ValueError(\nValueError: generated tool-choice prefix is outside the allowed vocabulary (length=3, tail=[1607, 10931, 151645])\n"
+}

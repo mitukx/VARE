@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "editable_files": [
+      "video_utils.py",
+      "test_public.py"
+    ],
+    "split": "development",
+    "task_type": "external_mlsys_video_sampling_repair",
+    "upstream_fix": "https://github.com/huggingface/transformers/pull/49908",
+    "upstream_issue": "https://github.com/huggingface/transformers/issues/49907"
+  },
+  "prompt": "Fix default_sample_indices_fn in video_utils.py. For a nonempty source video and positive requested FPS, the FPS path must retain at least one frame when integer truncation would otherwise produce zero. Preserve ordinary sampling, empty-source behavior, fixed-num_frames behavior, and the missing-source-FPS error.",
+  "source": {
+    "base_revision": "b36173c2ccd7834b77c3541854a50e2ad67a9f8f",
+    "external_upstream_path": "src/transformers/video_utils.py",
+    "external_upstream_revision": "1a55addd658aaa95b52871f5b72e91a6b91449b6",
+    "local_path": "huggingface/transformers"
+  },
+  "task_id": "transformers-video-short-fps-min-frame-20261027-v1",
+  "tests": [],
+  "title": "Keep FPS sampling nonempty for a short nonempty video"
+}

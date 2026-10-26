@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "candidate_visible_files": [
+      "kernel_config.py"
+    ],
+    "editable_files": [
+      "kernel_config.py",
+      "test_public.py"
+    ],
+    "independent_grader_hidden": true,
+    "prior_exposure": "Source revision selected after VARE model work. Publicly available upstream code may have appeared in model pretraining; no claim of pretraining novelty. This task was not used by prior VARE model attempts in this sprint.",
+    "split": "development",
+    "task_type": "external_mlsys_kernel_device_support"
+  },
+  "prompt": "Update kernel_config.py so MPS is a supported device type consistently across add_to_mapping, add_to_mapping_local, and sanitize_kernel_mapping. Centralize the supported device list so these validation paths cannot drift apart. Preserve all existing supported devices and continue rejecting CPU.",
+  "source": {
+    "base_blob_sha": "4ca496c0fd41fd46d59664efcfe8bad2bd265925",
+    "external_upstream_path": "src/transformers/utils/kernel_config.py",
+    "external_upstream_revision": "1573af48b1c5cd8bfb0cfba4dc1ecf6e882d0348",
+    "known_fix_blob_sha": "947a52c7a16ce218d061795d8503f291075e85f3",
+    "known_fix_revision": "be67386f98c22ca61e446c715a8e758b0b7fa4e0",
+    "local_path": "huggingface/transformers",
+    "upstream_fix": "https://github.com/huggingface/transformers/pull/49655",
+    "upstream_fix_merge": "https://github.com/huggingface/transformers/commit/be67386f98c22ca61e446c715a8e758b0b7fa4e0"
+  },
+  "task_id": "transformers-kernel-config-mps-support-20261027-v1",
+  "title": "Allow MPS in Transformers kernel configuration"
+}

@@ -1,0 +1,102 @@
+$ /opt/homebrew/Caskroom/miniforge/base/bin/python -m pytest -o addopts= -q tests/test_separated_candidate_harness.py::test_frozen_oracle_passes_through_the_same_isolated_adapter tests/test_separated_candidate_harness.py::test_v3_warmup_oracle_runs_through_the_isolated_grader tests/test_separated_candidate_harness.py::test_v3_oracle_controls_use_canonical_task_paths[mlsys-v3-ema-bias-ema_bias-bias_corrected_ema]
+exit_code=1
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_________ test_frozen_oracle_passes_through_the_same_isolated_adapter __________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-67/test_frozen_oracle_passes_thro0')
+
+    def test_frozen_oracle_passes_through_the_same_isolated_adapter(tmp_path: Path) -> None:
+        module = _pack_adapter()
+        scripts = ROOT / "scripts"
+        sys.path.insert(0, str(scripts))
+        from mlsys_task_isolated_calls import _load_evaluator
+    
+        evaluator = _load_evaluator(
+            TASK_DIR / "evaluator/test_hidden.py", TASK_DIR.parents[1], TASK_ID,
+        )
+        subject = tmp_path / "subject"
+        subject.mkdir()
+        shutil.copy(
+            TASK_DIR / "evaluator/oracle/causal_attention.py",
+            subject / "causal_attention.py",
+        )
+        request = module.HarnessRequest(
+            workspace=subject,
+            entrypoint=ENTRYPOINT,
+            task_type="correctness",
+            trusted_task_path=TASK_DIR / "task.json",
+            input_generator=evaluator._generator,
+            reference=evaluator._reference,
+            checker=evaluator._checker,
+            repeats=4,
+            timeout_s=20,
+        )
+    
+        report = module.run_harness(request)
+    
+>       assert report.passed is True
+E       AssertionError: assert False is True
+E        +  where False = HarnessReport(harness_id='vare.separated_candidate_harness.grade_function', replaced_by=None, nonce_enforced=True, non...sed=False, error='correctness_failed', baseline_samples_s=[], candidate_samples_s=[], interleave='even_baseline_first').passed
+
+tests/test_separated_candidate_harness.py:118: AssertionError
+____________ test_v3_warmup_oracle_runs_through_the_isolated_grader ____________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-67/test_v3_warmup_oracle_runs_thr0')
+
+    def test_v3_warmup_oracle_runs_through_the_isolated_grader(tmp_path: Path) -> None:
+        task_dir = ROOT / "benchmarks/mlsys_coding_v3/tasks/warmup_cosine"
+        subject = tmp_path / "subject"
+        subject.mkdir()
+        shutil.copy(
+            task_dir / "evaluator/oracle/warmup_cosine.py",
+            subject / "warmup_cosine.py",
+        )
+        report = grade_function({
+            "workspace": str(subject),
+            "entrypoint": "warmup_cosine:learning_rate",
+            "task_type": "correctness",
+            "trusted_task_path": str(task_dir / "task.json"),
+            "nonce": "ef" * 16,
+        })
+>       assert report["passed"] is True
+E       assert False is True
+
+tests/test_separated_candidate_harness.py:319: AssertionError
+_ test_v3_oracle_controls_use_canonical_task_paths[mlsys-v3-ema-bias-ema_bias-bias_corrected_ema] _
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-67/test_v3_oracle_controls_use_ca0')
+task_id = 'mlsys-v3-ema-bias', module = 'ema_bias'
+function = 'bias_corrected_ema'
+
+    @pytest.mark.parametrize(
+        ("task_id", "module", "function"),
+        [
+            ("mlsys-v3-ema-bias", "ema_bias", "bias_corrected_ema"),
+        ],
+    )
+    def test_v3_oracle_controls_use_canonical_task_paths(
+        tmp_path: Path, task_id: str, module: str, function: str,
+    ) -> None:
+        task_dir = ROOT / "benchmarks/mlsys_coding_v3/tasks" / task_id
+        oracle_files = list((task_dir / "evaluator/oracle").glob("*.py"))
+        assert len(oracle_files) == 1
+        subject = tmp_path / "subject"
+        subject.mkdir()
+        shutil.copy(oracle_files[0], subject / f"{module}.py")
+        report = grade_function({
+            "workspace": str(subject),
+            "entrypoint": f"{module}:{function}",
+            "task_type": "correctness",
+            "trusted_task_path": str(task_dir / "task.json"),
+            "nonce": "cd" * 16,
+        })
+>       assert report["passed"] is True
+E       assert False is True
+
+tests/test_separated_candidate_harness.py:357: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_separated_candidate_harness.py::test_frozen_oracle_passes_through_the_same_isolated_adapter
+FAILED tests/test_separated_candidate_harness.py::test_v3_warmup_oracle_runs_through_the_isolated_grader
+FAILED tests/test_separated_candidate_harness.py::test_v3_oracle_controls_use_canonical_task_paths[mlsys-v3-ema-bias-ema_bias-bias_corrected_ema]
+3 failed in 30.47s

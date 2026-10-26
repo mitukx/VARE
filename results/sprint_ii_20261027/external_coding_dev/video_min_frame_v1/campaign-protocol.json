@@ -1,0 +1,81 @@
+{
+  "arms": [
+    {
+      "guidance_version": "v1",
+      "id": "video_schema_slots_navigation_v1"
+    },
+    {
+      "guidance_version": "v2",
+      "id": "video_schema_slots_navigation_v2"
+    }
+  ],
+  "budgets": {
+    "max_context_tokens": 16384,
+    "max_new_tokens_per_turn": 512,
+    "max_public_test_runs": 3,
+    "max_total_new_tokens": 6000,
+    "max_turns": 20,
+    "public_test_memory_mib": 512,
+    "public_test_timeout_seconds": 45,
+    "resource_guard": {
+      "free_swap_preflight_mib": 1024,
+      "memory_free_preflight_percent": 65,
+      "process_tree_rss_cap_mib": 12288,
+      "swap_growth_cap_mib": 768,
+      "wall_cap_seconds": 1800
+    },
+    "wall_seconds": 1800
+  },
+  "controller_sources_sha256": {
+    "scripts/run_local_agent.py": "2fca643599fa9eb2674263408d9f98a30a3f11ce152290539b20835786cce46f",
+    "src/vare/schema_slot_protocol.py": "f92198b29285875427fc0d768a920219f2e7020fca9b5071e79ebff673359d05"
+  },
+  "exclusions": [
+    "No held-out task use.",
+    "No training or optimizer updates.",
+    "Do not count aborted, invalid, incomplete, or ungraded attempts as repairs.",
+    "No post-hoc output repair."
+  ],
+  "frozen_at_utc": "2026-10-26 18:33:34 UTC",
+  "grading": "Run immutable public smoke test through pinned Docker image python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258; run hidden independent safe AST grader on final candidate via same isolated pinned image. Preserve grader sources and hashes.",
+  "hypothesis": "Guidance v2 will reduce repeated no-hit searches and identical first-window reads, increasing progress to a correctly applied repair versus v1.",
+  "matched_design": "One attempt per arm on separate clean workspaces cloned from the same local baseline commit. Same model snapshot, corrected tokenizer override, task, seed, schema_slots_v1 protocol, tool interface, system task text, public tests, generation and resource budgets. Only navigation guidance differs. This is a paired single-task controller diagnostic, not an independent-task estimate or general capability comparison.",
+  "model": {
+    "backend": "MLX 0.32.4 / mlx-lm 0.32.2, CPU device, Apple M1 Pro",
+    "corrected_tokenizer_override_sha256": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "local_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80",
+    "quantization": "4-bit checkpoint as distributed",
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "sampling": "greedy / no sampling",
+    "seed": 73,
+    "snapshot_revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "tokenizer_config_sha256_original": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+    "weight_sha256": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e"
+  },
+  "primary_outcome": "Independently graded correct source repair per task at one attempt per arm.",
+  "protocol_id": "vare-video-min-fps-controller-guidance-paired-v1",
+  "question": "On one fresh qualified Transformers video-sampling task, does task-independent navigation guidance that addresses observed search/read failures change the outcome under otherwise identical schema-constrained Qwen2.5-Coder-7B inference?",
+  "secondary_outcomes": [
+    "schema-valid tool-call count and sequence",
+    "search/read localization behavior and repeated reads",
+    "edit attempts and successfully applied edits",
+    "public smoke-test outcome",
+    "independent static grader outcome",
+    "generated tokens, wall time, sampled RSS, swap growth, and resource abort"
+  ],
+  "status": "FROZEN_BEFORE_VIDEO_TASK_MODEL_INFERENCE",
+  "task": {
+    "candidate_source_sha256": "747f4883484cb7fc049f6eaf6e098d0c6fce224436529db657dbf196032c5bcb",
+    "grader_sha256": "c68b3117a62850902c215321b62225e304b58ec933fa6c5e9383bf29cffb2441",
+    "local_candidate_base_revision": "b36173c2ccd7834b77c3541854a50e2ad67a9f8f",
+    "prior_exposure": "Newly selected task; model pretraining exposure to upstream repository/patch is unknown.",
+    "public_test_sha256": "a104d5e1e9910b15f1382a20e0274bfcb349eef4f7741991a35473470e4616ef",
+    "qualification": "baseline FAIL; exact merged upstream fix PASS; incorrect max(2, ...) mutant FAIL; controls run in pinned isolated container; hidden grader is static AST plus restricted arithmetic interpretation and does not execute candidate code",
+    "qualification_controls_sha256": "51adb96103e8fd8e0288c8f053af2c63518c0d52b29123494fc6f751952a214e",
+    "split": "development",
+    "task_id": "transformers-video-short-fps-min-frame-20261027-v1",
+    "upstream_base_revision": "1a55addd658aaa95b52871f5b72e91a6b91449b6",
+    "upstream_fix_pr": "https://github.com/huggingface/transformers/pull/49908",
+    "upstream_repository": "huggingface/transformers"
+  }
+}\n

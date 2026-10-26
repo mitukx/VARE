@@ -151,6 +151,19 @@ def assert_split_member(contract: AgentTaskContract, split: dict, split_name: st
         raise ValueError(f"task is outside the frozen {split_name} split")
 
 
+def _add_public_test_hash(root: Path, files: list[str], hashes: dict[str, str]) -> None:
+    if "test_public.py" not in files:
+        return
+    candidates = [
+        path for path in (root / "subject" / "test_public.py", root / "test_public.py")
+        if path.is_file()
+    ]
+    if len(candidates) > 1:
+        raise ValueError("task has ambiguous public test files")
+    if candidates:
+        hashes["test_public.py"] = _sha256(candidates[0])
+
+
 def load_agent_task(task_root: Path) -> AgentTaskContract:
     root = Path(task_root)
     task_path = root / "task.json"
@@ -173,6 +186,7 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
         files = [_safe_relative(name) for name in source["files"]]
         if not files:
             raise ValueError("historical task has no source files")
+        _add_public_test_hash(root, files, hashes)
         return AgentTaskContract(
             task_id=str(task["task_id"]),
             schema="historical",
@@ -189,6 +203,7 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
     files = [_safe_relative(name) for name in metadata["editable_files"]]
     if not files:
         raise ValueError("engineering task has no editable files")
+    _add_public_test_hash(root, files, hashes)
     prompt = task.get("prompt")
     if not isinstance(prompt, str) or not prompt.strip():
         raise ValueError("engineering task prompt is empty")

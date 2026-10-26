@@ -1,0 +1,13 @@
+{
+  "amendment_id": "launch-amendment-v1",
+  "frozen_at_utc": "2026-10-26 20:16:08 UTC",
+  "initial_launch_resource_summary_sha256": "c50babb1e1addf2691b54217db46cd289cb1c8fece12f856d939d98ea5bf4c36",
+  "initial_launch_stderr_sha256": "fe51c05c8115444a2d71ae5374587bfc1758a07d3174a3f4e48d4adaa2788565",
+  "instruction": "Repair the SuperPoint forward method so its list comprehensions do not reuse last_hidden_state as a comprehension target. Preserve the outer encoder output for both keypoint and descriptor decoding; keep both decoder comprehensions aligned with the same per-image hidden-state tensor.",
+  "instruction_sha256": "a53a6ac7ad545165e26795a3ed00f2984115b2032a86136c8eb7204fc4c2a575",
+  "next_attempt": "run/14b_cpu_schema_slots_v2_v1/attempt2",
+  "only_command_correction": "Supply the exact task.prompt as --instruction. No task, model, controller, decoding, sampling, budget, or resource limit changes.",
+  "prohibition": "Do not attempt a further inference after attempt2 starts, regardless of its outcome.",
+  "protocol_sha256": "41dfe97fad5b837320351c2468b666004c1ff9c1e220ec0b27a67c79fccf2eb8",
+  "reason": "The first wrapper launch exited with argparse returncode 2 before model loading because --instruction was omitted. No generation occurred; resource summary records zero model activity."
+}

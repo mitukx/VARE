@@ -1,0 +1,47 @@
+{
+  "baseline": {
+    "grade": {
+      "reason": "minimum_fps_count_not_enforced",
+      "safe_expression_probe": {
+        "expected_minimum": 1,
+        "fps": 1,
+        "observed": null,
+        "total_num_frames": 10,
+        "video_fps": 30
+      },
+      "success": false
+    },
+    "returncode": 0,
+    "stderr": ""
+  },
+  "incorrect_mutant": {
+    "grade": {
+      "reason": "minimum_fps_count_not_enforced",
+      "safe_expression_probe": {
+        "expected_minimum": 1,
+        "fps": 1,
+        "observed": 2,
+        "total_num_frames": 10,
+        "video_fps": 30
+      },
+      "success": false
+    },
+    "returncode": 0,
+    "stderr": ""
+  },
+  "known_fix": {
+    "grade": {
+      "reason": "contract_pass",
+      "safe_expression_probe": {
+        "expected_minimum": 1,
+        "fps": 1,
+        "observed": 1,
+        "total_num_frames": 10,
+        "video_fps": 30
+      },
+      "success": true
+    },
+    "returncode": 0,
+    "stderr": ""
+  }
+}

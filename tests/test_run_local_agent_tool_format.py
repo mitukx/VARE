@@ -1,6 +1,7 @@
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 import sys
 
 import pytest
@@ -9,15 +10,20 @@ from scripts import run_local_agent
 from scripts.run_local_agent import (
     DurableEventJournal, capture_rendered_prompt, main, normalize_tool_call_format,
     parse_tool_output_v1, pinned_public_contract_grader_sources, read_file_range,
-    refresh_public_tests_after_edit, replace_text, run_public_contract_tests,
+    python_syntax_failures, refresh_public_tests_after_edit, replace_text, run_public_contract_tests,
     run_with_public_test_budget, tools_for,
 )
 from vare.agent_edit_v2 import SourceEditLeaseStoreV1
+from vare.container_isolation import DockerIsolationRunner, IsolationResult
 from scripts.calibrate_agent_edit_interface_v1 import FIXTURES, _validate_fixture, tool_output
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
     verified_task_success,
+)
+
+PINNED_TEST_IMAGE = (
+    "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
 )
 
 
@@ -436,6 +442,108 @@ def test_applied_recovered_edit_requires_a_fresh_public_test(monkeypatch, tmp_pa
     assert refreshed == {"passed": False, "returncode": 1}
     assert refreshed is not stale_result
     assert calls == [(tmp_path, "pinned-image", "test-hash")]
+
+
+def test_public_test_runner_executes_function_tests_and_fails_on_assertion(
+        monkeypatch, tmp_path):
+    workspace = tmp_path / "candidate"
+    workspace.mkdir()
+    test_file = workspace / "test_public.py"
+    test_file.write_text(
+        "from pathlib import Path\n"
+        "def test_candidate_syntax_is_valid():\n"
+        "    import ast\n"
+        "    ast.parse(Path('candidate.py').read_text())\n",
+        encoding="utf-8",
+    )
+    (workspace / "candidate.py").write_text("if True:\n    pass\n", encoding="utf-8")
+    expected_hash = run_local_agent.sha256(test_file)
+
+    async def execute_test_driver(_self, _limits, *, workspace, command,
+                                  allowed_workspace_root):
+        assert allowed_workspace_root == tmp_path
+        assert command[:2] == ["python", "-c"]
+        completed = subprocess.run(
+            [sys.executable, "-c", command[2], str(workspace / "test_public.py")],
+            cwd=workspace, capture_output=True, text=True, check=False,
+        )
+        return IsolationResult(completed.returncode, completed.stdout, completed.stderr)
+
+    monkeypatch.setattr(DockerIsolationRunner, "run_candidate", execute_test_driver)
+    passed = run_local_agent.run_public_tests(workspace, PINNED_TEST_IMAGE, expected_hash)
+    assert passed["passed"] is True
+    assert "1 public test(s) passed" in passed["stdout"]
+
+    (workspace / "candidate.py").write_text("if True\n    pass\n", encoding="utf-8")
+    failed = run_local_agent.run_public_tests(workspace, PINNED_TEST_IMAGE, expected_hash)
+    assert failed["passed"] is False
+    assert failed["returncode"] == 1
+    assert "SyntaxError" in failed["stderr"]
+
+
+def test_public_test_runner_rejects_unexecuted_parameterized_tests(
+        monkeypatch, tmp_path):
+    workspace = tmp_path / "candidate"
+    workspace.mkdir()
+    test_file = workspace / "test_public.py"
+    test_file.write_text("def test_requires_fixture(fixture):\n    assert fixture\n", encoding="utf-8")
+
+    async def execute_test_driver(_self, _limits, *, workspace, command,
+                                  allowed_workspace_root):
+        completed = subprocess.run(
+            [sys.executable, "-c", command[2], str(workspace / "test_public.py")],
+            cwd=workspace, capture_output=True, text=True, check=False,
+        )
+        return IsolationResult(completed.returncode, completed.stdout, completed.stderr)
+
+    monkeypatch.setattr(DockerIsolationRunner, "run_candidate", execute_test_driver)
+    result = run_local_agent.run_public_tests(
+        workspace, PINNED_TEST_IMAGE, run_local_agent.sha256(test_file),
+    )
+    assert result["passed"] is False
+    assert "fixtures are unsupported" in result["stderr"]
+
+
+def test_public_test_runner_executes_module_assertions_and_rejects_noop(
+        monkeypatch, tmp_path):
+    workspace = tmp_path / "candidate"
+    workspace.mkdir()
+    test_file = workspace / "test_public.py"
+    test_file.write_text(
+        "from pathlib import Path\n"
+        "assert Path('candidate.py').read_text() == 'value = 2\\n'\n",
+        encoding="utf-8",
+    )
+    (workspace / "candidate.py").write_text("value = 2\n", encoding="utf-8")
+
+    async def execute_test_driver(_self, _limits, *, workspace, command,
+                                  allowed_workspace_root):
+        completed = subprocess.run(
+            [sys.executable, "-c", command[2], str(workspace / "test_public.py")],
+            cwd=workspace, capture_output=True, text=True, check=False,
+        )
+        return IsolationResult(completed.returncode, completed.stdout, completed.stderr)
+
+    monkeypatch.setattr(DockerIsolationRunner, "run_candidate", execute_test_driver)
+    result = run_local_agent.run_public_tests(
+        workspace, PINNED_TEST_IMAGE, run_local_agent.sha256(test_file),
+    )
+    assert result["passed"] is True
+    assert "module-level public assertion(s) passed" in result["stdout"]
+
+    test_file.write_text("# no assertions or test functions\n", encoding="utf-8")
+    result = run_local_agent.run_public_tests(
+        workspace, PINNED_TEST_IMAGE, run_local_agent.sha256(test_file),
+    )
+    assert result["passed"] is False
+    assert "no executable public assertions" in result["stderr"]
+
+
+def test_finish_syntax_gate_covers_only_allowlisted_python_sources(tmp_path):
+    (tmp_path / "good.py").write_text("value = 1\n", encoding="utf-8")
+    (tmp_path / "bad.py").write_text("if True\n    pass\n", encoding="utf-8")
+    (tmp_path / "notes.txt").write_text("not Python\n", encoding="utf-8")
+    assert set(python_syntax_failures(tmp_path, {"good.py", "bad.py", "notes.txt"})) == {"bad.py"}
 
 
 def test_attempted_task_run_count_includes_every_arm_and_secondary_model():
