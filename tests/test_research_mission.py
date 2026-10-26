@@ -714,6 +714,49 @@ def test_phase_decision_artifact_is_retained_and_rechecked(mission):
         journal.audit("mission-test")
 
 
+def test_tampered_decision_blocks_resume_claim_and_model_exposure(mission):
+    journal, _, db = mission
+    register_dev(journal)
+    model_action = add_model_attempt(journal)
+    enter_execute(journal)
+    claimed = journal.claim_next(
+        "mission-test", owner="model-worker", now=102, lease_seconds=100
+    )
+    assert claimed["action_id"] == model_action["action_id"]
+    reference = Path(f"{journal.path}.discover-screen.decision.json")
+    reference.write_bytes(reference.read_bytes() + b"tampered after phase transition")
+
+    with pytest.raises(IntegrityError, match="do not match"):
+        journal.resume("mission-test", now=103)
+    with pytest.raises(IntegrityError, match="do not match"):
+        journal.claim_next(
+            "mission-test", owner="another-worker", now=103, lease_seconds=30
+        )
+    with pytest.raises(IntegrityError, match="do not match"):
+        journal.start_model_exposure(
+            "mission-test",
+            model_action["action_id"],
+            owner="model-worker",
+            generation=claimed["lease_generation"],
+            now=104,
+        )
+
+    with sqlite3.connect(db) as connection:
+        assert (
+            connection.execute(
+                "SELECT exposure FROM tasks WHERE task_id='dev-1'"
+            ).fetchone()[0]
+            == "unseen"
+        )
+        assert (
+            connection.execute(
+                "SELECT model_started FROM actions WHERE action_id=?",
+                (model_action["action_id"],),
+            ).fetchone()[0]
+            == 0
+        )
+
+
 def test_resource_reservations_are_serialized_and_budgeted(mission):
     journal, _, _ = mission
     add_probe(journal, "a", request={"memory_bytes": 700})

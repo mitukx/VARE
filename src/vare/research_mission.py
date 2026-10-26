@@ -743,6 +743,7 @@ class MissionJournal:
             mission = self._mission(db, mission_id)
             self._check_source(mission)
             self._assert_chain(db, mission)
+            self._assert_artifacts(db, mission)
             if record_ref is not None:
                 record_ref = _verified_evidence_ref(
                     record_ref,
@@ -867,6 +868,7 @@ class MissionJournal:
             mission = self._mission(db, mission_id)
             self._check_source(mission)
             self._assert_chain(db, mission)
+            self._assert_artifacts(db, mission)
             existing = db.execute(
                 "SELECT * FROM actions WHERE mission_id=? AND idempotency_key=?",
                 (mission_id, idempotency_key),
@@ -1088,6 +1090,7 @@ class MissionJournal:
             mission = self._mission(db, mission_id)
             self._check_source(mission)
             self._assert_chain(db, mission)
+            self._assert_artifacts(db, mission)
             if mission["status"] != "active":
                 return None
             self._expire_leases(db, mission_id, current)
@@ -1215,6 +1218,7 @@ class MissionJournal:
             mission = self._mission(db, mission_id)
             self._check_source(mission)
             self._assert_chain(db, mission)
+            self._assert_artifacts(db, mission)
             action = self._fenced_action(
                 db, mission_id, action_id, owner, generation, current
             )
@@ -1290,6 +1294,7 @@ class MissionJournal:
             mission = self._mission(db, mission_id)
             self._check_source(mission)
             self._assert_chain(db, mission)
+            self._assert_artifacts(db, mission)
             if result_ref is None:
                 raise MissionError(
                     "completed action requires a retained result_ref artifact"
@@ -1426,6 +1431,7 @@ class MissionJournal:
             mission = self._mission(db, mission_id)
             self._check_source(mission)
             self._assert_chain(db, mission)
+            self._assert_artifacts(db, mission)
             prior = db.execute(
                 "SELECT * FROM actions WHERE mission_id=? AND action_id=?",
                 (mission_id, action_id),
@@ -1671,6 +1677,7 @@ class MissionJournal:
             mission = self._mission(db, mission_id)
             self._check_source(mission)
             self._assert_chain(db, mission)
+            self._assert_artifacts(db, mission)
             self._expire_leases(db, mission_id, current)
             mission = self._mission(db, mission_id)
             queued = db.execute(
