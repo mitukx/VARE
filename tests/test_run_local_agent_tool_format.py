@@ -192,6 +192,10 @@ def test_navigation_runs_accept_a_supplied_event_journal_before_model_loading(
     fake_mlx.__path__ = []
     fake_mlx.__version__ = "fixture"
     fake_core = ModuleType("mlx.core")
+    selected_devices = []
+    fake_core.cpu = "fixture-cpu"
+    fake_core.gpu = "fixture-gpu"
+    fake_core.set_default_device = selected_devices.append
     fake_core.random = SimpleNamespace(seed=lambda seed: None)
     fake_mlx.core = fake_core
     fake_mlx_lm = ModuleType("mlx_lm")
@@ -218,6 +222,7 @@ def test_navigation_runs_accept_a_supplied_event_journal_before_model_loading(
     ])
     with pytest.raises(OSError, match="fixture model load failed"):
         main()
+    assert selected_devices == [fake_core.gpu]
     records = [json.loads(line) for line in journal_path.read_text(encoding="utf-8").splitlines()]
     assert [item["event"]["event_type"] for item in records] == [
         "journal_created", "invocation_started", "run_context",

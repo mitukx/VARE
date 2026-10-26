@@ -399,6 +399,25 @@ def candidate_file_sets(contract: Any) -> tuple[set[str], set[str], set[str]]:
     return agent_sources, public_tests, agent_sources | public_tests
 
 
+def tokenizer_override(model_dir: Path, override_path: Path | None) -> tuple[dict[str, str], dict[str, Any]]:
+    """Allow only an explicitly hashed chat-template override; keep weights immutable."""
+    if override_path is None:
+        return {}, {}
+    original_path = model_dir / 'tokenizer_config.json'
+    original = json.loads(original_path.read_text(encoding='utf-8'))
+    override = json.loads(override_path.read_text(encoding='utf-8'))
+    if (not isinstance(override, dict) or not isinstance(override.get('chat_template'), str)
+            or not override['chat_template'].strip()
+            or {k: v for k, v in override.items() if k != 'chat_template'}
+            != {k: v for k, v in original.items() if k != 'chat_template'}):
+        raise ValueError('tokenizer override may change only chat_template')
+    return {'chat_template': override['chat_template']}, {
+        'original_config_sha256': sha256(original_path),
+        'override_config_sha256': sha256(override_path),
+        'effective_chat_template_sha256': hashlib.sha256(override['chat_template'].encode()).hexdigest(),
+    }
+
+
 def run_git(root: Path, *args: str) -> str:
     return subprocess.run(['git', '-C', str(root), *args], check=True, text=True,
                           capture_output=True).stdout.strip()
@@ -622,6 +641,7 @@ def main() -> int:
     parser.add_argument('--model-repository', default=MODEL_REPOSITORY)
     parser.add_argument('--backend', choices=('transformers_cpu', 'mlx'), default='transformers_cpu')
     parser.add_argument('--mlx-device', choices=('metal', 'cpu'), default='metal')
+    parser.add_argument('--tokenizer-config-override', type=Path)
     parser.add_argument('--public-test-image', help='Pinned Docker image for isolated execution of test_public.py')
     parser.add_argument('--public-test-timeout-s', type=int, default=45)
     parser.add_argument('--public-test-memory-mb', type=int, default=512)
@@ -688,6 +708,7 @@ def main() -> int:
         parser.error('HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1 are required')
 
     model_files = {path.name: sha256(path) for path in sorted(model_dir.iterdir()) if path.is_file()}
+    tokenizer_kwargs, tokenizer_identity = tokenizer_override(model_dir, args.tokenizer_config_override)
     event_journal = DurableEventJournal(event_path) if event_path is not None else None
     if event_journal is not None:
         event_journal.append(
@@ -698,6 +719,7 @@ def main() -> int:
             task_prompt=contract.prompt_text, instruction=args.instruction,
             model_repository=args.model_repository, model_snapshot=model_dir.name,
             model_files_sha256=model_files,
+            tokenizer_configuration=tokenizer_identity,
             policy_source_commit=run_git(ROOT, 'rev-parse', 'HEAD'),
             controller_source_files_sha256=controller_sources,
             budgets={
@@ -810,7 +832,10 @@ def main() -> int:
             from mlx_lm import load
             mx.set_default_device(mx.cpu if args.mlx_device == 'cpu' else mx.gpu)
             mx.random.seed(args.seed)
-            model, tokenizer = load(str(model_dir))
+            model, tokenizer = (load(str(model_dir), tokenizer_config=tokenizer_kwargs)
+                                if tokenizer_kwargs else load(str(model_dir)))
+            if tokenizer_kwargs and tokenizer.chat_template != tokenizer_kwargs['chat_template']:
+                raise RuntimeError('loaded tokenizer differs from the frozen override')
             mlx_lm = __import__('mlx_lm')
             runtime = {'python': platform.python_version(), 'mlx': getattr(__import__('mlx'), '__version__', 'unknown'),
                        'mlx_lm': getattr(mlx_lm, '__version__', 'unknown'),
@@ -826,7 +851,7 @@ def main() -> int:
             model = AutoModelForCausalLM.from_pretrained(
                 model_dir, local_files_only=True, dtype=torch.float32,
             ).to('cpu').eval()
-            tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
+            tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True, **tokenizer_kwargs)
             if not all(parameter.device.type == 'cpu' for parameter in model.parameters()):
                 raise RuntimeError('model parameter escaped CPU')
             runtime = {'python': platform.python_version(), 'torch': torch.__version__,
@@ -1207,6 +1232,7 @@ def main() -> int:
         'initial_messages': initial_messages,
         'model_repository': args.model_repository, 'model_snapshot': model_dir.name,
         'model_files': model_files,
+        'tokenizer_configuration': tokenizer_identity,
         'runtime': runtime,
         'budgets': {'max_turns': args.max_turns, 'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
                     'max_total_new_tokens': args.max_total_new_tokens,

@@ -72,11 +72,28 @@ def campaign(tmp_path_factory):
     pytest.importorskip("transformers")
     pytest.importorskip("psutil")
     target=tmp_path_factory.mktemp("continuation")/"run"
-    process=subprocess.run([sys.executable,str(bench.ROOT/"scripts/benchmark_e2e_rl_continuation.py"),
+    # This suite verifies historical V5 execution, not the current coding
+    # runtime. Run the benchmark from the exact V5 campaign checkout; the
+    # current auditor still checks every recorded source hash against Git.
+    pinned_commit="6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
+    checkout=target.parent/"historical-v5"
+    subprocess.run(["git","-C",str(bench.ROOT),"worktree","add","--detach",
+                    str(checkout),pinned_commit],check=True,capture_output=True,text=True)
+    bench.atomic_json(target.parent/"execution-boundary.json",{
+        "benchmark_commit":pinned_commit,
+        "test_driver_commit":subprocess.check_output(
+            ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True).strip(),
+        "test_driver_sha256":auditor.sha(Path(__file__)),
+    })
+    try:
+        process=subprocess.run([sys.executable,str(checkout/"scripts/benchmark_e2e_rl_continuation.py"),
                             "--output",str(target),"--model-dir",str(Path(model).resolve()),
                             "--workers","2","--seeds","3901","--rounds","6","--tasks","4","--eval-tasks","4"],
                            capture_output=True,text=True,timeout=240,
-                           env={**os.environ,"OMP_NUM_THREADS":"1","MKL_NUM_THREADS":"1","TOKENIZERS_PARALLELISM":"false","PYTHONHASHSEED":"0"})
+                               env={**os.environ,"OMP_NUM_THREADS":"1","MKL_NUM_THREADS":"1","TOKENIZERS_PARALLELISM":"false","PYTHONHASHSEED":"0"})
+    finally:
+        subprocess.run(["git","-C",str(bench.ROOT),"worktree","remove",str(checkout)],
+                       check=True,capture_output=True,text=True)
     assert process.returncode==0,process.stdout+process.stderr
     return target,Path(model).resolve()
 
