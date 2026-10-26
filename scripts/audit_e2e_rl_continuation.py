@@ -1015,13 +1015,8 @@ def audit(root, check_tensors=False, model_dir=None):
             resumed_spans=trace_stages.get(("round",expected_round,1),[])
             need(len(resumed_spans)==1,"recovery endpoint lacks one resumed-round trace")
             resumed_end=resumed_spans[0]["end"]
-            if source_names in (SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2):
-                need(progress.get("time")==resumed_end,
-                     "recovery endpoint differs from resumed-round trace")
-            else:
-                next_spans=trace_stages.get(("round",expected_round+1,1),[])
-                need(len(next_spans)==1 and resumed_end<=progress.get("time")<=next_spans[0]["start"],
-                     "legacy recovery endpoint falls outside the resumed-round trace interval")
+            need(progress.get("time")==resumed_end,
+                 "recovery endpoint differs from resumed-round trace")
             need(row["recovery_to_next_update_s"]==progress["time"]-killed["killed_at"]>0,
                  "recovery clock differs")
     for row in rows:
