@@ -231,6 +231,14 @@ def tools_for(edit_format: str, *, public_tests: bool = False,
     return tools
 
 
+def capture_rendered_prompt(args: argparse.Namespace, prompt: str) -> str:
+    """Retain the exact prompt passed to generation and its byte identity."""
+    digest = hashlib.sha256(prompt.encode('utf-8')).hexdigest()
+    args._last_rendered_prompt = prompt
+    args._last_rendered_prompt_sha256 = digest
+    return digest
+
+
 def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[str, Any]],
                   tools: list[dict[str, Any]], *, limit: int, args: argparse.Namespace) -> tuple[str, int, int]:
     """Generate one bounded assistant response using a locally loaded backend."""
@@ -238,6 +246,7 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
         messages, tools=tools, tokenize=False, add_generation_prompt=True,
         enable_thinking=False,
     )
+    capture_rendered_prompt(args, prompt)
     prompt_tokens = len(tokenizer.encode(prompt, add_special_tokens=False))
     if prompt_tokens >= args.max_context_tokens:
         raise ValueError('context_budget_exhausted')
@@ -432,10 +441,22 @@ def candidate_file_sets(contract: Any) -> tuple[set[str], set[str], set[str]]:
 
 def tokenizer_override(model_dir: Path, override_path: Path | None) -> tuple[dict[str, str], dict[str, Any]]:
     """Allow only an explicitly hashed chat-template override; keep weights immutable."""
-    if override_path is None:
-        return {}, {}
     original_path = model_dir / 'tokenizer_config.json'
-    original = json.loads(original_path.read_text(encoding='utf-8'))
+    original_bytes = original_path.read_bytes()
+    original = json.loads(original_bytes)
+    if not isinstance(original, dict):
+        raise ValueError('original tokenizer configuration must be an object')
+    original_template = original.get('chat_template')
+    if override_path is None:
+        return {}, {
+            'original_config_sha256': hashlib.sha256(original_bytes).hexdigest(),
+            'override_config_sha256': None,
+            'effective_chat_template_sha256': (
+                hashlib.sha256(original_template.encode('utf-8')).hexdigest()
+                if isinstance(original_template, str) else None
+            ),
+            'effective_template_source': 'snapshot',
+        }
     override = json.loads(override_path.read_text(encoding='utf-8'))
     if (not isinstance(override, dict) or not isinstance(override.get('chat_template'), str)
             or not override['chat_template'].strip()
@@ -446,6 +467,7 @@ def tokenizer_override(model_dir: Path, override_path: Path | None) -> tuple[dic
         'original_config_sha256': sha256(original_path),
         'override_config_sha256': sha256(override_path),
         'effective_chat_template_sha256': hashlib.sha256(override['chat_template'].encode()).hexdigest(),
+        'effective_template_source': 'isolated_override',
     }
 
 
@@ -959,6 +981,8 @@ def main() -> int:
             break
         limit = min(args.max_new_tokens_per_turn, remaining)
         generation_start = time.perf_counter()
+        args._last_rendered_prompt = None
+        args._last_rendered_prompt_sha256 = None
         try:
             raw, generated_tokens, prompt_tokens = generate_turn(
                 args.backend, model, tokenizer, messages, tools, limit=limit, args=args,
@@ -968,7 +992,9 @@ def main() -> int:
                                'generation_failure': 'MemoryError'})
             if event_journal is not None:
                 event_journal.append('generation_failure', turn=turn + 1,
-                                     status='memory_budget_exhausted', error='MemoryError')
+                                     status='memory_budget_exhausted', error='MemoryError',
+                                     rendered_prompt=getattr(args, '_last_rendered_prompt', None),
+                                     rendered_prompt_sha256=getattr(args, '_last_rendered_prompt_sha256', None))
             stop_reason = 'memory_budget_exhausted'
             break
         except ValueError as exc:
@@ -978,7 +1004,9 @@ def main() -> int:
                                'generation_failure': str(exc)})
             if event_journal is not None:
                 event_journal.append('generation_failure', turn=turn + 1,
-                                     status='context_exhausted', error=str(exc))
+                                     status='context_exhausted', error=str(exc),
+                                     rendered_prompt=getattr(args, '_last_rendered_prompt', None),
+                                     rendered_prompt_sha256=getattr(args, '_last_rendered_prompt_sha256', None))
             stop_reason = 'context_budget_exhausted'
             break
         generation_elapsed = time.perf_counter() - generation_start
@@ -987,11 +1015,17 @@ def main() -> int:
                                  'generated_tokens': generated_tokens,
                                  'prompt_tokens': prompt_tokens,
                                  'generation_seconds': round(generation_elapsed, 6)}
+        rendered_prompt = args._last_rendered_prompt
+        rendered_prompt_sha256 = args._last_rendered_prompt_sha256
+        if rendered_prompt is not None:
+            entry['rendered_prompt_sha256'] = rendered_prompt_sha256
         if event_journal is not None:
             event_journal.append(
                 'model_output_completed', turn=turn + 1, model_output=raw,
                 generated_tokens=generated_tokens, prompt_tokens=prompt_tokens,
                 generation_seconds=round(generation_elapsed, 6),
+                rendered_prompt=rendered_prompt,
+                rendered_prompt_sha256=rendered_prompt_sha256,
             )
         if time.perf_counter() - start >= args.wall_seconds:
             entry['turn_outcome'] = 'wall_time_exhausted_after_generation'

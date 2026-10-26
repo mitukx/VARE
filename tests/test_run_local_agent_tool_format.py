@@ -4,7 +4,8 @@ import json
 import pytest
 
 from scripts.run_local_agent import (
-    DurableEventJournal, main, normalize_tool_call_format, parse_tool_output_v1, read_file_range,
+    DurableEventJournal, capture_rendered_prompt, main, normalize_tool_call_format,
+    parse_tool_output_v1, read_file_range,
     refresh_public_tests_after_edit, replace_text, run_public_contract_tests,
     run_with_public_test_budget, tools_for,
 )
@@ -102,6 +103,18 @@ def test_public_test_budget_is_shared_and_does_not_execute_after_exhaustion():
     assert used == 1 and calls == ["ran"]
 
 
+def test_rendered_prompt_is_retained_with_exact_utf8_hash():
+    import argparse
+    import hashlib
+
+    args = argparse.Namespace()
+    rendered = "<|im_start|>system\nExact prompt with tools\n"
+
+    assert capture_rendered_prompt(args, rendered) == hashlib.sha256(rendered.encode()).hexdigest()
+    assert args._last_rendered_prompt == rendered
+    assert args._last_rendered_prompt_sha256 == hashlib.sha256(rendered.encode()).hexdigest()
+
+
 def test_lease_bound_interface_exposes_only_the_versioned_atomic_edit():
     names = {tool["function"]["name"] for tool in tools_for(
         "structured_replace", tool_interface="lease_bound_lines_v1",
@@ -136,6 +149,16 @@ def test_versioned_parser_rejects_bad_schema_without_repairing_it():
     # The transport parser must leave the old truncated action byte-for-byte untouched.
     raw = '<tool_call>{"name":"replace_lines","arguments":{"lease":"12ab34cd56ef","text":"partial'
     assert parse_tool_output_v1(raw, tools) == ("truncated_tool_call", None)
+
+
+def test_corrected_template_calls_use_the_strict_parser_without_repair():
+    tools = tools_for("structured_replace", public_tests=True,
+                      tool_interface="structured_replace_v1")
+    valid = '<tool_call>{"name":"list_files","arguments":{}}</tool_call>'
+    doubled_braces = '<tool_call>{{"name":"list_files","arguments":{}}}</tool_call>'
+
+    assert parse_tool_output_v1(valid, tools)[0] == "complete_tool_call"
+    assert parse_tool_output_v1(doubled_braces, tools)[0] == "invalid_json_or_schema"
 
 
 def test_token_calibration_fixtures_have_valid_unique_legacy_preimages():
@@ -217,6 +240,8 @@ def test_navigation_runs_accept_a_supplied_event_journal_before_model_loading(
     model_dir.mkdir()
     model_file = model_dir / "weights.safetensors"
     model_file.write_bytes(b"pinned fixture checkpoint\n")
+    tokenizer_config = model_dir / "tokenizer_config.json"
+    tokenizer_config.write_text(json.dumps({"chat_template": "fixture-template"}), encoding="utf-8")
     journal_path = tmp_path / "events.jsonl"
 
     fake_mlx = ModuleType("mlx")
@@ -264,9 +289,14 @@ def test_navigation_runs_accept_a_supplied_event_journal_before_model_loading(
     assert invocation["task_prompt"] == "Fix the value function.\n"
     assert invocation["instruction"] == "inspect and repair"
     assert invocation["model_repository"] == "fixture/model"
-    model_hash = hashlib.sha256(model_file.read_bytes()).hexdigest()
-    assert invocation["model_files_sha256"] == {model_file.name: model_hash}
-    assert records[3]["event"]["model_files_sha256"] == {model_file.name: model_hash}
+    model_files = {
+        model_file.name: hashlib.sha256(model_file.read_bytes()).hexdigest(),
+        tokenizer_config.name: hashlib.sha256(tokenizer_config.read_bytes()).hexdigest(),
+    }
+    assert invocation["model_files_sha256"] == model_files
+    assert invocation["tokenizer_configuration"]["effective_template_source"] == "snapshot"
+    assert invocation["tokenizer_configuration"]["original_config_sha256"] == model_files[tokenizer_config.name]
+    assert records[3]["event"]["model_files_sha256"] == model_files
     assert records[-1]["event"]["exception_type"] == "OSError"
     previous = "0" * 64
     for record in records:

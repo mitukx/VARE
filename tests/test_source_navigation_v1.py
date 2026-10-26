@@ -284,6 +284,9 @@ def test_real_runner_main_path_with_fake_backend_filters_and_journals_navigation
     model_dir = tmp_path / "fake-local-model"
     model_dir.mkdir()
     (model_dir / "config.json").write_text("{}\n", encoding="utf-8")
+    (model_dir / "tokenizer_config.json").write_text(
+        json.dumps({"chat_template": "fixture-template"}) + "\n", encoding="utf-8",
+    )
 
     safe_path = "src/component.py"
     safe_source = "def value():\n    return 1  # target_symbol\n"

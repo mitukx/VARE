@@ -31,5 +31,15 @@ def test_override_cannot_change_tokenizer_semantics_beyond_template(tmp_path, ch
         tokenizer_override(tmp_path, override)
 
 
-def test_default_path_does_not_require_new_fixture_files(tmp_path):
-    assert tokenizer_override(tmp_path, None) == ({}, {})
+def test_default_path_binds_the_original_template_without_modifying_it(tmp_path):
+    original = tmp_path / "tokenizer_config.json"
+    original.write_text(json.dumps({"chat_template": "frozen", "eos_token": "end"}))
+    before = original.read_bytes()
+
+    arguments, identity = tokenizer_override(tmp_path, None)
+
+    assert arguments == {}
+    assert identity["original_config_sha256"] == hashlib.sha256(before).hexdigest()
+    assert identity["effective_chat_template_sha256"] == hashlib.sha256(b"frozen").hexdigest()
+    assert identity["effective_template_source"] == "snapshot"
+    assert original.read_bytes() == before

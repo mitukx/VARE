@@ -1,0 +1,218 @@
+{
+  "allocation": {
+    "future_heldout_exclusions": [
+      "mlsys-v2-gqa-repeat-development-v1",
+      "mlx-lm-1721-checkpoint-shards-development-v1"
+    ],
+    "heldout_evaluation": "NOT_RUN",
+    "reserved_heldout_tasks_used": false,
+    "split": "development"
+  },
+  "asset_hashes": {
+    "benchmarks/corrected_template_agent_v1/checkpoint-shards-baseline.py.txt": "8f52b7c88ba676ecb3d9a954aa5a39a4824ea45bdee85abf846318f0fb0b5234",
+    "benchmarks/corrected_template_agent_v1/checkpoint-shards-incorrect-mutant.py.txt": "014ad3e7c368922a91320c77d31f09d1e1ae2fd259207f406b641a10803bd657",
+    "benchmarks/corrected_template_agent_v1/checkpoint-shards-upstream-fixed.py.txt": "625a06baa9f99a87eab030ba2c2f6bdf14f2fb2b5cefc51e9d44d6bace46f3f9",
+    "benchmarks/corrected_template_agent_v1/gqa-repeat-baseline.py.txt": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+    "benchmarks/corrected_template_agent_v1/gqa-repeat-incorrect-mutant.py.txt": "942114aaddc5e98ba182c925718d31d36b98bbc2753b183dc34badf0c9b9e03b",
+    "benchmarks/corrected_template_agent_v1/gqa-repeat-upstream-fixed.py.txt": "965564fe5831475b46dd059634a22b3c153f3c9b81b3b72d3f7fbf84bab3b697",
+    "benchmarks/corrected_template_agent_v1/qualification-protocol-v2.json": "bfe36720ae4c756ebd7b4419500a93874bfb1b10e72bea70391e022486c985c6",
+    "benchmarks/corrected_template_agent_v1/qwen25-corrected-tokenizer-config.json": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "benchmarks/corrected_template_agent_v1/tasks.json": "bd43a02f8592e8bb256989ec85599065843db16197b6155908ed1dc71a242e8d",
+    "results/corrected-template-agent-v1/qualification-run-2/summary.json": "b4a336389c3c18b4e37b2be13e47037cfafcd77d389fc957445419c5d768e5bb"
+  },
+  "asset_root": "benchmarks/corrected_template_agent_v1",
+  "async_integration": "NOT_TESTED_BY_THIS_CAMPAIGN; the four model cells run sequentially to preserve the resource limit.",
+  "budgets": {
+    "do_sample": false,
+    "edit_format": "structured_replace",
+    "internal_wall_seconds": 600,
+    "max_context_tokens": 12288,
+    "max_new_tokens_per_turn": 1024,
+    "max_no_tool_retries": 1,
+    "max_public_test_runs": 12,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "sampling": "greedy",
+    "temperature": 0,
+    "tool_interface": "structured_replace_v1",
+    "top_k": 0,
+    "top_p": 0
+  },
+  "cells": [
+    {
+      "id": "cell-01-checkpoint-shards-original",
+      "seed": 101,
+      "task_id": "checkpoint-shards",
+      "template_arm": "original"
+    },
+    {
+      "id": "cell-02-gqa-repeat-corrected",
+      "seed": 101,
+      "task_id": "gqa-repeat",
+      "template_arm": "corrected"
+    },
+    {
+      "id": "cell-03-gqa-repeat-original",
+      "seed": 101,
+      "task_id": "gqa-repeat",
+      "template_arm": "original"
+    },
+    {
+      "id": "cell-04-checkpoint-shards-corrected",
+      "seed": 101,
+      "task_id": "checkpoint-shards",
+      "template_arm": "corrected"
+    }
+  ],
+  "claim_boundary": "Two narrow Development function contracts and one greedy attempt per task per template arm. No held-out model evaluation, general capability gain, policy update, training result, or long-horizon RL improvement is claimed.",
+  "driver_python": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+  "failure_policy": "A failed preflight loads no model and terminates the campaign. A memory/RSS/swap/wall abort stops remaining cells; aborted cells are never rerun. No prompt, task, parser, or grader changes are made after the first inference. Every available candidate snapshot is graded and its status remains separate from completion/repair counts.",
+  "frozen_at_utc": "2026-10-26T15:43:17.705880+00:00",
+  "grader": "scripts/grade_corrected_template_candidate_v1.py",
+  "hypothesis": "Correcting the cached Qwen2.5 tool-example JSON may increase strict tool-call validity and permit completed model-generated edits, relative to the original template, on fresh Development tasks under an otherwise identical local coding-agent interface.",
+  "id": "corrected-template-agent-paired-development-campaign-v1",
+  "metric_definitions": {
+    "edit_attempts_and_applied": "replace_text calls, plus runner edit_attempted/edit_applied booleans.",
+    "public_test_outcomes": "run_public_tests calls and final public grader result.",
+    "resource": "Sampled process-tree RSS, host swap growth, available-memory observations, process and agent wall time, token counts.",
+    "source_search_and_read": "Separate counts of search_text and read_file_range tool calls; list_files is counted separately.",
+    "valid_json_tool_calls": "Count of per-turn strict parser statuses equal to complete_tool_call.",
+    "verified_repair": "Requires a normal process exit, finish tool, changed candidate, passed public checks, admitted source, and independent full-grader success."
+  },
+  "model": {
+    "backend": "mlx",
+    "cached_original_modified": false,
+    "corrected_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "corrected_tokenizer_config": "benchmarks/corrected_template_agent_v1/qwen25-corrected-tokenizer-config.json",
+    "corrected_tokenizer_config_sha256": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "device": "cpu",
+    "entrypoint": "scripts/development_campaign_model_entry_v1.py",
+    "model_files_sha256": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "README.md": "fecf595155116837d6ccd97918cb59ae7228ee1511c2dd1d9b1725bdfeea9919",
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "ceb97c46fe17f523ac42c0f0254fd18d9589f8725f0bbbe0bef541f8ef84547a",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "f212cf6fb9923281a09c135e05d43a052ee5ef7121f5b1dc0b0fb2de80f97cfd",
+      "model.safetensors.index.json": "7edb73f1af3c860b1344ece4abe04b258246afdfeba4cb39d3b84a0459890bee",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "only_changed_tokenizer_field": "chat_template",
+    "original_template_sha256": "d5495a1e5db0611132a97e46a65dbb64a642a499421228b9c8b93229097fa9a4",
+    "original_tokenizer_config_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+    "packages": {
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "tokenizers": "0.23.3",
+      "transformers": "5.20.2"
+    },
+    "path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-3B-Instruct-4bit/snapshots/4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "python": "/Users/user/.cache/vare-mlx-venv/bin/python",
+    "repository": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "snapshot_id": "4f83f8f146fdf28b512a06562b671d7af4fab457"
+  },
+  "post_campaign_gate": "One greedy sample per task and arm cannot create a nonconstant reward group, so GRPO is not authorized by this campaign. A positive Development repair is retained for a separately frozen training-data eligibility review. Any controller intervention requires a new protocol and unused tasks.",
+  "predecessor": {
+    "base_commit": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1",
+    "latest_integration_commit": "f96a551a",
+    "pull_request": 139
+  },
+  "provenance": "Each generation event records the full rendered prompt and its SHA-256; invocation records bind exact model-file hashes, tokenizer configuration, task prompt, controller source hashes, and source preimage. The campaign runner independently audits event-chain hashes and prompt/output consistency, then runs the full candidate grader in a separate isolated Python process.",
+  "purpose": "Prospective, real-model, matched original-versus-corrected tokenizer-template campaign. It begins only after both tasks pass the frozen baseline/known-fix/incorrect-mutant controls.",
+  "qualification": {
+    "all_six_controls_passed": true,
+    "protocol": "benchmarks/corrected_template_agent_v1/qualification-protocol-v2.json",
+    "protocol_sha256": "bfe36720ae4c756ebd7b4419500a93874bfb1b10e72bea70391e022486c985c6",
+    "raw_outcomes_sha256": {
+      "results/corrected-template-agent-v1/qualification-run-2/checkpoint-shards/baseline.json": "cf467991d589ccd5f4b779e5e00c77585fba74b9538d2544c7e21f17f2956f31",
+      "results/corrected-template-agent-v1/qualification-run-2/checkpoint-shards/incorrect-mutant.json": "86f3a6060c7a8d6004e577af7d82f2bac3080f07c9261a4a808970cdf4fab37b",
+      "results/corrected-template-agent-v1/qualification-run-2/checkpoint-shards/known-fix.json": "0225e01e144d282134a1cfd6dd59ad6cffa18398c147b6fe9a084c4459068b68",
+      "results/corrected-template-agent-v1/qualification-run-2/gqa-repeat/baseline.json": "475e7feac9329e6937bb4b0547bfdd1bbf67f22deab26ca4b35884d391c16ce9",
+      "results/corrected-template-agent-v1/qualification-run-2/gqa-repeat/incorrect-mutant.json": "e359de4205c4d57f3bab9462b63cf96fa5ed664c4a006e6ff2e09304d2307aa9",
+      "results/corrected-template-agent-v1/qualification-run-2/gqa-repeat/known-fix.json": "ad120f487bcf9c8151f511da24ac0f73bc3927dc476ff8b8a7683493286a85b6"
+    },
+    "result_summary": "results/corrected-template-agent-v1/qualification-run-2/summary.json",
+    "result_summary_sha256": "b4a336389c3c18b4e37b2be13e47037cfafcd77d389fc957445419c5d768e5bb"
+  },
+  "qualification_evidence_hashes": {
+    "results/corrected-template-agent-v1/qualification-run-2/checkpoint-shards/baseline.json": "cf467991d589ccd5f4b779e5e00c77585fba74b9538d2544c7e21f17f2956f31",
+    "results/corrected-template-agent-v1/qualification-run-2/checkpoint-shards/incorrect-mutant.json": "86f3a6060c7a8d6004e577af7d82f2bac3080f07c9261a4a808970cdf4fab37b",
+    "results/corrected-template-agent-v1/qualification-run-2/checkpoint-shards/known-fix.json": "0225e01e144d282134a1cfd6dd59ad6cffa18398c147b6fe9a084c4459068b68",
+    "results/corrected-template-agent-v1/qualification-run-2/gqa-repeat/baseline.json": "475e7feac9329e6937bb4b0547bfdd1bbf67f22deab26ca4b35884d391c16ce9",
+    "results/corrected-template-agent-v1/qualification-run-2/gqa-repeat/incorrect-mutant.json": "e359de4205c4d57f3bab9462b63cf96fa5ed664c4a006e6ff2e09304d2307aa9",
+    "results/corrected-template-agent-v1/qualification-run-2/gqa-repeat/known-fix.json": "ad120f487bcf9c8151f511da24ac0f73bc3927dc476ff8b8a7683493286a85b6"
+  },
+  "resources": {
+    "external_wall_seconds": 660,
+    "grader_rss_limit_bytes": 536870912,
+    "grader_swap_growth_limit_bytes": 134217728,
+    "grader_wall_seconds": 30,
+    "maximum_paid_spend": 0,
+    "minimum_available_memory_bytes": 6442450944,
+    "minimum_free_swap_bytes": 536870912,
+    "mlx_allocation_limit_bytes": 6442450944,
+    "mlx_cache_limit_bytes": 536870912,
+    "poll_interval_ms": 250,
+    "rss_limit_bytes": 5368709120,
+    "swap_growth_limit_bytes": 268435456
+  },
+  "source_hashes": {
+    "scripts/development_campaign_model_entry_v1.py": "6d7a0073e19caabed13445de2f3c875e3e65e5595745f756343d807ebc8d1ab9",
+    "scripts/grade_corrected_template_candidate_v1.py": "a4efd9aa5429652d8ae246743e1a76a0d58956b627bab2ef7b31a4d1c8cfe0a6",
+    "scripts/grade_vare_development_candidate_v1.py": "a56ea948234df6f910bc0b0bdd58ee8824c9f550741bd0368024feec51c0377a",
+    "scripts/qualify_corrected_template_tasks_v1.py": "32140928bcb2c9b86a8ef40dd1d1ce83da776a2be89c84cfa84313581a473d5d",
+    "scripts/run_corrected_template_campaign_v1.py": "22ba9eb4dc247f10e1030fa997417e693ff8ccb882420983ad92aca021245535",
+    "scripts/run_local_agent.py": "ae0124a406bf3f206f403e39692e919a1aedd62e8e2dff3c7d27cdc04d51f677",
+    "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+    "src/vare/agent_edit_v2.py": "b455e8b1b8c2097693b7c3491d6285b025547b38548726d160183d68d825e21c",
+    "src/vare/agent_task_contract.py": "e062de7a08a418ff54ef7ee4dcc3722d2e44344655bbed69a3e677c5fcaf664a"
+  },
+  "strict_parser": "structured_replace_v1 uses parse_tool_output_v1 directly; it rejects malformed/doubled-brace JSON. normalize_tool_call_format is not called in this interface. Raw outputs are kept unchanged in the transcript and fsynced event journal.",
+  "tasks": [
+    {
+      "base_revision": "e99e3df975562e4363d60b4b6ad43d731a25df1d",
+      "base_target_function_sha256": "8be20669dcf8242540aaa34d26258fa376058d06734b06492b018f8befc755bc",
+      "candidate_projection_asset": "checkpoint-shards-baseline.py.txt",
+      "candidate_projection_sha256": "8f52b7c88ba676ecb3d9a954aa5a39a4824ea45bdee85abf846318f0fb0b5234",
+      "candidate_scope": "Only make_shards is mutable. The full utils.py module and unrelated fixes are not provided.",
+      "fix_revision": "8f4dc363b291c2ee3abeece68bf69d4e0c64ed09",
+      "fix_target_function_sha256": "8f70fe4dea5897471f9469e3176d1ef335e57f44bd2a59bd1a2cde6e2c74447e",
+      "full_baseline_source_sha256": "d0e6867e3695600adaf975c0fa7e58b96a1c629d1aa12cb5d09e2f8f2aa133c9",
+      "full_fix_source_sha256": "0c663344fa6bcece617c34737d6cda9a1df1be98d07f345639713aad3b4aa046",
+      "id": "checkpoint-shards",
+      "instruction": "Repair make_shards in mlx_lm/utils.py. Apply a minimal source edit, run the public function-contract checks, and call finish only after they pass.",
+      "repository": "ml-explore/mlx-lm",
+      "reserved_source_file_overlap": "The exact utils.py file also contains reserved #1877 code, but only this target function and MAX_FILE_SIZE_GB are exposed. The #1877 load_model target and fix are absent.",
+      "source_path": "mlx_lm/utils.py",
+      "split": "development",
+      "target_function": "make_shards",
+      "task_id": "mlx-lm-1721-checkpoint-shards-development-v1",
+      "task_prompt": "Repair `make_shards` in `mlx_lm/utils.py`. It currently can emit an empty leading shard when one tensor exceeds the size limit, and can emit an empty shard for an empty weight mapping. Ensure every tensor is assigned exactly once, no empty shard is emitted, oversized tensors occupy their own shard, input order is retained, and the input mapping is not changed. Preserve the function signature and all source outside its body.",
+      "upstream_pr": 1721
+    },
+    {
+      "candidate_projection_asset": "gqa-repeat-baseline.py.txt",
+      "candidate_projection_sha256": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+      "candidate_scope": "Only repeat_kv_heads is mutable. The pinned validation helper remains unchanged.",
+      "full_baseline_source_sha256": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+      "id": "gqa-repeat",
+      "instruction": "Repair repeat_kv_heads in gqa_repeat.py. Apply a minimal source edit, run the public function-contract checks, and call finish only after they pass.",
+      "original_hidden_grader_sha256": "9cf8466e92d19287054a4fb4d5b46c46118fed4e023a0d4e2692d0e7455b8634",
+      "original_public_test_sha256": "8d18a1af06006508975f8371329fb091a5ddd21b4f52e0775c17faecb4605bef",
+      "original_task_json_sha256": "fa8c8754d711886660be7ca0e18efc7cb610d452f30d27789369eecb63ff7fc8",
+      "source_pack": "mlsys-coding-v2",
+      "source_pack_manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+      "source_pack_original_split": "unassigned",
+      "source_pack_split_sha256": "7a3bd7f368b6794dc1503b6154004d71d207f7ca8abeabf8689b628bf9e46b51",
+      "source_path": "gqa_repeat.py",
+      "source_task_id": "mlsys-v2-gqa-repeat",
+      "split": "development",
+      "target_function": "repeat_kv_heads",
+      "task_id": "mlsys-v2-gqa-repeat-development-v1",
+      "task_prompt": "Repair `repeat_kv_heads` in `gqa_repeat.py` to satisfy the module contract: emit `n_rep` consecutive copies of each input head in the original order, return fresh row objects, and leave the input unchanged. Keep `_validate` and all other source unchanged."
+    }
+  ]
+}
