@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import importlib.util
 import json
-import shutil
 import tempfile
 import time
 from pathlib import Path
@@ -28,6 +28,38 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def candidate_execution_interference(source: bytes) -> list[str]:
+    """Reject process control and output forgery outside this parser task's contract.
+
+    The candidate module is imported by both pytest and the isolated oracle.
+    This task only permits a parser repair; process exits, dynamic imports, and
+    import-time output can otherwise make the candidate forge a successful
+    evaluator return code without running either check.
+    """
+    try:
+        tree = ast.parse(source)
+    except SyntaxError as exc:
+        return [f"candidate source is not valid Python: {exc.msg}"]
+
+    findings: list[str] = []
+    denied_modules = {"os", "sys", "signal", "subprocess", "ctypes", "builtins"}
+    denied_names = {"__import__", "exec", "eval", "compile", "print", "exit", "quit"}
+    denied_attributes = {"_exit", "exit", "system", "popen", "kill", "dup2"}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name.split(".", 1)[0] in denied_modules:
+                    findings.append(f"process-control import is not allowed: {alias.name}")
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            if node.module.split(".", 1)[0] in denied_modules:
+                findings.append(f"process-control import is not allowed: {node.module}")
+        elif isinstance(node, ast.Name) and node.id in denied_names:
+            findings.append(f"evaluator-interference name is not allowed: {node.id}")
+        elif isinstance(node, ast.Attribute) and node.attr in denied_attributes:
+            findings.append(f"process-control attribute is not allowed: {node.attr}")
+    return sorted(set(findings))
+
+
 def grade_source(repo: Path, candidate: Path, output: Path) -> dict[str, Any]:
     if output.exists():
         raise FileExistsError(f"refusing to overwrite grader evidence: {output}")
@@ -40,6 +72,19 @@ def grade_source(repo: Path, candidate: Path, output: Path) -> dict[str, Any]:
     (output / "raw").mkdir()
     started = time.monotonic()
     record: dict[str, Any] = {"candidate_sha256": hashlib.sha256(candidate_bytes).hexdigest()}
+    interference = candidate_execution_interference(candidate_bytes)
+    if interference:
+        result = {
+            "schema_version": 1,
+            "protocol_id": "mlsys-repo-task-mlx-lm-1910-candidate-grader-v1",
+            "status": "FAIL",
+            "candidate": {**record, "execution_boundary": {"passed": False, "findings": interference}},
+            "elapsed_seconds": round(time.monotonic() - started, 3),
+            "claim_limit": "Development-task semantic calibration only; no held-out capability claim.",
+        }
+        (output / "grade.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+        return result
+    record["execution_boundary"] = {"passed": True, "findings": []}
     with tempfile.TemporaryDirectory(prefix="vare-mlx1910-grade-", dir=str(output)) as temp:
         source = Path(temp) / "candidate"
         CAL.archive_commit(repo, CAL.BASE, source)

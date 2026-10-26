@@ -42,6 +42,16 @@ def test_rejects_duplicate_paths_in_sorted_entry_manifest(tmp_path):
     assert failures == ["duplicate manifest path: agent.json"]
 
 
+def test_rejects_missing_and_empty_file_inventories(tmp_path):
+    for manifest in ({}, {"files": {}}, {"files": []}):
+        (tmp_path / "evidence-manifest.json").write_text(json.dumps(manifest))
+
+        verified, failures = verify(tmp_path)
+
+        assert verified == 0
+        assert failures
+
+
 def test_verifies_workspace_files_from_archive_when_git_tree_is_not_portable(tmp_path):
     workspace = tmp_path / "greedy" / "workspace"
     source = workspace / ".git" / "config"

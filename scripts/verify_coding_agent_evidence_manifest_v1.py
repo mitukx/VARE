@@ -44,11 +44,17 @@ def workspace_archive_entry(root: Path, relative: str) -> tuple[Path, str] | Non
 
 def manifest_entries(manifest: dict) -> tuple[list[tuple[str, dict]], list[str]]:
     """Read both the original path-map and the later sorted-entry manifest."""
-    files = manifest.get('files', {})
+    if 'files' not in manifest:
+        return [], ['files inventory is missing']
+    files = manifest['files']
     if isinstance(files, dict):
+        if not files:
+            return [], ['files inventory must not be empty']
         return list(files.items()), []
     if not isinstance(files, list):
         return [], ['files must be an object or array']
+    if not files:
+        return [], ['files inventory must not be empty']
     entries: list[tuple[str, dict]] = []
     errors: list[str] = []
     seen: set[str] = set()
