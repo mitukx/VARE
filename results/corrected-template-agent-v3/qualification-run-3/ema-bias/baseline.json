@@ -1,0 +1,71 @@
+{
+  "expected_success": false,
+  "grade": {
+    "admitted": true,
+    "checks": {
+      "bias-correction-0": false,
+      "bias-correction-1": false,
+      "bias-correction-2": true,
+      "bias-correction-3": false,
+      "bias-correction-4": false,
+      "invalid-0": true,
+      "invalid-1": true,
+      "invalid-2": true,
+      "invalid-3": true
+    },
+    "isolated_candidate_execution": true,
+    "isolated_grade": {
+      "decision": {
+        "conservative_speedup": null,
+        "oracle_subject_ratio": null,
+        "reason": "correctness_failed",
+        "reward": 0.0,
+        "success": false,
+        "workload_sufficient": false
+      },
+      "grade": {
+        "cases": [
+          {
+            "case_id": "mlsys-v2-ema-bias-hidden-0",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.0006857089974801056
+          },
+          {
+            "case_id": "mlsys-v2-ema-bias-hidden-1",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.0007172499972512014
+          },
+          {
+            "case_id": "mlsys-v2-ema-bias-hidden-2",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0006799170005251653
+          },
+          {
+            "case_id": "mlsys-v2-ema-bias-hidden-3",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0006345000001601875
+          }
+        ],
+        "passed": false,
+        "task_kind": "correctness"
+      },
+      "grade_passed": false,
+      "test_timed_out": false
+    },
+    "public": false,
+    "source_sha256": "4f989a6293a95982523b5ecadf6e54c0351d8f684257fb89919a46901d8e4816",
+    "success": false,
+    "task": "ema-bias"
+  },
+  "isolated_success": false,
+  "observed_success": false,
+  "qualification_gate_passed": true,
+  "source_path": "benchmarks/corrected_template_agent_v2/ema-bias-baseline.py.txt",
+  "source_sha256": "4f989a6293a95982523b5ecadf6e54c0351d8f684257fb89919a46901d8e4816",
+  "task_id": "mlsys-v2-ema-bias",
+  "variant": "baseline"
+}
