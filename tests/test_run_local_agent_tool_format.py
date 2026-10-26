@@ -1,11 +1,14 @@
 import hashlib
 import json
+from pathlib import Path
+import sys
 
 import pytest
 
+from scripts import run_local_agent
 from scripts.run_local_agent import (
     DurableEventJournal, capture_rendered_prompt, main, normalize_tool_call_format,
-    parse_tool_output_v1, read_file_range,
+    parse_tool_output_v1, pinned_public_contract_grader_sources, read_file_range,
     refresh_public_tests_after_edit, replace_text, run_public_contract_tests,
     run_with_public_test_budget, tools_for,
 )
@@ -16,6 +19,51 @@ from scripts.run_separated_coding_eval import (
     _planned_task_run_count,
     verified_task_success,
 )
+
+
+def test_public_contract_grader_registration_is_task_and_hash_pinned(monkeypatch):
+    grader = run_local_agent.ROOT / 'scripts/grade_mlsys_coding_v2_candidate_v2.py'
+    sources = pinned_public_contract_grader_sources(grader, 'label-smooth')
+    assert sources['scripts/grade_mlsys_coding_v2_candidate_v2.py'] == (
+        '9bdcdf7c2550d542de4ac520bbc3a0b72c3bc6ca53021ce6bda16693e841df05')
+    assert 'scripts/grade_mlsys_coding_v2_candidate_v1.py' in sources
+
+    with pytest.raises(ValueError, match='path or task is not pinned'):
+        pinned_public_contract_grader_sources(grader, 'unregistered-task')
+
+    actual_sha = run_local_agent.sha256
+
+    def drifted_sha(path: Path) -> str:
+        if path.resolve() == grader.resolve():
+            return '0' * 64
+        return actual_sha(path)
+
+    monkeypatch.setattr(run_local_agent, 'sha256', drifted_sha)
+    with pytest.raises(ValueError, match='grader hash mismatch'):
+        pinned_public_contract_grader_sources(grader, 'label-smooth')
+
+
+def test_legacy_public_contract_grader_registration_remains_available():
+    grader = run_local_agent.ROOT / 'scripts/grade_corrected_template_candidate_v1.py'
+    sources = pinned_public_contract_grader_sources(grader, 'gqa-repeat')
+    assert 'scripts/grade_corrected_template_candidate_v1.py' in sources
+    assert 'scripts/grade_vare_development_candidate_v1.py' in sources
+
+
+def test_main_accepts_registered_authored_grader_before_model_path_check(
+        tmp_path, monkeypatch, capsys):
+    grader = run_local_agent.ROOT / 'scripts/grade_mlsys_coding_v2_candidate_v2.py'
+    monkeypatch.setattr(sys, 'argv', [
+        'run_local_agent.py', '--workspace', str(tmp_path / 'workspace'),
+        '--model-path', str(tmp_path / 'missing-model'), '--task-root', str(tmp_path / 'task'),
+        '--output', str(tmp_path / 'agent.json'), '--instruction', 'inspect and repair',
+        '--seed', '101', '--public-contract-grader', str(grader),
+        '--public-contract-task', 'label-smooth',
+    ])
+    with pytest.raises(SystemExit) as error:
+        main()
+    assert error.value.code == 2
+    assert 'local model snapshot directory does not exist' in capsys.readouterr().err
 
 
 def test_normalizes_a_fenced_qwen_json_tool_call_without_changing_raw_text():

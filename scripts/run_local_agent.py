@@ -415,6 +415,29 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def pinned_public_contract_grader_sources(grader: Path, task: str) -> dict[str, str]:
+    """Admit only the graders and task IDs pinned for public smoke checks."""
+    resolved = grader.resolve()
+    legacy_path = (ROOT / 'scripts/grade_corrected_template_candidate_v1.py').resolve()
+    authored_path = (ROOT / 'scripts/grade_mlsys_coding_v2_candidate_v2.py').resolve()
+    if resolved == legacy_path and task in {'checkpoint-shards', 'gqa-repeat'}:
+        return {
+            'scripts/grade_corrected_template_candidate_v1.py': sha256(legacy_path),
+            'scripts/grade_vare_development_candidate_v1.py': sha256(
+                ROOT / 'scripts/grade_vare_development_candidate_v1.py'),
+        }
+    if resolved == authored_path and task in {'label-smooth', 'ema-bias'}:
+        expected = '9bdcdf7c2550d542de4ac520bbc3a0b72c3bc6ca53021ce6bda16693e841df05'
+        if sha256(authored_path) != expected:
+            raise ValueError('authored MLSys public contract grader hash mismatch')
+        return {
+            'scripts/grade_mlsys_coding_v2_candidate_v1.py': sha256(
+                ROOT / 'scripts/grade_mlsys_coding_v2_candidate_v1.py'),
+            'scripts/grade_mlsys_coding_v2_candidate_v2.py': expected,
+        }
+    raise ValueError('public contract grader path or task is not pinned')
+
+
 def digest_tree(root: Path, files: list[str]) -> dict[str, str]:
     return {name: sha256(root / name) for name in files if (root / name).is_file()}
 
@@ -731,12 +754,13 @@ def main() -> int:
     # this same source identity even if execution stops partway through.
     controller_sources = controller_source_hashes(args.tool_interface)
     if args.public_contract_grader:
-        if not args.public_contract_task or args.public_contract_grader.resolve() != (
-                ROOT / 'scripts/grade_corrected_template_candidate_v1.py').resolve():
-            parser.error('only the pinned corrected-template contract grader is supported')
-        controller_sources['scripts/grade_corrected_template_candidate_v1.py'] = sha256(args.public_contract_grader)
-        controller_sources['scripts/grade_vare_development_candidate_v1.py'] = sha256(
-            ROOT / 'scripts/grade_vare_development_candidate_v1.py')
+        if not args.public_contract_task:
+            parser.error('--public-contract-task is required with --public-contract-grader')
+        try:
+            controller_sources.update(pinned_public_contract_grader_sources(
+                args.public_contract_grader, args.public_contract_task))
+        except ValueError as error:
+            parser.error(str(error))
     if args.max_public_test_runs < 1:
         parser.error('--max-public-test-runs must be at least 1')
     if args.tool_interface != 'legacy' and args.edit_format != 'structured_replace':

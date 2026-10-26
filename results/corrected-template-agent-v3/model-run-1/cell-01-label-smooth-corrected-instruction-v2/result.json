@@ -1,0 +1,240 @@
+{
+  "agent_record_sha256": null,
+  "agent_stop_reason": null,
+  "base_revision": "14fa55ff2bad5ee9d85d8b2020aef11820242985",
+  "candidate_source_sha256": "cc2af6d07db108e5b357d38da022412f41ae419a6d569dfe750bf8ab76de1871",
+  "cell_id": "cell-01-label-smooth-corrected-instruction-v2",
+  "elapsed_seconds": null,
+  "event_chain_final_sha256": null,
+  "event_journal_sha256": null,
+  "generation_count": 0,
+  "grade": {
+    "admitted": true,
+    "checks": {
+      "distribution-0": true,
+      "distribution-1": true,
+      "distribution-2": false,
+      "distribution-3": false,
+      "distribution-4": false,
+      "distribution-5": false,
+      "distribution-6": false,
+      "inputs-preserved-0": true,
+      "inputs-preserved-1": true,
+      "inputs-preserved-2": true,
+      "inputs-preserved-3": true,
+      "inputs-preserved-4": true,
+      "inputs-preserved-5": true,
+      "inputs-preserved-6": true,
+      "invalid-0": true,
+      "invalid-1": true,
+      "invalid-2": true,
+      "invalid-3": true,
+      "invalid-4": true,
+      "sum-to-one-0": true,
+      "sum-to-one-1": true,
+      "sum-to-one-2": true,
+      "sum-to-one-3": true,
+      "sum-to-one-4": true,
+      "sum-to-one-5": true,
+      "sum-to-one-6": true
+    },
+    "isolated_candidate_execution": true,
+    "isolated_grade": {
+      "decision": {
+        "conservative_speedup": null,
+        "oracle_subject_ratio": null,
+        "reason": "correctness_failed",
+        "reward": 0.0,
+        "success": false,
+        "workload_sufficient": false
+      },
+      "grade": {
+        "cases": [
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-0",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.0008071659976849332
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-1",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0005540830024983734
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-2",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.00046829200437059626
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-3",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0008689169990248047
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-4",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0005584159953286871
+          }
+        ],
+        "passed": false,
+        "task_kind": "correctness"
+      },
+      "grade_passed": false,
+      "test_timed_out": false
+    },
+    "public": false,
+    "source_sha256": "cc2af6d07db108e5b357d38da022412f41ae419a6d569dfe750bf8ab76de1871",
+    "success": false,
+    "task": "label-smooth"
+  },
+  "grade_process": {
+    "abort": null,
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "-I",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/grade_mlsys_coding_v2_candidate_v2.py",
+      "--task",
+      "label-smooth",
+      "--source",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/corrected-template-agent-v3/model-run-1/cell-01-label-smooth-corrected-instruction-v2/workspace/label_smooth.py"
+    ],
+    "elapsed_s": 0.525,
+    "peak_sampled_rss_bytes": 82919424,
+    "returncode": 0,
+    "samples": [
+      {
+        "available_memory_bytes": 13696548864,
+        "elapsed_s": 0.003,
+        "rss_bytes": 7094272,
+        "swap_used_bytes": 842006528
+      },
+      {
+        "available_memory_bytes": 13696548864,
+        "elapsed_s": 0.263,
+        "rss_bytes": 82919424,
+        "swap_used_bytes": 842006528
+      }
+    ],
+    "swap_used_end_bytes": 842006528,
+    "swap_used_start_bytes": 842006528
+  },
+  "integrity_errors": [
+    "required event journal is missing"
+  ],
+  "max_rss_bytes": null,
+  "metrics": {
+    "completed_verified_repair": false,
+    "edit_applied": false,
+    "edit_attempted": false,
+    "edit_tool_calls": 0,
+    "independent_grade_success": false,
+    "invalid_json_or_schema": 0,
+    "list_files_calls": 0,
+    "public_test_calls": 0,
+    "public_test_passed": false,
+    "source_changed": false,
+    "source_read_calls": 0,
+    "source_search_calls": 0,
+    "truncated_tool_calls": 0,
+    "valid_json_tool_calls": 0
+  },
+  "model_invocations": 0,
+  "model_tokenizer_identity_verified": false,
+  "new_tokens": null,
+  "preflight": {
+    "available_memory_bytes": 13726334976,
+    "free_swap_bytes": 1305477120,
+    "minimum_available_memory_bytes": 6442450944,
+    "minimum_free_swap_bytes": 536870912,
+    "passed": true
+  },
+  "process": {
+    "abort": null,
+    "command": [
+      "/Users/user/.cache/vare-mlx-venv/bin/python",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/development_campaign_model_entry_v1.py",
+      "--workspace",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/corrected-template-agent-v3/model-run-1/cell-01-label-smooth-corrected-instruction-v2/workspace",
+      "--model-path",
+      "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-3B-Instruct-4bit/snapshots/4f83f8f146fdf28b512a06562b671d7af4fab457",
+      "--model-repository",
+      "mlx-community/Qwen2.5-3B-Instruct-4bit",
+      "--backend",
+      "mlx",
+      "--mlx-device",
+      "cpu",
+      "--task-root",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/corrected-template-agent-v3/model-run-1/cell-01-label-smooth-corrected-instruction-v2/task",
+      "--output",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/corrected-template-agent-v3/model-run-1/cell-01-label-smooth-corrected-instruction-v2/agent-record.json",
+      "--event-journal",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/corrected-template-agent-v3/model-run-1/cell-01-label-smooth-corrected-instruction-v2/events.jsonl",
+      "--instruction",
+      "Repair smooth_targets in label_smooth.py. Apply a minimal source edit, read relevant lines before editing, run the public smoke check, and finish only after it passes. Output exactly one tool call in each response: one <tool_call> block containing valid JSON arguments. Do not include narration or text outside that block, and do not bundle multiple tool calls. Wait for the tool result before your next action. Before replace_text, read the relevant source lines with read_file_range; do not edit based only on a search result.",
+      "--seed",
+      "101",
+      "--max-turns",
+      "12",
+      "--max-no-tool-retries",
+      "1",
+      "--max-new-tokens-per-turn",
+      "1024",
+      "--max-total-new-tokens",
+      "4096",
+      "--max-context-tokens",
+      "12288",
+      "--wall-seconds",
+      "600",
+      "--no-do-sample",
+      "--temperature",
+      "0",
+      "--top-p",
+      "0",
+      "--top-k",
+      "0",
+      "--edit-format",
+      "structured_replace",
+      "--tool-interface",
+      "structured_replace_v1",
+      "--require-split",
+      "development",
+      "--public-contract-grader",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/grade_mlsys_coding_v2_candidate_v2.py",
+      "--public-contract-task",
+      "label-smooth",
+      "--max-public-test-runs",
+      "12",
+      "--tokenizer-config-override",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/benchmarks/corrected_template_agent_v1/qwen25-corrected-tokenizer-config.json"
+    ],
+    "elapsed_s": 0.525,
+    "peak_sampled_rss_bytes": 41910272,
+    "returncode": 2,
+    "samples": [
+      {
+        "available_memory_bytes": 13718552576,
+        "elapsed_s": 0.002,
+        "rss_bytes": 6569984,
+        "swap_used_bytes": 842006528
+      },
+      {
+        "available_memory_bytes": 13690880000,
+        "elapsed_s": 0.263,
+        "rss_bytes": 41910272,
+        "swap_used_bytes": 842006528
+      }
+    ],
+    "swap_used_end_bytes": 842006528,
+    "swap_used_start_bytes": 842006528
+  },
+  "public_test_result": null,
+  "seed": 101,
+  "status": "PROVENANCE_FAILURE",
+  "task_id": "label-smooth",
+  "template_arm": "corrected"
+}
