@@ -33,7 +33,7 @@ def test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign():
                      for path in (bench.ROOT/"src/vare").rglob("*.py")}
     historical_77=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V1]
     diagnostic_78=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V2]
-    diagnostic_79=auditor.PINNED_RUNTIME_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
+    diagnostic_79=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
     assert auditor.runtime_source_names_from_commit(historical_77)==auditor.RUNTIME_PACKAGE_SOURCES_V1
     assert auditor.runtime_source_names_from_commit(diagnostic_78)==auditor.RUNTIME_PACKAGE_SOURCES_V2
     assert auditor.runtime_source_names_from_commit(diagnostic_79)==auditor.RUNTIME_PACKAGE_SOURCES_V3
@@ -72,30 +72,17 @@ def test_v1_and_v2_inventory_pins_accept_only_complete_exact_snapshots():
             )
 
 
-def test_v3_inventory_binds_runtime_and_campaign_identities_separately():
+def test_v3_inventory_accepts_only_pinned_79_file_snapshot_and_merge_alias():
     inventory=auditor.SOURCE_INVENTORY_V3
-    runtime_commit=auditor.PINNED_RUNTIME_SOURCE_COMMITS[inventory]
-    campaign_commit=runtime_commit
-    runtime_hashes=auditor.source_hashes_from_commit(
-        runtime_commit,auditor.RUNTIME_PACKAGE_SOURCES_V3,
-    )
-    campaign_hashes=auditor.source_hashes_from_commit(
-        campaign_commit,auditor.CAMPAIGN_SOURCE_NAMES_V3,
-    )
-    manifest={
-        "base_commit":campaign_commit,
-        "sources":{**runtime_hashes,**campaign_hashes},
-        "source_identity":{
-            "schema":auditor.SOURCE_IDENTITY_SCHEMA_V1,
-            "inventory_id":auditor.SOURCE_INVENTORY_V3_ID,
-            "runtime_source_commit":runtime_commit,
-            "runtime_source_sha256":runtime_hashes,
-            "campaign_source_commit":campaign_commit,
-            "campaign_source_sha256":campaign_hashes,
-        },
-    }
+    commit=auditor.PINNED_VERSIONED_SOURCE_COMMITS[inventory]
+    hashes=auditor.source_hashes_from_commit(commit,inventory)
+    manifest={"base_commit":commit,"sources":hashes}
     auditor.validate_source_inventory(manifest,inventory,False)
 
+    merge_alias=next(iter(auditor.PINNED_V3_EQUIVALENT_MERGE_COMMITS))
+    auditor.validate_source_inventory(
+        {"base_commit":merge_alias,"sources":hashes},inventory,False,
+    )
     with pytest.raises(ValueError):
         auditor.validate_source_inventory(manifest,set(inventory)-{"src/vare/agent_edit_v2.py"},False)
     with pytest.raises(ValueError,match="pinned source inventory differs"):
@@ -104,17 +91,11 @@ def test_v3_inventory_binds_runtime_and_campaign_identities_separately():
         )
     changed=dict(manifest)
     changed["sources"]={**manifest["sources"],"src/vare/agent_edit_v2.py":"0"*64}
-    with pytest.raises(ValueError,match="V3 combined source snapshot differs"):
+    with pytest.raises(ValueError,match="79-file source snapshot differs"):
         auditor.validate_source_inventory(changed,inventory,False)
     changed=dict(manifest)
     changed["base_commit"]="0"*40
-    with pytest.raises(ValueError,match="V3 campaign source commit differs"):
-        auditor.validate_source_inventory(changed,inventory,False)
-    changed={**manifest,"source_identity":dict(manifest["source_identity"])}
-    changed["source_identity"]["runtime_source_commit"]=auditor.PINNED_VERSIONED_SOURCE_COMMITS[
-        auditor.SOURCE_INVENTORY_V2
-    ]
-    with pytest.raises(ValueError,match="V3 runtime source commit differs"):
+    with pytest.raises(ValueError,match="79-file campaign base commit differs"):
         auditor.validate_source_inventory(changed,inventory,False)
 
 
@@ -134,13 +115,23 @@ def campaign(tmp_path_factory):
     pytest.importorskip("transformers")
     pytest.importorskip("psutil")
     target=tmp_path_factory.mktemp("continuation")/"run"
-    process=subprocess.run([sys.executable,str(bench.ROOT/"scripts/benchmark_e2e_rl_continuation.py"),
+    source_root=tmp_path_factory.mktemp("pinned-source")/"repo"
+    source_commit=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
+    checkout=subprocess.run(["git","-C",str(bench.ROOT),"worktree","add","--detach",
+                             str(source_root),source_commit],capture_output=True,text=True,timeout=60)
+    assert checkout.returncode==0,checkout.stdout+checkout.stderr
+    try:
+        process=subprocess.run([sys.executable,str(source_root/"scripts/benchmark_e2e_rl_continuation.py"),
                             "--output",str(target),"--model-dir",str(Path(model).resolve()),
                             "--workers","2","--seeds","3901","--rounds","6","--tasks","4","--eval-tasks","4"],
-                           capture_output=True,text=True,timeout=240,
-                           env={**os.environ,"OMP_NUM_THREADS":"1","MKL_NUM_THREADS":"1","TOKENIZERS_PARALLELISM":"false","PYTHONHASHSEED":"0"})
-    assert process.returncode==0,process.stdout+process.stderr
-    return target,Path(model).resolve()
+                               capture_output=True,text=True,timeout=240,
+                               env={**os.environ,"OMP_NUM_THREADS":"1","MKL_NUM_THREADS":"1","TOKENIZERS_PARALLELISM":"false","PYTHONHASHSEED":"0"})
+        assert process.returncode==0,process.stdout+process.stderr
+        return target,Path(model).resolve()
+    finally:
+        removed=subprocess.run(["git","-C",str(bench.ROOT),"worktree","remove","--force",
+                                str(source_root)],capture_output=True,text=True,timeout=60)
+        assert removed.returncode==0,removed.stdout+removed.stderr
 
 
 def test_actual_checkpoint_state_and_scores_replay(campaign):
@@ -163,12 +154,12 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     assert runtime_sources==auditor.RUNTIME_PACKAGE_SOURCES_V3
     assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V3
     assert set(manifest["source_sha256"])==auditor.SOURCE_INVENTORY_V3
-    identity=manifest["source_identity"]
-    assert identity["runtime_source_commit"]==auditor.PINNED_RUNTIME_SOURCE_COMMITS[
+    assert manifest["base_commit"]==auditor.PINNED_VERSIONED_SOURCE_COMMITS[
         auditor.SOURCE_INVENTORY_V3
     ]
-    assert identity["inventory_id"]==auditor.SOURCE_INVENTORY_V3_ID
-    assert identity["campaign_source_commit"]==manifest["base_commit"]
+    assert manifest["sources"]==auditor.source_hashes_from_commit(
+        manifest["base_commit"],auditor.SOURCE_INVENTORY_V3,
+    )
     changed=tmp_path/"changed-runtime-dependency"
     shutil.copytree(root,changed)
     source="src/vare/curriculum.py"
@@ -184,7 +175,7 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
         config["source_sha256"][source]=digest
         bench.atomic_json(config_path,config)
     reseal_records(changed)
-    with pytest.raises(ValueError,match="V3 combined source snapshot differs"):
+    with pytest.raises(ValueError,match="79-file source snapshot differs"):
         auditor.audit(changed)
 
 
