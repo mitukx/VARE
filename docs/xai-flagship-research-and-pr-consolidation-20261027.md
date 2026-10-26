@@ -2,7 +2,7 @@
 
 **Snapshot date:** 2026-10-27 (local, Asia/Tokyo)  
 **Repository:** [mitukx/VARE](https://github.com/mitukx/VARE)  
-**Research branch / PR:** `codex/development-navigation-campaign-v1`, [draft PR #139](https://github.com/mitukx/VARE/pull/139), originally at `25c16910f47f5f1b1aa84d7325723a1a3ad4dc29` (base branch `codex/navigation-integrity-fixes-v1`, initial head `6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1`).  
+**Research branch / PR:** `codex/development-navigation-campaign-v1`, [draft PR #139](https://github.com/mitukx/VARE/pull/139), initial sprint head `25c16910f47f5f1b1aa84d7325723a1a3ad4dc29`, experiment/evidence head `549cb7e083028364dcc3eecd2a1a5d4618b20372`, historical-test correction head `ca1cdea63277e2e2a072d6d90920c09e878a54ab` (base branch `codex/navigation-integrity-fixes-v1`, base `6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1`).
 **Main observed at audit start:** `f3ab90a36e8724441b6b9555255f8f75a0a4d529`.
 
 ## Executive result
@@ -23,9 +23,13 @@ The #139 branch adds:
 
 ### #139 historical CI failures
 
-The initial PR head already contains the correct fixes for the reported failures. The MLX fake-module fixture now provides `set_default_device` and verifies device setup before model loading; it previously exposed an incomplete API compared with the real runner. The V5 continuation test now creates and runs the immutable historical campaign checkout for the V5 inventory, while the auditor still validates every pinned path/hash and the separately recorded current campaign source. The failure came from executing historical inventory assertions against the changed runtime tree. The correction changes the execution boundary, not the historical hashes or accepted source set. The reported exact-head CI was green at the original #139 head; this sprint will recheck after publishing its new head.
+The MLX fake-module fixture provides `set_default_device` and verifies device setup before model loading; the previous fixture exposed an incomplete API compared with the real runner. The V5 continuation test creates and runs the immutable historical campaign checkout, while the auditor still validates every pinned path and hash and separately records the current campaign source. No historical hash or accepted source set was changed.
 
-The selected local suite completed with **124 passed, 14 skipped**. `ruff check` and `git diff --check` passed. The initial exact-head #139 CI at `25c16910...` was green (20/20 check records, including Python 3.11/3.12/3.13, CPU evidence, E2E recovery, lint, typecheck, and blob budget); that result applies only to the initial head. New-head CI must be read after publishing this sprint update. No merge was performed.
+The first updated head, `549cb7e0`, exposed stale live-tree assumptions. All three Python versions failed the same two historical-inventory tests: 3.11 had **1,713 passed, 125 skipped, 3 failed**; 3.12 had **1,724 passed, 115 skipped, 2 failed**; 3.13 had **1,714 passed, 125 skipped, 2 failed**. One test compared the evolving checkout's runtime set with frozen V4; another used current `HEAD` as an “unpinned” fixture despite two new runtime modules. The E2E CPU job exposed a third stale comparison in the model-backed campaign test (**95 passed, 3 failed**): it expected the current checkout to remain exactly 80 files instead of checking the manifest's pinned runtime commit and hashes. The tests now verify immutable historical commits and digests; an unpinned SHA with the same historical 80-file tree remains rejected. Frozen source sets and hash validation are unchanged. The 3.11 run also timed out once in an unrelated slow-step heartbeat test; that test passed when rerun alone locally. The Python logs and full E2E failure log are retained under `results/sprint_ii_20261027/pr-audit/`. The corrected local focused suite, including `tests/test_e2e_rl_continuation.py`, completed with **153 passed, 83 skipped** (the actual-model campaign fixture is skipped locally because no `VARE_E2E_MODEL_DIR` was provided), and the heartbeat test passed separately. The correction was pushed as `ca1cdea6`. Its exact-head checks all passed: Python 3.11/3.12/3.13, lint, typecheck, blob budget, math500, seeded summary, RVL inference, calibrated CPU tasks, and actual optimizer/recovery. See the exact [CI run](https://github.com/mitukx/VARE/actions/runs/40403819460), [CPU-evidence run](https://github.com/mitukx/VARE/actions/runs/40403819485), and [E2E system run](https://github.com/mitukx/VARE/actions/runs/40403819458).
+
+The original #139 head `25c16910...` had 20/20 successful check records. At `549cb7e0`, seven check types succeeded and the Python matrix plus E2E system job failed for the stale comparisons above. The correction at `ca1cdea6` passed all 11 check types, including the model-backed E2E continuation/recovery suite. On the separate [#120](https://github.com/mitukx/VARE/pull/120) correction head `609c5f302f538e6780480b80fc9fb2031273737a`, all 11 CI checks also succeeded. #120 remains blocked by required human review and unresolved review threads.
+
+The selected local suite completed with **124 passed, 14 skipped** before the final historical-test correction; the expanded suite with `tests/test_e2e_rl_continuation.py` then completed with **153 passed, 83 skipped**. `ruff check` and `git diff --check` passed before the final report-only commit. No merge was performed.
 
 On the separate #120 worktree, its changed-file suite completed with **8 passed** and lint/compile/diff checks passed. A broader related suite completed with **73 passed, 4 skipped, 3 failed**. The three failures are in untouched `tests/test_separated_candidate_harness.py` oracle controls; the retained rerun shows `correctness_failed`/`malformed_result`. Their cause was not established, so they are not hidden or attributed to the #120 patch. See `results/sprint_ii_20261027/pr-audit/pr120-local-regression-failures.txt` and the new exact-head CI for the authoritative follow-up.
 
@@ -109,6 +113,31 @@ The source-only edit intervention was tested prospectively on the unused `move_t
 
 The initial live audit found 33 open PRs. Eighteen evidence-only or superseded PRs were closed while retaining their branches and repository artifacts; no commits or unique results were deleted. These were `#88, #100–#107, #123–#125, #127–#130, #132, #134`. PR #103 was closed as superseded; the other closures were evidence archives. No PR was merged.
 
+| Live PR measure | Before | After captured sweep |
+|---|---:|---:|
+| Open PRs | 33 | 15 |
+| Closed during sprint | 0 | 18 |
+| Merged during sprint | 0 | 0 |
+| Existing open PRs updated | 0 | 3 (`#120`, `#133`, `#139`) |
+| Draft PRs | 18 | 8 |
+| PRs with `REVIEW_REQUIRED` | 5 | 4 (`#99`, `#120`, `#121`, `#122`) |
+| Unresolved review threads | 17 | 10 |
+
+The after snapshot is timestamped in `results/sprint_ii_20261027/pr-audit/pr-ledger-after.json`; PR check states and exact heads are also captured in `pr-checks-live-final.json`. The after counts reflect actual GitHub state, not recommendations. The snapshot records #139 at `ca1cdea6`, with CI successful, Draft status retained, and its dependency on still-open #137.
+
+The machine-readable ledger contains the full per-PR dependency relation. The active stacked lines reduce to:
+
+```mermaid
+flowchart LR
+  P99 --> P100 --> P101 --> P102 --> P103 --> P104 --> P105 --> P106 --> P107 --> P108
+  P99 --> P114 --> P117
+  P101 --> P118
+  P122 --> P123 --> P124 --> P125 --> P126 --> P127 --> P128 --> P129 --> P130 --> P131 --> P132 --> P133 --> P136 --> P137 --> P139
+  P132 --> P134 --> P135
+```
+
+The graph describes branch ancestry, not merge eligibility. Many intermediate nodes were closed while preserving commits and evidence; the ledger records each disposition and whether its recorded base SHA still matched.
+
 The #139 branch was updated with the controller/test-runner fixes, focused regression tests, full new campaign artifacts, and this report. Two unresolved P2 review threads on [#133](https://github.com/mitukx/VARE/pull/133) received evidence-based replies linking to the descendant corrections on #139; the threads are still unresolved on #133 itself. The exact reply links and machine-readable snapshots are in `results/sprint_ii_20261027/pr-audit/`.
 
 The two P1 findings on [#120](https://github.com/mitukx/VARE/pull/120) were also addressed on the existing branch, now at `609c5f30`. The #1910 candidate grader rejects task-incompatible process-control imports, dynamic execution, output, and early-exit APIs before candidate execution; an adversarial import/print/`os._exit(0)` test asserts that neither source archival nor Docker execution begins. The evidence verifier now rejects absent and empty inventories. The focused suite passed **8 tests**, Ruff/compileall/diff checks passed, and both review threads received regression-evidence replies. These are task-scoped safeguards, not a general proof that arbitrary candidate code is safe; keep #120 out of an active reward path until exact-head CI and human review pass. The review threads remain open.
@@ -117,11 +146,11 @@ An exact per-PR ledger with before/after heads, base SHAs, draft and CI state, u
 
 ### Remaining critical integration blockers
 
-- [#120](https://github.com/mitukx/VARE/pull/120): the two P1 code findings have a pushed task-scoped correction at `609c5f30` and regression tests; review threads remain open and exact-head CI is pending. Keep it out of the active reward path until reviewer acceptance and CI.
+- [#120](https://github.com/mitukx/VARE/pull/120): the two P1 code findings have a pushed task-scoped correction at `609c5f30`, regression tests, and **11/11 successful exact-head CI checks**. Both review threads remain unresolved, so keep it out of the active reward path until reviewer acceptance.
 - [#133](https://github.com/mitukx/VARE/pull/133): two P2 findings on source-search output bounding and transient index-rebuild recovery; fixes are present in the #139 descendant, but #133 itself remains unresolved.
 - [#117](https://github.com/mitukx/VARE/pull/117): unresolved P1/P2 findings in the MLX-LM source isolation lineage.
 - [#99](https://github.com/mitukx/VARE/pull/99): two unresolved P1 findings in the historical Development evaluator/source-integrity path.
-- #139 remains Draft and stacked on #137. It was not merged and requires exact updated-head CI plus normal review.
+- #139 at `ca1cdea6` is Draft and stacked on #137. All 11 exact-head check types pass; it remains unmerged pending its dependency and normal review.
 
 ## Outcome table
 
