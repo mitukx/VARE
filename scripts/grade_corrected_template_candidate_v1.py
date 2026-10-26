@@ -25,7 +25,7 @@ boundary.TASKS = {
     "checkpoint-shards": ("checkpoint-shards-baseline.py.txt", None, "make_shards"),
     "gqa-repeat": ("gqa-repeat-baseline.py.txt", None, "repeat_kv_heads"),
 }
-boundary.SAFE_GLOBALS |= {"MAX_FILE_SIZE_GB", "math", "_validate"}
+boundary.SAFE_GLOBALS |= {"MAX_FILE_SIZE_GB", "math", "range", "_validate"}
 boundary.SAFE_ATTRIBUTES |= {"nbytes"}
 
 
