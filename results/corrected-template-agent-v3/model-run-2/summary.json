@@ -1,0 +1,53 @@
+{
+  "campaign_complete": true,
+  "cells": [
+    {
+      "cell_id": "cell-01-label-smooth-corrected-instruction-v2",
+      "metrics": {
+        "completed_verified_repair": false,
+        "edit_applied": false,
+        "edit_attempted": false,
+        "edit_tool_calls": 0,
+        "independent_grade_success": false,
+        "invalid_json_or_schema": 1,
+        "list_files_calls": 0,
+        "public_test_calls": 0,
+        "public_test_passed": false,
+        "source_changed": false,
+        "source_read_calls": 0,
+        "source_search_calls": 0,
+        "truncated_tool_calls": 0,
+        "valid_json_tool_calls": 0
+      },
+      "status": "GRADED",
+      "task_id": "label-smooth",
+      "template_arm": "corrected"
+    },
+    {
+      "cell_id": "cell-02-ema-bias-corrected-instruction-v2",
+      "metrics": {
+        "completed_verified_repair": false,
+        "edit_applied": false,
+        "edit_attempted": false,
+        "edit_tool_calls": 0,
+        "independent_grade_success": false,
+        "invalid_json_or_schema": 1,
+        "list_files_calls": 0,
+        "public_test_calls": 0,
+        "public_test_passed": false,
+        "source_changed": false,
+        "source_read_calls": 0,
+        "source_search_calls": 0,
+        "truncated_tool_calls": 0,
+        "valid_json_tool_calls": 0
+      },
+      "status": "GRADED",
+      "task_id": "ema-bias",
+      "template_arm": "corrected"
+    }
+  ],
+  "heldout_evaluation": "NOT_RUN",
+  "protocol_sha256": "12ea427af0ee6ff9902ebe7632b1a718b8afcc8e8976ab42aadc4340f767ebf3",
+  "training": "NO_GO_SINGLE_GREEDY_ATTEMPT_PER_TASK_AND_ARM",
+  "verified_repairs": 0
+}
