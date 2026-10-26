@@ -42,9 +42,18 @@ def candidate_execution_interference(source: bytes) -> list[str]:
         return [f"candidate source is not valid Python: {exc.msg}"]
 
     findings: list[str] = []
-    denied_modules = {"os", "sys", "signal", "subprocess", "ctypes", "builtins"}
-    denied_names = {"__import__", "exec", "eval", "compile", "print", "exit", "quit"}
-    denied_attributes = {"_exit", "exit", "system", "popen", "kill", "dup2"}
+    denied_modules = {
+        "os", "sys", "signal", "subprocess", "ctypes", "builtins", "importlib",
+        "runpy", "posix", "nt", "_posixsubprocess",
+    }
+    denied_names = {
+        "__import__", "exec", "eval", "compile", "print", "exit", "quit", "open",
+        "getattr", "setattr", "globals", "locals", "vars", "__builtins__",
+    }
+    denied_attributes = {
+        "_exit", "exit", "system", "popen", "kill", "dup2", "write", "fileno",
+        "stdout", "stderr",
+    }
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:

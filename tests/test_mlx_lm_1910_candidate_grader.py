@@ -2,13 +2,14 @@ from scripts import grade_mlx_lm_1910_candidate_v1 as grader
 
 
 def test_candidate_execution_interference_rejects_early_exit_and_output_forgery():
-    source = b'import os\nprint("expected oracle output")\nos._exit(0)\n'
+    source = b'import os\nprint("expected oracle output")\nos._exit(0)\nopen(1, "w").write("forged")\n'
 
     findings = grader.candidate_execution_interference(source)
 
     assert any("process-control import" in finding for finding in findings)
     assert any("evaluator-interference name" in finding for finding in findings)
     assert any("process-control attribute" in finding for finding in findings)
+    assert any("open" in finding for finding in findings)
 
 
 def test_candidate_execution_interference_allows_normal_parser_module():
