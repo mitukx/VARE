@@ -295,6 +295,37 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str,
             'isolation': 'docker-network-none-read-only-root-only-workspace-mount'}
 
 
+def run_public_contract_tests(grader: Path, task: str, source: Path,
+                              *, timeout_s: int = 30) -> dict[str, Any]:
+    """Run the fixed function-contract smoke oracle in an isolated interpreter."""
+    started = time.perf_counter()
+    try:
+        completed = subprocess.run(
+            [sys.executable, '-I', str(grader), '--task', task, '--source', str(source), '--public'],
+            capture_output=True, text=True, timeout=timeout_s, check=False,
+        )
+    except Exception as exc:
+        return {'passed': False, 'error': f'{type(exc).__name__}: {exc}',
+                'elapsed_seconds': round(time.perf_counter() - started, 3)}
+    try:
+        observation = json.loads(completed.stdout) if completed.returncode == 0 else {}
+    except json.JSONDecodeError:
+        observation = {}
+    return {'passed': isinstance(observation, dict) and observation.get('success') is True,
+            'returncode': completed.returncode, 'contract_result': observation,
+            'stderr': completed.stderr[:2000],
+            'elapsed_seconds': round(time.perf_counter() - started, 3),
+            'isolation': 'pinned-grader-isolated-python-process'}
+
+
+def run_with_public_test_budget(calls_used: int, maximum: int, runner, *args, **kwargs):
+    """Apply one shared per-attempt call budget to every public-test backend."""
+    if calls_used >= maximum:
+        return {'passed': False, 'error': 'public test run budget exhausted',
+                'calls_used': calls_used}, calls_used
+    return runner(*args, **kwargs), calls_used + 1
+
+
 def refresh_public_tests_after_edit(
     edit_result: dict[str, Any], workspace: Path, image: str | None,
     expected_test_hash: str | None,
@@ -643,6 +674,8 @@ def main() -> int:
     parser.add_argument('--mlx-device', choices=('metal', 'cpu'), default='metal')
     parser.add_argument('--tokenizer-config-override', type=Path)
     parser.add_argument('--public-test-image', help='Pinned Docker image for isolated execution of test_public.py')
+    parser.add_argument('--public-contract-grader', type=Path)
+    parser.add_argument('--public-contract-task')
     parser.add_argument('--public-test-timeout-s', type=int, default=45)
     parser.add_argument('--public-test-memory-mb', type=int, default=512)
     parser.add_argument('--max-public-test-runs', type=int, default=12)
@@ -675,6 +708,13 @@ def main() -> int:
     # or any generation; the run-start journal is written later but retains
     # this same source identity even if execution stops partway through.
     controller_sources = controller_source_hashes(args.tool_interface)
+    if args.public_contract_grader:
+        if not args.public_contract_task or args.public_contract_grader.resolve() != (
+                ROOT / 'scripts/grade_corrected_template_candidate_v1.py').resolve():
+            parser.error('only the pinned corrected-template contract grader is supported')
+        controller_sources['scripts/grade_corrected_template_candidate_v1.py'] = sha256(args.public_contract_grader)
+        controller_sources['scripts/grade_vare_development_candidate_v1.py'] = sha256(
+            ROOT / 'scripts/grade_vare_development_candidate_v1.py')
     if args.max_public_test_runs < 1:
         parser.error('--max-public-test-runs must be at least 1')
     if args.tool_interface != 'legacy' and args.edit_format != 'structured_replace':
@@ -743,8 +783,12 @@ def main() -> int:
     if args.public_test_image and len(test_files) != 1:
         parser.error('isolated public-test execution requires exactly one test_public.py in the task')
     try:
-        tools = tools_for(args.edit_format, public_tests=bool(args.public_test_image),
+        tools = tools_for(args.edit_format, public_tests=bool(args.public_test_image or args.public_contract_grader),
                           tool_interface=args.tool_interface)
+        if args.public_contract_grader:
+            tools = [({**tool, 'function': {**tool['function'], 'description':
+                      'Run the fixed public function-contract smoke checks after structural source admission.'}}
+                      if tool['function']['name'] == 'run_public_tests' else tool) for tool in tools]
     except ValueError as exc:
         parser.error(str(exc))
     tool_names = {item['function']['name'] for item in tools}
@@ -789,8 +833,8 @@ def main() -> int:
            'First call list_files, then inspect the exact source path named in the task. ')
         + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
         + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
-        + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
-           'Call finish only after the public smoke test passes. ' if args.public_test_image else '')
+        + ('After changing source, call run_public_tests; read its output and repair failures. The public checks are immutable. '
+           'Call finish only after the public smoke test passes. ' if args.public_test_image or args.public_contract_grader else '')
         + 'You have a limited tool budget; each assistant turn before finish must call a tool. '
         'TASK:\n' + task_text.split('## Reproduce', 1)[0].rstrip()
     )
@@ -895,14 +939,12 @@ def main() -> int:
 
     def bounded_public_test(test_workspace: Path, image: str, expected_hash: str) -> dict[str, Any]:
         nonlocal public_test_runs
-        if public_test_runs >= args.max_public_test_runs:
-            return {'passed': False, 'error': 'public test run budget exhausted',
-                    'calls_used': public_test_runs}
-        public_test_runs += 1
-        return run_public_tests(
+        result, public_test_runs = run_with_public_test_budget(
+            public_test_runs, args.max_public_test_runs, run_public_tests,
             test_workspace, image, expected_hash,
             timeout_s=args.public_test_timeout_s, memory_mb=args.public_test_memory_mb,
         )
+        return result
 
     for turn in range(args.max_turns):
         elapsed = time.perf_counter() - start
@@ -1146,7 +1188,15 @@ def main() -> int:
                             entry['automatic_public_test'] = public_test_result
                             result = {**result, 'automatic_public_test': public_test_result}
                 elif name == 'run_public_tests':
-                    if args.public_test_image and public_test_hash:
+                    if args.public_contract_grader:
+                        if len(allowed) != 1:
+                            raise ValueError('function-contract grading requires exactly one source')
+                        public_test_result, public_test_runs = run_with_public_test_budget(
+                            public_test_runs, args.max_public_test_runs, run_public_contract_tests,
+                            args.public_contract_grader, args.public_contract_task,
+                            workspace / next(iter(allowed)),
+                        )
+                    elif args.public_test_image and public_test_hash:
                         public_test_result = bounded_public_test(
                             workspace, args.public_test_image, public_test_hash,
                         )
@@ -1163,7 +1213,7 @@ def main() -> int:
                 else:
                     if digest_tree(workspace, sorted(tracked_files)) == before:
                         result = {'finished': False, 'error': 'source is unchanged; inspect and edit before finishing'}
-                    elif args.public_test_image and not (public_test_result or {}).get('passed'):
+                    elif (args.public_test_image or args.public_contract_grader) and not (public_test_result or {}).get('passed'):
                         result = {'finished': False, 'error': 'public tests have not passed; run them and repair failures'}
                     else:
                         final_summary = str(arguments.get('summary', ''))

@@ -5,7 +5,8 @@ import pytest
 
 from scripts.run_local_agent import (
     DurableEventJournal, main, normalize_tool_call_format, parse_tool_output_v1, read_file_range,
-    refresh_public_tests_after_edit, replace_text, tools_for,
+    refresh_public_tests_after_edit, replace_text, run_public_contract_tests,
+    run_with_public_test_budget, tools_for,
 )
 from vare.agent_edit_v2 import SourceEditLeaseStoreV1
 from scripts.calibrate_agent_edit_interface_v1 import FIXTURES, _validate_fixture, tool_output
@@ -69,6 +70,36 @@ def test_structured_interface_exposes_bounded_reads_and_unique_replacements():
     assert {"read_file_range", "replace_text", "run_public_tests", "finish"} <= names
     assert "apply_patch" not in names
     assert "write_file" not in names
+
+
+def test_public_contract_runner_accepts_only_strict_grader_success(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    source = tmp_path / "candidate.py"
+    source.write_text("pass\n")
+    monkeypatch.setattr("scripts.run_local_agent.subprocess.run", lambda *args, **kwargs:
+                        SimpleNamespace(returncode=0, stdout='{"success":true}', stderr=""))
+    assert run_public_contract_tests(tmp_path / "grader.py", "task", source)["passed"] is True
+    monkeypatch.setattr("scripts.run_local_agent.subprocess.run", lambda *args, **kwargs:
+                        SimpleNamespace(returncode=0, stdout='not-json', stderr=""))
+    assert run_public_contract_tests(tmp_path / "grader.py", "task", source)["passed"] is False
+    monkeypatch.setattr("scripts.run_local_agent.subprocess.run", lambda *args, **kwargs:
+                        SimpleNamespace(returncode=1, stdout='{"success":true}', stderr="failure"))
+    assert run_public_contract_tests(tmp_path / "grader.py", "task", source)["passed"] is False
+
+
+def test_public_test_budget_is_shared_and_does_not_execute_after_exhaustion():
+    calls = []
+
+    def runner():
+        calls.append("ran")
+        return {"passed": True}
+
+    result, used = run_with_public_test_budget(0, 1, runner)
+    assert result == {"passed": True} and used == 1
+    result, used = run_with_public_test_budget(used, 1, runner)
+    assert result["error"] == "public test run budget exhausted"
+    assert used == 1 and calls == ["ran"]
 
 
 def test_lease_bound_interface_exposes_only_the_versioned_atomic_edit():
