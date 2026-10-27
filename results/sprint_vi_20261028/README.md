@@ -7,3 +7,5 @@ Four unique task families passed baseline-fail, known-fix-pass, incorrect-mutant
 Use `development-task-cohort-summary.json` for compact qualification receipts and artifact hashes. See the parent Sprint VI report for model outcomes, failures, task-level interpretation, and GO/NO-GO decisions.
 
 The two 1.7 MB #50001 protocol JSON artifacts are stored losslessly as deterministic gzip files to remain below the repository 1 MiB blob limit. Their original byte lengths and SHA-256 digests are retained in `campaign_50001/metadata/compressed-artifacts-v1.json`; the public verifier expands and checks both original byte streams.
+
+`pr-ledger.json` is the timestamped all-PR audit snapshot; `pr-post-audit-updates-v1.json` records subsequent PR #133/#142 head changes and exact-head check states without rewriting that snapshot.

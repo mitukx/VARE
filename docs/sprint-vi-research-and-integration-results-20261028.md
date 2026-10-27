@@ -53,13 +53,13 @@ This run shows that schema-constrained JSON generation can produce valid tool ac
 
 ## Engineering and PR state
 
-The machine-readable ledger at `results/sprint_vi_20261028/pr-ledger.json` records all 18 open PRs, their exact base/head, draft state, CI snapshot, review threads, dependencies, changed-file counts, disposition, and next action. Classification counts are 4 `MERGE-CANDIDATE`, 3 `REPAIR-FIRST`, 2 `EXTRACT`, 4 `RESEARCH-EVIDENCE`, and 5 `BLOCKED`. No open PR was clearly proven superseded; no PR was closed simply to reduce the count.
+The machine-readable ledger at `results/sprint_vi_20261028/pr-ledger.json` records all 18 open PRs, their exact base/head, draft state, CI snapshot, review threads, dependencies, changed-file counts, disposition, and next action. Post-snapshot head changes and the later exact-head CI/review snapshot are kept separately in `results/sprint_vi_20261028/pr-post-audit-updates-v1.json`. Classification counts are 4 `MERGE-CANDIDATE`, 3 `REPAIR-FIRST`, 2 `EXTRACT`, 4 `RESEARCH-EVIDENCE`, and 5 `BLOCKED`. No open PR was clearly proven superseded; no PR was closed simply to reduce the count.
 
 - **PR #133:** source fixes are at `947bbb08054174f7e3c569e257f129091c8df04f`: `_bounded()` truncates auxiliary path inventory before dropping ranked results; search retries transient index-build failures and stays fail-closed. Both regressions fail on prior head `a65d59e5704b84a934a49385551a8d2311a01575`; the relevant source-navigation/tool suite passes 37 tests, Ruff, and `git diff --check`. Its first new-head E2E run (40544616237) showed the frozen V4 continuation benchmark was launched from an evolved checkout; immutable source checks correctly rejected the runtime mismatch. No hash validation was weakened. Follow-up `96f1abb5838f02814fb16b413dadcb8fe3edb9b8` makes CI create a detached worktree at the pinned V4 commit `d251cc678fbc9940f3de460904d5d23a1967b3ce`, assert its HEAD, then run historical continuation tests there. Workflow YAML parsing and a local pinned-tree inventory test pass. Exact-head Actions for that follow-up were in progress at the later update. Two P2 threads remain open; #133 is still stacked on closed, unmerged #132 and is not mainline integration.
 - **PR #142:** its existing evidence-archive branch now carries this report, raw trajectories, qualification receipts, and prior-exposure reconciliation. The two 1.71 MB #50001 protocol JSON files are stored losslessly as deterministic gzip with original byte counts and SHA-256 digests; the verifier expands and checks them. It verifies 184 bundle files, both event chains, and prior-exposure exclusion; the tracked-blob budget passes. No hidden grader source or model weights were added; the PR remains Draft.
 - **PR #143:** focused main-based canonical candidate-diff export; exact-head checks were green, but no independent approval is recorded.
 - **PR #140:** focused main-based evidence-manifest integrity change; checks were green; one outdated P2 thread remains unresolved and there is no independent approval.
-- **PR #120:** still has a current P1 evaluator-completion-forgery finding. The separate empty-manifest concern is extracted to #140. It is not admitted to a trusted reward path.
+- **PR #120:** the P1 completion-forgery thread remains open for independent reviewer confirmation, but the current implementation already rejects the reported import/output/early-exit spoof before candidate execution; the retained adversarial regression and 7 focused grader tests pass, and exact-head checks are green. The separate empty-manifest fix is extracted to #140. Until independent review, #120 remains outside the trusted reward path.
 - **PR #139:** Draft, large stacked experimental/controller branch; exact-head CI was green at the live snapshot but it remains behind #137/#136/#133 and is not integrated.
 - **PR #99:** two current P1 source-integrity findings remain. PR #117 has four outdated review findings; #136/#137 remain stacked behind #133.
 - **Dependency note:** #132 was closed without merge and contains 11,403 additions on its branch. PR #133 is based on that branch. Retargeting #133 to main would import the whole dependency history, so this sprint leaves it stacked rather than disguising a bulk integration as a small fix.
@@ -88,6 +88,24 @@ The full ledger below is an audit snapshot captured at `2026-10-27T16:52:43Z`; l
 | [#140](https://github.com/mitukx/VARE/pull/140) Reject empty coding-agent evidence manifests | MERGE-CANDIDATE; Ready | `f3ab90a3` → `34f972eb` | ci=success; cpu-evidence=success | 0 current / 1 outdated; REVIEW_REQUIRED | #120 | Ask an independent reviewer to confirm the symlink/archive-fallback regression; merge only after approval. |
 | [#142](https://github.com/mitukx/VARE/pull/142) Publish verified external repair campaign evidence | RESEARCH-EVIDENCE; Draft | `f3ab90a3` → `be2de0a2` | ci=success; cpu-evidence=success | 0; REVIEW_REQUIRED | #129, #141, #143 | Add Sprint VI report, compact raw trajectory package, task manifests and refreshed audit ledger; retain Draft until review. |
 | [#143](https://github.com/mitukx/VARE/pull/143) Export candidate diffs from pinned workspaces | MERGE-CANDIDATE; Ready | `f3ab90a3` → `6266ec0a` | cpu-evidence=success; ci=success | 0; REVIEW_REQUIRED | #139, #141 | Obtain an independent approval; merge through protected main if the reviewer confirms the current source/hash regressions. |
+
+### Dependency graph
+
+PR-body and stacked-branch dependencies captured by the ledger (some are evidence prerequisites rather than direct Git parents):
+
+```mermaid
+flowchart LR
+  p98["#98"] --> p99["#99"]
+  p107["#107"] --> p108["#108"]
+  p117["#117"] --> p114["#114"]
+  p132["#132 closed unmerged"] --> p133["#133"] --> p136["#136"] --> p137["#137"] --> p139["#139"] --> p143["#143"]
+  p120["#120"] --> p139
+  p120 --> p140["#140"]
+  p129["#129"] --> p142["#142"]
+  p141["#141"] --> p142
+  p143 --> p142
+  p134["#134"] --> p135["#135"]
+```
 
 ### Before/after GitHub counts
 
