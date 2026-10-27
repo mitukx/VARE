@@ -13,9 +13,19 @@ Sprint IV の成功タスク `mlx-lm-1926-falcon-h1-uncached-behavior-v2`（上�
 
 一方、**Falcon-H1 の2試行が隔離された hidden grader に合格したという観測自体は維持される**。正確な解釈は「2つの seed で同じ既割当上流系列の Development repair が成功した」であり、独立 blind held-out に対する汎化能力の証明ではない。凍結済み protocol、全8試行の raw trajectory、grader result は変更しない。
 
-また、MiniCPM3 #1913 の left-padding 修正と、先行する held-out 候補 #1925 との family-level overlap も同一基準で監査する。#1925 は過去の readiness report ですでに重複により除外されたが、別の上流PR番号だけでは独立系列と断定できない。
+MiniCPM3 #1913 と先行 held-out 候補 #1925 の family-level overlap も監査対象とした。#1925 は過去の readiness report ですでに重複により除外されており、今回の比較でもMiniCPM3部分は同じ修正系列と判断した（追補参照）。
 
 この追補は実験後の provenance 訂正であり、**元の結果を遡及的に変更するものではない**。公開bundleのhash、元のtask JSONのsplitラベル、採点値はいずれも保持し、別途 prospective exposure/disposition 記録と独立レビューを完了するまで、このPRはDraftのままとする。
+
+## 追補：prospective exposure disposition v1
+
+2026-10-27 に append-only reconciliation を作成した（[`exposure-disposition-append-v1.json`](../results/sprint_iv_20261027/exposure-disposition-append-v1.json)、SHA-256 `3018268f0e14ccf75e52234e1f84aa4a90db10cdb993b3f897870b288cdfd66c`）。元のPR #129 allocationとreadiness recordは変更せず、今後の blind held-out 利用だけを更新する。
+
+- #1926 は Sprint IV の Falcon-H1 Development 試行が同じ `FalconH1Model.__call__` cache initialization / gradient 修正系列に接触したため、過去の source/grader certificateは保持しつつ、将来の untouched held-out countから除外する。
+- #1913 と #1925 の MiniCPM3 部分は同じ `mlx_lm/models/minicpm3.py::MiniCPM3Model.__call__` の cache-derived attention-mask / left-padding 修正を対象とする。#1913 の Sprint IV outcomeは public pass 2 / independent hidden pass 0。#1925 は前の readiness recordでも #1921 overlapにより認定10件へ数えておらず、今回も複合task全体を独立blind familyに数えない。Phixtral側だけは Sprint IV の許可sourceに含まれず未露出だが、利用には別taskとしての再認定が必要。
+- したがって、過去の source/grader-certified unique 10件から #1926 の1系列を除いた prospective source/grader-certified countは **9/15**、残り6件。外部pretraining exposureは未監査のため、完全な model-eligible held-out 総数は引き続き **UNKNOWN** で、held-out inferenceは不許可。
+
+このrecordはsplitの遡及変更ではなく、過去の認定値と今後の候補eligibilityを分離した追補である。Sprint IVのraw trajectories、task files、hidden grader outcomesは書き換えていない。
 
 ## 新しく得た結果
 
