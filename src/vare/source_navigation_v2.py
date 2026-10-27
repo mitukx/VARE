@@ -24,16 +24,14 @@ class SourceNavigatorV2(SourceNavigatorV1):
         self._searched_queries: set[tuple[int, str]] = set()
 
     def search(self, query: object) -> dict[str, Any]:
-        normalized = (
-            " ".join(query.casefold().split())
-            if isinstance(query, str) and query.strip() else None
-        )
+        query_text = query.strip() if isinstance(query, str) else None
+        normalized = " ".join(query_text.casefold().split()) if query_text else None
         if normalized is not None and self._last_build_error is None and not self._is_stale():
             key = (self._generation, normalized)
             if key in self._searched_queries:
                 return self._bounded({
                     "status": "duplicate_query",
-                    "query": query.strip(),
+                    "query": query_text,
                     "index_sha256": self._index_sha256,
                     "index_generation": self._generation,
                     "retry_hint": (
