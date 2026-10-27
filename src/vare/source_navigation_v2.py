@@ -17,10 +17,35 @@ _QUALIFIED_IDENTIFIER = re.compile(r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+$")
 
 
 class SourceNavigatorV2(SourceNavigatorV1):
-    """Support exact class-method searches without weakening V1 text matching."""
+    """Support qualified-name lookup and reject repeated searches on unchanged code."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self._searched_queries: set[tuple[int, str]] = set()
 
     def search(self, query: object) -> dict[str, Any]:
+        normalized = (
+            " ".join(query.casefold().split())
+            if isinstance(query, str) and query.strip() else None
+        )
+        if normalized is not None and self._last_build_error is None and not self._is_stale():
+            key = (self._generation, normalized)
+            if key in self._searched_queries:
+                return self._bounded({
+                    "status": "duplicate_query",
+                    "query": query.strip(),
+                    "index_sha256": self._index_sha256,
+                    "index_generation": self._generation,
+                    "retry_hint": (
+                        "This exact query was already searched on the unchanged source snapshot. "
+                        "Search a shorter code identifier or a distinctive term from the implementation; "
+                        "do not repeat the task description."
+                    ),
+                })
+
         result = super().search(query)
+        if normalized is not None and result.get("status") == "ok":
+            self._searched_queries.add((self._generation, normalized))
         if (not isinstance(query, str) or not _QUALIFIED_IDENTIFIER.fullmatch(query.strip())
                 or result.get("status") != "ok" or result.get("results")):
             return result

@@ -34,6 +34,41 @@ def test_v2_falls_back_to_bounded_v1_text_search(tmp_path: Path):
     assert 'qualified_name_resolution' not in result
 
 
+def test_v2_rejects_repeated_query_on_unchanged_source_snapshot(tmp_path: Path):
+    (tmp_path / 'module.py').write_text(
+        'def update_cache(cache_position):\n'
+        '    return cache_position\n',
+        encoding='utf-8',
+    )
+    navigator = SourceNavigatorV2(tmp_path, {'module.py'})
+
+    first = navigator.search('update_cache')
+    repeated = navigator.search('  UPDATE_CACHE  ')
+
+    assert first['status'] == 'ok'
+    assert first['results']
+    assert repeated['status'] == 'duplicate_query'
+    assert repeated['index_sha256'] == first['index_sha256']
+    assert repeated['index_generation'] == first['index_generation']
+    assert 'shorter code identifier' in repeated['retry_hint']
+
+
+def test_v2_allows_same_query_after_source_snapshot_changes(tmp_path: Path):
+    source = tmp_path / 'module.py'
+    source.write_text('def update_cache():\n    return 1\n', encoding='utf-8')
+    navigator = SourceNavigatorV2(tmp_path, {'module.py'})
+
+    first = navigator.search('update_cache')
+    source.write_text('def update_cache():\n    return 2\n', encoding='utf-8')
+    after_change = navigator.search('update_cache')
+
+    assert first['status'] == 'ok'
+    assert after_change['status'] == 'ok'
+    assert after_change['index_generation'] > first['index_generation']
+    assert after_change['index_sha256'] != first['index_sha256']
+    assert after_change['index_rebuilt'] is True
+
+
 def test_v2_interface_hashes_both_navigator_versions_and_keeps_tool_contract():
     sources = controller_source_hashes('lease_bound_navigation_v2', 'schema_slots_v1')
     assert sources['src/vare/source_navigation_v1.py']
