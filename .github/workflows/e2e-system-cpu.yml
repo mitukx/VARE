@@ -26,7 +26,11 @@ permissions:
 jobs:
   actual-optimizer-and-recovery:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # The fully passing continuation suite has several real checkpoint and
+    # SIGKILL restart cases; the former 15-minute cap cancelled it before the
+    # historical campaign completed. This is CI wall time only, not a change
+    # to any frozen experiment or model/resource budget.
+    timeout-minutes: 25
     env:
       OMP_NUM_THREADS: '1'
       MKL_NUM_THREADS: '1'
