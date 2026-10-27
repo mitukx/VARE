@@ -17,7 +17,12 @@ Qwen2.5-Coder-14B-Instruct-4bit を MLX CPU で使い、外部 MLX-LM の新し�
 
 v2の主指標は固定4試行/ task family（2 arms × 2 seeds）で「独立graderに合格した修復を1件以上含むDevelopment task familyの割合」。比較は自律ナビゲーションAと、凍結lexical localizationで関数を提示するB。両条件とも同じモデル、サンプリング設定、編集lease、テストgraderを使った。seedは431/432、temperature 0.2、top-p 0.95、top-k 20、1ターン512生成token、1試行2048生成token、12ターン、8192 context token、900秒上限。結果を見てから課題・予算・判定基準は変更していない。
 
-両課題とも候補workspaceにはbaselineとpublic testだけを置き、hidden graderを候補プロセスから隔離した。別Docker workspaceでのbaseline / known-fix / incorrect-mutant controlsを実施した。MLX-LM PR [#1926](https://github.com/ml-explore/mlx-lm/pull/1926) taskはbaselineがpublic/hidden fail、known fixがpass、mutantがfail。PR [#1913](https://github.com/ml-explore/mlx-lm/pull/1913) taskはbaselineとmutantがpublic smokeを通る一方hidden fail、known fixだけpublic/hidden passであり、public testの弱さも検出した。モデル事前学習でこれらのソースや修正に接触していないとは言えない。VAREの過去task記録には一致する試行がなく、pretraining exposureは不明である。
+| Task family / task ID | Upstream base revision | Known-fix revision | 対象 |
+|---|---|---|---|
+| [MLX-LM #1926](https://github.com/ml-explore/mlx-lm/pull/1926), `mlx-lm-1926-falcon-h1-uncached-behavior-v2` | `87b7b583a697537aa68f47130b40884700b5f55f` | `ebba55f5176fe451b94f04212e975f052a6d96e0` | `mlx_lm/models/falcon_h1.py`, `FalconH1Model.__call__` |
+| [MLX-LM #1913](https://github.com/ml-explore/mlx-lm/pull/1913), `mlx-lm-1913-minicpm3-left-padding-behavior-v2` | `c69d1288440a0dc4e6401fc417098b07598dccd5` | `b4844fd8072b1fc241ce3bb5f81526346b80370f` | `mlx_lm/models/minicpm3.py`, `MiniCPM3Model.__call__` |
+
+両課題とも候補workspaceにはbaselineとpublic testだけを置き、hidden graderを候補プロセスから隔離した。別Docker workspaceでのbaseline / known-fix / incorrect-mutant controlsを実施した。MLX-LM PR #1926 taskはbaselineがpublic/hidden fail、known fixがpass、mutantがfail。PR #1913 taskはbaselineとmutantがpublic smokeを通る一方hidden fail、known fixだけpublic/hidden passであり、public testの弱さも検出した。モデル事前学習でこれらのソースや修正に接触していないとは言えない。VAREの過去task記録には一致する試行がなく、pretraining exposureは不明である。凍結protocolのsynthetic prerequisiteはこの評価とは別に、実モデルの4/4 tool call受理とsynthetic public/hidden passを要求しており、外部repair数には加算していない。
 
 ## モデルと計算資源
 
