@@ -134,3 +134,12 @@ shasum -a 256 -c SHA256SUMS
 ```
 
 このコマンドは固定protocol、raw event hash chain、公開bundleファイルを検証し、モデルを実行しない。
+
+
+## 追補：prospective exposure disposition v2 — MLX-LM #1955
+
+公開追補 v1 の後に、ローカルで保持していた別の負のDevelopment実験 MLX-LM [#1955](https://github.com/ml-explore/mlx-lm/pull/1955) も過去のモデル接触として確認した。元のv1記録と全ての実験ファイルは変更せず、新しいappend-only record [exposure-disposition-append-v2.json](../results/sprint_iv_20261027/exposure-disposition-append-v2.json)（SHA-256 `b2da5a3d7ee4e09b0d0cae890b4fbf3d1edc2a5a950c5ec3a7811b80c51b3ed5`）に追加した。対象は `mlx_lm/utils.py::dequantize_model` のexpert別NVFP4 global scale適用で、baseline `c39139d70f0798834fc721c28a1aa8e1374ea33c`、known fix `33fdd163aac1d60b7364763cfa1fb568aa3dd84c`、protocol SHA-256 `dee0e4682faa057bc84618c6c01ebb9a225fdf27acbc0e365e959b980ba41ef8`。
+
+Qwen2.5-Coder-14B-Instruct-4bit（snapshot `29efdbab55a161237ab1e432a3abaf6c7ae2b477`、MLX CPU）は自律armで `list_functions` と `read_function` を受理させ、3回目に1024 tokenの不正・未完了ツール出力を生成した。編集試行は0、source bytesは不変、public/independent graderは未実行。224.46秒後、process RSS peak 3365.28 MiB、swap空き908.69→385.12 MiB（最大増加523.57 MiB）で、凍結済み増加上限332.69 MiBに達したためresource abortした。source-localized armはautonomous armの後に実行予定だった。先行するpre-inference snapshot時点では空きswap 908.69 MiBでpreflight passだったが、autonomous armのresource abort後は385.12 MiBまで低下し凍結下限512 MiBを下回ったため、2本目のmodel processは起動せずNOT_RUN。このため新規修復としては数えず、2アームpaired experimentとも扱わない。
+
+PR #1955のtask prompt / target sourceにモデルが接触済みなので、この修正familyは今後のblind held-outから除外する。これは既存15 family allocationの外にある追加Development taskであり、v1で訂正したsource/grader-certified **9/15**をさらに減らす根拠にはしない。モデル事前学習の露出は不明のままである。
