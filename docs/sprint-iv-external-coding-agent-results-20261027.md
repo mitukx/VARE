@@ -67,9 +67,9 @@ Model-coupled asynchronous RL、optimizer recoveryとの接続、独立したlon
 
 mainは `f3ab90a36e8724441b6b9555255f8f75a0a4d529` のまま。PR #139はDraft、head `087914fb…`、base PR #137の `6d95bd91…`。#139の最初のcheck run `40408880544` でPython 3.13が失敗したが、同じheadのrerun `40408886276` では3.11/3.12/3.13を含む全checksがpassした。人間のapprovalは記録されていない。
 
-PR #141は外部revision差分出力だけのfocused child PRで、main merge前に#139依存が解消される必要がある。PR #140 head `a548daa1797b0d6a7a9b865f2eebb18b8ca71fc5` のCIはpassだが、symlink/archive fallbackに関するautomated P2 threadは未解決のまま独立review待ち。PR #120のgrader-completion spoofing P1も既存blockerである。
+PR #141は外部revision差分出力だけのfocused child PR（head `52d257e80f503306d04af255203fef9396b4d304`）で、main merge前に#139依存が解消される必要がある。PR #141のGitHub checksはこの報告snapshot時点で実行中で、完了済みchecksはpass、失敗checkはない。公開用の実験レポート・trajectory bundleは、mainをbaseとする別PR [#142](https://github.com/mitukx/VARE/pull/142)（head `2d519b57446401d9470212987d76315ad2a23a04`）に分けた。#142もsnapshot時点ではCI実行中。PR #140 head `a548daa1797b0d6a7a9b865f2eebb18b8ca71fc5` のCIはpassだが、symlink/archive fallbackに関するautomated P2 threadは未解決のまま独立review待ち。PR #120のgrader-completion spoofing P1も既存blockerである。
 
-今回のPR変更履歴は、開始時16 openから #141作成で17 openへ増加（0 merge / 0 close）。この報告・evidence用PRもmainを対象に別作成するため、公開時点の数は再監査して記す。Draft数は開始時8で、既存PRをDraft解除していない。レビュー要件を飛び越えてmergeしたPRはない。
+今回のPR変更履歴は開始時16 openから18 openへ増加し、#141（runner修正）と#142（実験証拠）の2件を作成した。close 0、merge 0、既存PRのDraft解除0。Draft数は8のまま。mainは`f3ab90a36e8724441b6b9555255f8f75a0a4d529`のままで、PR reviewやdependency gateを飛び越えた統合はない。
 
 ## 判定と次の実験
 
