@@ -8,7 +8,8 @@ import pytest
 
 from scripts import run_local_agent
 from scripts.run_local_agent import (
-    DurableEventJournal, capture_rendered_prompt, main, normalize_tool_call_format,
+    DurableEventJournal, candidate_source_diff, capture_rendered_prompt, main,
+    normalize_tool_call_format, snapshot_allowed_sources,
     parse_tool_output_v1, pinned_public_contract_grader_sources, read_file_range,
     python_syntax_failures, refresh_public_tests_after_edit, replace_text, run_public_contract_tests,
     run_with_public_test_budget, tools_for,
@@ -25,6 +26,30 @@ from scripts.run_separated_coding_eval import (
 PINNED_TEST_IMAGE = (
     "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
 )
+
+
+def test_candidate_diff_uses_invocation_snapshot_without_git_metadata(tmp_path):
+    source = tmp_path / 'mlx_lm' / 'models' / 'example.py'
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b'def forward(x):\n    return x\n')
+    before = snapshot_allowed_sources(tmp_path, ['mlx_lm/models/example.py'])
+
+    source.write_bytes(b'def forward(x):\n    return x + 1\n')
+    diff = candidate_source_diff(tmp_path, ['mlx_lm/models/example.py'], before)
+
+    assert not (tmp_path / '.git').exists()
+    assert '--- a/mlx_lm/models/example.py' in diff
+    assert '+++ b/mlx_lm/models/example.py' in diff
+    assert '-    return x\n' in diff
+    assert '+    return x + 1\n' in diff
+
+
+def test_candidate_diff_is_empty_when_candidate_matches_snapshot(tmp_path):
+    source = tmp_path / 'module.py'
+    source.write_bytes(b'value = 1\n')
+    before = snapshot_allowed_sources(tmp_path, ['module.py'])
+
+    assert candidate_source_diff(tmp_path, ['module.py'], before) == ''
 
 
 def test_public_contract_grader_registration_is_task_and_hash_pinned(monkeypatch):

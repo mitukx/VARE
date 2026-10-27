@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import difflib
 import hashlib
 import json
 import os
@@ -747,6 +748,30 @@ def digest_tree(root: Path, files: list[str]) -> dict[str, str]:
     return {name: sha256(root / name) for name in files if (root / name).is_file()}
 
 
+def snapshot_allowed_sources(root: Path, files: list[str]) -> dict[str, bytes]:
+    """Retain exact candidate-visible source bytes before model edits begin."""
+    return {name: (root / name).read_bytes() for name in sorted(files)}
+
+
+def candidate_source_diff(root: Path, files: list[str], before: dict[str, bytes]) -> str:
+    """Build a text patch from invocation-time bytes without relying on Git history."""
+    chunks: list[bytes] = []
+    for name in sorted(files):
+        old = before[name]
+        new = (root / name).read_bytes()
+        if old == new:
+            continue
+        chunks.extend(difflib.diff_bytes(
+            difflib.unified_diff,
+            old.splitlines(keepends=True),
+            new.splitlines(keepends=True),
+            fromfile=f'a/{name}'.encode('utf-8'),
+            tofile=f'b/{name}'.encode('utf-8'),
+            lineterm=b'\n',
+        ))
+    return b''.join(chunks).decode('utf-8', errors='backslashreplace')
+
+
 def controller_source_hashes(tool_interface: str, generation_protocol: str = 'raw_v1') -> dict[str, str]:
     """Record code identities needed to reproduce the selected edit interface."""
     paths = {
@@ -1244,6 +1269,7 @@ def main() -> int:
     ]
     initial_messages = [dict(message) for message in messages]
     transcript: list[dict[str, Any]] = []
+    source_before = snapshot_allowed_sources(workspace, sorted(allowed))
     before = digest_tree(workspace, sorted(tracked_files))
     if event_journal is not None:
         event_journal.append(
@@ -1673,7 +1699,7 @@ def main() -> int:
 
     elapsed = time.perf_counter() - start
     after = digest_tree(workspace, sorted(tracked_files))
-    diff = run_git(workspace, 'diff', '--binary', contract.diff_revision, '--', *sorted(allowed))
+    diff = candidate_source_diff(workspace, sorted(allowed), source_before)
     if args.backend == 'mlx':
         runtime['mlx_active_memory_bytes'] = int(mx.metal.get_active_memory())
         runtime['mlx_peak_memory_bytes'] = int(mx.metal.get_peak_memory())
