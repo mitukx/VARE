@@ -458,20 +458,34 @@ def _v4_manifest_for_campaign_commit(campaign_commit):
     }
 
 
+def _pinned_v4_campaign_commit():
+    return auditor.PINNED_RUNTIME_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V4]
+
+
 def test_v4_accepts_exact_campaign_identity_with_immutable_runtime_pin():
-    campaign_commit=subprocess.check_output(
-        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
-    ).strip()
+    # Historical V4 must be exercised from its exact immutable source commit.
+    # The current checkout may contain later runtime changes and is not a
+    # substitute for the campaign revision.
+    campaign_commit=_pinned_v4_campaign_commit()
     manifest=_v4_manifest_for_campaign_commit(campaign_commit)
     assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V4
     assert manifest["source_identity"]["campaign_source_commit"]==campaign_commit
     auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V4,False)
 
 
-def test_v4_rejects_wrong_runtime_commit_campaign_commit_and_source_hashes():
+def test_v4_rejects_evolved_checkout_as_historical_campaign_runtime():
     campaign_commit=subprocess.check_output(
         ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
     ).strip()
+    if campaign_commit==_pinned_v4_campaign_commit():
+        pytest.skip("checkout is the immutable V4 commit itself")
+    manifest=_v4_manifest_for_campaign_commit(campaign_commit)
+    with pytest.raises(ValueError,match="campaign runtime source hashes differ from immutable runtime commit"):
+        auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V4,False)
+
+
+def test_v4_rejects_wrong_runtime_commit_campaign_commit_and_source_hashes():
+    campaign_commit=_pinned_v4_campaign_commit()
     manifest=_v4_manifest_for_campaign_commit(campaign_commit)
 
     wrong_runtime={**manifest,"source_identity":{
