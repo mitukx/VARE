@@ -19,16 +19,32 @@ def digest_stream(stream) -> tuple[str, int]:
     return digest.hexdigest(), size
 
 
-def is_safe_regular_file(path: Path, root: Path) -> bool:
+def regular_file_state(path: Path, root: Path) -> str:
+    """Distinguish absent paths from present but unsafe workspace entries."""
     current = root
-    for part in path.relative_to(root).parts:
-        current = current / part
-        if current.is_symlink():
-            return False
     try:
-        return stat.S_ISREG(path.lstat().st_mode)
-    except FileNotFoundError:
-        return False
+        parts = path.relative_to(root).parts
+    except ValueError:
+        return "unsafe"
+    for index, part in enumerate(parts):
+        current = current / part
+        try:
+            mode = current.lstat().st_mode
+        except FileNotFoundError:
+            return "absent"
+        except OSError:
+            return "unsafe"
+        if stat.S_ISLNK(mode):
+            return "unsafe"
+        if index < len(parts) - 1 and not stat.S_ISDIR(mode):
+            return "unsafe"
+        if index == len(parts) - 1:
+            return "safe" if stat.S_ISREG(mode) else "unsafe"
+    return "unsafe"
+
+
+def is_safe_regular_file(path: Path, root: Path) -> bool:
+    return regular_file_state(path, root) == "safe"
 
 
 def workspace_archive_entry(root: Path, relative: str) -> tuple[Path, str] | None:
@@ -87,10 +103,11 @@ def verify(evidence: Path) -> tuple[int, list[str]]:
             continue
         path = root / relative_path
         actual: tuple[str, int] | None = None
-        if is_safe_regular_file(path, root):
+        path_state = regular_file_state(path, root)
+        if path_state == "safe":
             with path.open('rb') as stream:
                 actual = digest_stream(stream)
-        else:
+        elif path_state == "absent":
             archive_entry = workspace_archive_entry(root, relative)
             if archive_entry is not None:
                 archive, member_name = archive_entry

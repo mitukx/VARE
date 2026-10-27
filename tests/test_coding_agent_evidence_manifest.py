@@ -69,3 +69,50 @@ def test_verifies_workspace_files_from_archive_when_git_tree_is_not_portable(tmp
     }))
 
     assert verify(tmp_path) == (1, [])
+
+
+def test_rejects_symlinked_workspace_file_even_when_archive_has_original(tmp_path):
+    workspace = tmp_path / "greedy" / "workspace"
+    workspace.mkdir(parents=True)
+    retained = b"verified archive bytes\n"
+    altered = b"unverified live bytes\n"
+    (tmp_path / "greedy" / "workspace.tar").parent.mkdir(parents=True, exist_ok=True)
+    with tarfile.open(tmp_path / "greedy" / "workspace.tar", "w") as archive:
+        import io
+        info = tarfile.TarInfo("agent.py")
+        info.size = len(retained)
+        archive.addfile(info, io.BytesIO(retained))
+    outside = tmp_path / "altered-agent.py"
+    outside.write_bytes(altered)
+    (workspace / "agent.py").symlink_to(outside)
+    (tmp_path / "evidence-manifest.json").write_text(json.dumps({
+        "files": [_entry("greedy/workspace/agent.py", retained)],
+    }))
+
+    verified, failures = verify(tmp_path)
+
+    assert verified == 0
+    assert failures == ["greedy/workspace/agent.py"]
+
+
+def test_rejects_symlinked_workspace_ancestor_even_when_archive_has_original(tmp_path):
+    greedy = tmp_path / "greedy"
+    greedy.mkdir()
+    live_workspace = tmp_path / "altered-workspace"
+    live_workspace.mkdir()
+    (live_workspace / "agent.py").write_bytes(b"unverified live bytes\n")
+    (greedy / "workspace").symlink_to(live_workspace, target_is_directory=True)
+    retained = b"verified archive bytes\n"
+    with tarfile.open(greedy / "workspace.tar", "w") as archive:
+        import io
+        info = tarfile.TarInfo("agent.py")
+        info.size = len(retained)
+        archive.addfile(info, io.BytesIO(retained))
+    (tmp_path / "evidence-manifest.json").write_text(json.dumps({
+        "files": [_entry("greedy/workspace/agent.py", retained)],
+    }))
+
+    verified, failures = verify(tmp_path)
+
+    assert verified == 0
+    assert failures == ["greedy/workspace/agent.py"]
