@@ -1,0 +1,334 @@
+{
+  "arms": {
+    "A_autonomous": {
+      "behavior": "Model lists supported functions and reads the selected function.",
+      "localizer": null,
+      "tool_interface": "lease_bound_function_edit_v2"
+    },
+    "B_source_localized": {
+      "behavior": "Model receives fixed source window and reads that function to obtain lease; no source-search or list-functions action.",
+      "localizer": "task_prompt_lexical_windows_v1",
+      "tool_interface": "lease_bound_function_edit_localized_v1"
+    }
+  },
+  "attempt_order": [
+    {
+      "arm": "A_autonomous",
+      "ordinal": 1,
+      "seed": 432,
+      "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2"
+    },
+    {
+      "arm": "B_source_localized",
+      "ordinal": 2,
+      "seed": 432,
+      "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2"
+    },
+    {
+      "arm": "A_autonomous",
+      "ordinal": 3,
+      "seed": 431,
+      "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2"
+    },
+    {
+      "arm": "B_source_localized",
+      "ordinal": 4,
+      "seed": 431,
+      "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2"
+    },
+    {
+      "arm": "B_source_localized",
+      "ordinal": 5,
+      "seed": 431,
+      "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+    },
+    {
+      "arm": "A_autonomous",
+      "ordinal": 6,
+      "seed": 431,
+      "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+    },
+    {
+      "arm": "A_autonomous",
+      "ordinal": 7,
+      "seed": 432,
+      "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+    },
+    {
+      "arm": "B_source_localized",
+      "ordinal": 8,
+      "seed": 432,
+      "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+    }
+  ],
+  "claim_boundary": "Exploratory two-family feasibility cohort; report all task and paired attempt results without a broad coding capability or learning claim.",
+  "controller_sources": {
+    "A_autonomous": {
+      "scripts/run_local_agent.py": "a22664eae14fdb210333dc99472cf6189d38e77eeb92d6172b54535b5dfd0461",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "baef24ffc8dd84308bce67fde805c62932ae4a78b308b3b8f9bf1ae991a7d9bc",
+      "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+      "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+      "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+      "src/vare/agent_task_contract.py": "e050e7f37bdc1f53e006afc66667f30f3e25f9e9c36961c0df5fe53ebce53570"
+    },
+    "B_source_localized": {
+      "scripts/run_local_agent.py": "a22664eae14fdb210333dc99472cf6189d38e77eeb92d6172b54535b5dfd0461",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "baef24ffc8dd84308bce67fde805c62932ae4a78b308b3b8f9bf1ae991a7d9bc",
+      "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+      "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+      "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+      "src/vare/agent_task_contract.py": "e050e7f37bdc1f53e006afc66667f30f3e25f9e9c36961c0df5fe53ebce53570"
+    },
+    "grade_script": "3f677eb9c65fc924e6153b98058b9bb7e2d640bc13075afeb36a59f1ee759f04",
+    "localizer_script": "e32bd46791b779da1fdeae9a62f55c92724639fbd76c789bce3be65c304884ef"
+  },
+  "created_utc": "2026-10-27T07:37:05.804929+00:00",
+  "experiment_id": "external-mlx-lm-two-family-agent-v1",
+  "generation": {
+    "edit_format": "structured_replace",
+    "env": {
+      "DOCKER_CONTEXT": "colima",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1"
+    },
+    "instruction": "Inspect the requested source, apply the smallest correct repair, run public tests, and finish.",
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 2,
+    "max_public_test_runs": 3,
+    "max_total_new_tokens": 2048,
+    "max_turns": 12,
+    "parser": "parse_tool_output_v1 strict; no malformed-output repair",
+    "protocol": "raw_json_eos_v3",
+    "public_test_image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "public_test_memory_mib": 2048,
+    "public_test_timeout_s": 180,
+    "wall_seconds": 900
+  },
+  "grading": {
+    "control_summary_sha256": "0f44fc8a58f4febc98234998ac5fa7e811e0651df64ee720e321bc7503da971f",
+    "cpus": 1.0,
+    "drop_all_capabilities": true,
+    "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "memory_mib": 2048,
+    "network": "none",
+    "no_new_privileges": true,
+    "pids": 32,
+    "public_hidden_separation": "Public test runs in workspace-only sandbox during generation. Hidden test is copied only after generation into a distinct post-run grader workspace.",
+    "qualification": "baseline fail, known fix pass, and incorrect mutant fail under both public and hidden controls for every task.",
+    "read_only_root": true,
+    "timeout_s": 180,
+    "uid_gid": "65534:65534"
+  },
+  "model": {
+    "backend": "MLX",
+    "device": "CPU",
+    "files_sha256": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "README.md": "36c856ec2056a132eb408dee54b786ce44c3573760a5ff261e699c9ace8a4986",
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "7a2e85de5e0e115e6aaea7cb71091c5833aa29786fc748ef1d7e607e3a3a18f2",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model-00001-of-00002.safetensors": "784b0c89d3e006f49cb8547aba1f2f4e99b365ab4380cf202655ca04c87d7ac3",
+      "model-00002-of-00002.safetensors": "a1b7516f1926070177601698661494dfc68c2de1d98e7c43ba910a0d1d7dfbbe",
+      "model.safetensors.index.json": "635d985ebf00b6a25daba71b7eba4d5ec8be7902c15104a79312fe947f44b121",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "quantization": "4-bit",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "snapshot_commit": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "source_manifest": "prior completed load; every new invocation must match recorded file hashes",
+    "tokenizer_config_sha256": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "tokenizer_json_sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"
+  },
+  "planned_attempt_count": 8,
+  "pre_inference_manifest_sha256": {
+    "mlx-lm-1913-minicpm3-left-padding-behavior-v2/A_autonomous/431": "f9faa21a22541010633fc2602f4e3ee5beaaff9b41ab362d03385f200cebab99",
+    "mlx-lm-1913-minicpm3-left-padding-behavior-v2/A_autonomous/432": "f159a90f99c4ea551ebde81da54c1c191e375b4be5a1820e9eec4fab119a0a88",
+    "mlx-lm-1913-minicpm3-left-padding-behavior-v2/B_source_localized/431": "7890b7bc15c2fbf23f9716b6a2240229dbc2ad777cce74c8b80f6b4c58491b31",
+    "mlx-lm-1913-minicpm3-left-padding-behavior-v2/B_source_localized/432": "82f5b57981c9b673e6250e906c52610da1e77a748acba91485a54b4dcfc15c9d",
+    "mlx-lm-1926-falcon-h1-uncached-behavior-v2/A_autonomous/431": "ef8e5d31f81febfe87f7e9cfd0a70912da8bbefd7af91a980a87a8658cf24f80",
+    "mlx-lm-1926-falcon-h1-uncached-behavior-v2/A_autonomous/432": "2b4c0a1b432e7b1a492d3fab6bde6e5819a2572f83192b22a87dda9e64c69a5d",
+    "mlx-lm-1926-falcon-h1-uncached-behavior-v2/B_source_localized/431": "a9463056a0fe4ef053e8ea510d0900453653eb0480fea7c2a6d13d62b12711ad",
+    "mlx-lm-1926-falcon-h1-uncached-behavior-v2/B_source_localized/432": "5c61af7719d436fbaf69703f9301e3448f56dc0042d0b25eda4a984fef8e3342"
+  },
+  "primary_metric": "Task families with >=1 verified repair / 2 at a fixed four attempts per family (2 arms x 2 seeds). Attempts are reported but not counted as independent families.",
+  "purpose": "Matched autonomous-navigation versus fixed source-localization real-model coding experiment.",
+  "resources": {
+    "abort_rule": "Terminate only this attempt process group if any hard resource bound is crossed; preserve partial journal and logs. No cap increases.",
+    "docker": "Colima Virtualization.Framework, Docker 29.5.2, aarch64",
+    "host": "Apple M1 Pro, 32 GiB unified memory",
+    "maximum_process_rss_mib": 8192,
+    "maximum_swap_growth_per_attempt_mib": 160,
+    "maximum_wall_seconds": 900,
+    "memory_pressure_free_percent": 81,
+    "minimum_free_swap_during_attempt_mib": 220,
+    "preflight_free_swap_mib": 425.12,
+    "preflight_swap_usage": "vm.swapusage: total = 3072.00M  used = 2646.88M  free = 425.12M  (encrypted)",
+    "required_free_swap_before_each_attempt_mib": 380
+  },
+  "runtime": {
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "python": "3.12.12"
+  },
+  "sampling": {
+    "do_sample": true,
+    "paired_seeds": [
+      431,
+      432
+    ],
+    "temperature": 0.2,
+    "top_k": 20,
+    "top_p": 0.95
+  },
+  "schema_version": 1,
+  "secondary_metrics": [
+    "accepted calls",
+    "source-function reads",
+    "applied edits",
+    "syntax rejection",
+    "public test outcomes",
+    "independent hidden passes",
+    "tokens",
+    "wall time",
+    "peak RSS",
+    "swap growth",
+    "failure class"
+  ],
+  "sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+  "status": "FROZEN_BEFORE_GENERATION",
+  "success_definition": "Count a repair only when strict tool calls apply a syntax-valid edit to the allowed source, the agent finishes normally, the public tests pass, and the independently isolated hidden grader passes. No edit, abort, invalid output, non-finish, or ungraded attempt counts.",
+  "synthetic_prerequisite": {
+    "events_sha256": "525638665e0d62e31f158eb3229873b6f344b7177c43e65a3b0c3fa8ce5142ba",
+    "interpretation": "4/4 accepted calls with public and hidden synthetic pass; interface proof only.",
+    "record": "results/sprint_iv_20261027/function-edit-line-array-synthetic-v3"
+  },
+  "task_family_count": 2,
+  "tasks": [
+    {
+      "base_revision": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+      "base_tree": "27bc192fc3bb3f00a27c26d7d0d536f99ad63ee4",
+      "candidate_isolation": "Workspace includes baseline source archive and public test runner file only; hidden evaluator is in a separate task-root/evaluator directory, never mounted into the agent process.",
+      "editable_source_path": "mlx_lm/models/minicpm3.py",
+      "fix_tree": "3387b061780bf77e1b85319e941978795bac98e3",
+      "hidden_test_sha256": "dc2b1b01f89d6a2f2a7f0fd89f351bf13ba25daaf008bfedf9c5d1c6a8385e3a",
+      "known_fix_revision": "b4844fd8072b1fc241ce3bb5f81526346b80370f",
+      "localized_region": {
+        "algorithm": "task_prompt_lexical_windows_v1",
+        "content_sha256": "57115ce60321bb06167908edb9e95dc2bcb1e8a3f2cf67a490572bdea55e7788",
+        "end_line": 243,
+        "path": "mlx_lm/models/minicpm3.py",
+        "source_sha256": "7cae4617eb0b6c86004c80767875d490f7166c6b2042fa8b895d2f99538f1e1a",
+        "start_line": 164
+      },
+      "localized_source_record_sha256": "c3185bbf0aafd7bf9d6e497899ed53fcfe1211f33799f1b2cc5fad75e8832f14",
+      "model_prior_exposure": "No matching task-attempt record was found in VARE results before this cohort; exposure during model pretraining is unknown.",
+      "public_test_sha256": "1f3f0487530991c4cf23787d1049bd4efef763673436b84c35a8fde92a77d00c",
+      "qualification_controls": {
+        "baseline": {
+          "expected": "FAIL",
+          "grade_sha256": "d79e9f6436444d971dec8d12dd710315bcc4a74eafb4172287d77347e9cbcc76",
+          "hidden_pass": false,
+          "public_pass": true,
+          "qualified_outcome": true,
+          "target_sha256": "7cae4617eb0b6c86004c80767875d490f7166c6b2042fa8b895d2f99538f1e1a"
+        },
+        "fix": {
+          "expected": "PASS",
+          "grade_sha256": "5c0f3c668238159cc5df52cec9c0c6d3055279d7c3e6ccf8c2c2324b3a813e85",
+          "hidden_pass": true,
+          "public_pass": true,
+          "qualified_outcome": true,
+          "target_sha256": "798eb1d06b0b960e25a3da669d9e8c8a94607d78ae28c23feaccc041fe4969bb"
+        },
+        "mutant": {
+          "expected": "FAIL",
+          "grade_sha256": "86fd26777558895243f4fb6fd92e2fbf56736d3b120b06ef49ebd5250063f967",
+          "hidden_pass": false,
+          "public_pass": true,
+          "qualified_outcome": true,
+          "target_sha256": "02665bc52ac5c063220524ae7d5377769c4a72a5d6865c6f65cf64567e4bf9c1"
+        }
+      },
+      "source_sha256": {
+        "baseline": "7cae4617eb0b6c86004c80767875d490f7166c6b2042fa8b895d2f99538f1e1a",
+        "incorrect_mutant": "02665bc52ac5c063220524ae7d5377769c4a72a5d6865c6f65cf64567e4bf9c1",
+        "known_fix": "798eb1d06b0b960e25a3da669d9e8c8a94607d78ae28c23feaccc041fe4969bb"
+      },
+      "split": "development",
+      "target_function": "MiniCPM3Model.__call__",
+      "task_brief_sha256": "ce836b3d28f8e70dc5bff59770e34b60d967404a20e325520fb9dc50b4404af3",
+      "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2",
+      "task_json_sha256": "d4beb3bf79d58366319957059f7aee1e00baef739a9cf41def48760d8c9c080b",
+      "upstream_pull_request": 1913,
+      "upstream_repository": "https://github.com/ml-explore/mlx-lm"
+    },
+    {
+      "base_revision": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "base_tree": "2bff99092987e47654c63671fffdf7d083870a04",
+      "candidate_isolation": "Workspace includes baseline source archive and public test runner file only; hidden evaluator is in a separate task-root/evaluator directory, never mounted into the agent process.",
+      "editable_source_path": "mlx_lm/models/falcon_h1.py",
+      "fix_tree": "97c4f7d4472042c1cc88ec3b51e37f655ec2a5a6",
+      "hidden_test_sha256": "87e6d8f8b60c558948e6de556ddb2ad3daf6f6cbd049ea17af74159f94ff75c8",
+      "known_fix_revision": "ebba55f5176fe451b94f04212e975f052a6d96e0",
+      "localized_region": {
+        "algorithm": "task_prompt_lexical_windows_v1",
+        "content_sha256": "eb34db634e6f0a84443171f377c1cfb9b0fb7ad3074426884c27c4e079725967",
+        "end_line": 452,
+        "path": "mlx_lm/models/falcon_h1.py",
+        "source_sha256": "68c25a5b53a8f87bf843e87c93b8c35caf1a059600583506d7180d2f79863ca6",
+        "start_line": 373
+      },
+      "localized_source_record_sha256": "394eb2fcea5f56a55225ccb12575ec2902c52b6919d437785372f29edcc84d68",
+      "model_prior_exposure": "No matching task-attempt record was found in VARE results before this cohort; exposure during model pretraining is unknown.",
+      "public_test_sha256": "083d6fe5b28c8a442add327dee251806ac8424cc8e1c58d8702cc1ae4c73d5e6",
+      "qualification_controls": {
+        "baseline": {
+          "expected": "FAIL",
+          "grade_sha256": "d720cc717adc591b2012eac61fa9c29c3d6e808327d29f7033349ab145a51e8f",
+          "hidden_pass": false,
+          "public_pass": false,
+          "qualified_outcome": true,
+          "target_sha256": "68c25a5b53a8f87bf843e87c93b8c35caf1a059600583506d7180d2f79863ca6"
+        },
+        "fix": {
+          "expected": "PASS",
+          "grade_sha256": "c7f8fd82382f47b06ed2549d50741afe8015a34c9166923f725b6c0cc249df9d",
+          "hidden_pass": true,
+          "public_pass": true,
+          "qualified_outcome": true,
+          "target_sha256": "cc3acc9bb4d3c6ed8ff3f67ed6d85ba8828d973712e9ce13c8865a5064f6a999"
+        },
+        "mutant": {
+          "expected": "FAIL",
+          "grade_sha256": "d5f275d5b962617ca184fee910e7b956ce19db149d8f3b73e14b3cd5eb86dea4",
+          "hidden_pass": false,
+          "public_pass": false,
+          "qualified_outcome": true,
+          "target_sha256": "0ac6ceb9022937c2b3b63f13f35bc27384d2618a7a9a50e90aeae48dbdea35fb"
+        }
+      },
+      "source_sha256": {
+        "baseline": "68c25a5b53a8f87bf843e87c93b8c35caf1a059600583506d7180d2f79863ca6",
+        "incorrect_mutant": "0ac6ceb9022937c2b3b63f13f35bc27384d2618a7a9a50e90aeae48dbdea35fb",
+        "known_fix": "cc3acc9bb4d3c6ed8ff3f67ed6d85ba8828d973712e9ce13c8865a5064f6a999"
+      },
+      "split": "development",
+      "target_function": "FalconH1Model.__call__",
+      "task_brief_sha256": "165f4915f6c747dece3f084291936718572c4133935f6bad6af0a29c3033f645",
+      "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2",
+      "task_json_sha256": "28e809503a18faedb9428530fe497b4ab755f73aa4861091434d853795e25431",
+      "upstream_pull_request": 1926,
+      "upstream_repository": "https://github.com/ml-explore/mlx-lm"
+    }
+  ]
+}

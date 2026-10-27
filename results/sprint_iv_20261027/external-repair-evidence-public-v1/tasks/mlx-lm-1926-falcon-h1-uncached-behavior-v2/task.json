@@ -1,0 +1,15 @@
+{
+  "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2",
+  "prompt": "Regression: Falcon-H1 forward passes without a cache skip decoder work and produce incorrect outputs or gradients. Investigate FalconH1Model.__call__ in mlx_lm/models/falcon_h1.py and repair uncached execution while preserving cached execution.",
+  "metadata": {
+    "editable_files": [
+      "mlx_lm/models/falcon_h1.py",
+      "test_public.py"
+    ],
+    "split": "development"
+  },
+  "source": {
+    "base_revision": "87b7b583a697537aa68f47130b40884700b5f55f",
+    "calibration_revision": "ebba55f5176fe451b94f04212e975f052a6d96e0"
+  }
+}
