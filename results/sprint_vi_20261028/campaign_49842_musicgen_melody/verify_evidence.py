@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import gzip
 import json
 from pathlib import Path
 
@@ -37,6 +38,15 @@ def main() -> None:
         assert path.stat().st_size == entry["bytes"], path
         assert digest(path) == entry["sha256"], path
 
+    compressed = json.loads((ROOT.parent / "campaign_50001/metadata/compressed-artifacts-v1.json").read_text())
+    assert compressed["schema"] == "vare.compressed-artifacts.v1"
+    for entry in compressed["artifacts"]:
+        assert entry["compression"] == "gzip"
+        stored = ROOT.parent / entry["storage_path"]
+        raw = gzip.decompress(stored.read_bytes())
+        assert len(raw) == entry["original_bytes"], entry["logical_path"]
+        assert hashlib.sha256(raw).hexdigest() == entry["original_sha256"], entry["logical_path"]
+
     for arm in ("01-A_autonomous-seed-2029", "02-B_localized-seed-2029"):
         attempt = ROOT / "attempts" / arm
         rows, last_hash = verify_event_chain(attempt / "events.jsonl")
@@ -55,7 +65,7 @@ def main() -> None:
     exposure = json.loads((ROOT / "append-only-prior-exposure-reconciliation-v1.json").read_text())
     assert len(exposure["prior_vare_model_attempts"]) == 2
     assert "not fresh" in exposure["finding"].lower()
-    print(f"verified {len(manifest['files'])} bundle files, both event chains, and prior-exposure disqualification")
+    print(f"verified {len(manifest['files'])} bundle files, {len(compressed['artifacts'])} lossless compressed originals, both event chains, and prior-exposure disqualification")
 
 
 if __name__ == "__main__":

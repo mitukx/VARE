@@ -55,8 +55,8 @@ This run shows that schema-constrained JSON generation can produce valid tool ac
 
 The machine-readable ledger at `results/sprint_vi_20261028/pr-ledger.json` records all 18 open PRs, their exact base/head, draft state, CI snapshot, review threads, dependencies, changed-file counts, disposition, and next action. Classification counts are 4 `MERGE-CANDIDATE`, 3 `REPAIR-FIRST`, 2 `EXTRACT`, 4 `RESEARCH-EVIDENCE`, and 5 `BLOCKED`. No open PR was clearly proven superseded; no PR was closed simply to reduce the count.
 
-- **PR #133:** updated directly on its existing head branch to `947bbb08054174f7e3c569e257f129091c8df04f`. `_bounded()` now truncates auxiliary path inventory before dropping ranked results; search retries index construction after transient failures and still fails closed after a failed retry. Both regressions failed on prior head `a65d59e5704b84a934a49385551a8d2311a01575`. The relevant suite (`test_source_navigation_v1.py`, `test_run_local_agent_tool_format.py`) passes 37 tests; Ruff and `git diff --check` pass. Review replies include the reproductions. Two P2 threads remain open for reviewer confirmation. Current CI was in progress at report capture. **The PR is stacked on #132, which is closed unmerged, so its branch is not a mainline integration.**
-- **PR #142:** received this report and selected Sprint VI evidence as an update to its existing evidence-archive branch; it remains Draft. No hidden grader source or model weights were added.
+- **PR #133:** source fixes are at `947bbb08054174f7e3c569e257f129091c8df04f`: `_bounded()` truncates auxiliary path inventory before dropping ranked results; search retries transient index-build failures and stays fail-closed. Both regressions fail on prior head `a65d59e5704b84a934a49385551a8d2311a01575`; the relevant source-navigation/tool suite passes 37 tests, Ruff, and `git diff --check`. Its first new-head E2E run (40544616237) showed the frozen V4 continuation benchmark was launched from an evolved checkout; immutable source checks correctly rejected the runtime mismatch. No hash validation was weakened. Follow-up `96f1abb5838f02814fb16b413dadcb8fe3edb9b8` makes CI create a detached worktree at the pinned V4 commit `d251cc678fbc9940f3de460904d5d23a1967b3ce`, assert its HEAD, then run historical continuation tests there. Workflow YAML parsing and a local pinned-tree inventory test pass. Exact-head Actions for that follow-up were in progress at the later update. Two P2 threads remain open; #133 is still stacked on closed, unmerged #132 and is not mainline integration.
+- **PR #142:** its existing evidence-archive branch now carries this report, raw trajectories, qualification receipts, and prior-exposure reconciliation. The two 1.71 MB #50001 protocol JSON files are stored losslessly as deterministic gzip with original byte counts and SHA-256 digests; the verifier expands and checks them. It verifies 184 bundle files, both event chains, and prior-exposure exclusion; the tracked-blob budget passes. No hidden grader source or model weights were added; the PR remains Draft.
 - **PR #143:** focused main-based canonical candidate-diff export; exact-head checks were green, but no independent approval is recorded.
 - **PR #140:** focused main-based evidence-manifest integrity change; checks were green; one outdated P2 thread remains unresolved and there is no independent approval.
 - **PR #120:** still has a current P1 evaluator-completion-forgery finding. The separate empty-manifest concern is extracted to #140. It is not admitted to a trusted reward path.
@@ -65,6 +65,8 @@ The machine-readable ledger at `results/sprint_vi_20261028/pr-ledger.json` recor
 - **Dependency note:** #132 was closed without merge and contains 11,403 additions on its branch. PR #133 is based on that branch. Retargeting #133 to main would import the whole dependency history, so this sprint leaves it stacked rather than disguising a bulk integration as a small fix.
 
 ### PR inventory
+
+The full ledger below is an audit snapshot captured at `2026-10-27T16:52:43Z`; later exact-head updates are listed after the before/after table.
 
 | PR | disposition / draft | base SHA → head SHA | exact-head checks at audit capture | unresolved threads / approval | deps | next action |
 |---|---|---|---|---|---|---|
@@ -98,6 +100,12 @@ The machine-readable ledger at `results/sprint_vi_20261028/pr-ledger.json` recor
 | Updated PRs during sprint | 0 | 2 (#133, #142) |
 | Independent approvals recorded | 0 across open PRs | 0 across open PRs |
 | Main SHA | `f3ab90a36e8724441b6b9555255f8f75a0a4d529` | unchanged |
+
+### Exact-head updates after the ledger snapshot
+
+- PR #133 head `96f1abb5838f02814fb16b413dadcb8fe3edb9b8`: `ci`, `cpu-evidence`, and `e2e-system-cpu` were running at capture; exact-head E2E run [40546521396](https://github.com/mitukx/VARE/actions/runs/40546521396). The earlier failure remains available at [40544616237](https://github.com/mitukx/VARE/actions/runs/40544616237).
+- PR #142 initial Sprint VI publication head `c282a9ff9dd95ad3f73aec6224661edf6d7e82f6` failed `blob-budget` because its two protocol blobs exceeded 1 MiB. The lossless gzip representation and original-byte digest checks were committed in a follow-up; their new exact-head runs will be recorded when complete.
+- Neither update changed `main`; no review approval or merge requirement was bypassed.
 
 Main is protected. The branch-protection endpoint returned 403 to the connected integration; no protection setting was changed. No independent reviewer has been identified or requested through the available metadata; no arbitrary reviewer was selected. No approval was fabricated, and no merge or forced close occurred.
 
