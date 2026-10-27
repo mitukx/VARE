@@ -1,0 +1,35 @@
+{
+  "controls_remain_useful": "The current baseline/fix/wrong-mutant controls validate this task grader for this source version, but do not restore task novelty.",
+  "current_run_treatment": "Retain all current raw logs and report them as exploratory repeat exposure. Do not count the 14B arms as fresh Development evidence; do not use these results for held-out evaluation or training.",
+  "finding": "The same MusicGen Melody cached-position source-fix family was already model-exposed in Sprint II before the new paired 14B run. The present task therefore was not fresh and must not enter fresh Development family counts or the primary independent coding-agent outcome.",
+  "preexisting_invalidation_record_sha256": "5e1b076becc6e4da993fdddad5a1743f936bfa62a08c31ebecc22a8cb4043506",
+  "preventive_action": "All future model prelaunches require an explicit cross-sprint exposure-index check and a fail-closed disqualification record before any model process starts.",
+  "prior_campaign_protocol_sha256": "74aa58b670008045b018c3246cd890d7725e7f89617acb03ed576a19762ea9c7",
+  "prior_vare_model_attempts": [
+    {
+      "agent_outcome": "turn_budget_exhausted",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "events_sha256": "da51f4992f0b282c14dc81dc33a96cdf50ac7f6c51a751dca7e9330905e2b19d",
+      "generated_tokens": 267,
+      "guidance": "guidance_v1",
+      "independent_grader": "NOT_RUN_NO_PATCH",
+      "result_sha256": "46c2887a156653d120607b5ef54d438db4f52c0c43da3e8c90a4c32f849932dc"
+    },
+    {
+      "agent_outcome": "turn_budget_exhausted",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "events_sha256": "602011ac75f17a96b4ac3cc8caa12066d13afa4606dc8e25974db7d0bbe0f11d",
+      "generated_tokens": 268,
+      "guidance": "guidance_v2",
+      "independent_grader": "NOT_RUN_NO_PATCH",
+      "result_sha256": "a96a80d167b515b8d11d7b2d61b0457f646be3c66ce091175a3d25c35a87ac3a"
+    }
+  ],
+  "record_type": "append_only_prior_exposure_reconciliation",
+  "recorded_at_utc": "2026-10-27T16:50:26.068664+00:00",
+  "root_cause": "The Sprint VI run setup reread task controls and model provenance but failed to consult the already-retained invalidation-v1 and Sprint II exposure index before launch.",
+  "schema_version": 1,
+  "task_id": "transformers-49842-musicgen-melody-long-cache-position-v1"
+}

@@ -1,0 +1,86 @@
+{
+  "claim_limit": "These were source-fix qualified Development families at launch and are now exposed. This is not held-out evidence. All model pretraining exposure is UNKNOWN.",
+  "schema_version": 1,
+  "status": "SAMPLED_DEVELOPMENT_COHORT_SUMMARY",
+  "task_families": [
+    {
+      "baseline_revision": "09a71e5b32a747dbc7805599457e67c956ef212f",
+      "calibration_revision": "ef1c61d3386d25275e4b8579ab2abf6ef4cf3c60",
+      "id": "transformers-49696-encoder-sentinel-logits-processors-runtime-v1",
+      "paired_attempts": 2,
+      "pretraining_exposure": "UNKNOWN",
+      "qualification": {
+        "baseline": "public FAIL, hidden FAIL",
+        "grader_spoof": "public PASS, hidden FAIL; adversarial hidden boundary caught spoof",
+        "known_fix": "public PASS, hidden PASS",
+        "wrong_mutant": "public FAIL, hidden FAIL"
+      },
+      "status": "QUALIFIED_DEVELOPMENT; EXPOSED",
+      "upstream": "https://github.com/huggingface/transformers/pull/49696",
+      "verified_repairs": 0
+    },
+    {
+      "additional_preflight_abort_attempts": 1,
+      "baseline_revision": "6c5f8f4186c15f4bfbd67941a1736b2b347e0155",
+      "calibration_revision": "0876d33998f49c423fb8623b6bd397caf3b372fc",
+      "id": "transformers-49975-lazy-tp-gradient-hook-install-v1",
+      "paired_attempts": 2,
+      "pretraining_exposure": "UNKNOWN; researcher had inspected related but distinct PR #48205 in the same file/domain",
+      "qualification": {
+        "baseline": "public FAIL, hidden FAIL",
+        "known_fix": "public PASS, hidden PASS",
+        "spoof_and_nonce_forgery": "public FAIL, hidden FAIL",
+        "wrong_mutant": "public FAIL, hidden FAIL"
+      },
+      "status": "QUALIFIED_DEVELOPMENT; EXPOSED",
+      "upstream": "https://github.com/huggingface/transformers/pull/49975",
+      "verified_repairs": 0
+    },
+    {
+      "baseline_revision": "6317971aa31593f77b5335e806009dc2f1e94617",
+      "calibration_revision": "f39ea9ea753d55371b98676b107b5d39d7399d0e",
+      "id": "transformers-50001-token-classification-lazy-import-v1",
+      "paired_attempts": 2,
+      "pretraining_exposure": "UNKNOWN",
+      "qualification": {
+        "baseline": "public FAIL, hidden FAIL",
+        "known_fix": "public PASS, hidden PASS",
+        "wrong_mutant": "public FAIL, hidden FAIL"
+      },
+      "status": "QUALIFIED_DEVELOPMENT; EXPOSED",
+      "upstream": "https://github.com/mitukx/VARE/pull/142 evidence refers to upstream Transformers fix",
+      "verified_repairs": 0
+    },
+    {
+      "baseline_revision": "50a952d06c8f593b5a0cea5dc8040fad9761ea67",
+      "id": "transformers-49900-numpy-integer-label-dtype-v1",
+      "paired_attempts": 2,
+      "pretraining_exposure": "UNKNOWN; VARE prior model attempt not found before qualification",
+      "qualification": {
+        "baseline": "public FAIL, independent FAIL",
+        "grader_integrity": "bounded source scope and semantic checks executed",
+        "known_fix": "public PASS, independent PASS",
+        "wrong_mutant": "public FAIL, independent FAIL"
+      },
+      "status": "QUALIFIED_DEVELOPMENT; EXPOSED; append-only diff-wrapper reconciliation excludes legacy false grade",
+      "upstream": "https://github.com/huggingface/transformers/pull/49900",
+      "verified_repairs": 0
+    },
+    {
+      "id": "transformers-49772-reverse-capture-literal-semantics-v2",
+      "paired_attempts": 2,
+      "qualification": "qualification.lock remains qualification_pending; baseline failure exists but complete controls are not attested in the retained record",
+      "status": "NOT_COUNTED",
+      "upstream": "https://github.com/huggingface/transformers/pull/49772",
+      "verified_repairs": 0
+    },
+    {
+      "id": "transformers-49842-musicgen-melody-long-cache-position-v1",
+      "paired_attempts": 2,
+      "qualification": "baseline/fix/wrong controls pass their intended outcomes; same family was already used in Sprint II",
+      "status": "DISQUALIFIED_AS_FRESH; SEE APPEND-ONLY EXPOSURE RECONCILIATION",
+      "upstream": "https://github.com/huggingface/transformers/pull/49842",
+      "verified_repairs": 0
+    }
+  ]
+}

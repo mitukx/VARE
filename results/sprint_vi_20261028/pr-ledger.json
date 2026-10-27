@@ -1,0 +1,3512 @@
+{
+  "branch_protection_read": "GitHub API branch-protection endpoint returned 403 Resource not accessible by integration; main protection requirement is confirmed by repository context. No setting was changed.",
+  "captured_at_utc": "2026-10-27T16:52:43.334717+00:00",
+  "draft_count": 9,
+  "main_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "open_count": 18,
+  "prs": [
+    {
+      "additions": 10907,
+      "base": {
+        "ref": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "body_excerpt": "## Hypothesis\nA task-specific candidate boundary and an independent host-held golden-output comparison can safely preserve the pinned MLX-LM #1971 test semantics for one Development task without exposing tests, fixed source, or expected outputs.\n\n## Change\n- Adds a task adapter limited to `mlx_lm/models/mimo_v2_flash.py` and verifies the pinned baseline source hash and Git index flags.\n- Runs the candidate adapter in the existing isolated Docker candidate runner. The grader comparison and expected tensors remain in the host process and are not mounted into the candidate.\n- Freezes prompt, implementation hashes, upstream commits, expected-output hash, container image, and resource limits in protocol v1.\n- Retains the raw baseline/fix/red-team calibration and report.\n- Adds this module to runtime source inventory; previous frozen inventories remain unchanged.\n\n## Reproduction and evidence\nOn implementation commit `dfa911b0d317327b1eebad8698f5893ab3ec3cfc`, baseline failed the output oracle, the known fix passed, fixed-source substitution was rejected, and all shared red-team probes passed. Calibration took 3.98 seconds in the pinned CPU-only Linux ARM64 container. Raw evidence is in `results/mlxlm-1971-isolated-v1/run-1/`; its SHA-256 check passes.\n\nLocal checks passed:\n- task-specific patch and symlink tests\n- related #1912, repository-task and isolated-candidate tests (with Colima)\n- Ruff and mypy for changed Python modules\n- protocol hash and Git-index verification\n- evidence checksum and `git diff --check`\n\n## Limitations and decision\nThis is a synthetic randomly initialized small-model task, not a model-generated patch, pretrained-model result, Metal result, or agent rollout. It does not certify arbitrary Python repositories. **GO** for this task-specific grader cali",
+      "changed_files": 98,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410636",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410426",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410438",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "actual-optimizer-and-recovery",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634493/job/120723410205",
+          "workflow": "e2e-system-cpu"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410458",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410419",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410215",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410430",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410545",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410415",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044634472/job/120723410092",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400339",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400371",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400358",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400244",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400361",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400335",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400282",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400383",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400637",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 3,
+      "dependencies_mentioned": [
+        98
+      ],
+      "disposition_reason": "Two current unresolved P1 review findings cover external lock anchoring and Git replacement refs; exact-head checks are green but reviewer findings remain active.",
+      "draft": true,
+      "head": {
+        "ref": "codex/mlxlm-1971-isolation",
+        "sha": "762a5a65598756014d957a206ba1548cb19a348f"
+      },
+      "latest_reviews": [
+        {
+          "author": "chatgpt-codex-connector",
+          "state": "COMMENTED",
+          "submittedAt": "2026-10-23T04:12:14Z"
+        }
+      ],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "e2e-system-cpu",
+          "run_number": 276,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 538,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1539,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "BLOCKED",
+      "mergeable": true,
+      "next_action": "Address both P1s in a prospective version, rerun baseline/fix/mutant and adversarial controls, then request independent review.",
+      "number": 99,
+      "primary_disposition": "REPAIR-FIRST",
+      "requested_reviewers": [],
+      "review_decision": "REVIEW_REQUIRED",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 2,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 2
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Calibrate isolated MLX-LM 1971 Development task",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Anchor the v9 lock outside mutable working files**\n\nWhen the public `grade_workspace()` or `export_candidate()` entrypoint runs from a checkout where the protocol, lock, and evaluator files have been edited coherently, this check still succeeds because it compares only mutually editable working-tree data; unlike the historical auditor, it never compares v9 against the pinned `3f12eef...` Git objects. An altered grader can therefore accept a candidate while still reporting the v9 protocol identity, so the pu",
+          "line": 85,
+          "path": "src/vare/mlxlm_1971_repo_task_v9.py"
+        },
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable replacement refs in the v9 calibration**\n\nWhen `HEAD` has a replacement ref to a coherently tampered commit and the index/worktree is reset through that replacement, this `git status` reports clean while the later `rev-parse HEAD` still records the original SHA; the replacement can contain matching altered protocol, lock, and evaluator bytes, so the runner can emit passing evidence under the trusted implementation identity. Set `GIT_NO_REPLACE_OBJECTS=1` on this and the other revision-sensitive v9 G",
+          "line": 241,
+          "path": "scripts/run_mlxlm_1971_calibration_v9.py"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/99"
+    },
+    {
+      "additions": 2761,
+      "base": {
+        "ref": "codex/fresh-hf-dev-candidates-v1",
+        "sha": "ab8d7c0b55d5b1c28365f2f002509ce3a37df501"
+      },
+      "body_excerpt": "## Problem\nThe frozen HF Coding Development inference v1 requires a dual-Python runtime (MLX inference and host-side PyTorch grading), but that execution contract and preflight are not recorded in a versioned protocol. The prior v1 study remains protocol-invalid and its historical evidence must stay intact.\n\n## Hypothesis\nA separately versioned protocol with explicit interpreter identities and fail-closed prerequisite checks makes a future, auditable Development-only run executable without altering v1 evidence or grading semantics.\n\n## Changes\n- Add protocol v2 and a lock with exact model, task, source, grader, runtime, seed, budget, metrics, and GO/NO-GO identities.\n- Pin the verified MLX interpreter and Miniforge host-grader interpreter, with host PyTorch preflight before inference.\n- Add a lightweight v2 dry-run and focused tests; no model weights are loaded.\n- Mark all four tasks as previously model-exposed. Any rerun is not fresh-task evidence.\n- Preserve frozen v1 protocol, locks, and historical study evidence.\n\n## Validation and evidence\n- v2 dual-Python dry-run: 47/47 prerequisite checks passed; READY; 12 planned commands; no inference or training.\n- Focused tests: 4 passed.\n- Ruff, `py_compile`, `git diff --check`, protocol/lock verification, and evidence manifest integrity checks passed.\n- Raw dry-run, summary, and SHA-256 manifest are included under `results/hf-coding-dev-inference-v2/dual-python-validation-v2/`.\n\n## Limitations / decision\nThis PR establishes execution readiness only. It does not report coding success, fresh-task evidence, SFT/GRPO, or capability improvement. The four tasks were previously exposed to a model. Future inference must follow v2 exactly and retain this exposure classification.\n\n## Dependency\nStacked on PR #107 (`codex/fresh-hf-dev",
+      "changed_files": 9,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166307",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161388/job/119625165975",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166311",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166328",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166292",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166194",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166496",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166252",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166346",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166246",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123230",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123290",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123403",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123191",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123189",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625122902",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123186",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123254",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123303",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 0,
+      "dependencies_mentioned": [
+        107
+      ],
+      "disposition_reason": "Draft protocol is stacked on a candidate-selection branch not among the current open PRs; green checks do not validate task qualification or model success.",
+      "draft": true,
+      "head": {
+        "ref": "codex/hf-coding-dev-inference-v2-dual-python",
+        "sha": "710dbc0d28aa33a78521a29f067c9a9493f6c56d"
+      },
+      "latest_reviews": [],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1205,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 386,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Reconcile parent and task eligibility; retain negative outcomes, then request review of a narrowly scoped protocol.",
+      "number": 108,
+      "primary_disposition": "BLOCKED",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Add dual-Python HF Coding Development protocol v2",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/108"
+    },
+    {
+      "additions": 890,
+      "base": {
+        "ref": "codex/mlxlm-1971-isolation",
+        "sha": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc"
+      },
+      "body_excerpt": "## Scope\n\nProspective, operator-only safety wrapper for the frozen MLX-LM #1971 v9 calibration path. It runs the historical implementation from an independently attested fixed-commit worktree and preserves the frozen v9 protocol, lock, source, and raw evidence.\n\n## Current protections\n\n- Atomically reserves an operator-owned output directory and verifies its identity through descriptor-relative publication.\n- Disables Git replacement refs, inherited `GIT_*` routing, system/global Git configuration, hooks, and fsmonitor in trusted worktree operations.\n- Checks historical v9 protocol, lock, and evaluator bytes against immutable Git objects before dispatch.\n- Rejects symlink path components and uses a private no-follow patch snapshot for export.\n- Runs grade/export from pinned source in an isolated Python subprocess.\n\n## Cross-filesystem evidence retention\n\nThe child's raw records stage in a fresh mode-`0700` sibling directory under the reserved output's parent, so staging and publication share a filesystem. If descriptor-relative publication fails, the error names the retained recovery directory; cleanup of the temporary Git worktree does not delete staged evidence. A regression injects `EXDEV` and verifies the raw failure record remains available.\n\n## Verification and limits\n\n- Focused operator suite: **16 passed**.\n- Ruff, mypy for the changed operator, and `git diff --check`: passed.\n- No calibration, model inference, Docker grading, training, or held-out evaluation was performed.\n- On exact head `8257a4dfe2106055a048ddd4b1520a08c7e4d658`, the `ci` and `cpu-evidence` runs passed, and two independent exact-head Codex reviews found no major issues. The focused attestation/operator suite passes 24 tests. The PR remains Draft and stacked on #99.\n- PR #117 now contains this",
+      "changed_files": 5,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728165",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695727932",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036070134/job/120695728375",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728191",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728111",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728109",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728086",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728333",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728160",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728125",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711195",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711092",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711071",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711214",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711037",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695710908",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711175",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711147",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711094",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 1,
+      "dependencies_mentioned": [
+        117
+      ],
+      "disposition_reason": "Historical attested calibration publication evidence; draft, stacked on #99 and #117 line, with resolved threads and green checks.",
+      "draft": true,
+      "head": {
+        "ref": "codex/mlxlm-1971-attested-calibration",
+        "sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658"
+      },
+      "latest_reviews": [
+        {
+          "author": "chatgpt-codex-connector",
+          "state": "COMMENTED",
+          "submittedAt": "2026-10-23T22:47:15Z"
+        }
+      ],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 529,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1521,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Keep evidence, compare helper code with main before extraction; obtain review on the complete dependency chain.",
+      "number": 114,
+      "primary_disposition": "RESEARCH-EVIDENCE",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Preserve attested MLX-LM calibration evidence on publication failure",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/114"
+    },
+    {
+      "additions": 4180,
+      "base": {
+        "ref": "codex/mlxlm-1971-attested-calibration",
+        "sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658"
+      },
+      "body_excerpt": "## Summary\n\nThe v11 operator was superseded before any calibration after a source-level security regression showed that exporting from a caller-supplied Git repository could execute its local smudge filter during checkout. The prospective v12 wrapper fetches only the pinned baseline commit into fresh bare Git metadata, then delegates to the v11 operator using that isolated snapshot.\n\nA synthetic source-boundary test has a direct-checkout positive control that runs the fixture smudge filter, then verifies the isolated snapshot checkout does not run it and that the source upload-pack hook remains disabled. A separate real-source preflight passed the pinned MLX-LM baseline through the snapshot helper and verified all 201 Python files against the frozen source manifest. Its records are in `results/mlxlm-1971-v12-source-git-filter-boundary-v1/` and `results/mlxlm-1971-v12-real-source-snapshot-v1/`.\n\n## Validation\n\n- v11 + v12 focused suites: 30 passed.\n- Ruff, formatting, mypy (`src/vare`, 84 files), CLI import/help, and diff checks passed.\n- Synthetic source-boundary test: 0.66 s, child maximum RSS 33,931,264 bytes.\n- Real source-manifest preflight: 3.92 s, 3,813,389-byte peak temporary object/worktree storage, child maximum RSS 8,781,824 bytes, no swap growth. The recorded erratum states that Git wire bytes were not instrumented.\n- No model was loaded. No candidate grading, calibration, inference, training, or optimizer update was performed.\n\n## Scope and remaining gates\n\nProtocols v10, v11, and all earlier raw evidence are unchanged. v12 is prospective; its public operator interface has not been used for a task result. The source-provenance preflight is not a grader result. The #1971 task remains Development-only and consumed. The direct historical v9 public-entrypoint tr",
+      "changed_files": 90,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796963",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796906",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700972/job/120726796859",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796973",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796652",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796930",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796941",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796905",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796956",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796960",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781774",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781977",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781844",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781903",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781863",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781920",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781872",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781627",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781798",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 0,
+      "dependencies_mentioned": [],
+      "disposition_reason": "Stacked source-export chain with four unresolved but outdated review findings (including P1s); exact-head checks green, latest branch remains draft.",
+      "draft": true,
+      "head": {
+        "ref": "codex/mlxlm-1971-v10-operator",
+        "sha": "6709aed996ce5ec315cf7a87930350dca6c0ee20"
+      },
+      "latest_reviews": [
+        {
+          "author": "chatgpt-codex-connector",
+          "state": "COMMENTED",
+          "submittedAt": "2026-10-23T23:17:33Z"
+        }
+      ],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1541,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 539,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Preserve calibration history; obtain independent review of each current implementation before changing Draft/base state.",
+      "number": 117,
+      "primary_disposition": "BLOCKED",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 4,
+        "unresolved_threads": 4
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Isolate MLX-LM source snapshots before trusted export",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable repository hooks before staging trusted code**\n\nWhen the repository has an attacker-controlled `post-checkout` hook, including one selected through `core.hooksPath`, this command executes it inside the new worktree; the [Git hook documentation](https://git-scm.com/docs/githooks) confirms that `post-checkout` runs after `git worktree add` unless `--no-checkout` is used. The hook can add an untracked `scripts/__init__.py` or crafted bytecode, neither of which is covered by `PINNED_OPERATOR_SOURCES`, s",
+          "line": null,
+          "path": "scripts/run_mlxlm_1971_v10_operator.py"
+        },
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject export symlinks before canonicalizing paths**\n\nWhen `--source-repo` or `--patch` names a symlink, resolving it here erases that fact before the pinned v9 dispatcher receives the request, bypassing v9's explicit `source_root.is_symlink()` and `patch_path.is_symlink()` rejection. For a mutable patch referent, the historical exporter then validates, applies, and hashes the path in separate operations, allowing replacement between those steps and producing evidence for bytes different from those applied.",
+          "line": null,
+          "path": "scripts/run_mlxlm_1971_v10_operator.py"
+        },
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Read protocol inputs through bounded nonblocking descriptors**\n\nIf a mutable protocol or lock file is replaced with a FIFO after the preceding `is_file()` check, these ordinary `read_bytes()` calls block indefinitely before digest validation. This happens in the parent, before any subprocess timeout applies; a synchronized FIFO substitution reproduced the hang under a two-second external timeout. The patch snapshot's nonblocking protection does not cover these inputs. Open both files with no-follow/nonblock",
+          "line": null,
+          "path": "scripts/run_mlxlm_1971_v10_operator.py"
+        },
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve required test files in the nested v9 checkout**\n\nOn Git 2.43.0, the nested `git worktree add` in the pinned `run_pinned_v9_task` inherits this sparse selection, excluding `tests/`. Both actions consequently fail before export or grading: `attest_current_v9` requires the two test files listed in the frozen implementation manifest and raises `ValueError: v9 input is not a regular file: tests/test_mlxlm_1971_calibration_v9.py`. Exercising the real materialization helper and nested checkout confirmed t",
+          "line": null,
+          "path": "scripts/run_mlxlm_1971_v10_operator.py"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/117"
+    },
+    {
+      "additions": 512,
+      "base": {
+        "ref": "codex/transformers-49752-repo-task",
+        "sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d"
+      },
+      "body_excerpt": "## Summary\nProspective, **library-only** extraction of `agent_structured_edit.py` and source-only regression tests from stacked #102, based on latest passing #101 (`aef27e3`). Adds the runtime source to the prospective continuation inventory and explicitly documents current security limitations. No frozen v9/v11 files, agent runtime, protocol lock, or historical evidence was modified.\n\n## Gate\nDraft until the exact-head CI is green and an independent review checks race/symlink behavior. The code is not connected to the live Agent; no model inference or new calibration occurred. This is an incremental way to unblock #102 without bypassing frozen implementation hashes. No change to #102 itself or its retained raw evidence.\n\n## Prior results\nThe original 153-line module and 99-line tests are byte-identical to the corresponding Git files in #102 before any prospective changes. This PR does not claim a new model capability or held-out certification.\n\n## Exact-head follow-up \u2014 `552d6f61187926d78719aad8c4c7ec9e8663c242`\n\nAll exact-head CI checks pass, including Python 3.11/3.12/3.13, lint, typecheck, CPU evidence, and optimizer/recovery checks. The automated exact-head Codex review found no major issues. The PR remains Draft on its existing stacked base; the library is still not wired into live agent execution, and no model or new calibration run was performed.",
+      "changed_files": 4,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857119",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857271",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334856799",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857080",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768390/job/120334856914",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "actual-optimizer-and-recovery",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768430/job/120334857163",
+          "workflow": "e2e-system-cpu"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857025",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857365",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857102",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857415",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857338",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334834965",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835128",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835056",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835121",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835117",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835145",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334834948",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835084",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835240",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 0,
+      "dependencies_mentioned": [],
+      "disposition_reason": "Standalone library is not wired to the active runner; review threads are resolved, but the parent task branch is not one of the open PRs.",
+      "draft": true,
+      "head": {
+        "ref": "codex/structured-edit-core-standalone",
+        "sha": "552d6f61187926d78719aad8c4c7ec9e8663c242"
+      },
+      "latest_reviews": [
+        {
+          "author": "chatgpt-codex-connector",
+          "state": "COMMENTED",
+          "submittedAt": "2026-10-23T09:03:45Z"
+        }
+      ],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 494,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1452,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "e2e-system-cpu",
+          "run_number": 251,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Compare against #143 and current runner before extracting only still-used APIs to a main-based test PR.",
+      "number": 118,
+      "primary_disposition": "EXTRACT",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Extract hash-checked structured edit library without changing frozen agent runtime",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/118"
+    },
+    {
+      "additions": 37375,
+      "base": {
+        "ref": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "body_excerpt": "## Latest Development feasibility result: Transformers #45852\n\nThis update records a second bounded real-model run on a distinct Development-only task, plus source-controller fixes prompted by the retained trace.\n\n- Task: `transformers-45852-4d-mask`; baseline `381032b7e0a8896ae48f90dbe83eae3bf7630953`; known fix `909ece888ed4b55402dc8acbb9c13ddf8ff977b5`. The independent v3 grader had been calibrated before inference. The task is now exposed and retired from future cohorts.\n- Model: local MLX `Qwen2.5-3B-Instruct-4bit`, revision `4f83f8f146fdf28b512a06562b671d7af4fab457`; MLX 0.32.4 / MLX-LM 0.32.2.\n- Greedy and sampled attempts: **0/2 independently correct patches**; rewards `[0, 0]`, within-task variance `0.0`; a tool-applied edit occurred in 1/2 attempts, but neither edit was semantically correct. Public syntax checks passed but did not exercise task behavior. Both independent grades were 3/6 and failed the task cases.\n- Generated 1,077 tokens in 59.54 monitored model-run seconds. Maximum child RSS was 1,932.83 MiB, maximum MLX allocation was 2,712,633,538 bytes, minimum free-memory reading was 43%, and swap growth was 0 MiB. No optimizer step or held-out evaluation occurred.\n- Frozen protocol SHA-256: `2fc9a1361aad3640672290d1b1da23e27098bc5808004608554ce16d465154`; evidence manifest SHA-256: `10b1cbad0d35dd37eaf964bba60482a3c875576658f55edc26fbab819f09855c`. Full raw outputs, grading, resource telemetry, workspaces, exposure update, and reproduction details are in `results/transformers-45852-qwen25-3b-agent-feasibility-v1/`.\n- A preceding launch using the system Python failed before loading the model because MLX was unavailable in that interpreter; it produced zero tokens and was retained. The frozen MLX environment was then used for the two authorized attempts.\n\n",
+      "changed_files": 546,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290061",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466717/job/122156289479",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "actual-optimizer-and-recovery",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466741/job/122156290007",
+          "workflow": "e2e-system-cpu"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290153",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290059",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156289986",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156289910",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290075",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290077",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156289758",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290180",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262823",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262921",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262783",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262873",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262473",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156263031",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156263076",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262925",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262917",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 55,
+      "dependencies_mentioned": [],
+      "disposition_reason": "Current P1 grader-completion spoof fix and regression are present and exact-head CI is green, but independent reviewer confirmation remains unresolved; outdated empty-manifest P1 was extracted to #140. Large evidence bundle is not a clean merge unit.",
+      "draft": false,
+      "head": {
+        "ref": "codex/fresh-task-qualification-mlx-lm-1910",
+        "sha": "8aacae54d0f8893580a77cb8bb831e7621a2403a"
+      },
+      "latest_reviews": [
+        {
+          "author": "chatgpt-codex-connector",
+          "state": "COMMENTED",
+          "submittedAt": "2026-10-26T10:08:57Z"
+        }
+      ],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1766,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "e2e-system-cpu",
+          "run_number": 332,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 643,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "BLOCKED",
+      "mergeable": true,
+      "next_action": "Have an independent reviewer run the forged-output/early-exit regression; extract only the task-grader fix if the historical bundle is too broad.",
+      "number": 120,
+      "primary_disposition": "REPAIR-FIRST",
+      "requested_reviewers": [],
+      "review_decision": "REVIEW_REQUIRED",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 1,
+        "unresolved_outdated_threads": 1,
+        "unresolved_threads": 2
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Record real-model coding-agent feasibility and tool-boundary fixes",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Reject candidates that forge evaluator completion**\n\nWhen candidate source executes code during import, it controls the same stdout and process exit status used to establish evaluator success. A replacement module can emit the expected oracle JSON and call `os._exit(0)` before `CAL.CHILD` invokes any parser; under pytest, it can simply exit zero during collection. A local subprocess reproduction of these execution paths satisfied both acceptance conditions despite providing no `parse_tool_call` implementati",
+          "line": 194,
+          "path": "scripts/grade_mlx_lm_1910_candidate_v1.py"
+        },
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Reject manifests without a nonempty file inventory**\n\nIf a malformed manifest omits `files`, this default silently converts it into a valid empty inventory. Running the verifier against a directory containing only `evidence-manifest.json` with `{}` returns exit code zero and `status=COMPLETED`, although no evidence was verified; explicit empty objects and arrays also pass. This success marker is consumed by `run_mlx_lm_1910_qwen25_debug_v1.py` as its prior-run evidence check. Require the inventory field and",
+          "line": null,
+          "path": "scripts/verify_coding_agent_evidence_manifest_v1.py"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/120"
+    },
+    {
+      "additions": 2083,
+      "base": {
+        "ref": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "body_excerpt": "## Why\nThe frozen source-qualification v1 record for Transformers #49412 labels the baseline as failed based on the selected upstream pytest. Its raw baseline output shows the test fixture fails in setUp while patching an attribute absent at baseline, before the target registration function is called. That result did not independently reproduce the claimed behavior.\n\nThis PR adds a hash-locked, direct source replay of the pinned upstream _register_module_fusion implementation with fixed in-memory discovery and mapping-registry doubles. The first v2 replay is retained as exploratory history. Exact-head Codex review found that v2 could classify an unrelated first-call error as a baseline reproduction, so v2 is not accepted as authoritative. The prospective v3 protocol fixes that classifier and retains a dedicated first-call error control.\n\n## V3 results\n- Baseline: first registration returned normally; second registration raised the exact expected conversion-mapping ValueError.\n- Fixed source: passed same-fusion idempotence, unrelated-mapping retention, and unrelated-conflict rejection.\n- Three predeclared incorrect source mutations were all detected.\n- A separate control injected an unrelated ValueError on the first call and returned FIRST_CALL_ERROR_REJECTED.\n- All six cases matched the frozen protocol. Total in-container probe time was 0.120339 seconds; maximum process RSS was 18,743,296 bytes. Six fresh containers used no network, one CPU, 512 MiB, 64 PIDs, and a 30-second per-case timeout. No timeout or OOM occurred; host swap did not change.\n\n## Limits\nThis is narrow source-level evidence, not a certified repository-patch task. The probe stubs discovery and registry persistence and does not run candidate code, a hidden grader, the full upstream pytest suite, a model",
+      "changed_files": 52,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183645",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183882",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183883",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820733/job/120727183265",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183833",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183906",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183969",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183873",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183820",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183916",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171649",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171671",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171612",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171731",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171434",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171710",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171714",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171599",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171650",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 0,
+      "dependencies_mentioned": [],
+      "disposition_reason": "Main-based independent source replay and task qualification; exact-head checks green, prior P2 thread resolved, no independent approval.",
+      "draft": false,
+      "head": {
+        "ref": "codex/transformers-49412-qualification",
+        "sha": "a937f4ad6eacb63d679952f7a05d39d04afab59a"
+      },
+      "latest_reviews": [
+        {
+          "author": "chatgpt-codex-connector",
+          "state": "COMMENTED",
+          "submittedAt": "2026-10-24T00:04:25Z"
+        }
+      ],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1543,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 540,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "BLOCKED",
+      "mergeable": true,
+      "next_action": "Review task exposure and grader artifacts, obtain independent approval, then merge if the review confirms the frozen boundary.",
+      "number": 121,
+      "primary_disposition": "MERGE-CANDIDATE",
+      "requested_reviewers": [],
+      "review_decision": "REVIEW_REQUIRED",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Add independent source replay for Transformers fusion registration",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/121"
+    },
+    {
+      "additions": 4580,
+      "base": {
+        "ref": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "body_excerpt": "A candidate workspace excluded known fixes, but its dependency image contained the exact upstream GPTQ repair. A one-line installed-source import and an explicit compiled-code delegation each passed all four independent cases. Source replacement alone left the compiled repair available. The portable image build now verifies baseline module bytes, removes 187 package bytecode files, and corrects installation RECORD hashes/sizes. Both delegation paths fail the final task gate; genuine fixes still pass (GPTQ 4/4, tokenizer 9/9), and all four incorrect source mutations are rejected.\n\nThe bounded teacher trial completed four Mistral-7B attempts on two new Development module contracts: 0/4 repairs, 3,072 tokens, 133.158 monitored attempt seconds, and zero swap growth. The requested 14B checkpoint was unavailable locally and was not downloaded or rerun. Original image qualification was revoked after the dependency leak was discovered. All unchanged-baseline negatives, failed cleanup-image checks, raw traces and precommitted protocols are preserved; no model was rerun after image correction.\n\nValidation: 68 focused tests passed; Ruff and blob-budget checks passed; the independent offline byte/provenance audit passed normally and under python -O. Raw model and isolation records are losslessly archived with per-member SHA-256 inventories. No previously frozen shared runtime or historical evidence was changed. The inference controller is explicitly pinned to unmerged #120 commit 58ecd9c9727a1544a5a08c9c250f1f36dd9a5f8d in a separate checkout.\n\nLearning remains NO-GO: zero positives, two constant-zero reward groups, and no eligible 15-task held-out set. No SFT/GRPO, optimizer update, held-out quality comparison, async learner run or RSI gain is claimed. These are narrow module cont",
+      "changed_files": 74,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183367",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183124",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183099",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183181",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807182946",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183167",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183122",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183238",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183125",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467077",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799466908",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467052",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431251/job/120799467276",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799466995",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799466994",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467060",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467018",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467088",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799466986",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 0,
+      "dependencies_mentioned": [],
+      "disposition_reason": "Main-based repair-leakage closure plus explicit 7B teacher no-go evidence; exact-head checks green, no current unresolved threads, no independent approval.",
+      "draft": false,
+      "head": {
+        "ref": "codex/flagship-teacher-gate",
+        "sha": "37b31519818b5dfbf245075cc541d6c8a38b4099"
+      },
+      "latest_reviews": [],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 541,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1545,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "BLOCKED",
+      "mergeable": true,
+      "next_action": "Review diff for historical evidence scope, then obtain independent approval and merge through branch protection.",
+      "number": 122,
+      "primary_disposition": "MERGE-CANDIDATE",
+      "requested_reviewers": [],
+      "review_decision": "REVIEW_REQUIRED",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Close installed-repair leakage and record the 7B teacher NO-GO",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/122"
+    },
+    {
+      "additions": 9670,
+      "base": {
+        "ref": "codex/real-agent-interface-v1",
+        "sha": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76"
+      },
+      "body_excerpt": "## Result\n\nThis PR reports the v6 verifier-version drift pilot and five real learner-process crash/recovery injections on a synthetic TinyStories fixture.\n\n- Across two eligible seeds, naive async committed one invalid mixed-verifier update per seed (2/2); VARE quarantined each stale group and committed no invalid update in 2/2. Exact paired one-sided sign test p=0.25; uncertainty is large.\n- Held-out evaluations saturated at 4/4 for incumbent and candidate. No policy-quality gain or coding capability improvement is demonstrated.\n- All five actual SIGKILL cutpoints recovered exactly to the synchronous candidate's model, Adam, CPU RNG, and module-mode states. The new independent audit also checks eight consumed SQLite rows and matching acknowledgment heads, the durable active pointer, and the checkpoint digest. Each restart made one effective commit; two pre-commit attempts were recomputed.\n- VARE quarantined 8/16 rollouts, used no extra verifier calls, reached 1.28 GB peak process RSS, and added no measured swap. Queue-inclusive latency, checkpoint I/O and throughput details remain in the report.\n\n## Integrity fixes and re-audit\n\nThe runner's P1 output-ownership fix is included: an existing output directory is rejected without creating or overwriting evidence. The original defect was reproduced against temporary successful-run and failure-record fixtures; both regression tests confirm byte-for-byte preservation.\n\nAuditor correction v5 addresses three additional independent findings: it enforces the frozen behavior-logprob threshold, verifies trajectory states and acknowledgment events against the SQLite snapshot, and reconciles the durable SQLite promotion row with `active.json`, the worker journal, and recovered checkpoint bytes. Corruption regressions cover stale snap",
+      "changed_files": 58,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631154/job/120915477725",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478248",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478298",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "actual-optimizer-and-recovery",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631238/job/120915477876",
+          "workflow": "e2e-system-cpu"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915477994",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478179",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478183",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478129",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478150",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478221",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478270",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468418",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468504",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468124",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468439",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468413",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468323",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468346",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468545",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468443",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 5,
+      "dependencies_mentioned": [],
+      "disposition_reason": "Distinct synthetic verifier-drift, crash and recovery evidence; all current checks green, but branch is stacked on an unavailable/unfinished parent line.",
+      "draft": false,
+      "head": {
+        "ref": "codex/verifier-consistent-async-grpo-v1",
+        "sha": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48"
+      },
+      "latest_reviews": [
+        {
+          "author": "chatgpt-codex-connector",
+          "state": "COMMENTED",
+          "submittedAt": "2026-10-24T15:11:21Z"
+        }
+      ],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "e2e-system-cpu",
+          "run_number": 288,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 558,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1595,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Preserve records; compare exact source deltas against main before extracting any still-unique integrity code.",
+      "number": 126,
+      "primary_disposition": "RESEARCH-EVIDENCE",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Measure verifier-version-aware GRPO under drift and crashes",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/126"
+    },
+    {
+      "additions": 10743,
+      "base": {
+        "ref": "codex/mlx-core-development-agent-feasibility-v1",
+        "sha": "071352981ad2e6bb1601ae50f935600f28aba8fc"
+      },
+      "body_excerpt": "Stacked on Draft PR #130 at `codex/mlx-core-development-agent-feasibility-v1`. This change adds a bounded deterministic systems result for the lease-bound edit interface and makes the E2E source inventory admission explicit at its reviewed source identities.\n\n## Findings\n\n- The pinned deterministic controller completed 8/8 task \u00d7 interface \u00d7 mode cells on two MLX-LM Development tasks. All exact known-fix bytes passed the trusted network-denied grader.\n- One SIGKILL was injected after the atomic edit and fsynced action journal but before grading. Recovery restored the exact expected target hash, passed grading, and did not make a duplicate edit.\n- The descriptive synchronous/asynchronous wall-time ratio was 1.817 on this one four-cell workload. This is not a replicated speedup estimate and does not establish model quality or asynchronous RL gains.\n- Serialized tool-call request tokens were 878 for lease-bound edits and 1,155 for legacy edits on these exact known patches; these were tokenizer counts, not model-generated tokens.\n- The frozen journals contain two identical terminal completion markers per cell. Independent audit found a valid hash chain and one edit commit per operation. This warning is preserved in the raw evidence; the prospective logger fix has a regression test.\n- The model-coupled Qwen3-4B pilot stopped before generation after three wrapper setup failures. It produced no output, edit, grade, or optimizer update. No model capability or learning result is claimed.\n\n## Source inventory integrity\n\n- Preserve the historical 77-file runtime inventory at its pinned commit.\n- Admit the 78-file diagnostic inventory only at its recorded PR #129 source commit and verify the complete snapshot against Git blobs.\n- Reject mismatched source lists, hashes, runtime tree",
+      "changed_files": 163,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "actual-optimizer-and-recovery",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475653/job/121533450644",
+          "workflow": "e2e-system-cpu"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451621",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475567/job/121533450709",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451248",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451677",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451704",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451638",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451586",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451594",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451689",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451693",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421477",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421161",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421447",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421528",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421421",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421585",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421498",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421495",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421725",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 97,
+      "dependencies_mentioned": [
+        129,
+        130
+      ],
+      "disposition_reason": "Unique deterministic edit/recovery and source-inventory lineage; draft, stacked on older MLX feasibility branch.",
+      "draft": true,
+      "head": {
+        "ref": "codex/hash-bound-agent-edit-v1",
+        "sha": "139de5381989531691673be08e906233dd00468c"
+      },
+      "latest_reviews": [],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 609,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1698,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "e2e-system-cpu",
+          "run_number": 314,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Retain historical evidence; extract only source changes still needed after comparing with #143/#139.",
+      "number": 131,
+      "primary_disposition": "RESEARCH-EVIDENCE",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Measure deterministic edit replay and recovery; pin E2E inventories",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/131"
+    },
+    {
+      "additions": 1373,
+      "base": {
+        "ref": "codex/mlx-pr4748-qwen3-pilot-v1",
+        "sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b"
+      },
+      "body_excerpt": "## Summary\n\nAdds a bounded, hash-aware source-navigation interface for repository-repair agents and hardens the candidate-visible file filter against conventional answer/reference files and compiled artifacts. The candidate tools support deterministic source search, bounded leased reads, and atomic hash-bound edits. The shared runner records a fake-backed end-to-end tool trace; this is controller evidence, not model performance evidence.\n\nThis branch is stacked on PR #132. Historical source inventories V1\u2013V3 remain pinned; V4 pins the 80-file runtime source set and this test inventory to the exact implementation commits.\n\n## Verification\n\n- Focused suite: 84 passed, 69 skipped (model-gated).\n- An earlier independent review at head `00842df09437a4e1c4b4572eeeb4e2dd2e5fca02` recorded 55 passed and 19 source-inventory checks passed (1 skipped). It predates the current head. Current head `a65d59e5704b84a934a49385551a8d2311a01575` has green `ci`, `cpu-evidence`, and `e2e-system-cpu`; it is now ready for fresh exact-head review.\n- Ruff, blob budget, and `git diff --check` passed.\n- No model inference, held-out access, or task outcome was used.\n\n## Claim boundary\n\nThe fake backend proves that the runner can search, reject protected paths, read a lease-bound source window, apply an edit, finish, and retain the event chain. It does not demonstrate that a real model can solve a task or that this interface improves model capability. Filename filtering is defense in depth; each task still requires content-level source and grader qualification. No human approval is recorded; this stacked PR is not mergeable on its own.\n",
+      "changed_files": 7,
+      "checks": [],
+      "deletions": 37,
+      "dependencies_mentioned": [
+        132
+      ],
+      "disposition_reason": "The previously unresolved P2 findings are now fixed directly on the PR head with regressions. Exact-head local tests pass; GitHub Actions is pending, two threads remain open for reviewer confirmation, and the PR is stacked on #132.",
+      "draft": false,
+      "head": {
+        "ref": "codex/source-navigation-v1",
+        "sha": "947bbb08054174f7e3c569e257f129091c8df04f"
+      },
+      "latest_reviews": [
+        {
+          "author": "chatgpt-codex-connector",
+          "state": "COMMENTED",
+          "submittedAt": "2026-10-26T10:10:06Z"
+        }
+      ],
+      "live_workflows": [
+        {
+          "conclusion": null,
+          "name": "ci",
+          "run_id": 40544616246,
+          "run_number": 1774,
+          "status": "in_progress"
+        },
+        {
+          "conclusion": null,
+          "name": "e2e-system-cpu",
+          "run_id": 40544616237,
+          "run_number": 336,
+          "status": "in_progress"
+        },
+        {
+          "conclusion": null,
+          "name": "cpu-evidence",
+          "run_id": 40544616232,
+          "run_number": 647,
+          "status": "in_progress"
+        }
+      ],
+      "merge_state": "BLOCKED",
+      "mergeable": true,
+      "next_action": "Wait for exact-head CI, then obtain independent reviewer confirmation of both regressions and review the stacked dependencies; do not merge through protected main without approval.",
+      "number": 133,
+      "primary_disposition": "REPAIR-FIRST",
+      "requested_reviewers": [],
+      "review_decision": "REVIEW_REQUIRED",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 2,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 2
+      },
+      "reviewed_at": "2026-10-27T16:52:43.334521+00:00",
+      "state": "OPEN",
+      "title": "Add bounded source navigation for repair agents",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Bound the path inventory independently of search results**\n\nWhen the allowlist contains many moderately long paths, `indexed_paths` alone exceeds the response budget, and `_bounded()` discards every match before returning `output_limit_too_small`. I reproduced this with 128 valid source paths of 116 characters each under the default 8 KiB limit: indexing succeeds, but every search fails regardless of query. Truncate or omit the path inventory independently so that supported source sets still return useful b",
+          "line": 318,
+          "path": "src/vare/source_navigation_v1.py"
+        },
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Retry index construction after a recoverable build failure**\n\nIf a source temporarily exceeds an index limit or becomes unreadable, the failed rebuild clears the snapshot and sets `_last_build_error`; this early return then prevents all subsequent freshness checks and rebuilds, even after the source is repaired. I reproduced this by exceeding the per-file line limit, searching once, restoring a valid two-line file, and searching again: the navigator permanently reports the old limit error. Retry a bounded r",
+          "line": 270,
+          "path": "src/vare/source_navigation_v1.py"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/133"
+    },
+    {
+      "additions": 2233,
+      "base": {
+        "ref": "codex/transformers-47468-qualification-v1",
+        "sha": "d8636def094cd83a2010980570a5c4804725166a"
+      },
+      "body_excerpt": "## Summary\n\nProspective v4 correction for the process-group escape found in PR #134. This PR is stacked on #134 and preserves v3 source and historical evidence.\n\nV4 pins the unchanged v3 core, denies network/fork/subprocess spawn in the tested macOS profile, persists a UUID before process launch, and recovers a matching writer only when token, command, and working directory match. Ambiguous or inaccessible scans remain fail-closed.\n\nThe prior exact-head audit caught a journal-repair-before-identity-check defect; v4 now authenticates the first frozen event without repair and validates the current lock, source hashes, commit/tree and clean worktree before recovery can load or mutate the journal.\n\nIndependent review of `17ae56449a13fcb0484857c93e7b7b105024b699` found a P1: an ignored `run-v4/records` symlink redirected the manifest and recovery records outside the experiment while Git stayed clean. The current v4 runner rejects symlinked/non-directory runtime ancestors, records and run paths, symlinked manifest/lock/pending entries, and symlink entries in the records directory. Journal reads, atomic writes and recovery recheck the pinned runtime location. Output overrides use normalized lexical comparison after path validation.\n\n## Current source and verification\n\nCurrent head: `b258c69fc0295e421eab3aaae965d70b693cd1e6` (tree `7a7d0bdb95bb41b6d91191519bcc8dba2ab4952a`). This prospective commit changes only the V4 recovery test harness and its locked test-suite hash. It limits the launch-token test\u2019s inventory to the explicitly exercised PIDs, while delegating attribute-based process-group scans to the real `psutil.process_iter`; production recovery behavior is unchanged.\n\n- V4 focused synthetic suite: **34 passed** locally on the current commit.\n- Ruff, `py_compile`, and d",
+      "changed_files": 13,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374088",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374227",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080550/job/121237373814",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374166",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374195",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374119",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374089",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374201",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374224",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374107",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363207",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363183",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363298",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363081",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363308",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363008",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363178",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363218",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363198",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 0,
+      "dependencies_mentioned": [
+        134
+      ],
+      "disposition_reason": "Draft task-specific process-boundary preflight is stacked on a qualification branch that is not among the 18 open PRs.",
+      "draft": true,
+      "head": {
+        "ref": "codex/transformers-47468-qualification-v4",
+        "sha": "b258c69fc0295e421eab3aaae965d70b693cd1e6"
+      },
+      "latest_reviews": [],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 600,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1679,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Reconcile the closed/missing parent, refresh task qualification, then decide whether this preflight remains needed.",
+      "number": 135,
+      "primary_disposition": "BLOCKED",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Add process-creation boundary preflight for 47468 v4",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/135"
+    },
+    {
+      "additions": 164,
+      "base": {
+        "ref": "codex/source-navigation-v1",
+        "sha": "a65d59e5704b84a934a49385551a8d2311a01575"
+      },
+      "body_excerpt": "## Summary\n\nFixes the independent review finding on the bounded source-navigation change in PR #133. The exact source is `eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f`, whose tree is based on the prospective integration commit that includes the #133 tree; the PR base is #133's branch, so the reviewed diff is limited to this correction.\n\nThe syntax checker now opens only allowlisted regular files without following symlinks, enforces the 4 MiB bound on the opened descriptor, and rechecks file identity to reject swaps. Controller identity now also includes `agent_edit_format.py`. Error responses omit source content.\n\n## Verification\n\n- Focused syntax/source-navigation suite: 21 passed.\n- `py_compile`, Ruff, and `git diff --check` passed.\n- No model, grader, or hidden test ran.\n- Exact-head `ci` and `cpu-evidence` workflows passed; `e2e-system-cpu` is not defined for this head.\n- This PR is ready for exact-head independent review; no GitHub human approval is recorded.\n\n## Scope\n\nThis is a stacked PR against #133. It does not alter the frozen verifier qualification protocol or its evidence.",
+      "changed_files": 3,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202983",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230203029",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708887/job/121230202797",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202995",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202985",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230203053",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230203017",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202833",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202969",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202981",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174281",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174398",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174380",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174406",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174351",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174389",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174521",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174472",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174140",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 12,
+      "dependencies_mentioned": [
+        133
+      ],
+      "disposition_reason": "Narrow navigation follow-up stacked on #133, whose current two P2 findings remain unresolved.",
+      "draft": false,
+      "head": {
+        "ref": "codex/navigation-symlink-fix-v1",
+        "sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f"
+      },
+      "latest_reviews": [],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 596,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1671,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Keep behind #133; confirm exact-head tests after parent review.",
+      "number": 136,
+      "primary_disposition": "BLOCKED",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Harden source navigation syntax checks",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/136"
+    },
+    {
+      "additions": 437,
+      "base": {
+        "ref": "codex/navigation-symlink-fix-v1",
+        "sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f"
+      },
+      "body_excerpt": "## Summary\n\nProspective follow-up to PR #136 addressing the exact-head source-navigation review findings:\n\n- Split source identifiers and queries on underscores and CamelCase boundaries; require all query terms for a multi-part identifier match.\n- Include the selected controller source hashes, including `agent_edit_format.py`, in the durable `run_context` event before generation and reuse that same identity in the final record.\n- Exclude paths containing non-ASCII components from candidate-visible source to prevent Unicode-confusable protected directory names from bypassing filename filtering.\n- Add explicit V5 runtime/campaign source inventories. V4 and its historical 77-file campaign remain accepted at their pinned commits; new V5 diagnostics require their actual runtime/campaign commits and file hashes, including `scripts/run_local_agent.py`.\n- Require the event journal before model loading and retain the source identity before generation.\n\n## Validation\n\n- Focused V4/V5/navigation tests: 24 passed, 96 deselected.\n- Related local suites: 51 passed, 69 skipped; Ruff and `py_compile` passed.\n- Exact-head GitHub CI at `dd62c6e8336a5257bb626e51ff1d68443ba251f7` passed, including `actual-optimizer-and-recovery` and CPU evidence.\n- Independent exact-head technical review: GO. Exact-head review workflows passed. No GitHub human approval has been recorded; this PR is ready for review and remains unmerged.\n\nThe CI optimizer/recovery jobs exercise the existing synthetic CPU regression path with a tiny public model. They do not measure coding-agent capability, task success, or model-learning improvement.\n\n## Prospective invocation-retention correction (commit 6d95bd91)\n\nNavigation runs now fsync `invocation_started`, the exact prompt/task/model-file hashes and budgets, and `mod",
+      "changed_files": 8,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115769",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115831",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284302/job/121526115801",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "actual-optimizer-and-recovery",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284144/job/121526115125",
+          "workflow": "e2e-system-cpu"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115316",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115841",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115807",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115736",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115823",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115578",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115550",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096713",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096575",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096491",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096436",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096466",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096463",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096492",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096088",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096659",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 56,
+      "dependencies_mentioned": [
+        136
+      ],
+      "disposition_reason": "Useful source integrity changes, but stacked on #136 and #133; current #133 has two unresolved P2 findings.",
+      "draft": false,
+      "head": {
+        "ref": "codex/navigation-integrity-fixes-v1",
+        "sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
+      },
+      "latest_reviews": [],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "e2e-system-cpu",
+          "run_number": 311,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1692,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 606,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Resolve/review #133 and integrate dependencies in order; do not retarget or merge around the chain.",
+      "number": 137,
+      "primary_disposition": "BLOCKED",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Fix source-navigation review findings",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/137"
+    },
+    {
+      "additions": 230247,
+      "base": {
+        "ref": "codex/navigation-integrity-fixes-v1",
+        "sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
+      },
+      "body_excerpt": "## Sprint II research result\n\nPR #139 remains **Draft** on `codex/navigation-integrity-fixes-v1` (base `6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1`) and is stacked on unmerged PR #137. Current head: `087914fb9fc127302ab632cc665f9b7352b0c47c`. No merge was performed.\n\n### Real coding-agent campaign\n\n- Evaluated cached `mlx-community/Qwen2.5-Coder-7B-Instruct-4bit` (snapshot `019cc73c45c770444708a6dd8690c66243cc5c80`) and `mlx-community/Qwen2.5-Coder-14B-Instruct-4bit` (`29efdbab55a161237ab1e432a3abaf6c7ae2b477`) using MLX CPU on an M1 Pro / 32 GB.\n- Qualified seven Development task families across eight task packs from Transformers, with baseline-fail, known-fix-pass, incorrect-mutant-fail controls. No reserved held-out tasks were used.\n- Ran 12 model attempts plus one pre-inference launch error. Two attempts applied source edits; both failed independent grading. Final: **0 independently verified repairs / 7 families**. No Coding RL improvement claim.\n- Fixed the public runner's pytest-style false pass and bound the executed test file to the task-pinned SHA-256. Historical false-positive records remain unchanged and receive no credit.\n\n### Fresh model-coupled systems replication\n\nA separate, preregistered systems-only experiment completed at protocol `vare.streamed-grpo-systems.sprint-ii.v1` (SHA-256 `8507aede0b57ea08e75ae1d758df78b813adf637d0ee52bbe2554e9c5007cbe5`). It used cached `roneneldan/TinyStories-1M` revision `77f1b168e219585646439073245fe87e56b3023e`, CPU fp32, seeds 82014/82015/82016, four rounds and four optimizer updates per seed. Checkpoint/model file hashes and the full protocol are in `results/sprint_ii_20261027/streamed_grpo_v32/`.\n\nAll 12 updates passed independent full-gradient, Adam-state, parameter, loss, RNG, behavior-alignment, and trajectory-ledger",
+      "changed_files": 1059,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722442/job/122208108865",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722442/job/122208108680",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "actual-optimizer-and-recovery",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722401/job/122208107975",
+          "workflow": "e2e-system-cpu"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722442/job/122208108798",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722442/job/122208109027",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722442/job/122208108772",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722442/job/122208109546",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722442/job/122208108900",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722442/job/122208108359",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722442/job/122208108959",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509722532/job/122208108400",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509714382/job/122208082009",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509714382/job/122208082068",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509714382/job/122208082184",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509714382/job/122208082260",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509714382/job/122208081907",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509714382/job/122208082100",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509714382/job/122208082151",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509714382/job/122208081464",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40509714382/job/122208082429",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 79,
+      "dependencies_mentioned": [
+        120,
+        133,
+        137
+      ],
+      "disposition_reason": "Large stacked branch contains overlapping navigation changes and substantial historical model/task evidence; all three checks pass at current head.",
+      "draft": true,
+      "head": {
+        "ref": "codex/development-navigation-campaign-v1",
+        "sha": "cde7e56f9f7664a7fd30b99f2295975e063ed37a"
+      },
+      "latest_reviews": [],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 646,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1772,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "e2e-system-cpu",
+          "run_number": 335,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "CLEAN",
+      "mergeable": true,
+      "next_action": "Keep the negative evidence in #142; extract only independently reviewed source-navigation fixes after parent #137/#136/#133 decisions.",
+      "number": 139,
+      "primary_disposition": "EXTRACT",
+      "requested_reviewers": [],
+      "review_decision": "",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Fix navigation regressions and measure fresh Development agent failures",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/139"
+    },
+    {
+      "additions": 342,
+      "base": {
+        "ref": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "body_excerpt": "## Summary\n\nExtract the empty-inventory integrity fix from PR #120 into a focused, reviewable change based on `main`.\n\nThe verifier now rejects a missing `files` field, an empty object, and an empty array. The accompanying tests retain coverage for both supported nonempty manifest schemas, duplicate paths, and archived workspace entries.\n\n## Validation\n\n- `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_coding_agent_evidence_manifest.py` \u2014 5 passed\n- `ruff check scripts/verify_coding_agent_evidence_manifest_v1.py tests/test_coding_agent_evidence_manifest.py` \u2014 passed\n- `git diff --cached --check` \u2014 passed\n\nThis PR does not merge PR #120 or resolve its separate candidate-evaluator review finding.",
+      "changed_files": 2,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392020",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392041",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716577/job/122113391859",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392044",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392003",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392173",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113391990",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392018",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113391894",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113391609",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372672",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372705",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372577",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372733",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372392",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372701",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372748",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372665",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372639",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 0,
+      "dependencies_mentioned": [
+        120
+      ],
+      "disposition_reason": "Focused main-based manifest integrity fix; CI green. One unresolved P2 is outdated and appears addressed in the head, but no reviewer confirmed it.",
+      "draft": false,
+      "head": {
+        "ref": "codex/evidence-manifest-integrity-v1",
+        "sha": "34f972eb2a300711f36fd81a72b6948528dfebad"
+      },
+      "latest_reviews": [
+        {
+          "author": "chatgpt-codex-connector",
+          "state": "COMMENTED",
+          "submittedAt": "2026-10-27T06:47:42Z"
+        }
+      ],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1756,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 638,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "BLOCKED",
+      "mergeable": true,
+      "next_action": "Ask an independent reviewer to confirm the symlink/archive-fallback regression; merge only after approval.",
+      "number": 140,
+      "primary_disposition": "MERGE-CANDIDATE",
+      "requested_reviewers": [],
+      "review_decision": "REVIEW_REQUIRED",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 1,
+        "unresolved_threads": 1
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Reject empty coding-agent evidence manifests",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [
+        {
+          "author": "chatgpt-codex-connector",
+          "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject unsafe live workspace entries before archive fallback**\n\nWhen a workspace file or one of its ancestors is replaced by a symlink, `is_safe_regular_file()` rejects it, but this fallback then verifies the original archive member and reports success despite the altered live evidence. A reproduction with `greedy/workspace/agent.py` symlinked to different contents and the original bytes retained in `greedy/workspace.tar` returns `(1, [])`. Restrict archive fallback to genuinely absent workspace entries and",
+          "line": null,
+          "path": "scripts/verify_coding_agent_evidence_manifest_v1.py"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/140"
+    },
+    {
+      "additions": 10910,
+      "base": {
+        "ref": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "body_excerpt": "## Dataset-split audit \u2014 do not merge pending independent review\n\nSprint IV used MLX-LM upstream #1926 as Development even though frozen VARE PR #129 had allocated and certified the same Falcon-H1 cache/gradient source family as held-out. The original allocation and all model/grader outcomes remain unchanged. The family is now excluded from every future blind held-out count.\n\nAn append-only prospective disposition record is published at `results/sprint_iv_20261027/exposure-disposition-append-v1.json` (SHA-256 `3018268f0e14ccf75e52234e1f84aa4a90db10cdb993b3f897870b288cdfd66c`). It preserves the original #129 record, records the #1926 exposure, and audits #1913/#1925: the MiniCPM3 components share the same source method and attention-mask/cache fix family. The #1925 composite candidate remains excluded and receives no independent credit. Its Phixtral component was not visible to the Sprint IV model and would need separate qualification before use.\n\nThe earlier 10/15 source/grader-certified count therefore becomes **9/15 prospectively**, with six more certificates needed. Full model eligibility remains unknown because external pretraining exposure is unaudited; held-out inference remains NO-GO. The full Japanese report includes the dated correction and reconciliation.\n\nThe PR remains Draft until an independent reviewer checks the source-split disposition. Do not merge before that review.\n\n## Summary\n\nPublishes the frozen Sprint IV v2 protocol, two qualified upstream Development tasks, all eight raw hash-chained model/tool trajectories, candidate diffs, resource monitor records, public-safe grader receipts, and the Japanese report. It also retains the v1 prelaunch invalidation record; no model attempts were run under v1 because candidate-visible metadata disclosed repair op",
+      "changed_files": 82,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359603/job/122125666226",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359603/job/122125665781",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359603/job/122125666379",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359415/job/122125664727",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359603/job/122125666280",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359603/job/122125666517",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359603/job/122125666342",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359603/job/122125666446",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359603/job/122125666377",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485359603/job/122125666163",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485348193/job/122125626119",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485348193/job/122125626062",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485348193/job/122125626037",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485348193/job/122125626210",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485348193/job/122125626308",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485348193/job/122125626066",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485348193/job/122125626224",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485348193/job/122125626138",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40485348193/job/122125626185",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 0,
+      "dependencies_mentioned": [
+        129,
+        141,
+        143
+      ],
+      "disposition_reason": "Retains Sprint III\u2013V exposure and evidence; this sprint adds a new task campaign and append-only negative outcomes. Draft and no outside review.",
+      "draft": true,
+      "head": {
+        "ref": "codex/sprint-iv-evidence-public-v1",
+        "sha": "be2de0a23bef45eccf673658d8c1feafee1449cf"
+      },
+      "latest_reviews": [],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1762,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 641,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "BLOCKED",
+      "mergeable": true,
+      "next_action": "Add Sprint VI report, compact raw trajectory package, task manifests and refreshed audit ledger; retain Draft until review.",
+      "number": 142,
+      "primary_disposition": "RESEARCH-EVIDENCE",
+      "requested_reviewers": [],
+      "review_decision": "REVIEW_REQUIRED",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Publish verified external repair campaign evidence",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/142"
+    },
+    {
+      "additions": 467,
+      "base": {
+        "ref": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "body_excerpt": "## Summary\n\nExtract the external candidate-diff finalization fix into a small main-based change, without importing PR #139's large experimental/controller history.\n\nThe agent now records the candidate workspace revision and the exact allowlisted source bytes before generation. At finalization it requires that the workspace HEAD is unchanged, compares the invocation snapshot to the pinned Git blobs from that workspace, and emits the canonical Git diff with external diff/textconv/lazy-fetch paths disabled. This avoids looking up an upstream source commit in VARE's Git database and fails closed on source or workspace revision drift.\n\n## Regression evidence\n\n- `record_coding_agent_baseline.parse_diff()` accepts the emitted patch.\n- `verify_agent_workspace.verify_workspace()` independently accepts the candidate source, hashes, and canonical patch.\n- Tests cover unchanged workspaces, all four final-newline combinations, and a changed workspace HEAD.\n- Focused suite: 17 passed.\n- `ruff check scripts/run_local_agent.py tests/test_run_local_agent_tool_format.py`: passed.\n- `git diff --check`: passed.\n\nThis extraction is based directly on `main` at `f3ab90a36e8724441b6b9555255f8f75a0a4d529`. It does not contain PR #139 experiment results or other unmerged runtime changes.\n\n\n## Local full-suite verification\n\nAt exact head `f2a0be838e456107e1c33a884bed7c4a3903aa59`, the full relevant local suite completed with `1481 passed, 91 skipped` in 290.46 seconds. Command: `TMPDIR=<workspace>/work/docker-tmp DOCKER_HOST=unix:///Users/user/.colima/default/docker.sock PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py`. The initial default macOS temporary directory was outside Colima's shared mounts and caused fou",
+      "changed_files": 4,
+      "checks": [
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394224",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394004",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394319",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147393978",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147393899",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "calibrated-cpu-tasks",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491829961/job/122147393111",
+          "workflow": "cpu-evidence"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394105",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394128",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394178",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394041",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.12)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375208",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.13)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375251",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "lint",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375367",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "test (3.11)",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375249",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "typecheck",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375333",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "rvl-inference-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375334",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "blob-budget",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375314",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "seeded-summary-cpu",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375383",
+          "workflow": "ci"
+        },
+        {
+          "bucket": "pass",
+          "name": "math500-grader",
+          "state": "SUCCESS",
+          "url": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375042",
+          "workflow": "ci"
+        }
+      ],
+      "deletions": 30,
+      "dependencies_mentioned": [
+        139,
+        141
+      ],
+      "disposition_reason": "Small main-based export/verifier hardening; exact-head checks green and no unresolved threads. No outside APPROVED review is present.",
+      "draft": false,
+      "head": {
+        "ref": "codex/external-diff-export-main-v1",
+        "sha": "6266ec0a10920ae9ef95ccb528145ef14a452e39"
+      },
+      "latest_reviews": [],
+      "live_workflows": [
+        {
+          "conclusion": "success",
+          "name": "cpu-evidence",
+          "run_number": 642,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "ci",
+          "run_number": 1764,
+          "status": "completed"
+        }
+      ],
+      "merge_state": "BLOCKED",
+      "mergeable": true,
+      "next_action": "Obtain an independent approval; merge through protected main if the reviewer confirms the current source/hash regressions.",
+      "number": 143,
+      "primary_disposition": "MERGE-CANDIDATE",
+      "requested_reviewers": [],
+      "review_decision": "REVIEW_REQUIRED",
+      "review_state": {
+        "independent_approval_present": false,
+        "requested_reviewers": [],
+        "unresolved_current_threads": 0,
+        "unresolved_outdated_threads": 0,
+        "unresolved_threads": 0
+      },
+      "reviewed_at": "2026-10-28T01:10:00+09:00",
+      "state": "OPEN",
+      "title": "Export candidate diffs from pinned workspaces",
+      "unique_evidence_or_code_retained": true,
+      "unresolved_review_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/143"
+    }
+  ],
+  "repository": "mitukx/VARE",
+  "schema_version": 1,
+  "summary": {
+    "all_open_prs_have_independent_approval": false,
+    "classification_counts": {
+      "BLOCKED": 5,
+      "EXTRACT": 2,
+      "MERGE-CANDIDATE": 4,
+      "REPAIR-FIRST": 3,
+      "RESEARCH-EVIDENCE": 4
+    },
+    "closed_this_sprint": 0,
+    "merged_this_sprint": 0,
+    "open_prs_with_all_current_actions_green": 17,
+    "updated_this_sprint": 1
+  }
+}

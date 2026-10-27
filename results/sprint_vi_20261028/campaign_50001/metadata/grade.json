@@ -1,0 +1,38 @@
+{
+  "base_revision": "6317971aa31593f77b5335e806009dc2f1e94617",
+  "candidate_isolation": "agent-visible workspace excluded evaluator directory and hidden test; grader copied workspace after generation",
+  "expected_pass": false,
+  "hidden": {
+    "hidden_test_sha256": "3878b579b4c7941b269b4c641a68c79fff24a979716234f7800981481f4f28be",
+    "isolation": "separate-post-generation-read-only-workspace-network-none",
+    "passed": false,
+    "returncode": 1,
+    "stderr": "FAILED: test_import_is_deferred_until_pipeline_construction\nTraceback (most recent call last):\n  File \"<string>\", line 27, in <module>\n  File \"/workspace/test_hidden.py\", line 62, in test_import_is_deferred_until_pipeline_construction\n    assert result.returncode == 0, f\"constructor behavior check failed: {result.stdout}\\\\n{result.stderr}\"\n           ^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: constructor behavior check failed: \\nTraceback (most recent call last):\n  File \"<string>\", line 3, in <module>\nAssertionError\n\nFAILED: test_only_moves_the_basic_tokenizer_import\nTraceback (most recent call last):\n  File \"<string>\", line 27, in <module>\n  File \"/workspace/test_hidden.py\", line 21, in test_only_moves_the_basic_tokenizer_import\n    assert len(imports) == 1, f\"expected one BasicTokenizer import, got {len(imports)}\"\n           ^^^^^^^^^^^^^^^^^\nAssertionError: expected one BasicTokenizer import, got 2\n",
+    "stderr_sha256": "0d1bc0c8a690366c318a866c8696c777fb9aa9732a27ecc35fe5ed2429e39867",
+    "stdout": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "hidden_test_sha256": "3878b579b4c7941b269b4c641a68c79fff24a979716234f7800981481f4f28be",
+  "image": "localhost:5000/vare/transformers-50001-grader@sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+  "public": {
+    "elapsed_seconds": 4.08,
+    "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+    "passed": false,
+    "returncode": 1,
+    "stderr": "FAILED: test_token_classification_import_does_not_load_legacy_bert_tokenizer\nTraceback (most recent call last):\n  File \"<string>\", line 26, in <module>\n  File \"/workspace/test_public.py\", line 15, in test_token_classification_import_does_not_load_legacy_bert_tokenizer\n    assert result.returncode == 0, f\"lazy import assertion failed: {result.stdout}\\n{result.stderr}\"\n           ^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: lazy import assertion failed: \nTraceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nAssertionError\n\n",
+    "stdout": ""
+  },
+  "public_test_sha256": "3a1d6d2366f80f9e5ef4d51bef1e4f0070c6bab8133013d1b77ef284d0f9344b",
+  "qualified_outcome": true,
+  "schema_version": 1,
+  "split": "development",
+  "state": "mutant",
+  "target_path": "src/transformers/pipelines/token_classification.py",
+  "target_sha256": "e6a89499e16d3f797cd05631ade1c6b6d291f16124330bb1790aefa177d6a8a4",
+  "task_id": "transformers-50001-token-classification-lazy-import-v1",
+  "task_input_hashes": {
+    "TASK.md": "bfe9d00187969c3708bd80d0cfdc1d2314263fa8da37dcb71b089556fda9acc0",
+    "task.json": "0f37f4660529ede392ceffd98b8c272d0cef1ce7f4ca987410bd4b8b32294468",
+    "test_public.py": "3a1d6d2366f80f9e5ef4d51bef1e4f0070c6bab8133013d1b77ef284d0f9344b"
+  }
+}
