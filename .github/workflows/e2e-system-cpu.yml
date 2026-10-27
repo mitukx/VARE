@@ -59,9 +59,15 @@ jobs:
         run: |
           python scripts/benchmark_e2e_rl_real_model.py --output "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2" --workers 1 --seeds 1701 --tasks 8 --eval-tasks 8
           python scripts/audit_e2e_rl_real_model.py "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2"
+      - name: Materialize the immutable continuation campaign revision
+        run: |
+          historical="${RUNNER_TEMP}/vare-e2e-continuation-v4"
+          git -c core.hooksPath=/dev/null worktree add --detach "$historical" d251cc678fbc9940f3de460904d5d23a1967b3ce
+          test "$(git -C "$historical" rev-parse HEAD)" = "d251cc678fbc9940f3de460904d5d23a1967b3ce"
       - name: Verify continuous updates and actual learner SIGKILL recovery
         env:
           VARE_E2E_MODEL_DIR: ${{ runner.temp }}/tiny-gpt2
+        working-directory: ${{ runner.temp }}/vare-e2e-continuation-v4
         run: |
           set +e
           python -m pytest tests/test_e2e_rl_continuation.py --basetemp="${RUNNER_TEMP}/v2-tests"
