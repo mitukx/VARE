@@ -62,9 +62,15 @@ v2の主指標は固定4試行/ task family（2 arms × 2 seeds）で「独立gr
 
 公開証拠bundleは `results/sprint_iv_20261027/external-repair-evidence-public-v1/` にあり、8つのraw hash-chained event journal、候補diff、resource samples、正規化したcommands、grader control summaries、protocol、task/public test、manifest verifierを収録する。hidden test source、hidden grader、hidden stdout/stderr、candidate workspaces、model weightsは公開bundleに含めない。未編集の生記録は元のローカル実験treeに残す。
 
-## 学習・long-horizon・RSI
+## SFT・GRPO・long-horizon・RSI
 
-SFT / GRPOは**未実施**。二つともDevelopment taskでTrain例ではなく、修復をtraining dataとして流用しない。15-family held-out gateを変更せず、held-out taskを消費していない。optimizer update / training checkpoint / learned policy comparisonはない。
+**Train split限定のSFTを実行した。** これは外部Development campaignとは別の学習実行で、MLSys v1の固定Train 5 taskから作ったknown-fixパッチ5例だけを使った。Development試行、held-out task、hidden test/graderは含めていない。モデルは `Qwen/Qwen2.5-0.5B-Instruct` revision `7ae557604adf67be50417f59c2c2f167def9a775`、MLX 0.32.4 / mlx-lm 0.32.2、Apple Metal。LoRA rank 8、最終4 transformer layers、Adam、learning rate `1e-5`、seed `20261027`、20 updates、最大系列長2,048。
+
+20/20 updateを完了し、学習lossはstep 1の0.628からstep 20の0.150へ低下した。最終adapterの28個のLoRA-B tensorは全て非ゼロ（405,504個の非ゼロ要素）で、重みSHA-256は `d3865fdcfcc14deadf05663285fa166d21b19c19104b13657690dd997205eb03`。これは実際にoptimizerがモデルadapterを更新した証拠だが、5つの訓練例上のlossであり、能力改善の証拠ではない。独立no-update比較、独立採点、held-out評価は行っていない。MLX-LM標準CLIはoptimizer stateを保存しないため、optimizer state checkpointもない。
+
+学習は18.25秒、最大process RSS 1,220.77 MiB、空きswap 433.12→441.12 MiBで完了し、中断なし。protocol SHA-256は `2243ee5bf6273140172e015fdee9c5d2671749c61b4393bf49ea0f3fa14e9e9d`。凍結protocol、5件の学習JSONL、20 step log、resource samples、adapter hashを `results/sprint_iv_20261027/mlsys-sft-train-only-v1/` に収録する。adapter重み自体は通常Gitには含めず、ローカル実験成果として保管する。
+
+GRPOは**未実施**。モデル生成の信頼できる非定数報酬群がなく、MLSys hidden graderの候補名前空間分離にも既知の問題が残るため、今回はSFTと称してRLを実行していない。15-family held-out要件を変更せず、held-out taskを消費していない。Model-coupled asynchronous RLとRSI benchmark loopも未実施。
 
 Model-coupled asynchronous RL、optimizer recoveryとの接続、独立したlong-horizon fault injection、agent提案のRSI benchmark loopも**未実施**。今回の完了は1つのbounded coding episodeに限られ、504-round synthetic systems結果の再現や延長ではない。
 
@@ -72,7 +78,7 @@ Model-coupled asynchronous RL、optimizer recoveryとの接続、独立したlon
 
 mainは `f3ab90a36e8724441b6b9555255f8f75a0a4d529` のまま。PR #139はDraft、head `087914fb…`、base PR #137の `6d95bd91…`。#139の最初のcheck run `40408880544` でPython 3.13が失敗したが、同じheadのrerun `40408886276` では3.11/3.12/3.13を含む全checksがpassした。人間のapprovalは記録されていない。
 
-PR #141は外部revision差分出力だけのfocused child PR（head `52d257e80f503306d04af255203fef9396b4d304`）で、main merge前に#139依存が解消される必要がある。PR #141のGitHub checksはこの報告snapshot時点で実行中で、完了済みchecksはpass、失敗checkはない。公開用の実験レポート・trajectory bundleは、mainをbaseとする別PR [#142](https://github.com/mitukx/VARE/pull/142)（head `2d519b57446401d9470212987d76315ad2a23a04`）に分けた。#142もsnapshot時点ではCI実行中。PR #140 head `a548daa1797b0d6a7a9b865f2eebb18b8ca71fc5` のCIはpassだが、symlink/archive fallbackに関するautomated P2 threadは未解決のまま独立review待ち。PR #120のgrader-completion spoofing P1も既存blockerである。
+PR #141は外部revision差分出力だけのfocused child PR（head `52d257e80f503306d04af255203fef9396b4d304`、base #139 head `087914fb9fc127302ab632cc665f9b7352b0c47c`）で、GitHub上の全19 check runsはSUCCESS。自動Codex reviewは記録されたが、人間approvalはなく、#139依存と必須reviewが解消していないためmainには未統合。公開用の実験レポート・trajectory bundleは、mainをbaseとする別PR [#142](https://github.com/mitukx/VARE/pull/142)（前回head `bf897359f7944dd15f82809571d2a90f97a7def9`）に分けた。SFT evidenceと本報告の今回の追記前、#142の同head上でも19 check runsすべてSUCCESSだったが、GitHubは`REVIEW_REQUIRED`で人間approvalはない。この追記は新headとなりCIを再実行する。PR #140 head `a548daa1797b0d6a7a9b865f2eebb18b8ca71fc5` のCIはpassだが、symlink/archive fallbackに関するautomated P2 threadは未解決のまま独立review待ち。PR #120のgrader-completion spoofing P1も既存blockerである。
 
 今回のPR変更履歴は開始時16 openから18 openへ増加し、#141（runner修正）と#142（実験証拠）の2件を作成した。close 0、merge 0、既存PRのDraft解除0。Draft数は8のまま。mainは`f3ab90a36e8724441b6b9555255f8f75a0a4d529`のままで、PR reviewやdependency gateを飛び越えた統合はない。
 
@@ -84,14 +90,15 @@ PR #141は外部revision差分出力だけのfocused child PR（head `52d257e80f
 | Qwen 14Bが外部編集を適用 | RUN | localized 4/4 edits applied、autonomous 0/4 |
 | 独立検証済み外部repair | RUN / 小規模 | Falcon-H1 2成功試行、1/2 task family |
 | 自律ナビゲーション | NO-GO / controller改良必要 | 4/4で編集前に同種のnavigationを反復 |
-| Training / GRPO / SFT | NOT_RUN | eligible Train dataなし |
+| Train-only SFT | RUN | Qwen2.5-0.5B、5 oracle examples、20 LoRA updates。訓練lossは低下したが独立能力評価なし |
+| GRPO | NOT_RUN | 信頼できるnonconstant reward groupsなし。grader境界も未適格 |
 | held-out improvement | NOT_RUN | 未使用・15 family要件維持 |
 | model-coupled long-horizon RL | NOT_RUN | 今回実行していない |
 | RSI research automation | NOT_RUN | agent-proposed benchmark iteration未実施 |
-| runner export fix | PARTIAL | PR #141に実装・105 tests pass、CI/review待ち、main未統合 |
+| runner export fix | PARTIAL | PR #141に実装・105 tests pass・GitHub checks成功、#139依存とreview待ち、main未統合 |
 | PR close / merge | 0 / 0 | review・dependency gateを維持 |
 
-**次の最優先実験:** PR #141のreview/CIを完了させてから、未使用のMLX/Transformers Development task familyを少なくとも6件、同じ14B checkpointと修正runnerで事前登録し、autonomous/localizedを同seed・同tool budgetで比較する。各runはrunner終了と`run_finished` eventまで確認してから別graderに渡す。今回のtask IDは再利用しない。学習は、その後に独立Train familyとreward variationが確認できた場合だけ始める。
+**次の最優先実験:** PR #141の#139依存とreviewを解消し、修正runnerで未使用のMLX/Transformers Development task familyを少なくとも6件、同じ14B checkpointで事前登録してautonomous/localizedを同seed・同tool budgetで比較する。各runはrunner終了と`run_finished` eventまで確認してから別graderに渡す。今回のDevelopment task IDは再利用しない。次の学習段階は、optimizer stateを保存できる実装と独立Train-family評価を用意した後に行う。今回のSFTはTrain splitの実更新を証明したが、Coding RL/held-out性能向上は未証明である。
 
 ## 検証
 
