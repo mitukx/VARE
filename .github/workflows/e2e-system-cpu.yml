@@ -26,7 +26,11 @@ permissions:
 jobs:
   actual-optimizer-and-recovery:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # The fully passing continuation suite has several real checkpoint and
+    # SIGKILL restart cases; the former 15-minute cap cancelled it before the
+    # historical campaign completed. This is CI wall time only, not a change
+    # to any frozen experiment or model/resource budget.
+    timeout-minutes: 25
     env:
       OMP_NUM_THREADS: '1'
       MKL_NUM_THREADS: '1'
@@ -59,9 +63,18 @@ jobs:
         run: |
           python scripts/benchmark_e2e_rl_real_model.py --output "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2" --workers 1 --seeds 1701 --tasks 8 --eval-tasks 8
           python scripts/audit_e2e_rl_real_model.py "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2"
+      - name: Materialize the V4 campaign harness revision
+        run: |
+          historical="${RUNNER_TEMP}/vare-e2e-continuation-v4-campaign"
+          # The immutable V4 runtime is pinned separately to d251cc6 by its
+          # source identity. Use the campaign harness revision that admits V4
+          # and asserts its corresponding fail-closed diagnostic.
+          git -c core.hooksPath=/dev/null worktree add --detach "$historical" a65d59e5704b84a934a49385551a8d2311a01575
+          test "$(git -C "$historical" rev-parse HEAD)" = "a65d59e5704b84a934a49385551a8d2311a01575"
       - name: Verify continuous updates and actual learner SIGKILL recovery
         env:
           VARE_E2E_MODEL_DIR: ${{ runner.temp }}/tiny-gpt2
+        working-directory: ${{ runner.temp }}/vare-e2e-continuation-v4-campaign
         run: |
           set +e
           python -m pytest tests/test_e2e_rl_continuation.py --basetemp="${RUNNER_TEMP}/v2-tests"
