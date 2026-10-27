@@ -52,6 +52,38 @@ def test_rejects_missing_and_empty_file_inventories(tmp_path):
         assert failures
 
 
+def test_rejects_duplicate_json_keys_in_path_map_manifest(tmp_path):
+    payload = b"evidence\n"
+    digest = hashlib.sha256(payload).hexdigest()
+    (tmp_path / "agent.json").write_bytes(payload)
+    (tmp_path / "evidence-manifest.json").write_text(
+        '{"files":{"agent.json":{"bytes":9,"sha256":"'
+        + digest
+        + '"},"agent.json":{"bytes":9,"sha256":"'
+        + digest
+        + '"}}}'
+    )
+
+    verified, failures = verify(tmp_path)
+
+    assert verified == 0
+    assert failures == ["invalid evidence manifest: duplicate JSON object key: agent.json"]
+
+
+def test_rejects_invalid_manifest_root_and_path_map_values(tmp_path):
+    manifest_path = tmp_path / "evidence-manifest.json"
+    for contents, expected_failure in (
+        ('null', "manifest must be a JSON object"),
+        ('{"files":{"agent.json":[]}}', "files['agent.json'] must be an object"),
+    ):
+        manifest_path.write_text(contents)
+
+        verified, failures = verify(tmp_path)
+
+        assert verified == 0
+        assert failures == [expected_failure]
+
+
 def test_verifies_workspace_files_from_archive_when_git_tree_is_not_portable(tmp_path):
     workspace = tmp_path / "greedy" / "workspace"
     source = workspace / ".git" / "config"

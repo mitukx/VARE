@@ -10,6 +10,19 @@ import stat
 import tarfile
 
 
+class DuplicateManifestKey(ValueError):
+    """Raised when JSON object keys would otherwise be silently overwritten."""
+
+
+def reject_duplicate_object_keys(pairs: list[tuple[str, object]]) -> dict:
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise DuplicateManifestKey(f"duplicate JSON object key: {key}")
+        result[key] = value
+    return result
+
+
 def digest_stream(stream) -> tuple[str, int]:
     digest = hashlib.sha256()
     size = 0
@@ -58,15 +71,26 @@ def workspace_archive_entry(root: Path, relative: str) -> tuple[Path, str] | Non
     return root / parts[0] / 'workspace.tar', Path(*parts[3:]).as_posix()
 
 
-def manifest_entries(manifest: dict) -> tuple[list[tuple[str, dict]], list[str]]:
+def manifest_entries(manifest: object) -> tuple[list[tuple[str, dict]], list[str]]:
     """Read both the original path-map and the later sorted-entry manifest."""
+    if not isinstance(manifest, dict):
+        return [], ["manifest must be a JSON object"]
     if 'files' not in manifest:
         return [], ['files inventory is missing']
     files = manifest['files']
     if isinstance(files, dict):
         if not files:
             return [], ['files inventory must not be empty']
-        return list(files.items()), []
+        entries: list[tuple[str, dict]] = []
+        errors: list[str] = []
+        for relative, expected in files.items():
+            if not isinstance(relative, str) or not relative:
+                errors.append('files path-map keys must be nonempty strings')
+            elif not isinstance(expected, dict):
+                errors.append(f'files[{relative!r}] must be an object')
+            else:
+                entries.append((relative, expected))
+        return entries, errors
     if not isinstance(files, list):
         return [], ['files must be an object or array']
     if not files:
@@ -93,7 +117,13 @@ def manifest_entries(manifest: dict) -> tuple[list[tuple[str, dict]], list[str]]
 def verify(evidence: Path) -> tuple[int, list[str]]:
     root = evidence.resolve()
     manifest_path = root / 'evidence-manifest.json'
-    manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+    try:
+        manifest = json.loads(
+            manifest_path.read_text(encoding='utf-8'),
+            object_pairs_hook=reject_duplicate_object_keys,
+        )
+    except (OSError, UnicodeError, json.JSONDecodeError, DuplicateManifestKey) as exc:
+        return 0, [f'invalid evidence manifest: {exc}']
     entries, failures = manifest_entries(manifest)
     verified = 0
     for relative, expected in entries:
