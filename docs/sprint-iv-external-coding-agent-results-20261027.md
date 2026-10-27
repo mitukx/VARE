@@ -78,7 +78,9 @@ Model-coupled asynchronous RL、optimizer recoveryとの接続、独立したlon
 
 mainは `f3ab90a36e8724441b6b9555255f8f75a0a4d529` のまま。PR #139はDraft、head `087914fb…`、base PR #137の `6d95bd91…`。#139の最初のcheck run `40408880544` でPython 3.13が失敗したが、同じheadのrerun `40408886276` では3.11/3.12/3.13を含む全checksがpassした。人間のapprovalは記録されていない。
 
-PR #141は外部revision差分出力だけのfocused child PR（head `52d257e80f503306d04af255203fef9396b4d304`、base #139 head `087914fb9fc127302ab632cc665f9b7352b0c47c`）で、GitHub上の全19 check runsはSUCCESS。自動Codex reviewは記録されたが、人間approvalはなく、#139依存と必須reviewが解消していないためmainには未統合。公開用の実験レポート・trajectory bundleは、mainをbaseとする別PR [#142](https://github.com/mitukx/VARE/pull/142)（前回head `bf897359f7944dd15f82809571d2a90f97a7def9`）に分けた。SFT evidenceと本報告の今回の追記前、#142の同head上でも19 check runsすべてSUCCESSだったが、GitHubは`REVIEW_REQUIRED`で人間approvalはない。この追記は新headとなりCIを再実行する。PR #140 head `a548daa1797b0d6a7a9b865f2eebb18b8ca71fc5` のCIはpassだが、symlink/archive fallbackに関するautomated P2 threadは未解決のまま独立review待ち。PR #120のgrader-completion spoofing P1も既存blockerである。
+PR #141は外部revision差分出力だけのfocused child PR（最新head `a7b55730d930367389d012c82018790a7f6d6617`、base #139 head `087914fb9fc127302ab632cc665f9b7352b0c47c`）。初回head `52d257e80f503306d04af255203fef9396b4d304` は19/19 checks成功だったが、自動reviewがGit evidence consumer向け`diff --git`形式の維持（P1）と最終改行なし行の表現（P2）を指摘した。`a7b55730` は候補workspace内のpinned Git baseからcanonical diffを生成し、`parse_diff()`と`verify_workspace()`で完全一致を確認する回帰ケースと、4種類のterminal-newline組合せを追加した。関連ローカルsuiteは109 passed、Ruff / `git diff --check` pass。新headの19 checksはこの報告更新時点で実行中、レビューthreadは未解決のままで再review待ち。#139依存と必須reviewも残り、mainには未統合。
+
+公開用の実験レポート・trajectory bundleは、mainをbaseとする別PR [#142](https://github.com/mitukx/VARE/pull/142) に分けた。前回の#142 head `bf897359f7944dd15f82809571d2a90f97a7def9` は19/19 checks成功後に、SFT evidenceと本報告を含む `c15fb45addd1a03774160bd1d50c799cc0eea65f` へ更新し、新headのCIは実行中。GitHubは`REVIEW_REQUIRED`で、人間approvalはまだない。PR #140 head `a548daa1797b0d6a7a9b865f2eebb18b8ca71fc5` のCIはpassだが、symlink/archive fallbackに関するautomated P2 threadは未解決のまま独立review待ち。PR #120のgrader-completion spoofing P1も既存blockerである。
 
 今回のPR変更履歴は開始時16 openから18 openへ増加し、#141（runner修正）と#142（実験証拠）の2件を作成した。close 0、merge 0、既存PRのDraft解除0。Draft数は8のまま。mainは`f3ab90a36e8724441b6b9555255f8f75a0a4d529`のままで、PR reviewやdependency gateを飛び越えた統合はない。
 
@@ -95,7 +97,7 @@ PR #141は外部revision差分出力だけのfocused child PR（head `52d257e80f
 | held-out improvement | NOT_RUN | 未使用・15 family要件維持 |
 | model-coupled long-horizon RL | NOT_RUN | 今回実行していない |
 | RSI research automation | NOT_RUN | agent-proposed benchmark iteration未実施 |
-| runner export fix | PARTIAL | PR #141に実装・105 tests pass・GitHub checks成功、#139依存とreview待ち、main未統合 |
+| runner export fix | PARTIAL | PR #141に実装・109 tests pass、最新headのCIと再review待ち、#139依存、main未統合 |
 | PR close / merge | 0 / 0 | review・dependency gateを維持 |
 
 **次の最優先実験:** PR #141の#139依存とreviewを解消し、修正runnerで未使用のMLX/Transformers Development task familyを少なくとも6件、同じ14B checkpointで事前登録してautonomous/localizedを同seed・同tool budgetで比較する。各runはrunner終了と`run_finished` eventまで確認してから別graderに渡す。今回のDevelopment task IDは再利用しない。次の学習段階は、optimizer stateを保存できる実装と独立Train-family評価を用意した後に行う。今回のSFTはTrain splitの実更新を証明したが、Coding RL/held-out性能向上は未証明である。
