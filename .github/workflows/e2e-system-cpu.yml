@@ -67,10 +67,10 @@ jobs:
         run: |
           historical="${RUNNER_TEMP}/vare-e2e-continuation-v4-campaign"
           # The immutable V4 runtime is pinned separately to d251cc6 by its
-          # source identity. The campaign harness/auditor revision is 701b5c5;
-          # running tests from the runtime-only commit predates V4 admission.
-          git -c core.hooksPath=/dev/null worktree add --detach "$historical" 701b5c582492e53bba3f4e43a15b3e7d717e2e3d
-          test "$(git -C "$historical" rev-parse HEAD)" = "701b5c582492e53bba3f4e43a15b3e7d717e2e3d"
+          # source identity. Use the campaign harness revision that admits V4
+          # and asserts its corresponding fail-closed diagnostic.
+          git -c core.hooksPath=/dev/null worktree add --detach "$historical" a65d59e5704b84a934a49385551a8d2311a01575
+          test "$(git -C "$historical" rev-parse HEAD)" = "a65d59e5704b84a934a49385551a8d2311a01575"
       - name: Verify continuous updates and actual learner SIGKILL recovery
         env:
           VARE_E2E_MODEL_DIR: ${{ runner.temp }}/tiny-gpt2
