@@ -10,14 +10,16 @@ import os
 import platform
 import re
 import resource
-import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "src"))
+from pinned_workspace_git import pinned_git, read_regular_source  # noqa: E402
 from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submission, require_edit_format  # noqa: E402
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
@@ -168,17 +170,19 @@ def sha256(path: Path) -> str:
 
 
 def digest_tree(root: Path, files: list[str]) -> dict[str, str]:
-    return {name: sha256(root / name) for name in files if (root / name).is_file()}
+    return {
+        name: hashlib.sha256(read_regular_source(root, name)).hexdigest()
+        for name in sorted(files)
+    }
 
 
 def snapshot_allowed_sources(root: Path, files: list[str]) -> dict[str, bytes]:
     """Retain the exact candidate-visible bytes before model edits begin."""
-    return {name: (root / name).read_bytes() for name in sorted(files)}
+    return {name: read_regular_source(root, name) for name in sorted(files)}
 
 
 def run_git(root: Path, *args: str) -> str:
-    return subprocess.run(['git', '-C', str(root), *args], check=True, text=True,
-                          capture_output=True).stdout.strip()
+    return pinned_git(root, *args).decode("utf-8").strip()
 
 
 def candidate_source_diff(
@@ -188,30 +192,30 @@ def candidate_source_diff(
     ordered = sorted(files)
     if set(before) != set(ordered):
         raise ValueError('invocation source snapshot does not match the allowlist')
+    if re.fullmatch(r"[0-9a-f]{40}", base_revision) is None:
+        raise ValueError("candidate base revision is not a full Git commit SHA")
     if run_git(root, 'rev-parse', 'HEAD') != base_revision:
         raise ValueError('candidate workspace HEAD changed during model invocation')
-    git_env = dict(
-        os.environ, GIT_NO_LAZY_FETCH='1', GIT_TERMINAL_PROMPT='0',
-        GIT_EXTERNAL_DIFF='', GIT_PAGER='cat',
-    )
     for name in ordered:
-        original = subprocess.run(
-            ['git', '-C', str(root), 'cat-file', 'blob', f'{base_revision}:{name}'],
-            check=True, capture_output=True, timeout=20, env=git_env,
-        ).stdout
+        read_regular_source(root, name)
+        original = pinned_git(root, 'cat-file', 'blob', f'{base_revision}:{name}')
         if before[name] != original:
             raise ValueError(f'invocation source snapshot differs from pinned Git blob: {name}')
-    completed = subprocess.run(
-        [
-            'git', '-C', str(root), '--no-optional-locks',
-            '-c', 'diff.external=', '-c', 'core.quotePath=false',
-            '-c', 'core.fsmonitor=false', 'diff', '--no-ext-diff',
-            '--no-textconv', '--no-renames', '--binary', base_revision,
-            '--', *ordered,
-        ],
-        check=True, capture_output=True, timeout=20, env=git_env,
-    )
-    diff = completed.stdout.decode('utf-8').strip()
+    with tempfile.TemporaryDirectory(prefix="vare-pinned-index-") as temp_dir:
+        index_file = Path(temp_dir) / "index"
+        pinned_git(root, "read-tree", base_revision, index_file=index_file)
+        status = pinned_git(
+            root, "status", "--porcelain=v1", "--untracked-files=all",
+        ).decode("utf-8")
+        allowed_statuses = {f" M {name}" for name in ordered}
+        if any(line not in allowed_statuses for line in status.splitlines() if line):
+            raise ValueError("candidate workspace contains staged or non-allowlisted changes")
+        diff_bytes = pinned_git(
+            root, "diff", "--no-ext-diff", "--no-textconv", "--no-renames",
+            "--binary", "--", *ordered, index_file=index_file,
+            max_output_bytes=2 * 1024 * 1024,
+        )
+    diff = diff_bytes.decode('utf-8').strip()
     if len(diff.encode('utf-8')) > 2 * 1024 * 1024:
         raise ValueError('candidate diff exceeds the evidence parser limit')
     return diff
