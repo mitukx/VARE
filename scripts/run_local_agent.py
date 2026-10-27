@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-import difflib
 import hashlib
 import json
 import os
@@ -753,23 +752,41 @@ def snapshot_allowed_sources(root: Path, files: list[str]) -> dict[str, bytes]:
     return {name: (root / name).read_bytes() for name in sorted(files)}
 
 
-def candidate_source_diff(root: Path, files: list[str], before: dict[str, bytes]) -> str:
-    """Build a text patch from invocation-time bytes without relying on Git history."""
-    chunks: list[bytes] = []
-    for name in sorted(files):
-        old = before[name]
-        new = (root / name).read_bytes()
-        if old == new:
-            continue
-        chunks.extend(difflib.diff_bytes(
-            difflib.unified_diff,
-            old.splitlines(keepends=True),
-            new.splitlines(keepends=True),
-            fromfile=f'a/{name}'.encode('utf-8'),
-            tofile=f'b/{name}'.encode('utf-8'),
-            lineterm=b'\n',
-        ))
-    return b''.join(chunks).decode('utf-8', errors='backslashreplace')
+def candidate_source_diff(
+    root: Path, files: list[str], before: dict[str, bytes], base_revision: str,
+) -> str:
+    """Export the canonical Git diff from the candidate workspace and pinned base."""
+    ordered = sorted(files)
+    if set(before) != set(ordered):
+        raise ValueError('invocation source snapshot does not match the allowlist')
+    head = run_git(root, 'rev-parse', 'HEAD')
+    if head != base_revision:
+        raise ValueError('candidate workspace HEAD changed during model invocation')
+    git_env = dict(
+        os.environ, GIT_NO_LAZY_FETCH='1', GIT_TERMINAL_PROMPT='0',
+        GIT_EXTERNAL_DIFF='', GIT_PAGER='cat',
+    )
+    for name in ordered:
+        original = subprocess.run(
+            ['git', '-C', str(root), 'cat-file', 'blob', f'{base_revision}:{name}'],
+            check=True, capture_output=True, timeout=20, env=git_env,
+        ).stdout
+        if before[name] != original:
+            raise ValueError(f'invocation source snapshot differs from pinned Git blob: {name}')
+    completed = subprocess.run(
+        [
+            'git', '-C', str(root), '--no-optional-locks',
+            '-c', 'diff.external=', '-c', 'core.quotePath=false',
+            '-c', 'core.fsmonitor=false', 'diff', '--no-ext-diff',
+            '--no-textconv', '--no-renames', '--binary', base_revision,
+            '--', *ordered,
+        ],
+        check=True, capture_output=True, timeout=20, env=git_env,
+    )
+    diff = completed.stdout.decode('utf-8').strip()
+    if len(diff.encode('utf-8')) > 2 * 1024 * 1024:
+        raise ValueError('candidate diff exceeds the evidence parser limit')
+    return diff
 
 
 def controller_source_hashes(tool_interface: str, generation_protocol: str = 'raw_v1') -> dict[str, str]:
@@ -1269,6 +1286,7 @@ def main() -> int:
     ]
     initial_messages = [dict(message) for message in messages]
     transcript: list[dict[str, Any]] = []
+    workspace_revision = run_git(workspace, 'rev-parse', 'HEAD')
     source_before = snapshot_allowed_sources(workspace, sorted(allowed))
     before = digest_tree(workspace, sorted(tracked_files))
     if event_journal is not None:
@@ -1280,7 +1298,7 @@ def main() -> int:
             model_repository=args.model_repository, model_snapshot=model_dir.name,
             policy_source_commit=run_git(ROOT, 'rev-parse', 'HEAD'),
             controller_source_files_sha256=controller_sources,
-            workspace_revision=run_git(workspace, 'rev-parse', 'HEAD'),
+            workspace_revision=workspace_revision,
             source_hashes_before=before,
             initial_messages=initial_messages,
             budgets={
@@ -1699,7 +1717,7 @@ def main() -> int:
 
     elapsed = time.perf_counter() - start
     after = digest_tree(workspace, sorted(tracked_files))
-    diff = candidate_source_diff(workspace, sorted(allowed), source_before)
+    diff = candidate_source_diff(workspace, sorted(allowed), source_before, workspace_revision)
     if args.backend == 'mlx':
         runtime['mlx_active_memory_bytes'] = int(mx.metal.get_active_memory())
         runtime['mlx_peak_memory_bytes'] = int(mx.metal.get_peak_memory())
@@ -1768,7 +1786,7 @@ def main() -> int:
         'stop_reason': stop_reason, 'agent_summary': final_summary,
         'elapsed_seconds': round(elapsed, 3), 'new_tokens': token_total,
         'max_rss_bytes': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
-        'workspace_revision': run_git(workspace, 'rev-parse', 'HEAD'),
+        'workspace_revision': workspace_revision,
         'candidate_diff': diff,
         'candidate_diff_sha256': hashlib.sha256(diff.encode()).hexdigest(),
         'source_hashes_before': before, 'source_hashes_after': after,
