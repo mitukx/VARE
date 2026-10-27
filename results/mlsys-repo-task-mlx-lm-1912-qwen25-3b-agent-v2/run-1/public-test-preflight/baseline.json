@@ -1,0 +1,11 @@
+{
+  "arm": "baseline",
+  "elapsed_seconds": 0.214,
+  "error": null,
+  "passed": false,
+  "public_test_sha256": "a88ccf1972d0d4a9b0d9ff79fa33d7fa4aae78a3ff638b76dc115fe63f31cdd2",
+  "returncode": 1,
+  "source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+  "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 37, in <module>\n    test_apply_top_p_keeps_top_token_at_tiny_thresholds()\n  File \"/workspace/test_public.py\", line 22, in test_apply_top_p_keeps_top_token_at_tiny_thresholds\n    assert actual_probs.tolist() == [1.0, 0.0, 0.0, 0.0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "stdout": ""
+}

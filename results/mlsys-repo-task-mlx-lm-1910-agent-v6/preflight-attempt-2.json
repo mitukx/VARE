@@ -1,0 +1,10 @@
+{
+  "attempt_id": "preflight-attempt-2",
+  "classification": "launcher_venv_path_resolution_bug",
+  "error": "Same launcher package-version mismatch reproduced. Root cause: Path.resolve followed the venv bin/python symlink into base Conda Python, bypassing pinned packages. Model was not loaded.",
+  "model_loaded": false,
+  "model_prompt_sent": false,
+  "protocol_sha256": "eec5ab63b1c97a31daafafe804b7af9c2fa9a6dcbb70fa71995bd53ab22d3ffc",
+  "stage": "runtime_package_identity",
+  "status": "FAILED"
+}

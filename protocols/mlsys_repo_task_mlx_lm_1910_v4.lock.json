@@ -1,0 +1,131 @@
+{
+  "cheaper_alternative": "Static diff and retained #1904 logs were inspected first. They cannot establish #1910 baseline/fix behavior or discriminator quality, so bounded CPU reproduction is required.",
+  "frozen_at_utc": "2026-10-23T09:59:48+00:00",
+  "grader": {
+    "calibration_arms": [
+      "baseline",
+      "exact_upstream_fix",
+      "mutant_restore_default_string",
+      "mutant_parse_any_json_scalar",
+      "mutant_object_only"
+    ],
+    "design": "Candidate parser executes in a non-root isolated container. Hidden expected outputs remain in the host process; the candidate process receives only serialized input values and returns serialized parser outputs. It cannot mount or read the VARE checkout.",
+    "failure_classification": [
+      "wrong_output",
+      "candidate_exception",
+      "container_infrastructure",
+      "timeout",
+      "source_hash_mismatch",
+      "oracle_protocol_error"
+    ],
+    "identity": "VARE host-side independent semantic oracle in scripts/qualify_mlx_lm_1910_v1.py",
+    "required_outcomes": {
+      "baseline": "upstream test FAIL and oracle FAIL",
+      "each_mutant": "upstream test FAIL and oracle FAIL",
+      "exact_upstream_fix": "upstream test PASS and oracle PASS"
+    },
+    "runner_sha256": "12815ea5fa10751ff2f6ad8b8f718a1d8c22de7f00546ec3001990177225db4c",
+    "source_export_policy": "Stream regular files and directories from git archive after rejecting absolute and parent-traversal paths; skip and record symlinks and other nonregular entries; set source directories 0755 and files 0444; allow only the task test or mutation copy to become writable. No source-repository checkout or hooks."
+  },
+  "hypothesis": "On the pinned MLX-LM #1910 baseline, the regression must fail; the exact upstream fix must pass; a host-held independent semantic oracle must distinguish the fix from three deliberately incorrect parser mutations.",
+  "metrics": [
+    "per-arm upstream-test conclusion",
+    "per-case semantic oracle result",
+    "wall time",
+    "host memory/swap before and after",
+    "raw stdout/stderr SHA-256",
+    "candidate source SHA-256"
+  ],
+  "model": {
+    "checkpoint_hashes": null,
+    "inference_authorized_by_this_protocol": false,
+    "model_revision": null
+  },
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-v4",
+  "reproduction": {
+    "command": "python3 scripts/qualify_mlx_lm_1910_v4.py --git-source <local-mlx-lm-clone-with-pinned-objects> --output results/mlsys-repo-task-mlx-lm-1910-v4/run-<new-id>",
+    "network_required_during_run": false,
+    "prior_attempt": "V1 attempt 1 is retained at results/mlsys-repo-task-mlx-lm-1910-v1/run-1/attempt.json and failed before any test execution.",
+    "prior_attempts": [
+      "V1 attempt 1 failed at safe source export before any test ran; see results/mlsys-repo-task-mlx-lm-1910-v1/run-1/.",
+      "V2 attempt 1 failed on Python 3.9 tarfile API compatibility before any test ran; see results/mlsys-repo-task-mlx-lm-1910-v2/run-1/.",
+      "V3 attempt 1 failed the image-identity preflight because HOME=/tmp hid the Colima context; no tests ran. See results/mlsys-repo-task-mlx-lm-1910-v3/run-1/."
+    ]
+  },
+  "runtime": {
+    "abort_conditions": [
+      "container isolation flags/image identity differ",
+      "any source or test hash mismatch",
+      "upstream baseline passes",
+      "exact fix fails",
+      "any wrong mutant passes",
+      "host memory pressure free percentage below 15%",
+      "swap usage rises by more than 512 MiB during calibration",
+      "wall budget exceeded",
+      "candidate process accesses hidden host evaluator files"
+    ],
+    "candidate_mount": "read-only",
+    "capabilities": "all dropped; no-new-privileges",
+    "docker_cli": "Host Docker CLI receives explicit DOCKER_CONFIG for the configured Colima context; candidate container receives only HOME=/tmp and no Docker socket/config.",
+    "host_python": "System Python 3.9.6; extractor uses only APIs available in Python 3.9. Each container config ID is checked against the locked digest before any test.",
+    "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "image_config_id": "sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "limits": {
+      "cpus": 2,
+      "memory": "1 GiB",
+      "memory_plus_swap": "1 GiB",
+      "pids": 64,
+      "tmpfs": "64 MiB"
+    },
+    "max_total_wall_seconds": 900,
+    "memory_abort_observation": "Baseline host memory pressure was 39% free; swap was 2453.19 MiB used. Abort at <15% free or +512 MiB swap.",
+    "network": "disabled",
+    "platform": "linux/arm64, Docker 29.5.2 on Colima/macOS Virtualization.Framework",
+    "rootfs": "read-only",
+    "user": "65534:65534"
+  },
+  "schema_version": 4,
+  "split": {
+    "candidate_assignment": "development_only",
+    "excluded_overlapping_task_ids": [
+      "mlxlm-1904-tool-arguments"
+    ],
+    "heldout_tasks": [],
+    "no_model_prompt_until_grader_go": true,
+    "no_reassignment_of_frozen_v1_split": true,
+    "train_tasks": []
+  },
+  "status": "FROZEN_NOT_RUN",
+  "stop_rule": "A failed identity, isolation, expected outcome pattern or resource abort is NO_GO. Do not prompt a model until a separate, preregistered Development feasibility protocol is frozen and the task receives GRADER_CALIBRATION_PASS.",
+  "supersedes": "mlsys-repo-task-mlx-lm-1910-v3",
+  "supersedes_reason": "V3 safely stopped before tests because a clean temporary HOME hid the named Colima Docker context from the host CLI. V4 explicitly passes the host Docker config directory while preserving HOME=/tmp inside the candidate container. Earlier failures remain retained.",
+  "task": {
+    "baseline_commit": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+    "baseline_target_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+    "baseline_tree": "fae7a2bfe3392a5ac1e72efab68426efbfa6f958",
+    "fixed_merge_commit": "a537041adc86d73cfae4cc1375b2c8851c652c60",
+    "fixed_target_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+    "fixed_tree": "ac066127d9abba586814e8da36176bf569d318e2",
+    "license": "MIT",
+    "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+    "per_file_license_review": "The target has an Apple copyright notice and identifies its upstream Qwen-derived origin; the repository license is MIT. Preserve both notices in any extracted source bundle.",
+    "pr_head": "c14ed3c58f945705a6ea1dfd0c8c59799f5cb22a",
+    "prior_exposure": {
+      "limitation": "Repository search cannot establish absence from model pretraining or unrecorded external exposure. Upstream merge date 2026-10-06 is after the model cutoff proxy 2025-08-09, which is only a freshness proxy.",
+      "local_agent_or_model_rollout_found": false,
+      "search_scope": "tracked protocols, results, reports and scripts in VARE main at f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+    },
+    "public_test_path": "tests/test_tool_parsing.py",
+    "public_test_selector": "test_qwen3_coder_untyped_param",
+    "public_test_sha256": "09ba0fcd264ee83f5a3da1675345f05d839e5c1c09fb28f44cd8911d05045fcf",
+    "related_family": "Qwen3 Coder argument parsing; overlaps broad parser family of #1904. #1904 is excluded from this prospective cohort and no task-level independence claim will combine them.",
+    "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1910",
+    "target_allowlist": [
+      "mlx_lm/tool_parsers/qwen3_coder.py"
+    ],
+    "target_path": "mlx_lm/tool_parsers/qwen3_coder.py",
+    "task_prompt": "Fix Qwen3 Coder argument parsing when a parameter schema has no top-level type. Preserve existing behavior for typed parameters and keep malformed input from crashing parsing.",
+    "task_prompt_sha256": "5c75d2692d9490c264cbc44b855f22e0faebe05b44f4ef571e19d90c83975f99",
+    "upstream_repository": "https://github.com/ml-explore/mlx-lm"
+  }
+}

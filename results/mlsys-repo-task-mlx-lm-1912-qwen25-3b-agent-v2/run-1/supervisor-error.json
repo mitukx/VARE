@@ -1,0 +1,14 @@
+{
+  "child_stderr_observation": "run_local_agent_streaming_v1.py rejected the prepared workspace because mlx_lm/sample_utils.py and test_public.py were absent after the parent unwound its TemporaryDirectory.",
+  "exception_text": "'max_wall_seconds'",
+  "exception_type": "KeyError",
+  "failure_point": "resource-limit evaluation immediately after Popen; no resource-monitor return record was written",
+  "model_import_order_observation": "The existing agent runner checks that all allowlisted workspace files exist before importing MLX or calling generate_turn.",
+  "post_failure_process_audit": "No run_local_agent, run_mlx_lm_1912_qwen25_agent_v2, or task container remained; only the long-running local registry container was present.",
+  "raw_turn_log_bytes": 0,
+  "raw_turn_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "schema_version": 1,
+  "source_file": "scripts/run_mlx_lm_1912_qwen25_agent_v1.py",
+  "source_line": 319,
+  "status": "FAILED"
+}

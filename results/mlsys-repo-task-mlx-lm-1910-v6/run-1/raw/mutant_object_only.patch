@@ -1,0 +1,11 @@
+--- results/mlsys-repo-task-mlx-lm-1910-v6/run-1/vare-mlx1910-6abpxd7r/fixed/mlx_lm/tool_parsers/qwen3_coder.py	2026-10-24 02:55:55
++++ results/mlsys-repo-task-mlx-lm-1910-v6/run-1/vare-mlx1910-6abpxd7r/mutant_object_only/mlx_lm/tool_parsers/qwen3_coder.py	2026-10-24 02:56:02
+@@ -49,7 +49,7 @@
+             value = json.loads(param_value)
+         except json.JSONDecodeError:
+             return param_value
+-        return value if isinstance(value, (dict, list)) else param_value
++        return value if isinstance(value, dict) else param_value
+     if param_type in _string_types:
+         return param_value
+     elif (

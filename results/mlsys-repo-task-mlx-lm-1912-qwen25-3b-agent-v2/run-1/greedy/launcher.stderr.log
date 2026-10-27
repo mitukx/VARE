@@ -1,0 +1,19 @@
+usage: run_local_agent_streaming_v1.py [-h] --workspace WORKSPACE --model-path
+                                       MODEL_PATH
+                                       [--model-repository MODEL_REPOSITORY]
+                                       [--backend {transformers_cpu,mlx}]
+                                       [--public-test-image PUBLIC_TEST_IMAGE]
+                                       --task-root TASK_ROOT --output OUTPUT
+                                       --instruction INSTRUCTION --seed SEED
+                                       [--max-turns MAX_TURNS]
+                                       [--max-no-tool-retries MAX_NO_TOOL_RETRIES]
+                                       [--max-new-tokens-per-turn MAX_NEW_TOKENS_PER_TURN]
+                                       [--max-total-new-tokens MAX_TOTAL_NEW_TOKENS]
+                                       [--max-context-tokens MAX_CONTEXT_TOKENS]
+                                       [--wall-seconds WALL_SECONDS]
+                                       [--temperature TEMPERATURE]
+                                       [--top-p TOP_P] [--top-k TOP_K]
+                                       [--do-sample | --no-do-sample]
+                                       [--edit-format {unified_diff,whole_file}]
+                                       [--require-split {train,heldout}]
+run_local_agent_streaming_v1.py: error: workspace missing allowed source files: ['mlx_lm/sample_utils.py', 'test_public.py']

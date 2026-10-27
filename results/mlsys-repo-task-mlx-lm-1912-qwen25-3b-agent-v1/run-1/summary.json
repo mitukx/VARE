@@ -1,0 +1,25 @@
+{
+  "attempts": [],
+  "generated_tokens": 0,
+  "model_load_repeated": false,
+  "preflight": {
+    "baseline": {
+      "elapsed_seconds": 0.088,
+      "error": "IsolationError: could not confirm Docker container cleanup",
+      "passed": false
+    },
+    "known_fix": {
+      "elapsed_seconds": 0.035,
+      "error": "IsolationError: could not confirm Docker container cleanup",
+      "passed": false
+    }
+  },
+  "protocol_id": "vare.real-coding-agent-feasibility.mlxlm-1912-qwen25-3b-v1",
+  "reason": "public_test_baseline_fix_gate_failed",
+  "resource_before_model_load": {
+    "memory_free_percent": 62,
+    "swap_used_mib": 3806.5
+  },
+  "schema_version": 1,
+  "status": "NO_GO"
+}

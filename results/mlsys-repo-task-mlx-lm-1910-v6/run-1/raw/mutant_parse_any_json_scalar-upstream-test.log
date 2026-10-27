@@ -1,0 +1,73 @@
+F
+=================================== FAILURES ===================================
+________________ TestToolParsing.test_qwen3_coder_untyped_param ________________
+
+self = <test_tool_parsing.TestToolParsing testMethod=test_qwen3_coder_untyped_param>
+
+    def test_qwen3_coder_untyped_param(self):
+        # Without a top-level "type", only JSON objects and arrays are parsed.
+        schema = {"anyOf": [{"type": "object"}, {"type": "array"}, {"type": "string"}]}
+        tools = [
+            {
+                "type": "function",
+                "function": {
+                    "name": "f",
+                    "parameters": {"type": "object", "properties": {"value": schema}},
+                },
+            }
+        ]
+        test_cases = [
+            ('{"kind": "new"}', {"kind": "new"}),
+            ('["a", "b"]', ["a", "b"]),
+            ("plain text", "plain text"),
+            ('["unfinished"', '["unfinished"'),
+            ("123", "123"),
+            ('"quoted"', '"quoted"'),
+        ]
+        for value, expected in test_cases:
+            with self.subTest(value=value):
+                call = f"<function=f><parameter=value>{value}</parameter></function>"
+>               tool_call = qwen3_coder.parse_tool_call(call, tools)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tool_parsing.py:266: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+mlx_lm/tool_parsers/qwen3_coder.py:127: in parse_tool_call
+    return _parse_xml_function_call(match[0], tools)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+mlx_lm/tool_parsers/qwen3_coder.py:109: in _parse_xml_function_call
+    param_dict[param_name] = _convert_param_value(
+mlx_lm/tool_parsers/qwen3_coder.py:48: in _convert_param_value
+    return json.loads(param_value)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.12/json/decoder.py:338: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0xfa4c57a95b20>, s = 'plain text'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/usr/local/lib/python3.12/json/decoder.py:356: JSONDecodeError
+=========================== short test summary info ============================
+FAILED tests/test_tool_parsing.py::TestToolParsing::test_qwen3_coder_untyped_param
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 17 deselected in 0.81s

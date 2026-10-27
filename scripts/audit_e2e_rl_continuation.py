@@ -63,6 +63,7 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/evidence.py",
     "src/vare/failure.py",
     "src/vare/failure_triage.py",
+    "src/vare/flat_tool_chat.py",
     "src/vare/format_vs_correctness.py",
     "src/vare/format_vs_correctness_seeded_summary_v3.py",
     "src/vare/format_vs_correctness_v2.py",

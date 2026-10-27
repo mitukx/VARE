@@ -1,0 +1,46 @@
+{
+  "attempt_count": 2,
+  "categories": {
+    "format_parse_failures": {
+      "count": 0
+    },
+    "no_tool_call_turns": {
+      "count": 2,
+      "detail": "sampled attempt emitted prose without a tool twice"
+    },
+    "path_resolution_rejection": {
+      "count": 1,
+      "detail": "sampled attempt used the literal placeholder <allowed source path>"
+    },
+    "public_smoke_failures": {
+      "count": 0
+    },
+    "runtime_environment_launch_failure": {
+      "count": 1,
+      "detail": "system python did not provide mlx; zero tokens and no prompt processing",
+      "stage": "before model initialization"
+    },
+    "semantically_wrong_candidate": {
+      "count": 2,
+      "detail": "greedy patch only altered the Apache license header; sampled candidate was unchanged; both failed the same three Torch task cases"
+    },
+    "syntax_failure": {
+      "count": 0
+    },
+    "task_success": {
+      "count": 0
+    },
+    "tool_schema_rejection": {
+      "count": 2,
+      "detail": "both attempts supplied an unsupported path argument to read-only list_files"
+    }
+  },
+  "independent_success_count": 0,
+  "schema_version": 1,
+  "task_id": "transformers-45852-4d-mask",
+  "tool_error_messages": {
+    "ValueError: tool arguments do not match the declared schema": 2,
+    "path is not allowed": 1,
+    "source is unchanged; inspect and edit before finishing": 1
+  }
+}

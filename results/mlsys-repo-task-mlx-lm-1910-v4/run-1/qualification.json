@@ -1,0 +1,108 @@
+{
+  "elapsed_seconds": 1.808,
+  "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-v4",
+  "records": [
+    {
+      "arm": "baseline",
+      "output_sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "upstream_test",
+      "wall_seconds": 0.2
+    },
+    {
+      "arm": "known_fix",
+      "output_sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "returncode": 1,
+      "source_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+      "stage": "upstream_test",
+      "wall_seconds": 0.123
+    },
+    {
+      "arm": "mutant_restore_default_string",
+      "output_sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "upstream_test",
+      "wall_seconds": 0.12
+    },
+    {
+      "arm": "mutant_parse_any_json_scalar",
+      "output_sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "returncode": 1,
+      "source_sha256": "67d38295ff97a018970ce672b5099ad5fb204d18cffc21787bc04ef059efe154",
+      "stage": "upstream_test",
+      "wall_seconds": 0.126
+    },
+    {
+      "arm": "mutant_object_only",
+      "output_sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "returncode": 1,
+      "source_sha256": "503167d96d328ae9653c5196c3a67efbd6c4e90a59a6a30a42c7158e7b1edf56",
+      "stage": "upstream_test",
+      "wall_seconds": 0.125
+    },
+    {
+      "arm": "baseline",
+      "cases": [],
+      "output_sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "independent_oracle",
+      "wall_seconds": 0.142
+    },
+    {
+      "arm": "known_fix",
+      "cases": [],
+      "output_sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+      "stage": "independent_oracle",
+      "wall_seconds": 0.131
+    },
+    {
+      "arm": "mutant_restore_default_string",
+      "cases": [],
+      "output_sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "independent_oracle",
+      "wall_seconds": 0.126
+    },
+    {
+      "arm": "mutant_parse_any_json_scalar",
+      "cases": [],
+      "output_sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "67d38295ff97a018970ce672b5099ad5fb204d18cffc21787bc04ef059efe154",
+      "stage": "independent_oracle",
+      "wall_seconds": 0.123
+    },
+    {
+      "arm": "mutant_object_only",
+      "cases": [],
+      "output_sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "503167d96d328ae9653c5196c3a67efbd6c4e90a59a6a30a42c7158e7b1edf56",
+      "stage": "independent_oracle",
+      "wall_seconds": 0.135
+    }
+  ],
+  "schema_version": 1,
+  "source_commits": {
+    "baseline": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+    "fixed": "a537041adc86d73cfae4cc1375b2c8851c652c60"
+  },
+  "status": "NO_GO"
+}

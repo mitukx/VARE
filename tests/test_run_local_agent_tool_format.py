@@ -1,9 +1,46 @@
-from scripts.run_local_agent import normalize_tool_call_format, refresh_public_tests_after_edit
+import json
+import subprocess
+
+from scripts.run_local_agent import (
+    attempt_configured_edit,
+    build_initial_messages,
+    list_allowed_files,
+    normalize_tool_call_format,
+    parse_tool_call_blocks,
+    read_file_range,
+    resolve_pinned_public_test_image,
+    refresh_public_tests_after_edit,
+    tools_for,
+)
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
     verified_task_success,
 )
+
+
+def test_initial_messages_are_deterministic_and_include_only_public_task_material():
+    task_text = "# Repair\nPreserve public behavior.\n\n## Reproduce\nprivate grader notes"
+    messages = build_initial_messages(
+        task_text,
+        ["src/transformers/tokenization_utils_base.py"],
+        "unified_diff",
+        True,
+        "Inspect and repair the named source file.",
+    )
+
+    assert messages == build_initial_messages(
+        task_text,
+        ["src/transformers/tokenization_utils_base.py"],
+        "unified_diff",
+        True,
+        "Inspect and repair the named source file.",
+    )
+    assert len(messages) == 2
+    assert "src/transformers/tokenization_utils_base.py" in messages[0]["content"]
+    assert "run_public_tests" in messages[0]["content"]
+    assert "private grader notes" not in messages[0]["content"]
+    assert messages[1]["content"] == "Inspect and repair the named source file."
 
 
 def test_normalizes_a_fenced_qwen_json_tool_call_without_changing_raw_text():
@@ -52,6 +89,255 @@ def test_does_not_promote_unknown_or_malformed_fenced_json_to_tool_calls():
 def test_preserves_native_tool_call_format():
     raw = '<tool_call>{"name":"finish","arguments":{"summary":"done"}}</tool_call>'
     assert normalize_tool_call_format(raw, {"finish"}) == (raw, False)
+
+
+def test_recovers_exact_duplicate_qwen_wrapper_and_parses_nested_arguments():
+    raw = '<tool_call>\n{{"name": "read_file", "arguments": {"path": "/mlx_lm/sample_utils.py"}}\n}}\n</tool_call>'
+    tools = tools_for("unified_diff")
+    names = {item["function"]["name"] for item in tools}
+
+    normalized, recovered = normalize_tool_call_format(raw, names)
+    blocks, parsed, failures = parse_tool_call_blocks(normalized, tools)
+
+    assert recovered is True
+    assert len(blocks) == 1
+    assert failures == []
+    assert [(name, arguments) for _, name, arguments in parsed] == [
+        ("read_file", {"path": "/mlx_lm/sample_utils.py"}),
+    ]
+
+
+def test_recovers_exact_qwen_wrapper_from_retained_trace_and_filters_allowed_files():
+    # Verbatim framing shape from the #1910 and #45852 Qwen2.5 traces.
+    raw = '<tool_call>\n{{"name": "list_files", "arguments": {"path": "qwen3_coder.py"}}}\n</tool_call>'
+    tools = tools_for("unified_diff")
+    names = {item["function"]["name"] for item in tools}
+
+    normalized, recovered = normalize_tool_call_format(raw, names)
+    blocks, parsed, failures = parse_tool_call_blocks(normalized, tools)
+
+    assert recovered is True
+    assert len(blocks) == 1
+    assert failures == []
+    assert [(name, args) for _, name, args in parsed] == [
+        ("list_files", {"path": "qwen3_coder.py"}),
+    ]
+    assert list_allowed_files({"src/module.py", "test_public.py"}, "src/module.py") == ["src/module.py"]
+    assert list_allowed_files({"src/module.py", "test_public.py"}, "qwen3_coder.py") == {
+        "error": "path is not allowed",
+        "allowed_paths": ["src/module.py", "test_public.py"],
+    }
+    assert list_allowed_files({"src/module.py"}, "./src/module.py")["error"] == "path is not allowed"
+    assert list_allowed_files({"src/module.py", "test_public.py"}) == ["src/module.py", "test_public.py"]
+
+
+def test_recovers_exact_qwen_wrapper_from_retained_trace_when_schema_is_valid():
+    raw = '<tool_call>\n{{"name": "read_file", "arguments": {"path": "qwen3_coder.py"}}}\n</tool_call>'
+    tools = tools_for("unified_diff")
+    names = {item["function"]["name"] for item in tools}
+
+    normalized, recovered = normalize_tool_call_format(raw, names)
+    blocks, parsed, failures = parse_tool_call_blocks(normalized, tools)
+
+    assert recovered is True
+    assert len(blocks) == 1
+    assert [(name, arguments) for _, name, arguments in parsed] == [
+        ("read_file", {"path": "qwen3_coder.py"}),
+    ]
+    assert failures == []
+
+
+def test_parses_nested_json_in_native_tool_call_blocks():
+    raw = '<tool_call>{"name":"read_file","arguments":{"path":"src/module.py"}}</tool_call>'
+    blocks, parsed, failures = parse_tool_call_blocks(raw, tools_for("unified_diff"))
+    assert len(blocks) == 1
+    assert [(name, arguments) for _, name, arguments in parsed] == [
+        ("read_file", {"path": "src/module.py"}),
+    ]
+    assert failures == []
+
+
+def test_does_not_recover_malformed_patch_or_unbalanced_suffix():
+    tools = tools_for("unified_diff")
+    names = {item["function"]["name"] for item in tools}
+    malformed_patch = (
+        '<tool_call>\n{{"name": "apply_patch", "arguments": '
+        '{"patch": "diff --git a/x.py b/x.py\\n" +\n"+++ b/x.py\\n"}}\n}}'
+        '</tool_call>'
+    )
+    ambiguous = '<tool_call>{{"name":"list_files","arguments":{}}} extra }}</tool_call>'
+
+    assert normalize_tool_call_format(malformed_patch, names) == (malformed_patch, False)
+    assert normalize_tool_call_format(ambiguous, names) == (ambiguous, False)
+
+
+def test_rejects_tool_arguments_outside_the_declared_schema():
+    tools = tools_for("unified_diff", public_tests=True)
+    blocks, parsed, failures = parse_tool_call_blocks(
+        '<tool_call>{"name":"run_public_tests","arguments":{"timeout":600}}</tool_call>',
+        tools,
+    )
+    assert len(blocks) == 1
+    assert parsed == []
+    assert len(failures) == 1
+    assert "declared schema" in failures[0][1]
+
+
+def test_rejects_nested_schema_object_where_read_file_requires_a_path_string():
+    tools = tools_for("unified_diff")
+    malformed_calls = (
+        {"path": {"type": "string"}},
+        {"path": ["qwen3_coder.py"]},
+        {"path": 17},
+        {"path": True},
+    )
+
+    for arguments in malformed_calls:
+        raw = '<tool_call>' + json.dumps({
+            "name": "read_file", "arguments": arguments,
+        }) + '</tool_call>'
+        blocks, parsed, failures = parse_tool_call_blocks(raw, tools)
+
+        assert len(blocks) == 1
+        assert parsed == []
+        assert len(failures) == 1
+        assert "tool argument 'path' must be a string" in failures[0][1]
+
+
+def test_read_file_returns_bounded_inclusive_ranges(tmp_path):
+    source = tmp_path / "large.py"
+    source.write_text("".join(f"line {index}\n" for index in range(1, 202)))
+
+    first_page = read_file_range(source, "large.py")
+    middle_page = read_file_range(source, "large.py", 81, 160)
+    too_large = read_file_range(source, "large.py", 1, 81)
+    beyond_eof = read_file_range(source, "large.py", 202, 205)
+
+    assert first_page["start_line"] == 1
+    assert first_page["end_line"] == 80
+    assert first_page["truncated"] is True
+    assert first_page["content"].splitlines()[0] == "line 1"
+    assert first_page["content"].splitlines()[-1] == "line 80"
+    assert middle_page["content"].splitlines() == [f"line {i}" for i in range(81, 161)]
+    assert too_large["error"] == "read_file range must contain at most 80 positive-numbered lines"
+    assert "exceeds file length" in beyond_eof["error"]
+
+
+def test_candidate_edit_cannot_change_copyright_or_license_header(tmp_path):
+    source = tmp_path / "src/module.py"
+    source.parent.mkdir()
+    original = (
+        b"# Copyright 2026 Example\n"
+        b"# Licensed under the Apache License, Version 2.0\n"
+        b"\n"
+        b"def value():\n"
+        b"    return 1\n"
+    )
+    source.write_bytes(original)
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    patch = (
+        "diff --git a/src/module.py b/src/module.py\n"
+        "--- a/src/module.py\n"
+        "+++ b/src/module.py\n"
+        "@@ -1,5 +1,5 @@\n"
+        " # Copyright 2026 Example\n"
+        "-# Licensed under the Apache License, Version 2.0\n"
+        "+# Licensed under the MIT License\n"
+        " \n"
+        " def value():\n"
+        "     return 1\n"
+    )
+
+    result = attempt_configured_edit(
+        tmp_path, patch, "unified_diff", {"src/module.py"},
+    )
+
+    assert result["applied"] is False
+    assert result["error"] == "edit changed a protected copyright or license header"
+    assert source.read_bytes() == original
+
+
+def test_candidate_edit_preserves_header_while_changing_source(tmp_path):
+    source = tmp_path / "src/module.py"
+    source.parent.mkdir()
+    source.write_bytes(
+        b"# Copyright 2026 Example\n"
+        b"# Licensed under the Apache License, Version 2.0\n"
+        b"\n"
+        b"def value():\n"
+        b"    return 1\n"
+    )
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    patch = (
+        "diff --git a/src/module.py b/src/module.py\n"
+        "--- a/src/module.py\n"
+        "+++ b/src/module.py\n"
+        "@@ -3,3 +3,3 @@\n"
+        " \n"
+        " def value():\n"
+        "-    return 1\n"
+        "+    return 2\n"
+    )
+
+    result = attempt_configured_edit(
+        tmp_path, patch, "unified_diff", {"src/module.py"},
+    )
+
+    assert result["applied"] is True
+    assert source.read_bytes().endswith(b"    return 2\n")
+
+
+def test_line_range_arguments_require_positive_json_integers():
+    tools = tools_for("unified_diff")
+    blocks, parsed, failures = parse_tool_call_blocks(
+        '<tool_call>{"name":"read_file","arguments":{"path":"large.py","start_line":true}}</tool_call>',
+        tools,
+    )
+    assert len(blocks) == 1
+    assert parsed == []
+    assert "positive integer" in failures[0][1]
+
+
+def test_resolves_local_image_id_to_a_digest_that_maps_back_to_the_same_image(monkeypatch):
+    image_id = "sha256:" + "b" * 64
+    digest = "vare-test@sha256:" + "a" * 64
+    calls = []
+
+    class Result:
+        returncode = 0
+
+        def __init__(self, stdout):
+            self.stdout = stdout
+
+    def fake_run(command, **kwargs):
+        calls.append((command, kwargs))
+        return Result('["' + digest + '"]' if len(calls) == 1 else image_id + "\n")
+
+    monkeypatch.setattr("scripts.run_local_agent.subprocess.run", fake_run)
+
+    assert resolve_pinned_public_test_image(image_id) == digest
+    assert calls[0][0] == [
+        "docker", "image", "inspect", image_id, "--format", "{{json .RepoDigests}}",
+    ]
+    assert calls[1][0] == [
+        "docker", "image", "inspect", digest, "--format", "{{.Id}}",
+    ]
+    assert all(call[1]["timeout"] == 10 for call in calls)
+
+
+def test_refuses_local_image_id_without_an_exact_repository_digest(monkeypatch):
+    class Result:
+        returncode = 0
+        stdout = '["vare-test@sha256:' + "a" * 64 + '"]'
+
+    monkeypatch.setattr("scripts.run_local_agent.subprocess.run", lambda *_args, **_kwargs: Result())
+
+    try:
+        resolve_pinned_public_test_image("sha256:" + "b" * 64)
+    except ValueError as error:
+        assert "does not resolve" in str(error)
+    else:
+        raise AssertionError("mismatched image ID and repository digest were accepted")
 
 
 def test_verified_success_requires_public_test_and_independent_hidden_grade():

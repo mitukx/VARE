@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "scripts/qualify_mlx_lm_1910_v1.py", line 203, in <module>
+    raise SystemExit(main())
+  File "scripts/qualify_mlx_lm_1910_v1.py", line 119, in main
+    archive_commit(repo, BASE, base)
+  File "scripts/qualify_mlx_lm_1910_v1.py", line 81, in archive_commit
+    raise RuntimeError(f"unsafe archive member: {member.name!r}")
+RuntimeError: unsafe archive member: 'CLAUDE.md'
+
+Classification: setup/source-export refusal before any candidate code, public test, or oracle was run.
+Exit code: 1. The first frozen protocol and runner were retained unchanged.

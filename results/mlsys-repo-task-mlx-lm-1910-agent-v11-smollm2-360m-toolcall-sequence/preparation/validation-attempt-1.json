@@ -1,0 +1,17 @@
+{
+  "check": "direct frozen-protocol verifier validation",
+  "occurred_before_protocol_freeze": true,
+  "failure": {
+    "exception": "ValueError",
+    "message": "unexpected or unfrozen v2 protocol",
+    "source": "scripts/run_mlx_lm_1910_smollm2_feasibility_v2.py:verify"
+  },
+  "inference_started": false,
+  "model_loaded": false,
+  "generated_tokens": 0,
+  "optimizer_steps": 0,
+  "root_cause": "Importing the v2 runner patched the shared v1 module verifier; the v3 runner captured that v2 wrapper instead of the original v1 verifier.",
+  "correction": "The v3 runner now captures the original verifier retained by the v2 module and still validates prior v2 exposure before delegating.",
+  "recorded_at_utc": "2026-10-23T19:45:21Z",
+  "status": "FAILED_BEFORE_INFERENCE"
+}

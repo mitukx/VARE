@@ -16,7 +16,7 @@ from vare.blob_budget import THRESHOLD_BYTES, list_tracked_blobs, parse_allowlis
 # SHA-256 of protocols/tracked_large_blob_allowlist_v1.txt. Changing the
 # census requires changing this pin in the same commit; that diff is the
 # review point. Do not refresh it to admit a new large checkpoint.
-ALLOWLIST_SHA256 = "946a940250e2610a3ccc0e9bb8507f2f523395dd1b774c283a0da58a0e3ffd34"
+ALLOWLIST_SHA256 = "1bcec38843a691aed8d1d504aad8c20ed51ce609b7b0f456fb8b1cba1381176c"
 ALLOWLIST_RELATIVE = Path("protocols/tracked_large_blob_allowlist_v1.txt")
 
 

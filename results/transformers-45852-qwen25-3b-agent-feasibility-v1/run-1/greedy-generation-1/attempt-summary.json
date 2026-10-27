@@ -1,0 +1,36 @@
+{
+  "attempt": "greedy",
+  "candidate_diff_sha256": "051478afa52959747f17b4e590ede74d3e6f5d002258dc37d19fa3146e8cd7d9",
+  "candidate_target_sha256": "773245990ad6a3229fa2cd6de908605f10160875d6cfc3eddc7ea71527a7dce5",
+  "edit_applied": true,
+  "edit_attempted": true,
+  "elapsed_seconds": 44.344,
+  "format_parse_failure_count": 0,
+  "max_child_rss_mib": 1913.125,
+  "model_runtime": {
+    "device": "apple_metal",
+    "mlx": "unknown",
+    "mlx_active_memory_bytes": 1736204296,
+    "mlx_lm": "0.32.2",
+    "mlx_peak_memory_bytes": 2711552148,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "seed": 113
+  },
+  "monitor_elapsed_seconds": 45.78,
+  "monitor_status": "COMPLETED",
+  "new_tokens": 875,
+  "public_test_result": {
+    "elapsed_seconds": 0.27,
+    "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+    "passed": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "PASS: candidate source parses\n"
+  },
+  "seed": 113,
+  "stop_reason": "turn_budget_exhausted",
+  "task_id": "transformers-45852-4d-mask",
+  "tool_turns": 12,
+  "workspace_archive_sha256": "411bfbaef17d41ff3a49d3933f580168d21224e8db2d0897400f7049853a249f"
+}

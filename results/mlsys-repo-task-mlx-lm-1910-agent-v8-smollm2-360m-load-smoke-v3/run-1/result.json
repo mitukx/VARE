@@ -1,0 +1,93 @@
+{
+  "command": [
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/mlx-smoke-venv/bin/python",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/scripts/smoke_local_mlx_model_load_v3.py",
+    "--child-model",
+    "/Users/user/.cache/huggingface/hub/models--mlx-community--SmolLM2-360M-Instruct/snapshots/5d5e6fee5beb5d4d4d85e2203ef23e1230a9aac7",
+    "--child-result",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/results/mlsys-repo-task-mlx-lm-1910-agent-v8-smollm2-360m-load-smoke-v3/run-1/load.json"
+  ],
+  "generated_tokens": 0,
+  "load_result": {
+    "generated_tokens": 0,
+    "loaded": true,
+    "model_class": "Model",
+    "tokenizer_class": "TokenizerWrapper"
+  },
+  "optimizer_steps": 0,
+  "protocol_id": "vare.local-mlx-model-load-smoke.v3",
+  "protocol_sha256": "01b67c26f4d0069db347ec849c8caa51dd97c2b757d1de102572a326319b6fd5",
+  "reason": null,
+  "resource": {
+    "end_free_memory_percent": 61,
+    "end_swap_mib": 3862.5,
+    "minimum_sampled_free_memory_percent": 60,
+    "peak_sampled_child_rss_mib": 814.34,
+    "peak_sampled_swap_mib": 3862.5,
+    "samples": [
+      {
+        "child_rss_mib": 8.77,
+        "elapsed_seconds": 0.002,
+        "free_memory_percent": 61,
+        "swap_used_mib": 3862.5
+      },
+      {
+        "child_rss_mib": 39.22,
+        "elapsed_seconds": 0.269,
+        "free_memory_percent": 60,
+        "swap_used_mib": 3862.5
+      },
+      {
+        "child_rss_mib": 65.08,
+        "elapsed_seconds": 0.536,
+        "free_memory_percent": 60,
+        "swap_used_mib": 3862.5
+      },
+      {
+        "child_rss_mib": 74.42,
+        "elapsed_seconds": 0.797,
+        "free_memory_percent": 61,
+        "swap_used_mib": 3862.5
+      },
+      {
+        "child_rss_mib": 76.28,
+        "elapsed_seconds": 1.064,
+        "free_memory_percent": 61,
+        "swap_used_mib": 3862.5
+      },
+      {
+        "child_rss_mib": 78.89,
+        "elapsed_seconds": 1.325,
+        "free_memory_percent": 61,
+        "swap_used_mib": 3862.5
+      },
+      {
+        "child_rss_mib": 83.16,
+        "elapsed_seconds": 1.587,
+        "free_memory_percent": 60,
+        "swap_used_mib": 3862.5
+      },
+      {
+        "child_rss_mib": 814.34,
+        "elapsed_seconds": 1.85,
+        "free_memory_percent": 61,
+        "swap_used_mib": 3862.5
+      },
+      {
+        "child_rss_mib": 0.0,
+        "elapsed_seconds": 2.116,
+        "free_memory_percent": 61,
+        "swap_used_mib": 3862.5
+      }
+    ],
+    "start_free_memory_percent": 61,
+    "start_swap_mib": 3862.5,
+    "swap_growth_mib": 0.0
+  },
+  "return_code": 0,
+  "runner_sha256": "531527192c0effc5118bde303aaa9e106e631f5caab93d2d8ce2177569f8ad4b",
+  "schema_version": 1,
+  "started_at_utc": "2026-10-23T19:05:25.685058+00:00",
+  "status": "COMPLETED",
+  "wall_seconds": 2.386
+}

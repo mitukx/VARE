@@ -22,9 +22,13 @@ from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submis
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
 MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
+_LOCAL_IMAGE_ID = re.compile(r'sha256:[0-9a-f]{64}\Z')
+_REPOSITORY_IMAGE_DIGEST = re.compile(r'[a-z0-9][a-z0-9._:/-]*@sha256:[0-9a-f]{64}\Z')
+_HEADER_COMMENT_LINE = re.compile(rb'^\s*(?:#|//|/\*|\*|<!--)')
+_PROTECTED_HEADER_TERM = re.compile(rb'(?i)\b(?:copyright|spdx-license-identifier|licen[cs](?:e|ed|ing))\b')
 TOOLS = [
-    {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace.', 'parameters': {'type': 'object', 'properties': {}, 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file. Provide its repository-relative path; a workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace. Optionally provide one exact allowlisted path to list only that file.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read up to 80 inclusive lines from one UTF-8 task source file. Provide its repository-relative path and, for a later section, optional start_line and end_line. If omitted, reads the first 80 lines. A workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer'}, 'end_line': {'type': 'integer'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in the allowed task source files.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a small unified diff to existing task source files. Keep the patch minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
@@ -113,10 +117,11 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> di
         return {'passed': False, 'error': 'public test file is missing or changed'}
     from vare.container_isolation import DockerIsolationRunner, IsolationLimits
 
-    limits = IsolationLimits(image=image, timeout_s=45, memory_mb=512, cpus=1.0,
-                             pids_limit=32, max_output_bytes=20_000)
     started = time.perf_counter()
     try:
+        pinned_image = resolve_pinned_public_test_image(image)
+        limits = IsolationLimits(image=pinned_image, timeout_s=45, memory_mb=512, cpus=1.0,
+                                 pids_limit=32, max_output_bytes=20_000)
         result = asyncio.run(DockerIsolationRunner().run_candidate(
             limits, allowed_workspace_root=workspace.parent, workspace=workspace,
             command=['python', '/workspace/test_public.py'],
@@ -128,6 +133,34 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> di
             'stdout': result.stdout, 'stderr': result.stderr,
             'elapsed_seconds': round(time.perf_counter() - started, 3),
             'isolation': 'docker-network-none-read-only-root-only-workspace-mount'}
+
+
+def resolve_pinned_public_test_image(image: str) -> str:
+    """Map an immutable local image ID to a repository digest accepted by Docker isolation."""
+    if _LOCAL_IMAGE_ID.fullmatch(image) is None:
+        return image
+    inspected = subprocess.run(
+        ['docker', 'image', 'inspect', image, '--format', '{{json .RepoDigests}}'],
+        capture_output=True, text=True, check=False, timeout=10,
+    )
+    if inspected.returncode != 0:
+        raise ValueError('local public-test image ID is unavailable')
+    try:
+        repository_digests = json.loads(inspected.stdout)
+    except json.JSONDecodeError as exc:
+        raise ValueError('Docker returned invalid repository-digest metadata') from exc
+    if not isinstance(repository_digests, list):
+        raise ValueError('local public-test image has no repository digest')
+    for digest in sorted(repository_digests):
+        if not isinstance(digest, str) or _REPOSITORY_IMAGE_DIGEST.fullmatch(digest) is None:
+            continue
+        verified = subprocess.run(
+            ['docker', 'image', 'inspect', digest, '--format', '{{.Id}}'],
+            capture_output=True, text=True, check=False, timeout=10,
+        )
+        if verified.returncode == 0 and verified.stdout.strip() == image:
+            return digest
+    raise ValueError('local public-test image ID does not resolve to an exact repository digest')
 
 
 def refresh_public_tests_after_edit(
@@ -148,6 +181,16 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
             'malformed_diff' if edit_format == 'unified_diff' else 'malformed_file'
         )
         return {'applied': False, 'format_parse_failure': reason}
+    originals: dict[str, bytes] = {}
+    protected_headers: dict[str, tuple[bytes, ...]] = {}
+    for name in parsed.paths:
+        if name not in allowed:
+            continue
+        path = workspace / name
+        if path.is_file() and not path.is_symlink():
+            original = path.read_bytes()
+            originals[name] = original
+            protected_headers[name] = protected_header_lines(original)
     applied = apply_parsed_edit(workspace, parsed, allowed)
     if not applied.applied:
         return {
@@ -156,7 +199,27 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
             'error': applied.error or 'edit was not applied',
             'paths': list(applied.paths),
         }
+    if any(
+        protected_headers[name] != protected_header_lines((workspace / name).read_bytes())
+        for name in originals
+    ):
+        for name, original in originals.items():
+            (workspace / name).write_bytes(original)
+        return {
+            'applied': False,
+            'format_parse_failure': None,
+            'error': 'edit changed a protected copyright or license header',
+            'paths': list(applied.paths),
+        }
     return {'applied': True, 'paths': list(applied.paths), 'format_parse_failure': None}
+
+
+def protected_header_lines(source: bytes) -> tuple[bytes, ...]:
+    """Return copyright/license comment lines in the conventional file header."""
+    return tuple(
+        line for line in source.splitlines(keepends=True)[:80]
+        if _HEADER_COMMENT_LINE.match(line) and _PROTECTED_HEADER_TERM.search(line)
+    )
 
 
 def sha256(path: Path) -> str:
@@ -181,6 +244,16 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     normalized = raw_path.replace('\\', '/').lstrip('./')
     matches = [path for path in allowed if normalized == path or normalized.endswith('/' + path)]
     return matches[0] if len(matches) == 1 else None
+
+
+def list_allowed_files(allowed: set[str], raw_path: str | None = None) -> list[str] | dict[str, Any]:
+    """List all candidate-visible files or filter by one exact allowed path."""
+    if raw_path is None:
+        return sorted(allowed)
+    path = raw_path.replace('\\', '/')
+    if path not in allowed:
+        return {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
+    return [path]
 
 
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
@@ -216,7 +289,39 @@ def normalize_tool_call_format(raw: str, tool_names: set[str]) -> tuple[str, boo
     existing strict tool-call parser.
     """
     if "<tool_call>" in raw:
-        return raw, False
+        # Some Qwen2.5 generations wrap an otherwise valid tool payload in an
+        # extra opening brace and two extra closing braces. Recover only that
+        # exact framing error; malformed arguments or mixed content in a block
+        # remain untouched for the strict parser to reject.
+        block_pattern = re.compile(r'<tool_call>(.*?)</tool_call>', re.DOTALL)
+        recovered_any = False
+
+        def recover_duplicate_wrapper(match: re.Match[str]) -> str:
+            nonlocal recovered_any
+            content = match.group(1).strip()
+            if not content.startswith('{{'):
+                return match.group(0)
+            try:
+                payload, end = json.JSONDecoder().raw_decode(content[1:])
+            except json.JSONDecodeError:
+                return match.group(0)
+            # The malformed generations observed in the retained trace add
+            # exactly one brace at each edge: ``{{<json-object>}}``. Accept
+            # only that paired framing error. Requiring two trailing braces
+            # here misses the actual model output and sends it to json.loads
+            # with the extra leading brace still present.
+            if re.fullmatch(r'(?:\}\}?\s*|\s+\}\})', content[1:][end:]) is None:
+                return match.group(0)
+            if (not isinstance(payload, dict) or set(payload) != {'name', 'arguments'}
+                    or payload.get('name') not in tool_names
+                    or not isinstance(payload.get('arguments'), dict)):
+                return match.group(0)
+            recovered_any = True
+            encoded = json.dumps(payload, ensure_ascii=False, separators=(',', ':'))
+            return f'<tool_call>{encoded}</tool_call>'
+
+        normalized = block_pattern.sub(recover_duplicate_wrapper, raw)
+        return normalized, recovered_any
 
     def encode_if_tool_call(text: str) -> str | None:
         try:
@@ -247,6 +352,105 @@ def normalize_tool_call_format(raw: str, tool_names: set[str]) -> tuple[str, boo
     if encoded is None:
         return raw, False
     return f"<tool_call>{encoded}</tool_call>", True
+
+
+def parse_tool_call_payload(raw_call: str, tools: list[dict[str, Any]]) -> tuple[str, dict[str, Any]]:
+    """Parse one complete JSON tool payload and enforce its declared schema."""
+    call = json.loads(raw_call)
+    if not isinstance(call, dict) or set(call) != {'name', 'arguments'}:
+        raise ValueError('tool payload must contain exactly name and arguments')
+    name = call['name']
+    arguments = call['arguments']
+    if not isinstance(name, str) or not isinstance(arguments, dict):
+        raise ValueError('tool name and arguments have invalid types')
+    specification = next(
+        (tool['function'] for tool in tools if tool['function']['name'] == name), None,
+    )
+    if specification is None:
+        raise ValueError('unsupported tool call')
+    parameters = specification['parameters']
+    properties = parameters['properties']
+    required = set(parameters.get('required', []))
+    if not required <= set(arguments) or set(arguments) - set(properties):
+        raise ValueError('tool arguments do not match the declared schema')
+    for key, value in arguments.items():
+        expected_type = properties[key].get('type')
+        if expected_type == 'string' and not isinstance(value, str):
+            raise ValueError(f'tool argument {key!r} must be a string')
+        if expected_type == 'object' and not isinstance(value, dict):
+            raise ValueError(f'tool argument {key!r} must be an object')
+        if expected_type == 'integer' and (type(value) is not int or value < 1):
+            raise ValueError(f'tool argument {key!r} must be a positive integer')
+    return name, arguments
+
+
+def read_file_range(path: Path, display_path: str, start_line: int = 1,
+                    end_line: int | None = None) -> dict[str, Any]:
+    """Read a bounded inclusive line range without flooding the model context."""
+    lines = path.read_text(encoding='utf-8').splitlines()
+    requested_end = start_line + 79 if end_line is None else end_line
+    if start_line < 1 or requested_end < start_line or requested_end - start_line >= 80:
+        return {'error': 'read_file range must contain at most 80 positive-numbered lines'}
+    if start_line > len(lines):
+        return {'error': f'start_line exceeds file length ({len(lines)} lines)'}
+    actual_end = min(requested_end, len(lines))
+    return {
+        'resolved_path': display_path,
+        'start_line': start_line,
+        'end_line': actual_end,
+        'total_lines': len(lines),
+        'truncated': actual_end < len(lines),
+        'content': '\n'.join(lines[start_line - 1:actual_end]),
+    }
+
+
+def build_initial_messages(task_text: str, allowed_editable_files: list[str],
+                           edit_format: str, public_tests: bool,
+                           instruction: str) -> list[dict[str, str]]:
+    """Build the exact frozen system/user messages used by a coding attempt."""
+    if edit_format == 'whole_file':
+        edit_sentence = (
+            'Read the source path named in the user instruction, then use tools to inspect and edit. '
+            'Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. '
+            'Keep the replacement concise enough to fit within the per-turn output budget. '
+        )
+    elif edit_format == 'unified_diff':
+        edit_sentence = (
+            'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
+            'The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. '
+        )
+    else:
+        raise ValueError(f'unsupported edit format: {edit_format}')
+    system = (
+        'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
+        + edit_sentence
+        + 'Allowed source paths: ' + ', '.join(sorted(allowed_editable_files)) + '. First call list_files. Then search for the relevant symbol and read its source with an exact path and a bounded line range. '
+        + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
+        + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
+        + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
+           'Call finish only after the public smoke test passes. ' if public_tests else '')
+        + 'For large files, use search_text to find the relevant symbol and read_file with start_line and end_line; each read is limited to 80 lines. '
+        + 'You have a limited tool budget; each assistant turn before finish must call a tool. '
+        'TASK:\n' + task_text.split('## Reproduce', 1)[0].rstrip()
+    )
+    return [{'role': 'system', 'content': system}, {'role': 'user', 'content': instruction}]
+
+
+def parse_tool_call_blocks(
+    text: str, tools: list[dict[str, Any]],
+) -> tuple[list[re.Match[str]], list[tuple[re.Match[str], str, dict[str, Any]]],
+           list[tuple[re.Match[str], str]]]:
+    """Parse complete tool-call blocks without truncating nested JSON objects."""
+    blocks = list(re.finditer(r'<tool_call>\s*(.*?)\s*</tool_call>', text, re.DOTALL))
+    parsed: list[tuple[re.Match[str], str, dict[str, Any]]] = []
+    failures: list[tuple[re.Match[str], str]] = []
+    for block in blocks:
+        try:
+            name, arguments = parse_tool_call_payload(block.group(1), tools)
+            parsed.append((block, name, arguments))
+        except Exception as exc:
+            failures.append((block, f'{type(exc).__name__}: {exc}'))
+    return blocks, parsed, failures
 
 
 def main() -> int:
@@ -330,32 +534,9 @@ def main() -> int:
         parser.error('isolated public-test execution requires exactly one test_public.py in the task')
     tools = tools_for(args.edit_format, public_tests=bool(args.public_test_image))
     tool_names = {item['function']['name'] for item in tools}
-    if args.edit_format == 'whole_file':
-        edit_sentence = (
-            'Read the source path named in the user instruction, then use tools to inspect and edit. '
-            'Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. '
-            'Keep the replacement concise enough to fit within the per-turn output budget. '
-        )
-    else:
-        edit_sentence = (
-            'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
-            'The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. '
-        )
-    system = (
-        'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
-        + edit_sentence
-        + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then read the exact source path named in the task. '
-        + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
-        + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
-        + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
-           'Call finish only after the public smoke test passes. ' if args.public_test_image else '')
-        + 'You have a limited tool budget; each assistant turn before finish must call a tool. '
-        'TASK:\n' + task_text.split('## Reproduce', 1)[0].rstrip()
+    messages = build_initial_messages(
+        task_text, sorted(editable), args.edit_format, bool(args.public_test_image), args.instruction,
     )
-    messages: list[dict[str, str]] = [
-        {'role': 'system', 'content': system},
-        {'role': 'user', 'content': args.instruction},
-    ]
     initial_messages = [dict(message) for message in messages]
     transcript: list[dict[str, Any]] = []
     before = digest_tree(workspace, sorted(allowed))
@@ -369,8 +550,6 @@ def main() -> int:
     public_test_result = None
     format_parse_failure = None
     format_parse_failure_count = 0
-    pattern = re.compile(r'<tool_call>\s*(\{.*?\})\s*</tool_call>', re.DOTALL)
-
     def note_edit(edit_result: dict[str, Any]) -> None:
         nonlocal edit_attempted, edit_applied, format_parse_failure, format_parse_failure_count
         edit_attempted = True
@@ -409,8 +588,8 @@ def main() -> int:
                                  'generation_seconds': round(generation_elapsed, 6)}
         parse_text, recovered_tool_format = normalize_tool_call_format(raw, tool_names)
         if recovered_tool_format:
-            entry['tool_call_format_recovery'] = 'strict_qwen_json_normalization'
-        calls = list(pattern.finditer(parse_text))
+            entry['tool_call_format_recovery'] = 'strict_allowlisted_json_recovery'
+        calls, parsed_calls, call_errors = parse_tool_call_blocks(parse_text, tools)
         if not calls:
             recovered = parse_submission(raw, edit_format=args.edit_format)
             if not isinstance(recovered, ParseFailure) or recovered.reason != 'no_edit':
@@ -447,17 +626,8 @@ def main() -> int:
                 continue
             stop_reason = 'no_tool_call_after_edit' if current_hashes != before else 'no_tool_call_retries_exhausted'
             break
-        parsed_calls = []
-        for match in calls:
-            try:
-                call = json.loads(match.group(1))
-                name = call.get('name')
-                arguments = call.get('arguments', {})
-                if name not in tool_names or not isinstance(arguments, dict):
-                    raise ValueError('unsupported tool call')
-                parsed_calls.append((match, name, arguments))
-            except Exception as exc:
-                entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': match.group(1)})
+        for match, error in call_errors:
+            entry['tool_calls'].append({'error': error, 'raw_call': match.group(1)})
         if parsed_calls:
             messages.append({'role': 'assistant', 'tool_calls': [
                 {'type': 'function', 'function': {'name': name, 'arguments': arguments}}
@@ -468,15 +638,18 @@ def main() -> int:
         for match, name, arguments in parsed_calls:
             try:
                 if name == 'list_files':
-                    result: Any = sorted(allowed)
+                    result: Any = list_allowed_files(allowed, arguments.get('path'))
                 elif name == 'read_file':
                     raw_path = arguments.get('path', '')
                     path = resolve_allowed_path(raw_path, allowed)
                     if path is None:
                         result = {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
                     else:
-                        result = {'resolved_path': path,
-                                  'content': (workspace / path).read_text(encoding='utf-8')}
+                        result = read_file_range(
+                            workspace / path, path,
+                            arguments.get('start_line', 1),
+                            arguments.get('end_line'),
+                        )
                 elif name == 'search_text':
                     query = arguments.get('query', '')
                     if not query:

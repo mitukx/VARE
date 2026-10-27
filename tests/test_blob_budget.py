@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -17,7 +18,7 @@ from vare.blob_budget import (
 
 REPO = Path(__file__).resolve().parents[1]
 ALLOWLIST = REPO / "protocols/tracked_large_blob_allowlist_v1.txt"
-PINNED_SHA256 = "946a940250e2610a3ccc0e9bb8507f2f523395dd1b774c283a0da58a0e3ffd34"
+PINNED_SHA256 = "1bcec38843a691aed8d1d504aad8c20ed51ce609b7b0f456fb8b1cba1381176c"
 
 
 def test_parse_allowlist_rejects_malformed_rows():
@@ -66,12 +67,12 @@ def test_repository_allowlist_matches_the_current_index():
     rows = parse_allowlist(data.decode("utf-8"), threshold=THRESHOLD_BYTES)
     tracked = list_tracked_blobs(REPO)
     assert violations(tracked, rows, threshold=THRESHOLD_BYTES) == []
-    assert len(rows) == 235
+    assert len(rows) == 237
 
 
 def test_check_script_passes_on_this_repository():
     proc = subprocess.run(
-        ["python3", "scripts/check_tracked_blob_budget.py"],
+        [sys.executable, "scripts/check_tracked_blob_budget.py"],
         cwd=REPO,
         check=False,
         capture_output=True,
@@ -79,4 +80,4 @@ def test_check_script_passes_on_this_repository():
         env={**os.environ, "PYTHONPATH": "src"},
     )
     assert proc.returncode == 0, proc.stderr
-    assert "235 allowlisted blobs" in proc.stdout
+    assert "237 allowlisted blobs" in proc.stdout

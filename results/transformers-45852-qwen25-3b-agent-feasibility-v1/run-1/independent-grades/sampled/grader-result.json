@@ -1,0 +1,75 @@
+{
+  "arm": "sampled",
+  "calibration_passed": true,
+  "candidate_target_sha256": "51a96b8d23e365014cfcd44049fda9a40a41e76ab5ba80a7b687138d3523f00a",
+  "candidate_workspace_hidden_from_grader_mount": true,
+  "grader_implementation_commit": "b9f5dd6b32bacad026b87a5fed43dac2108e142a",
+  "grader_protocol_id": "transformers-45852-isolated-eval-v3",
+  "grader_protocol_sha256": "512575c223a5bd3edebe762f6d48e97daaceda9acf3c2713e3f1b81644c25779",
+  "grader_wall_seconds": 26.763,
+  "result": {
+    "candidate_image": "localhost:5000/vare/transformers-cpu@sha256:5461f5ec9d3022db72d49cf5bcd140c99521eba5b37747257b58a576d4e12e1f",
+    "candidate_target_sha256": "51a96b8d23e365014cfcd44049fda9a40a41e76ab5ba80a7b687138d3523f00a",
+    "candidate_wall_s": [
+      3.075931916020635,
+      2.740283708944705,
+      2.835587667027812,
+      2.8518974989351737,
+      2.7713159170239057,
+      2.8121611250268117
+    ],
+    "candidate_workspace_sha256": "031ffd665c0bf81adfe8e697dc6a30c2452097c2de9e946c0234f62ce1bfea3c",
+    "cases": [
+      {
+        "case_id": "ordinary_variable_length_padded_batch",
+        "failure": null,
+        "passed": true,
+        "wall_s": 3.075931916020635
+      },
+      {
+        "case_id": "torch_square_4d_mask",
+        "failure": "wrong_output",
+        "passed": false,
+        "wall_s": 2.740283708944705
+      },
+      {
+        "case_id": "numpy_square_4d_mask",
+        "failure": null,
+        "passed": true,
+        "wall_s": 2.835587667027812
+      },
+      {
+        "case_id": "torch_asymmetric_q_kv_mask",
+        "failure": "wrong_output",
+        "passed": false,
+        "wall_s": 2.8518974989351737
+      },
+      {
+        "case_id": "torch_nonuniform_4d_mask",
+        "failure": "wrong_output",
+        "passed": false,
+        "wall_s": 2.7713159170239057
+      },
+      {
+        "case_id": "numpy_nonuniform_4d_mask",
+        "failure": null,
+        "passed": true,
+        "wall_s": 2.8121611250268117
+      }
+    ],
+    "configured_memory_limit_mb": 1536,
+    "git_history_exported": false,
+    "grader_adapter_sha256": "85ac3740bc05d14b2ac0976f54d7d29ae695825620a16794764f160014e95031",
+    "grader_files_mounted_to_candidate": false,
+    "grader_source_sha256": "3bc002d97ce3ec64b90ee53aba51562b7bc03ea32690c59db8f8bf452a54c44c",
+    "network": "none",
+    "passed": false,
+    "peak_memory_bytes": null,
+    "protocol_sha256": "512575c223a5bd3edebe762f6d48e97daaceda9acf3c2713e3f1b81644c25779",
+    "task_id": "transformers-45852-4d-mask",
+    "task_statement_sha256": "99ef996ed432136483fed21a5964a918f2f90f45dc6e5491ad5490e2138e395e",
+    "timeout_s": 30.0
+  },
+  "schema_version": 1,
+  "task_id": "transformers-45852-4d-mask"
+}
