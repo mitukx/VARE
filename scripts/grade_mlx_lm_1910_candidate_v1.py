@@ -28,6 +28,40 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def candidate_module_scope_interference(source: bytes, baseline_source: bytes) -> list[str]:
+    """Permit this task to change only the body of its pinned parser helper.
+
+    Candidate modules are imported by pytest and the oracle. Requiring the full
+    module AST outside `_convert_param_value` to match the pinned baseline
+    prevents import-time output, early exits, import hooks, and changed test
+    surfaces from running inside either evaluator process.
+    """
+    try:
+        candidate_tree = ast.parse(source)
+        baseline_tree = ast.parse(baseline_source)
+    except SyntaxError as exc:
+        return [f"candidate or pinned source is not valid Python: {exc.msg}"]
+
+    def normalize(tree: ast.Module) -> str | None:
+        matches = [
+            node for node in tree.body
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.name == "_convert_param_value"
+        ]
+        if len(matches) != 1:
+            return None
+        matches[0].body = [ast.Pass()]
+        return ast.dump(tree, include_attributes=False)
+
+    candidate_ast = normalize(candidate_tree)
+    baseline_ast = normalize(baseline_tree)
+    if candidate_ast is None or baseline_ast is None:
+        return ["pinned parser helper is missing or ambiguous"]
+    if candidate_ast != baseline_ast:
+        return ["candidate changes code outside _convert_param_value body"]
+    return []
+
+
 def candidate_execution_interference(source: bytes) -> list[str]:
     """Reject process control and output forgery outside this parser task's contract.
 
@@ -44,15 +78,19 @@ def candidate_execution_interference(source: bytes) -> list[str]:
     findings: list[str] = []
     denied_modules = {
         "os", "sys", "signal", "subprocess", "ctypes", "builtins", "importlib",
-        "runpy", "posix", "nt", "_posixsubprocess",
+        "runpy", "posix", "nt", "_posixsubprocess", "pathlib", "io", "tempfile",
+        "socket", "_thread", "threading", "multiprocessing", "inspect", "site",
+        "pkgutil", "mmap", "pty", "fcntl", "resource",
     }
     denied_names = {
         "__import__", "exec", "eval", "compile", "print", "exit", "quit", "open",
         "getattr", "setattr", "globals", "locals", "vars", "__builtins__",
+        "SystemExit", "KeyboardInterrupt",
     }
     denied_attributes = {
         "_exit", "exit", "system", "popen", "kill", "dup2", "write", "fileno",
-        "stdout", "stderr",
+        "stdout", "stderr", "write_text", "write_bytes", "read_bytes", "open",
+        "__dict__", "__class__", "__bases__", "__subclasses__", "__globals__",
     }
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -81,7 +119,12 @@ def grade_source(repo: Path, candidate: Path, output: Path) -> dict[str, Any]:
     (output / "raw").mkdir()
     started = time.monotonic()
     record: dict[str, Any] = {"candidate_sha256": hashlib.sha256(candidate_bytes).hexdigest()}
-    interference = candidate_execution_interference(candidate_bytes)
+    baseline = CAL.run(["git", "-C", str(repo), "show", f"{CAL.BASE}:{CAL.TARGET}"])
+    if baseline.returncode != 0 or CAL.sha256_bytes(baseline.stdout) != CAL.BASE_FILE_SHA256:
+        raise RuntimeError("pinned baseline parser source failed identity validation")
+    interference = candidate_module_scope_interference(candidate_bytes, baseline.stdout)
+    interference.extend(candidate_execution_interference(candidate_bytes))
+    interference = sorted(set(interference))
     if interference:
         result = {
             "schema_version": 1,
