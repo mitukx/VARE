@@ -5,6 +5,18 @@
 **実験実装の基点:** PR [#139](https://github.com/mitukx/VARE/pull/139) head `087914fb9fc127302ab632cc665f9b7352b0c47c`  
 **凍結 protocol v2:** SHA-256 `b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308`
 
+## 追補：Held-out と Development の系列重複（統合前の要是正事項）
+
+Sprint IV の成功タスク `mlx-lm-1926-falcon-h1-uncached-behavior-v2`（上流 MLX-LM [#1926](https://github.com/ml-explore/mlx-lm/pull/1926)、`FalconH1Model.__call__`）は、この実験では **Development** として実行された。一方、先行する VARE [PR #129](https://github.com/mitukx/VARE/pull/129) の凍結 allocation と `docs/mlsys-heldout-task-qualification-pilot-v1-report.md` は、同じ上流 #1926、同じ `falcon_h1.py` の uncached forward/cache/gradient 修正を `mlxlm-1926-falcon-cache-gradient` として **reserved held-out** に割り当て、source/grader certificate を取得していた。この系列重複は Sprint IV の事前分割監査で検出されなかった。
+
+**過去の held-out にモデル推論を実施していない、という従来の記述は修正を要する。** モデルは今回 #1926 の修正課題に実際に接触しており、この上流系列は今後の blind held-out 評価から除外する必要がある。以前の 10/15 source/grader certificate は認定当時の歴史的記録として保存し、本件の exposure を反映した将来の適格数は別途再計算する。少なくとも #1926 の1系列は未使用 held-out として数えられない。全体の model-eligible count はもともと確定していない。
+
+一方、**Falcon-H1 の2試行が隔離された hidden grader に合格したという観測自体は維持される**。正確な解釈は「2つの seed で同じ既割当上流系列の Development repair が成功した」であり、独立 blind held-out に対する汎化能力の証明ではない。凍結済み protocol、全8試行の raw trajectory、grader result は変更しない。
+
+また、MiniCPM3 #1913 の left-padding 修正と、先行する held-out 候補 #1925 との family-level overlap も同一基準で監査する。#1925 は過去の readiness report ですでに重複により除外されたが、別の上流PR番号だけでは独立系列と断定できない。
+
+この追補は実験後の provenance 訂正であり、**元の結果を遡及的に変更するものではない**。公開bundleのhash、元のtask JSONのsplitラベル、採点値はいずれも保持し、別途 prospective exposure/disposition 記録と独立レビューを完了するまで、このPRはDraftのままとする。
+
 ## 新しく得た結果
 
 Qwen2.5-Coder-14B-Instruct-4bit を MLX CPU で使い、外部 MLX-LM の新しい Development task family を2件、各4回、計8回実行した。source-localized 条件では Falcon-H1 の `__call__` に2回、モデル自身がレイヤーごとの空 cache 初期化を加え、双方が公開テストと独立 hidden grader を通過した。2回は同一task family内のseed違いであり、独立修復数は2件ではなく **成功したtask family 1/2** と報告する。
