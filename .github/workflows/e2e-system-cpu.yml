@@ -59,15 +59,18 @@ jobs:
         run: |
           python scripts/benchmark_e2e_rl_real_model.py --output "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2" --workers 1 --seeds 1701 --tasks 8 --eval-tasks 8
           python scripts/audit_e2e_rl_real_model.py "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2"
-      - name: Materialize the immutable continuation campaign revision
+      - name: Materialize the V4 campaign harness revision
         run: |
-          historical="${RUNNER_TEMP}/vare-e2e-continuation-v4"
-          git -c core.hooksPath=/dev/null worktree add --detach "$historical" d251cc678fbc9940f3de460904d5d23a1967b3ce
-          test "$(git -C "$historical" rev-parse HEAD)" = "d251cc678fbc9940f3de460904d5d23a1967b3ce"
+          historical="${RUNNER_TEMP}/vare-e2e-continuation-v4-campaign"
+          # The immutable V4 runtime is pinned separately to d251cc6 by its
+          # source identity. The campaign harness/auditor revision is 701b5c5;
+          # running tests from the runtime-only commit predates V4 admission.
+          git -c core.hooksPath=/dev/null worktree add --detach "$historical" 701b5c582492e53bba3f4e43a15b3e7d717e2e3d
+          test "$(git -C "$historical" rev-parse HEAD)" = "701b5c582492e53bba3f4e43a15b3e7d717e2e3d"
       - name: Verify continuous updates and actual learner SIGKILL recovery
         env:
           VARE_E2E_MODEL_DIR: ${{ runner.temp }}/tiny-gpt2
-        working-directory: ${{ runner.temp }}/vare-e2e-continuation-v4
+        working-directory: ${{ runner.temp }}/vare-e2e-continuation-v4-campaign
         run: |
           set +e
           python -m pytest tests/test_e2e_rl_continuation.py --basetemp="${RUNNER_TEMP}/v2-tests"
