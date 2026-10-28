@@ -1,0 +1,210 @@
+{
+ "analysis": {
+  "bootstrap_resamples": 10000,
+  "bootstrap_seed": 20261028,
+  "intervals": "two-sided 95% t interval and percentile bootstrap over pairs",
+  "primary_set": "pairs where both trajectories completed the horizon",
+  "sensitivity_set": "action-equivalent completed pairs only",
+  "unit": "paired difference/ratio within a pair"
+ },
+ "base": {
+  "branch": "codex/development-navigation-campaign-v1",
+  "head_commit": "df0a360ead3927f72d33972634251469b50c2368",
+  "pull_request": 139,
+  "related_prior_measurement": "PR 142 results/sprint_x_20261028/schema_slots_kv_cache_v1 (2 pairs x 2 turns)"
+ },
+ "budget": {
+  "campaign_wall_minutes_max": 170,
+  "cloud_gpu": false,
+  "model_download": false,
+  "paid_api": false
+ },
+ "cheaper_alternative_considered": "CPU fake-MLX tests (existing 8/16-turn regression and new safety tests) verify controller cache logic but cannot measure real latency, Metal allocation, or numerical divergence between one-pass prefix prefill and chunked full prefill; Sprint X measured only 2 turns.",
+ "created": "2026-10-28",
+ "decision_changed": "Whether schema_slots_v10 is recommended as the default local MLX schema-slot generation protocol or remains explicit opt-in with v9 as the fallback. No argparse default is changed by this experiment.",
+ "decision_rule": {
+  "outcomes": {
+   "KEEP_EXPLICIT_FALLBACK_V10_OPT_IN_UNDER_MEMORY_HEADROOM": "all pass except memory",
+   "KEEP_V9_DEFAULT_V10_EXPLICIT_OPT_IN": "safety passes but action equivalence, reliability (v10 failures <= v9 and parser acceptance >= v9), or efficiency fails",
+   "NO_GO_V10_KEEP_V9_DEFAULT": "any audit violation, probe failure (non-exact token prefix, argmax mismatch, top-5 overlap below threshold, or undetected stale prefix), or unbounded retention",
+   "PROMOTE_V10_DEFAULT_RETAIN_EXPLICIT_V9_FALLBACK": "all gates pass; v9 remains selectable and in-controller exact-prefix fallback remains"
+  },
+  "thresholds": {
+   "max_active_growth_after_turn_bytes": 268435456,
+   "max_mean_metal_peak_increase_bytes": 2147483648,
+   "max_v10_process_peak_rss_bytes": 12884901888,
+   "min_mean_wall_reduction_percent": 20.0,
+   "probe_min_top5_overlap": 4
+  }
+ },
+ "design": {
+  "arm_letters": {
+   "A": "schema_slots_v9",
+   "B": "schema_slots_v10"
+  },
+  "blocks": [
+   {
+    "horizon": 8,
+    "order": "ABBA",
+    "variant": "inventory"
+   },
+   {
+    "horizon": 16,
+    "order": "BAAB",
+    "variant": "inventory"
+   },
+   {
+    "horizon": 8,
+    "order": "BAAB",
+    "variant": "textstats"
+   },
+   {
+    "horizon": 16,
+    "order": "ABBA",
+    "variant": "textstats"
+   },
+   {
+    "horizon": 8,
+    "order": "ABBA",
+    "variant": "intervals"
+   },
+   {
+    "horizon": 16,
+    "order": "BAAB",
+    "variant": "intervals"
+   }
+  ],
+  "fixture": "results/v10_multiturn_abba_20261028/fixtures.json (vare.synthetic-two-bug-repair.v1, Development synthetic; three variants, two bugs each). Grader-only tests are never shown to the model.",
+  "generation": {
+   "decoding": "greedy (do_sample false, temperature 0)",
+   "max_context_tokens": 12288,
+   "turn_token_budget": 256
+  },
+  "matched_conditions": "Same model snapshot, tokenizer, chat template, tool schemas, tool executor, fixture, horizon, per-turn token budget, context limit, greedy decoding, python runtime, and machine. Only generation_protocol differs.",
+  "pairing": "Within each 4-run block, positions (1,2) form pair 1 and (3,4) form pair 2; each pair has one run per arm. 24 trajectories, 12 pairs (6 per horizon).",
+  "parse_failure_handling": "Raw output and a controller notice are appended; the trajectory continues.",
+  "probe": "Before the schedule, a separate process compares last-position logits of chunked full prefill vs restored-prefix + suffix on real prompts (turn 1 and after a read), and a negative control that reuses a stale prefix built from an altered tool response.",
+  "process_isolation": "One fresh worker process per trajectory; model loaded per process; trajectories run sequentially.",
+  "tool_feedback": "Real deterministic executors from the repository (SourceEditLeaseStoreV1 with deterministic lease tokens, SourceNavigatorV2, check_syntax_source) and an isolated subprocess public-test runner. Accepted edits change the source seen by later turns.",
+  "tool_interface": "lease_bound_exact_text_transactional_v1 with list_files, read_lines, search_source, replace_exact_text_transactional, check_syntax, run_public_tests; finish is offered only on the final turn so every trajectory spans exactly the horizon unless it fails."
+ },
+ "evidence_class": "Systems measurement on a synthetic Development fixture with a real local model. Not capability evidence; not a held-out or upstream task.",
+ "hypotheses": {
+  "H1_equivalence": "Greedy v10 action sequences equal v9 in every pair.",
+  "H2_efficiency": "Mean paired trajectory wall-time reduction >= 20% with 95% t-CI lower bound > 0 at both horizons.",
+  "H3_memory": "Mean paired peak Metal increase <= 2 GiB and v10 process peak RSS <= 12 GiB.",
+  "H4_safety": "Zero prefix-audit violations; every reused stage starts with exactly the cached prefix tokens; caches do not accumulate across turns."
+ },
+ "implementation": {
+  "analysis": "scripts/analyze_v10_multiturn_v1.py",
+  "campaign": "scripts/run_v10_multiturn_campaign_v1.py",
+  "file_sha256": {
+   "results/v10_multiturn_abba_20261028/fixtures.json": "c033851a6cefc827faa5295444009e7f4c58f6fbfda848e39e609be1d81be43b",
+   "results/v10_multiturn_abba_20261028/grader/hidden_tests.json": "a38fccf69c7be2b32139e9ff005ba880691872361d39aac751caef9d26c26746",
+   "results/v10_multiturn_abba_20261028/grader/qualification_sources.json": "ce1b034a6d88c5454f8be4923f8c02d601d1b461c54c60aebcade1eb151a33db",
+   "results/v10_multiturn_abba_20261028/protocol-template.json": "768d281aa02831d35b53632044171feac69d11fa35605c8886621f0cce24e664",
+   "results/v10_multiturn_abba_20261028/tokenizer-preflight.json": "dbf97f340e599842d69bcf0f7dcd896eafa8cda3eb8f38ee3ae955530ffbf84b",
+   "scripts/analyze_v10_multiturn_v1.py": "961331dc95c8e2e645197bf5b0fb87b2489d6328ad0171b140deb38ba78317d4",
+   "scripts/freeze_v10_multiturn_protocol_v1.py": "b64f49737667edeb7b12c0b8ce60c4da0011867604be1e2a55c622821bdcc881",
+   "scripts/grade_v10_multiturn_v1.py": "cb7c09af9069075e98be7501cdbd65237a29100c30d67a955230cecc299aa9ed",
+   "scripts/preflight_v10_multiturn_tokenizer_v1.py": "39ef15a23e9a4fd42fbab5ccda2bc4665a403b5a37cf268dcb1c76ab9011ea6b",
+   "scripts/run_local_agent.py": "a1b4798f4cb9658df2da613669fd90702ddad128648dd024c151ee06425f03ac",
+   "scripts/run_v10_multiturn_campaign_v1.py": "65c413d19ed151ffc89a8f87b9dca6b8034a774b69050699438cedd51fcbe344",
+   "scripts/run_v10_multiturn_worker_v1.py": "550dfb383643742d2daa28600f4623d6e5c8db26c81700eb608bcf066b801137",
+   "src/vare/agent_edit_v2.py": "62abef0be0a200eac69ed62b15aca34a99a5a7b6b983128333fb49c8fa8a2123",
+   "src/vare/schema_slot_protocol.py": "bf794eb0edce4b114dfd7945513286bee1383ca13d3afd4a35ce39edf5e2715f",
+   "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+   "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b",
+   "src/vare/synthetic_function_tests_v1.py": "a476e5434d73768c542d6ba2c53d5d163ae9f9d371df7cc652491a4b1c657f95",
+   "tests/test_v10_multiturn_cache_safety_v1.py": "2f17de7a64fd9bacfc5f715625c23448b36bb1a234e72dc110a8d9e112dcfc06"
+  },
+  "grader": "scripts/grade_v10_multiturn_v1.py",
+  "worker": "scripts/run_v10_multiturn_worker_v1.py"
+ },
+ "implementation_commit": "1ef3af71a66f37eeec0cdd61d28a6aa4d904c9a1",
+ "limitations": [
+  "Small n: 6 pairs per horizon, 3 variants; pairs within a variant share the fixture and are not independent.",
+  "Greedy decoding makes repeats near-deterministic, so repeats estimate timing noise rather than behavioural variance.",
+  "System swap and available memory are shared with unrelated processes on the same machine.",
+  "Synthetic Development fixture only; results do not transfer to capability claims.",
+  "Single machine (Apple M1 Pro, 32 GiB) and a single 7B 4-bit model."
+ ],
+ "metrics": {
+  "primary": "Paired relative reduction in trajectory wall seconds (model load excluded), per horizon.",
+  "secondary": [
+   "amortized prefill tokens (stage prefill inputs + shared prefix build)",
+   "prefill seconds",
+   "decode seconds",
+   "tool seconds",
+   "model load seconds",
+   "guard process wall seconds",
+   "peak Metal bytes (turn peaks recorded across controller resets)",
+   "process peak RSS (ru_maxrss) and guard-sampled process-tree RSS",
+   "system swap growth during each run",
+   "parser acceptance rate",
+   "action-sequence and generated-token equivalence with first divergence turn",
+   "task correctness by separate grader",
+   "KV reuse stage count and fallback counts by reason",
+   "Metal active memory after each turn minus post-load active",
+   "failure rates (timeouts, crashes, controller exceptions)",
+   "within-arm determinism across repeats"
+  ]
+ },
+ "model": {
+  "file_sha256": {
+   "config.json": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+   "model.safetensors": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+   "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+   "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+  },
+  "id": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+  "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+  "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80",
+  "source": "already-cached local snapshot, HF offline"
+ },
+ "protocol_id": "vare.v10-multiturn-shared-prefix-abba.v1",
+ "question": "Over 8- and 16-turn tool trajectories with real tool feedback and changing source, does schema_slots_v10 (per-turn shared-prefix KV reuse) preserve v9 actions exactly while reducing prefill work and wall time, at an acceptable memory cost?",
+ "resources": {
+  "max_process_tree_rss_bytes": 15032385536,
+  "max_swap_growth_bytes": 536870912,
+  "min_available_memory_bytes": 1610612736,
+  "min_free_swap_bytes": 268435456,
+  "preflight_min_available_memory_bytes": 6442450944,
+  "preflight_min_disk_free_bytes": 10737418240,
+  "preflight_min_free_swap_bytes": 536870912,
+  "probe_timeout_seconds": 900,
+  "sampling_interval_seconds": 0.5,
+  "trajectory_timeout_seconds": {
+   "16": 1800,
+   "8": 900
+  }
+ },
+ "runtime": {
+  "mlx": "0.32.4",
+  "mlx_lm": "0.32.2",
+  "psutil": "7.1.3",
+  "python": "3.12.12",
+  "python_executable": "/tmp/vare-sprint-vii-mlx/bin/python",
+  "transformers": "5.21.0"
+ },
+ "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+ "stopping_rules": {
+  "block_budget_rule": "Before each 4-run block, project elapsed minutes plus the last observed duration of a block with the same horizon (or the default estimate); if the projection exceeds campaign_wall_minutes_max the campaign stops and the partial, interleaved schedule is analyzed as-is.",
+  "campaign_wall_minutes_max": 170,
+  "controller_exceptions": "Recorded as trajectory failures, never retried; the campaign continues.",
+  "default_block_minutes_estimate": {
+   "16": 60,
+   "8": 25
+  },
+  "integrity": "Any prefix-audit violation stops the campaign after preserving the record.",
+  "max_timeouts": 2,
+  "max_worker_failures": 3,
+  "no_retries": "No run is repeated or replaced; partial campaigns are analyzed as-is.",
+  "resource_abort": "Any guard resource limit breach kills the worker process group and stops the campaign."
+ },
+ "tokenizer_preflight": {
+  "all_prefixes_exact": true,
+  "context_headroom_tokens": 6730,
+  "max_scripted_stage_prompt_tokens": 5302
+ }
+}
