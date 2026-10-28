@@ -1,0 +1,483 @@
+{
+  "schema_version": 1,
+  "protocol_id": "development-repository-repair-campaign-v1",
+  "status": "frozen_before_inference",
+  "frozen_before_model_execution": true,
+  "inference_authorized": false,
+  "fresh_task_evidence": false,
+  "held_out_tasks_used": false,
+  "held_out_task_ids": [],
+  "purpose": "Freeze a prospective real-model Development repository-repair campaign before any inference. Every included family was already used in a Development model attempt, so a later result is not fresh-task evidence and cannot be promoted to a held-out claim.",
+  "hypothesis": "On the included Development families, the pinned cached 4-bit coder checkpoint, running through the existing MLX tool loop on Apple Metal, produces at least one applied source edit that passes that family's independent grader inside the frozen budgets. One such family success is a feasibility milestone only.",
+  "claim_boundary": "This file freezes the campaign. It contains no model output and no grader decision. A later unique-family success would establish feasibility on an already exposed Development family. It would not establish a fresh task result, a held-out result, a training effect, or a comparison against an unmatched controller.",
+  "primary_metric": "Unique-family success: a family counts once when at least one frozen attempt changes the pinned target bytes and the independent grader accepts the candidate. Attempt-level success is the count of attempts that meet that same rule. The two rates are reported separately.",
+  "reporting": {
+    "unique_family_success_reported_separately": true,
+    "attempt_level_success_reported_separately": true,
+    "synthetic_control_success_counts_as_model_success": false,
+    "known_fix_or_mutant_replay_counts_as_model_success": false,
+    "one_family_success_is_feasibility_milestone_only": true,
+    "fresh_task_claim_permitted": false,
+    "held_out_claim_permitted": false,
+    "missing_or_unverifiable_grader_result_counts_as_success": false
+  },
+  "decision_rule": "After the frozen attempts, retain every record. One or more unique-family successes authorize only a feasibility note for those already exposed families. Zero successes remain a retained negative result. Neither outcome authorizes training, a held-out run, a budget change, or a second protocol on the same attempts.",
+  "stopping_rule": "Run at most the frozen seeds for each included family. Stop an attempt on a resource, parser, or wall-time failure and retain it. Do not add seeds, raise a cap, change the prompt, or replace the checkpoint after the first model call.",
+  "abort": [
+    "Do not run model inference, a Docker grading campaign, or a model download as part of freezing this protocol.",
+    "Do not open, name, or grade any held-out task.",
+    "Do not pass --require-split. The current runner accepts only train or heldout, and these tasks are development.",
+    "Do not start from a base revision of HEAD.",
+    "Do not place the known fix, the incorrect mutant, or the grader inside the candidate workspace.",
+    "Do not count a synthetic control, a known-fix replay, or a mutant replay as model success.",
+    "Do not raise memory, swap, token, turn, or wall caps during a run.",
+    "Do not modify an already frozen historical protocol or runner in place."
+  ],
+  "evidence_commits_read": {
+    "main": "41512fb1900bd9b0db0b86f6ca5e5ddf32d63327",
+    "sprint_ii_development_records": "df0a360ead3927f72d33972634251469b50c2368",
+    "sprint_iv_through_ix_development_records": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+    "note": "Qualification rows were re-read from these commits. The sprint commits are not parents of main. Hashes below were taken from those records or from blobs those commits contain."
+  },
+  "output": {
+    "directory": "results/development-repository-repair-campaign-v1",
+    "directory_must_be_absent_at_freeze": true,
+    "refuse_overwrite": true,
+    "create_only_when_an_authorized_execution_starts": true
+  },
+  "model": {
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "base_repository": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "base_revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+    "license": "Apache-2.0",
+    "backend": "mlx",
+    "device": "Apple Metal through MLX",
+    "weights_must_already_be_cached": true,
+    "download_permitted": false,
+    "quantization": {
+      "bits": 4,
+      "format": "MLX safetensors",
+      "group_size": 64
+    },
+    "environment_pins": {
+      "mlx": "0.32.2",
+      "mlx-lm": "0.32.2",
+      "python": "3.12.12"
+    },
+    "tokenizer": {
+      "identity": "snapshot tokenizer.json and tokenizer_config.json at the pinned revision",
+      "tokenizer_json_sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config_json_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+    },
+    "snapshot_file_sha256": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "README.md": "900637f68349b42803bd0779765ef87bd8ad54e4eba57991336911b3b1655e97",
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+      "model.safetensors.index.json": "23cd562592dd96686d2e799eb02e4b578a4038b6045eaefe860d270cc060e24f",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "selection_justification": {
+      "host": "Apple M1 Pro, 32 GiB unified memory, MLX on Metal",
+      "measured_metal_peak": "The retained 7B coding-agent evaluation records a 5.25 GB peak MLX allocation for this revision. Its per-agent runtime records identify apple_metal. The current runner reads mx.metal.get_peak_memory and mx.metal.get_active_memory.",
+      "measured_repository_repair_footprint": "Sprint II resource summaries for this snapshot on the same host class report process-tree RSS of 4340 to 4384 MiB and zero swap growth under a 12288 MiB RSS cap. Those invocations requested mlx-device cpu, so they measure host footprint of this checkpoint rather than a Metal-device label.",
+      "rejected_cached_checkpoint": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit revision 29efdbab55a161237ab1e432a3abaf6c7ae2b477 is cached in the same host records and contains 8321093967 weight bytes. A later attempt on that host stopped when swap growth hit the cap at 631.6 s. It does not satisfy the swap fail-closed limit.",
+      "caps_relative_to_measurements": "The 8 GiB MLX-peak cap sits above the recorded 5.25 GB Metal peak. The 10 GiB process-RSS cap sits above the recorded 4.3 GiB repository-repair RSS. The 32 MiB swap-growth cap is above the recorded zero growth for this checkpoint."
+    }
+  },
+  "decoding": {
+    "do_sample": false,
+    "temperature": 0,
+    "top_p": null,
+    "top_k": null,
+    "runner_greedy_mapping": "scripts/run_local_agent.py maps do_sample false to an MLX sampler with temperature 0, top_p 0, and top_k 0.",
+    "seeds": [
+      101,
+      211
+    ],
+    "attempts_per_family": 2,
+    "seed_interpretation": "Seeds are frozen repetition labels. Greedy decoding does not make them independent stochastic replicates. Report both attempts."
+  },
+  "budgets": {
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "max_no_tool_retries": 1,
+    "max_public_test_runs": 3,
+    "wall_seconds": 900,
+    "process_lifetime_seconds": 900,
+    "cpu_threads": 4,
+    "gpu_hours": 0,
+    "paid_api_usd": 0
+  },
+  "resource_limits": {
+    "host": "Apple M1 Pro, 32 GiB unified memory, MLX/Metal",
+    "parallel_model_processes": 1,
+    "max_mlx_peak_memory_bytes": 8589934592,
+    "max_process_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 2147483648,
+    "minimum_free_swap_bytes": 536870912,
+    "minimum_disk_free_bytes": 17179869184,
+    "sample_interval_seconds": 1,
+    "fail_closed": "Before load, abort when available memory, free swap, or free disk is below the minimum, or when the MLX default device is not Metal. During a run, terminate the attempt process when MLX peak memory, process RSS, swap growth, wall time, or process lifetime exceeds its cap. Retain the partial record. Classify the stop as budget or infrastructure. Do not raise a cap.",
+    "offline_environment": [
+      "HF_HUB_OFFLINE=1",
+      "TRANSFORMERS_OFFLINE=1"
+    ]
+  },
+  "runner": {
+    "module": "scripts/run_local_agent.py",
+    "diff_function": "candidate_source_diff",
+    "pinned_git_module": "scripts/pinned_workspace_git.py",
+    "edit_format": "unified_diff",
+    "public_tests": true,
+    "backend_flag": "mlx",
+    "do_not_modify_runner": true,
+    "require_split_flag": "must not be passed",
+    "workspace_head_rule": "Workspace HEAD must be the family's workspace_baseline_commit, a full 40-hex SHA. The current runner rejects a HEAD that changes during the attempt and rejects a base revision that is not a full SHA. The literal value HEAD is not a baseline."
+  },
+  "tool_schema": {
+    "allowlist_source": "scripts.run_local_agent.tools_for('unified_diff', public_tests=True)",
+    "allowlist": [
+      "list_files",
+      "read_file",
+      "search_text",
+      "apply_patch",
+      "check_syntax",
+      "run_public_tests",
+      "finish"
+    ],
+    "required_progression": [
+      {
+        "step": "inspect",
+        "tool": "list_files"
+      },
+      {
+        "step": "search",
+        "tool": "search_text"
+      },
+      {
+        "step": "read",
+        "tool": "read_file"
+      },
+      {
+        "step": "edit",
+        "tool": "apply_patch"
+      },
+      {
+        "step": "test_or_syntax_check",
+        "tool": [
+          "check_syntax",
+          "run_public_tests"
+        ]
+      },
+      {
+        "step": "inspect_diff",
+        "tool": "candidate_source_diff"
+      },
+      {
+        "step": "repair_or_finish",
+        "tool": [
+          "apply_patch",
+          "finish"
+        ]
+      }
+    ],
+    "inspect_diff": "inspect_diff is the existing candidate_source_diff export, not a new model tool. The attempt record must contain that patch and its SHA-256 before the independent grader runs.",
+    "repair": "A later apply_patch after a failed public test or syntax check is the repair step. finish is rejected by the current runner when the source is unchanged, and, when a public-test image is configured, when the public test has not passed.",
+    "parser": "Use the existing strict name/arguments parser and the existing Markdown and ChatML normalization. A call that does not name an allowlisted tool is a tool-schema failure. A call that does not parse is a parser error. Retain the raw text either way."
+  },
+  "isolation": {
+    "candidate_workspace": "The candidate workspace receives the baseline target and, when the family has one, the immutable public test. It does not receive the known fix, the incorrect mutant, the hidden grader, or upstream history.",
+    "public_test_container": {
+      "aarch64": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+      "amd64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+      "limits": "network none, read-only root, dropped capabilities, bounded memory, CPU, and PIDs; only the candidate workspace is mounted"
+    },
+    "independent_grader": "Grade a fresh copy of the candidate target outside the candidate namespace. The grader command, image, and bytes must match the family's pinned hashes. A missing file, hash mismatch, timeout, malformed grader output, or unverifiable provenance is not success."
+  },
+  "attempt_record_fields": [
+    "model_repository",
+    "model_revision",
+    "tokenizer_sha256",
+    "snapshot_file_sha256",
+    "family_id",
+    "task_id",
+    "workspace_baseline_commit",
+    "upstream_baseline_commit",
+    "fix_commit",
+    "baseline_source_sha256",
+    "grader_sha256",
+    "seed",
+    "generated_token_count",
+    "tool_calls",
+    "inspections",
+    "applied_edits",
+    "rejected_edits",
+    "public_test_runs",
+    "candidate_diff",
+    "candidate_diff_sha256",
+    "grader_decision",
+    "wall_seconds",
+    "process_lifetime_seconds",
+    "mlx_peak_memory_bytes",
+    "mlx_active_memory_bytes",
+    "process_rss_bytes",
+    "swap_growth_bytes",
+    "failure_reason",
+    "prior_exposure"
+  ],
+  "failure_taxonomy": [
+    "poor_decision",
+    "missing_context",
+    "tool_schema",
+    "parser_error",
+    "budget",
+    "infrastructure",
+    "incorrect_patch"
+  ],
+  "failure_taxonomy_rule": "Every unsuccessful attempt uses exactly one of these labels. poor_decision: the model stops without a relevant edit or finishes on an unchanged plan. missing_context: the needed source was not retrieved or the context budget cut it off. tool_schema: the call named an unknown tool or violated the argument schema. parser_error: the call did not parse. budget: a token, turn, or wall cap stopped the attempt. infrastructure: device, memory, swap, container, or provenance failure. incorrect_patch: an edit was applied and the public test or independent grader rejected it.",
+  "success_rule": {
+    "source_must_change": true,
+    "independent_grader_must_pass": true,
+    "public_test_must_pass_when_the_family_has_one": true,
+    "synthetic_success_allowed": false,
+    "family_counts_once": true
+  },
+  "families": [
+    {
+      "family_id": "transformers-49197",
+      "upstream_pull_request": 49197,
+      "repository": "https://github.com/huggingface/transformers",
+      "license": "Apache-2.0",
+      "task_id": "transformers-csm-codebook-embedding-tying-20261027-v1",
+      "target_path": "src/transformers/models/csm/configuration_csm.py",
+      "upstream_baseline_commit": "50e35cc0ca18ec19b80653690de553e6decf74f5",
+      "workspace_baseline_commit": "f64044270ba3cb6d006a9ca18e944a7609726ea6",
+      "fix_commit": "6c5f8f4186c15f4bfbd67941a1736b2b347e0155",
+      "baseline_source_sha256": "7315b52c40b3a2b5fda6da79e9b61ef02f0af704561b5c54d895b4316adaa42a",
+      "known_fix_source_sha256": "a8bcef984ab2982633e4c1386f7edd2bb6320064f024129fc591e03cc923adcd",
+      "grader_sha256": "366669ed573ed202f62ce7bfbeb3a7f913b09d1b8d470029b100749f0ac32cbf",
+      "public_test_sha256": "9275a8b7366ce9730a2849735ebe92f4e6b9c05d8a33d1d19722e75239220418",
+      "controls": {
+        "baseline": "FAIL",
+        "known_fix": "PASS",
+        "incorrect_mutant": "FAIL"
+      },
+      "evidence_commit": "df0a360ead3927f72d33972634251469b50c2368",
+      "evidence_path": "results/sprint_ii_20261027/external_coding_dev/csm_codebook_tying_v1",
+      "prior_exposure": "Development attempts with this 7B snapshot are recorded in the evidence path. This family is not fresh.",
+      "fresh": false
+    },
+    {
+      "family_id": "transformers-49842",
+      "upstream_pull_request": 49842,
+      "repository": "https://github.com/huggingface/transformers",
+      "license": "Apache-2.0",
+      "task_id": "transformers-musicgen-cached-position-20261027-v1",
+      "target_path": "src/transformers/models/musicgen/modeling_musicgen.py",
+      "upstream_baseline_commit": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+      "workspace_baseline_commit": "d810cee130801c93a3dc066e648f99de8f25f86d",
+      "fix_commit": "3043da63578bcef1392499579ae7527f044c93bb",
+      "baseline_source_sha256": "38c3dd92541e32b715f99eb01d12f73219d92c8c15b100b1d9e6be8b77d41e4a",
+      "known_fix_source_sha256": "90cd15425fa517a7b2266f6177ea7c5346ddf3a65cbc8e202831cc4c7affd990",
+      "grader_sha256": "44b26ba0dd856c387096c6f177aa96a38300f74510d8f27b7d5276f2e86dc532",
+      "public_test_sha256": "8cd34316a878e4d7b30cdb017175049387a2065730ec40939a298a6ec8e3535a",
+      "controls": {
+        "baseline": "FAIL",
+        "known_fix": "PASS",
+        "incorrect_mutant": "FAIL"
+      },
+      "evidence_commit": "df0a360ead3927f72d33972634251469b50c2368",
+      "evidence_path": "results/sprint_ii_20261027/external_coding_dev/musicgen_cached_position_v1",
+      "counted_once": true,
+      "prior_exposure": "Development attempts on this file and on the melody file from the same pull request are recorded in sprint II. A later 14B repeat of the melody file records fresh_development_family_eligible false. This family is not fresh.",
+      "fresh": false
+    },
+    {
+      "family_id": "transformers-49900",
+      "upstream_pull_request": 49900,
+      "repository": "https://github.com/huggingface/transformers",
+      "license": "Apache-2.0",
+      "task_id": "transformers-49900-numpy-integer-label-dtype-v1",
+      "target_path": "src/transformers/data/data_collator.py",
+      "upstream_baseline_commit": "50a952d06c8f593b5a0cea5dc8040fad9761ea67",
+      "workspace_baseline_commit": "80efcba045c3a7b228630caecb6fe214548506ca",
+      "fix_commit": "54bec9ef72c1f9ed5bf0ea3096c5a1641583f1bd",
+      "merge_commit": "5922731af57ec4359b5a8cbadb73384a78f62fa1",
+      "baseline_source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+      "known_fix_source_sha256": "7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6",
+      "incorrect_mutant_source_sha256": "555746c4fb41ece40083a875ac9cd5493f86b75d383d5da625f66db22c14bf07",
+      "grader_sha256": "08102d74a6b29c4ff951782ea99074c2ef231da3ca569cf50584e98d41e3a68d",
+      "public_test_sha256": "e334e03c328fd6fff1a5e21fa401de7f5128a6edb98ec6c24c6073476302a3d7",
+      "hidden_test_sha256": "b3789cf3d9c68be8978e5d426ed500fb62c7bdc634eae43fd4a8ae4122957c12",
+      "grading_image": "vare-transformers-candidate-v2@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+      "controls": {
+        "baseline": "FAIL",
+        "known_fix": "PASS",
+        "incorrect_mutant": "FAIL"
+      },
+      "evidence_commit": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+      "evidence_path": "results/sprint_vi_20261028/campaign_49900/metadata/qualification.json",
+      "same_target_path_as_other_development_family": "transformers-49349",
+      "prior_exposure": "Development attempts with the 14B snapshot are recorded in results/sprint_vi_20261028/campaign_49900. This family is not fresh. Transformers #49349 uses the same target path and is not an additional family in this campaign.",
+      "fresh": false
+    },
+    {
+      "family_id": "transformers-49703",
+      "upstream_pull_request": 49703,
+      "repository": "https://github.com/huggingface/transformers",
+      "license": "Apache-2.0",
+      "task_id": "transformers-49703-mask2former-projection-registration-development-v2",
+      "task_family": "transformers-49698-mask2former-module-registration",
+      "target_path": "src/transformers/models/mask2former/modeling_mask2former.py",
+      "upstream_baseline_commit": "8e40ad7bc7019ba19ae8b0e7d98e60376d0fac2a",
+      "workspace_baseline_commit": "b777cad66493cba609c0b948b3997bad2e218ae2",
+      "fix_commit": "094669a133c54bafd2975c11a325140bc93b3459",
+      "merge_commit": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+      "task_json_base_revision_rejected": "HEAD",
+      "baseline_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+      "known_fix_source_sha256": "929838b2bc993c420859aa0722f2f93738517f4609da61de479d618f6a3a8eb8",
+      "incorrect_mutant_source_sha256": "99174f6a2c7069d9b703416480ba7b98a0c19eb005f96464a9d1e5925024f513",
+      "grader_sha256": "9bf4074e31dc40d7134efa033fb030eb0fa1cf9ff72f0c348c9ef7023c7ad9b2",
+      "controls": {
+        "baseline": "FAIL",
+        "known_fix": "PASS",
+        "incorrect_mutant": "FAIL"
+      },
+      "evidence_commit": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+      "evidence_path": "results/sprint_viii_20261028/external_transformers_49703/qualification/qualification-v2.json",
+      "workspace_note": "task-v2/task.json records base_revision HEAD and is not the baseline. The workspace commit above is the qualification-v2 local template whose target hash equals the upstream baseline source hash. Execution must use that full SHA or another full SHA with the same target hash, and must fail closed on HEAD.",
+      "prior_exposure": "Development campaign attempts are recorded under results/sprint_viii_20261028/external_transformers_49703. This family is not fresh.",
+      "fresh": false
+    },
+    {
+      "family_id": "trl-7913",
+      "upstream_pull_request": 7913,
+      "repository": "https://github.com/huggingface/trl",
+      "license": "Apache-2.0",
+      "task_id": "trl-7913-cpo-truncated-completion-development-v1",
+      "target_path": "trl/experimental/cpo/cpo_trainer.py",
+      "upstream_baseline_commit": "1374d6956419455864dd642911c7d4a0334e60b0",
+      "workspace_baseline_commit": "3ca44e4a91110175e3a305ebd9414a3cf7792a15",
+      "fix_commit": "3ed1ae5ac17076ff67d4be24cbd303c528081b4d",
+      "merge_commit": "33b871b5eee4d7a51dcc42c1b5454a4d0364339a",
+      "task_json_base_revision_rejected": "HEAD",
+      "baseline_source_sha256": "41a52900b1761949b02d3bb13975fcbad9a69edb4b7f5fc23eec7b6c39d3568d",
+      "known_fix_source_sha256": "52bad888f7a13128f2a9136e2796437085980b5d7b3021b1bc4e5323ed587f47",
+      "incorrect_mutant_source_sha256": "92c9724214f4c74a95ddd4a9d712191b90cae1d641fa606ee85bed22a25d8f22",
+      "grader_sha256": "9a3ed8681a2f643317e055d48c51bffb07df16b1884a696fe1a48e246e2d1194",
+      "grader_test_sha256": "0fce4be3537a8f6324968f3660aed6d44407d6da95bc6f772caaa713ccce3f43",
+      "public_test_sha256": null,
+      "public_test": "not exposed; the independent grader is the pinned upstream regression test",
+      "grading_image_id": "sha256:d5b0300b60c61881ea30834a45bbe0e99bf3ee74482ad4d766d46e777a277077",
+      "controls": {
+        "baseline": "FAIL",
+        "known_fix": "PASS",
+        "incorrect_mutant": "FAIL"
+      },
+      "evidence_commit": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+      "evidence_path": "results/sprint_vii_20261028/external_dev_trl7913",
+      "workspace_note": "task.json records base_revision HEAD. The frozen baseline is 1374d6956419455864dd642911c7d4a0334e60b0. The workspace commit is the recorded candidate head whose target hash equals that baseline source. Execution must fail closed on HEAD.",
+      "prior_exposure": "A Development attempt is recorded under the evidence path. This family is not fresh.",
+      "fresh": false
+    },
+    {
+      "family_id": "mlx-lm-1777",
+      "upstream_pull_request": 1777,
+      "repository": "https://github.com/ml-explore/mlx-lm",
+      "license": "MIT",
+      "task_id": "mlx-lm-prefill-history-dev-01",
+      "target_path": "mlx_lm/generate.py",
+      "upstream_baseline_commit": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+      "workspace_baseline_commit": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+      "fix_commit": "fa6cb55e7e3b21861263df0fc5d235552670dda7",
+      "upstream_pull_request_head": "b4998c75d48c025103633ab45d95384b2e5a22d8",
+      "baseline_source_sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2",
+      "known_fix_source_sha256": "c68732942b6a4653f8c303897d4ef85954fef4c2373b08e7c163baabe77a9599",
+      "incorrect_mutant_source_sha256": "ef1c4cac3cd7bac55ef82c0267c15ee5b97f4bbdc4f628d531550fbc6c9635d3",
+      "grader_sha256": "7894fa2811de5f42ddec0b3f1fa3e78cd3ae5a541c00b8282cabd3d64f550420",
+      "public_test_sha256": "9f7d24301714a8c44e419add1d124a74f19774ed102caefe0acf5fcc4c8eb5f9",
+      "grader_bytes_in_public_bundle": false,
+      "controls": {
+        "baseline": "FAIL",
+        "known_fix": "PASS",
+        "incorrect_mutant": "FAIL",
+        "surfaces": [
+          "public",
+          "hidden"
+        ]
+      },
+      "evidence_commit": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+      "evidence_path": "results/sprint_ix_20261028/mlx_lm_1777_agentic_repair/public-evidence-v1",
+      "snapshot_overlap": "upstream_baseline_commit equals fixed_revision of train task mlxlm-1795-moe-routing-gradient in results/mlsys-task-deep-qualification-v1/qualification.json. The Development controls are for pull request 1777. The result is not disjoint from that train snapshot and is not fresh.",
+      "prior_exposure": "Development attempts are recorded in the evidence path. This family is not fresh. Grader bytes are withheld from the public bundle; execution must fail closed unless a local grader file matches grader_sha256.",
+      "fresh": false
+    }
+  ],
+  "excluded_families": [
+    {
+      "family_id": "transformers-49908",
+      "upstream_pull_request": 49908,
+      "task_id": "transformers-video-short-fps-min-frame-20261027-v1",
+      "reason": "no_immutable_fix_commit",
+      "verified": {
+        "upstream_baseline_commit": "1a55addd658aaa95b52871f5b72e91a6b91449b6",
+        "local_baseline_commit": "b36173c2ccd7834b77c3541854a50e2ad67a9f8f",
+        "baseline_source_sha256": "747f4883484cb7fc049f6eaf6e098d0c6fce224436529db657dbf196032c5bcb",
+        "known_fix_file_sha256": "49bd0e0ec5884a201154b038f2638397eb938b6b25a777720fc87c2b54e08d42",
+        "grader_sha256": "c68b3117a62850902c215321b62225e304b58ec933fa6c5e9383bf29cffb2441",
+        "controls": {
+          "baseline": "FAIL",
+          "known_fix": "PASS",
+          "incorrect_mutant": "FAIL"
+        },
+        "baseline_bundle_heads": [
+          "b36173c2ccd7834b77c3541854a50e2ad67a9f8f"
+        ]
+      },
+      "detail": "The sprint II record has an upstream baseline, a local baseline, source and grader hashes, and baseline-fail / known-fix-pass / mutant-fail controls. The known fix is a file hash only. The campaign protocol and task.json do not record a fix commit, and the retained baseline git bundle contains only the local baseline commit. The family stays out until a fix commit is pinned.",
+      "evidence_commit": "df0a360ead3927f72d33972634251469b50c2368",
+      "evidence_path": "results/sprint_ii_20261027/external_coding_dev/video_min_frame_v1"
+    }
+  ],
+  "duplicate_rows_not_separate_families": [
+    {
+      "family_id": "transformers-49842",
+      "task_id": "transformers-musicgen-melody-cached-position-20261027-v1",
+      "reason": "same_upstream_pull_request_counted_once",
+      "upstream_baseline_commit": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+      "workspace_baseline_commit": "bee525abbbb1370deaf45a24bd5a1650ca66ab3e",
+      "fix_commit": "3043da63578bcef1392499579ae7527f044c93bb",
+      "baseline_source_sha256": "5b27dea955c5f5c64c1c16d8564a51ce38be3ac655b73db6f5c7fee100988b82",
+      "grader_sha256": "1b5e28758e830a176ad70c4a05a7c85d48f5508f704d6a6fa6cbf80c32ae6848",
+      "controls": {
+        "baseline": "FAIL",
+        "known_fix": "PASS",
+        "incorrect_mutant": "FAIL"
+      },
+      "evidence_commit": "df0a360ead3927f72d33972634251469b50c2368",
+      "evidence_path": "results/sprint_ii_20261027/external_coding_dev/musicgen_melody_cached_position_v1"
+    },
+    {
+      "family_id": "transformers-49842",
+      "task_id": "transformers-49842-musicgen-melody-long-cache-position-v1",
+      "reason": "later_repeat_of_the_same_family",
+      "fresh_development_family_eligible": false,
+      "upstream_baseline_commit": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+      "calibration_revision": "3a3c3ff20527981fd3934da91526ddd62fed5c49",
+      "baseline_source_sha256": "5b27dea955c5f5c64c1c16d8564a51ce38be3ac655b73db6f5c7fee100988b82",
+      "evidence_commit": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+      "evidence_path": "results/sprint_vi_20261028/campaign_49842_musicgen_melody/qualification-summary.json"
+    }
+  ],
+  "sha256": "9239406621a3ac68a6977cf341e4debd35278735a91783626ff764c87210c354"
+}
