@@ -44,6 +44,7 @@ from vare.agent_task_contract import (  # noqa: E402
     load_agent_task,
     resolve_candidate_diff_revision,
 )
+from vare.agent_runtime_snapshot_v1 import capture_runtime_snapshot  # noqa: E402
 from vare.schema_slot_protocol import (  # noqa: E402
     PROTOCOL_ID as SCHEMA_SLOT_PROTOCOL_ID,
     PROTOCOL_ID_V2 as SCHEMA_SLOT_PROTOCOL_V2_ID,
@@ -66,6 +67,34 @@ from vare.schema_slot_protocol import (  # noqa: E402
 )
 from vare.source_navigation_v1 import SourceNavigatorV1  # noqa: E402
 from vare.source_navigation_v2 import SourceNavigatorV2  # noqa: E402
+
+
+def loaded_module_source_path(module_name: str) -> Path:
+    module = sys.modules.get(module_name)
+    raw_path = getattr(module, '__file__', None)
+    if not isinstance(raw_path, str):
+        raise RuntimeError(f'loaded controller module has no source file: {module_name}')
+    return Path(raw_path)
+
+
+LOADED_RUNTIME_SOURCE_HASHES = {
+    'scripts/run_local_agent.py': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+    **{
+        module_name.replace('.', '/') + '.py': hashlib.sha256(
+            loaded_module_source_path(module_name).read_bytes()
+        ).hexdigest()
+        for module_name in (
+            'vare.agent_edit_format', 'vare.agent_edit_v2', 'vare.agent_function_edit_v1',
+            'vare.agent_json_eos_v1', 'vare.agent_json_eos_v2', 'vare.agent_json_eos_v3',
+            'vare.agent_runtime_snapshot_v1', 'vare.agent_task_contract', 'vare.schema_slot_protocol',
+            'vare.source_navigation_v1', 'vare.source_navigation_v2',
+        )
+    },
+}
+LOADED_RUNTIME_SOURCE_HASHES = {
+    ('src/' + path if path.startswith('vare/') else path): digest
+    for path, digest in LOADED_RUNTIME_SOURCE_HASHES.items()
+}
 
 MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
 NAVIGATION_TOOL_INTERFACES = {'lease_bound_navigation_v1', 'lease_bound_navigation_v2'}
@@ -94,6 +123,33 @@ SOURCE_NAVIGATION_TOOL_NAMES = {
     'list_files', 'search_source', 'read_lines', 'list_functions', 'read_function',
 }
 POST_EDIT_INVENTORY_TOOL_NAMES = {'list_files', 'list_functions'}
+RUNTIME_SOURCE_FILES = (
+    'scripts/run_local_agent.py',
+    'src/vare/agent_edit_format.py',
+    'src/vare/agent_edit_v2.py',
+    'src/vare/agent_function_edit_v1.py',
+    'src/vare/agent_json_eos_v1.py',
+    'src/vare/agent_json_eos_v2.py',
+    'src/vare/agent_json_eos_v3.py',
+    'src/vare/agent_runtime_snapshot_v1.py',
+    'src/vare/agent_task_contract.py',
+    'src/vare/schema_slot_protocol.py',
+    'src/vare/source_navigation_v1.py',
+    'src/vare/source_navigation_v2.py',
+)
+RUNTIME_MODULE_NAMES = (
+    'vare.agent_edit_format',
+    'vare.agent_edit_v2',
+    'vare.agent_function_edit_v1',
+    'vare.agent_json_eos_v1',
+    'vare.agent_json_eos_v2',
+    'vare.agent_json_eos_v3',
+    'vare.agent_runtime_snapshot_v1',
+    'vare.agent_task_contract',
+    'vare.schema_slot_protocol',
+    'vare.source_navigation_v1',
+    'vare.source_navigation_v2',
+)
 
 
 class DurableEventJournal:
@@ -431,6 +487,15 @@ def tools_for_post_edit_navigation_gate(
     if not enabled or not edit_applied:
         return tools
     return [tool for tool in tools if tool['function']['name'] not in POST_EDIT_INVENTORY_TOOL_NAMES]
+
+
+def tools_for_no_progress_guard(
+    tools: list[dict[str, Any]], *, blocked_tools: set[str], enabled: bool,
+) -> list[dict[str, Any]]:
+    """Temporarily remove actions that just repeated without source progress."""
+    if not enabled or not blocked_tools:
+        return tools
+    return [tool for tool in tools if tool['function']['name'] not in blocked_tools]
 
 
 def capture_rendered_prompt(args: argparse.Namespace, prompt: str) -> str:
@@ -1675,6 +1740,18 @@ def main() -> int:
         '--post-edit-navigation-gate', action='store_true',
         help='hide list_files/list_functions after an edit has applied; targeted search/read/edit/test/finish remain available',
     )
+    parser.add_argument(
+        '--no-progress-guard', action='store_true',
+        help='after duplicate source actions, constrain one model turn to a different useful tool action',
+    )
+    parser.add_argument(
+        '--post-edit-completion-guidance', action='store_true',
+        help='send one versioned controller message after an applied edit to clarify test and finish steps',
+    )
+    parser.add_argument(
+        '--grader-entrypoint', type=Path,
+        help='record the independent grader entrypoint hash without exposing its source to the model',
+    )
     parser.add_argument('--require-split', choices=('train', 'development', 'heldout'))
     args = parser.parse_args()
     if args.tool_interface in NAVIGATION_TOOL_INTERFACES | TRANSACTIONAL_TOOL_INTERFACES and args.event_journal is None:
@@ -1707,6 +1784,7 @@ def main() -> int:
     # or any generation; the run-start journal is written later but retains
     # this same source identity even if execution stops partway through.
     controller_sources = controller_source_hashes(args.tool_interface, args.generation_protocol)
+    grader_entrypoints: list[Path] = []
     if args.public_contract_grader:
         if not args.public_contract_task:
             parser.error('--public-contract-task is required with --public-contract-grader')
@@ -1715,6 +1793,9 @@ def main() -> int:
                 args.public_contract_grader, args.public_contract_task))
         except ValueError as error:
             parser.error(str(error))
+        grader_entrypoints.append(args.public_contract_grader)
+    if args.grader_entrypoint is not None:
+        grader_entrypoints.append(args.grader_entrypoint)
     if args.max_public_test_runs < 1:
         parser.error('--max-public-test-runs must be at least 1')
     if args.tool_interface != 'legacy' and args.edit_format != 'structured_replace':
@@ -1767,6 +1848,34 @@ def main() -> int:
     if not os.environ.get('HF_HUB_OFFLINE') == '1' or not os.environ.get('TRANSFORMERS_OFFLINE') == '1':
         parser.error('HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1 are required')
 
+    module_origins = {
+        name: str(loaded_module_source_path(name))
+        for name in RUNTIME_MODULE_NAMES
+        if name in sys.modules
+    }
+    if set(module_origins) != set(RUNTIME_MODULE_NAMES):
+        parser.error('one or more loaded controller modules have no source origin')
+    runtime_source_drift = {
+        path: {'loaded': LOADED_RUNTIME_SOURCE_HASHES.get(path), 'current': digest}
+        for path, digest in controller_sources.items()
+        if path in LOADED_RUNTIME_SOURCE_HASHES
+        and digest != LOADED_RUNTIME_SOURCE_HASHES[path]
+    }
+    if runtime_source_drift:
+        parser.error(f'controller source changed after import: {runtime_source_drift}')
+    try:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        runtime_snapshot = capture_runtime_snapshot(
+            repository_root=ROOT,
+            output_dir=args.output.parent / 'runtime_snapshot',
+            source_paths=RUNTIME_SOURCE_FILES,
+            module_origins=module_origins,
+            expected_hashes=LOADED_RUNTIME_SOURCE_HASHES,
+            grader_entrypoints=grader_entrypoints,
+        )
+    except (OSError, ValueError, RuntimeError) as exc:
+        parser.error(f'cannot establish immutable runtime source identity: {exc}')
+
     model_files = {path.name: sha256(path) for path in sorted(model_dir.iterdir()) if path.is_file()}
     tokenizer_kwargs, tokenizer_identity = tokenizer_override(model_dir, args.tokenizer_config_override)
     event_journal = DurableEventJournal(event_path) if event_path is not None else None
@@ -1783,6 +1892,14 @@ def main() -> int:
             tokenizer_configuration=tokenizer_identity,
             policy_source_commit=run_git(ROOT, 'rev-parse', 'HEAD'),
             controller_source_files_sha256=controller_sources,
+            runtime_source_snapshot={
+                'path': runtime_snapshot['path'],
+                'manifest_sha256': runtime_snapshot['manifest_sha256'],
+                'source_hashes': runtime_snapshot['source_hashes'],
+                'module_origins': runtime_snapshot['module_origins'],
+                'repository': runtime_snapshot['repository'],
+                'grader_entrypoints': runtime_snapshot['grader_entrypoints'],
+            },
             budgets={
                 'max_turns': args.max_turns,
                 'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
@@ -1794,6 +1911,9 @@ def main() -> int:
                 'navigation_guidance': args.navigation_guidance,
                 'require_source_read_before_edit': args.require_source_read_before_edit,
                 'replace_text_guidance': args.replace_text_guidance,
+                'no_progress_guard': args.no_progress_guard,
+                'post_edit_navigation_gate': args.post_edit_navigation_gate,
+                'post_edit_completion_guidance': args.post_edit_completion_guidance,
                 'localization_record_sha256': localization_record_sha256,
             },
         )
@@ -2043,7 +2163,13 @@ def main() -> int:
     no_tool_retries = 0
     edit_attempted = False
     edit_applied = False
+    edit_attempt_count = 0
     source_lease_read_succeeded = False
+    no_progress_blocked_tools: set[str] = set()
+    no_progress_interventions: list[dict[str, Any]] = []
+    last_successful_read_key: tuple[str, int, int, str, int] | None = None
+    last_no_progress_guidance_key: tuple[str, ...] | None = None
+    post_edit_guidance_sent = False
     public_test_hash = sha256(workspace / next(iter(test_files))) if test_files else None
     public_test_result = None
     public_test_runs = 0
@@ -2053,7 +2179,11 @@ def main() -> int:
 
     def note_edit(edit_result: dict[str, Any]) -> None:
         nonlocal edit_attempted, edit_applied, format_parse_failure, format_parse_failure_count
+        nonlocal edit_attempt_count, last_successful_read_key
         edit_attempted = True
+        edit_attempt_count += 1
+        last_successful_read_key = None
+        no_progress_blocked_tools.clear()
         failure = edit_result.get('format_parse_failure')
         if failure:
             format_parse_failure = failure
@@ -2092,6 +2222,11 @@ def main() -> int:
             edit_applied=edit_applied,
             enabled=args.post_edit_navigation_gate,
         )
+        turn_tools = tools_for_no_progress_guard(
+            turn_tools,
+            blocked_tools=no_progress_blocked_tools,
+            enabled=args.no_progress_guard,
+        )
         turn_tool_names = {item['function']['name'] for item in turn_tools}
         if event_journal is not None:
             event_journal.append(
@@ -2101,11 +2236,45 @@ def main() -> int:
                                          if args.require_source_read_before_edit else 'disabled'),
                     'post_edit_navigation_gate': ('hide_inventory_after_edit_v1'
                                                   if args.post_edit_navigation_gate else 'disabled'),
+                    'no_progress_guard': ('block_duplicate_navigation_action_v1'
+                                          if args.no_progress_guard else 'disabled'),
+                    'no_progress_blocked_tools': sorted(no_progress_blocked_tools),
                 },
                 edit_applied=edit_applied,
                 source_lease_read_succeeded=source_lease_read_succeeded,
                 available_tool_names=sorted(turn_tool_names),
             )
+        if (edit_applied and args.post_edit_completion_guidance
+                and not post_edit_guidance_sent):
+            public_result = public_test_result if isinstance(public_test_result, dict) else {}
+            public_passed = bool(public_result.get('passed'))
+            if public_passed or not (args.public_test_image or args.public_contract_grader):
+                completion_message = (
+                    'Controller completion guidance v1: a source edit was applied. '
+                    'The configured public test has passed; call finish now with a short summary. '
+                    'Do not reopen source inventories or repeat reads.'
+                    if public_passed else
+                    'Controller completion guidance v1: a source edit was applied and no public test tool is configured. '
+                    'Call finish now with a short summary so the independent grader can evaluate the candidate. '
+                    'Do not reopen source inventories or repeat reads.'
+                )
+            else:
+                completion_message = (
+                    'Controller completion guidance v1: a source edit was applied. '
+                    'Run the configured public test now and inspect its result. If it passes, call finish; '
+                    'if it fails, repair only the reported issue, then test again. Do not reopen inventories.'
+                )
+            messages.append({'role': 'system', 'content': completion_message})
+            post_edit_guidance_sent = True
+            intervention = {
+                'kind': 'post_edit_completion_guidance_v1',
+                'turn': turn + 1,
+                'controller_assisted': True,
+                'model_action_replaced': False,
+            }
+            no_progress_interventions.append(intervention)
+            if event_journal is not None:
+                event_journal.append('controller_intervention', **intervention)
         generation_start = time.perf_counter()
         args._last_rendered_prompt = None
         args._last_rendered_prompt_sha256 = None
@@ -2271,6 +2440,37 @@ def main() -> int:
                     result = edit_leases.read_lines(
                         arguments.get('path'), arguments.get('start'), arguments.get('end'),
                     )
+                    if (args.no_progress_guard and isinstance(result, dict)
+                            and result.get('status') == 'read_complete'
+                            and isinstance(arguments.get('path'), str)
+                            and isinstance(arguments.get('start'), int)
+                            and isinstance(arguments.get('end'), int)
+                            and isinstance(result.get('sha256'), str)):
+                        read_key = (
+                            arguments['path'], arguments['start'], arguments['end'],
+                            result['sha256'], edit_attempt_count,
+                        )
+                        if read_key == last_successful_read_key:
+                            no_progress_blocked_tools = {'read_lines'}
+                            intervention = {
+                                'kind': 'duplicate_source_read_guard_v1',
+                                'turn': turn + 1,
+                                'trigger': {
+                                    'path': arguments['path'],
+                                    'start': arguments['start'],
+                                    'end': arguments['end'],
+                                    'source_sha256': result['sha256'],
+                                },
+                                'blocked_tools': ['read_lines'],
+                                'controller_assisted': True,
+                                'model_action_replaced': False,
+                            }
+                            no_progress_interventions.append(intervention)
+                            if event_journal is not None:
+                                event_journal.append('controller_intervention', **intervention)
+                        else:
+                            last_successful_read_key = read_key
+                            no_progress_blocked_tools.clear()
                 elif name == 'replace_lines':
                     result = edit_leases.replace_lines(arguments.get('lease'), arguments.get('text'))
                     note_edit(result)
@@ -2301,6 +2501,33 @@ def main() -> int:
                     result = edit_leases.read_function(
                         arguments.get('path'), arguments.get('qualified_name'),
                     )
+                    if (args.no_progress_guard and isinstance(result, dict)
+                            and result.get('status') == 'read_complete'
+                            and isinstance(result.get('sha256'), str)):
+                        read_key = (
+                            f"{arguments.get('path')}::{arguments.get('qualified_name')}",
+                            0, 0, result['sha256'], edit_attempt_count,
+                        )
+                        if read_key == last_successful_read_key:
+                            no_progress_blocked_tools = {'read_function'}
+                            intervention = {
+                                'kind': 'duplicate_source_read_guard_v1',
+                                'turn': turn + 1,
+                                'trigger': {
+                                    'path': arguments.get('path'),
+                                    'qualified_name': arguments.get('qualified_name'),
+                                    'source_sha256': result['sha256'],
+                                },
+                                'blocked_tools': ['read_function'],
+                                'controller_assisted': True,
+                                'model_action_replaced': False,
+                            }
+                            no_progress_interventions.append(intervention)
+                            if event_journal is not None:
+                                event_journal.append('controller_intervention', **intervention)
+                        else:
+                            last_successful_read_key = read_key
+                            no_progress_blocked_tools.clear()
                 elif name == 'replace_function_body_transactional':
                     if args.tool_interface in ARRAY_FUNCTION_EDIT_TOOL_INTERFACES:
                         result = edit_leases.replace_function_body_lines_transactional_v2(
@@ -2351,6 +2578,29 @@ def main() -> int:
                                   'error': 'search_source is not available in this interface'}
                     else:
                         result = source_navigator.search(arguments.get('query'))
+                    if (args.no_progress_guard and isinstance(result, dict)
+                            and result.get('status') == 'duplicate_query'):
+                        no_progress_blocked_tools = {
+                            'search_source', 'list_files', 'list_functions',
+                        }
+                        intervention = {
+                            'kind': 'duplicate_source_search_guard_v1',
+                            'turn': turn + 1,
+                            'trigger': {
+                                'query': arguments.get('query'),
+                                'index_sha256': result.get('index_sha256'),
+                                'index_generation': result.get('index_generation'),
+                            },
+                            'blocked_tools': sorted(no_progress_blocked_tools),
+                            'controller_assisted': True,
+                            'model_action_replaced': False,
+                        }
+                        no_progress_interventions.append(intervention)
+                        if event_journal is not None:
+                            event_journal.append('controller_intervention', **intervention)
+                    elif (args.no_progress_guard and isinstance(result, dict)
+                            and result.get('status') == 'ok' and result.get('results')):
+                        no_progress_blocked_tools.clear()
                 elif name == 'apply_patch':
                     result = attempt_configured_edit(
                         workspace, str(arguments.get('patch', '')), args.edit_format, editable,
@@ -2464,6 +2714,31 @@ def main() -> int:
                             edit_tool=name,
                         )
                 messages.append({'role': 'tool', 'name': name, 'content': json.dumps(result, ensure_ascii=False)})
+                guidance_key = tuple(sorted(no_progress_blocked_tools))
+                if args.no_progress_guard and guidance_key and guidance_key != last_no_progress_guidance_key:
+                    if 'search_source' in no_progress_blocked_tools:
+                        guidance = (
+                            'Controller navigation guidance v1: the last search repeated an unchanged query. '
+                            'Search and inventory tools are temporarily unavailable for this turn. Use read_lines '
+                            'on a known candidate path to inspect source, or choose another available action. '
+                            'This constraint does not select or rewrite your action.'
+                        )
+                    else:
+                        guidance = (
+                            'Controller navigation guidance v1: the last read repeated the same unchanged source range. '
+                            'That read tool is temporarily unavailable for this turn. Use the latest returned lease '
+                            'to edit, or search/read a different location. This constraint does not select or rewrite your action.'
+                        )
+                    messages.append({'role': 'system', 'content': guidance})
+                    last_no_progress_guidance_key = guidance_key
+                    if event_journal is not None:
+                        event_journal.append(
+                            'controller_guidance', turn=turn + 1,
+                            guidance=guidance,
+                            blocked_tools=list(guidance_key),
+                        )
+                elif not guidance_key:
+                    last_no_progress_guidance_key = None
                 if name == 'finish':
                     break
             except Exception as exc:
@@ -2509,6 +2784,21 @@ def main() -> int:
         'tool_interface': args.tool_interface,
         'generation_protocol': args.generation_protocol,
         'controller_source_files_sha256': controller_sources,
+        'runtime_source_snapshot': {
+            'path': runtime_snapshot['path'],
+            'manifest_sha256': runtime_snapshot['manifest_sha256'],
+            'source_hashes': runtime_snapshot['source_hashes'],
+            'module_origins': runtime_snapshot['module_origins'],
+            'repository': runtime_snapshot['repository'],
+            'grader_entrypoints': runtime_snapshot['grader_entrypoints'],
+        },
+        'controller_interventions': no_progress_interventions,
+        'model_explicitly_finished': any(
+            call.get('name') == 'finish' and isinstance(call.get('result'), dict)
+            and call['result'].get('finished') is True
+            for turn_record in transcript for call in turn_record.get('tool_calls', [])
+        ),
+        'controller_finalized': False,
         'agent_outcome': agent_outcome,
         'independent_semantic_status': 'pending_independent_grade',
         'transport_outcomes': transport_outcomes,

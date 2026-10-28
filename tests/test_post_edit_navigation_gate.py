@@ -1,4 +1,7 @@
-from scripts.run_local_agent import tools_for_post_edit_navigation_gate
+from scripts.run_local_agent import (
+    tools_for_no_progress_guard,
+    tools_for_post_edit_navigation_gate,
+)
 
 
 def _tool(name: str) -> dict:
@@ -37,3 +40,20 @@ def test_post_edit_gate_can_be_disabled_after_an_edit() -> None:
     result = tools_for_post_edit_navigation_gate(tools, edit_applied=True, enabled=False)
 
     assert result == tools
+
+
+def test_no_progress_guard_hides_only_repeated_actions_for_one_turn() -> None:
+    tools = [_tool(name) for name in (
+        "list_files", "search_source", "read_lines", "replace_lines", "finish",
+    )]
+
+    result = tools_for_no_progress_guard(
+        tools, blocked_tools={"search_source", "list_files"}, enabled=True,
+    )
+
+    assert [tool["function"]["name"] for tool in result] == [
+        "read_lines", "replace_lines", "finish",
+    ]
+    assert tools_for_no_progress_guard(
+        tools, blocked_tools={"search_source"}, enabled=False,
+    ) == tools
