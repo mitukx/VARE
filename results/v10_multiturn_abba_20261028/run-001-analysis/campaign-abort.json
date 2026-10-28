@@ -1,0 +1,14 @@
+{
+ "run_dir": "results/v10_multiturn_abba_20261028/run-001",
+ "status": "ABORTED_PARTIAL",
+ "reason": "host needed by another workload",
+ "stopped_by": "operator SIGTERM to the campaign guard process and its worker (not a preregistered stopping rule)",
+ "stopped_at_local": "2026-10-29 ~00:15 JST",
+ "aborted_during": {"block": 6, "variant": "intervals", "horizon": 16, "run": "021-b6-intervals-h16-schema_slots_v10", "seconds_into_run_approx": 30},
+ "completed_runs": 20,
+ "completed_blocks": [1, 2, 3, 4, 5],
+ "missing": "block 6 (intervals, 16 turns: 4 runs, 2 pairs). Run 021 left only stdout/stderr/resource samples (no trajectory or guard record) and is excluded from analysis. The guard never wrote campaign-summary.json.",
+ "preregistered_stopping_rules_fired": "none (no resource abort, timeout, worker failure, or prefix-audit violation before the operator stop)",
+ "probe_v2_amendment_001": "not executed: the host was released before it could run",
+ "analysis_note": "The frozen analysis script was run unchanged on the box (Python 3.13, pure-Python statistics) over runs 001-020 via a view directory that omits the incomplete run 021."
+}
