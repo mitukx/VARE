@@ -1224,6 +1224,11 @@ def run_jobs(
 ) -> dict:
     import psutil
 
+    max_children = read_json(root / "protocol-reference.json")["limits"][
+        "max_concurrent_children"
+    ]
+    if len(jobs) > max_children:
+        raise RuntimeError("RESOURCE_ABORT planned child concurrency exceeds frozen cap")
     pending = {
         job["name"]: launch_job(protocol_path, root, job, process_log) for job in jobs
     }

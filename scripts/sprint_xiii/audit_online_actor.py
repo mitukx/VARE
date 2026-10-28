@@ -1387,6 +1387,12 @@ def audit(p_path: Path, root: Path) -> dict:
             "campaign resource summary exceeds a frozen cap",
             findings,
         )
+    for jobs in ("rollout", "learner"):
+        check(
+            p["limits"][f"max_{jobs}_concurrency"] == 1,
+            f"protocol relaxed {jobs} process concurrency",
+            findings,
+        )
     if p.get("rvl_source_root") and p.get("rvl_commit"):
         actual_rvl = subprocess.run(
             ["git", "-C", p["rvl_source_root"], "rev-parse", "HEAD"],
