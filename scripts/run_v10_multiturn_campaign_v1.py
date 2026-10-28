@@ -231,11 +231,23 @@ def main() -> int:
 
     stop_reason = None
     timeouts = crashes = 0
+    rules = protocol['stopping_rules']
+    block_minutes = {str(h): float(m) for h, m in rules['default_block_minutes_estimate'].items()}
+    block_started = time.monotonic()
+    previous_horizon = None
     for index, run in enumerate(schedule(protocol), start=1):
-        elapsed_min = (time.monotonic() - campaign_started) / 60
-        if run['position'] == 1 and elapsed_min > protocol['stopping_rules']['no_new_block_after_minutes']:
-            stop_reason = 'campaign_wall_budget'
-            break
+        if run['position'] == 1:
+            if index > 1:
+                block_minutes[str(previous_horizon)] = (time.monotonic() - block_started) / 60
+            elapsed_min = (time.monotonic() - campaign_started) / 60
+            projected = elapsed_min + block_minutes[str(run['horizon'])]
+            append_event(events, event='block_budget_check', elapsed_minutes=round(elapsed_min, 2),
+                         projected_minutes=round(projected, 2), block=run['block'])
+            if projected > rules['campaign_wall_minutes_max']:
+                stop_reason = 'campaign_wall_budget'
+                break
+            block_started = time.monotonic()
+        previous_horizon = run['horizon']
         label = f"{index:03d}-b{run['block']}-{run['variant']}-h{run['horizon']}-{run['arm']}"
         run_path = run_dir / 'runs' / label
         run_path.mkdir(parents=True)
@@ -274,7 +286,7 @@ def main() -> int:
                 stop_reason = 'kv_prefix_audit_violation'
                 append_event(events, event='integrity_violation', label=label, violations=violations[:20])
                 break
-        if timeouts >= protocol['stopping_rules']['max_timeouts'] or crashes >= protocol['stopping_rules']['max_worker_failures']:
+        if timeouts >= rules['max_timeouts'] or crashes >= rules['max_worker_failures']:
             stop_reason = 'repeated_worker_failures'
             break
     write_json(run_dir / 'campaign-summary.json', {

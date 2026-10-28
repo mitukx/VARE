@@ -15,7 +15,7 @@
  },
  "cheaper_alternative_considered": "CPU fake-MLX tests (existing 8/16-turn regression and new safety tests) verify controller cache logic but cannot measure real latency, Metal allocation, or numerical divergence between one-pass prefix prefill and chunked full prefill; Sprint X measured only 2 turns.",
  "decision_changed": "Whether schema_slots_v10 is recommended as the default local MLX schema-slot generation protocol or remains explicit opt-in with v9 as the fallback. No argparse default is changed by this experiment.",
- "budget": {"campaign_wall_minutes_max": 165, "paid_api": false, "cloud_gpu": false, "model_download": false},
+ "budget": {"campaign_wall_minutes_max": 170, "paid_api": false, "cloud_gpu": false, "model_download": false},
  "model": {"id": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit", "source": "already-cached local snapshot, HF offline"},
  "design": {
   "arm_letters": {"A": "schema_slots_v9", "B": "schema_slots_v10"},
@@ -30,7 +30,7 @@
   "pairing": "Within each 4-run block, positions (1,2) form pair 1 and (3,4) form pair 2; each pair has one run per arm. 24 trajectories, 12 pairs (6 per horizon).",
   "process_isolation": "One fresh worker process per trajectory; model loaded per process; trajectories run sequentially.",
   "matched_conditions": "Same model snapshot, tokenizer, chat template, tool schemas, tool executor, fixture, horizon, per-turn token budget, context limit, greedy decoding, python runtime, and machine. Only generation_protocol differs.",
-  "generation": {"decoding": "greedy (do_sample false, temperature 0)", "turn_token_budget": 256, "max_context_tokens": 8192},
+  "generation": {"decoding": "greedy (do_sample false, temperature 0)", "turn_token_budget": 256, "max_context_tokens": 12288},
   "tool_interface": "lease_bound_exact_text_transactional_v1 with list_files, read_lines, search_source, replace_exact_text_transactional, check_syntax, run_public_tests; finish is offered only on the final turn so every trajectory spans exactly the horizon unless it fails.",
   "tool_feedback": "Real deterministic executors from the repository (SourceEditLeaseStoreV1 with deterministic lease tokens, SourceNavigatorV2, check_syntax_source) and an isolated subprocess public-test runner. Accepted edits change the source seen by later turns.",
   "parse_failure_handling": "Raw output and a controller notice are appended; the trajectory continues.",
@@ -55,7 +55,9 @@
  },
  "stopping_rules": {
   "resource_abort": "Any guard resource limit breach kills the worker process group and stops the campaign.",
-  "no_new_block_after_minutes": 140,
+  "campaign_wall_minutes_max": 170,
+  "default_block_minutes_estimate": {"8": 25, "16": 60},
+  "block_budget_rule": "Before each 4-run block, project elapsed minutes plus the last observed duration of a block with the same horizon (or the default estimate); if the projection exceeds campaign_wall_minutes_max the campaign stops and the partial, interleaved schedule is analyzed as-is.",
   "max_timeouts": 2,
   "max_worker_failures": 3,
   "integrity": "Any prefix-audit violation stops the campaign after preserving the record.",
