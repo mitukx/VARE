@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from pathlib import PurePosixPath
@@ -132,6 +133,46 @@ class AgentTaskContract:
     @property
     def diff_revision(self) -> str:
         return self.base_revision or "HEAD"
+
+
+def resolve_candidate_diff_revision(
+    workspace: Path,
+    revision: str,
+    source_files: tuple[str, ...] | list[str],
+) -> str:
+    """Resolve a candidate-local baseline and verify it matches the starting files.
+
+    Upstream source revisions are provenance identities, but isolated task
+    worktrees may intentionally contain only a synthetic baseline commit. The
+    final candidate diff must use a commit that exists in that worktree and
+    whose tracked source bytes exactly match the files the model receives.
+    """
+    root = Path(workspace).resolve()
+    resolved = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "--verify", f"{revision}^{{commit}}"],
+        capture_output=True,
+        text=True,
+    )
+    if resolved.returncode != 0:
+        raise ValueError(f"candidate diff baseline is unavailable: {revision}")
+    commit = resolved.stdout.strip()
+    if not commit:
+        raise ValueError(f"candidate diff baseline did not resolve: {revision}")
+
+    for relative in source_files:
+        safe = _safe_relative(relative)
+        current = root / safe
+        if current.is_symlink() or not current.is_file():
+            raise ValueError(f"candidate source is missing or not a regular file: {safe}")
+        baseline = subprocess.run(
+            ["git", "-C", str(root), "show", f"{commit}:{safe}"],
+            capture_output=True,
+        )
+        if baseline.returncode != 0:
+            raise ValueError(f"candidate diff baseline omits source file: {safe}")
+        if hashlib.sha256(baseline.stdout).digest() != hashlib.sha256(current.read_bytes()).digest():
+            raise ValueError(f"candidate diff baseline differs from starting source: {safe}")
+    return commit
 
 
 def assert_train_only(contract: AgentTaskContract, split: dict) -> None:

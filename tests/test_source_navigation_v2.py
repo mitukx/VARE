@@ -73,6 +73,16 @@ def test_v2_interface_hashes_both_navigator_versions_and_keeps_tool_contract():
     sources = controller_source_hashes('lease_bound_navigation_v2', 'schema_slots_v1')
     assert sources['src/vare/source_navigation_v1.py']
     assert sources['src/vare/source_navigation_v2.py']
+    transactional = controller_source_hashes(
+        'lease_bound_transactional_navigation_v1', 'schema_slots_v6',
+    )
+    assert transactional['src/vare/source_navigation_v1.py']
+    assert transactional['src/vare/source_navigation_v2.py']
+    assert transactional['src/vare/agent_function_edit_v1.py']
+    assert transactional['src/vare/agent_json_eos_v1.py']
+    assert transactional['src/vare/agent_json_eos_v2.py']
+    assert transactional['src/vare/agent_json_eos_v3.py']
+    assert transactional['src/vare/schema_slot_protocol.py']
     v1 = tools_for('structured_replace', public_tests=True,
                    tool_interface='lease_bound_navigation_v1')
     v2 = tools_for('structured_replace', public_tests=True,

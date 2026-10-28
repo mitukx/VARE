@@ -89,6 +89,10 @@ def test_navigation_run_identity_includes_all_selected_interface_sources() -> No
         "src/vare/agent_edit_v2.py",
         "src/vare/agent_edit_format.py",
         "src/vare/agent_task_contract.py",
+        "src/vare/agent_function_edit_v1.py",
+        "src/vare/agent_json_eos_v1.py",
+        "src/vare/agent_json_eos_v2.py",
+        "src/vare/agent_json_eos_v3.py",
         "src/vare/source_navigation_v1.py",
     }
     assert sources["src/vare/source_navigation_v1.py"] == sha256(
@@ -110,6 +114,10 @@ def test_navigation_run_identity_changes_when_active_parser_changes(
         "src/vare/agent_edit_v2.py",
         "src/vare/agent_edit_format.py",
         "src/vare/agent_task_contract.py",
+        "src/vare/agent_function_edit_v1.py",
+        "src/vare/agent_json_eos_v1.py",
+        "src/vare/agent_json_eos_v2.py",
+        "src/vare/agent_json_eos_v3.py",
         "src/vare/source_navigation_v1.py",
     ):
         target = tmp_path / relative

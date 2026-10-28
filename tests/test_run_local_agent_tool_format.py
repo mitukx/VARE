@@ -8,11 +8,12 @@ import pytest
 
 from scripts import run_local_agent
 from scripts.run_local_agent import (
-    DurableEventJournal, capture_rendered_prompt, main, normalize_tool_call_format,
+    DurableEventJournal, capture_rendered_prompt, load_localization_record, main, normalize_tool_call_format,
     parse_tool_output_v1, pinned_public_contract_grader_sources, read_file_range,
     python_syntax_failures, refresh_public_tests_after_edit, replace_text, run_public_contract_tests,
-    run_with_public_test_budget, tools_for,
+    run_with_public_test_budget, tools_for, tools_for_source_read_gate,
 )
+from scripts.run_local_agent import supports_localization_context, transactional_edit_guidance
 from vare.agent_edit_v2 import SourceEditLeaseStoreV1
 from vare.container_isolation import DockerIsolationRunner, IsolationResult
 from scripts.calibrate_agent_edit_interface_v1 import FIXTURES, _validate_fixture, tool_output
@@ -47,6 +48,23 @@ def test_public_contract_grader_registration_is_task_and_hash_pinned(monkeypatch
     monkeypatch.setattr(run_local_agent, 'sha256', drifted_sha)
     with pytest.raises(ValueError, match='grader hash mismatch'):
         pinned_public_contract_grader_sources(grader, 'label-smooth')
+
+
+def test_source_read_gate_hides_edits_until_a_fresh_lease_is_read():
+    tools = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_transactional_navigation_v1',
+    )
+    gated = tools_for_source_read_gate(tools, lease_read_succeeded=False, enabled=True)
+    assert {tool['function']['name'] for tool in gated} == {
+        'list_files', 'read_lines', 'search_source',
+    }
+    assert {tool['function']['name'] for tool in tools_for_source_read_gate(
+        tools, lease_read_succeeded=True, enabled=True,
+    )} == {tool['function']['name'] for tool in tools}
+    assert tools_for_source_read_gate(
+        tools, lease_read_succeeded=False, enabled=False,
+    ) is tools
 
 
 def test_legacy_public_contract_grader_registration_remains_available():
@@ -178,6 +196,157 @@ def test_lease_bound_interface_exposes_only_the_versioned_atomic_edit():
     assert "apply_patch" not in names
 
 
+def test_transactional_navigation_and_localized_tools_share_the_same_edit_contract():
+    autonomous = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_transactional_navigation_v1',
+    )
+    localized = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_transactional_localized_v1',
+    )
+    auto_names = {tool['function']['name'] for tool in autonomous}
+    localized_names = {tool['function']['name'] for tool in localized}
+    assert auto_names == {
+        'list_files', 'read_lines', 'search_source', 'replace_lines_transactional',
+        'check_syntax', 'run_public_tests', 'finish',
+    }
+    assert localized_names == {
+        'read_lines', 'replace_lines_transactional', 'check_syntax',
+        'run_public_tests', 'finish',
+    }
+    for tools in (autonomous, localized):
+        edit = next(tool for tool in tools
+                    if tool['function']['name'] == 'replace_lines_transactional')
+        assert edit['function']['parameters']['required'] == ['lease', 'text', 'normalization']
+        assert edit['function']['parameters']['additionalProperties'] is False
+
+
+def test_localization_context_can_be_compared_without_changing_tool_capabilities():
+    autonomous = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_transactional_navigation_v1',
+    )
+    localized_context = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_transactional_navigation_v1',
+    )
+
+    assert autonomous == localized_context
+    names = {tool['function']['name'] for tool in localized_context}
+    assert names == {
+        'list_files', 'read_lines', 'search_source', 'replace_lines_transactional',
+        'check_syntax', 'run_public_tests', 'finish',
+    }
+    assert supports_localization_context('lease_bound_transactional_navigation_v1')
+    assert supports_localization_context('lease_bound_transactional_localized_v1')
+    assert 'search tool remains available' in transactional_edit_guidance(
+        localized=True, search_available=True,
+    )
+    assert 'search tool remains available' not in transactional_edit_guidance(
+        localized=True, search_available=False,
+    )
+
+
+def test_transactional_navigation_guidance_v2_is_explicit_and_keeps_edit_contract():
+    v1 = transactional_edit_guidance(localized=False, search_available=True)
+    v2 = transactional_edit_guidance(
+        localized=False, search_available=True, navigation_guidance='v2',
+    )
+
+    assert v1.startswith('Search candidate-visible source, then inspect a narrow range using read_lines.')
+    assert 'one short, distinctive, unquoted identifier or term' in v2
+    assert 'every query term must occur on one source line' in v2
+    assert 'retry once with a shorter identifier' in v2
+    assert 'Never repeat an identical query after a duplicate_query result' in v2
+    assert 'Do not read the beginning of the file when a search misses' in v2
+    assert 'read_lines to obtain a one-time lease' in v2
+    assert 'replace_lines_transactional with the complete replacement' in v2
+    assert 'required explicit normalization choice' in v2
+    assert 'syntax-invalid proposal is rejected without changing the candidate' in v2
+    assert 'Semantic code is never inferred or repaired by the controller.' in v2
+
+    legacy_tools = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_transactional_navigation_v1',
+    )
+    assert {tool['function']['name'] for tool in legacy_tools} == {
+        'list_files', 'read_lines', 'search_source', 'replace_lines_transactional',
+        'check_syntax', 'run_public_tests', 'finish',
+    }
+
+
+def test_function_scoped_interface_uses_closed_schemas_and_only_function_edits():
+    tools = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_function_edit_v1',
+    )
+    by_name = {tool['function']['name']: tool['function']['parameters'] for tool in tools}
+    assert set(by_name) == {
+        'list_functions', 'read_function', 'replace_function_body_transactional',
+        'check_syntax', 'run_public_tests', 'finish',
+    }
+    assert by_name['list_functions']['required'] == ['path']
+    assert by_name['read_function']['required'] == ['path', 'qualified_name']
+    assert by_name['replace_function_body_transactional']['required'] == [
+        'lease', 'body', 'normalization',
+    ]
+    assert by_name['replace_function_body_transactional']['properties']['normalization']['enum'] == [
+        'none', 'strip_single_python_fence', 'append_final_newline',
+        'strip_single_python_fence_append_final_newline',
+    ]
+    assert all(schema['additionalProperties'] is False for schema in by_name.values())
+
+
+def test_function_scoped_parser_rejects_unsupported_arguments_without_repair():
+    tools = tools_for(
+        'structured_replace', tool_interface='lease_bound_function_edit_v1',
+    )
+    valid = '<tool_call>{"name":"list_functions","arguments":{"path":"module.py"}}</tool_call>'
+    invalid = '<tool_call>{"name":"list_functions","arguments":{"path":"module.py","pattern":"*"}}</tool_call>'
+
+    assert parse_tool_output_v1(valid, tools)[0] == 'complete_tool_call'
+    status, call = parse_tool_output_v1(invalid, tools)
+    assert status == 'invalid_json_or_schema'
+    assert call['arguments']['pattern'] == '*'
+
+
+def test_certified_single_line_function_interface_has_the_same_closed_actions():
+    tools = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_single_line_function_edit_v1',
+    )
+    names = {tool['function']['name'] for tool in tools}
+    assert names == {
+        'list_functions', 'read_function', 'replace_function_body_transactional',
+        'check_syntax', 'run_public_tests', 'finish',
+    }
+    edit = next(tool for tool in tools
+                if tool['function']['name'] == 'replace_function_body_transactional')
+    assert edit['function']['parameters']['additionalProperties'] is False
+
+
+def test_localization_record_is_bound_to_exact_candidate_source(tmp_path):
+    from scripts.run_local_agent import sha256
+
+    workspace = tmp_path / 'workspace'
+    workspace.mkdir()
+    source = workspace / 'module.py'
+    source.write_text('def call():\n    return 1\n', encoding='utf-8')
+    record_path = tmp_path / 'localization.json'
+    record = {
+        'algorithm': 'task_prompt_lexical_windows_v1',
+        'path': 'module.py', 'start_line': 1, 'end_line': 2,
+        'source_sha256': sha256(source), 'content': 'def call():\n    return 1\n',
+    }
+    record_path.write_text(json.dumps(record), encoding='utf-8')
+
+    assert load_localization_record(record_path, workspace, {'module.py'}) == record
+    source.write_text('def call():\n    return 2\n', encoding='utf-8')
+    with pytest.raises(ValueError, match='does not match'):
+        load_localization_record(record_path, workspace, {'module.py'})
+
+
 def test_versioned_parser_distinguishes_complete_truncated_invalid_and_policy_rejected():
     tools = tools_for("structured_replace", tool_interface="lease_bound_lines_v1")
     complete = '<tool_call>{"name":"list_files","arguments":{}}</tool_call>'
@@ -281,6 +450,13 @@ def test_navigation_runs_accept_a_supplied_event_journal_before_model_loading(
     workspace = tmp_path / "workspace"
     (workspace / "src").mkdir(parents=True)
     (workspace / "src" / "value.py").write_text("value = 1\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(workspace)], check=True)
+    subprocess.run(["git", "-C", str(workspace), "config", "user.name", "VARE test"], check=True)
+    subprocess.run([
+        "git", "-C", str(workspace), "config", "user.email", "vare-test@example.invalid",
+    ], check=True)
+    subprocess.run(["git", "-C", str(workspace), "add", "src/value.py"], check=True)
+    subprocess.run(["git", "-C", str(workspace), "commit", "-qm", "candidate baseline"], check=True)
     task_root = tmp_path / "task"
     task_root.mkdir()
     (task_root / "TASK.md").write_text("Fix the value function.\n", encoding="utf-8")
@@ -325,6 +501,7 @@ def test_navigation_runs_accept_a_supplied_event_journal_before_model_loading(
     monkeypatch.setattr("sys.argv", [
         "run_local_agent.py", "--workspace", str(workspace),
         "--model-path", str(model_dir), "--task-root", str(task_root),
+        "--diff-base", "HEAD",
         "--output", str(tmp_path / "agent.json"), "--event-journal", str(journal_path),
         "--instruction", "inspect and repair", "--seed", "7",
         "--backend", "mlx", "--model-repository", "fixture/model",
@@ -567,3 +744,66 @@ def test_planned_task_run_count_matches_admitted_secondary_models():
     assert _planned_task_run_count(
         protocol, arms, 3, {"coder_0_5b": "skipped", "coder_1_5b": "skipped"},
     ) == 6
+
+
+def test_function_edit_v2_tool_schema_is_line_array_and_closed():
+    tools = tools_for(
+        "structured_replace", public_tests=True,
+        tool_interface="lease_bound_function_edit_v2",
+    )
+    by_name = {tool["function"]["name"]: tool["function"] for tool in tools}
+    assert list(by_name) == [
+        "list_functions", "read_function", "replace_function_body_transactional",
+        "check_syntax", "run_public_tests", "finish",
+    ]
+    schema = by_name["replace_function_body_transactional"]["parameters"]
+    assert schema["required"] == ["lease", "body_lines"]
+    assert schema["additionalProperties"] is False
+    assert set(schema["properties"]) == {"lease", "body_lines"}
+    assert schema["properties"]["body_lines"] == {
+        "type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 120,
+    }
+
+
+def test_function_edit_v2_parser_enforces_array_item_and_length_constraints():
+    tools = tools_for("structured_replace", tool_interface="lease_bound_function_edit_v2")
+
+    def parse(body_lines):
+        payload = {
+            "name": "replace_function_body_transactional",
+            "arguments": {"lease": "lease-1", "body_lines": body_lines},
+        }
+        return parse_tool_output_v1(f"<tool_call>{json.dumps(payload)}</tool_call>", tools)[0]
+
+    assert parse(["    return value"]) == "complete_tool_call"
+    assert parse([]) == "invalid_json_or_schema"
+    assert parse([1]) == "invalid_json_or_schema"
+    assert parse(["line"] * 121) == "invalid_json_or_schema"
+
+
+def test_localized_function_editor_omits_navigation_but_keeps_leased_array_edit():
+    autonomous = tools_for(
+        "structured_replace", public_tests=True,
+        tool_interface="lease_bound_function_edit_v2",
+    )
+    localized = tools_for(
+        "structured_replace", public_tests=True,
+        tool_interface="lease_bound_function_edit_localized_v1",
+    )
+    auto_names = {tool["function"]["name"] for tool in autonomous}
+    localized_names = {tool["function"]["name"] for tool in localized}
+    assert auto_names == {
+        "list_functions", "read_function", "replace_function_body_transactional",
+        "check_syntax", "run_public_tests", "finish",
+    }
+    assert localized_names == {
+        "read_function", "replace_function_body_transactional",
+        "check_syntax", "run_public_tests", "finish",
+    }
+    auto_edit = next(tool for tool in autonomous
+                     if tool["function"]["name"] == "replace_function_body_transactional")
+    localized_edit = next(tool for tool in localized
+                          if tool["function"]["name"] == "replace_function_body_transactional")
+    assert localized_edit == auto_edit
+    rejected = '<tool_call>{"name":"list_functions","arguments":{"path":"module.py"}}</tool_call>'
+    assert parse_tool_output_v1(rejected, localized)[0] == "valid_call_rejected_by_policy"

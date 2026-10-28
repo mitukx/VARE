@@ -5,7 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from vare.agent_edit_v2 import SourceEditLeaseStoreV1, read_source_lines_v1, replace_source_lines_v1
+from vare.agent_edit_v2 import (
+    SourceEditLeaseStoreV1,
+    read_source_lines_v1,
+    replace_python_source_lines_transactional_v1,
+    replace_source_lines_v1,
+)
 
 
 def _source(root: Path, text: str = "def value():\n    return 1\n") -> tuple[Path, str]:
@@ -158,4 +163,77 @@ def test_edit_lease_rejects_source_changes_after_read(tmp_path: Path) -> None:
 
     assert result["status"] == "valid_call_rejected_by_policy"
     assert result["error"] == "stale_preimage"
+    assert source.read_bytes() == before
+
+
+def test_transactional_python_edit_rejects_syntax_without_mutating_source(tmp_path: Path) -> None:
+    source, rel = _source(tmp_path)
+    before = source.read_bytes()
+    digest = hashlib.sha256(before).hexdigest()
+
+    result = replace_python_source_lines_transactional_v1(
+        tmp_path, rel, digest, 2, 2, "    return (\n", {rel},
+    )
+
+    assert result["applied"] is False
+    assert result["status"] == "candidate_rejected_syntax"
+    assert result["syntax_valid"] is False
+    assert result["raw_replacement_sha256"] == hashlib.sha256(b"    return (\n").hexdigest()
+    assert source.read_bytes() == before
+    assert not list(source.parent.glob(".*.vare-*.tmp"))
+
+
+@pytest.mark.parametrize(
+    ("raw", "normalization", "expected"),
+    [
+        ("    return 2\n", "none", "    return 2\n"),
+        ("```python\n    return 3\n```\n", "strip_single_python_fence", "    return 3\n"),
+        ("    return 4", "append_final_newline", "    return 4\n"),
+        ("```py\n    return 5\n```", "strip_single_python_fence_append_final_newline", "    return 5\n"),
+    ],
+)
+def test_transactional_python_edit_requires_and_records_explicit_format_transform(
+        tmp_path: Path, raw: str, normalization: str, expected: str) -> None:
+    source, rel = _source(tmp_path)
+    store = SourceEditLeaseStoreV1(tmp_path, {rel}, token_factory=lambda: "0123456789ab")
+    observed = store.read_lines(rel, 2, 2)
+
+    result = store.replace_lines_transactional(observed["lease"], raw, normalization)
+
+    assert result["applied"] is True
+    assert result["syntax_valid"] is True
+    assert source.read_text(encoding="utf-8") == f"def value():\n{expected}"
+    assert result["raw_replacement_sha256"] == hashlib.sha256(raw.encode()).hexdigest()
+    assert result["normalized_replacement_sha256"] == hashlib.sha256(expected.encode()).hexdigest()
+    assert result["normalization"] == normalization
+    record = store.audit_records()[0]
+    assert record["raw_replacement_sha256"] == result["raw_replacement_sha256"]
+    assert record["normalized_replacement_sha256"] == result["normalized_replacement_sha256"]
+
+
+def test_transactional_python_edit_does_not_strip_fences_without_explicit_selection(tmp_path: Path) -> None:
+    source, rel = _source(tmp_path)
+    before = source.read_bytes()
+    store = SourceEditLeaseStoreV1(tmp_path, {rel}, token_factory=lambda: "0123456789ab")
+    observed = store.read_lines(rel, 2, 2)
+
+    result = store.replace_lines_transactional(observed["lease"], "```python\n    return 2\n```\n", "none")
+
+    assert result["applied"] is False
+    assert result["status"] == "candidate_rejected_syntax"
+    assert source.read_bytes() == before
+
+
+def test_transactional_python_edit_rejects_inexact_fence_transform_without_write(tmp_path: Path) -> None:
+    source, rel = _source(tmp_path)
+    before = source.read_bytes()
+    digest = hashlib.sha256(before).hexdigest()
+
+    result = replace_python_source_lines_transactional_v1(
+        tmp_path, rel, digest, 2, 2, "```python\n    return 2\n", {rel},
+        normalization="strip_single_python_fence",
+    )
+
+    assert result["applied"] is False
+    assert result["error"] == "python_fence_not_exact"
     assert source.read_bytes() == before
