@@ -1,14 +1,14 @@
 {
   "schema": "vare.sprint-vii.curated-evidence-manifest.v1",
   "created_utc": "2026-10-28",
-  "source_pr139_commit": "e5f3be9c9168e1701a9fe21c273e087b7244575a",
+  "source_pr139_commit": "e1be20cbf67d4d60a3e180172e9598d4bc0d1862",
   "external_hidden_grader_source_included": false,
   "external_known_fix_source_included": false,
   "files": [
     {
       "path": "docs/sprint-vii-from-valid-tool-calls-to-verified-repairs-20261028.md",
-      "bytes": 15417,
-      "sha256": "d1a1f2a41b59def5bc59ce056d682fd311a8a2bff22dce4de3205c6268c59c48"
+      "bytes": 17817,
+      "sha256": "632515b04b9614ad3763a295f5377424dc6542c5dd5d9058834a9eaa73f36f11"
     },
     {
       "path": "results/sprint_vii_20261028/controller-regressions.log",
@@ -154,6 +154,16 @@
       "path": "results/sprint_vii_20261028/external_dev_trl7913/task/task.json",
       "bytes": 521,
       "sha256": "4a241121d874a15cbb626ce713099c7d050729e20aca73f0b031dd5702b91f9a"
+    },
+    {
+      "path": "results/sprint_vii_20261028/github_ci/pr139_e1be20cb_ci_summary.json",
+      "bytes": 1115,
+      "sha256": "e351241c01cbd7c77caef52ecb49c65dbae71c9a90df77aa14078aa7f4268602"
+    },
+    {
+      "path": "results/sprint_vii_20261028/github_ci/pr139_e5f3be9_failure_record.json",
+      "bytes": 2589,
+      "sha256": "43c29828a3093a02fc98629c66dc86612d930d69f44c17966c39c0bff6288dfc"
     },
     {
       "path": "results/sprint_vii_20261028/github_ci/pr139_ec6f37ce/failure-record.json",
@@ -319,26 +329,6 @@
       "path": "results/sprint_vii_20261028/root-cause-matrix-v1.json",
       "bytes": 11420,
       "sha256": "91d27cdeee844f854d6056e218af95dd02fe9cb45ae09862af5d2056b530a6d2"
-    },
-    {
-      "path": "scripts/run_sprint_vii_e0.py",
-      "bytes": 17300,
-      "sha256": "be5525cd816380e7bad7dc7e5665868951e0a89c1752b497efa1f6671bda49aa"
-    },
-    {
-      "path": "scripts/run_sprint_vii_model_interface.py",
-      "bytes": 20538,
-      "sha256": "9701412dbfd146ae0cafc2725262c4e1fbe363711b6d2d28014cd1d09b835cd2"
-    },
-    {
-      "path": "scripts/sprint_vii_e0_grader.py",
-      "bytes": 8267,
-      "sha256": "fd94406bef984ef74489f39aa72d40126c1ba7db5ac4b76d9ceb99b7c23b7d22"
-    },
-    {
-      "path": "scripts/sprint_vii_model_compat_grader.py",
-      "bytes": 5030,
-      "sha256": "be5ccec21669c1311564068da474be918fffcb67b847b078e53124234a960715"
     }
   ]
 }

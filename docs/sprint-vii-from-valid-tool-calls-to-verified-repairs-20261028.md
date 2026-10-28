@@ -18,7 +18,7 @@ E0 deterministic edit-acceptance v3は16項目すべてを通過した。探索�
 
 ## 1. Sprint VIの再監査とroot cause
 
-歴史的なSprint VI記録は変更していない。詳細なattempt単位のmatrixは[`results/sprint_vii_20261028/root-cause-matrix-v1.json`](../work/VARE/results/sprint_vii_20261028/root-cause-matrix-v1.json)に保存した。
+歴史的なSprint VI記録は変更していない。詳細なattempt単位のmatrixは[根本原因matrix](../results/sprint_vii_20261028/root-cause-matrix-v1.json)に保存した。
 
 | 過去attempt | 実際に止まった段階 | 根拠と原因 |
 |---|---|---|
@@ -79,6 +79,8 @@ postprocessorが空のGit diffを落とす既存bugもこのrunで再現した�
 
 **固定protocol:** `protocol.v2.json`, SHA-256 `3c4ac0ee5040abb88b18f2262ee248a8165eb8af75210e64ab858a9b9766ef86`。1 attempt、seed 20261028、greedy、14 turns、192生成token/turn、1536 total生成token、8192 context、480s agent limit、RSS 10 GiB上限、swap growth 32 MiB上限。preflight時に利用可能memory 9.65 GB、free swap 1.41 GB、disk free 45.76 GB。上限は変更していない。
 
+再現性上の制約: attempt recordにはcontroller source hashがあるが、生成直前の`run_local_agent.py` bytes自体はattempt archiveへ同梱されていない。record上のhash `bb0894ec…`はPR #139の最初のinterface commit `ec6f37ce`に保存されたrunner (`f538d5a4…`) と一致しない。raw trajectoryと結果は保持されているものの、当時のrunner全体をcommit SHAだけで完全再構成できるとは主張しない。
+
 **結果:** Qwen2.5-Coder-7Bの同一snapshotで14/14 actionがschema-valid。1 `list_files`、2 `read_lines`、11 `search_source`。最初は引用符付き複数語query `"dataset preparation CPOTrainer"`を出しhitなし。その後10回同一queryを繰り返し、すべて`duplicate_query`。最初の1–100行を2回読んだが、検索hit付近のreadに進まなかった。generated tokens 144。各constrained decoding stageの最大promptは4,919 tokensで8,192上限未満。全stage prompt tokensの合計98,665は、反復したgeneration stageの処理量でありcontext window長ではない。
 
 source edit attempt 0、applied edit 0、candidate diff 0 bytes、candidate sourceはbaselineと同一。public testは公開しておらず未実行。candidate graderも`NOT_RUN_NO_CANDIDATE_PATCH`。wall time 362.222s、peak process-tree RSS 4,381,933,568 bytes、minimum sampled available RAM 6,296,272,896 bytes、swap growth 0。resource abortなし。従って主因はresourceでもJSON/schemaでもなく、source localizationとrepeated action selection。指示されたstopping ruleに従い、同一taskへのprompt retryや追加task消費を行わなかった。
@@ -87,22 +89,22 @@ source edit attempt 0、applied edit 0、candidate diff 0 bytes、candidate sour
 
 v1 transactional guidanceは「sourceをsearchし、narrow rangeを読む」としか指示せず、queryがline-orientedであること、検索失敗時の短縮、重複query停止を説明していなかった。`scripts/run_local_agent.py`に明示指定できるnavigation guidance v2を加えた。v2は短い単一identifier、同一line一致、no-hit時の短縮再試行、duplicate query禁止、hit付近のnarrow readを指示する。既存default v1は維持し、edit tool schemaも変えていない。transactional one-time lease、explicit normalization、全file syntax validation、fail-closed write semanticsは維持する。
 
-Regression: 188 tests passed、Ruff passed、py_compile passed、`git diff --check` passed。実モデルでは**未実行**。次のreal-model testには、未露出のfresh Development familyと独立qualificationが必要。
+Regression: guidance/navigation関連188 tests passed、Ruff・py_compile・`git diff --check` passed。#139のexact-head CIで追加のfixture欠落が2件判明したため、fixtureを修正して`e1be20cbf67d4d60a3e180172e9598d4bc0d1862`をpushした。修正後のcontroller/navigation/agent grader関連suiteは58 passed、4 skipped。実モデルではguidance v2を**未実行**。次のreal-model testには、未露出のfresh Development familyと独立qualificationが必要。
 
 ## 6. GitHub/PR統合
 
 | 対象 | live state / このSprintの判断 |
 |---|---|
 | `main` | 開始・終了SHA `f3ab90a36e8724441b6b9555255f8f75a0a4d529`。変更なし。 |
-| [#139](https://github.com/mitukx/VARE/pull/139) | Draft、baseは#137のbranch。`ec6f37ce`でagent interfacesを追加、CI失敗後にdev NumPy依存とmypy narrowingを修正し`e5f3be9c9168e1701a9fe21c273e087b7244575a`をpush。独立approvalなし。最新exact-head CIは確認中。 |
-| [#133](https://github.com/mitukx/VARE/pull/133) | source navigation P2修正があるがclosed-unmerged #132にstacked。2件のP2 review thread未解決。exact headのCIは前回監査時成功。mainへ入っていない。 |
+| [#139](https://github.com/mitukx/VARE/pull/139) | Draft、baseは#137系branch。`ec6f37ce`でagent interfaces、`e5f3be9c`でdev NumPy依存とmypy narrowing、`e1be20cb`で2件のtest-fixture不備を修正。現head `e1be20cbf67d4d60a3e180172e9598d4bc0d1862`の必須check 9件、calibrated CPU、actual optimizer/recoveryがすべてpass。独立approvalとstacked dependencyの解消待ち。 |
+| [#133](https://github.com/mitukx/VARE/pull/133) | head `e8ab4705b84d82cd79e2883c391083087e82b4e8`、closed-unmerged #132のbranchにstacked。path inventory上限とtransient index retryの2件のP2 threadは未解決だが、該当修正はこのheadに存在し、全表示CI checksはpass。mainへ入っていない。 |
 | [#137](https://github.com/mitukx/VARE/pull/137) | #136にstacked。前回監査時exact-head CI成功。approval/dependency解消なし。 |
-| [#120](https://github.com/mitukx/VARE/pull/120) | exact-head checksは前回監査時green。evaluator completion forgeryのP1は未解決で、trusted reward pathには入れない。 |
-| [#140](https://github.com/mitukx/VARE/pull/140) | evidence-manifest修正、前回監査時checks green。outdated P2 threadとrequired reviewが残る。 |
-| [#143](https://github.com/mitukx/VARE/pull/143) | canonical diff export、前回監査時checks green。required independent approval待ち。 |
-| [#142](https://github.com/mitukx/VARE/pull/142) | Draft evidence archive。Sprint VII report、protocols、curated raw trajectories、task/grader control receiptsをappend-onlyで追加。独立レビュー待ち。 |
+| [#120](https://github.com/mitukx/VARE/pull/120) | head `8aacae54d0f8893580a77cb8bb831e7621a2403a`、全表示CI checks pass。completion forgery P1とempty-manifest P1 threadは未解決。manifest修正は#140に抽出済み。P1完了は独立レビュー未確認のためtrusted reward pathへ入れない。 |
+| [#140](https://github.com/mitukx/VARE/pull/140) | head `34f972eb2a300711f36fd81a72b6948528dfebad`、全表示CI checks pass。symlink/archive fallbackとduplicate-key修正はheadに存在し、P2 threadは未解決のまま reviewer confirmation待ち。 |
+| [#143](https://github.com/mitukx/VARE/pull/143) | head `6266ec0a10920ae9ef95ccb528145ef14a452e39`、全表示CI checks pass、open review threadなし。必須の独立approval待ち。 |
+| [#142](https://github.com/mitukx/VARE/pull/142) | Draft evidence archive、head `d51deae3408bbdf1835eee0c5072cbe1ac836133`。Sprint VII report、protocols、curated raw trajectories、task/grader control receiptsを追加。現headのtest 3.11/3.12/3.13、lint、typecheck、grader、CPU checksはすべてpass。`REVIEW_REQUIRED`で独立承認待ち。 |
 
-最新#139 CIで、最初のhead `ec6f37ce`は全Python matrixでNumPy未導入によるtest collection failure、typecheckは`schema_slot_protocol.py`の`Any | None` list typingで失敗した。dev extraへ`numpy>=1.26,<3`を追加し、型絞りを明示して`e5f3be9c`をpushした。Ruff、mypy（86 source files）、ローカル関連195 testsはPASS。second headのGitHub exact-head CIは報告作成時に実行中で、完了後の状態を追記する。初回CI失敗ログはSprint VII結果に保持。live PR数は18 open / 9 Draft。protected mainは1 independent approving reviewと必須checksを要求する。Sprint VIIでの実操作は#139と#142の2更新、0 merge、0 close。approval、branch protection、review threadは迂回していない。
+`ec6f37ce`のCIではPython matrixのtest collection時にNumPyが不足し、typecheckでも`schema_slot_protocol.py`の`Any | None` list typingが失敗した。dev extraへ`numpy>=1.26,<3`を追加し型絞りを明示した`e5f3be9c`では、3.12/3.13のtest jobsがそれぞれ2件失敗した（3.12: 1,828 passed/112 skipped、3.13: 1,818 passed/122 skipped）。原因は、controller identityテストfixtureがstartup-hashed moduleを作っていなかったことと、agent preflightの仮workspaceにcandidate diff用Git `HEAD`がなかったこと。後者は本番のfail-closed validationが意図どおり先に停止した結果だった。テストfixtureを補い、baseline commitはcandidate-visible sourceと一致するbytesから作るよう変更した。`e1be20cb`後のローカル関連suiteは58 passed/4 skipped。失敗記録は[CI failure record](../results/sprint_vii_20261028/github_ci/pr139_e5f3be9_failure_record.json)とPR #139のGitHub Actionsに保存した。修正後のexact-head `e1be20cb`では必須checks 9/9と`calibrated-cpu-tasks`、`actual-optimizer-and-recovery`がpassし、3言語版Python matrixは各2 runともpassした（run IDs `40622442697`, `40622449164`, `40622449205`, `40622449291`）。機械可読な結果は[exact-head CI summary](../results/sprint_vii_20261028/github_ci/pr139_e1be20cb_ci_summary.json)に保存した。PR #142の現head `d51deae`でも表示されている必須checksはpass。Ruffとmypy（86 source files）もpass。live PR数は18 open / 9 Draft。protected mainは1 independent approving reviewと必須checksを要求する。Sprint VIIでの実操作はPR #139を3 commit更新、PR #142に1 evidence commit追加、0 merge、0 close。approval、branch protection、review threadは迂回していない。
 
 ## 7. RL / Long-Horizon / RSIゲート
 
@@ -125,6 +127,6 @@ Regression: 188 tests passed、Ruff passed、py_compile passed、`git diff --che
 | Long-horizon model/recovery comparison | `NOT_RUN` | model task completionまで到達せず、durable-vs-naive比較なし。 |
 | RSI research automation | `NOT_RUN` | 実験選択による改善なし。 |
 | PR closures / merges | `0 / 0` | main SHA unchanged。 |
-| PR update | `RUN` | #139 commit `ec6f37ce…` push。独立レビュー/CI待ち。 |
+| PR update | `RUN / PARTIAL` | #139に`ec6f37ce`、`e5f3be9c`、`e1be20cb`をpush。#142にevidence archiveを更新。両PRの独立レビューが残る。 |
 
 **厳密に新しく示せること:** trusted hash-bound edit pathと独立graderは、実際のQwen2.5-Coder-7B生成でsynthetic source editを2回受理できる。外部taskではschema generationは成立したがnavigation段階で停滞し、独立修復には至らなかった。従って現在主張できるのは「モデル生成から安全な編集適用へのsynthetic feasibility」と「外部Development attemptでの具体的なnavigation失敗測定」であり、Coding RLの改善、Long-Horizon RLの実モデル復旧、RSIによる能力向上ではない。
