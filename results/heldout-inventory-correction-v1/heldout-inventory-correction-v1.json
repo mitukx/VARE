@@ -1,0 +1,290 @@
+{
+  "append_only": true,
+  "does_not_establish": [
+    "Model capability, task success, or a policy update.",
+    "That any of the remaining 8 tasks is unseen by pretraining.",
+    "That the remaining 8 tasks are free of the open snapshot or theme questions.",
+    "A change to any historical certificate, protocol, ledger, or prior exposure record."
+  ],
+  "evidence_paths": [
+    {
+      "absent_from_pr_142_head": true,
+      "branch": "codex/heldout-task-certification-pilot-v1",
+      "branch_head": "4920c249f11d20dc0846ab8966066b1b5d4600e8",
+      "path": "results/mlsys-heldout-task-readiness-v2.json",
+      "pull_request": 129,
+      "role": "heldout_readiness_row",
+      "sha256": "ead678711dc1f5da7fdcdc7b127cd8e122e8f20b6bd116542633524aac788f39",
+      "sidecar_sha256": "ead678711dc1f5da7fdcdc7b127cd8e122e8f20b6bd116542633524aac788f39"
+    },
+    {
+      "branch": "codex/heldout-task-certification-pilot-v1",
+      "branch_head": "4920c249f11d20dc0846ab8966066b1b5d4600e8",
+      "path": "protocols/mlsys_heldout_extension_v7.json",
+      "pull_request": 129,
+      "role": "heldout_protocol",
+      "sha256": "ff0778b3554ff3af979762524cbc3434bec99fa0481969c8da53cb0965dcb06e"
+    },
+    {
+      "branch": "codex/flagship-teacher-gate",
+      "branch_head": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+      "path": "protocols/flagship_development_qualification_v1.json",
+      "pull_request": 122,
+      "role": "development_qualification_protocol",
+      "sha256": "63495ce52b1f30771d646bfaba903db4f69a588c5b81d987a08c7e97f51df51e"
+    },
+    {
+      "branch": "codex/flagship-teacher-gate",
+      "branch_head": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+      "path": "protocols/flagship_cached_mistral_teacher_v1.json",
+      "pull_request": 122,
+      "role": "teacher_protocol_consumption_rule_and_model",
+      "sha256": "25390ddcb473274dbb365c90ac440f2350bd96c9895b52ab320bfa48e98647a4"
+    },
+    {
+      "branch": "codex/flagship-teacher-gate",
+      "branch_head": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+      "path": "results/flagship-cached-mistral-teacher-v1/summary.json",
+      "protocol_sha256_field_matches_teacher_protocol": true,
+      "pull_request": 122,
+      "role": "model_attempt_summary",
+      "sha256": "a8f6ce9060c8c1252f5a8da07ab97d7092f98d0cb6c3db30f53715a59a8635ea"
+    }
+  ],
+  "excluded_task": {
+    "baseline_revision": "e5962529e5614ce00f14bdd39fe5fc6e410ca2b0",
+    "baseline_target_sha256": "81d7df02f5de9ec8cb79390145f34724ee549a1a7cafadaac3edaaa7bc2cb318",
+    "development_split": "development",
+    "development_task_id": "gptq-groups",
+    "fixed_revision": "d4d38d96485c6546a920b3c8431e455c7aa60980",
+    "fixed_target_sha256": "bd4c08453a24fe41fea8ce5885f433b718628c16c4e7a0596900fc72553daf16",
+    "grader_or_upstream_test_path": "tests/test_gptq.py",
+    "grader_or_upstream_test_sha256": "f7fcf46389897ee7e5a6994fac7d32ab257e7240e316f8e5f2df870273ae582e",
+    "heldout_split_in_protocol": "prospective_heldout_extension_v4",
+    "heldout_split_in_readiness": "prospective_heldout_extension",
+    "heldout_status_in_readiness": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+    "heldout_task_id": "mlxlm-1880-gptq-group-error-propagation",
+    "historical_certificate_retained": true,
+    "prospective_disposition": "EXCLUDE_FROM_PROSPECTIVE_UNTOUCHED_SOURCE_GRADER_CERTIFIED_COUNT",
+    "reason": "The held-out mlx-lm #1880 record and the Development task gptq-groups are the same upstream pull request, baseline commit, fix commit, target path, and baseline-target, fixed-target, and grader/upstream-test hashes. gptq-groups then received two model attempts. A task used as a Development model task is not an untouched prospective held-out task. The readiness row remains a historical certificate and is not rewritten.",
+    "target_path": "mlx_lm/quant/gptq.py",
+    "upstream_pr": 1880,
+    "upstream_repository": "ml-explore/mlx-lm"
+  },
+  "exposure": {
+    "attempt_count_for_gptq_groups": 2,
+    "attempts": [
+      {
+        "attempt": "greedy",
+        "independent_success": false,
+        "reward": 0,
+        "seed": 101,
+        "source_sha256": "81d7df02f5de9ec8cb79390145f34724ee549a1a7cafadaac3edaaa7bc2cb318",
+        "task": "gptq-groups"
+      },
+      {
+        "attempt": "sampled",
+        "independent_success": false,
+        "reward": 0,
+        "seed": 211,
+        "source_sha256": "81d7df02f5de9ec8cb79390145f34724ee549a1a7cafadaac3edaaa7bc2cb318",
+        "task": "gptq-groups"
+      }
+    ],
+    "model_repository": "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
+    "model_revision": "a4b8f870474b0eb527f466a03fbc187830d271f5",
+    "readiness_created_at_utc": "2026-10-25T09:32:05.758402+00:00",
+    "readiness_file_commit": "4920c249f11d20dc0846ab8966066b1b5d4600e8",
+    "readiness_file_committer_date": "2026-10-25T18:39:20+09:00",
+    "readiness_matches_for_1877_and_1880": 0,
+    "readiness_zero_match_is_after_the_attempts": true,
+    "summary_committer_date": "2026-10-24T15:12:17+09:00",
+    "summary_first_commit": "37b31519818b5dfbf245075cc541d6c8a38b4099"
+  },
+  "historical_records_modified": false,
+  "non_exposure_statement": "A VARE-level finding of no exposure match is not evidence that a pretrained model never saw the task. External pretraining exposure stays UNKNOWN. The readiness value matches_for_1877_and_1880 = 0 is a local retained-ref scan, and its own scope_limit refuses a global or external corpus no-exposure claim.",
+  "open_unverified_inconsistencies": [
+    {
+      "decided_disqualification": false,
+      "id": "readiness_hash_mismatch",
+      "observed": "exposure-disposition-append-v1.json and docs/mlsys-heldout-task-readiness-v2-report.md cite sha256 cde4489049e9f6e685528651907d63a1ef88ad4121fb33c4914468a7add2d65a. The committed results/mlsys-heldout-task-readiness-v2.json bytes hash to ead678711dc1f5da7fdcdc7b127cd8e122e8f20b6bd116542633524aac788f39, which is also the sidecar value. The same bytes were present on every fetched branch that contains the file. Raw bytes, newline-stripped bytes, and json.dumps sort_keys forms (indent 2 and compact) did not reproduce cde44890. The readiness file is absent from PR #142 head 91d3d19a, the branch that cites it.",
+      "status": "OPEN_UNVERIFIED",
+      "unverified": "What bytes the cited digest cde44890 was computed over."
+    },
+    {
+      "decided_disqualification": false,
+      "id": "1926_fix_commit_discrepancy",
+      "observed": "Readiness task mlxlm-1926-falcon-cache-gradient fixed_revision is 3051e26bc72b8ab426af17d14c5599447eb306a5. exposure-disposition-append-v1.json sprint_iv_exposure.known_fix_revision is ebba55f5176fe451b94f04212e975f052a6d96e0. Both records use baseline 87b7b583a697537aa68f47130b40884700b5f55f. Append-v1 already removes this family from the prospective count. This correction does not restore it and does not open the fix diffs.",
+      "status": "OPEN_UNVERIFIED",
+      "unverified": "Which recorded fix revision is the upstream change, and whether the two commits are the same tree."
+    },
+    {
+      "decided_disqualification": false,
+      "id": "49412_split_conflict",
+      "observed": "Readiness task transformers-49412-fusion-idempotence is split heldout, status EXCLUDED_TASK_EXPOSURE_NINE_QWEN3_RECEIPTS, fixed_revision 01269bc99768ad45f8aeaeb701e1315371e25239, baseline cb33194ad6152bd9fad6305378d92db385dd7b32. Commit 19516567 on PR #102 adds benchmarks/mlsys_repo_eval_v4/transformers_49412_fusion_idempotence/task.json (sha256 c6846ab89cd21f66b0b2071ab5390bc7cbde66583c663e3e359281d984fd82a5) and the v2 task.json (sha256 65a5984196f4918bcaf4eff5f751d3f76dd3e7e94fca7a1dcfe73a5eeb81f024). Both metadata.split values are development and both source.fixed_revision values are 527725cace0b038a0ac8ab738e921f118bb2668a, with the same baseline. PR #139 results/sprint_ii_20261027/external_coding_dev/move_to_device_mapping_type_v1/task/task.json (sha256 86612b94f2e7e9f57f4f8fd92afb85b2ab4a1777056ac13a83d6f29e13202a4b) is split development for upstream PR 49731 and sets external_upstream_revision to 01269bc99768ad45f8aeaeb701e1315371e25239, the readiness fix revision of #49412. Only those identifier fields were read.",
+      "status": "OPEN_UNVERIFIED",
+      "unverified": "Whether the split and fix-commit conflict, or the shared revision string with #49731, changes any prospective count beyond the #49412 family readiness already excluded."
+    },
+    {
+      "decided_disqualification": false,
+      "id": "snapshot_or_theme_overlaps",
+      "observed": "From readiness identity fields only: #49147 baseline cb33194ad6152bd9fad6305378d92db385dd7b32 equals the #49412 baseline; #1938 baseline caed1943d38ecb58f6e466a72bed98310c9d45a5 equals the train #1904 fixed revision; #1979 baseline 8fda5e976a2da412d9f8119361edefd405381cf9 equals the Development #1971 fixed revision. These eight tasks stay in the 8/15 count.",
+      "status": "OPEN_UNVERIFIED",
+      "unverified": "Whether those shared revisions exposed the held-out target files, and whether #1921 or #1979 overlap the exposed #1913 left-padding theme. Resolving either question would require reading held-out content, which this record does not do. Neither item is a disqualification."
+    }
+  ],
+  "prospective_inventory": {
+    "count_expression": "8/15",
+    "counting_rule": "Start from readiness-v2 unique_independently_controlled_task_certificates = 10. Subtract the #1926 family already removed by exposure-disposition-append-v1. Subtract #1880, confirmed identical to the exposed Development task gptq-groups. Do not subtract families listed only under open_unverified_inconsistencies.",
+    "current_source_grader_certified_unique_families": 8,
+    "fifteen_task_gate_met": false,
+    "fully_model_eligible_heldout_total": "UNKNOWN_NOT_ESTABLISHED",
+    "gate_status": "NOT_MET",
+    "heldout_model_inference_admitted": false,
+    "previous_source_grader_certified_unique_families": 9,
+    "readiness_unique_independently_controlled_task_certificates": 10,
+    "remaining_source_grader_certified_task_ids": [
+      "transformers-48319-stale-best-checkpoint",
+      "transformers-49208-resume-metrics",
+      "transformers-49147-gemma3n-fp16-gradient-clipping",
+      "mlxlm-1921-padded-logprobs",
+      "mlxlm-1938-phi3small-logits-mask",
+      "mlxlm-1979-ssm-padding-mask",
+      "mlxlm-1898-qwen3-rope-parameters",
+      "mlxlm-1877-compressed-tensors-format-validation"
+    ],
+    "remaining_tasks": [
+      {
+        "baseline_revision": "6ec0f83563f56335d4227354614459a01d76ba0d",
+        "fixed_revision": "36deb0b53ed0863f4b4dfdea23dcaec7f3df3701",
+        "split": "heldout",
+        "task_id": "transformers-48319-stale-best-checkpoint",
+        "upstream_pr": 48319
+      },
+      {
+        "baseline_revision": "dbac24c0f04a39d68cc24d2fa2abecf196713ae2",
+        "fixed_revision": "7fb5bcd1d4b8a5c225a2c33429b2e9e023dd61ae",
+        "split": "heldout",
+        "task_id": "transformers-49208-resume-metrics",
+        "upstream_pr": 49208
+      },
+      {
+        "baseline_revision": "05b7aed425453057c511ec0d5ec9732c325b3444",
+        "fixed_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa",
+        "split": "heldout",
+        "task_id": "mlxlm-1921-padded-logprobs",
+        "upstream_pr": 1921
+      },
+      {
+        "baseline_revision": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+        "fixed_revision": "011f2f6e2f4ff91e99b3fed3a7f51d3a42a6335c",
+        "split": "heldout",
+        "task_id": "mlxlm-1938-phi3small-logits-mask",
+        "upstream_pr": 1938
+      },
+      {
+        "baseline_revision": "8fda5e976a2da412d9f8119361edefd405381cf9",
+        "fixed_revision": "1e511c1f72a93f47e3c6d73254f1b5da2ae92d2d",
+        "split": "heldout",
+        "task_id": "mlxlm-1979-ssm-padding-mask",
+        "upstream_pr": 1979
+      },
+      {
+        "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+        "fixed_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10",
+        "split": "prospective_heldout_extension",
+        "task_id": "transformers-49147-gemma3n-fp16-gradient-clipping",
+        "upstream_pr": 49147
+      },
+      {
+        "baseline_revision": "28e9ccd9cb52d1d4a6f674b7914bae2de49d9aad",
+        "fixed_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+        "split": "prospective_heldout_extension",
+        "task_id": "mlxlm-1898-qwen3-rope-parameters",
+        "upstream_pr": 1898
+      },
+      {
+        "baseline_revision": "dcbcf786c0cf56f9a12fabe9468c887781431ae2",
+        "fixed_revision": "796b466f305c814080ddab53546ee7432f20b88a",
+        "split": "prospective_heldout_extension",
+        "task_id": "mlxlm-1877-compressed-tensors-format-validation",
+        "upstream_pr": 1877
+      }
+    ],
+    "remaining_to_source_grader_certificate_gate": 7,
+    "removed_by_append_v1": 1,
+    "removed_by_this_record": 1,
+    "required": 15
+  },
+  "record_kind": "append_only_prospective_inventory_correction",
+  "recorded_at_utc": "2026-10-28T14:17:59Z",
+  "schema": "vare.heldout-inventory-correction.v1",
+  "supersedes": [
+    {
+      "branch": "codex/sprint-iv-evidence-public-v1",
+      "branch_head": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+      "path": "results/sprint_iv_20261027/exposure-disposition-append-v1.json",
+      "present_on_main_f3ab90a3": false,
+      "pull_request": 142,
+      "retained_unchanged": "The file is not edited. Its exclusion of upstream family mlx-lm #1926 from future blind held-out use remains in force.",
+      "sha256": "3018268f0e14ccf75e52234e1f84aa4a90db10cdb993b3f897870b288cdfd66c",
+      "superseded_claim": "prospective_inventory_reconciliation.current_source_grader_certified_unique_families = 9"
+    },
+    {
+      "branch": "codex/sprint-iv-evidence-public-v1",
+      "branch_head": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+      "path": "results/sprint_iv_20261027/exposure-disposition-append-v2.json",
+      "present_on_main_f3ab90a3": false,
+      "pull_request": 142,
+      "retained_unchanged": "The file is not edited. Upstream PR #1955 remains a development exposure and still adds no held-out certificate.",
+      "sha256": "b2da5a3d7ee4e09b0d0cae890b4fbf3d1edc2a5a950c5ec3a7811b80c51b3ed5",
+      "superseded_claim": "prior_exposure.counting.changes_prior_prospective_9_of_15_certificate_count = false, which left the prospective count at 9"
+    }
+  ],
+  "verification": {
+    "disagreements_with_20261028_rederivation": [
+      {
+        "found": "Commit 9688af422a3f03ffac0f9a4f314f19bb5acf58d9 (committer 2026-10-24T14:24:25+09:00) adds protocols/flagship_cached_mistral_teacher_v1.json with status FROZEN_BEFORE_MODEL_LOAD and results/flagship-development-qualification-v1/run-1/summary.json with model_inference NOT_RUN. It does not contain results/flagship-cached-mistral-teacher-v1/summary.json. Commit 37b31519818b5dfbf245075cc541d6c8a38b4099 (committer 2026-10-24T15:12:17+09:00) is the first commit that adds that summary, and it is the PR #122 branch head. The two gptq-groups model attempts are in that summary only.",
+        "item": "attempt_commit_attribution",
+        "rederivation_claim": "The two Mistral attempts are recorded by commits 9688af42 (2026-10-24 14:24 JST) and 37b31519 (2026-10-24 15:12 JST)."
+      },
+      {
+        "found": "That sentence is in protocols/flagship_cached_mistral_teacher_v1.json, field exposure: 'These two tasks are Development only and become consumed at first model access; no task from the frozen historical held-out allocation is opened.' The qualification protocol does not contain that sentence. Its sha256 is the qualification_protocol_sha256 cited by the teacher protocol.",
+        "item": "consumption_sentence_path",
+        "rederivation_claim": "protocols/flagship_development_qualification_v1.json says the tasks become consumed at first model access."
+      }
+    ],
+    "exposure_of_gptq_groups": "CONFIRMED",
+    "field_mapping_note": "The shared digests match. 81d7df02... is the baseline target-file hash (held-out baseline_target_sha256; development baseline_sha256). bd4c0845... is the fixed target-file hash (held-out fixed_target_sha256; development fixed_sha256). f7fcf463... is the grader/upstream-test hash for tests/test_gptq.py (held-out and readiness grader_sha256; development upstream_test_sha256). The readiness row split is prospective_heldout_extension; the held-out protocol task split is prospective_heldout_extension_v4. Both are held-out-extension labels.",
+    "identity_1880_versus_gptq_groups": "CONFIRMED",
+    "main_head": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+    "method": "Git metadata only. Compared task ids, upstream pull-request numbers, commits, content hashes, split labels, and committer dates. Did not open held-out task sources, hidden tests, graders, or known-fix diffs.",
+    "refs_read": [
+      {
+        "branch": "codex/flagship-teacher-gate",
+        "head": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+        "pull_request": 122
+      },
+      {
+        "branch": "codex/heldout-task-certification-pilot-v1",
+        "head": "4920c249f11d20dc0846ab8966066b1b5d4600e8",
+        "pull_request": 129
+      },
+      {
+        "branch": "codex/development-navigation-campaign-v1",
+        "head": "df0a360ead3927f72d33972634251469b50c2368",
+        "pull_request": 139
+      },
+      {
+        "branch": "codex/sprint-iv-evidence-public-v1",
+        "head": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+        "pull_request": 142
+      },
+      {
+        "branch": "codex/structured-edit-agent-v1",
+        "commit_containing_49412_task_json": "19516567f8152fbd4fc58290e94790154a2d6e01",
+        "pull_request": 102
+      }
+    ]
+  }
+}
