@@ -1,0 +1,19 @@
+{
+  "error": "queued_stale_v0 cohort had no mixed-reward group; learner update-v1 had committed, but the harness incorrectly required selected_group_id before testing freshness admission.",
+  "error_type": "StopIteration",
+  "failed_at": "after learner-update-v1 and concurrent queued_stale_v0 worker completed; before freshness comparison, fresh_v1 generation, reference v2, or learner SIGKILL.",
+  "failure_class": "harness-selection-condition",
+  "preserved_positive_evidence": [
+    "real Qwen rollout worker was SIGKILLed after durable trajectory persistence and resumed by reading the existing artifact without regeneration",
+    "one VARE replay-admitted nonconstant group produced one actual GRPO optimizer step and committed adapter/Adam/RNG checkpoint v1"
+  ],
+  "protocol_id": "vare-sprint-xi-qwen025-model-coupled-recovery-v1",
+  "queued_stale_v0": {
+    "all_rewards_zero": true,
+    "mixed_reward_groups": 0,
+    "optimizer_training": false,
+    "prompts_attempted": 8
+  },
+  "rerun_policy": "No consumed prompt or output was regenerated. Continuation uses only the already persisted complete stale group for admission-only verification and the predeclared fresh_v1 cohort, which was not generated before this failure.",
+  "status": "partial_harness_failure"
+}
