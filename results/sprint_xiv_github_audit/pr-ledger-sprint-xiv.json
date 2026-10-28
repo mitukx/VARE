@@ -2,11 +2,11 @@
   "observed_at_local": "2026-10-29",
   "repository": "https://github.com/mitukx/VARE",
   "main_sha_after_145_merge": "b1e5882cbf89a8f925bf6e5f0a2f288f2d4c8a02",
-  "open_pr_count": 18,
+  "open_pr_count": 19,
   "draft_count": 10,
   "merged_during_sprint": 1,
   "closed_without_merge_during_sprint": 0,
-  "audit_scope": "All 18 open PRs plus #145 merged during this audit. Changed-file and review-thread snapshots are live API data. Semantic overlap is flagged for follow-up rather than inferred from path names.",
+  "audit_scope": "All 18 open PRs in the original live snapshot plus #145 merged during audit; #149 was subsequently created from current main and appended at its initial submitted head. Older per-PR changed-file and review snapshots remain timestamped to the original audit. Semantic overlap is flagged for follow-up rather than inferred from path names.",
   "pull_requests": [
     {
       "number": 99,
@@ -343,7 +343,7 @@
           "priority": null,
           "path": "scripts/grade_mlx_lm_1910_candidate_v1.py",
           "author": "mitukx",
-          "title": "Independent Sprint VI verification at exact head `8aacae54d0f8893580a77cb8bb831e7621a2403a`: I reran `tests/test_mlx_lm_1910_candidate_grader.py` locally with the project\u2019s Python 3.12 environment; all 7 tests passed. The tests include the module-level forged ",
+          "title": "Independent Sprint VI verification at exact head `8aacae54d0f8893580a77cb8bb831e7621a2403a`: I reran `tests/test_mlx_lm_1910_candidate_grader.py` locally with the project’s Python 3.12 environment; all 7 tests passed. The tests include the module-level forged ",
           "url": "https://github.com/mitukx/VARE/pull/120#discussion_r4390398788"
         },
         {
@@ -1002,6 +1002,22 @@
       "mergeable": "MERGEABLE"
     },
     {
+      "number": 145,
+      "title": "Freeze family-specific Development repository-repair protocol v2",
+      "url": "https://github.com/mitukx/VARE/pull/145",
+      "isDraft": false,
+      "headRefName": "cursor/development-repo-repair-protocol-4ffa",
+      "headRefOid": "1a99df2861b79bedc29ca400a35505bceb47c686",
+      "baseRefName": "main",
+      "baseRefOid": "40f7b38fe619217c0ebd534c4d89d42617859be8",
+      "state": "MERGED",
+      "mergedAt": "2026-10-28T22:47:34Z",
+      "mergeCommit": "b1e5882cbf89a8f925bf6e5f0a2f288f2d4c8a02",
+      "primary_disposition": "MERGED",
+      "rationale": "Latest-base PR; 19/19 exact-head checks passed; live protection required zero approving reviews; no unresolved GraphQL review threads. Automated COMMENTED reviews are not counted as approval.",
+      "next_action": "Track post-merge main CI; no claims of independent human approval."
+    },
+    {
       "number": 146,
       "title": "v9/v10 multi-turn shared-prefix ABBA measurement (partial run-001)",
       "url": "https://github.com/mitukx/VARE/pull/146",
@@ -1095,20 +1111,23 @@
       "mergeable": "MERGEABLE"
     },
     {
-      "number": 145,
-      "title": "Freeze family-specific Development repository-repair protocol v2",
-      "url": "https://github.com/mitukx/VARE/pull/145",
+      "number": 149,
+      "title": "Record Sprint XIV verified agent research",
+      "url": "https://github.com/mitukx/VARE/pull/149",
       "isDraft": false,
-      "headRefName": "cursor/development-repo-repair-protocol-4ffa",
-      "headRefOid": "1a99df2861b79bedc29ca400a35505bceb47c686",
+      "headRefName": "codex/sprint-xiv-progress-aware-agent-v1",
+      "headRefOid": "2a4ef1de33d2ae9839ab001f88febd361e11e471",
       "baseRefName": "main",
-      "baseRefOid": "40f7b38fe619217c0ebd534c4d89d42617859be8",
-      "state": "MERGED",
-      "mergedAt": "2026-10-28T22:47:34Z",
-      "mergeCommit": "b1e5882cbf89a8f925bf6e5f0a2f288f2d4c8a02",
-      "primary_disposition": "MERGED",
-      "rationale": "Latest-base PR; 19/19 exact-head checks passed; live protection required zero approving reviews; no unresolved GraphQL review threads. Automated COMMENTED reviews are not counted as approval.",
-      "next_action": "Track post-merge main CI; no claims of independent human approval."
+      "baseRefOid": "b1e5882cbf89a8f925bf6e5f0a2f288f2d4c8a02",
+      "state": "OPEN",
+      "mergeStateStatus": "BLOCKED",
+      "reviewDecision": "",
+      "primary_disposition": "MERGE_CANDIDATE",
+      "rationale": "Main-based focused extraction of progress-aware source navigation and integrity changes plus qualified Development task and exact-policy retrospective evidence. Opened ready for review; no independent review received at initial-head snapshot.",
+      "next_action": "Obtain independent review and require exact-head CI to pass; do not merge before governance gates.",
+      "dependencies": [],
+      "ci_observation": "Checks were running at initial submitted head; see live PR for current head and checks.",
+      "unresolved_review_findings": []
     }
   ],
   "post_merge_main_ci": {

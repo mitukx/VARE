@@ -10,7 +10,7 @@
 - Qwen2.5-Coder-7Bで新規Development family #49752を1回実行。source readとmultiline source searchを含む3つの連続tool callはschema-validだったが、その後2回toolを呼ばず終了した。edit 0、public test未実行、独立graderは変更なしのbaselineをreject。修復成功は0/4 family。
 - Qwen2.5-0.5BのSprint XIII既存policyを正確に列挙評価した結果、78 policy/task比較のうちtrusted expected rewardは77件で低下、平均差は −0.00085935。main-based integration branchから独立再実行し、主要metric JSONがhistorical outputと完全一致した。これは消費済みsynthetic cohortのretrospective分析であり、新しい学習やCoding RL結果ではない。
 - SFT/GRPOは0 update、held-out改善評価も未実施。held-out family certificationの最新記録は8/15で、学習gateはNO-GO。
-- PR #145をmainへ統合し、mainlineでのプロトコル成果を一つ増やした。残る18 PRのうち10件はDraft。大きなstackは統合せず、P1/P2の未解決指摘を明示した。
+- PR #145をmainへ統合し、mainlineでのプロトコル成果を一つ増やした。残る18 PRのうち10件はDraft。さらにmain-basedの焦点を絞った[PR #149](https://github.com/mitukx/VARE/pull/149)を作成し、レビュー待ちでopen。作成直後のheadは `2a4ef1de33d2ae9839ab001f88febd361e11e471`、baseはmain `b1e5882cbf89a8f925bf6e5f0a2f288f2d4c8a02`。この報告更新を同PRへ追加するためheadは後続commitで更新される。required reviewがないためmergeしていない。
 
 ## 1. 実行した研究仮説と境界
 
@@ -97,7 +97,7 @@ main開始時は `40f7b38fe619217c0ebd534c4d89d42617859be8`。#145はexact head 
 
 ### PR台帳
 
-開始時は19 open / 10 Draft。#145 merge後は18 open / 10 Draft、1 merged、0 closed-without-merge。full exact SHA、base/head、CI, review threads, changed file inventory, dependencies, rationaleは [machine-readable PR ledger](../results/sprint_xiv_github_audit/pr-ledger-sprint-xiv.json)、依存図は [dependency graph](../results/sprint_xiv_github_audit/dependency-graph-sprint-xiv.mmd)。
+開始時は19 open / 10 Draft。#145 merge後は18 open / 10 Draft、1 merged、0 closed-without-merge。その後#149を作成したため現在19 open / 10 Draft、期間中1 merged / 0 close-without-merge / 1 created / 0 existing-PR updated。#149はready for reviewだが未レビューで未merge。full exact SHA、base/head、CI, review threads, changed file inventory, dependencies, rationaleは [machine-readable PR ledger](../results/sprint_xiv_github_audit/pr-ledger-sprint-xiv.json)、依存図は [dependency graph](../results/sprint_xiv_github_audit/dependency-graph-sprint-xiv.mmd)。ledgerの既存18件は#149作成前の全件監査snapshot、#149は後述の追加行である。
 
 | PR / title | State | Head / base prefix (merge state) | CI | 未解決レビュー | 主分類と次の作業 |
 |---|---|---|---|---|---|
@@ -120,10 +120,11 @@ main開始時は `40f7b38fe619217c0ebd534c4d89d42617859be8`。#145はexact head 
 | [#146](https://github.com/mitukx/VARE/pull/146) v9/v10 multi-turn shared-prefix ABBA measurement (partial run-001) | Draft | 027e16aebb / df0a360ead (CLEAN) | 20/20 | なし | EVIDENCE_ARCHIVE — Retain raw outcomes; mark incomplete and preserve dependency on #139 evidence. |
 | [#148](https://github.com/mitukx/VARE/pull/148) Sprint XIII: online actor learning and imperfect verifier evidence | Draft | 493740b39a / 40f7b38fe6 (BEHIND) | 19/19 | なし | SPLIT_OR_CHERRY_PICK — Extract stable code/tests and separate the report/data; keep the 13/15 negative run unchanged. |
 | [#145](https://github.com/mitukx/VARE/pull/145) | MERGED | 1a99df2861 / 40f7b38fe6 | 19/19 success | 0 open threads | mainへ統合 |
+| [#149](https://github.com/mitukx/VARE/pull/149) Record Sprint XIV verified agent research | OPEN / Ready | initial head `2a4ef1de33d2` / base `b1e5882cbf89` (report follow-up commit updates head) | live exact-head status in PR | independent review not yet received | MERGE_CANDIDATE — Review controller integrity changes and research evidence; do not merge before required review/CI. |
 
 重要な阻害点は、#99の2 P1+P2、#117の4 source-isolation thread、#120の2 P1 evaluator/evidence issuesとconflict、#133の2 P2 source-index issues。#137の最新exact-head CLI checksは20/20 successだが、#133/#136からのstackをレビューせずにmergeする根拠にならない。#142は明示的なsplit/human-review blocker。#148はmainよりbehindでDraft、143 files/約32k additionsを含む。supersededと断定できるPRは見つけず、履歴破棄を伴うcloseは行っていない。
 
-**Sprint内のPR操作:** #145 merged 1、既存PR update 0、without-merge close 0、new focused PR作成前のopen count 18/Draft10。これに加えて、今回のcontroller/evidenceをまとめたmain-based review PRを作成する。mergeは独立したrequired approvalやCIが不足している間はしない。
+**Sprint内のPR操作:** #145 merged 1、既存PR update 0、without-merge close 0、focused PR #149 created 1。#149作成後のopen countは19/Draft10。#149は独立レビューがないため未merge。
 
 ## 4. Reproduction and evidence
 
@@ -144,7 +145,7 @@ main開始時は `40f7b38fe619217c0ebd534c4d89d42617859be8`。#145はexact head 
 | Model-coupled async / recovery | NOT_RUN | durable continuation/fault recoveryを今回測っていない。 |
 | RSI research selection | NOT_RUN | adaptive task-selection comparisonなし。 |
 | Mainline integration | RUN | #145 merged; merge `b1e5882`; post-merge CI success. |
-| PR debt | PARTIAL | PR #145一件統合。18 open / 10 Draftのまま、重大findingはledger化。 |
+| PR debt | PARTIAL | PR #145を1件統合、PR #149をmain-basedレビュー用に作成。現在19 open / 10 Draft。既存の重大findingはledger化。 |
 | Next reviewable engineering result | PARTIAL | progress-aware source navigation + source integrity fixesをmain-based PRへ提出予定。 |
 
 ### 研究上の結論
