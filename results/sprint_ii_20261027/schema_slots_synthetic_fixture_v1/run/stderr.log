@@ -1,0 +1,34 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/run_local_agent.py", line 1570, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/run_local_agent.py", line 1191, in main
+    raw, generated_tokens, prompt_tokens = generate_turn(
+                                           ^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/run_local_agent.py", line 255, in generate_turn
+    return generate_schema_slot_turn(model, tokenizer, messages, tools, limit=limit, args=args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/run_local_agent.py", line 361, in generate_schema_slot_turn
+    choice_text = generate(
+                  ^^^^^^^^^
+  File "/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py", line 797, in generate
+    for response in stream_generate(model, tokenizer, prompt, **kwargs):
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py", line 734, in stream_generate
+    for n, (token, logprobs, from_draft) in enumerate(token_generator):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py", line 722, in <genexpr>
+    (token, logprobs, False) for token, logprobs in token_generator
+                                                    ^^^^^^^^^^^^^^^
+  File "/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py", line 471, in generate_step
+    next_y, next_logprobs = _step(y)
+                            ^^^^^^^^
+  File "/Users/user/.cache/vare-mlx-venv/lib/python3.12/site-packages/mlx_lm/generate.py", line 423, in _step
+    logits = processor(tokens, logits)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/src/vare/schema_slot_protocol.py", line 71, in processor
+    allowed = allowed_choice_tokens(generated, sequences, eos_ids)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/src/vare/schema_slot_protocol.py", line 50, in allowed_choice_tokens
+    raise ValueError("generated tool-choice prefix is outside the allowed vocabulary")
+ValueError: generated tool-choice prefix is outside the allowed vocabulary

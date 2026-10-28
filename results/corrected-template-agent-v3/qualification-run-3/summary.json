@@ -1,0 +1,70 @@
+{
+  "environment": {
+    "candidate_execution": "2 GiB RAM, 1 CPU, 64 pids, no network, read-only root, uid/gid 65534",
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "machine": "arm64",
+    "python": "3.12.12",
+    "system": "Darwin"
+  },
+  "isolation_protocol_sha256": "d87ad20c1a477b313e3dd8ec4cd35e30efc82273155d4c4bbc306e5c19fa2b88",
+  "limitations": [
+    "Authored single-file utility contracts, not upstream repository issue fixes.",
+    "Qualification outcomes are not model capability or held-out evidence."
+  ],
+  "model_inference": "NOT_RUN_DURING_QUALIFICATION",
+  "outcomes": [
+    {
+      "expected_success": false,
+      "isolated_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "mlsys-v2-label-smooth",
+      "variant": "baseline"
+    },
+    {
+      "expected_success": true,
+      "isolated_success": true,
+      "observed_success": true,
+      "qualification_gate_passed": true,
+      "task_id": "mlsys-v2-label-smooth",
+      "variant": "known_fix"
+    },
+    {
+      "expected_success": false,
+      "isolated_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "mlsys-v2-label-smooth",
+      "variant": "incorrect_mutant"
+    },
+    {
+      "expected_success": false,
+      "isolated_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "mlsys-v2-ema-bias",
+      "variant": "baseline"
+    },
+    {
+      "expected_success": true,
+      "isolated_success": true,
+      "observed_success": true,
+      "qualification_gate_passed": true,
+      "task_id": "mlsys-v2-ema-bias",
+      "variant": "known_fix"
+    },
+    {
+      "expected_success": false,
+      "isolated_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "mlsys-v2-ema-bias",
+      "variant": "incorrect_mutant"
+    }
+  ],
+  "protocol_id": "corrected-template-agent-task-qualification-v3",
+  "protocol_sha256": "72c5a2df36dd4fe73b030c79bb8ae41b3483b44d94968fcddbf0b68adca734d8",
+  "qualification_passed": true,
+  "qualified_controls": 6,
+  "task_pack_manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0"
+}

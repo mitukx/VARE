@@ -1,0 +1,71 @@
+{
+  "expected_success": true,
+  "grade": {
+    "admitted": true,
+    "checks": {
+      "bias-correction-0": true,
+      "bias-correction-1": true,
+      "bias-correction-2": true,
+      "bias-correction-3": true,
+      "bias-correction-4": true,
+      "invalid-0": true,
+      "invalid-1": true,
+      "invalid-2": true,
+      "invalid-3": true
+    },
+    "isolated_candidate_execution": true,
+    "isolated_grade": {
+      "decision": {
+        "conservative_speedup": null,
+        "oracle_subject_ratio": null,
+        "reason": "correctness",
+        "reward": 1.0,
+        "success": true,
+        "workload_sufficient": false
+      },
+      "grade": {
+        "cases": [
+          {
+            "case_id": "mlsys-v2-ema-bias-hidden-0",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0006975419964874163
+          },
+          {
+            "case_id": "mlsys-v2-ema-bias-hidden-1",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0005629579973174259
+          },
+          {
+            "case_id": "mlsys-v2-ema-bias-hidden-2",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.000627041001280304
+          },
+          {
+            "case_id": "mlsys-v2-ema-bias-hidden-3",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0005619590010610409
+          }
+        ],
+        "passed": true,
+        "task_kind": "correctness"
+      },
+      "grade_passed": true,
+      "test_timed_out": false
+    },
+    "public": false,
+    "source_sha256": "3f1ab73b811db25de2770b006277455c5cdfb0dd7c20b10b626ee766cc6281e5",
+    "success": true,
+    "task": "ema-bias"
+  },
+  "isolated_success": true,
+  "observed_success": true,
+  "qualification_gate_passed": true,
+  "source_path": "benchmarks/corrected_template_agent_v2/ema-bias-known-fix.py.txt",
+  "source_sha256": "3f1ab73b811db25de2770b006277455c5cdfb0dd7c20b10b626ee766cc6281e5",
+  "task_id": "mlsys-v2-ema-bias",
+  "variant": "known_fix"
+}

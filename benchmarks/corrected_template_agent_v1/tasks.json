@@ -1,0 +1,63 @@
+{
+  "allocation": "development",
+  "claim_boundary": "Two narrow function-contract tasks; matched template arms on one fixed local checkpoint. Neither task is held out or eligible as held-out evidence.",
+  "excluded_candidates": [
+    {
+      "evidence": "docs/flagship-verified-agent-v1-report.md",
+      "reason": "Already consumed in the earlier flagship Development qualification and teacher experiment; never rerun it in this campaign.",
+      "source": "MLX-LM PR #1974",
+      "task_id": "thinking-markers"
+    }
+  ],
+  "id": "corrected-template-agent-development-v1",
+  "tasks": [
+    {
+      "base_revision": "e99e3df975562e4363d60b4b6ad43d731a25df1d",
+      "base_target_function_sha256": "8be20669dcf8242540aaa34d26258fa376058d06734b06492b018f8befc755bc",
+      "candidate_projection_asset": "checkpoint-shards-baseline.py.txt",
+      "candidate_projection_sha256": "8f52b7c88ba676ecb3d9a954aa5a39a4824ea45bdee85abf846318f0fb0b5234",
+      "candidate_scope": "Only make_shards is mutable. The full utils.py module and unrelated fixes are not provided.",
+      "fix_revision": "8f4dc363b291c2ee3abeece68bf69d4e0c64ed09",
+      "fix_target_function_sha256": "8f70fe4dea5897471f9469e3176d1ef335e57f44bd2a59bd1a2cde6e2c74447e",
+      "full_baseline_source_sha256": "d0e6867e3695600adaf975c0fa7e58b96a1c629d1aa12cb5d09e2f8f2aa133c9",
+      "full_fix_source_sha256": "0c663344fa6bcece617c34737d6cda9a1df1be98d07f345639713aad3b4aa046",
+      "id": "checkpoint-shards",
+      "incorrect_mutant_asset": "checkpoint-shards-incorrect-mutant.py.txt",
+      "incorrect_mutant_sha256": "014ad3e7c368922a91320c77d31f09d1e1ae2fd259207f406b641a10803bd657",
+      "known_fix_asset": "checkpoint-shards-upstream-fixed.py.txt",
+      "known_fix_projection_sha256": "625a06baa9f99a87eab030ba2c2f6bdf14f2fb2b5cefc51e9d44d6bace46f3f9",
+      "repository": "ml-explore/mlx-lm",
+      "reserved_source_file_overlap": "The exact utils.py file also contains reserved #1877 code, but only this target function and MAX_FILE_SIZE_GB are exposed. The #1877 load_model target and fix are absent.",
+      "source_path": "mlx_lm/utils.py",
+      "split": "development",
+      "target_function": "make_shards",
+      "task_id": "mlx-lm-1721-checkpoint-shards-development-v1",
+      "upstream_pr": 1721
+    },
+    {
+      "candidate_projection_asset": "gqa-repeat-baseline.py.txt",
+      "candidate_projection_sha256": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+      "candidate_scope": "Only repeat_kv_heads is mutable. The pinned validation helper remains unchanged.",
+      "full_baseline_source_sha256": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+      "id": "gqa-repeat",
+      "incorrect_mutant_asset": "gqa-repeat-incorrect-mutant.py.txt",
+      "incorrect_mutant_sha256": "942114aaddc5e98ba182c925718d31d36b98bbc2753b183dc34badf0c9b9e03b",
+      "incorrect_mutant_target_function_sha256": "120413402e5316ffd61a2e0c627f87de34191242aa15e0b4b6981fb9ca0b8bd8",
+      "known_fix_asset": "gqa-repeat-upstream-fixed.py.txt",
+      "known_fix_projection_sha256": "965564fe5831475b46dd059634a22b3c153f3c9b81b3b72d3f7fbf84bab3b697",
+      "known_fix_target_function_sha256": "cdda16ff067a9ab24f87d2d22132352b6a5e6a7590c447ec0c5c5acd12d6de7e",
+      "original_hidden_grader_sha256": "9cf8466e92d19287054a4fb4d5b46c46118fed4e023a0d4e2692d0e7455b8634",
+      "original_public_test_sha256": "8d18a1af06006508975f8371329fb091a5ddd21b4f52e0775c17faecb4605bef",
+      "original_task_json_sha256": "fa8c8754d711886660be7ca0e18efc7cb610d452f30d27789369eecb63ff7fc8",
+      "source_pack": "mlsys-coding-v2",
+      "source_pack_manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+      "source_pack_original_split": "unassigned",
+      "source_pack_split_sha256": "7a3bd7f368b6794dc1503b6154004d71d207f7ca8abeabf8689b628bf9e46b51",
+      "source_path": "gqa_repeat.py",
+      "source_task_id": "mlsys-v2-gqa-repeat",
+      "split": "development",
+      "target_function": "repeat_kv_heads",
+      "task_id": "mlsys-v2-gqa-repeat-development-v1"
+    }
+  ]
+}

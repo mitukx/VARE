@@ -1,0 +1,58 @@
+{
+  "expected_success": false,
+  "observation": {
+    "admitted": true,
+    "checks": {
+      "fresh-rows-0": true,
+      "fresh-rows-1": true,
+      "fresh-rows-2": true,
+      "head-order-0": false,
+      "head-order-1": true,
+      "head-order-2": true,
+      "input-preserved-0": true,
+      "input-preserved-1": true,
+      "input-preserved-2": true,
+      "invalid-0": true,
+      "invalid-1": true,
+      "invalid-2": true,
+      "invalid-3": true,
+      "invalid-4": true,
+      "invalid-5": true
+    },
+    "public": false,
+    "source_sha256": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+    "success": false,
+    "task": "gqa-repeat"
+  },
+  "process": {
+    "abort": null,
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "-I",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/grade_corrected_template_candidate_v1.py",
+      "--task",
+      "gqa-repeat",
+      "--source",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/benchmarks/corrected_template_agent_v1/gqa-repeat-baseline.py.txt"
+    ],
+    "elapsed_s": 0.113,
+    "peak_sampled_rss_bytes": 6520832,
+    "returncode": 0,
+    "samples": [
+      {
+        "available_memory_bytes": 17493295104,
+        "elapsed_s": 0.008,
+        "process_tree_rss_bytes": 6520832,
+        "swap_used_bytes": 909115392
+      }
+    ],
+    "stderr": "",
+    "stdout": "{\"admitted\": true, \"checks\": {\"fresh-rows-0\": true, \"fresh-rows-1\": true, \"fresh-rows-2\": true, \"head-order-0\": false, \"head-order-1\": true, \"head-order-2\": true, \"input-preserved-0\": true, \"input-preserved-1\": true, \"input-preserved-2\": true, \"invalid-0\": true, \"invalid-1\": true, \"invalid-2\": true, \"invalid-3\": true, \"invalid-4\": true, \"invalid-5\": true}, \"public\": false, \"source_sha256\": \"1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6\", \"success\": false, \"task\": \"gqa-repeat\"}\n",
+    "swap_used_end_bytes": 909115392,
+    "swap_used_start_bytes": 909115392
+  },
+  "qualification_gate_passed": true,
+  "source_sha256": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+  "task_id": "gqa-repeat",
+  "variant": "baseline"
+}

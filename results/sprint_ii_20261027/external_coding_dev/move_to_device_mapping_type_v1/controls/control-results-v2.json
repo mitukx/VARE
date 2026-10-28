@@ -1,0 +1,53 @@
+{
+  "grader_sha256": "534b9b83f381c0b08c0254361c6ac4f60e9a109de1a4e5fbc5f290029ca61724",
+  "protocol": "external-task-qualification-v2",
+  "public_test_sha256": "6ff972647f4dfdbe476b366ca3267b5f7a13e047b19ec535bb17c70fd59c137a",
+  "rows": {
+    "incorrect_mutant": {
+      "grade": {
+        "reason": "mapping_type_or_recursive_move_failed",
+        "success": false
+      },
+      "public_result": {
+        "elapsed_seconds": 0.259,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_mapping_subclass_is_preserved_and_values_are_recursively_moved\nTraceback (most recent call last):\n  File \"<string>\", line 18, in <module>\n  File \"/workspace/test_public.py\", line 33, in test_mapping_subclass_is_preserved_and_values_are_recursively_moved\n    assert moved[\"last_hidden_state\"].device == \"cpu:7\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": ""
+      },
+      "source_sha256": "0b3b6a09ae48b5804429e4f8a67d70f37c5303d095a482d752c6288d5a7e48df"
+    },
+    "known_fix": {
+      "grade": {
+        "reason": "recursive_mapping_type_contract_pass",
+        "success": true
+      },
+      "public_result": {
+        "elapsed_seconds": 0.258,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "1 public test(s) passed\n"
+      },
+      "source_sha256": "f1908bb1b85714fee71c127d55e306d8eac5a2f6565f58d7a29075ae82ab6beb"
+    },
+    "subject": {
+      "grade": {
+        "reason": "mapping_type_or_recursive_move_failed",
+        "success": false
+      },
+      "public_result": {
+        "elapsed_seconds": 0.274,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_mapping_subclass_is_preserved_and_values_are_recursively_moved\nTraceback (most recent call last):\n  File \"<string>\", line 18, in <module>\n  File \"/workspace/test_public.py\", line 31, in test_mapping_subclass_is_preserved_and_values_are_recursively_moved\n    assert type(moved) is ModelOutputLike\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": ""
+      },
+      "source_sha256": "cab95b73a9eada20f0192b89dc6b4544a7495cd958124fe8eab130d327c3e4d4"
+    }
+  },
+  "task_id": "transformers-move-to-device-mapping-type-20261027-v1"
+}

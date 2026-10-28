@@ -1,0 +1,94 @@
+{
+  "expected_success": false,
+  "grade": {
+    "admitted": true,
+    "checks": {
+      "distribution-0": false,
+      "distribution-1": true,
+      "distribution-2": false,
+      "distribution-3": false,
+      "distribution-4": false,
+      "distribution-5": false,
+      "distribution-6": false,
+      "inputs-preserved-0": true,
+      "inputs-preserved-1": true,
+      "inputs-preserved-2": true,
+      "inputs-preserved-3": true,
+      "inputs-preserved-4": true,
+      "inputs-preserved-5": true,
+      "inputs-preserved-6": true,
+      "invalid-0": true,
+      "invalid-1": true,
+      "invalid-2": true,
+      "invalid-3": true,
+      "invalid-4": true,
+      "sum-to-one-0": false,
+      "sum-to-one-1": true,
+      "sum-to-one-2": false,
+      "sum-to-one-3": false,
+      "sum-to-one-4": false,
+      "sum-to-one-5": false,
+      "sum-to-one-6": false
+    },
+    "isolated_candidate_execution": true,
+    "isolated_grade": {
+      "decision": {
+        "conservative_speedup": null,
+        "oracle_subject_ratio": null,
+        "reason": "correctness_failed",
+        "reward": 0.0,
+        "success": false,
+        "workload_sufficient": false
+      },
+      "grade": {
+        "cases": [
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-0",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.000760875002015382
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-1",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0006228330021258444
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-2",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.000510208003106527
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-3",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0005261670012259856
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-4",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.000570875003177207
+          }
+        ],
+        "passed": false,
+        "task_kind": "correctness"
+      },
+      "grade_passed": false,
+      "test_timed_out": false
+    },
+    "public": false,
+    "source_sha256": "ff20853c01003941d967e670c44279499e7791554c6c31f0ccfe90fa562e6ff4",
+    "success": false,
+    "task": "label-smooth"
+  },
+  "isolated_success": false,
+  "observed_success": false,
+  "qualification_gate_passed": true,
+  "source_path": "benchmarks/corrected_template_agent_v2/label-smooth-incorrect-mutant.py.txt",
+  "source_sha256": "ff20853c01003941d967e670c44279499e7791554c6c31f0ccfe90fa562e6ff4",
+  "task_id": "mlsys-v2-label-smooth",
+  "variant": "incorrect_mutant"
+}

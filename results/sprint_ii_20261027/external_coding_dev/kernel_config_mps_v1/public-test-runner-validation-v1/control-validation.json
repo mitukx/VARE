@@ -1,0 +1,61 @@
+{
+  "protocol": "public-test-runner-control-v1",
+  "public_test_sha256": "f5c34132c3c4ac683463d2fdc2bc17d0990fbffb201a3811624b7604e61641ec",
+  "rows": {
+    "incorrect_mutant": {
+      "grader": {
+        "errors": [
+          "validation_not_using_shared_device_constant:sanitize_kernel_mapping"
+        ],
+        "reason": "mps_device_validation_incomplete",
+        "success": false
+      },
+      "public": {
+        "elapsed_seconds": 0.264,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_mps_is_declared_and_used_in_all_validation_paths\nTraceback (most recent call last):\n  File \"<string>\", line 26, in <module>\n  File \"/workspace/test_public.py\", line 9, in test_mps_is_declared_and_used_in_all_validation_paths\n    assert any(isinstance(n,ast.Compare) and any(isinstance(op,(ast.In,ast.NotIn)) for op in n.ops) and isinstance(n.left,ast.Name) and n.left.id==\"device\" and any(isinstance(x,ast.Name) and x.id==\"KERNELS_SUPPORTED_DEVICE_TYPES\" for x in n.comparators) for n in ast.walk(funcs[name]))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": ""
+      },
+      "source_sha256": "65cb2b7a8e9eac6b1b6cc48783e8e5282a3adf6d9a0535715cb71a41bb55a16a"
+    },
+    "known_fix": {
+      "grader": {
+        "errors": [],
+        "reason": "contract_pass",
+        "success": true
+      },
+      "public": {
+        "elapsed_seconds": 0.273,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "1 public test(s) passed\n"
+      },
+      "source_sha256": "d8b852dc9939c1708bb3406cbdc783f2b96b5dae53a37377df317154ca85b4a4"
+    },
+    "subject": {
+      "grader": {
+        "errors": [
+          "shared_device_constant_missing_supported_values",
+          "validation_not_using_shared_device_constant:add_to_mapping",
+          "validation_not_using_shared_device_constant:add_to_mapping_local",
+          "validation_not_using_shared_device_constant:sanitize_kernel_mapping"
+        ],
+        "reason": "mps_device_validation_incomplete",
+        "success": false
+      },
+      "public": {
+        "elapsed_seconds": 0.269,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_mps_is_declared_and_used_in_all_validation_paths\nTraceback (most recent call last):\n  File \"<string>\", line 26, in <module>\n  File \"/workspace/test_public.py\", line 5, in test_mps_is_declared_and_used_in_all_validation_paths\n    const=next(n.value for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id==\"KERNELS_SUPPORTED_DEVICE_TYPES\" for t in n.targets))\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nStopIteration\n",
+        "stdout": ""
+      },
+      "source_sha256": "ba6bff9914441dc314ec32dccf15245eb07036bc54726bbf5bef786506c4561b"
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "budgets": {
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_public_test_runs": 3,
+    "max_total_new_tokens": 8192,
+    "max_turns": 20,
+    "public_test_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "resource_guard": {
+      "free_swap_preflight_mib": 1024,
+      "memory_free_preflight_percent": 65,
+      "process_tree_rss_cap_mib": 12288,
+      "swap_growth_cap_mib": 768,
+      "wall_cap_seconds": 1800
+    },
+    "wall_seconds": 1800
+  },
+  "claim_limit": "One Development task observation; not held-out, not a population-level capability estimate, no optimizer or learning claim.",
+  "controller": {
+    "controller_source_sha256": {
+      "scripts/run_local_agent.py": "4af362fb8ec471f50ccba11cac0a15fb0488fa5d5962eeb715965b606f6f53dd",
+      "src/vare/schema_slot_protocol.py": "341fd6967b7e46cf85f7c109c70f827cf6956ed6ea6cccf409bcf25dbde6b260",
+      "src/vare/source_navigation_v2.py": "c6c65592fbc9028551b76b4e3e02b2f4e8f049ef64002cc0c6e31580a110b847"
+    },
+    "generation_protocol": "schema_slots_v2",
+    "navigation_guidance": "v2",
+    "parser": "strict parse_tool_output_v1, no post-hoc repair",
+    "tool_interface": "lease_bound_navigation_v2"
+  },
+  "design": "One greedy real-model Development attempt with fixed task, exact source revision, schema_slots_v2 action interface, lease-bound navigation v2, and independent static AST grading. This is the prioritized 14B arm; if machine resources recover and the budget permits, a matched 7B corrected-template arm may follow on the same task and will not be counted as an independent task observation.",
+  "frozen_at_utc": "2026-10-26 19:54:33 UTC",
+  "model": {
+    "backend": "MLX 0.32.4 / mlx-lm 0.32.2, CPU, Apple M1 Pro",
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "quantization": "4-bit as distributed",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "snapshot_revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "template": "snapshot-native; no override",
+    "tokenizer_config_sha256": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "weights_sha256": {
+      "model-00001-of-00002.safetensors": "784b0c89d3e006f49cb8547aba1f2f4e99b365ab4380cf202655ca04c87d7ac3",
+      "model-00002-of-00002.safetensors": "a1b7516f1926070177601698661494dfc68c2de1d98e7c43ba910a0d1d7dfbbe"
+    }
+  },
+  "outcomes": [
+    "All raw model slot strings and generated token IDs retained.",
+    "No candidate edit counts unless actually applied to the isolated task workspace.",
+    "Independent grader is run only after inference against the final candidate snapshot.",
+    "Resource preflight aborts are retained and not retried with relaxed caps."
+  ],
+  "protocol_id": "vare-transformers-kernel-config-mps-14b-schema-slots-v2-v1",
+  "sampling": "greedy / no sampling",
+  "seed": 73,
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "task": {
+    "candidate_source": "kernel_config.py",
+    "control_results_sha256": "fedb091b11530405afdf6c7be785635b727b641057f0436f6417a5240ea4785b",
+    "grader_sha256": "e5a6bac9178da673f414cf818b13e3d72b9fad71115fc15d7ba91ee1ae7560e3",
+    "known_fix_blob_sha": "947a52c7a16ce218d061795d8503f291075e85f3",
+    "known_fix_revision": "be67386f98c22ca61e446c715a8e758b0b7fa4e0",
+    "public_tests_sha256": "f5c34132c3c4ac683463d2fdc2bc17d0990fbffb201a3811624b7604e61641ec",
+    "source_blob_sha": "4ca496c0fd41fd46d59664efcfe8bad2bd265925",
+    "source_revision": "1573af48b1c5cd8bfb0cfba4dc1ecf6e882d0348",
+    "source_sha256": "ba6bff9914441dc314ec32dccf15245eb07036bc54726bbf5bef786506c4561b",
+    "task_id": "transformers-kernel-config-mps-support-20261027-v1",
+    "task_json_sha256": "aadec8dcbc421d547043a5e672d1a9b36cc3564608cc3a964fd00c492682a584"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "failure_class": "qualification_harness_assertion",
+  "cause": "grader v1 skipped safe arithmetic evaluation when the mutant's lower bound was not exactly 1, so the mutant was rejected but its probe value was null rather than 2; the follow-up assertion expected the distinguishing value 2",
+  "inference_started": false,
+  "controls": {
+    "baseline": {"success": false, "observed_probe": null, "container_returncode": 0},
+    "known_fix": {"success": true, "observed_probe": 1, "container_returncode": 0},
+    "incorrect_mutant": {"success": false, "observed_probe": null, "container_returncode": 0}
+  },
+  "resolution": "grader v2 evaluates safe arithmetic for both lower-bound values and independently requires lower bound 1 and probe output 1; the mutant now produces probe output 2 and fails",
+  "superseded_by": "controls/control-results.json"
+}

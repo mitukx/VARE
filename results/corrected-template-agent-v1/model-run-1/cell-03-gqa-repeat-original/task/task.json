@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "editable_files": [
+      "gqa_repeat.py"
+    ],
+    "split": "development",
+    "upstream_repository": "mlsys-coding-v2",
+    "upstream_revision": null
+  },
+  "prompt": "Repair `repeat_kv_heads` in `gqa_repeat.py` to satisfy the module contract: emit `n_rep` consecutive copies of each input head in the original order, return fresh row objects, and leave the input unchanged. Keep `_validate` and all other source unchanged.",
+  "source": {
+    "base_revision": "50edc5cac8b01f596cfc1da778b81e09be09851a"
+  },
+  "task_id": "mlsys-v2-gqa-repeat-development-v1"
+}

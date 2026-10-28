@@ -1,0 +1,61 @@
+{
+  "expected_success": true,
+  "observation": {
+    "admitted": true,
+    "checks": {
+      "input-preserved-0": true,
+      "input-preserved-1": true,
+      "input-preserved-2": true,
+      "input-preserved-3": true,
+      "input-preserved-4": true,
+      "input-preserved-5": true,
+      "input-preserved-6": true,
+      "input-preserved-7": true,
+      "input-preserved-8": true,
+      "partition-0": true,
+      "partition-1": true,
+      "partition-2": true,
+      "partition-3": true,
+      "partition-4": true,
+      "partition-5": true,
+      "partition-6": true,
+      "partition-7": true,
+      "partition-8": true
+    },
+    "public": false,
+    "source_sha256": "625a06baa9f99a87eab030ba2c2f6bdf14f2fb2b5cefc51e9d44d6bace46f3f9",
+    "success": true,
+    "task": "checkpoint-shards"
+  },
+  "process": {
+    "abort": null,
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "-I",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/grade_corrected_template_candidate_v1.py",
+      "--task",
+      "checkpoint-shards",
+      "--source",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/benchmarks/corrected_template_agent_v1/checkpoint-shards-upstream-fixed.py.txt"
+    ],
+    "elapsed_s": 0.11,
+    "peak_sampled_rss_bytes": 6766592,
+    "returncode": 0,
+    "samples": [
+      {
+        "available_memory_bytes": 17493295104,
+        "elapsed_s": 0.008,
+        "process_tree_rss_bytes": 6766592,
+        "swap_used_bytes": 909115392
+      }
+    ],
+    "stderr": "",
+    "stdout": "{\"admitted\": true, \"checks\": {\"input-preserved-0\": true, \"input-preserved-1\": true, \"input-preserved-2\": true, \"input-preserved-3\": true, \"input-preserved-4\": true, \"input-preserved-5\": true, \"input-preserved-6\": true, \"input-preserved-7\": true, \"input-preserved-8\": true, \"partition-0\": true, \"partition-1\": true, \"partition-2\": true, \"partition-3\": true, \"partition-4\": true, \"partition-5\": true, \"partition-6\": true, \"partition-7\": true, \"partition-8\": true}, \"public\": false, \"source_sha256\": \"625a06baa9f99a87eab030ba2c2f6bdf14f2fb2b5cefc51e9d44d6bace46f3f9\", \"success\": true, \"task\": \"checkpoint-shards\"}\n",
+    "swap_used_end_bytes": 909115392,
+    "swap_used_start_bytes": 909115392
+  },
+  "qualification_gate_passed": true,
+  "source_sha256": "625a06baa9f99a87eab030ba2c2f6bdf14f2fb2b5cefc51e9d44d6bace46f3f9",
+  "task_id": "checkpoint-shards",
+  "variant": "known-fix"
+}

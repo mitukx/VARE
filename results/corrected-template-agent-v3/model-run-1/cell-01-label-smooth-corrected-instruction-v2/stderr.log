@@ -1,0 +1,25 @@
+usage: run_local_agent.py [-h] --workspace WORKSPACE --model-path MODEL_PATH
+                          [--model-repository MODEL_REPOSITORY]
+                          [--backend {transformers_cpu,mlx}]
+                          [--mlx-device {metal,cpu}]
+                          [--tokenizer-config-override TOKENIZER_CONFIG_OVERRIDE]
+                          [--public-test-image PUBLIC_TEST_IMAGE]
+                          [--public-contract-grader PUBLIC_CONTRACT_GRADER]
+                          [--public-contract-task PUBLIC_CONTRACT_TASK]
+                          [--public-test-timeout-s PUBLIC_TEST_TIMEOUT_S]
+                          [--public-test-memory-mb PUBLIC_TEST_MEMORY_MB]
+                          [--max-public-test-runs MAX_PUBLIC_TEST_RUNS]
+                          --task-root TASK_ROOT --output OUTPUT
+                          [--event-journal EVENT_JOURNAL] --instruction
+                          INSTRUCTION --seed SEED [--max-turns MAX_TURNS]
+                          [--max-no-tool-retries MAX_NO_TOOL_RETRIES]
+                          [--max-new-tokens-per-turn MAX_NEW_TOKENS_PER_TURN]
+                          [--max-total-new-tokens MAX_TOTAL_NEW_TOKENS]
+                          [--max-context-tokens MAX_CONTEXT_TOKENS]
+                          [--wall-seconds WALL_SECONDS]
+                          [--temperature TEMPERATURE] [--top-p TOP_P]
+                          [--top-k TOP_K] [--do-sample | --no-do-sample]
+                          [--edit-format {unified_diff,whole_file,structured_replace}]
+                          [--tool-interface {legacy,structured_replace_v1,lease_bound_lines_v1,lease_bound_navigation_v1}]
+                          [--require-split {train,development,heldout}]
+run_local_agent.py: error: only the pinned corrected-template contract grader is supported

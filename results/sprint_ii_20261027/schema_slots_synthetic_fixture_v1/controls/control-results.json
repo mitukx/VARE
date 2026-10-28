@@ -1,0 +1,44 @@
+{
+  "controls": [
+    {
+      "arm": "baseline",
+      "expected": false,
+      "grade": {
+        "elapsed_seconds": 0.155,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 3, in <module>\n    assert retry_budget(0) == 0\n           ^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": ""
+      }
+    },
+    {
+      "arm": "known-fix",
+      "expected": true,
+      "grade": {
+        "elapsed_seconds": 0.143,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "4 public checks passed\n"
+      }
+    },
+    {
+      "arm": "incorrect-mutant",
+      "expected": false,
+      "grade": {
+        "elapsed_seconds": 0.139,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 3, in <module>\n    assert retry_budget(0) == 0\n           ^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": ""
+      }
+    }
+  ],
+  "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "protocol_sha256": "8657f3048cb8c039ef47170bf7ba5d7b9544739a0502b3bcc8e484218e917dfb",
+  "public_test_sha256": "d2d861a01395927253d62c9868109e0d08e3b800acfc9ed9957504764cde8090",
+  "qualified": true
+}

@@ -1,0 +1,65 @@
+{
+  "expected_success": true,
+  "observation": {
+    "admitted": true,
+    "checks": {
+      "bias-correction-0": true,
+      "bias-correction-1": true,
+      "bias-correction-2": true,
+      "bias-correction-3": true,
+      "bias-correction-4": true,
+      "invalid-0": true,
+      "invalid-1": true,
+      "invalid-2": true,
+      "invalid-3": true
+    },
+    "public": false,
+    "source_sha256": "3f1ab73b811db25de2770b006277455c5cdfb0dd7c20b10b626ee766cc6281e5",
+    "success": true,
+    "task": "ema-bias",
+    "task_pack_hidden_harness": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "",
+      "timeout": false
+    },
+    "task_pack_hidden_harness_passed": true
+  },
+  "process": {
+    "abort": null,
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "-I",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/grade_mlsys_coding_v2_candidate_v1.py",
+      "--task",
+      "ema-bias",
+      "--source",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/benchmarks/corrected_template_agent_v2/ema-bias-known-fix.py.txt"
+    ],
+    "elapsed_s": 0.221,
+    "peak_sampled_rss_bytes": 45498368,
+    "returncode": 0,
+    "samples": [
+      {
+        "available_memory_bytes": 14721286144,
+        "elapsed_s": 0.006,
+        "process_tree_rss_bytes": 5357568,
+        "swap_used_bytes": 883949568
+      },
+      {
+        "available_memory_bytes": 15247425536,
+        "elapsed_s": 0.116,
+        "process_tree_rss_bytes": 45498368,
+        "swap_used_bytes": 883949568
+      }
+    ],
+    "stderr": "",
+    "stdout": "{\"admitted\": true, \"checks\": {\"bias-correction-0\": true, \"bias-correction-1\": true, \"bias-correction-2\": true, \"bias-correction-3\": true, \"bias-correction-4\": true, \"invalid-0\": true, \"invalid-1\": true, \"invalid-2\": true, \"invalid-3\": true}, \"public\": false, \"source_sha256\": \"3f1ab73b811db25de2770b006277455c5cdfb0dd7c20b10b626ee766cc6281e5\", \"success\": true, \"task\": \"ema-bias\", \"task_pack_hidden_harness\": {\"returncode\": 0, \"stderr\": \"\", \"stdout\": \"\", \"timeout\": false}, \"task_pack_hidden_harness_passed\": true}\n",
+    "swap_used_end_bytes": 883949568,
+    "swap_used_start_bytes": 883949568
+  },
+  "qualification_gate_passed": true,
+  "source_sha256": "3f1ab73b811db25de2770b006277455c5cdfb0dd7c20b10b626ee766cc6281e5",
+  "task_id": "ema-bias",
+  "variant": "known-fix"
+}

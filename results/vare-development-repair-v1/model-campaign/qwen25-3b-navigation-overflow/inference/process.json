@@ -1,0 +1,153 @@
+{
+  "abort": "host_swap_growth_limit",
+  "command": [
+    "/Users/user/.cache/vare-mlx-venv/bin/python",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/development_campaign_model_entry_v1.py",
+    "--workspace",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/model-campaign/qwen25-3b-navigation-overflow/workspace",
+    "--model-path",
+    "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-3B-Instruct-4bit/snapshots/4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "--model-repository",
+    "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "--backend",
+    "mlx",
+    "--task-root",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/model-campaign/qwen25-3b-navigation-overflow/task",
+    "--output",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/model-campaign/qwen25-3b-navigation-overflow/agent-record.json",
+    "--event-journal",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/model-campaign/qwen25-3b-navigation-overflow/events.jsonl",
+    "--instruction",
+    "Repair _bounded in src/vare/source_navigation_v1.py. Apply a minimal source edit and then call finish.",
+    "--seed",
+    "101",
+    "--max-turns",
+    "12",
+    "--max-no-tool-retries",
+    "1",
+    "--max-new-tokens-per-turn",
+    "1024",
+    "--max-total-new-tokens",
+    "4096",
+    "--max-context-tokens",
+    "12288",
+    "--wall-seconds",
+    "600",
+    "--no-do-sample",
+    "--edit-format",
+    "structured_replace",
+    "--tool-interface",
+    "lease_bound_navigation_v1",
+    "--require-split",
+    "development",
+    "--temperature",
+    "0",
+    "--top-p",
+    "0",
+    "--top-k",
+    "0"
+  ],
+  "elapsed_s": 4.064614457995049,
+  "peak_sampled_rss_bytes": 2007728128,
+  "returncode": -9,
+  "samples": [
+    {
+      "available_memory_bytes": 7019823104,
+      "elapsed_s": 0.001738957995257806,
+      "rss_bytes": 7667712,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 6997393408,
+      "elapsed_s": 0.26358500000060303,
+      "rss_bytes": 47759360,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 6997393408,
+      "elapsed_s": 0.5252328329952434,
+      "rss_bytes": 62291968,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 6997393408,
+      "elapsed_s": 0.7885230409956421,
+      "rss_bytes": 63406080,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 7005765632,
+      "elapsed_s": 1.0501705409988062,
+      "rss_bytes": 64471040,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 7005765632,
+      "elapsed_s": 1.3117701250012033,
+      "rss_bytes": 79609856,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 7005765632,
+      "elapsed_s": 1.5727879999976722,
+      "rss_bytes": 92651520,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 7005765632,
+      "elapsed_s": 1.8303281249973224,
+      "rss_bytes": 93519872,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 7005634560,
+      "elapsed_s": 2.0922413329972187,
+      "rss_bytes": 94978048,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 7005503488,
+      "elapsed_s": 2.3505255409982055,
+      "rss_bytes": 96108544,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 6995017728,
+      "elapsed_s": 2.6125881249972736,
+      "rss_bytes": 1882882048,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 6995017728,
+      "elapsed_s": 2.874544833000982,
+      "rss_bytes": 1991573504,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 6019645440,
+      "elapsed_s": 3.1360787079975125,
+      "rss_bytes": 2006597632,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 5890998272,
+      "elapsed_s": 3.3979124999968917,
+      "rss_bytes": 2007728128,
+      "swap_used_bytes": 414842880
+    },
+    {
+      "available_memory_bytes": 5890998272,
+      "elapsed_s": 3.657484249997651,
+      "rss_bytes": 1991802880,
+      "swap_used_bytes": 544210944
+    },
+    {
+      "available_memory_bytes": 5890998272,
+      "elapsed_s": 3.9211560409967205,
+      "rss_bytes": 1910505472,
+      "swap_used_bytes": 1073741824
+    }
+  ],
+  "swap_used_end_bytes": 1074003968,
+  "swap_used_start_bytes": 414842880
+}

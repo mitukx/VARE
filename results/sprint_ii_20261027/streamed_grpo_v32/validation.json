@@ -1,0 +1,15 @@
+{
+  "relevant_test_command": "PATH=/opt/homebrew/bin:$PATH PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -o addopts='' -q tests/test_streamed_grpo_audit.py tests/test_streamed_grpo_preflight.py tests/test_rvl_evaluation_promotion_e2e.py tests/test_rvl_grpo_eval_identity.py tests/test_rvl_grpo_group_boundary.py tests/test_rvl_grpo_group_boundary_calibration.py tests/test_rvl_grpo_hooks.py tests/test_rvl_grpo_inference_cancellation.py tests/test_rvl_grpo_rollout_task_binding.py tests/test_rvl_grpo_shared_module_mode.py tests/test_rvl_grpo_torch_state.py tests/test_rvl_grpo_verifier_trainer_prompt_alignment.py tests/test_rvl_integration.py tests/test_rvl_midstep_revision_guard.py tests/test_rvl_reward_attestation.py tests/test_rvl_trajectory.py tests/test_e2e_rl_continuation.py tests/test_blob_budget.py",
+  "result": "173 passed, 69 skipped",
+  "stdout_log": "relevant-tests.log",
+  "python_versions": {
+    "pytest_runner": "Python 3.12.12",
+    "python3_on_test_path": "Python 3.14.7",
+    "system_python3_initial": "/usr/bin/python3 Python 3.9.6"
+  },
+  "environment_note": "The first combined local command inherited /usr/bin/python3 3.9.6 for a child process and the blob-budget self-check failed because that runtime lacks zip(strict=...). Re-running with the installed Homebrew Python first on PATH passed. The exact-head GitHub CI separately covers supported Python 3.11/3.12/3.13.",
+  "ruff": "PASS",
+  "git_diff_check": "PASS",
+  "tracked_blob_budget": "PASS (235 pre-existing allowlisted large blobs; no new large Git blobs in this evidence set)",
+  "audit_repeatability": "PASS (three restored checkpoint archives independently re-audited; audit protocol/bytecode regression tests included in test command)"
+}

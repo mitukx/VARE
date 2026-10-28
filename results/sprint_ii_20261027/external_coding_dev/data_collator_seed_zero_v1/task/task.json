@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "candidate_visible_files": [
+      "data_collator.py"
+    ],
+    "editable_files": [
+      "data_collator.py",
+      "test_public.py"
+    ],
+    "split": "development",
+    "task_type": "external_mlsys_seeded_data_pipeline_fix",
+    "upstream_fix": "https://github.com/huggingface/transformers/pull/49349"
+  },
+  "prompt": "Fix DataCollatorForLanguageModeling so seed=0 initializes its seeded random generator for both torch_call and numpy_call. Preserve the existing behavior when seed is None and for all nonzero seeds.",
+  "source": {
+    "base_blob_sha": "3dcb41aa91978f05487cd8549f5d0ef62cba6389",
+    "external_upstream_path": "src/transformers/data/data_collator.py",
+    "external_upstream_revision": "5a27d2d2706cbd1ee36d1a8e8441656bb88e7f04",
+    "known_fix_blob_sha": "8e6f104249fff447afdb05422200c797a761da64",
+    "known_fix_revision": "b4526a7658b216e6674f776cf7eac84b346fcd32",
+    "local_path": "huggingface/transformers",
+    "upstream_fix": "https://github.com/huggingface/transformers/pull/49349"
+  },
+  "task_id": "transformers-data-collator-seed-zero-20261027-v1",
+  "title": "Honor seed=0 in language-modeling data collators"
+}

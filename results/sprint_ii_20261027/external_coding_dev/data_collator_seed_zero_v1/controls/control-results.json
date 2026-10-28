@@ -1,0 +1,34 @@
+{
+  "incorrect_mutant": {
+    "grade": {
+      "errors": [
+        "seed_none_check_missing:torch_call"
+      ],
+      "reason": "seed_zero_not_supported",
+      "success": false
+    },
+    "public_passed": false,
+    "public_returncode": 1
+  },
+  "known_fix": {
+    "grade": {
+      "errors": [],
+      "reason": "contract_pass",
+      "success": true
+    },
+    "public_passed": true,
+    "public_returncode": 0
+  },
+  "subject": {
+    "grade": {
+      "errors": [
+        "seed_none_check_missing:torch_call",
+        "seed_none_check_missing:numpy_call"
+      ],
+      "reason": "seed_zero_not_supported",
+      "success": false
+    },
+    "public_passed": false,
+    "public_returncode": 1
+  }
+}

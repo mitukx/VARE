@@ -12,6 +12,7 @@ from scripts import run_local_agent as local_agent
 from scripts.run_local_agent import (
     candidate_file_sets,
     controller_source_hashes,
+    public_test_binding_error,
     sha256,
     tools_for,
 )
@@ -49,6 +50,38 @@ def test_navigation_interface_is_versioned_and_keeps_lease_bound_edit() -> None:
     }
 
 
+def test_public_test_is_hash_bound_to_task_and_candidate_workspace(tmp_path: Path) -> None:
+    task_root = tmp_path / "task"
+    subject = task_root / "subject"
+    subject.mkdir(parents=True)
+    public_test = subject / "test_public.py"
+    public_test.write_text("def test_example():\n    assert True\n", encoding="utf-8")
+    (task_root / "task.json").write_text(json.dumps({
+        "task_id": "pinned-public-smoke",
+        "source": {},
+        "metadata": {
+            "editable_files": ["sample.py", "test_public.py"],
+            "split": "development",
+        },
+        "prompt": "Fix sample.py.",
+    }), encoding="utf-8")
+    contract = load_agent_task(task_root)
+    workspace = tmp_path / "run" / "workspace"
+    workspace.mkdir(parents=True)
+    (workspace / "sample.py").write_text("value = 1\n", encoding="utf-8")
+    copied_test = workspace / "test_public.py"
+    copied_test.write_bytes(public_test.read_bytes())
+
+    assert contract.input_hashes["test_public.py"] == hashlib.sha256(
+        public_test.read_bytes(),
+    ).hexdigest()
+    assert public_test_binding_error(contract, workspace, {"test_public.py"}) is None
+    copied_test.write_text("def test_example():\n    assert False\n", encoding="utf-8")
+    assert public_test_binding_error(contract, workspace, {"test_public.py"}) == (
+        "workspace public test differs from the task-pinned public test"
+    )
+
+
 def test_navigation_run_identity_includes_all_selected_interface_sources() -> None:
     sources = controller_source_hashes("lease_bound_navigation_v1")
     assert set(sources) == {
@@ -56,6 +89,10 @@ def test_navigation_run_identity_includes_all_selected_interface_sources() -> No
         "src/vare/agent_edit_v2.py",
         "src/vare/agent_edit_format.py",
         "src/vare/agent_task_contract.py",
+        "src/vare/agent_function_edit_v1.py",
+        "src/vare/agent_json_eos_v1.py",
+        "src/vare/agent_json_eos_v2.py",
+        "src/vare/agent_json_eos_v3.py",
         "src/vare/source_navigation_v1.py",
     }
     assert sources["src/vare/source_navigation_v1.py"] == sha256(
@@ -77,6 +114,10 @@ def test_navigation_run_identity_changes_when_active_parser_changes(
         "src/vare/agent_edit_v2.py",
         "src/vare/agent_edit_format.py",
         "src/vare/agent_task_contract.py",
+        "src/vare/agent_function_edit_v1.py",
+        "src/vare/agent_json_eos_v1.py",
+        "src/vare/agent_json_eos_v2.py",
+        "src/vare/agent_json_eos_v3.py",
         "src/vare/source_navigation_v1.py",
     ):
         target = tmp_path / relative
@@ -284,6 +325,9 @@ def test_real_runner_main_path_with_fake_backend_filters_and_journals_navigation
     model_dir = tmp_path / "fake-local-model"
     model_dir.mkdir()
     (model_dir / "config.json").write_text("{}\n", encoding="utf-8")
+    (model_dir / "tokenizer_config.json").write_text(
+        json.dumps({"chat_template": "fixture-template"}) + "\n", encoding="utf-8",
+    )
 
     safe_path = "src/component.py"
     safe_source = "def value():\n    return 1  # target_symbol\n"

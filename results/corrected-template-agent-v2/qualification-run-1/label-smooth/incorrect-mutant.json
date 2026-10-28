@@ -1,0 +1,82 @@
+{
+  "expected_success": false,
+  "observation": {
+    "admitted": true,
+    "checks": {
+      "distribution-0": false,
+      "distribution-1": true,
+      "distribution-2": false,
+      "distribution-3": false,
+      "distribution-4": false,
+      "distribution-5": false,
+      "distribution-6": false,
+      "inputs-preserved-0": true,
+      "inputs-preserved-1": true,
+      "inputs-preserved-2": true,
+      "inputs-preserved-3": true,
+      "inputs-preserved-4": true,
+      "inputs-preserved-5": true,
+      "inputs-preserved-6": true,
+      "invalid-0": true,
+      "invalid-1": true,
+      "invalid-2": true,
+      "invalid-3": true,
+      "invalid-4": true,
+      "sum-to-one-0": false,
+      "sum-to-one-1": true,
+      "sum-to-one-2": false,
+      "sum-to-one-3": false,
+      "sum-to-one-4": false,
+      "sum-to-one-5": false,
+      "sum-to-one-6": false
+    },
+    "public": false,
+    "source_sha256": "ff20853c01003941d967e670c44279499e7791554c6c31f0ccfe90fa562e6ff4",
+    "success": false,
+    "task": "label-smooth",
+    "task_pack_hidden_harness": {
+      "returncode": 1,
+      "stderr": "AssertionError: [0.05, 0.8, 0.05, 0.05] != [0.05, 0.8500000000000001, 0.05, 0.05]\n",
+      "stdout": "",
+      "timeout": false
+    },
+    "task_pack_hidden_harness_passed": false
+  },
+  "process": {
+    "abort": null,
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "-I",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/grade_mlsys_coding_v2_candidate_v1.py",
+      "--task",
+      "label-smooth",
+      "--source",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/benchmarks/corrected_template_agent_v2/label-smooth-incorrect-mutant.py.txt"
+    ],
+    "elapsed_s": 0.222,
+    "peak_sampled_rss_bytes": 39534592,
+    "returncode": 0,
+    "samples": [
+      {
+        "available_memory_bytes": 14721286144,
+        "elapsed_s": 0.008,
+        "process_tree_rss_bytes": 5586944,
+        "swap_used_bytes": 883949568
+      },
+      {
+        "available_memory_bytes": 14721286144,
+        "elapsed_s": 0.117,
+        "process_tree_rss_bytes": 39534592,
+        "swap_used_bytes": 883949568
+      }
+    ],
+    "stderr": "",
+    "stdout": "{\"admitted\": true, \"checks\": {\"distribution-0\": false, \"distribution-1\": true, \"distribution-2\": false, \"distribution-3\": false, \"distribution-4\": false, \"distribution-5\": false, \"distribution-6\": false, \"inputs-preserved-0\": true, \"inputs-preserved-1\": true, \"inputs-preserved-2\": true, \"inputs-preserved-3\": true, \"inputs-preserved-4\": true, \"inputs-preserved-5\": true, \"inputs-preserved-6\": true, \"invalid-0\": true, \"invalid-1\": true, \"invalid-2\": true, \"invalid-3\": true, \"invalid-4\": true, \"sum-to-one-0\": false, \"sum-to-one-1\": true, \"sum-to-one-2\": false, \"sum-to-one-3\": false, \"sum-to-one-4\": false, \"sum-to-one-5\": false, \"sum-to-one-6\": false}, \"public\": false, \"source_sha256\": \"ff20853c01003941d967e670c44279499e7791554c6c31f0ccfe90fa562e6ff4\", \"success\": false, \"task\": \"label-smooth\", \"task_pack_hidden_harness\": {\"returncode\": 1, \"stderr\": \"AssertionError: [0.05, 0.8, 0.05, 0.05] != [0.05, 0.8500000000000001, 0.05, 0.05]\\n\", \"stdout\": \"\", \"timeout\": false}, \"task_pack_hidden_harness_passed\": false}\n",
+    "swap_used_end_bytes": 883949568,
+    "swap_used_start_bytes": 883949568
+  },
+  "qualification_gate_passed": true,
+  "source_sha256": "ff20853c01003941d967e670c44279499e7791554c6c31f0ccfe90fa562e6ff4",
+  "task_id": "label-smooth",
+  "variant": "incorrect-mutant"
+}

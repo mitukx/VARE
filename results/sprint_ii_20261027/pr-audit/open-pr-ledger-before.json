@@ -1,0 +1,2391 @@
+{
+  "snapshot_utc": "2026-10-26T17:46:30Z",
+  "repository": "mitukx/VARE",
+  "main_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "open_pr_count": 33,
+  "checks_summary": "All listed open PRs were queried with gh pr checks at the captured snapshot; latest state for every check name was SUCCESS. Earlier duplicate check-run records can retain an old failure, so use the CLI latest-by-name result.",
+  "unresolved_thread_summary": {
+    "88": "2 P1, 1 P2",
+    "99": "2 P1",
+    "102": "3 P1",
+    "107": "1 P1",
+    "117": "2 P1, 2 P2",
+    "120": "2 P1",
+    "133": "2 P2"
+  },
+  "classification_counts": {
+    "EVIDENCE_ARCHIVE": 18,
+    "FIX_THEN_MERGE": 4,
+    "SUPERSEDED_CLOSE": 1,
+    "BLOCKED": 6,
+    "SPLIT_OR_CHERRY_PICK": 4
+  },
+  "pull_requests": [
+    {
+      "number": 88,
+      "title": "Record a 14B CPU MLSys coding-agent run",
+      "url": "https://github.com/mitukx/VARE/pull/88",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "cursor/mlsys-coding-agent-e2e-4095",
+        "sha": "ae6e469769127d042623f31dd8cc8247b1babba6"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "4728d478c1b9b50ad6aead1f1043ab03560b449a"
+      },
+      "dependency": {
+        "pr": null,
+        "base_branch": "main",
+        "base_sha": "4728d478c1b9b50ad6aead1f1043ab03560b449a",
+        "matches_current_head": false
+      },
+      "merge_state": "DIRTY",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 1
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [
+        {
+          "path": "benchmarks/mlsys_coding_v1/tasks/global_grad_clip/evaluator/test_hidden.py",
+          "line": 23,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Reject clipped gradients with the wrong shape"
+        },
+        {
+          "path": "scripts/run_mlsys_coding_agent_e2e.py",
+          "line": 70,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Verify the files listed in the frozen pack manifest"
+        },
+        {
+          "path": "src/vare/coding_agent_loop.py",
+          "line": 642,
+          "priority": "P2",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Enforce the candidate worker's declared resource limits"
+        }
+      ],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 210,
+      "changed_path_groups": {
+        "README.md": 1,
+        "benchmarks": 52,
+        "docs": 3,
+        "protocols": 5,
+        "results": 140,
+        "scripts": 4,
+        "src": 2,
+        "tests": 3
+      },
+      "implementation_paths": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/hash_mlsys_coding_pack_v1.py",
+        "scripts/run_mlsys_coding_agent_e2e.py",
+        "scripts/run_mlsys_coding_policy_comparison_v1.py",
+        "src/vare/coding_agent_loop.py",
+        "src/vare/local_gguf.py",
+        "tests/test_coding_agent_loop.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_mlsys_coding_v1.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve the 14B CPU trajectories and raw outcomes. Do not promote 2/5 Development or 1/4 held-out pass claims: unresolved P1 hidden-grader shape acceptance and frozen-pack manifest validation defects, plus P2 worker resource-limit gap; stale main base and DIRTY merge state."
+    },
+    {
+      "number": 99,
+      "title": "Calibrate isolated MLX-LM 1971 Development task",
+      "url": "https://github.com/mitukx/VARE/pull/99",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/mlxlm-1971-isolation",
+        "sha": "762a5a65598756014d957a206ba1548cb19a348f"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "dependency": {
+        "pr": null,
+        "base_branch": "main",
+        "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "matches_current_head": true
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 9,
+        "mitukx:COMMENTED": 11
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [
+        {
+          "path": "src/vare/mlxlm_1971_repo_task_v9.py",
+          "line": 85,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Anchor the v9 lock outside mutable working files"
+        },
+        {
+          "path": "scripts/run_mlxlm_1971_calibration_v9.py",
+          "line": 241,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable replacement refs in the v9 calibration"
+        }
+      ],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 98,
+      "changed_path_groups": {
+        "benchmarks": 26,
+        "docs": 12,
+        "results": 24,
+        "scripts": 14,
+        "src": 7,
+        "tests": 15
+      },
+      "implementation_paths": [
+        "scripts/attest_mlxlm_1971_v9_current_git.py",
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/audit_mlxlm_1971_historical_implementation_hashes.py",
+        "scripts/benchmark_trajectory_runtime.py",
+        "scripts/generate_mlxlm_1971_v2_goldens.py",
+        "scripts/run_mlxlm_1971_calibration.py",
+        "scripts/run_mlxlm_1971_calibration_v2.py",
+        "scripts/run_mlxlm_1971_calibration_v3.py",
+        "scripts/run_mlxlm_1971_calibration_v4.py",
+        "scripts/run_mlxlm_1971_calibration_v5.py",
+        "scripts/run_mlxlm_1971_calibration_v6.py",
+        "scripts/run_mlxlm_1971_calibration_v7.py",
+        "scripts/run_mlxlm_1971_calibration_v8.py",
+        "scripts/run_mlxlm_1971_calibration_v9.py",
+        "src/vare/mlxlm_1971_repo_task.py",
+        "src/vare/mlxlm_1971_repo_task_v2.py",
+        "src/vare/mlxlm_1971_repo_task_v3.py",
+        "src/vare/mlxlm_1971_repo_task_v4.py",
+        "src/vare/mlxlm_1971_repo_task_v6.py",
+        "src/vare/mlxlm_1971_repo_task_v7.py",
+        "src/vare/mlxlm_1971_repo_task_v9.py",
+        "tests/test_attest_mlxlm_1971_v9_current_git.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_mlxlm_1971_calibration_v5.py",
+        "tests/test_mlxlm_1971_calibration_v6.py",
+        "tests/test_mlxlm_1971_calibration_v7.py",
+        "tests/test_mlxlm_1971_calibration_v8.py",
+        "tests/test_mlxlm_1971_calibration_v9.py",
+        "tests/test_mlxlm_1971_historical_implementation_hash_audit.py",
+        "tests/test_mlxlm_1971_repo_task.py",
+        "tests/test_mlxlm_1971_repo_task_v2.py",
+        "tests/test_mlxlm_1971_repo_task_v3.py",
+        "tests/test_mlxlm_1971_repo_task_v4.py",
+        "tests/test_mlxlm_1971_repo_task_v6.py",
+        "tests/test_mlxlm_1971_repo_task_v7.py",
+        "tests/test_mlxlm_1971_repo_task_v9.py"
+      ],
+      "disposition": "FIX_THEN_MERGE",
+      "rationale": "Useful isolated MLX-LM #1971 Development calibration, but two unresolved P1s allow a mutable protocol/grader trust anchor and Git replacement-ref spoofing. Current checks pass; branch protection still requires review."
+    },
+    {
+      "number": 100,
+      "title": "Measure Qwen3-4B patch feasibility on Development tasks",
+      "url": "https://github.com/mitukx/VARE/pull/100",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/qwen-development-feasibility",
+        "sha": "4c03f12992c6ff45a6e5342a58e6b1927a8d28d2"
+      },
+      "base": {
+        "branch": "codex/mlxlm-1971-isolation",
+        "sha": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc"
+      },
+      "dependency": {
+        "pr": 99,
+        "base_branch": "codex/mlxlm-1971-isolation",
+        "base_sha": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc",
+        "matches_current_head": false
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 1,
+        "mitukx:COMMENTED": 3
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 26,
+      "changed_path_groups": {
+        "docs": 4,
+        "protocols": 5,
+        "results": 9,
+        "scripts": 5,
+        "src": 1,
+        "tests": 2
+      },
+      "implementation_paths": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/audit_qwen3_4b_mlsys_development_feasibility_v1.py",
+        "scripts/audit_qwen3_4b_mlsys_development_feasibility_v2.py",
+        "scripts/run_qwen3_4b_mlsys_development_feasibility_v1.py",
+        "scripts/run_qwen3_4b_mlsys_development_feasibility_v2.py",
+        "src/vare/qwen_patch_contract_v2.py",
+        "tests/test_qwen3_4b_development_feasibility.py",
+        "tests/test_qwen_patch_contract_v2.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Retain the frozen Qwen3-4B feasibility negative result; it is built on an older #99 base and is not a clean implementation contribution."
+    },
+    {
+      "number": 101,
+      "title": "Calibrate Transformers coding task and record Qwen tool feasibility",
+      "url": "https://github.com/mitukx/VARE/pull/101",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/transformers-49752-repo-task",
+        "sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d"
+      },
+      "base": {
+        "branch": "codex/qwen-development-feasibility",
+        "sha": "4c03f12992c6ff45a6e5342a58e6b1927a8d28d2"
+      },
+      "dependency": {
+        "pr": 100,
+        "base_branch": "codex/qwen-development-feasibility",
+        "base_sha": "4c03f12992c6ff45a6e5342a58e6b1927a8d28d2",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 1
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 92,
+      "changed_path_groups": {
+        "benchmarks": 19,
+        "docs": 4,
+        "results": 58,
+        "scripts": 4,
+        "src": 2,
+        "tests": 5
+      },
+      "implementation_paths": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/benchmark_trajectory_runtime.py",
+        "scripts/run_local_agent.py",
+        "scripts/run_transformers_49752_calibration.py",
+        "src/vare/agent_task_contract.py",
+        "src/vare/transformers_49752_repo_task.py",
+        "tests/test_container_isolation.py",
+        "tests/test_run_local_agent_readonly_public_test.py",
+        "tests/test_separated_grading.py",
+        "tests/test_trajectory_benchmark.py",
+        "tests/test_transformers_49752_repo_task.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Retain task calibration and three no-valid-patch rollouts. The agent/task behavior has evolved in later branches; integrate no historical run bundle as active runtime."
+    },
+    {
+      "number": 102,
+      "title": "Run structured-edit Qwen coding-agent feasibility study",
+      "url": "https://github.com/mitukx/VARE/pull/102",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/structured-edit-agent-v1",
+        "sha": "0ba50de60f2013ea1838bb44e1068c44c26fd6c4"
+      },
+      "base": {
+        "branch": "codex/transformers-49752-repo-task",
+        "sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d"
+      },
+      "dependency": {
+        "pr": 101,
+        "base_branch": "codex/transformers-49752-repo-task",
+        "base_sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 6,
+        "mitukx:COMMENTED": 10
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [
+        {
+          "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/grader_adapter.py",
+          "line": 58,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Compute registry fingerprints with trusted primitives"
+        },
+        {
+          "path": "scripts/grade_transformers_phase_a_integrity_v8.py",
+          "line": 129,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Support null registry values in the parent comparison"
+        },
+        {
+          "path": "scripts/grade_transformers_phase_a_integrity_v9.py",
+          "line": 33,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Accept the keyword arguments supplied by the real parent comparator"
+        }
+      ],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 186,
+      "changed_path_groups": {
+        "benchmarks": 32,
+        "docs": 3,
+        "experiments": 26,
+        "results": 107,
+        "scripts": 7,
+        "src": 3,
+        "tests": 8
+      },
+      "implementation_paths": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/grade_transformers_phase_a_integrity_v10.py",
+        "scripts/grade_transformers_phase_a_integrity_v8.py",
+        "scripts/grade_transformers_phase_a_integrity_v9.py",
+        "scripts/grade_transformers_phase_a_v1.py",
+        "scripts/prepare_transformers_phase_a_v1.py",
+        "scripts/run_local_agent.py",
+        "src/vare/agent_edit_format.py",
+        "src/vare/agent_structured_edit.py",
+        "src/vare/agent_task_contract.py",
+        "tests/test_agent_structured_edit.py",
+        "tests/test_grade_transformers_phase_a.py",
+        "tests/test_grade_transformers_phase_a_integrity_v10.py",
+        "tests/test_grade_transformers_phase_a_integrity_v8.py",
+        "tests/test_grade_transformers_phase_a_integrity_v9.py",
+        "tests/test_isolated_candidate.py",
+        "tests/test_run_local_agent_tool_format.py",
+        "tests/test_separated_grading.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Retain all 18 rollouts and raw traces, but do not treat grading as trustworthy for positive repair claims: three unresolved P1s affect fingerprinting, null comparison and comparator invocation."
+    },
+    {
+      "number": 103,
+      "title": "feat: improve structured coding-agent repair loop",
+      "url": "https://github.com/mitukx/VARE/pull/103",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/structured-edit-controller-v2",
+        "sha": "031255fe3f2bf5b2913a393e2da3fb26d2a01d13"
+      },
+      "base": {
+        "branch": "codex/structured-edit-agent-v1",
+        "sha": "ab4bda75574db0b4855dbf8cb36d4463f8fbe1d5"
+      },
+      "dependency": {
+        "pr": 102,
+        "base_branch": "codex/structured-edit-agent-v1",
+        "base_sha": "ab4bda75574db0b4855dbf8cb36d4463f8fbe1d5",
+        "matches_current_head": false
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 6,
+        "mitukx:COMMENTED": 12
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 5,
+      "changed_path_groups": {
+        "docs": 1,
+        "scripts": 1,
+        "src": 1,
+        "tests": 2
+      },
+      "implementation_paths": [
+        "scripts/run_local_agent.py",
+        "src/vare/agent_structured_edit.py",
+        "tests/test_agent_structured_edit.py",
+        "tests/test_run_local_agent_structured_v2.py"
+      ],
+      "disposition": "SUPERSEDED_CLOSE",
+      "rationale": "Its small controller-v2 patch is in a stale #102 lineage; later controller/navigation paths supersede its use as an active PR. Keep the historical #102 traces and use #118 for a library-only extraction if desired."
+    },
+    {
+      "number": 104,
+      "title": "Enforce coding grader limits and improve source inspection",
+      "url": "https://github.com/mitukx/VARE/pull/104",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/fresh-coding-task-cohort",
+        "sha": "02684dcce4c0a5474256b1d97a2adbda879388d2"
+      },
+      "base": {
+        "branch": "codex/structured-edit-controller-v2",
+        "sha": "031255fe3f2bf5b2913a393e2da3fb26d2a01d13"
+      },
+      "dependency": {
+        "pr": 103,
+        "base_branch": "codex/structured-edit-controller-v2",
+        "base_sha": "031255fe3f2bf5b2913a393e2da3fb26d2a01d13",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 2,
+        "mitukx:COMMENTED": 5
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 140,
+      "changed_path_groups": {
+        "benchmarks": 47,
+        "experiments": 1,
+        "results": 70,
+        "scripts": 18,
+        "src": 1,
+        "tests": 3
+      },
+      "implementation_paths": [
+        "scripts/freeze_transformers_coding_agent_v1.py",
+        "scripts/freeze_transformers_coding_agent_v2.py",
+        "scripts/freeze_transformers_coding_agent_v3.py",
+        "scripts/freeze_transformers_coding_agent_v4.py",
+        "scripts/freeze_transformers_dev_cohort_v1.py",
+        "scripts/freeze_transformers_dev_cohort_v2.py",
+        "scripts/freeze_transformers_dev_cohort_v3.py",
+        "scripts/freeze_transformers_dev_cohort_v4.py",
+        "scripts/grade_transformers_fresh_dev_v1.py",
+        "scripts/grade_transformers_fresh_dev_v2.py",
+        "scripts/grade_transformers_fresh_dev_v3.py",
+        "scripts/grade_transformers_fresh_dev_v4.py",
+        "scripts/grade_transformers_fresh_dev_v5.py",
+        "scripts/prepare_transformers_dev_cohort_v1.py",
+        "scripts/run_transformers_fresh_dev_redteam_v1.py",
+        "scripts/run_transformers_fresh_dev_v10_redteam.py",
+        "scripts/run_transformers_fresh_dev_v9_redteam.py",
+        "scripts/transformers_fresh_dev_worker_v1.py",
+        "src/vare/isolated_candidate.py",
+        "tests/test_grade_transformers_fresh_dev_v5.py",
+        "tests/test_isolated_candidate.py",
+        "tests/test_prepare_transformers_dev_cohort.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve this large protocol/grader iteration and evidence; later #105/#106 and #120/#139 supersede the active controller path. Cherry-pick only a specifically revalidated generic control."
+    },
+    {
+      "number": 105,
+      "title": "Record fresh coding-task cohort and Qwen resource gate",
+      "url": "https://github.com/mitukx/VARE/pull/105",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/fresh-dev-agent-study-v5",
+        "sha": "a6c3071b5f47e988fe6c3330922c45833be04694"
+      },
+      "base": {
+        "branch": "codex/fresh-coding-task-cohort",
+        "sha": "02684dcce4c0a5474256b1d97a2adbda879388d2"
+      },
+      "dependency": {
+        "pr": 104,
+        "base_branch": "codex/fresh-coding-task-cohort",
+        "base_sha": "02684dcce4c0a5474256b1d97a2adbda879388d2",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 5,
+        "mitukx:COMMENTED": 9
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 253,
+      "changed_path_groups": {
+        ".gitattributes": 1,
+        "benchmarks": 16,
+        "docs": 4,
+        "experiments": 6,
+        "results": 207,
+        "scripts": 13,
+        "src": 1,
+        "tests": 5
+      },
+      "implementation_paths": [
+        "scripts/audit_coding_agent_dev_resource_gate_v1.py",
+        "scripts/calibrate_public_tests_v6_v2.py",
+        "scripts/freeze_coding_agent_dev_study_v1.py",
+        "scripts/freeze_transformers_dev_protocol_v1.py",
+        "scripts/freeze_transformers_dev_protocol_v2.py",
+        "scripts/grade_transformers_fresh_dev_v6.py",
+        "scripts/grade_transformers_fresh_dev_v7.py",
+        "scripts/prepare_coding_agent_dev_study_v1.py",
+        "scripts/prepare_transformers_dev_cohort_v2.py",
+        "scripts/run_coding_agent_dev_study_v1.py",
+        "scripts/run_local_agent.py",
+        "scripts/transformers_fresh_dev_worker_v2.py",
+        "scripts/transformers_fresh_dev_worker_v3.py",
+        "src/vare/agent_task_contract.py",
+        "tests/test_grade_transformers_fresh_dev_v6.py",
+        "tests/test_phase_a_v6_public_test_event_accounting.py",
+        "tests/test_run_coding_agent_dev_study_v1.py",
+        "tests/test_run_local_agent_tool_format.py",
+        "tests/test_separated_grading.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve the Development cohort, resource-gate, and rollout evidence. It is a 253-file experiment bundle, not a focused mainline change."
+    },
+    {
+      "number": 106,
+      "title": "Fix Phase A public-test Colima mounts",
+      "url": "https://github.com/mitukx/VARE/pull/106",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/phase-a-v6-colima-public-tests",
+        "sha": "075095c650ac372ff8d686e4461314feda26444a"
+      },
+      "base": {
+        "branch": "codex/fresh-dev-agent-study-v5",
+        "sha": "a6c3071b5f47e988fe6c3330922c45833be04694"
+      },
+      "dependency": {
+        "pr": 105,
+        "base_branch": "codex/fresh-dev-agent-study-v5",
+        "base_sha": "a6c3071b5f47e988fe6c3330922c45833be04694",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 8,
+        "mitukx:COMMENTED": 8
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 164,
+      "changed_path_groups": {
+        "docs": 6,
+        "experiments": 18,
+        "results": 115,
+        "scripts": 15,
+        "src": 1,
+        "tests": 9
+      },
+      "implementation_paths": [
+        "scripts/analyze_phase_a_v6_rollouts.py",
+        "scripts/analyze_phase_a_v6_run2.py",
+        "scripts/calibrate_phase_a_v6_colima_mount_v1.py",
+        "scripts/calibrate_public_test_execution_v1.py",
+        "scripts/calibrate_public_test_execution_v2.py",
+        "scripts/calibrate_public_test_execution_v3.py",
+        "scripts/calibrate_public_test_execution_v4.py",
+        "scripts/calibrate_public_test_execution_v5.py",
+        "scripts/calibrate_public_test_execution_v6.py",
+        "scripts/calibrate_public_test_execution_v7.py",
+        "scripts/calibrate_public_test_execution_v8.py",
+        "scripts/calibrate_public_test_execution_v9.py",
+        "scripts/calibrate_public_tests_v6_v2.py",
+        "scripts/run_coding_agent_dev_study_v1.py",
+        "scripts/run_local_agent.py",
+        "src/vare/agent_structured_edit.py",
+        "tests/test_agent_structured_edit.py",
+        "tests/test_calibrate_phase_a_v6_colima_mount.py",
+        "tests/test_phase_a_v6_colima_public_test_integration.py",
+        "tests/test_run_coding_agent_dev_study_v1.py",
+        "tests/test_run_local_agent_handles.py",
+        "tests/test_run_local_agent_public_tests.py",
+        "tests/test_run_local_agent_structured_v2.py",
+        "tests/test_run_local_agent_tool_format.py",
+        "tests/test_separated_grading.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve the Colima mount root-cause correction tied to frozen Phase A evidence; its experiment-specific harness is superseded by later controller runs."
+    },
+    {
+      "number": 107,
+      "title": "Qualify fresh HF coding tasks and analyze Phase A v6",
+      "url": "https://github.com/mitukx/VARE/pull/107",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/fresh-hf-dev-candidates-v1",
+        "sha": "4bdca9b51640e60c47c3aefe63c1c8f12834de85"
+      },
+      "base": {
+        "branch": "codex/phase-a-v6-colima-public-tests",
+        "sha": "0db31d223a132105b2a8e8577f73e858f9ded6d2"
+      },
+      "dependency": {
+        "pr": 106,
+        "base_branch": "codex/phase-a-v6-colima-public-tests",
+        "base_sha": "0db31d223a132105b2a8e8577f73e858f9ded6d2",
+        "matches_current_head": false
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 4,
+        "mitukx:COMMENTED": 3
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [
+        {
+          "path": "experiments/hf_coding_dev_inference_v1/protocol-v1.lock.json",
+          "line": 9,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Re-freeze the protocol against the integrated runner"
+        }
+      ],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 192,
+      "changed_path_groups": {
+        "benchmarks": 25,
+        "experiments": 6,
+        "results": 156,
+        "scripts": 3,
+        "tests": 2
+      },
+      "implementation_paths": [
+        "scripts/analyze_phase_a_v6_traces.py",
+        "scripts/grade_hf_coding_dev_v1.py",
+        "scripts/prepare_hf_coding_dev_v1.py",
+        "tests/test_hf_coding_dev_v1.py",
+        "tests/test_phase_a_v6_trace_analysis.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve the Phase A v6 correction and trace analysis, but the protocol has an unresolved P1: frozen runner and controller hashes do not match integrated source, so the planned rollout is blocked."
+    },
+    {
+      "number": 108,
+      "title": "Add dual-Python HF Coding Development protocol v2",
+      "url": "https://github.com/mitukx/VARE/pull/108",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/hf-coding-dev-inference-v2-dual-python",
+        "sha": "710dbc0d28aa33a78521a29f067c9a9493f6c56d"
+      },
+      "base": {
+        "branch": "codex/fresh-hf-dev-candidates-v1",
+        "sha": "ab8d7c0b55d5b1c28365f2f002509ce3a37df501"
+      },
+      "dependency": {
+        "pr": 107,
+        "base_branch": "codex/fresh-hf-dev-candidates-v1",
+        "base_sha": "ab8d7c0b55d5b1c28365f2f002509ce3a37df501",
+        "matches_current_head": false
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 9,
+      "changed_path_groups": {
+        "experiments": 2,
+        "requirements": 1,
+        "results": 3,
+        "scripts": 2,
+        "tests": 1
+      },
+      "implementation_paths": [
+        "scripts/dry_run_hf_coding_dev_v2_dual_python.py",
+        "scripts/preflight_hf_coding_dev_v1_host_grader.py",
+        "tests/test_hf_coding_dev_v2_dual_python_dry_run.py"
+      ],
+      "disposition": "BLOCKED",
+      "rationale": "The dual-Python v2 protocol is Draft and based on an older #107 commit; its underlying task protocol still has the unresolved #107 source-hash P1. Re-freeze against exact integrated runner/controller before promotion."
+    },
+    {
+      "number": 114,
+      "title": "Preserve attested MLX-LM calibration evidence on publication failure",
+      "url": "https://github.com/mitukx/VARE/pull/114",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/mlxlm-1971-attested-calibration",
+        "sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658"
+      },
+      "base": {
+        "branch": "codex/mlxlm-1971-isolation",
+        "sha": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc"
+      },
+      "dependency": {
+        "pr": 99,
+        "base_branch": "codex/mlxlm-1971-isolation",
+        "base_sha": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc",
+        "matches_current_head": false
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 4,
+        "mitukx:COMMENTED": 5
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 5,
+      "changed_path_groups": {
+        "docs": 1,
+        "scripts": 2,
+        "tests": 2
+      },
+      "implementation_paths": [
+        "scripts/audit_mlxlm_1971_historical_implementation_hashes.py",
+        "scripts/run_attested_mlxlm_1971_v9_calibration.py",
+        "tests/test_attest_mlxlm_1971_v9_current_git.py",
+        "tests/test_run_attested_mlxlm_1971_v9_calibration.py"
+      ],
+      "disposition": "BLOCKED",
+      "rationale": "Attested calibration wrapper is based on an older #99 branch revision, so its dependency does not contain the current #99 head; resolve #99 trust-anchor findings and rebase before integration."
+    },
+    {
+      "number": 117,
+      "title": "Isolate MLX-LM source snapshots before trusted export",
+      "url": "https://github.com/mitukx/VARE/pull/117",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/mlxlm-1971-v10-operator",
+        "sha": "6709aed996ce5ec315cf7a87930350dca6c0ee20"
+      },
+      "base": {
+        "branch": "codex/mlxlm-1971-attested-calibration",
+        "sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658"
+      },
+      "dependency": {
+        "pr": 114,
+        "base_branch": "codex/mlxlm-1971-attested-calibration",
+        "base_sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 6,
+        "mitukx:COMMENTED": 4
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [
+        {
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "line": null,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable repository hooks before staging trusted code"
+        },
+        {
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "line": null,
+          "priority": "P2",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject export symlinks before canonicalizing paths"
+        },
+        {
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "line": null,
+          "priority": "P2",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Read protocol inputs through bounded nonblocking descriptors"
+        },
+        {
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "line": null,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve required test files in the nested v9 checkout"
+        }
+      ],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 90,
+      "changed_path_groups": {
+        "benchmarks": 6,
+        "docs": 3,
+        "results": 77,
+        "scripts": 2,
+        "tests": 2
+      },
+      "implementation_paths": [
+        "scripts/run_mlxlm_1971_v11_operator.py",
+        "scripts/run_mlxlm_1971_v12_operator.py",
+        "tests/test_run_mlxlm_1971_v11_operator.py",
+        "tests/test_run_mlxlm_1971_v12_operator.py"
+      ],
+      "disposition": "FIX_THEN_MERGE",
+      "rationale": "Valuable isolated MLX-LM source/export operator, but four unresolved security/reliability findings remain (two P1, two P2: hooks, symlink canonicalization, FIFO reads, sparse-checkout omission). Must repair and rerun exact boundary tests."
+    },
+    {
+      "number": 118,
+      "title": "Extract hash-checked structured edit library without changing frozen agent runtime",
+      "url": "https://github.com/mitukx/VARE/pull/118",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/structured-edit-core-standalone",
+        "sha": "552d6f61187926d78719aad8c4c7ec9e8663c242"
+      },
+      "base": {
+        "branch": "codex/transformers-49752-repo-task",
+        "sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d"
+      },
+      "dependency": {
+        "pr": 101,
+        "base_branch": "codex/transformers-49752-repo-task",
+        "base_sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 6,
+        "mitukx:COMMENTED": 7
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 4,
+      "changed_path_groups": {
+        "docs": 1,
+        "scripts": 1,
+        "src": 1,
+        "tests": 1
+      },
+      "implementation_paths": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "src/vare/agent_structured_edit.py",
+        "tests/test_agent_structured_edit.py"
+      ],
+      "disposition": "SPLIT_OR_CHERRY_PICK",
+      "rationale": "Small library-only structured-edit extraction with source/tests, but based on historical #101. Review the 4-file extraction independently and cherry-pick onto current main if it remains useful."
+    },
+    {
+      "number": 120,
+      "title": "Record real-model coding-agent feasibility and tool-boundary fixes",
+      "url": "https://github.com/mitukx/VARE/pull/120",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/fresh-task-qualification-mlx-lm-1910",
+        "sha": "58ecd9c9727a1544a5a08c9c250f1f36dd9a5f8d"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "dependency": {
+        "pr": null,
+        "base_branch": "main",
+        "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "matches_current_head": true
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 1
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [
+        {
+          "path": "scripts/grade_mlx_lm_1910_candidate_v1.py",
+          "line": 97,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Reject candidates that forge evaluator completion"
+        },
+        {
+          "path": "scripts/verify_coding_agent_evidence_manifest_v1.py",
+          "line": 49,
+          "priority": "P1",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Reject manifests without a nonempty file inventory"
+        }
+      ],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 545,
+      "changed_path_groups": {
+        ".gitignore": 1,
+        "benchmarks": 7,
+        "protocols": 13,
+        "results": 483,
+        "scripts": 31,
+        "src": 1,
+        "tests": 9
+      },
+      "implementation_paths": [
+        "scripts/analyze_coding_agent_trace_format_v1.py",
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/calibrate_mlx_lm_1910_candidate_grader_v1.py",
+        "scripts/check_tracked_blob_budget.py",
+        "scripts/grade_mlx_lm_1910_candidate_v1.py",
+        "scripts/monitor_local_agent_resources_v1.py",
+        "scripts/monitor_local_agent_resources_v2.py",
+        "scripts/prepare_mlx_lm_1910_agent_task_v1.py",
+        "scripts/qualify_mlx_lm_1910_v1.py",
+        "scripts/qualify_mlx_lm_1910_v2.py",
+        "scripts/qualify_mlx_lm_1910_v3.py",
+        "scripts/qualify_mlx_lm_1910_v4.py",
+        "scripts/qualify_mlx_lm_1910_v5.py",
+        "scripts/qualify_mlx_lm_1910_v6.py",
+        "scripts/run_local_agent.py",
+        "scripts/run_local_agent_smollm_tool_compat_v1.py",
+        "scripts/run_local_agent_streaming_v1.py",
+        "scripts/run_mlx_lm_1910_feasibility_v1.py",
+        "scripts/run_mlx_lm_1910_qwen25_debug_v1.py",
+        "scripts/run_mlx_lm_1910_smollm2_feasibility_v1.py",
+        "scripts/run_mlx_lm_1910_smollm2_feasibility_v2.py",
+        "scripts/run_mlx_lm_1910_smollm2_feasibility_v3.py",
+        "scripts/run_mlx_lm_1912_qwen25_agent_v1.py",
+        "scripts/run_mlx_lm_1912_qwen25_agent_v2.py",
+        "scripts/run_mlx_lm_1912_qwen25_agent_v3.py",
+        "scripts/smoke_local_mlx_model_load_v1.py",
+        "scripts/smoke_local_mlx_model_load_v2.py",
+        "scripts/smoke_local_mlx_model_load_v3.py",
+        "scripts/smoke_local_qwen25_3b_model_load_v1.py",
+        "scripts/smoke_local_qwen25_3b_model_load_v2.py",
+        "scripts/verify_coding_agent_evidence_manifest_v1.py",
+        "src/vare/flat_tool_chat.py",
+        "tests/test_blob_budget.py",
+        "tests/test_coding_agent_evidence_manifest.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_flat_tool_chat.py",
+        "tests/test_mlx_lm_1910_smollm2_feasibility_v2.py",
+        "tests/test_mlx_lm_1910_smollm2_feasibility_v3.py",
+        "tests/test_mlx_lm_1912_agent_v3_wrapper.py",
+        "tests/test_mlx_lm_1912_streaming_agent.py",
+        "tests/test_run_local_agent_tool_format.py"
+      ],
+      "disposition": "FIX_THEN_MERGE",
+      "rationale": "Direct-main coding-agent/tool-boundary contribution with two unresolved P1s: candidate can forge grader completion and empty evidence manifests can report completed. Keep raw evidence; repair both before reward-path use, then obtain required human review."
+    },
+    {
+      "number": 121,
+      "title": "Add independent source replay for Transformers fusion registration",
+      "url": "https://github.com/mitukx/VARE/pull/121",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/transformers-49412-qualification",
+        "sha": "a937f4ad6eacb63d679952f7a05d39d04afab59a"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "dependency": {
+        "pr": null,
+        "base_branch": "main",
+        "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "matches_current_head": true
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 1,
+        "mitukx:COMMENTED": 1
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 52,
+      "changed_path_groups": {
+        "protocols": 2,
+        "results": 47,
+        "scripts": 2,
+        "tests": 1
+      },
+      "implementation_paths": [
+        "scripts/reproduce_transformers_49412_source_replay_v2.py",
+        "scripts/reproduce_transformers_49412_source_replay_v3.py",
+        "tests/test_transformers_49412_source_replay_v3.py"
+      ],
+      "disposition": "BLOCKED",
+      "rationale": "Source replay contribution is direct-main and all exact-head checks pass, but repository requires review and there is no approval. Hold for human review; its result corrects a baseline qualification error."
+    },
+    {
+      "number": 122,
+      "title": "Close installed-repair leakage and record the 7B teacher NO-GO",
+      "url": "https://github.com/mitukx/VARE/pull/122",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/flagship-teacher-gate",
+        "sha": "37b31519818b5dfbf245075cc541d6c8a38b4099"
+      },
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+      },
+      "dependency": {
+        "pr": null,
+        "base_branch": "main",
+        "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "matches_current_head": true
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 74,
+      "changed_path_groups": {
+        "README.md": 1,
+        "benchmarks": 10,
+        "docs": 1,
+        "protocols": 6,
+        "results": 47,
+        "scripts": 5,
+        "tests": 4
+      },
+      "implementation_paths": [
+        "scripts/audit_flagship_results_v1.py",
+        "scripts/probe_flagship_compiled_repair_v1.py",
+        "scripts/qualify_flagship_development_v1.py",
+        "scripts/replay_flagship_dependency_leakage_v1.py",
+        "scripts/run_flagship_teacher_v1.py",
+        "tests/test_flagship_development_v1.py",
+        "tests/test_flagship_image_sanitizer.py",
+        "tests/test_flagship_results_v1.py",
+        "tests/test_flagship_teacher_v1.py"
+      ],
+      "disposition": "BLOCKED",
+      "rationale": "Important direct-main installed-repair/bytecode leakage fix and NO-GO evidence; all exact-head checks pass but repository requires human review and no approval exists."
+    },
+    {
+      "number": 123,
+      "title": "Measure false rewards from installed repair artifacts",
+      "url": "https://github.com/mitukx/VARE/pull/123",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/dependency-artifact-pilot",
+        "sha": "a02d6cb64f2531cbe6152266b431d8a466f0bdbc"
+      },
+      "base": {
+        "branch": "codex/flagship-teacher-gate",
+        "sha": "37b31519818b5dfbf245075cc541d6c8a38b4099"
+      },
+      "dependency": {
+        "pr": 122,
+        "base_branch": "codex/flagship-teacher-gate",
+        "base_sha": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 1,
+        "mitukx:COMMENTED": 1
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 186,
+      "changed_path_groups": {
+        "benchmarks": 20,
+        "docs": 2,
+        "protocols": 11,
+        "results": 147,
+        "scripts": 5,
+        "tests": 1
+      },
+      "implementation_paths": [
+        "scripts/audit_verifier_integrity_evidence_v2.py",
+        "scripts/run_verifier_integrity_bandit_v1.py",
+        "scripts/run_verifier_integrity_pilot_v2.py",
+        "scripts/run_verifier_integrity_pilot_v3.py",
+        "scripts/run_verifier_integrity_pilot_v4.py",
+        "tests/test_verifier_integrity_evidence_chain_v2.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve false-reward/image leakage experiment and raw evidence stacked on #122; not a standalone runtime implementation."
+    },
+    {
+      "number": 124,
+      "title": "Measure contaminated rewards shifting a trainable repair policy",
+      "url": "https://github.com/mitukx/VARE/pull/124",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/transitive-reference-exposure-v1",
+        "sha": "af4bc1f862f2b8b2d0564cd8731b81129c1195ec"
+      },
+      "base": {
+        "branch": "codex/dependency-artifact-pilot",
+        "sha": "a02d6cb64f2531cbe6152266b431d8a466f0bdbc"
+      },
+      "dependency": {
+        "pr": 123,
+        "base_branch": "codex/dependency-artifact-pilot",
+        "base_sha": "a02d6cb64f2531cbe6152266b431d8a466f0bdbc",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 1,
+        "mitukx:COMMENTED": 1
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 170,
+      "changed_path_groups": {
+        "benchmarks": 2,
+        "docs": 2,
+        "protocols": 6,
+        "results": 157,
+        "scripts": 2,
+        "tests": 1
+      },
+      "implementation_paths": [
+        "scripts/run_verifier_integrity_policy_gradient_v1.py",
+        "scripts/run_verifier_integrity_transitive_reference_v1.py",
+        "tests/test_verifier_integrity_policy_reward_gate.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve the multi-seed contaminated-reward policy-gradient counterexample; stacked on #123/#122 and explicitly not a coding-LLM capability claim."
+    },
+    {
+      "number": 125,
+      "title": "Measure real coding-agent interface feasibility on fresh MLX-LM tasks",
+      "url": "https://github.com/mitukx/VARE/pull/125",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/real-agent-interface-v1",
+        "sha": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76"
+      },
+      "base": {
+        "branch": "codex/transitive-reference-exposure-v1",
+        "sha": "af4bc1f862f2b8b2d0564cd8731b81129c1195ec"
+      },
+      "dependency": {
+        "pr": 124,
+        "base_branch": "codex/transitive-reference-exposure-v1",
+        "base_sha": "af4bc1f862f2b8b2d0564cd8731b81129c1195ec",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 73,
+      "changed_path_groups": {
+        "benchmarks": 13,
+        "docs": 2,
+        "protocols": 1,
+        "results": 51,
+        "scripts": 4,
+        "src": 1,
+        "tests": 1
+      },
+      "implementation_paths": [
+        "scripts/prepare_real_agent_interface_v1.py",
+        "scripts/run_local_agent.py",
+        "scripts/run_real_agent_interface_v1.py",
+        "scripts/run_real_agent_isolation_e0_v1.py",
+        "src/vare/agent_edit_format.py",
+        "tests/test_run_local_agent_tool_format.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve fresh MLX-LM agent study and source identities. The two independently graded runs yielded no verified repair; runner/interface changes are superseded by newer tool/controller work."
+    },
+    {
+      "number": 126,
+      "title": "Measure verifier-version-aware GRPO under drift and crashes",
+      "url": "https://github.com/mitukx/VARE/pull/126",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/verifier-consistent-async-grpo-v1",
+        "sha": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48"
+      },
+      "base": {
+        "branch": "codex/real-agent-interface-v1",
+        "sha": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76"
+      },
+      "dependency": {
+        "pr": 125,
+        "base_branch": "codex/real-agent-interface-v1",
+        "base_sha": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 8,
+        "mitukx:COMMENTED": 3
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 58,
+      "changed_path_groups": {
+        "benchmarks": 46,
+        "results": 2,
+        "scripts": 3,
+        "src": 2,
+        "tests": 5
+      },
+      "implementation_paths": [
+        "scripts/audit_verifier_consistent_async_grpo.py",
+        "scripts/benchmark_verifier_consistent_async_grpo.py",
+        "scripts/benchmark_verifier_consistent_grpo_sigkill.py",
+        "src/vare/engine.py",
+        "src/vare/promotion.py",
+        "tests/test_checkpoint_bound_promotion.py",
+        "tests/test_verifier_consistent_async_grpo_audit_safety.py",
+        "tests/test_verifier_consistent_async_grpo_controls.py",
+        "tests/test_verifier_consistent_async_grpo_crash_eval.py",
+        "tests/test_verifier_consistent_async_grpo_output_safety.py"
+      ],
+      "disposition": "SPLIT_OR_CHERRY_PICK",
+      "rationale": "Unique verifier-version-aware async GRPO logic changes engine/promotion plus focused safety/crash tests. Extract the 52-line core delta and tests from the #122\u2013125 research stack for an independent mainline review."
+    },
+    {
+      "number": 127,
+      "title": "Report preregistered v7 verifier-drift pilot NO-GO",
+      "url": "https://github.com/mitukx/VARE/pull/127",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/verifier-drift-multiscenario-v1",
+        "sha": "9d471872fdc6449fed8586fcdfe081b161c9e0cd"
+      },
+      "base": {
+        "branch": "codex/verifier-consistent-async-grpo-v1",
+        "sha": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48"
+      },
+      "dependency": {
+        "pr": 126,
+        "base_branch": "codex/verifier-consistent-async-grpo-v1",
+        "base_sha": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 5,
+        "mitukx:COMMENTED": 9
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 63,
+      "changed_path_groups": {
+        "benchmarks": 14,
+        "docs": 2,
+        "results": 28,
+        "scripts": 13,
+        "tests": 6
+      },
+      "implementation_paths": [
+        "scripts/analyze_reward_calibration_directions.py",
+        "scripts/audit_coding_task_exposure_20261025.py",
+        "scripts/audit_output_safety.py",
+        "scripts/audit_sustained_crash_recovery.py",
+        "scripts/audit_sustained_crash_recovery_v2.py",
+        "scripts/audit_verifier_drift_pilot_stop.py",
+        "scripts/audit_verifier_drift_scenarios.py",
+        "scripts/audit_verifier_reward_calibration.py",
+        "scripts/benchmark_verifier_drift_scenarios.py",
+        "scripts/calibrate_verifier_reward.py",
+        "scripts/prepare_sustained_crash_fixture.py",
+        "scripts/run_verifier_consistency_optimizer_replay.py",
+        "scripts/verifier_drift_evaluation_evidence.py",
+        "tests/test_audit_output_safety.py",
+        "tests/test_authenticated_verifier_drift_regression.py",
+        "tests/test_dense_reward_calibration.py",
+        "tests/test_evaluation_evidence.py",
+        "tests/test_verifier_drift_pilot_stop_audit_safety.py",
+        "tests/test_verifier_drift_summary.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve preregistered verifier-drift NO-GO and stop/recovery audits; it is research evidence, not a standalone integration PR."
+    },
+    {
+      "number": 128,
+      "title": "Replay coding reward provenance under verifier contamination",
+      "url": "https://github.com/mitukx/VARE/pull/128",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/coding-reward-provenance-replay-v1",
+        "sha": "7f7d5a4e3963adef298dee7520bcfc36971639d9"
+      },
+      "base": {
+        "branch": "codex/verifier-drift-multiscenario-v1",
+        "sha": "9d471872fdc6449fed8586fcdfe081b161c9e0cd"
+      },
+      "dependency": {
+        "pr": 127,
+        "base_branch": "codex/verifier-drift-multiscenario-v1",
+        "base_sha": "9d471872fdc6449fed8586fcdfe081b161c9e0cd",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 1,
+        "mitukx:COMMENTED": 1
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 62,
+      "changed_path_groups": {
+        "docs": 1,
+        "protocols": 2,
+        "results": 57,
+        "scripts": 1,
+        "tests": 1
+      },
+      "implementation_paths": [
+        "scripts/run_coding_reward_provenance_replay_v1.py",
+        "tests/test_coding_reward_provenance_replay_v1.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve verifier-contamination reward provenance replay; evidence-only follow-up stacked on #127."
+    },
+    {
+      "number": 129,
+      "title": "Qualify three reserved MLX-LM held-out tasks",
+      "url": "https://github.com/mitukx/VARE/pull/129",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/heldout-task-certification-pilot-v1",
+        "sha": "4920c249f11d20dc0846ab8966066b1b5d4600e8"
+      },
+      "base": {
+        "branch": "codex/coding-reward-provenance-replay-v1",
+        "sha": "7f7d5a4e3963adef298dee7520bcfc36971639d9"
+      },
+      "dependency": {
+        "pr": 128,
+        "base_branch": "codex/coding-reward-provenance-replay-v1",
+        "base_sha": "7f7d5a4e3963adef298dee7520bcfc36971639d9",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 289,
+      "changed_path_groups": {
+        ".github": 1,
+        "benchmarks": 25,
+        "docs": 2,
+        "protocols": 34,
+        "results": 210,
+        "scripts": 14,
+        "src": 1,
+        "tests": 2
+      },
+      "implementation_paths": [
+        "scripts/adjudicate_mlx1880_baseline_v1.py",
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/audit_heldout_queue_exposure_v1.py",
+        "scripts/audit_heldout_queue_exposure_v2.py",
+        "scripts/audit_heldout_task_exposure_pilot_v1.py",
+        "scripts/audit_heldout_task_exposure_pilot_v2.py",
+        "scripts/audit_mlsys_heldout_task_qualification_pilots_v1.py",
+        "scripts/audit_mlx_1877_1880_exposure_v1.py",
+        "scripts/audit_mlx_1898_exposure_v1.py",
+        "scripts/qualify_mlsys_heldout_task_pilot_v1.py",
+        "scripts/run_mlsys_heldout_extension_v4.py",
+        "scripts/run_mlsys_heldout_extension_v5.py",
+        "scripts/run_mlsys_heldout_extension_v6.py",
+        "scripts/run_mlsys_heldout_extension_v7.py",
+        "src/vare/mlsys_heldout_task_pilot_v1.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_mlsys_heldout_task_pilot_v1.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve task qualification artifacts, but report 3/15 qualified only under this protocol (one attempted task failed qualification); reconcile with any later readiness count before using for held-out claims."
+    },
+    {
+      "number": 130,
+      "title": "Record MLX Development agent feasibility failure",
+      "url": "https://github.com/mitukx/VARE/pull/130",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/mlx-core-development-agent-feasibility-v1",
+        "sha": "071352981ad2e6bb1601ae50f935600f28aba8fc"
+      },
+      "base": {
+        "branch": "codex/heldout-task-certification-pilot-v1",
+        "sha": "4920c249f11d20dc0846ab8966066b1b5d4600e8"
+      },
+      "dependency": {
+        "pr": 129,
+        "base_branch": "codex/heldout-task-certification-pilot-v1",
+        "base_sha": "4920c249f11d20dc0846ab8966066b1b5d4600e8",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 101,
+      "changed_path_groups": {
+        "benchmarks": 4,
+        "docs": 3,
+        "protocols": 11,
+        "requirements": 1,
+        "results": 66,
+        "scripts": 16
+      },
+      "implementation_paths": [
+        "scripts/audit_mlx_core_development_qualification_v1.py",
+        "scripts/audit_mlx_core_development_qualification_v2.py",
+        "scripts/audit_mlx_core_development_qualification_v3.py",
+        "scripts/audit_mlx_core_development_qualification_v4.py",
+        "scripts/audit_mlx_core_development_qualification_v5.py",
+        "scripts/audit_mlx_core_development_qualification_v5_launcher.py",
+        "scripts/audit_mlx_core_task_exposure_v1.py",
+        "scripts/grade_mlx_core_development_agent_candidates_v1.py",
+        "scripts/mlx_core_task_observations_v1.py",
+        "scripts/mlx_core_upstream_test_launcher_v1.py",
+        "scripts/run_mlx_core_development_qualification_v1.py",
+        "scripts/run_mlx_core_development_qualification_v2.py",
+        "scripts/run_mlx_core_development_qualification_v3.py",
+        "scripts/run_mlx_core_development_qualification_v4.py",
+        "scripts/run_mlx_core_development_qualification_v5.py",
+        "scripts/run_mlx_core_development_qualification_v5_launcher.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve the Qwen3-4B failure at the token ceiling as negative capability evidence; no candidate patch was graded."
+    },
+    {
+      "number": 131,
+      "title": "Measure deterministic edit replay and recovery; pin E2E inventories",
+      "url": "https://github.com/mitukx/VARE/pull/131",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/hash-bound-agent-edit-v1",
+        "sha": "139de5381989531691673be08e906233dd00468c"
+      },
+      "base": {
+        "branch": "codex/mlx-core-development-agent-feasibility-v1",
+        "sha": "071352981ad2e6bb1601ae50f935600f28aba8fc"
+      },
+      "dependency": {
+        "pr": 130,
+        "base_branch": "codex/mlx-core-development-agent-feasibility-v1",
+        "base_sha": "071352981ad2e6bb1601ae50f935600f28aba8fc",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 163,
+      "changed_path_groups": {
+        ".github": 1,
+        "benchmarks": 10,
+        "docs": 1,
+        "protocols": 6,
+        "pyproject.toml": 1,
+        "results": 130,
+        "scripts": 7,
+        "src": 2,
+        "tests": 5
+      },
+      "implementation_paths": [
+        "scripts/audit_agent_development_task_exposure_v1.py",
+        "scripts/audit_agent_edit_interface_systems_only_v1.py",
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/benchmark_trajectory_runtime.py",
+        "scripts/calibrate_agent_edit_interface_v1.py",
+        "scripts/run_agent_edit_interface_systems_v1.py",
+        "scripts/run_local_agent.py",
+        "src/vare/agent_edit_v2.py",
+        "src/vare/agent_task_contract.py",
+        "tests/test_agent_edit_systems_only_v1.py",
+        "tests/test_agent_edit_v2.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_run_local_agent_tool_format.py",
+        "tests/test_separated_grading.py"
+      ],
+      "disposition": "SPLIT_OR_CHERRY_PICK",
+      "rationale": "Useful deterministic edit/replay and E2E inventory boundary work, but 163-file evidence bundle sits atop #122\u2013130. Extract agent_edit_v2, source-boundary fixes, and narrow tests into a focused integration change."
+    },
+    {
+      "number": 132,
+      "title": "Record MLX #4748 Qwen3 feasibility pilot",
+      "url": "https://github.com/mitukx/VARE/pull/132",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/mlx-pr4748-qwen3-pilot-v1",
+        "sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b"
+      },
+      "base": {
+        "branch": "codex/hash-bound-agent-edit-v1",
+        "sha": "1046507ed3b9472685f03e46c284176fee354448"
+      },
+      "dependency": {
+        "pr": 131,
+        "base_branch": "codex/hash-bound-agent-edit-v1",
+        "base_sha": "1046507ed3b9472685f03e46c284176fee354448",
+        "matches_current_head": false
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 119,
+      "changed_path_groups": {
+        "docs": 1,
+        "results": 118
+      },
+      "implementation_paths": [],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve the corrected-template Qwen3 pilot: 8/8 valid tool calls but sequential reads, no edit, no grading. Its base SHA is an older #131 snapshot, so do not assume it includes current #131 head."
+    },
+    {
+      "number": 133,
+      "title": "Add bounded source navigation for repair agents",
+      "url": "https://github.com/mitukx/VARE/pull/133",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/source-navigation-v1",
+        "sha": "a65d59e5704b84a934a49385551a8d2311a01575"
+      },
+      "base": {
+        "branch": "codex/mlx-pr4748-qwen3-pilot-v1",
+        "sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b"
+      },
+      "dependency": {
+        "pr": 132,
+        "base_branch": "codex/mlx-pr4748-qwen3-pilot-v1",
+        "base_sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {
+        "chatgpt-codex-connector:COMMENTED": 1
+      },
+      "human_approval_observed": false,
+      "unresolved_threads": [
+        {
+          "path": "src/vare/source_navigation_v1.py",
+          "line": 318,
+          "priority": "P2",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Bound the path inventory independently of search results"
+        },
+        {
+          "path": "src/vare/source_navigation_v1.py",
+          "line": 270,
+          "priority": "P2",
+          "author": "chatgpt-codex-connector",
+          "finding": "<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Retry index construction after a recoverable build failure"
+        }
+      ],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 7,
+      "changed_path_groups": {
+        "scripts": 3,
+        "src": 2,
+        "tests": 2
+      },
+      "implementation_paths": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/benchmark_e2e_rl_continuation.py",
+        "scripts/run_local_agent.py",
+        "src/vare/agent_task_contract.py",
+        "src/vare/source_navigation_v1.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_source_navigation_v1.py"
+      ],
+      "disposition": "FIX_THEN_MERGE",
+      "rationale": "New bounded source-navigation implementation is focused (7 files) and all checks pass, but two unresolved P2 defects can suppress search results for large path inventories and permanently retain a recoverable index-build error."
+    },
+    {
+      "number": 134,
+      "title": "Add fault-aware Transformers #47468 qualification gate",
+      "url": "https://github.com/mitukx/VARE/pull/134",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/transformers-47468-qualification-v1",
+        "sha": "d8636def094cd83a2010980570a5c4804725166a"
+      },
+      "base": {
+        "branch": "codex/mlx-pr4748-qwen3-pilot-v1",
+        "sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b"
+      },
+      "dependency": {
+        "pr": 132,
+        "base_branch": "codex/mlx-pr4748-qwen3-pilot-v1",
+        "base_sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 33,
+      "changed_path_groups": {
+        "results": 28,
+        "scripts": 3,
+        "tests": 2
+      },
+      "implementation_paths": [
+        "scripts/run_transformers_47468_qualification_v1.py",
+        "scripts/run_transformers_47468_qualification_v2.py",
+        "scripts/run_transformers_47468_qualification_v3.py",
+        "tests/test_transformers_47468_qualification_v2.py",
+        "tests/test_transformers_47468_qualification_v3.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Preserve v1\u2013v3 fault-aware Transformers #47468 qualification history; v4 is the prospective correction, so avoid merging the superseded evidence bundle as active code."
+    },
+    {
+      "number": 135,
+      "title": "Add process-creation boundary preflight for 47468 v4",
+      "url": "https://github.com/mitukx/VARE/pull/135",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/transformers-47468-qualification-v4",
+        "sha": "b258c69fc0295e421eab3aaae965d70b693cd1e6"
+      },
+      "base": {
+        "branch": "codex/transformers-47468-qualification-v1",
+        "sha": "d8636def094cd83a2010980570a5c4804725166a"
+      },
+      "dependency": {
+        "pr": 134,
+        "base_branch": "codex/transformers-47468-qualification-v1",
+        "base_sha": "d8636def094cd83a2010980570a5c4804725166a",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 13,
+      "changed_path_groups": {
+        ".gitignore": 1,
+        "results": 10,
+        "scripts": 1,
+        "tests": 1
+      },
+      "implementation_paths": [
+        "scripts/run_transformers_47468_qualification_v4.py",
+        "tests/test_transformers_47468_qualification_v4.py"
+      ],
+      "disposition": "BLOCKED",
+      "rationale": "Draft v4 process-boundary qualification correction is stacked on #134; tests pass but it has no independent task outcome and needs a clean, reviewable integration target after its predecessor is resolved."
+    },
+    {
+      "number": 136,
+      "title": "Harden source navigation syntax checks",
+      "url": "https://github.com/mitukx/VARE/pull/136",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/navigation-symlink-fix-v1",
+        "sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f"
+      },
+      "base": {
+        "branch": "codex/source-navigation-v1",
+        "sha": "a65d59e5704b84a934a49385551a8d2311a01575"
+      },
+      "dependency": {
+        "pr": 133,
+        "base_branch": "codex/source-navigation-v1",
+        "base_sha": "a65d59e5704b84a934a49385551a8d2311a01575",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 3,
+      "changed_path_groups": {
+        "scripts": 1,
+        "tests": 2
+      },
+      "implementation_paths": [
+        "scripts/run_local_agent.py",
+        "tests/test_agent_syntax_tool_v1.py",
+        "tests/test_source_navigation_v1.py"
+      ],
+      "disposition": "BLOCKED",
+      "rationale": "Three-file syntax-safety correction is green and directly follows #133, but source navigation still has unresolved P2 findings. Integrate only with the corrected #133 core."
+    },
+    {
+      "number": 137,
+      "title": "Fix source-navigation review findings",
+      "url": "https://github.com/mitukx/VARE/pull/137",
+      "state": "OPEN",
+      "draft": false,
+      "head": {
+        "branch": "codex/navigation-integrity-fixes-v1",
+        "sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
+      },
+      "base": {
+        "branch": "codex/navigation-symlink-fix-v1",
+        "sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f"
+      },
+      "dependency": {
+        "pr": 136,
+        "base_branch": "codex/navigation-symlink-fix-v1",
+        "base_sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 8,
+      "changed_path_groups": {
+        "scripts": 3,
+        "src": 2,
+        "tests": 3
+      },
+      "implementation_paths": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/benchmark_e2e_rl_continuation.py",
+        "scripts/run_local_agent.py",
+        "src/vare/agent_task_contract.py",
+        "src/vare/source_navigation_v1.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_run_local_agent_tool_format.py",
+        "tests/test_source_navigation_v1.py"
+      ],
+      "disposition": "SPLIT_OR_CHERRY_PICK",
+      "rationale": "Current green follow-up contains useful source-navigation and run-context identity fixes over #136, but its chain includes #133 and is not a main-based PR. Extract the verified core/tests to a clean focused PR after #133 P2s are fixed."
+    },
+    {
+      "number": 139,
+      "title": "Fix navigation regressions and measure fresh Development agent failures",
+      "url": "https://github.com/mitukx/VARE/pull/139",
+      "state": "OPEN",
+      "draft": true,
+      "head": {
+        "branch": "codex/development-navigation-campaign-v1",
+        "sha": "25c16910f47f5f1b1aa84d7325723a1a3ad4dc29"
+      },
+      "base": {
+        "branch": "codex/navigation-integrity-fixes-v1",
+        "sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
+      },
+      "dependency": {
+        "pr": 137,
+        "base_branch": "codex/navigation-integrity-fixes-v1",
+        "base_sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1",
+        "matches_current_head": true
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_event_counts": {},
+      "human_approval_observed": false,
+      "unresolved_threads": [],
+      "checks": {
+        "latest_by_name": "SUCCESS",
+        "validated_with": "gh pr checks --json name,state (all current head checks)",
+        "names": [
+          "actual-optimizer-and-recovery",
+          "blob-budget",
+          "calibrated-cpu-tasks",
+          "lint",
+          "math500-grader",
+          "rvl-inference-cpu",
+          "seeded-summary-cpu",
+          "test (3.11)",
+          "test (3.12)",
+          "test (3.13)",
+          "typecheck"
+        ]
+      },
+      "changed_file_count": 307,
+      "changed_path_groups": {
+        ".github": 1,
+        "benchmarks": 33,
+        "docs": 1,
+        "results": 245,
+        "scripts": 14,
+        "src": 1,
+        "tests": 12
+      },
+      "implementation_paths": [
+        "scripts/audit_vare_development_campaign_v1.py",
+        "scripts/development_campaign_model_entry_v1.py",
+        "scripts/grade_corrected_template_candidate_v1.py",
+        "scripts/grade_mlsys_coding_v2_candidate_v1.py",
+        "scripts/grade_mlsys_coding_v2_candidate_v2.py",
+        "scripts/grade_vare_development_candidate_v1.py",
+        "scripts/qualify_corrected_template_tasks_v1.py",
+        "scripts/qualify_corrected_template_tasks_v2.py",
+        "scripts/qualify_corrected_template_tasks_v3.py",
+        "scripts/repair_qwen25_tool_template_v1.py",
+        "scripts/run_corrected_template_campaign_v1.py",
+        "scripts/run_local_agent.py",
+        "scripts/run_vare_development_campaign_v1.py",
+        "scripts/verify_coding_agent_evidence_manifest_v1.py",
+        "src/vare/source_navigation_v1.py",
+        "tests/test_corrected_template_campaign_v1.py",
+        "tests/test_corrected_template_grader_v1.py",
+        "tests/test_development_candidate_admission_v1.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_manifest_review_regression_v1.py",
+        "tests/test_mlsys_coding_v2_candidate_grader_v1.py",
+        "tests/test_mlsys_coding_v2_candidate_grader_v2.py",
+        "tests/test_navigation_review_regressions_v1.py",
+        "tests/test_qwen25_tool_template_repair_v1.py",
+        "tests/test_run_local_agent_tool_format.py",
+        "tests/test_source_navigation_v1.py",
+        "tests/test_tokenizer_config_override_v1.py"
+      ],
+      "disposition": "EVIDENCE_ARCHIVE",
+      "rationale": "Keep the corrected-template campaign and full raw evidence immutable: 2/2 JSON-valid, 0/2 strict calls accepted due unsupported list_files arguments, zero edits/repairs. Split any reusable navigation/test fixes into a focused PR."
+    }
+  ]
+}

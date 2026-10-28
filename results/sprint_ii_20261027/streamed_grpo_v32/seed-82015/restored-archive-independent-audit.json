@@ -1,0 +1,59 @@
+{
+  "pass": true,
+  "updates": 4,
+  "numerics": [
+    {
+      "candidate": "policy-1",
+      "errors": {
+        "preclip_gradient": 4.76837158203125e-07,
+        "clipped_gradient": 1.4901161193847656e-08,
+        "parameter": 3.725290298461914e-09,
+        "loss": 0.0,
+        "optimizer_state": 1.862645149230957e-09
+      },
+      "preclip_norm": 22.636625289916992,
+      "behavior_alignment_error": 1.8596649169921875e-05,
+      "rng_equal": true
+    },
+    {
+      "candidate": "policy-2",
+      "errors": {
+        "preclip_gradient": 2.384185791015625e-07,
+        "clipped_gradient": 2.9802322387695312e-08,
+        "parameter": 2.3283064365386963e-10,
+        "loss": 0.0,
+        "optimizer_state": 3.259629011154175e-09
+      },
+      "preclip_norm": 13.739319801330566,
+      "behavior_alignment_error": 1.049041748046875e-05,
+      "rng_equal": true
+    },
+    {
+      "candidate": "policy-3",
+      "errors": {
+        "preclip_gradient": 2.384185791015625e-07,
+        "clipped_gradient": 1.4901161193847656e-08,
+        "parameter": 7.450580596923828e-09,
+        "loss": 1.979060471057892e-09,
+        "optimizer_state": 1.862645149230957e-09
+      },
+      "preclip_norm": 9.719823837280273,
+      "behavior_alignment_error": 1.9073486328125e-05,
+      "rng_equal": true
+    },
+    {
+      "candidate": "policy-4",
+      "errors": {
+        "preclip_gradient": 2.384185791015625e-07,
+        "clipped_gradient": 2.9802322387695312e-08,
+        "parameter": 4.656612873077393e-10,
+        "loss": 0.0,
+        "optimizer_state": 3.725290298461914e-09
+      },
+      "preclip_norm": 13.279411315917969,
+      "behavior_alignment_error": 1.430511474609375e-05,
+      "rng_equal": true
+    }
+  ],
+  "scope": "Externally anchored bytes and independent full-graph/preclip/Adam/RNG replay. Live checkpoint decoding and logical recovery are separately retained; no task-capability or learner-SIGKILL claim."
+}
