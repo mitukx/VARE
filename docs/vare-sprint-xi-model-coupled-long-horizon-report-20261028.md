@@ -75,7 +75,7 @@ PR #139に8/16-turnの決定論的回帰fixtureを追加した。実tool schema�
 
 - mainは開始・終了ともに`f3ab90a36e8724441b6b9555255f8f75a0a4d529`。Sprint XIでmergeは0件。
 - PR #139 (`https://github.com/mitukx/VARE/pull/139`) にv10長軌跡fixtureをcommit `df0a360ead3927f72d33972634251469b50c2368`としてpushした。PRはDraft、baseは#137 head `6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1`。exact-head CIは20/20 success。独立reviewはなく、mainへは未統合。
-- PR #142 (`https://github.com/mitukx/VARE/pull/142`) へ本レポートとSprint XI raw artifactsをcommit `f990817afeadfb8d331995a43e275625205f2bdd`で追記した。push時のGitHub blob-budget checkは3個のoptimizer checkpointが1 MiB超過で失敗した。この失敗記録は残した。続く修正で3原本をそれぞれ900,000 byte以下の2 partに可逆分割し、part連結後のsizeとSHA-256をcheckpoint manifestと照合する検証器を追加した。検証器は3/3原本の復元照合にPASSし、PRの現在差分から大blob原本を削除した。現時点の分割版はmanifest v2に記録済み。修正commitのexact-head CIはpush後に確認する。PRはDraftで、独立review/承認の代替ではない。
+- PR #142 (`https://github.com/mitukx/VARE/pull/142`) へ本レポートとSprint XI raw artifactsをcommit `f990817afeadfb8d331995a43e275625205f2bdd`で追記した。push時のGitHub blob-budget checkは3個のoptimizer checkpointが1 MiB超過で失敗した。この失敗記録は残した。続く修正で3原本をそれぞれ900,000 byte以下の2 partに可逆分割し、part連結後のsizeとSHA-256をcheckpoint manifestと照合する検証器を追加した。検証器は3/3原本の復元照合にPASSし、PRの現在差分から大blob原本を削除した。現時点の分割版はmanifest v2に記録済み。修正commit `54fd05cac5a97c2e5c369e62ca2510951158b1b1`のexact-head CIは19/19 checks success（blob-budget両workflow、Python 3.11/3.12/3.13を含む）。PRはDraftで、独立review/承認の代替ではない。
 - main protectionを回避していない。#140/#143等を含むmainline integrationは適格な独立approval待ちであり、実行済みmainline成果はない。
 
 2026-10-28のlive PR inventoryは開始時・終了時ともに18 open / 9 Draft。以下のmetadata snapshotと台帳は#142へのSprint XI追記前に取得した。CI列は取得時のGitHub status check数である。`clean`やgreen CIはレビュー承認や統合適格性を意味しない。
