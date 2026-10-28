@@ -981,8 +981,8 @@ def test_schema_slots_v10_long_tool_sequences_match_v9_with_safe_cache_fallback(
             active['choice_offsets'].append(kwargs['prompt_token_count'])
             return choice_offset_original(tokenizer_arg, tools_arg, **kwargs)
 
-        # Use the real processor's finite token sequences, while returning
-        # deterministic fixture logits through the fake generation stream.
+        # Use a deterministic finite-choice processor while returning fixture
+        # values through the fake generation stream.
         monkeypatch.setattr(run_local_agent, 'make_choice_logits_processor', choice_offset_spy)
         original_protocol = protocol
         args = SimpleNamespace(
