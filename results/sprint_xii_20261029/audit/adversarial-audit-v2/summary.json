@@ -1,0 +1,32 @@
+[
+  {
+    "mutation": "old-pointer",
+    "expected_v2_failure": "active-final-commit-path",
+    "v1_returncode": 0,
+    "v2_returncode": 1,
+    "failure": {
+      "type": "AssertionError",
+      "message": "101/A/active-final-commit-path"
+    }
+  },
+  {
+    "mutation": "wrong-gradient-origin",
+    "expected_v2_failure": "gradient-origin-state",
+    "v1_returncode": 0,
+    "v2_returncode": 1,
+    "failure": {
+      "type": "AssertionError",
+      "message": "101/A/1/gradient-origin-state"
+    }
+  },
+  {
+    "mutation": "evaluation-mean",
+    "expected_v2_failure": "evaluation-aggregation",
+    "v1_returncode": 0,
+    "v2_returncode": 1,
+    "failure": {
+      "type": "AssertionError",
+      "message": "101/A/evaluation-aggregation"
+    }
+  }
+]
