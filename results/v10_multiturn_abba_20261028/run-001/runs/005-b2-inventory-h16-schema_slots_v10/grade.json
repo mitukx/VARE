@@ -1,0 +1,64 @@
+{
+ "correct": false,
+ "final_source_sha256": "c48402c58702b95d1ba5423f324d3c89dd4c94df1a7d943b4c3b6970d0b9eb08",
+ "grader": "vare.synthetic-two-bug-repair.grader.v1",
+ "grader_only": {
+  "passed": false,
+  "status": "completed",
+  "summary": "3 passed, 3 failed",
+  "tests": [
+   {
+    "name": "test_parse_quantity_negative",
+    "outcome": "passed"
+   },
+   {
+    "detail": "KeyError: 'y'",
+    "name": "test_restock_does_not_mutate",
+    "outcome": "error"
+   },
+   {
+    "name": "test_restock_existing",
+    "outcome": "passed"
+   },
+   {
+    "detail": "KeyError: 'x'",
+    "name": "test_restock_missing",
+    "outcome": "error"
+   },
+   {
+    "name": "test_total_units_empty",
+    "outcome": "passed"
+   },
+   {
+    "detail": "AssertionError: ",
+    "name": "test_total_units_many",
+    "outcome": "failed"
+   }
+  ]
+ },
+ "hidden_tests_sha256": "f041a669047114edb72057a97be402be3f83b1d6c6d9501f67456e9656b5ffe5",
+ "public": {
+  "passed": false,
+  "status": "completed",
+  "summary": "1 passed, 2 failed",
+  "tests": [
+   {
+    "name": "test_parse_quantity",
+    "outcome": "passed"
+   },
+   {
+    "detail": "KeyError: 'b'",
+    "name": "test_restock_missing_item",
+    "outcome": "error"
+   },
+   {
+    "detail": "AssertionError: total_units({'a': 1, 'b': 2}) returned 2",
+    "name": "test_total_units",
+    "outcome": "failed"
+   }
+  ]
+ },
+ "source_changed": false,
+ "syntax_valid": true,
+ "variant": "inventory"
+}
