@@ -48,6 +48,15 @@ def data_group_paths(root: Path) -> list[Path]:
     )
 
 
+def data_score_paths(root: Path, group_id: str) -> list[Path]:
+    """Return versioned reward receipts, excluding score acknowledgements."""
+    return sorted(
+        path
+        for path in (root / "scores").glob(f"{group_id}-v*.json")
+        if path.is_file() and not path.name.endswith(".ack.json")
+    )
+
+
 def check(condition: bool, message: str, findings: list[str]) -> None:
     if not condition:
         findings.append(message)
@@ -718,9 +727,7 @@ def audit_case(
                 "token_checks": group_checks,
             }
         )
-        for score_path in sorted(
-            (root / "scores").glob(f"{group['group_id']}-v*.json")
-        ):
+        for score_path in data_score_paths(root, group["group_id"]):
             score = load_json(score_path)
             version = int(score["verifier_version"])
             recomputed = [

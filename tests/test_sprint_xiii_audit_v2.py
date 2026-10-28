@@ -22,3 +22,13 @@ def test_group_enumerator_excludes_acknowledgement_receipts(tmp_path: Path) -> N
         "fresh-policy-probe.json",
         "group-0.json",
     ]
+
+
+def test_score_enumerator_excludes_acknowledgement_receipts(tmp_path: Path) -> None:
+    scores = tmp_path / "scores"
+    scores.mkdir()
+    (scores / "group-0-v0.json").write_text('{"verifier_version":0}')
+    (scores / "group-0-v0.ack.json").write_text('{"score_sha256":"abc"}')
+    assert [p.name for p in auditor.data_score_paths(tmp_path, "group-0")] == [
+        "group-0-v0.json"
+    ]

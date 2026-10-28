@@ -122,7 +122,7 @@ def audit_subset(protocol_path: Path, root: Path, auditor_path: Path) -> dict:
     check(vm_before.available >= limits["min_available_bytes"], "subset audit preflight below frozen available-memory minimum", findings)
     if findings:
         return {
-            "audit_version": "online-actor-independent-audit-v3-completed-subset",
+            "audit_version": "online-actor-independent-audit-v4-completed-subset",
             "status": "FAIL_PRE_MODEL_AUDIT",
             "findings": findings,
             "protocol_sha256": protocol_sha,
@@ -174,7 +174,7 @@ def audit_subset(protocol_path: Path, root: Path, auditor_path: Path) -> dict:
             resource_check(case_root.name)
     except BaseException as exc:
         failure_report = {
-            "audit_version": "online-actor-independent-audit-v3-completed-subset",
+            "audit_version": "online-actor-independent-audit-v4-completed-subset",
             "status": "AUDIT_ABORT",
             "findings": findings,
             "audit_error_type": type(exc).__name__,
@@ -237,7 +237,7 @@ def audit_subset(protocol_path: Path, root: Path, auditor_path: Path) -> dict:
     )
     report = {
         "schema_version": 1,
-        "audit_version": "online-actor-independent-audit-v3-completed-subset",
+        "audit_version": "online-actor-independent-audit-v4-completed-subset",
         "status": "PASS_COMPLETED_SUBSET" if not findings else "FAIL_COMPLETED_SUBSET",
         "campaign_complete": False,
         "campaign_stop": failure,
