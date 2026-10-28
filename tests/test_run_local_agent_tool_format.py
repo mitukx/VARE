@@ -823,6 +823,266 @@ def test_schema_slots_v10_reuses_only_an_exact_cloned_turn_prefix(monkeypatch):
     assert all(stage['kv_cache_fallback_reason'] is None for stage in detail['stages'])
 
 
+@pytest.mark.parametrize('turn_count', [8, 16])
+def test_schema_slots_v10_long_tool_sequences_match_v9_with_safe_cache_fallback(
+        monkeypatch, turn_count):
+    """Exercise changing prompts, schemas, tool failures, retries, and cache reuse.
+
+    This is a deterministic controller/cache regression fixture. The separate
+    Qwen benchmark measures real model latency and allocation; this test checks
+    that v10 preserves the exact generated action sequence over longer histories.
+    """
+    from contextlib import nullcontext
+    from copy import deepcopy
+    from types import ModuleType, SimpleNamespace
+
+    fake_mlx = ModuleType('mlx')
+    fake_mlx.__path__ = []
+    fake_core = ModuleType('mlx.core')
+    fake_core.array = deepcopy
+    fake_core.copy = deepcopy
+    fake_core.eval = lambda *values: None
+    fake_core.stream = lambda _stream: nullcontext()
+    fake_core.reset_peak_memory = lambda: None
+    fake_core.get_active_memory = lambda: 10
+    fake_core.get_peak_memory = lambda: 20
+    fake_core.metal = SimpleNamespace(get_active_memory=lambda: 10, get_peak_memory=lambda: 20)
+    fake_mlx.core = fake_core
+
+    class Cache:
+        def __init__(self):
+            self.state = ([],)
+
+    fake_cache_module = ModuleType('mlx_lm.models.cache')
+    fake_cache_module.make_prompt_cache = lambda model: [Cache()]
+    fake_generate = ModuleType('mlx_lm.generate')
+    fake_generate.generation_stream = object()
+    fake_sample_utils = ModuleType('mlx_lm.sample_utils')
+    fake_sample_utils.make_sampler = lambda **kwargs: 'fixture-sampler'
+    fake_mlx_lm = ModuleType('mlx_lm')
+    fake_mlx_lm.__path__ = []
+    fake_models = ModuleType('mlx_lm.models')
+    fake_models.__path__ = []
+    for name, module in (
+        ('mlx', fake_mlx), ('mlx.core', fake_core), ('mlx_lm', fake_mlx_lm),
+        ('mlx_lm.generate', fake_generate), ('mlx_lm.models', fake_models),
+        ('mlx_lm.models.cache', fake_cache_module),
+        ('mlx_lm.sample_utils', fake_sample_utils),
+    ):
+        monkeypatch.setitem(sys.modules, name, module)
+
+    class Tokenizer:
+        bos_token = None
+        eos_token_id = 99
+        eos_token_ids = [99]
+
+        def __init__(self, boundary_mismatch=False):
+            self.boundary_mismatch = boundary_mismatch
+            self.shared_prefix = None
+
+        @staticmethod
+        def render(messages):
+            return ''.join(
+                f"<{item['role']}>{item.get('content', '')}</{item['role']}>"
+                for item in messages
+            )
+
+        def apply_chat_template(self, messages, **kwargs):
+            rendered = self.render(messages)
+            if not kwargs.get('add_generation_prompt', False):
+                self.shared_prefix = rendered
+            return rendered
+
+        def encode(self, text, add_special_tokens=False):
+            token_ids = [ord(char) for char in text]
+            # Model a BPE boundary merge at the end of the cached prefix. Text
+            # remains a prefix, but its tokenization no longer does.
+            if (self.boundary_mismatch and self.shared_prefix
+                    and text != self.shared_prefix and text.startswith(self.shared_prefix)):
+                token_ids[len(self.shared_prefix) - 1] = 0x10FFFF
+            return token_ids
+
+        @staticmethod
+        def decode(tokens, skip_special_tokens=False):
+            return ''.join(chr(token) for token in tokens)
+
+    active = {'turn': 0, 'prefix_ids': [], 'outputs': [], 'calls': [], 'choice_offsets': []}
+
+    class Model:
+        def __call__(self, token_batch, *, cache):
+            prefix = list(token_batch[0])
+            cache[0].state = (prefix,)
+            active['prefix_ids'] = prefix
+            return [0.0]
+
+    def stream_generate(model, tokenizer, *, prompt, max_tokens, sampler,
+                        logits_processors, prompt_cache=None):
+        text = active['outputs'].pop(0)
+        initial_cache = None
+        if prompt_cache is not None:
+            initial_cache = deepcopy(prompt_cache[0].state[0])
+            prompt_cache[0].state = (prompt_cache[0].state[0] + list(prompt),)
+        active['calls'].append({
+            'turn': active['turn'], 'prompt': list(prompt),
+            'initial_cache': initial_cache,
+        })
+        yield SimpleNamespace(
+            text=text, prompt_tokens=len(prompt), prompt_tps=100.0,
+            generation_tokens=len(tokenizer.encode(text, add_special_tokens=False)),
+            finish_reason='length',
+        )
+
+    fake_generate.stream_generate = stream_generate
+
+    tools = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_navigation_v1',
+    )
+    tool_names = {tool['function']['name'] for tool in tools}
+    assert {
+        'list_files', 'search_source', 'read_lines', 'replace_lines',
+        'check_syntax', 'run_public_tests', 'finish',
+    } <= tool_names
+    sequence = [
+        'list_files', 'search_source', 'search_source', 'read_lines',
+        'replace_lines', 'check_syntax', 'run_public_tests',
+    ]
+    actions = (sequence * ((turn_count - 1 + len(sequence) - 1) // len(sequence)))[:turn_count - 1]
+    actions.append('finish')
+
+    def arguments_for(name, lease):
+        return {
+            'list_files': {},
+            'search_source': {'query': 'return'},
+            'read_lines': {'path': 'src/model.py', 'start': 1, 'end': 3},
+            'replace_lines': {'lease': lease or 'lease-before-read', 'text': 'return 1\n'},
+            'check_syntax': {'path': 'src/model.py'},
+            'run_public_tests': {},
+            'finish': {'summary': 'bounded synthetic interaction completed'},
+        }[name]
+
+    def deterministic_choice_processor(tokenizer, tool_definitions, *, prompt_token_count, mx=None):
+        return None, {
+            tool['function']['name']: tuple(ord(c) for c in tool['function']['name'])
+            for tool in tool_definitions
+        }
+
+    def execute(protocol, *, boundary_mismatch=False):
+        active.update(turn=0, prefix_ids=[], calls=[], choice_offsets=[])
+        tokenizer = Tokenizer(boundary_mismatch=boundary_mismatch)
+        messages = [{'role': 'user', 'content': 'Follow the bounded source workflow.'}]
+        generated_actions = []
+        output_token_ids = []
+        stage_details = []
+        lease = None
+        choice_offset_original = deterministic_choice_processor
+
+        def choice_offset_spy(tokenizer_arg, tools_arg, **kwargs):
+            active['choice_offsets'].append(kwargs['prompt_token_count'])
+            return choice_offset_original(tokenizer_arg, tools_arg, **kwargs)
+
+        # Use the real processor's finite token sequences, while returning
+        # deterministic fixture logits through the fake generation stream.
+        monkeypatch.setattr(run_local_agent, 'make_choice_logits_processor', choice_offset_spy)
+        original_protocol = protocol
+        args = SimpleNamespace(
+            max_context_tokens=100_000, do_sample=False, temperature=0.0,
+            top_p=1.0, top_k=0, generation_protocol=original_protocol,
+            tool_interface='lease_bound_navigation_v1', replace_text_guidance='original',
+        )
+        for turn_index, name in enumerate(actions):
+            active['turn'] = turn_index
+            # Each generation stage emits a model-selected tool name followed
+            # by its typed values, without output repair.
+            values = arguments_for(name, lease)
+            active['outputs'] = [name, *[
+                json.dumps(values[key], separators=(',', ':')) if isinstance(values[key], (int, dict, list))
+                else str(values[key])
+                for key in next(
+                    tool['function']['parameters'].get('required', [])
+                    for tool in tools if tool['function']['name'] == name
+                )
+            ]]
+            # read_lines creates the changing lease used by a later edit.
+            if name == 'read_lines':
+                lease = f'lease-{turn_index}'
+                values['path'] = 'src/model.py'
+                active['outputs'] = [name, values['path'], str(values['start']), str(values['end'])]
+            if name == 'replace_lines':
+                values['lease'] = lease or 'lease-before-read'
+                active['outputs'] = [name, values['lease'], values['text']]
+
+            prefix_text = tokenizer.render(messages)
+            prefix_ids = tokenizer.encode(prefix_text)
+            raw, _, _ = run_local_agent.generate_schema_slot_turn(
+                Model(), tokenizer, messages, tools, limit=256, args=args,
+            )
+            status, parsed = parse_tool_output_v1(raw, tools)
+            assert status == 'complete_tool_call'
+            assert parsed['name'] == name
+            assert parsed['arguments'] == values
+            generated_actions.append(parsed)
+            output_token_ids.extend(
+                stage['generated_token_ids']
+                for stage in args._last_generation_detail['stages']
+            )
+            stage_details.append(args._last_generation_detail)
+            messages.extend([
+                {'role': 'assistant', 'content': raw},
+                {'role': 'tool', 'name': name, 'content': json.dumps(
+                    ({'status': 'read_complete', 'lease': lease, 'content': 'return 0\n'}
+                     if name == 'read_lines' else
+                     {'status': 'transient_error', 'detail': 'retry after index refresh'}
+                     if name == 'search_source' and turn_index == 1 else
+                     {'status': 'ok', 'detail': ('x' * (turn_index * 3))}),
+                    separators=(',', ':'),
+                )},
+                {'role': 'user', 'content': f'Continue bounded step {turn_index + 1}.'},
+            ])
+            if protocol == 'schema_slots_v10':
+                turn_calls = [call for call in active['calls'] if call['turn'] == turn_index]
+                assert turn_calls
+                if not boundary_mismatch:
+                    assert all(call['initial_cache'] == prefix_ids for call in turn_calls)
+                    assert len({tuple(call['initial_cache']) for call in turn_calls}) == 1
+        return generated_actions, output_token_ids, stage_details, active['calls'], active['choice_offsets']
+
+    monkeypatch.setattr(
+        run_local_agent, 'make_choice_logits_processor', deterministic_choice_processor,
+    )
+    monkeypatch.setattr(
+        run_local_agent, 'make_terminal_newline_logits_processor',
+        lambda *args, **kwargs: object(),
+    )
+    v9 = execute('schema_slots_v9')
+    exact_v10 = execute('schema_slots_v10')
+    mismatch_v10 = execute('schema_slots_v10', boundary_mismatch=True)
+    assert v9[0] == exact_v10[0] == mismatch_v10[0]
+    assert v9[1] == exact_v10[1] == mismatch_v10[1]
+    assert len(exact_v10[0]) == turn_count
+    assert len({stage['shared_prefix_cache']['prefix_tokens']
+                for stage in exact_v10[2]}) > 1
+    assert all(
+        call['initial_cache'] is None for call in v9[3]
+    )
+    assert all(
+        stage['kv_cache_reused_prefix_tokens'] > 0
+        and stage['kv_cache_fallback_reason'] is None
+        for turn in exact_v10[2] for stage in turn['stages']
+    )
+    assert all(
+        stage['kv_cache_reused_prefix_tokens'] == 0
+        and stage['kv_cache_fallback_reason'] == 'rendered_prompt_not_exact_prefix'
+        for turn in mismatch_v10[2] for stage in turn['stages']
+    )
+    for run in (v9, exact_v10, mismatch_v10):
+        first_stage_calls = [
+            next(call for call in run[3] if call['turn'] == turn)
+            for turn in range(turn_count)
+        ]
+        assert run[4] == [len(call['prompt']) for call in first_stage_calls]
+
+
 def test_mocked_full_edit_reaches_an_independent_fixture_oracle(tmp_path):
     import json
     import runpy
