@@ -96,7 +96,7 @@ At the PR audit snapshot there were **18 open PRs and 9 Drafts**. The machine-re
 | [#139](https://github.com/mitukx/VARE/pull/139) | Draft; updated head `79be1cae567bd5c3c63e26292a406b21c22e7233`; latest status view had 14 passing and 6 pending contexts | Added the duplicate-read guard fix and regression tests; no model follow-up on consumed family |
 | [#142](https://github.com/mitukx/VARE/pull/142) | Draft evidence PR; audit snapshot head `2251087c41f17220a547f4459be698d34711534b`; Sprint IX evidence commit `b720ed44f0f323652e38fee08639401df799ff93`; review required | Sprint IX safe evidence/report appended; retain Draft pending explicit source-split audit and independent review |
 | [#143](https://github.com/mitukx/VARE/pull/143) | Main-based, 19 latest checks green, independent approval required | No merge; no eligible reviewer was available |
-| [#140](https://github.com/mitukx/VARE/pull/140) | Main-based, 19 latest checks green, 1 unresolved review thread and approval required | No merge; resolve the thread and secure independent approval |
+| [#140](https://github.com/mitukx/VARE/pull/140) | Main-based, head `34f972eb2a300711f36fd81a72b6948528dfebad`, 19 latest checks green; maintainer says symlink/archive-fallback and duplicate-key fixes are present; 1 P2 thread remains unresolved | No merge; an independent reviewer must verify the fix and resolve the thread, then approve |
 | [#120](https://github.com/mitukx/VARE/pull/120) | Main-based, 20 latest checks green, 2 unresolved P1 threads | Remains blocked on evaluator completion-forgery findings |
 | [#133](https://github.com/mitukx/VARE/pull/133) | Stacked on closed #132 lineage; 2 unresolved P2 threads | Remains blocked on source-index budget and transient rebuild recovery findings |
 

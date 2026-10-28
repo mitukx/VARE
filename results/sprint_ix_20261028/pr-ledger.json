@@ -3411,9 +3411,9 @@
         "scripts/verify_coding_agent_evidence_manifest_v1.py",
         "tests/test_coding_agent_evidence_manifest.py"
       ],
-      "disposition": "FIX",
-      "rationale": "Main-based manifest-integrity PR has 1 unresolved review thread; green CI and automated COMMENTED review do not satisfy approval.",
-      "next_action": "Resolve the outstanding thread and secure independent approval before merge.",
+      "disposition": "HOLD",
+      "rationale": "The exact head contains the maintainer-described fix for unsafe live-path/archive fallback and duplicate JSON keys; the P2 thread remains unresolved for independent verification, and required approval is absent.",
+      "next_action": "An independent reviewer should verify the symlinked-file/ancestor and duplicate-key regressions, then resolve the thread and approve if satisfied.",
       "latest_head_checks": {
         "count": 19,
         "states": {
