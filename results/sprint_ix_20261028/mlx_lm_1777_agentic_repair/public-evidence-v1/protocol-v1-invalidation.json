@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "protocol_id": "vare-sprint-ix-progress-aware-coding-agent-v1",
+  "status": "INVALIDATED_BEFORE_MODEL_INFERENCE",
+  "protocol_sha256": "d441e32ff6aa725ac5b96921ed326b0fc3956ebdf64172e4fa14a70c006d5996",
+  "invalidated_at_utc": "2026-10-28T07:53:02.899Z",
+  "reason": "Pre-model launcher contract mismatch: runner expected task.instruction and task.candidate_baseline_sha256; protocol v1 only had candidate_instruction and baseline_source_sha256.",
+  "observed_failure": "protocol-level mismatch detected by code inspection before invoking campaign runner; no model weights were loaded, no inference occurred, no task attempt was consumed.",
+  "corrective_action": "Preserved v1 unchanged, corrected runner field bindings, created a prospective v2 protocol and reran integrity/command-construction preflight."
+}

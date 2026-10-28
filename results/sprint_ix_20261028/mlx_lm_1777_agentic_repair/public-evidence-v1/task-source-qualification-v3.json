@@ -1,0 +1,88 @@
+{
+  "TASK_md_sha256": "4c457b4a5c1ef8c9571f2a75f5097e11b8ffc16aef0e0a2677802a64a0277d8b",
+  "artifact_sha256": {
+    "TASK.md": "4c457b4a5c1ef8c9571f2a75f5097e11b8ffc16aef0e0a2677802a64a0277d8b",
+    "grade_hidden.py": "7894fa2811de5f42ddec0b3f1fa3e78cd3ae5a541c00b8282cabd3d64f550420",
+    "task.json": "cc210638970a5b6060f9bafa21b5b14a55dd63f05ccaa17f8747c8817b1bac06",
+    "test_public.py": "9f7d24301714a8c44e419add1d124a74f19774ed102caefe0acf5fcc4c8eb5f9"
+  },
+  "baseline_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+  "candidate_visible_files": [
+    "mlx_lm/generate.py"
+  ],
+  "candidate_visible_prompt_contains_exact_expected_behavior": true,
+  "candidate_visible_prompt_excludes_upstream_issue_and_pr_ids": true,
+  "candidate_workspace_contains_synthetic_baseline_commit": true,
+  "candidate_workspace_contains_upstream_git_history": false,
+  "created_at_utc": "2026-10-28T07:48:14.785734+00:00",
+  "family_id": "mlx-lm-prefill-history-dev-01",
+  "fixed_revision": "fa6cb55e7e3b21861263df0fc5d235552670dda7",
+  "grader_pretraining_exposure": "UNKNOWN",
+  "issue": "https://github.com/ml-explore/mlx-lm/issues/1773",
+  "prior_vare_model_exposure": "Retrospective source scan pending before inference.",
+  "pull_request": "https://github.com/ml-explore/mlx-lm/pull/1777",
+  "repository": "https://github.com/ml-explore/mlx-lm",
+  "schema_version": 1,
+  "source_path": "mlx_lm/generate.py",
+  "split": "development",
+  "states": {
+    "baseline": {
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/mlx-lm-task-1777-prep/mlx_lm/generate.py",
+      "sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2"
+    },
+    "candidate_workspaces": {
+      "A_autonomous": {
+        "head": "6cae71c4c2d13bdef51a3abe9de7e8274ce75178",
+        "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/sprint-ix-mlx1777-candidates/A_autonomous",
+        "source_sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2"
+      },
+      "B_progress_aware": {
+        "head": "6cae71c4c2d13bdef51a3abe9de7e8274ce75178",
+        "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/sprint-ix-mlx1777-candidates/B_progress_aware",
+        "source_sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2"
+      },
+      "C_localized": {
+        "head": "6cae71c4c2d13bdef51a3abe9de7e8274ce75178",
+        "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/sprint-ix-mlx1777-candidates/C_localized",
+        "source_sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2"
+      },
+      "control_baseline": {
+        "head": "6cae71c4c2d13bdef51a3abe9de7e8274ce75178",
+        "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/sprint-ix-mlx1777-candidates/control-baseline",
+        "source_sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2"
+      },
+      "control_fixed": {
+        "head": "6cae71c4c2d13bdef51a3abe9de7e8274ce75178",
+        "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/sprint-ix-mlx1777-candidates/control-fixed",
+        "source_sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2"
+      },
+      "control_mutant": {
+        "head": "6cae71c4c2d13bdef51a3abe9de7e8274ce75178",
+        "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/sprint-ix-mlx1777-candidates/control-mutant",
+        "source_sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2"
+      }
+    },
+    "fixed": {
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/mlx-lm-task-1777-fixed/mlx_lm/generate.py",
+      "sha256": "c68732942b6a4653f8c303897d4ef85954fef4c2373b08e7c163baabe77a9599"
+    },
+    "mutant": {
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/mlx-lm-task-1777-mutant/mlx_lm/generate.py",
+      "sha256": "ef1c4cac3cd7bac55ef82c0267c15ee5b97f4bbdc4f628d531550fbc6c9635d3"
+    }
+  },
+  "status": "QUALIFICATION_PASS_PRE_MODEL_FINAL_PROMPT",
+  "task_id": "mlx-lm-prefill-history-dev-01",
+  "task_json_sha256": "cc210638970a5b6060f9bafa21b5b14a55dd63f05ccaa17f8747c8817b1bac06",
+  "upstream_pr_head": "b4998c75d48c025103633ab45d95384b2e5a22d8",
+  "upstream_provenance": {
+    "baseline_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+    "current_base_sha": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+    "current_head_sha": "b4998c75d48c025103633ab45d95384b2e5a22d8",
+    "current_state": "MERGED",
+    "fixed_revision": "fa6cb55e7e3b21861263df0fc5d235552670dda7",
+    "issue": "https://github.com/ml-explore/mlx-lm/issues/1773",
+    "pull_request": "https://github.com/ml-explore/mlx-lm/pull/1777",
+    "repository": "https://github.com/ml-explore/mlx-lm"
+  }
+}
