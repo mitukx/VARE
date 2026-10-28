@@ -591,6 +591,90 @@ def test_navigation_runs_accept_a_supplied_event_journal_before_model_loading(
     assert not (tmp_path / "agent.json").exists()
 
 
+def test_schema_slot_stream_generation_uses_mlx_lm_stream_api_without_generate_only_kwargs(
+        monkeypatch):
+    from types import ModuleType, SimpleNamespace
+
+    fake_mlx = ModuleType('mlx')
+    fake_mlx.__path__ = []
+    fake_core = ModuleType('mlx.core')
+    fake_core.reset_peak_memory = lambda: None
+    fake_core.get_active_memory = lambda: 10
+    fake_core.get_peak_memory = lambda: 20
+    fake_core.metal = SimpleNamespace(get_active_memory=lambda: 10, get_peak_memory=lambda: 20)
+    fake_mlx.core = fake_core
+    fake_generate = ModuleType('mlx_lm.generate')
+    outputs = iter(['finish', 'done'])
+    calls = []
+
+    def stream_generate(model, tokenizer, *, prompt, max_tokens, sampler, logits_processors):
+        text = next(outputs)
+        calls.append({'prompt_tokens': len(prompt), 'max_tokens': max_tokens})
+        yield SimpleNamespace(
+            text=text, prompt_tokens=len(prompt), prompt_tps=100.0,
+            generation_tokens=1, finish_reason='length',
+        )
+
+    fake_generate.stream_generate = stream_generate
+    fake_sample_utils = ModuleType('mlx_lm.sample_utils')
+    fake_sample_utils.make_sampler = lambda **kwargs: 'fixture-sampler'
+    fake_mlx_lm = ModuleType('mlx_lm')
+    fake_mlx_lm.__path__ = []
+    monkeypatch.setitem(sys.modules, 'mlx', fake_mlx)
+    monkeypatch.setitem(sys.modules, 'mlx.core', fake_core)
+    monkeypatch.setitem(sys.modules, 'mlx_lm', fake_mlx_lm)
+    monkeypatch.setitem(sys.modules, 'mlx_lm.generate', fake_generate)
+    monkeypatch.setitem(sys.modules, 'mlx_lm.sample_utils', fake_sample_utils)
+
+    class Tokenizer:
+        bos_token = None
+        eos_token_id = 99
+        eos_token_ids = [99]
+
+        def apply_chat_template(self, messages, **kwargs):
+            return 'fixture prompt'
+
+        def encode(self, text, add_special_tokens=False):
+            if text == 'finish':
+                return [17]
+            return [ord(char) for char in text]
+
+        def decode(self, tokens, skip_special_tokens=False):
+            return 'finish' if tokens == [17] else ''.join(chr(token) for token in tokens)
+
+    tool = {
+        'type': 'function',
+        'function': {
+            'name': 'finish',
+            'parameters': {
+                'type': 'object', 'properties': {'summary': {'type': 'string'}},
+                'required': ['summary'], 'additionalProperties': False,
+            },
+        },
+    }
+    args = SimpleNamespace(
+        max_context_tokens=1024, do_sample=False, temperature=0.0,
+        top_p=1.0, top_k=0, generation_protocol='schema_slots_v9',
+        tool_interface='lease_bound_exact_text_transactional_v1',
+        replace_text_guidance='original',
+    )
+
+    raw, generated_tokens, prompt_tokens = run_local_agent.generate_schema_slot_turn(
+        object(), Tokenizer(), [], [tool], limit=32, args=args,
+    )
+
+    status, parsed = parse_tool_output_v1(raw, [tool])
+    assert status == 'complete_tool_call'
+    assert parsed['arguments'] == {'summary': 'done'}
+    assert generated_tokens == 5
+    assert prompt_tokens > 0
+    assert len(calls) == 2
+    assert [stage['stage'] for stage in args._last_generation_detail['stages']] == [
+        'tool_choice', 'argument_value',
+    ]
+    assert all(stage['generation_wall_seconds'] >= 0 for stage in args._last_generation_detail['stages'])
+
+
 def test_mocked_full_edit_reaches_an_independent_fixture_oracle(tmp_path):
     import json
     import runpy

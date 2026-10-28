@@ -763,7 +763,7 @@ def generate_schema_slot_turn(
         last_response = None
         for response in stream_generate(
                 model, tokenizer, prompt=prompt_ids, max_tokens=max_tokens,
-                sampler=sampler, logits_processors=logits_processors, verbose=False):
+                sampler=sampler, logits_processors=logits_processors):
             response_at = time.perf_counter()
             if first_response_at is None:
                 first_response_at = response_at
