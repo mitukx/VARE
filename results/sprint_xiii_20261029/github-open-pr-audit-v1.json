@@ -1,0 +1,340 @@
+{
+  "draft_count": 9,
+  "main_sha": "40f7b38fe619217c0ebd534c4d89d42617859be8",
+  "merged_count": 0,
+  "notes": [
+    "CI counts are exact-head GitHub check-run records at the captured SHAs; reruns may create multiple runs per job.",
+    "No independent APPROVED review was present on any of the 18 open PRs at snapshot time.",
+    "Mergeability does not override unresolved review findings or branch protection."
+  ],
+  "open_count": 18,
+  "pull_requests": [
+    {
+      "base": "codex/development-navigation-campaign-v1",
+      "base_sha": "df0a360ead3927f72d33972634251469b50c2368",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 20,
+        "total": 20
+      },
+      "draft": true,
+      "head": "codex/v10-multiturn-abba-v1",
+      "head_sha": "027e16aebbf1f7e812579df95bf0aee748541c1d",
+      "independent_approval": false,
+      "number": 146,
+      "state": "open",
+      "title": "v9/v10 multi-turn shared-prefix ABBA measurement (partial run-001)",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "main",
+      "base_sha": "50fd8c57788df6ef9aa90bcf483282721e696ae9",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 19,
+        "total": 19
+      },
+      "draft": false,
+      "head": "cursor/development-repo-repair-protocol-4ffa",
+      "head_sha": "0333c097877d7039efa57d8eb4ea408808f1b049",
+      "independent_approval": false,
+      "number": 145,
+      "state": "open",
+      "title": "Freeze family-specific Development repository-repair protocol v2",
+      "unresolved_review_threads": 1
+    },
+    {
+      "base": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 19,
+        "total": 19
+      },
+      "draft": true,
+      "head": "codex/sprint-iv-evidence-public-v1",
+      "head_sha": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+      "independent_approval": false,
+      "number": 142,
+      "state": "open",
+      "title": "Publish verified external repair campaign evidence",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "codex/navigation-integrity-fixes-v1",
+      "base_sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 20,
+        "total": 20
+      },
+      "draft": true,
+      "head": "codex/development-navigation-campaign-v1",
+      "head_sha": "df0a360ead3927f72d33972634251469b50c2368",
+      "independent_approval": false,
+      "number": 139,
+      "state": "open",
+      "title": "Fix navigation regressions and measure fresh Development agent failures",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "codex/navigation-symlink-fix-v1",
+      "base_sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f",
+      "check_runs": {
+        "failure": 1,
+        "other": 0,
+        "success": 28,
+        "total": 29
+      },
+      "draft": false,
+      "head": "codex/navigation-integrity-fixes-v1",
+      "head_sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1",
+      "independent_approval": false,
+      "number": 137,
+      "state": "open",
+      "title": "Fix source-navigation review findings",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "codex/source-navigation-v1",
+      "base_sha": "a65d59e5704b84a934a49385551a8d2311a01575",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 19,
+        "total": 19
+      },
+      "draft": false,
+      "head": "codex/navigation-symlink-fix-v1",
+      "head_sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f",
+      "independent_approval": false,
+      "number": 136,
+      "state": "open",
+      "title": "Harden source navigation syntax checks",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "codex/transformers-47468-qualification-v1",
+      "base_sha": "d8636def094cd83a2010980570a5c4804725166a",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 19,
+        "total": 19
+      },
+      "draft": true,
+      "head": "codex/transformers-47468-qualification-v4",
+      "head_sha": "b258c69fc0295e421eab3aaae965d70b693cd1e6",
+      "independent_approval": false,
+      "number": 135,
+      "state": "open",
+      "title": "Add process-creation boundary preflight for 47468 v4",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "codex/mlx-pr4748-qwen3-pilot-v1",
+      "base_sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 20,
+        "total": 20
+      },
+      "draft": false,
+      "head": "codex/source-navigation-v1",
+      "head_sha": "e8ab4705b84d82cd79e2883c391083087e82b4e8",
+      "independent_approval": false,
+      "number": 133,
+      "state": "open",
+      "title": "Add bounded source navigation for repair agents",
+      "unresolved_review_threads": 2
+    },
+    {
+      "base": "codex/mlx-core-development-agent-feasibility-v1",
+      "base_sha": "071352981ad2e6bb1601ae50f935600f28aba8fc",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 20,
+        "total": 20
+      },
+      "draft": true,
+      "head": "codex/hash-bound-agent-edit-v1",
+      "head_sha": "139de5381989531691673be08e906233dd00468c",
+      "independent_approval": false,
+      "number": 131,
+      "state": "open",
+      "title": "Measure deterministic edit replay and recovery; pin E2E inventories",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "codex/real-agent-interface-v1",
+      "base_sha": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 20,
+        "total": 20
+      },
+      "draft": false,
+      "head": "codex/verifier-consistent-async-grpo-v1",
+      "head_sha": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48",
+      "independent_approval": false,
+      "number": 126,
+      "state": "open",
+      "title": "Measure verifier-version-aware GRPO under drift and crashes",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 28,
+        "total": 28
+      },
+      "draft": false,
+      "head": "codex/flagship-teacher-gate",
+      "head_sha": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+      "independent_approval": false,
+      "number": 122,
+      "state": "open",
+      "title": "Close installed-repair leakage and record the 7B teacher NO-GO",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 19,
+        "total": 19
+      },
+      "draft": false,
+      "head": "codex/transformers-49412-qualification",
+      "head_sha": "a937f4ad6eacb63d679952f7a05d39d04afab59a",
+      "independent_approval": false,
+      "number": 121,
+      "state": "open",
+      "title": "Add independent source replay for Transformers fusion registration",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 20,
+        "total": 20
+      },
+      "draft": false,
+      "head": "codex/fresh-task-qualification-mlx-lm-1910",
+      "head_sha": "8aacae54d0f8893580a77cb8bb831e7621a2403a",
+      "independent_approval": false,
+      "number": 120,
+      "state": "open",
+      "title": "Record real-model coding-agent feasibility and tool-boundary fixes",
+      "unresolved_review_threads": 2
+    },
+    {
+      "base": "codex/transformers-49752-repo-task",
+      "base_sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 20,
+        "total": 20
+      },
+      "draft": true,
+      "head": "codex/structured-edit-core-standalone",
+      "head_sha": "552d6f61187926d78719aad8c4c7ec9e8663c242",
+      "independent_approval": false,
+      "number": 118,
+      "state": "open",
+      "title": "Extract hash-checked structured edit library without changing frozen agent runtime",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "codex/mlxlm-1971-attested-calibration",
+      "base_sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 19,
+        "total": 19
+      },
+      "draft": true,
+      "head": "codex/mlxlm-1971-v10-operator",
+      "head_sha": "6709aed996ce5ec315cf7a87930350dca6c0ee20",
+      "independent_approval": false,
+      "number": 117,
+      "state": "open",
+      "title": "Isolate MLX-LM source snapshots before trusted export",
+      "unresolved_review_threads": 4
+    },
+    {
+      "base": "codex/mlxlm-1971-isolation",
+      "base_sha": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 19,
+        "total": 19
+      },
+      "draft": true,
+      "head": "codex/mlxlm-1971-attested-calibration",
+      "head_sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "independent_approval": false,
+      "number": 114,
+      "state": "open",
+      "title": "Preserve attested MLX-LM calibration evidence on publication failure",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "codex/fresh-hf-dev-candidates-v1",
+      "base_sha": "ab8d7c0b55d5b1c28365f2f002509ce3a37df501",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 19,
+        "total": 19
+      },
+      "draft": true,
+      "head": "codex/hf-coding-dev-inference-v2-dual-python",
+      "head_sha": "710dbc0d28aa33a78521a29f067c9a9493f6c56d",
+      "independent_approval": false,
+      "number": 108,
+      "state": "open",
+      "title": "Add dual-Python HF Coding Development protocol v2",
+      "unresolved_review_threads": 0
+    },
+    {
+      "base": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "check_runs": {
+        "failure": 0,
+        "other": 0,
+        "success": 20,
+        "total": 20
+      },
+      "draft": false,
+      "head": "codex/mlxlm-1971-isolation",
+      "head_sha": "762a5a65598756014d957a206ba1548cb19a348f",
+      "independent_approval": false,
+      "number": 99,
+      "state": "open",
+      "title": "Calibrate isolated MLX-LM 1971 Development task",
+      "unresolved_review_threads": 3
+    }
+  ],
+  "repository": "mitukx/VARE",
+  "retrieved_utc": "2026-10-28T18:51:00.015225+00:00",
+  "schema_version": 1
+}
