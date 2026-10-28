@@ -74,8 +74,8 @@ PR #139に8/16-turnの決定論的回帰fixtureを追加した。実tool schema�
 ## GitHubと統合状態
 
 - mainは開始・終了ともに`f3ab90a36e8724441b6b9555255f8f75a0a4d529`。Sprint XIでmergeは0件。
-- PR #139 (`https://github.com/mitukx/VARE/pull/139`) にv10長軌跡fixtureをcommit `df0a360ead3927f72d33972634251469b50c2368`としてpushした。PRはDraft、baseは#137 head `6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1`。独立reviewはなく、mainへは未統合。exact-head CIはこのheadで実行中。
-- PR #142 (`https://github.com/mitukx/VARE/pull/142`) に本レポートとSprint XI raw artifactsを追記する。Draft evidence PRであり、独立review/承認の代替ではない。
+- PR #139 (`https://github.com/mitukx/VARE/pull/139`) にv10長軌跡fixtureをcommit `df0a360ead3927f72d33972634251469b50c2368`としてpushした。PRはDraft、baseは#137 head `6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1`。exact-head CIは20/20 success。独立reviewはなく、mainへは未統合。
+- PR #142 (`https://github.com/mitukx/VARE/pull/142`) へ本レポートとSprint XI raw artifactsをcommit `f990817afeadfb8d331995a43e275625205f2bdd`で追記した。push時のGitHub blob-budget checkは3個のoptimizer checkpointが1 MiB超過で失敗した。この失敗記録は残した。続く修正で3原本をそれぞれ900,000 byte以下の2 partに可逆分割し、part連結後のsizeとSHA-256をcheckpoint manifestと照合する検証器を追加した。検証器は3/3原本の復元照合にPASSし、PRの現在差分から大blob原本を削除した。現時点の分割版はmanifest v2に記録済み。修正commitのexact-head CIはpush後に確認する。PRはDraftで、独立review/承認の代替ではない。
 - main protectionを回避していない。#140/#143等を含むmainline integrationは適格な独立approval待ちであり、実行済みmainline成果はない。
 
 2026-10-28のlive PR inventoryは開始時・終了時ともに18 open / 9 Draft。以下のmetadata snapshotと台帳は#142へのSprint XI追記前に取得した。CI列は取得時のGitHub status check数である。`clean`やgreen CIはレビュー承認や統合適格性を意味しない。
@@ -125,6 +125,7 @@ main protectionは1件のrequired approvalを要求し、`enforce_admins=true`�
 
 - Parent protocol/run/failure: `results/sprint_xi_20261028/model_coupled_qwen025_v1/`
 - Prospective continuation protocol, independent worker/learner logs, checkpoint, audit and manifest: `results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/`
-- Sprint-wide SHA-256 inventory: `results/sprint_xi_20261028/manifest-sprint-xi-v1.json` with `.sha256` sidecar; it covers the report, PR ledger, source runner scripts, protocols, logs, checkpoints, evaluations, and retained partial failure files.
+- Sprint-wide SHA-256 inventory v1 (`results/sprint_xi_20261028/manifest-sprint-xi-v1.json`) is retained with its `.sha256` sidecar in the original evidence commit `f990817afeadfb8d331995a43e275625205f2bdd`. That version captured the three raw 1,218,465-byte optimizer files before the repository blob-budget check. The follow-up stores those same bytes as six 900,000-byte-or-smaller parts; `checkpoint-optimizer-parts-v1.json` and `verify_checkpoint_parts_v1.py` reconstruct and verify each original SHA-256 against the checkpoint manifests. Follow-up Sprint-wide manifest v2 inventories the current split representation and updated report.
 - Reproduction runners: `scripts/sprint_xi/run_model_coupled_v1.py`, `scripts/sprint_xi/run_recovery_continuation_v1.py`, `scripts/sprint_xi/audit_recovery_continuation_v1.py`.
+- Verify the lossless optimizer-file split with `python scripts/sprint_xi/verify_checkpoint_parts_v1.py`; pass a new temporary `--materialize-root` to reconstruct the original `.pt` bytes outside the evidence checkout.
 - Continuation command: `python scripts/sprint_xi/run_recovery_continuation_v1.py --protocol results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/protocol.lock.json --original-protocol results/sprint_xi_20261028/model_coupled_qwen025_v1/protocol.lock.json --base-run results/sprint_xi_20261028/model_coupled_qwen025_v1/runs/run-001 --output <new-output>`.
