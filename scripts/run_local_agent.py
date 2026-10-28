@@ -498,6 +498,25 @@ def tools_for_no_progress_guard(
     return [tool for tool in tools if tool['function']['name'] not in blocked_tools]
 
 
+def source_read_progress_key(
+    result: object, *, edit_attempt_count: int,
+) -> tuple[str, int, int, str, int] | None:
+    """Identify an unchanged line read without exposing the lease's full-file hash."""
+    if not isinstance(result, dict) or result.get('status') != 'read_complete':
+        return None
+    path = result.get('path')
+    start_line = result.get('start_line')
+    end_line = result.get('end_line')
+    content = result.get('content')
+    if (not isinstance(path, str) or not path
+            or not isinstance(start_line, int) or isinstance(start_line, bool)
+            or not isinstance(end_line, int) or isinstance(end_line, bool)
+            or not isinstance(content, str)):
+        return None
+    range_sha256 = hashlib.sha256(content.encode('utf-8')).hexdigest()
+    return path, start_line, end_line, range_sha256, edit_attempt_count
+
+
 def capture_rendered_prompt(args: argparse.Namespace, prompt: str) -> str:
     """Retain the exact prompt passed to generation and its byte identity."""
     digest = hashlib.sha256(prompt.encode('utf-8')).hexdigest()
@@ -2444,26 +2463,20 @@ def main() -> int:
                     result = edit_leases.read_lines(
                         arguments.get('path'), arguments.get('start'), arguments.get('end'),
                     )
-                    if (args.no_progress_guard and isinstance(result, dict)
-                            and result.get('status') == 'read_complete'
-                            and isinstance(arguments.get('path'), str)
-                            and isinstance(arguments.get('start'), int)
-                            and isinstance(arguments.get('end'), int)
-                            and isinstance(result.get('sha256'), str)):
-                        read_key = (
-                            arguments['path'], arguments['start'], arguments['end'],
-                            result['sha256'], edit_attempt_count,
-                        )
+                    read_key = source_read_progress_key(
+                        result, edit_attempt_count=edit_attempt_count,
+                    )
+                    if args.no_progress_guard and read_key is not None:
                         if read_key == last_successful_read_key:
                             no_progress_blocked_tools = {'read_lines'}
                             intervention = {
-                                'kind': 'duplicate_source_read_guard_v1',
+                                'kind': 'duplicate_source_read_guard_v2',
                                 'turn': turn + 1,
                                 'trigger': {
-                                    'path': arguments['path'],
-                                    'start': arguments['start'],
-                                    'end': arguments['end'],
-                                    'source_sha256': result['sha256'],
+                                    'path': read_key[0],
+                                    'start': read_key[1],
+                                    'end': read_key[2],
+                                    'range_sha256': read_key[3],
                                 },
                                 'blocked_tools': ['read_lines'],
                                 'controller_assisted': True,
