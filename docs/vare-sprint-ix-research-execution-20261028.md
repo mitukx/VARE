@@ -93,14 +93,14 @@ At the PR audit snapshot there were **18 open PRs and 9 Drafts**. The machine-re
 
 | PR | Current relevant state | Outcome this sprint |
 |---|---|---|
-| [#139](https://github.com/mitukx/VARE/pull/139) | Draft; updated head `79be1cae567bd5c3c63e26292a406b21c22e7233`; exact-head CI started and was pending at capture | Added the duplicate-read guard fix and regression tests; no model follow-up on consumed family |
-| [#142](https://github.com/mitukx/VARE/pull/142) | Draft evidence PR; initial head `2251087c41f17220a547f4459be698d34711534b`; review required | Sprint IX safe evidence/report appended; retain Draft pending explicit source-split audit and independent review |
+| [#139](https://github.com/mitukx/VARE/pull/139) | Draft; updated head `79be1cae567bd5c3c63e26292a406b21c22e7233`; latest status view had 14 passing and 6 pending contexts | Added the duplicate-read guard fix and regression tests; no model follow-up on consumed family |
+| [#142](https://github.com/mitukx/VARE/pull/142) | Draft evidence PR; audit snapshot head `2251087c41f17220a547f4459be698d34711534b`; Sprint IX evidence commit `b720ed44f0f323652e38fee08639401df799ff93`; review required | Sprint IX safe evidence/report appended; retain Draft pending explicit source-split audit and independent review |
 | [#143](https://github.com/mitukx/VARE/pull/143) | Main-based, 19 latest checks green, independent approval required | No merge; no eligible reviewer was available |
 | [#140](https://github.com/mitukx/VARE/pull/140) | Main-based, 19 latest checks green, 1 unresolved review thread and approval required | No merge; resolve the thread and secure independent approval |
 | [#120](https://github.com/mitukx/VARE/pull/120) | Main-based, 20 latest checks green, 2 unresolved P1 threads | Remains blocked on evaluator completion-forgery findings |
 | [#133](https://github.com/mitukx/VARE/pull/133) | Stacked on closed #132 lineage; 2 unresolved P2 threads | Remains blocked on source-index budget and transient rebuild recovery findings |
 
-No PR was merged or closed in this sprint. PR #139 and #142 were updated; all other PR states are unchanged. No historical task, grader, protocol, or result was rewritten. The report and public evidence are being appended to the evidence-focused #142, not merged to `main`.
+No PR was merged or closed in this sprint. PR #139 and #142 were updated; all other PR states are unchanged. No historical task, grader, protocol, or result was rewritten. The Sprint IX report and public evidence were appended to evidence-focused PR #142, not merged to `main`.
 
 ## Evidence and reproduction
 
