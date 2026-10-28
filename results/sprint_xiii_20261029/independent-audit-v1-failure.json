@@ -1,0 +1,20 @@
+{
+  "audit_version": "online-actor-independent-audit-v1",
+  "command": "scripts/sprint_xiii/audit_online_actor.py --protocol protocols/sprint_xiii_online_actor_v4.lock.json --output results/sprint_xiii_20261029/run-003 --receipt results/sprint_xiii_20261029/run-003/independent-audit.json",
+  "exception": {
+    "message": "max_rollout_concurrency",
+    "type": "KeyError"
+  },
+  "generation_count": 0,
+  "model_forward_count": 0,
+  "model_weights_loaded": true,
+  "optimizer_update_count": 0,
+  "outcome": "FAILED_BEFORE_ANY_AUDIT_MODEL_FORWARD",
+  "prior_protocol_and_run_receipts_modified": false,
+  "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v4",
+  "protocol_sha256": "194433a9fbbfaae9d8968f5c72a1f4cd4c1ca019de3470c35e513edda8a6ed23",
+  "record_type": "independent_audit_failure",
+  "recorded_utc": "2026-10-28T18:27:17Z",
+  "remediation": "Add an append-only audit v2 that interprets the frozen worker/learner concurrency fields without changing protocol v4 or audit v1.",
+  "root_cause": "audit v1 expects limits.max_rollout_concurrency but the frozen protocol uses limits.max_worker_concurrency for the single rollout worker. Protocol also records a separate max_learner_concurrency."
+}
