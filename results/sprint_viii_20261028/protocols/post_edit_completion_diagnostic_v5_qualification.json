@@ -1,0 +1,54 @@
+{
+  "checks": {
+    "cached_model_files_match": 11,
+    "candidate_baseline_sha256": "0ac4ea62bef2c530fe50c81f9930afff15a4712df7c961b8f41438bc5e6a79f7",
+    "candidate_known_fix_sha256_recorded_only_in_qualification": "219279f1e4495941e95206fe032a3f5aebd446b18593f78b74a03c8e696e508a",
+    "candidate_workspace_tracked_paths": [
+      "subject.py"
+    ],
+    "model_revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "protocol_sidecar": true,
+    "resource_failures": [],
+    "resource_snapshot": {
+      "available_memory_bytes": 12393857024,
+      "disk_free_bytes": 43899572224,
+      "free_swap_bytes": 1435828224,
+      "swap_used_bytes": 1785397248
+    },
+    "runner_protocol_id": "vare.sprint-viii.controller-diagnostic.v5",
+    "runtime": {
+      "mlx": "0.32.4",
+      "mlx_lm": "0.32.2",
+      "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+      "transformers": "5.21.0"
+    },
+    "runtime_code_hashes_match": true,
+    "semantic_grader_calibration": {
+      "baseline": {
+        "reason": "expression_outside_frozen_oracle_subset",
+        "status": "FAIL"
+      },
+      "known_fix": {
+        "reason": "exact_frozen_shift_contract",
+        "status": "PASS"
+      },
+      "semantically_equivalent_different_bytes": {
+        "reason": "exact_frozen_shift_contract",
+        "status": "PASS"
+      },
+      "wrong_mutant": {
+        "reason": "frozen_shift_contract_mismatch",
+        "status": "FAIL"
+      }
+    },
+    "task_contract_hash_match": true
+  },
+  "inference_allowed": true,
+  "model_inference_started": false,
+  "output_path": "results/sprint_viii_20261028/post_edit_completion_diagnostic_v5",
+  "protocol_path": "results/sprint_viii_20261028/protocols/post_edit_completion_diagnostic_v5.json",
+  "protocol_sha256": "47ab9f75b5d85ec66f36d05f9ebc25fae7e8595bf8b930b63b80b17888fe21f9",
+  "record_id": "sprint-viii-protocol-qualification-v5",
+  "status": "QUALIFIED_BEFORE_MODEL_INFERENCE",
+  "supersedes_protocol_sha256": "df9ea8733cde92bb0e6f5871dddd7045d32929edf00e405bc3492ad5ba7bd564"
+}

@@ -1,0 +1,34 @@
+{
+  "changed_file_count_api": 1,
+  "changed_files": [
+    {
+      "additions": 1,
+      "deletions": 1,
+      "filename": "src/transformers/models/mask2former/modeling_mask2former.py",
+      "patch": "@@ -2076,7 +2076,7 @@ def __init__(self, in_features: int, config: Mask2FormerConfig):\n         )\n         self.queries_embedder = nn.Embedding(config.num_queries, hidden_dim)\n         self.queries_features = nn.Embedding(config.num_queries, hidden_dim)\n-        self.input_projections = []\n+        self.input_projections = nn.ModuleList()\n \n         for _ in range(self.num_feature_levels):\n             if in_features != hidden_dim or config.enforce_input_projection:",
+      "status": "modified"
+    }
+  ],
+  "issue": {
+    "closed_at": "2026-10-21T19:15:10Z",
+    "html_url": "https://github.com/huggingface/transformers/issues/49698",
+    "number": 49698,
+    "state": "closed",
+    "title": "input_projections are not registered as PyTorch modules, causing missing parameters and CUDA device mismatch"
+  },
+  "license": "Apache-2.0",
+  "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+  "pull_request": {
+    "base_sha": "8e40ad7bc7019ba19ae8b0e7d98e60376d0fac2a",
+    "head_sha": "094669a133c54bafd2975c11a325140bc93b3459",
+    "html_url": "https://github.com/huggingface/transformers/pull/49703",
+    "merge_commit_sha": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+    "merged": true,
+    "merged_at": "2026-10-21T19:15:08Z",
+    "number": 49703,
+    "state": "closed",
+    "title": "fix(mask2former): register input_projections as nn.ModuleList (fixes #49698)"
+  },
+  "recorded_utc": "2026-10-28T05:54:46Z",
+  "repository": "huggingface/transformers"
+}

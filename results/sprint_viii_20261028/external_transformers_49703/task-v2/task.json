@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "editable_files": [
+      "src/transformers/models/mask2former/modeling_mask2former.py"
+    ],
+    "split": "development",
+    "task_family": "transformers-49698-mask2former-module-registration"
+  },
+  "prompt": "Repair the initialization of `Mask2FormerTransformerModule` in Mask2Former. The feature projection layers are stored but not registered as child modules, so their parameters are missing from `state_dict()` and optimizer traversal and may stay on the wrong device. Preserve both the projection and identity branches, public behavior, and signatures. Find and patch the responsible initialization, verify syntax, then finish for independent grading.",
+  "source": {
+    "base_revision": "HEAD"
+  },
+  "task_id": "transformers-49703-mask2former-projection-registration-development-v2"
+}

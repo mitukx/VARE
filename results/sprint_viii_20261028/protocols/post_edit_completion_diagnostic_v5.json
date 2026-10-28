@@ -1,0 +1,142 @@
+{
+  "analysis_rule": "Report each arm descriptively and use one task-family denominator. Do not treat turns or arms as independent task observations, do not estimate statistical significance, and do not claim external coding capability or policy improvement.",
+  "arms": [
+    {
+      "arm_id": "current_controller",
+      "post_edit_completion_guidance": false,
+      "post_edit_navigation_gate": false,
+      "rationale": "Current Qwen7B function-edit protocol; historical records are contextual only and are not substituted for this prospective arm.",
+      "tool_interface": "lease_bound_function_edit_v1"
+    },
+    {
+      "arm_id": "post_edit_inventory_gate",
+      "post_edit_completion_guidance": false,
+      "post_edit_navigation_gate": true,
+      "rationale": "Hides list_files/list_functions after a successful edit while preserving search/read/edit/test/finish.",
+      "tool_interface": "lease_bound_function_edit_v1"
+    },
+    {
+      "arm_id": "post_edit_gate_plus_guidance",
+      "post_edit_completion_guidance": true,
+      "post_edit_navigation_gate": true,
+      "rationale": "Adds one logged controller message stating whether to run tests or call finish after an applied edit; does not replace the model action.",
+      "tool_interface": "lease_bound_function_edit_v1"
+    }
+  ],
+  "cheapest_falsification": "Offline replay of Sprint VII records shows repeated list_functions after edit and no explicit finish; this new one-family model diagnostic compares current controller, post-edit inventory gate, and gate plus completion guidance.",
+  "claim_limit": "Nonblind synthetic controller diagnostic only; not an external repository repair, held-out result, Coding RL improvement, or model-learning experiment.",
+  "code_sha256": {
+    "scripts/run_local_agent.py": "8f07e9488c0587fe6de3646d3c6b90ac3bc7b438073e41940d66f106cfeae7c9",
+    "scripts/run_sprint_viii_controller_diagnostic_v1.py": "9bd4d6939b86e00d252412b00b633566d57a6d2855fc329a75ac451994bbc8ca",
+    "scripts/sprint_viii_synthetic_grader_v1.py": "9ca6b9e7909fd8faac280691fddb78c75eac322902e44d3793a12dc9fbbeab80",
+    "src/vare/agent_runtime_snapshot_v1.py": "0b5e942da81e5b9a34ebbd5f382bf6af09df634774886d308e2396e89ea0f514"
+  },
+  "design": "Prospective but nonblind 3-arm controller diagnostic. All arms share one previously consumed synthetic task, the same cached model snapshot, greedy decoding seed, tool interface, prompt, generation budget, resource caps, and independent AST grader. One attempt per arm; no inferential capability claim.",
+  "frozen_at_utc": "2026-10-28T05:40:50.861570+00:00",
+  "frozen_before_model_inference": true,
+  "go_no_go_rule": "If the gate and/or guidance leads to a model-generated finish after the independently graded correct edit within budget and without resource abort, retain it as synthetic controller-feasibility evidence and then consider one fresh Development family only after separate task qualification. Otherwise preserve the failure and do not consume a new external task.",
+  "historical_reference": {
+    "attempt_01_record_sha256": "46db416e616b108e367cc1ce36d3136c3cf74a0fa95fed13fbae88bc7db8171d",
+    "attempt_02_record_sha256": "06a1905291d4cab5d2dc7b53a750aba8af40c4d3e01b2f165d50959fe651a71a",
+    "sprint_vii_protocol_sha256": "27796d62cd20a5764ba5191804df499c8a161b61d87afe55ad46378442490303"
+  },
+  "hypothesis": "On a fixed model and synthetic edit task, hiding repeated inventories after an applied edit and adding explicit post-edit completion guidance will reduce nonterminal behavior while preserving an independently correct candidate.",
+  "inference_budget": {
+    "agent_wall_seconds": 240,
+    "do_sample": false,
+    "edit_format": "structured_replace",
+    "generation_protocol": "schema_slots_v8",
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 128,
+    "max_no_tool_retries": 1,
+    "max_total_new_tokens": 512,
+    "max_turns": 8,
+    "public_test_runs": 0,
+    "require_source_read_before_edit": true,
+    "seed": 20261028,
+    "temperature": 0.0,
+    "tool_interface": "lease_bound_function_edit_v1",
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "model": {
+    "backend": "MLX Metal",
+    "files_sha256": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "README.md": "900637f68349b42803bd0779765ef87bd8ad54e4eba57991336911b3b1655e97",
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+      "model.safetensors.index.json": "23cd562592dd96686d2e799eb02e4b578a4038b6045eaefe860d270cc060e24f",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "model_pretraining_exposure": "unknown",
+    "quantization": "4-bit MLX community checkpoint",
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80",
+    "tokenizer_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+  },
+  "primary_outcomes": [
+    "model_explicitly_finished",
+    "candidate_independent_grade_status",
+    "verified_synthetic_task_completion",
+    "tool_calls_after_first_applied_edit"
+  ],
+  "protocol_id": "vare.sprint-viii.controller-diagnostic.v5",
+  "qualification_note": "v1 had a wrong known-fix hash; v2 mismatched the runner protocol ID; v3 omitted per-arm tool_interface; v4 corrected the arm schema but still depended on a grader that required exact canonical-patch SHA before semantic evaluation. All four were rejected before model inference. v5 uses a new semantic-only AST grader, does not expose or use a known-fix SHA, and accepts any source in the frozen semantic subset.",
+  "repository_head": "fd98fa77e28874a19baa126b5e4d546697037a39",
+  "resource_abort_rule": "Abort the current process on any frozen host-memory, free-swap, swap-growth, disk, RSS, or wall-time breach. Retain the partial trajectory and do not launch subsequent arms.",
+  "resource_limits": {
+    "attempt_wall_seconds": 300,
+    "max_model_process_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 2147483648,
+    "minimum_disk_free_bytes": 17179869184,
+    "minimum_free_swap_bytes": 536870912,
+    "sample_interval_seconds": 1.0
+  },
+  "runtime": {
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "offline_required": true,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python_executable": "/tmp/vare-sprint-vii-mlx/bin/python",
+    "python_version": "3.12.12",
+    "transformers": "5.21.0"
+  },
+  "schema_version": 1,
+  "secondary_outcomes": [
+    "tool calls to first edit",
+    "edit attempt and apply status",
+    "generated tokens",
+    "wall time",
+    "controller interventions",
+    "peak RSS",
+    "swap growth",
+    "runtime snapshot audit status"
+  ],
+  "supersedes_protocol_sha256": "df9ea8733cde92bb0e6f5871dddd7045d32929edf00e405bc3492ad5ba7bd564",
+  "task": {
+    "baseline_source_sha256": "0ac4ea62bef2c530fe50c81f9930afff15a4712df7c961b8f41438bc5e6a79f7",
+    "candidate_visible_source_files": [
+      "subject.py"
+    ],
+    "grader_behavior": "Independent, non-executing AST contract checker. It accepts semantically equivalent value + 2 / 2 + value implementations in a bounded syntax subset; baseline and wrong mutants fail. It has no expected-patch hash input and is never candidate-visible.",
+    "grader_entrypoint": "scripts/sprint_viii_synthetic_grader_v1.py",
+    "grader_sha256": "9ca6b9e7909fd8faac280691fddb78c75eac322902e44d3793a12dc9fbbeab80",
+    "instruction": "In subject.py, change the shift function so that it adds 2 to its argument. Only edit subject.py. Inspect the source first, apply a syntax-valid edit, then finish.",
+    "prior_exposure": "Two Sprint VII model attempts used this task family and produced correct edits but no explicit finish. This is an explicitly nonblind diagnostic re-use.",
+    "public_tests": "NOT_CONFIGURED; independent grader runs after agent completion and is not model-visible",
+    "status": "consumed synthetic diagnostic fixture; not a Development or held-out task",
+    "task_id": "sprint-vii-synthetic-shift-plus-two",
+    "task_json_sha256": "3ffa025fe65043fbcbe57e41aeeb411e0b41d289eb458d03d72fda41da35ae1a",
+    "task_root_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/model_compat_fixture/task",
+    "workspace_base_commit": "ce7237984452cc25806836db1b4e84e9265fff97",
+    "workspace_template_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/model_compat_fixture/workspace-template"
+  }
+}
