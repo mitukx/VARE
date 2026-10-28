@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "task_id": "transformers-49900-numpy-label-dtype-v1",
+  "title": "Preserve NumPy integer scalar label dtypes in default data collators",
+  "prompt": "Repair src/transformers/data/data_collator.py so NumPy integer scalar labels retain integer dtypes for both PyTorch and NumPy outputs, for both label and label_ids. Preserve behavior for Python integers and floating-point labels. Run the public smoke test and finish with the applied source repair.",
+  "source": {
+    "repository": "https://github.com/huggingface/transformers",
+    "upstream_baseline_commit": "50a952d06c8f593b5a0cea5dc8040fad9761ea67",
+    "base_revision": "130c831a1d869aab4d60d9eecd9191ebcfc9dc57",
+    "baseline_source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+    "upstream_pull_request": 49900,
+    "calibration_revision": null,
+    "local_path": "subject"
+  },
+  "metadata": {
+    "grader_interface": "independent_external_grader",
+    "grader_visibility": "hidden_from_candidate_tools",
+    "editable_files": [
+      "src/transformers/data/data_collator.py",
+      "test_public.py"
+    ],
+    "split": null,
+    "task_type": "upstream-correctness-repair",
+    "historical_upstream_commit": true
+  },
+  "tests": [],
+  "license": "Apache-2.0"
+}
+

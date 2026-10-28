@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "protocol_id": "sprint_xiv_transformers_49752_minicpm_development_v3",
+  "protocol_sha256": "d57af943d76e5250085918fc41a36dcf196ef7b29244b0bbd326b869669f0e6f",
+  "task_id": "transformers-49752-minicpm-stacked-visual-units-v1",
+  "attempt": "attempt-104",
+  "seed": 104,
+  "model": {
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "snapshot_revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "backend": "MLX/Apple Metal",
+    "sampling": "greedy",
+    "snapshot_manifest_sha256": "e034df8c803f2d8c9477f28fd781777f2c7f61a229e9df67ab8c7132246db91d"
+  },
+  "trajectory": {
+    "turns": 5,
+    "generated_tokens": 83,
+    "accepted_tool_calls": [
+      "list_files",
+      "read_file",
+      "search_text"
+    ],
+    "source_read_paths": [
+      "src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py"
+    ],
+    "search_results": 3,
+    "edit_attempted": false,
+    "edit_applied": false,
+    "public_test_result": null,
+    "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stop_reason": "no_tool_call_retries_exhausted"
+  },
+  "independent_grade": {
+    "status": "grader_rejected",
+    "passed": false,
+    "failure": "stacked visual-unit ordering/shape contract failed",
+    "source_unchanged": true,
+    "grader_sha256": "d28523cb2fdc3e11caae36f147cc0f63873908dcc73816e7429bb99b992d2ac3",
+    "receipt_sha256": "086a6d2c17be969a66537b9e90db80eeb52069213988ce0f769473ecc50b2a95"
+  },
+  "resource": {
+    "status": "COMPLETED_WITHIN_RESOURCE_GATES",
+    "elapsed_seconds": 96.888,
+    "process_tree_rss_peak_bytes": 4713594880,
+    "mlx_peak_bytes": 5498268760,
+    "swap_growth_bytes": 0,
+    "minimum_available_memory_bytes": 7033192448,
+    "minimum_disk_free_bytes": 27001425920,
+    "free_swap_before_bytes": 1402470400,
+    "caps_unchanged": true
+  },
+  "classification": "action_selection_failure_after_successful_source_read_and_search; no edit, no public test, hidden grader rejects unchanged baseline; not a resource abort",
+  "raw_artifacts": {
+    "agent-record.json": "c8e62b8333eb0da768e95f5531ffcb51ded3f48967401df8817894be80ac1755",
+    "resource-guard.json": "716f9bcbccbd6e4f6b5f218b084dbcc43e1fbe46f3191f6917ae0014f2d909db",
+    "model-preflight.json": "8fd23563a3b2c9e5c8d69471831243f7feb6c039f014f6c8aac95a441dbed14d",
+    "runner-stdout.log": "3812177708f945f8cbf3cb8daecc3f60daac97596b2e12005f9aa9966f88726f",
+    "runner-stderr.log": "2dc2928bf9d0f0825548562e67d1efaf146f324aecbb621ce3c51c5194b29c6c"
+  }
+}

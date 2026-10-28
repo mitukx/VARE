@@ -1,0 +1,20 @@
+{
+  "attempt_consumed": false,
+  "attempt_id": "attempt-102",
+  "cause": "run_guarded_agent.py resolves --runner to an absolute path and requires that exact path string in child argv; the initial child command named scripts/run_local_agent.py relatively.",
+  "child_process_spawned": false,
+  "classification": "Harness command wiring failure; not a model/resource abort. The guard rejected a relative runner path before spawning the child.",
+  "frozen_command_addendum": "protocols/sprint_xiv_transformers_50044_development_v1_model_attempt_addendum_1.json",
+  "frozen_command_addendum_sha256": "52fd451969b194aceb9aee8f576ac4e9867616aab2f910fc8416b92934463197",
+  "generated_tokens": 0,
+  "guard_exit_code": 1,
+  "guard_stderr": "child command does not invoke the pinned runner",
+  "guard_stdout": "",
+  "model_weights_loaded": false,
+  "optimizer_updates": 0,
+  "protocol_sha256": "0953996db7c5fcaf4d6de7f92caf5da85b1ab3c9e4151fea01481b413e8e1d29",
+  "recorded_at_utc": "2026-10-28 22:06:54 UTC",
+  "resource_caps_modified": false,
+  "schema_version": 1,
+  "status": "GUARD_INVOCATION_REJECTED_BEFORE_CHILD_START"
+}

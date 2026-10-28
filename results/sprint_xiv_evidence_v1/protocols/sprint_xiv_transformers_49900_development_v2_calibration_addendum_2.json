@@ -1,0 +1,24 @@
+{
+  "candidate_input_cases_changed": false,
+  "correction": "The v2 grader compared Python float inputs directly to float32 outputs. Correct float32 implementations naturally round to IEEE-754 binary32. The v2.1 grader now converts expected float control values through a binary32 pack/unpack before exact comparison; candidate inputs and dtype requirements are unchanged.",
+  "frozen_at_utc": "2026-10-28T21:32:51.419389+00:00",
+  "inference_authorization": "Only after all four controls pass under the new grader hash. The previous v2 runs remain preserved and do not authorize inference.",
+  "integer_behavior_oracle_changed": false,
+  "new_grader_path": "benchmarks/external_development/transformers_49900_numpy_label_dtype/evaluator/grade_v2_1.py",
+  "new_grader_sha256": "ab66889ecd84ae81c8f6d7684d772d1bf3244f57ac027e5875be5937048c4532",
+  "parent_protocols": {
+    "sprint_xiv_transformers_49900_development_v2.json": "76d6eba477d1d51cb52ecee279f26ddddaf33414a0f3e260cdb6f2e903213241",
+    "sprint_xiv_transformers_49900_development_v2_calibration_addendum_1.json": "2561d972fdd5d44ec71351239c9c31ba0995ad52e878bec8e7e262d9b1037db9"
+  },
+  "protocol_id": "sprint-xiv-transformers-49900-development-v2-calibration-addendum-2",
+  "qualification_controls_required_again": [
+    "baseline FAIL",
+    "exact upstream known fix PASS",
+    "PyTorch-only incorrect mutant FAIL",
+    "static v1 stdout spoof FAIL"
+  ],
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_V2_1_QUALIFICATION",
+  "task_source_or_model_budget_changed": false,
+  "training_or_model_inference_performed": false
+}

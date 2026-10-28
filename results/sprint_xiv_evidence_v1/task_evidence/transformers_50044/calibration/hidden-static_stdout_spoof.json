@@ -1,0 +1,85 @@
+{
+  "challenge": {
+    "cases": [
+      {
+        "default_prompt": true,
+        "marker": "<mb864f9a0>",
+        "mode": "text",
+        "name": "text_string_default",
+        "text": "qb6fd8ad10f"
+      },
+      {
+        "default_prompt": false,
+        "marker": "<mb864f9a0>",
+        "mode": "text",
+        "name": "text_string_no_default",
+        "text": "qdf8d4d3e0a"
+      },
+      {
+        "default_prompt": false,
+        "marker": "<mb864f9a0>",
+        "mode": "image",
+        "name": "image_string",
+        "text": "qc0a08cf68b"
+      },
+      {
+        "default_prompt": true,
+        "marker": "<mb864f9a0>",
+        "mode": "text",
+        "name": "text_list_default",
+        "text": [
+          "qf0a20a3b0d",
+          "qcacff8abf0"
+        ]
+      },
+      {
+        "default_prompt": false,
+        "marker": "<mb864f9a0>",
+        "mode": "image",
+        "name": "image_list",
+        "text": [
+          "qcacff8abf0",
+          "q9db15ead5e"
+        ]
+      }
+    ],
+    "nonce": "6dd9623ef646cbce09503f982c5ad70e"
+  },
+  "challenge_sha256": "fe83ecc10fc6b367b13143c926c51cbb5346dcbac5aafaac21023d46fae9d2f2",
+  "container_exit_code": 0,
+  "container_stderr": "",
+  "container_stdout": "{\"nonce\":\"static\",\"results\":{}}\n{\"nonce\":\"6dd9623ef646cbce09503f982c5ad70e\",\"results\":{\"image_list\":[\"qcacff8abf0<mb864f9a0>\",\"q9db15ead5e<mb864f9a0>\"],\"image_string\":[\"q<mb864f9a0>\",\"c<mb864f9a0>\",\"0<mb864f9a0>\",\"a<mb864f9a0>\",\"0<mb864f9a0>\",\"8<mb864f9a0>\",\"c<mb864f9a0>\",\"f<mb864f9a0>\",\"6<mb864f9a0>\",\"8<mb864f9a0>\",\"b<mb864f9a0>\"],\"text_list_default\":[\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nqf0a20a3b0d\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nqcacff8abf0\"],\"text_string_default\":[\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nq\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nb\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\n6\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nf\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nd\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\n8\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\na\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nd\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\n1\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\n0\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nf\"],\"text_string_no_default\":\"qdf8d4d3e0a\"}}\n",
+  "control_passed": false,
+  "elapsed_seconds": 4.292,
+  "expected": {
+    "image_list": [
+      "qcacff8abf0<mb864f9a0>",
+      "q9db15ead5e<mb864f9a0>"
+    ],
+    "image_string": [
+      "qc0a08cf68b<mb864f9a0>"
+    ],
+    "text_list_default": [
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nqf0a20a3b0d",
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nqcacff8abf0"
+    ],
+    "text_string_default": [
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nqb6fd8ad10f"
+    ],
+    "text_string_no_default": [
+      "qdf8d4d3e0a"
+    ]
+  },
+  "expected_control_status": "grader_rejected",
+  "failure": "grader output must contain exactly one JSON line",
+  "grader_sha256": "f1f7524054e58353e51ba3cc86b09dff668c50b2c5c9e86995987df50cab6491",
+  "image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "passed": false,
+  "schema_version": 1,
+  "source_sha256_after": "519ab6331dc256d29a41b5c60be5c53571f009ef55b5631ee8ed618ed3d8ba64",
+  "source_sha256_before": "519ab6331dc256d29a41b5c60be5c53571f009ef55b5631ee8ed618ed3d8ba64",
+  "source_unchanged": true,
+  "status": "infrastructure_failure",
+  "task_id": "transformers-50044-janus-string-prompt-v1",
+  "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/results/sprint_xiv_transformers_50044_qualification_v1/calibration/workspaces/static_stdout_spoof"
+}

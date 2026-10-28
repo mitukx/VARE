@@ -1,0 +1,89 @@
+{
+  "challenge": {
+    "cases": [
+      {
+        "default_prompt": true,
+        "marker": "<m47cbad04>",
+        "mode": "text",
+        "name": "text_string_default",
+        "text": "q973be15d12"
+      },
+      {
+        "default_prompt": false,
+        "marker": "<m47cbad04>",
+        "mode": "text",
+        "name": "text_string_no_default",
+        "text": "qb4be7209f8"
+      },
+      {
+        "default_prompt": false,
+        "marker": "<m47cbad04>",
+        "mode": "image",
+        "name": "image_string",
+        "text": "q56c148d987"
+      },
+      {
+        "default_prompt": true,
+        "marker": "<m47cbad04>",
+        "mode": "text",
+        "name": "text_list_default",
+        "text": [
+          "q96a871b50b",
+          "q96a87a7463"
+        ]
+      },
+      {
+        "default_prompt": false,
+        "marker": "<m47cbad04>",
+        "mode": "image",
+        "name": "image_list",
+        "text": [
+          "q96a87a7463",
+          "q3f7c0055d9"
+        ]
+      }
+    ],
+    "nonce": "8415c2da98c92320f62270be813ab36c"
+  },
+  "challenge_sha256": "7ad631ea99655b2310970e911d3a7b139dadfdfe3525ea5040687da0d2a03a0f",
+  "container_exit_code": 0,
+  "container_stderr": "",
+  "container_stdout": "{\"nonce\":\"8415c2da98c92320f62270be813ab36c\",\"results\":{\"image_list\":[\"q96a87a7463<m47cbad04>\",\"q3f7c0055d9<m47cbad04>\"],\"image_string\":[\"q<m47cbad04>\",\"5<m47cbad04>\",\"6<m47cbad04>\",\"c<m47cbad04>\",\"1<m47cbad04>\",\"4<m47cbad04>\",\"8<m47cbad04>\",\"d<m47cbad04>\",\"9<m47cbad04>\",\"8<m47cbad04>\",\"7<m47cbad04>\"],\"text_list_default\":[\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nq96a871b50b\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nq96a87a7463\"],\"text_string_default\":[\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nq973be15d12\"],\"text_string_no_default\":\"qb4be7209f8\"}}\n",
+  "control_passed": false,
+  "elapsed_seconds": 3.987,
+  "expected": {
+    "image_list": [
+      "q96a87a7463<m47cbad04>",
+      "q3f7c0055d9<m47cbad04>"
+    ],
+    "image_string": [
+      "q56c148d987<m47cbad04>"
+    ],
+    "text_list_default": [
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nq96a871b50b",
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nq96a87a7463"
+    ],
+    "text_string_default": [
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nq973be15d12"
+    ],
+    "text_string_no_default": [
+      "qb4be7209f8"
+    ]
+  },
+  "expected_control_status": "grader_rejected",
+  "failure": "candidate behavior differs from expected task contract",
+  "grader_sha256": "f1f7524054e58353e51ba3cc86b09dff668c50b2c5c9e86995987df50cab6491",
+  "image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "passed": false,
+  "schema_version": 1,
+  "source_sha256_after": "f40da9f74f19b1aa25fadad73d4735b7cf302c7410b7bdfcc79319ea595a87a4",
+  "source_sha256_before": "f40da9f74f19b1aa25fadad73d4735b7cf302c7410b7bdfcc79319ea595a87a4",
+  "source_unchanged": true,
+  "status": "infrastructure_failure",
+  "task_id": "transformers-50044-janus-string-prompt-v1",
+  "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/results/sprint_xiv_transformers_50044_qualification_v1/calibration/workspaces/incorrect_text_mode_only",
+  "wrong_cases": [
+    "image_string",
+    "text_string_no_default"
+  ]
+}

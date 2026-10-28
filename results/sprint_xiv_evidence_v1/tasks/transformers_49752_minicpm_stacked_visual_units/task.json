@@ -1,0 +1,29 @@
+{
+  "license": "Apache-2.0",
+  "metadata": {
+    "editable_files": [
+      "src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py",
+      "test_public.py"
+    ],
+    "grader_interface": "independent_external_grader",
+    "grader_visibility": "hidden_from_candidate_tools",
+    "pretraining_exposure": "UNKNOWN",
+    "prior_exposure": "No VARE task/model exposure found for PR 49752 or this source family; pretrained model exposure UNKNOWN.",
+    "split": null,
+    "task_type": "upstream-correctness-repair"
+  },
+  "prompt": "Repair MiniCPMV4_6VideoProcessor._preprocess in src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py so stack_frames > 1 processes the ordered Stage 1 frame units. Preserve order and independent frame/composite units. Make a minimal source change, run test_public.py, and finish after it passes.",
+  "schema_version": 1,
+  "source": {
+    "base_revision": "7d933d9fb7f49136b5ed84d77b9618bfb276505d",
+    "baseline_source_sha256": "c0479fc2f6a14e493f6be020f6685a7c3ebbc72891c8bdbfca66f3e24ed3d7ee",
+    "fixed_source_sha256": "19f2f1b936c9ca45614fefb388d07e69564d7d0dc9665c620d00832f56e61380",
+    "repository": "https://github.com/huggingface/transformers",
+    "source_path": "src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py",
+    "upstream_baseline_commit": "6f2e80bdad560947903bb4bde8043ae95387069a",
+    "upstream_fix_commit": "482e80ae5910ecab54f9284c36343ff122db80ad",
+    "upstream_merge_commit": "bc0e71ffef22474fc14fcaa4b399d824eebc0e50"
+  },
+  "task_id": "transformers-49752-minicpm-stacked-visual-units-v1",
+  "title": "Fix stacked MiniCPM-V 4.6 video preprocessing"
+}

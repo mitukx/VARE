@@ -1,0 +1,55 @@
+{
+  "challenge": {
+    "cases": [
+      {
+        "dtype": "float16",
+        "name": "strict_fp16",
+        "values": [
+          -4.227,
+          -6.763,
+          5.891,
+          -4.112
+        ]
+      },
+      {
+        "dtype": "float32",
+        "name": "fp32_pad_preservation",
+        "values": [
+          1123581321.0,
+          -19.894,
+          1123581321.0
+        ]
+      },
+      {
+        "dtype": "float64",
+        "name": "fp64_pad_preservation",
+        "values": [
+          5.302,
+          1123581321.0,
+          -19.894
+        ]
+      }
+    ],
+    "nonce": "fd697092e7fb8fe9b1ada61bb3479146",
+    "pad_value": 1123581321.0,
+    "tolerance": 0.001
+  },
+  "challenge_sha256": "be1683c158e42d2269a4c0627f823336d756fda21f1f35a6de2e78c17c435e5b",
+  "container_exit_code": 0,
+  "container_stderr": "",
+  "container_stdout": "{\"nonce\":\"fd697092e7fb8fe9b1ada61bb3479146\",\"results\":{\"fp32_pad_preservation\":{\"inputs\":[1123581312.0,-19.893999099731445,1123581312.0],\"outputs\":[1123581312.0,-19.893999099731445,1123581312.0]},\"fp64_pad_preservation\":{\"inputs\":[5.302,1123581321.0,-19.894],\"outputs\":[5.302,1123581321.0,-19.894]},\"strict_fp16\":{\"error\":\"OverflowError: strict fp16 scalar conversion overflow\"}}}\n",
+  "controls_expected_classification": true,
+  "elapsed_seconds": 1.229,
+  "expected_control_status": "grader_rejected",
+  "failure": "candidate does not satisfy strict fp16 and padding preservation contracts",
+  "grader_sha256": "6abb40baab19a4ac1cc86c110bdc30c59073bdb59970b741a07a3360e3ce57b5",
+  "image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "passed": false,
+  "schema_version": 1,
+  "source_sha256_after": "7b625e923ac83da1b89c68e7c3c5d596fc645a3e39d761b307a36c8af690667e",
+  "source_sha256_before": "7b625e923ac83da1b89c68e7c3c5d596fc645a3e39d761b307a36c8af690667e",
+  "source_unchanged": true,
+  "status": "grader_rejected",
+  "task_id": "transformers-50021-timesfm-fp16-pad-value-v1",
+  "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/results/sprint_xiv_transformers_50021_qualification_v1/calibration/hidden-workspaces/baseline"
+}

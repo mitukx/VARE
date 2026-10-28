@@ -1,0 +1,90 @@
+{
+  "challenge": {
+    "cases": [
+      {
+        "default_prompt": true,
+        "marker": "<mcbea8e0d>",
+        "mode": "text",
+        "name": "text_string_default",
+        "text": "q4c7ccac7c0"
+      },
+      {
+        "default_prompt": false,
+        "marker": "<mcbea8e0d>",
+        "mode": "text",
+        "name": "text_string_no_default",
+        "text": "q825b3cc083"
+      },
+      {
+        "default_prompt": false,
+        "marker": "<mcbea8e0d>",
+        "mode": "image",
+        "name": "image_string",
+        "text": "q1dedd63398"
+      },
+      {
+        "default_prompt": true,
+        "marker": "<mcbea8e0d>",
+        "mode": "text",
+        "name": "text_list_default",
+        "text": [
+          "qf2b4893ae0",
+          "qfd125f4559"
+        ]
+      },
+      {
+        "default_prompt": false,
+        "marker": "<mcbea8e0d>",
+        "mode": "image",
+        "name": "image_list",
+        "text": [
+          "qfd125f4559",
+          "q5c7ae8d6e8"
+        ]
+      }
+    ],
+    "nonce": "435cd603121aa3eb11d955fb4ab5fb52"
+  },
+  "challenge_sha256": "9f70671bc4b994d17c8e7a4e4df61612cac0baf64daf91374696aed45403b500",
+  "container_exit_code": 0,
+  "container_stderr": "",
+  "container_stdout": "{\"nonce\":\"435cd603121aa3eb11d955fb4ab5fb52\",\"results\":{\"image_list\":[\"qfd125f4559<mcbea8e0d>\",\"q5c7ae8d6e8<mcbea8e0d>\"],\"image_string\":[\"q<mcbea8e0d>\",\"1<mcbea8e0d>\",\"d<mcbea8e0d>\",\"e<mcbea8e0d>\",\"d<mcbea8e0d>\",\"d<mcbea8e0d>\",\"6<mcbea8e0d>\",\"3<mcbea8e0d>\",\"3<mcbea8e0d>\",\"9<mcbea8e0d>\",\"8<mcbea8e0d>\"],\"text_list_default\":[\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nqf2b4893ae0\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nqfd125f4559\"],\"text_string_default\":[\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nq\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\n4\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nc\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\n7\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nc\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nc\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\na\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nc\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\n7\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nc\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\n0\"],\"text_string_no_default\":\"q825b3cc083\"}}\n",
+  "control_passed": false,
+  "elapsed_seconds": 4.095,
+  "expected": {
+    "image_list": [
+      "qfd125f4559<mcbea8e0d>",
+      "q5c7ae8d6e8<mcbea8e0d>"
+    ],
+    "image_string": [
+      "q1dedd63398<mcbea8e0d>"
+    ],
+    "text_list_default": [
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nqf2b4893ae0",
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nqfd125f4559"
+    ],
+    "text_string_default": [
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nq4c7ccac7c0"
+    ],
+    "text_string_no_default": [
+      "q825b3cc083"
+    ]
+  },
+  "expected_control_status": "grader_rejected",
+  "failure": "candidate behavior differs from expected task contract",
+  "grader_sha256": "f1f7524054e58353e51ba3cc86b09dff668c50b2c5c9e86995987df50cab6491",
+  "image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "passed": false,
+  "schema_version": 1,
+  "source_sha256_after": "d87652762ba0eafb8c7aacf60cab81afae135928de735fed097fc405c69796a5",
+  "source_sha256_before": "d87652762ba0eafb8c7aacf60cab81afae135928de735fed097fc405c69796a5",
+  "source_unchanged": true,
+  "status": "infrastructure_failure",
+  "task_id": "transformers-50044-janus-string-prompt-v1",
+  "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/results/sprint_xiv_transformers_50044_qualification_v1/calibration/workspaces/baseline",
+  "wrong_cases": [
+    "image_string",
+    "text_string_default",
+    "text_string_no_default"
+  ]
+}

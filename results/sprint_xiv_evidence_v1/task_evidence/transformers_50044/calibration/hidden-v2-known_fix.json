@@ -1,0 +1,85 @@
+{
+  "challenge": {
+    "cases": [
+      {
+        "default_prompt": true,
+        "marker": "<mc9510788>",
+        "mode": "text",
+        "name": "text_string_default",
+        "text": "q22b0a10f59"
+      },
+      {
+        "default_prompt": false,
+        "marker": "<mc9510788>",
+        "mode": "text",
+        "name": "text_string_no_default",
+        "text": "qd16291ca20"
+      },
+      {
+        "default_prompt": false,
+        "marker": "<mc9510788>",
+        "mode": "image",
+        "name": "image_string",
+        "text": "q0d1e3dc135"
+      },
+      {
+        "default_prompt": true,
+        "marker": "<mc9510788>",
+        "mode": "text",
+        "name": "text_list_default",
+        "text": [
+          "qba073dde74",
+          "q468234864e"
+        ]
+      },
+      {
+        "default_prompt": false,
+        "marker": "<mc9510788>",
+        "mode": "image",
+        "name": "image_list",
+        "text": [
+          "q468234864e",
+          "qdd44c76f6a"
+        ]
+      }
+    ],
+    "nonce": "5caa2923b9bc02609738d37b207a197f"
+  },
+  "challenge_sha256": "69ccc8b170d19ba9356f8984f888bdb86fab18e6160c67189555c0acf2930033",
+  "container_exit_code": 0,
+  "container_stderr": "",
+  "container_stdout": "{\"nonce\":\"5caa2923b9bc02609738d37b207a197f\",\"results\":{\"image_list\":[\"q468234864e<mc9510788>\",\"qdd44c76f6a<mc9510788>\"],\"image_string\":[\"q0d1e3dc135<mc9510788>\"],\"text_list_default\":[\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nqba073dde74\",\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nq468234864e\"],\"text_string_default\":[\"You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\\n\\nq22b0a10f59\"],\"text_string_no_default\":[\"qd16291ca20\"]}}\n",
+  "control_passed": true,
+  "elapsed_seconds": 4.03,
+  "expected": {
+    "image_list": [
+      "q468234864e<mc9510788>",
+      "qdd44c76f6a<mc9510788>"
+    ],
+    "image_string": [
+      "q0d1e3dc135<mc9510788>"
+    ],
+    "text_list_default": [
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nqba073dde74",
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nq468234864e"
+    ],
+    "text_string_default": [
+      "You are a helpful language and vision assistant. You are able to understand the visual content that the user provides, and assist the user with a variety of tasks using natural language.\n\nq22b0a10f59"
+    ],
+    "text_string_no_default": [
+      "qd16291ca20"
+    ]
+  },
+  "expected_control_status": "passed",
+  "failure": null,
+  "grader_sha256": "4bd7d6483ab7af72c1ed72cb0620c796e27868e84fd3f6c2e0bb1162d590ba7d",
+  "image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "passed": true,
+  "schema_version": 1,
+  "source_sha256_after": "fe1caf4a8371f53af418ded80404d8cf02d948087bff2e2f6be774d15733c935",
+  "source_sha256_before": "fe1caf4a8371f53af418ded80404d8cf02d948087bff2e2f6be774d15733c935",
+  "source_unchanged": true,
+  "status": "passed",
+  "task_id": "transformers-50044-janus-string-prompt-v1",
+  "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/results/sprint_xiv_transformers_50044_qualification_v1/calibration/workspaces/known_fix"
+}

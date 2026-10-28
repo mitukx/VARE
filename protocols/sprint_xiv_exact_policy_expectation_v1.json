@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "protocol_id": "sprint-xiv-exact-policy-expectation-v1",
+  "status": "frozen_retrospective_analysis",
+  "retrospective": true,
+  "inference_kind": "deterministic forward passes for exact finite-support probabilities; no token generation",
+  "purpose": "Diagnose why the completed Sprint XIII online-actor campaigns showed unchanged sampled trusted outcomes by exactly enumerating the already-consumed finite route policy space under the retained baseline and final checkpoints.",
+  "claim_boundary": "This is post-outcome analysis of consumed synthetic prompts. It is not fresh task evidence, a new training run, a coding result, or a generalization claim. It must not be reported as a new model-generated success.",
+  "hypothesis": "Exact trusted expected reward and trajectory divergence can distinguish a policy-shift/sampling-sensitivity explanation from a reward/objective or representation explanation in the retained Sprint XIII campaign.",
+  "cheapest_falsification": "Verify the raw archive and all input hashes, then compare the exact baseline first-step action probabilities against retained evaluation receipts before enumerating the policy tree.",
+  "primary_outcome": "Exact expected trusted verifier-v1 reward per frozen synthetic task for each retained final policy, paired against its seed baseline.",
+  "secondary_outcomes": [
+    "Exact expected proxy verifier-v0 reward",
+    "Exact probability of verifier-v1 reward 1.0 and exact task-success probability",
+    "Reward variance, trajectory entropy, policy total variation, and forward/reverse sequence KL",
+    "Expected generated-token count and first-step probability calibration",
+    "Retained Monte Carlo outcomes compared with exact policy probabilities"
+  ],
+  "source": {
+    "campaign_protocol_path": "protocols/sprint_xiii_online_actor_v4.lock.json",
+    "campaign_protocol_sha256": "194433a9fbbfaae9d8968f5c72a1f4cd4c1ca019de3470c35e513edda8a6ed23",
+    "run_archive_path": "results/sprint_xiii_20261029/sprint-xiii-run-003-evidence-v1.tar.gz",
+    "run_archive_sha256": "91b8985859ce4c9293f5a720d02b3be2d5e02dc99482bac4602b48f5acd87a65",
+    "run_manifest_path": "results/sprint_xiii_20261029/run-003/sha256-manifest-v1.json",
+    "run_manifest_sha256": "74bcf347fb636d7224f4c60ff08a7aa6da575b5d9f275a639bbc8f51539f4c9a",
+    "independent_audit_v5_sha256": "0241bd8570f7114f3feb40db5c7f1b130e4d03f920de05b94023b20346a53919",
+    "analysis_tasks": [
+      "train-route-v4-01",
+      "train-route-v4-02",
+      "eval-route-v4-01",
+      "eval-route-v4-02",
+      "eval-route-v4-03",
+      "eval-route-v4-04"
+    ],
+    "policies": "All three retained seed baselines and every one of the 13 independently audited completed final case checkpoints; incomplete cases are excluded and remain listed as incomplete."
+  },
+  "model": {
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "backend": "Transformers 4.57.3 / PyTorch 2.9.1, CPU fp32",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "model_weights_must_already_be_cached": true,
+    "network_downloads_permitted": false,
+    "token_generation_permitted": false,
+    "optimizer_updates_permitted": false
+  },
+  "enumeration": {
+    "actions": ["A", "B", "C", "D"],
+    "support": "four frozen single-token action IDs plus EOS",
+    "temperature": 2.0,
+    "termination_logit_offset": 2.5,
+    "minimum_actions_before_eos": 2,
+    "maximum_action_tokens": 5,
+    "prefix_nodes_per_task": 341,
+    "terminal_action_sequences_per_task": 1360,
+    "reward_functions": "The exact version-0 proxy and version-1 trusted score from scripts/sprint_xiii/online_actor.py, evaluated over every terminal policy sequence."
+  },
+  "resource_budget": {
+    "device": "Apple M1 Pro, 32 GiB unified memory",
+    "parallel_model_processes": 1,
+    "cpu_threads": 4,
+    "batch_size": 4,
+    "maximum_wall_seconds": 900,
+    "maximum_process_rss_bytes": 8589934592,
+    "maximum_swap_growth_bytes": 536870912,
+    "minimum_free_swap_bytes": 536870912,
+    "minimum_system_free_memory_percent": 10,
+    "minimum_disk_free_bytes": 10737418240,
+    "fail_closed": true
+  },
+  "stopping_rule": "Abort on any input hash mismatch, protocol/source identity mismatch, unsupported checkpoint state, failed first-step calibration, or resource limit. Retain an abort receipt; do not alter limits or rerun on the same data under a changed protocol.",
+  "output": {
+    "directory": "results/sprint_xiv_exact_policy_expectation_v1",
+    "must_be_absent_before_execution": true,
+    "raw_inputs_mutated": false,
+    "historical_protocols_mutated": false
+  },
+  "interpretation": {
+    "sampling_uncertainty": "Use the exact policy expectation as the primary diagnosis; retained sampled outcomes are descriptive and not independent task observations.",
+    "development_exposure": "All prompts and synthetic tasks were consumed in Sprint XIII and are not eligible as fresh Development or held-out tasks.",
+    "success_claim": "No coding success or task-generalization claim is authorized."
+  }
+}

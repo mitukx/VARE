@@ -1,0 +1,8 @@
+{
+  "elapsed_seconds": 1.155,
+  "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+  "passed": false,
+  "returncode": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 70, in <module>\n    test_stage_two_receives_ordered_single_frame_and_composite_units()\n  File \"/workspace/test_public.py\", line 54, in test_stage_two_receives_ordered_single_frame_and_composite_units\n    processor._preprocess(\n  File \"/workspace/src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py\", line 478, in _preprocess\n    grouped_videos, grouped_videos_index = group_videos_by_shape([video])\n                                           ^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'group_videos_by_shape' is not defined\n",
+  "stdout": ""
+}

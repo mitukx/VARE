@@ -10,7 +10,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from record_coding_agent_baseline import parse_diff
 from verify_agent_workspace import verify_workspace
 from scripts.run_local_agent import normalize_tool_call_format, refresh_public_tests_after_edit
-from scripts.run_local_agent import candidate_source_diff, snapshot_allowed_sources
+from scripts.run_local_agent import (
+    canonical_candidate_diff_or_error,
+    candidate_source_diff,
+    no_tool_retry_reminder,
+    search_source_content,
+    snapshot_allowed_sources,
+    tools_for,
+    validate_candidate_workspace_before_model,
+)
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
@@ -249,6 +257,48 @@ def test_candidate_diff_rejects_staged_or_untracked_workspace_changes(tmp_path):
         candidate_source_diff(tmp_path, ['module.py'], before, base_revision)
 
 
+def test_model_preflight_rejects_symlink_copy_drift_before_loading(tmp_path):
+    source, _ = _git_workspace(tmp_path, 'module.py', b'value=1\n')
+    target = tmp_path / 'target.txt'
+    target.write_text('shared instructions\n', encoding='utf-8')
+    alias = tmp_path / 'alias.txt'
+    alias.symlink_to('target.txt')
+    subprocess.run(['git', '-C', str(tmp_path), 'add', '--', 'target.txt', 'alias.txt'], check=True)
+    subprocess.run(['git', '-C', str(tmp_path), 'commit', '--quiet', '-m', 'tracked symlink'], check=True)
+    revision = subprocess.run(
+        ['git', '-C', str(tmp_path), 'rev-parse', 'HEAD'],
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+
+    # shutil.copytree's default follows symlinks, changing this tracked link to
+    # a regular file while leaving HEAD unchanged.
+    alias.unlink()
+    alias.write_text('shared instructions\n', encoding='utf-8')
+    assert source.read_bytes() == b'value=1\n'
+    with pytest.raises(ValueError, match='clean before model loading'):
+        validate_candidate_workspace_before_model(tmp_path, ['module.py'], revision)
+
+
+def test_model_preflight_returns_pinned_source_bytes_for_clean_workspace(tmp_path):
+    source, revision = _git_workspace(tmp_path, 'module.py', b'value=1\n')
+
+    snapshot = validate_candidate_workspace_before_model(tmp_path, ['module.py'], revision)
+
+    assert snapshot == {'module.py': b'value=1\n'}
+    assert source.read_bytes() == snapshot['module.py']
+
+
+def test_invalid_candidate_diff_is_returned_as_evidence_error(tmp_path):
+    _source, revision = _git_workspace(tmp_path, 'module.py', b'value=1\n')
+    before = snapshot_allowed_sources(tmp_path, ['module.py'])
+    (tmp_path / 'unexpected.txt').write_text('untrusted workspace change\n', encoding='utf-8')
+
+    diff, error = canonical_candidate_diff_or_error(tmp_path, ['module.py'], before, revision)
+
+    assert diff == ''
+    assert error == 'ValueError: candidate workspace contains staged or non-allowlisted changes'
+
+
 def test_normalizes_a_fenced_qwen_json_tool_call_without_changing_raw_text():
     raw = '```json\n{"name":"list_files","arguments":{}}\n```'
 
@@ -290,6 +340,46 @@ def test_does_not_promote_unknown_or_malformed_fenced_json_to_tool_calls():
         '{"name":"run_shell","arguments":{}}',
     ):
         assert normalize_tool_call_format(raw, {"read_file"}) == (raw, False)
+
+
+def test_source_search_matches_multiline_code_with_flexible_whitespace():
+    source = 'result = choose(\n    mask,\n    pad_val,\n    values,\n)\n'
+
+    matches = search_source_content(
+        'result = choose(mask, pad_val, values,)', {'model.py': source},
+    )
+
+    assert matches == [{
+        'path': 'model.py', 'line': 1, 'end_line': 5,
+        'text': 'result = choose(\n    mask,\n    pad_val,\n    values,\n)',
+    }]
+
+
+def test_source_search_keeps_non_whitespace_characters_literal():
+    matches = search_source_content('left + right', {'model.py': 'left - right\n'})
+
+    assert matches == []
+
+
+def test_search_tool_description_documents_multiline_whitespace_contract():
+    search = next(
+        item['function'] for item in tools_for('unified_diff')
+        if item['function']['name'] == 'search_text'
+    )
+
+    assert 'including newlines' in search['description']
+    assert 'bounded line spans' in search['description']
+
+
+def test_no_tool_retry_preserves_source_read_progress():
+    reminder = no_tool_retry_reminder(
+        'incomplete response', edit_format='apply_patch', allowed_paths=['model.py'],
+        token_limit=512, source_already_read=True,
+    )
+
+    assert 'do not reread the full file' in reminder.lower()
+    assert 'apply a minimal patch' in reminder
+    assert 'read_file' not in reminder
 
 
 def test_preserves_native_tool_call_format():

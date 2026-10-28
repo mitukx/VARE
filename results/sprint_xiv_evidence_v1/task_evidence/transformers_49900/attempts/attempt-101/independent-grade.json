@@ -1,0 +1,829 @@
+{
+  "case_pass": {
+    "int32_label_ids_np": false,
+    "int32_label_ids_pt": false,
+    "int32_label_np": false,
+    "int32_label_pt": false,
+    "int64_label_ids_np": false,
+    "int64_label_ids_pt": false,
+    "int64_label_np": false,
+    "int64_label_pt": false,
+    "numpy_float_label_ids_np": true,
+    "numpy_float_label_ids_pt": true,
+    "python_float_label_np": true,
+    "python_float_label_pt": true,
+    "python_int_label_ids_np": true,
+    "python_int_label_ids_pt": true,
+    "python_int_label_np": true,
+    "python_int_label_pt": true
+  },
+  "challenge": {
+    "cases": [
+      {
+        "backend": "pt",
+        "field": "label",
+        "name": "int32_label_pt",
+        "scalar_type": "int32",
+        "values": [
+          889728,
+          -187567,
+          595048,
+          553716
+        ]
+      },
+      {
+        "backend": "pt",
+        "field": "label_ids",
+        "name": "int32_label_ids_pt",
+        "scalar_type": "int32",
+        "values": [
+          [
+            328249,
+            394016
+          ],
+          [
+            77032,
+            -450214
+          ],
+          [
+            183504,
+            -349084
+          ],
+          [
+            -840093,
+            -373298
+          ]
+        ]
+      },
+      {
+        "backend": "np",
+        "field": "label",
+        "name": "int32_label_np",
+        "scalar_type": "int32",
+        "values": [
+          889728,
+          -187567,
+          595048,
+          553716
+        ]
+      },
+      {
+        "backend": "np",
+        "field": "label_ids",
+        "name": "int32_label_ids_np",
+        "scalar_type": "int32",
+        "values": [
+          [
+            328249,
+            394016
+          ],
+          [
+            77032,
+            -450214
+          ],
+          [
+            183504,
+            -349084
+          ],
+          [
+            -840093,
+            -373298
+          ]
+        ]
+      },
+      {
+        "backend": "pt",
+        "field": "label",
+        "name": "int64_label_pt",
+        "scalar_type": "int64",
+        "values": [
+          94682942268348,
+          -45405204126519,
+          230632405527047,
+          489940210211392
+        ]
+      },
+      {
+        "backend": "pt",
+        "field": "label_ids",
+        "name": "int64_label_ids_pt",
+        "scalar_type": "int64",
+        "values": [
+          [
+            80714164473132,
+            271712779492870
+          ],
+          [
+            286147226478923,
+            320417973547781
+          ],
+          [
+            -128165123801103,
+            354992447352772
+          ],
+          [
+            455078019684146,
+            294885719701371
+          ]
+        ]
+      },
+      {
+        "backend": "np",
+        "field": "label",
+        "name": "int64_label_np",
+        "scalar_type": "int64",
+        "values": [
+          94682942268348,
+          -45405204126519,
+          230632405527047,
+          489940210211392
+        ]
+      },
+      {
+        "backend": "np",
+        "field": "label_ids",
+        "name": "int64_label_ids_np",
+        "scalar_type": "int64",
+        "values": [
+          [
+            80714164473132,
+            271712779492870
+          ],
+          [
+            286147226478923,
+            320417973547781
+          ],
+          [
+            -128165123801103,
+            354992447352772
+          ],
+          [
+            455078019684146,
+            294885719701371
+          ]
+        ]
+      },
+      {
+        "backend": "pt",
+        "field": "label",
+        "name": "python_int_label_pt",
+        "scalar_type": "python_int",
+        "values": [
+          48041,
+          -38177,
+          25210,
+          25914
+        ]
+      },
+      {
+        "backend": "pt",
+        "field": "label_ids",
+        "name": "python_int_label_ids_pt",
+        "scalar_type": "python_int",
+        "values": [
+          [
+            1304,
+            -31445
+          ],
+          [
+            -40107,
+            32536
+          ],
+          [
+            -23335,
+            44362
+          ],
+          [
+            -25433,
+            26736
+          ]
+        ]
+      },
+      {
+        "backend": "pt",
+        "field": "label",
+        "name": "python_float_label_pt",
+        "scalar_type": "python_float",
+        "values": [
+          -77.12,
+          998.57,
+          416.49,
+          491.35
+        ]
+      },
+      {
+        "backend": "pt",
+        "field": "label_ids",
+        "name": "numpy_float_label_ids_pt",
+        "scalar_type": "numpy_float32",
+        "values": [
+          [
+            -90.43,
+            -7.85
+          ],
+          [
+            53.96,
+            -24.87
+          ],
+          [
+            2.35,
+            26.74
+          ],
+          [
+            88.79,
+            -32.7
+          ]
+        ]
+      },
+      {
+        "backend": "np",
+        "field": "label",
+        "name": "python_int_label_np",
+        "scalar_type": "python_int",
+        "values": [
+          48041,
+          -38177,
+          25210,
+          25914
+        ]
+      },
+      {
+        "backend": "np",
+        "field": "label_ids",
+        "name": "python_int_label_ids_np",
+        "scalar_type": "python_int",
+        "values": [
+          [
+            1304,
+            -31445
+          ],
+          [
+            -40107,
+            32536
+          ],
+          [
+            -23335,
+            44362
+          ],
+          [
+            -25433,
+            26736
+          ]
+        ]
+      },
+      {
+        "backend": "np",
+        "field": "label",
+        "name": "python_float_label_np",
+        "scalar_type": "python_float",
+        "values": [
+          -77.12,
+          998.57,
+          416.49,
+          491.35
+        ]
+      },
+      {
+        "backend": "np",
+        "field": "label_ids",
+        "name": "numpy_float_label_ids_np",
+        "scalar_type": "numpy_float32",
+        "values": [
+          [
+            -90.43,
+            -7.85
+          ],
+          [
+            53.96,
+            -24.87
+          ],
+          [
+            2.35,
+            26.74
+          ],
+          [
+            88.79,
+            -32.7
+          ]
+        ]
+      }
+    ],
+    "nonce": "d904d3c074627bbf5b0c4c8cbc232197"
+  },
+  "challenge_nonce": "d904d3c074627bbf5b0c4c8cbc232197",
+  "challenge_sha256": "104d584875acf1d301ccc2dd41d20a6d82202d0183a20ff4990a574f785c21a4",
+  "container_exit_code": 0,
+  "container_name": "vare-grade-26bbaedc3612310d86bfc2d0",
+  "container_stderr": "",
+  "container_stdout": "{\"nonce\":\"d904d3c074627bbf5b0c4c8cbc232197\",\"results\":{\"int32_label_ids_np\":{\"dtype\":\"float32\",\"values\":[[328249.0,394016.0],[77032.0,-450214.0],[183504.0,-349084.0],[-840093.0,-373298.0]]},\"int32_label_ids_pt\":{\"dtype\":\"torch.float32\",\"values\":[[328249.0,394016.0],[77032.0,-450214.0],[183504.0,-349084.0],[-840093.0,-373298.0]]},\"int32_label_np\":{\"dtype\":\"float32\",\"values\":[889728.0,-187567.0,595048.0,553716.0]},\"int32_label_pt\":{\"dtype\":\"torch.float32\",\"values\":[889728.0,-187567.0,595048.0,553716.0]},\"int64_label_ids_np\":{\"dtype\":\"float32\",\"values\":[[80714162765824.0,271712784482304.0],[286147230040064.0,320417982054400.0],[-128165120835584.0,354992435232768.0],[455078024577024.0,294885710102528.0]]},\"int64_label_ids_pt\":{\"dtype\":\"torch.float32\",\"values\":[[80714162765824.0,271712784482304.0],[286147230040064.0,320417982054400.0],[-128165120835584.0,354992435232768.0],[455078024577024.0,294885710102528.0]]},\"int64_label_np\":{\"dtype\":\"float32\",\"values\":[94682939916288.0,-45405203070976.0,230632412151808.0,489940207009792.0]},\"int64_label_pt\":{\"dtype\":\"torch.float32\",\"values\":[94682939916288.0,-45405203070976.0,230632412151808.0,489940207009792.0]},\"numpy_float_label_ids_np\":{\"dtype\":\"float32\",\"values\":[[-90.43000030517578,-7.849999904632568],[53.959999084472656,-24.8700008392334],[2.3499999046325684,26.739999771118164],[88.79000091552734,-32.70000076293945]]},\"numpy_float_label_ids_pt\":{\"dtype\":\"torch.float32\",\"values\":[[-90.43000030517578,-7.849999904632568],[53.959999084472656,-24.8700008392334],[2.3499999046325684,26.739999771118164],[88.79000091552734,-32.70000076293945]]},\"python_float_label_np\":{\"dtype\":\"float32\",\"values\":[-77.12000274658203,998.5700073242188,416.489990234375,491.3500061035156]},\"python_float_label_pt\":{\"dtype\":\"torch.float32\",\"values\":[-77.12000274658203,998.5700073242188,416.489990234375,491.3500061035156]},\"python_int_label_ids_np\":{\"dtype\":\"int64\",\"values\":[[1304,-31445],[-40107,32536],[-23335,44362],[-25433,26736]]},\"python_int_label_ids_pt\":{\"dtype\":\"torch.int64\",\"values\":[[1304,-31445],[-40107,32536],[-23335,44362],[-25433,26736]]},\"python_int_label_np\":{\"dtype\":\"int64\",\"values\":[48041,-38177,25210,25914]},\"python_int_label_pt\":{\"dtype\":\"torch.int64\",\"values\":[48041,-38177,25210,25914]}}}\n",
+  "elapsed_seconds": 2.634,
+  "expected": {
+    "int32_label_ids_np": {
+      "dtype": "int64",
+      "values": [
+        [
+          328249,
+          394016
+        ],
+        [
+          77032,
+          -450214
+        ],
+        [
+          183504,
+          -349084
+        ],
+        [
+          -840093,
+          -373298
+        ]
+      ]
+    },
+    "int32_label_ids_pt": {
+      "dtype": "torch.int64",
+      "values": [
+        [
+          328249,
+          394016
+        ],
+        [
+          77032,
+          -450214
+        ],
+        [
+          183504,
+          -349084
+        ],
+        [
+          -840093,
+          -373298
+        ]
+      ]
+    },
+    "int32_label_np": {
+      "dtype": "int64",
+      "values": [
+        889728,
+        -187567,
+        595048,
+        553716
+      ]
+    },
+    "int32_label_pt": {
+      "dtype": "torch.int64",
+      "values": [
+        889728,
+        -187567,
+        595048,
+        553716
+      ]
+    },
+    "int64_label_ids_np": {
+      "dtype": "int64",
+      "values": [
+        [
+          80714164473132,
+          271712779492870
+        ],
+        [
+          286147226478923,
+          320417973547781
+        ],
+        [
+          -128165123801103,
+          354992447352772
+        ],
+        [
+          455078019684146,
+          294885719701371
+        ]
+      ]
+    },
+    "int64_label_ids_pt": {
+      "dtype": "torch.int64",
+      "values": [
+        [
+          80714164473132,
+          271712779492870
+        ],
+        [
+          286147226478923,
+          320417973547781
+        ],
+        [
+          -128165123801103,
+          354992447352772
+        ],
+        [
+          455078019684146,
+          294885719701371
+        ]
+      ]
+    },
+    "int64_label_np": {
+      "dtype": "int64",
+      "values": [
+        94682942268348,
+        -45405204126519,
+        230632405527047,
+        489940210211392
+      ]
+    },
+    "int64_label_pt": {
+      "dtype": "torch.int64",
+      "values": [
+        94682942268348,
+        -45405204126519,
+        230632405527047,
+        489940210211392
+      ]
+    },
+    "numpy_float_label_ids_np": {
+      "dtype": "float32",
+      "values": [
+        [
+          -90.43000030517578,
+          -7.849999904632568
+        ],
+        [
+          53.959999084472656,
+          -24.8700008392334
+        ],
+        [
+          2.3499999046325684,
+          26.739999771118164
+        ],
+        [
+          88.79000091552734,
+          -32.70000076293945
+        ]
+      ]
+    },
+    "numpy_float_label_ids_pt": {
+      "dtype": "torch.float32",
+      "values": [
+        [
+          -90.43000030517578,
+          -7.849999904632568
+        ],
+        [
+          53.959999084472656,
+          -24.8700008392334
+        ],
+        [
+          2.3499999046325684,
+          26.739999771118164
+        ],
+        [
+          88.79000091552734,
+          -32.70000076293945
+        ]
+      ]
+    },
+    "python_float_label_np": {
+      "dtype": "float32",
+      "values": [
+        -77.12000274658203,
+        998.5700073242188,
+        416.489990234375,
+        491.3500061035156
+      ]
+    },
+    "python_float_label_pt": {
+      "dtype": "torch.float32",
+      "values": [
+        -77.12000274658203,
+        998.5700073242188,
+        416.489990234375,
+        491.3500061035156
+      ]
+    },
+    "python_int_label_ids_np": {
+      "dtype": "int64",
+      "values": [
+        [
+          1304,
+          -31445
+        ],
+        [
+          -40107,
+          32536
+        ],
+        [
+          -23335,
+          44362
+        ],
+        [
+          -25433,
+          26736
+        ]
+      ]
+    },
+    "python_int_label_ids_pt": {
+      "dtype": "torch.int64",
+      "values": [
+        [
+          1304,
+          -31445
+        ],
+        [
+          -40107,
+          32536
+        ],
+        [
+          -23335,
+          44362
+        ],
+        [
+          -25433,
+          26736
+        ]
+      ]
+    },
+    "python_int_label_np": {
+      "dtype": "int64",
+      "values": [
+        48041,
+        -38177,
+        25210,
+        25914
+      ]
+    },
+    "python_int_label_pt": {
+      "dtype": "torch.int64",
+      "values": [
+        48041,
+        -38177,
+        25210,
+        25914
+      ]
+    }
+  },
+  "grader_sha256": "ab66889ecd84ae81c8f6d7684d772d1bf3244f57ac027e5875be5937048c4532",
+  "image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "missing_cases": [],
+  "observed": {
+    "nonce": "d904d3c074627bbf5b0c4c8cbc232197",
+    "results": {
+      "int32_label_ids_np": {
+        "dtype": "float32",
+        "values": [
+          [
+            328249.0,
+            394016.0
+          ],
+          [
+            77032.0,
+            -450214.0
+          ],
+          [
+            183504.0,
+            -349084.0
+          ],
+          [
+            -840093.0,
+            -373298.0
+          ]
+        ]
+      },
+      "int32_label_ids_pt": {
+        "dtype": "torch.float32",
+        "values": [
+          [
+            328249.0,
+            394016.0
+          ],
+          [
+            77032.0,
+            -450214.0
+          ],
+          [
+            183504.0,
+            -349084.0
+          ],
+          [
+            -840093.0,
+            -373298.0
+          ]
+        ]
+      },
+      "int32_label_np": {
+        "dtype": "float32",
+        "values": [
+          889728.0,
+          -187567.0,
+          595048.0,
+          553716.0
+        ]
+      },
+      "int32_label_pt": {
+        "dtype": "torch.float32",
+        "values": [
+          889728.0,
+          -187567.0,
+          595048.0,
+          553716.0
+        ]
+      },
+      "int64_label_ids_np": {
+        "dtype": "float32",
+        "values": [
+          [
+            80714162765824.0,
+            271712784482304.0
+          ],
+          [
+            286147230040064.0,
+            320417982054400.0
+          ],
+          [
+            -128165120835584.0,
+            354992435232768.0
+          ],
+          [
+            455078024577024.0,
+            294885710102528.0
+          ]
+        ]
+      },
+      "int64_label_ids_pt": {
+        "dtype": "torch.float32",
+        "values": [
+          [
+            80714162765824.0,
+            271712784482304.0
+          ],
+          [
+            286147230040064.0,
+            320417982054400.0
+          ],
+          [
+            -128165120835584.0,
+            354992435232768.0
+          ],
+          [
+            455078024577024.0,
+            294885710102528.0
+          ]
+        ]
+      },
+      "int64_label_np": {
+        "dtype": "float32",
+        "values": [
+          94682939916288.0,
+          -45405203070976.0,
+          230632412151808.0,
+          489940207009792.0
+        ]
+      },
+      "int64_label_pt": {
+        "dtype": "torch.float32",
+        "values": [
+          94682939916288.0,
+          -45405203070976.0,
+          230632412151808.0,
+          489940207009792.0
+        ]
+      },
+      "numpy_float_label_ids_np": {
+        "dtype": "float32",
+        "values": [
+          [
+            -90.43000030517578,
+            -7.849999904632568
+          ],
+          [
+            53.959999084472656,
+            -24.8700008392334
+          ],
+          [
+            2.3499999046325684,
+            26.739999771118164
+          ],
+          [
+            88.79000091552734,
+            -32.70000076293945
+          ]
+        ]
+      },
+      "numpy_float_label_ids_pt": {
+        "dtype": "torch.float32",
+        "values": [
+          [
+            -90.43000030517578,
+            -7.849999904632568
+          ],
+          [
+            53.959999084472656,
+            -24.8700008392334
+          ],
+          [
+            2.3499999046325684,
+            26.739999771118164
+          ],
+          [
+            88.79000091552734,
+            -32.70000076293945
+          ]
+        ]
+      },
+      "python_float_label_np": {
+        "dtype": "float32",
+        "values": [
+          -77.12000274658203,
+          998.5700073242188,
+          416.489990234375,
+          491.3500061035156
+        ]
+      },
+      "python_float_label_pt": {
+        "dtype": "torch.float32",
+        "values": [
+          -77.12000274658203,
+          998.5700073242188,
+          416.489990234375,
+          491.3500061035156
+        ]
+      },
+      "python_int_label_ids_np": {
+        "dtype": "int64",
+        "values": [
+          [
+            1304,
+            -31445
+          ],
+          [
+            -40107,
+            32536
+          ],
+          [
+            -23335,
+            44362
+          ],
+          [
+            -25433,
+            26736
+          ]
+        ]
+      },
+      "python_int_label_ids_pt": {
+        "dtype": "torch.int64",
+        "values": [
+          [
+            1304,
+            -31445
+          ],
+          [
+            -40107,
+            32536
+          ],
+          [
+            -23335,
+            44362
+          ],
+          [
+            -25433,
+            26736
+          ]
+        ]
+      },
+      "python_int_label_np": {
+        "dtype": "int64",
+        "values": [
+          48041,
+          -38177,
+          25210,
+          25914
+        ]
+      },
+      "python_int_label_pt": {
+        "dtype": "torch.int64",
+        "values": [
+          48041,
+          -38177,
+          25210,
+          25914
+        ]
+      }
+    }
+  },
+  "passed": false,
+  "resource_limits": {
+    "cpus": 1,
+    "memory_mb": 1536,
+    "network": "none",
+    "pids": 32,
+    "rootfs": "read-only",
+    "timeout_seconds": 90,
+    "tmpfs_mb": 16,
+    "uid": 65534
+  },
+  "schema_version": 2,
+  "source_sha256_after": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+  "source_sha256_before": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+  "source_unchanged": true,
+  "status": "grader_rejected",
+  "task_id": "transformers-49900-numpy-label-dtype-v1",
+  "unexpected_cases": [],
+  "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/results/sprint_xiv_transformers_49900_qualification_v1/attempts/attempt-101/workspace"
+}

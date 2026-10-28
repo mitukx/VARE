@@ -1,0 +1,8 @@
+{
+  "classification": "calibration harness failure; v2 receipts do not authorize qualification",
+  "corrective_action": "Use a string SHA-256, assert the actual public test hash in each workspace before execution, and retain returncode/stdout/stderr per control.",
+  "failure": "The preflight script converted the expected public-test SHA-256 argument to pathlib.Path before calling run_public_tests; its strict string comparison returned missing/changed before Docker. All three controls were not executed; their false values are invalid and must not be counted as baseline/wrong-patch outcomes. No model weights loaded or inference performed.",
+  "invalid_receipt": "results/sprint_xiv_transformers_50044_qualification_v1/calibration/public-controls-v2.json",
+  "recorded_at_utc": "2026-10-28T21:56:34Z",
+  "schema_version": 1
+}

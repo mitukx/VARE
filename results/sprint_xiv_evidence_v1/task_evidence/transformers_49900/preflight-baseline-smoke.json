@@ -1,0 +1,14 @@
+{
+  "baseline_source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+  "classification": "exploratory_preprotocol_baseline_smoke; excluded from formal qualification counts",
+  "command": "docker --context colima run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,nodev,mode=1777,size=64m --cap-drop ALL --security-opt no-new-privileges --pids-limit 32 --memory 1536m --cpus 1 -v <baseline-src>:/repo/src:ro -e PYTHONPATH=/repo/src -e PYTHONDONTWRITEBYTECODE=1 vare-transformers-candidate-v2:latest python -c <baseline NumPy int32 label reproduction>",
+  "docker_image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "expected": "Both outputs should use integer label dtypes and preserve [-7, 3].",
+  "model_inference": false,
+  "observed_stdout": "import 5.21.0.dev0\ntorch.float32 float32 [-7.0, 3.0] [-7.0, 3.0]\n",
+  "schema_version": 1,
+  "source_path": "src/transformers/data/data_collator.py",
+  "source_repository": "huggingface/transformers",
+  "timestamp": "not captured by the original command invocation; this record is a post-freeze transcription of retained tool output.",
+  "upstream_baseline_commit": "50a952d06c8f593b5a0cea5dc8040fad9761ea67"
+}

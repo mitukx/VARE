@@ -1,0 +1,59 @@
+{
+  "attempt_id": "attempt-102",
+  "attempted_edit": "UNKNOWN",
+  "baseline_source_sha256": "d87652762ba0eafb8c7aacf60cab81afae135928de735fed097fc405c69796a5",
+  "candidate_source_changed": false,
+  "candidate_source_sha256": "d87652762ba0eafb8c7aacf60cab81afae135928de735fed097fc405c69796a5",
+  "classification": "Runner evidence serialization failure after model loading; not a task-semantic failure and not a resource abort.",
+  "engineering_correction_added": "scripts/run_local_agent.py now rejects a dirty workspace before loading model weights and retains raw trajectory when post-run canonical diff validation fails.",
+  "generated_token_count": "UNAVAILABLE_RAW_TRANSCRIPT_NOT_WRITTEN",
+  "independent_hidden_grade": "NOT_RUN",
+  "inference_started": true,
+  "model": {
+    "backend": "MLX/Metal",
+    "checkpoint": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "seed": 102
+  },
+  "model_attempt_addendum": "protocols/sprint_xiv_transformers_50044_development_v1_model_attempt_addendum_2.json",
+  "model_weights_loaded": true,
+  "protocol": "protocols/sprint_xiv_transformers_50044_development_v1.json",
+  "public_test_run": "NOT_RECORDED",
+  "raw_model_trajectory_available": false,
+  "resource": {
+    "elapsed_seconds": 113.753,
+    "max_process_tree_rss_bytes": 4726390784,
+    "maximum_swap_growth_bytes": 0,
+    "minimum_available_memory_bytes": 7686930432,
+    "minimum_disk_free_bytes": 28617879552,
+    "mlx_peak_memory_bytes": null,
+    "resource_abort": false,
+    "resource_guard_status": "STOPPED_OR_FAILED",
+    "resource_guard_stop_reason": "runner_nonzero_exit"
+  },
+  "retained_records": {
+    "candidate_workspace": "results/sprint_xiv_transformers_50044_qualification_v1/attempts/attempt-102/workspace",
+    "resource_guard": "results/sprint_xiv_transformers_50044_qualification_v1/attempts/attempt-102/resource-guard.json",
+    "stderr_log": "results/sprint_xiv_transformers_50044_qualification_v1/attempts/attempt-102/runner-stderr.log",
+    "stdout_log": "results/sprint_xiv_transformers_50044_qualification_v1/attempts/attempt-102/runner-stdout.log"
+  },
+  "retry_on_same_task_prohibited": true,
+  "root_cause": {
+    "converted_symlink_paths": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "docs/source/en/contributing.md",
+      "docs/source/en/notebooks.md"
+    ],
+    "failure_point": "candidate_source_diff at final evidence serialization",
+    "git_status": "T AGENTS.md\n T CLAUDE.md\n T docs/source/en/contributing.md\n T docs/source/en/notebooks.md",
+    "initial_preflight_checked_git_head_but_not_clean_worktree": true,
+    "runner_error": "ValueError: candidate workspace contains staged or non-allowlisted changes",
+    "workspace_copy_method": "shutil.copytree without symlinks=True followed four tracked Git symlinks, leaving regular-file type changes before model load."
+  },
+  "schema_version": 1,
+  "status": "MODEL_ATTEMPT_INVALIDATED_BY_PREEXISTING_DIRTY_WORKSPACE",
+  "task_consumed_development_family": true,
+  "tool_turn_count": "UNAVAILABLE_RAW_TRANSCRIPT_NOT_WRITTEN",
+  "verified_repair": false
+}

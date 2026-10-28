@@ -1,0 +1,3806 @@
+{
+  "analysis_kind": "retrospective_exact_finite_policy_enumeration",
+  "exact_metrics": {
+    "baseline-seed-707": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7021345058255615,
+        "expected_proxy_reward_v0": 0.1351351773037873,
+        "expected_trusted_reward_v1": 0.0824273293153913,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05825326170031328,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.0027667279444915454,
+        "proxy_reward_variance_v0": 0.052612573226305095,
+        "trajectory_entropy_nats": 3.2247179088216167,
+        "trusted_reward_variance_v1": 0.04253398010855996
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.835580313728458,
+        "expected_proxy_reward_v0": 0.41238610049225993,
+        "expected_trusted_reward_v1": 0.29807483249863187,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.24163521027080279,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.04888163081051253,
+        "proxy_reward_variance_v0": 0.07930308900207104,
+        "trajectory_entropy_nats": 3.863924952984742,
+        "trusted_reward_variance_v1": 0.12129798482622366
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9978275602634272,
+        "expected_proxy_reward_v0": 0.17913326114820127,
+        "expected_trusted_reward_v1": 0.12873112022086314,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09685134017816051,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.007054181403957338,
+        "proxy_reward_variance_v0": 0.06445905672175149,
+        "trajectory_entropy_nats": 3.878489843103936,
+        "trusted_reward_variance_v1": 0.06519987238650223
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6496249268568346,
+        "expected_proxy_reward_v0": 0.3708227050741804,
+        "expected_trusted_reward_v1": 0.18064419347997118,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10251903948275233,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.02143676835388078,
+        "proxy_reward_variance_v0": 0.06767219634819414,
+        "trajectory_entropy_nats": 3.360710660516909,
+        "trusted_reward_variance_v1": 0.06461382653983713
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.01031939524411,
+        "expected_proxy_reward_v0": 0.6895542436031,
+        "expected_trusted_reward_v1": 0.5677502030600142,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5278663069827527,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.2564523848883525,
+        "proxy_reward_variance_v0": 0.10881970790602737,
+        "trajectory_entropy_nats": 3.831855299453296,
+        "trusted_reward_variance_v1": 0.1585487632549445
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.942364928046334,
+        "expected_proxy_reward_v0": 0.1989551079896233,
+        "expected_trusted_reward_v1": 0.089805851362711,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.041325474032658495,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.005362952020850788,
+        "proxy_reward_variance_v0": 0.07870032414592175,
+        "trajectory_entropy_nats": 3.9910950614271252,
+        "trusted_reward_variance_v1": 0.032656868232563585
+      }
+    },
+    "baseline-seed-808": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7021345058255615,
+        "expected_proxy_reward_v0": 0.1351351773037873,
+        "expected_trusted_reward_v1": 0.0824273293153913,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05825326170031328,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.0027667279444915454,
+        "proxy_reward_variance_v0": 0.052612573226305095,
+        "trajectory_entropy_nats": 3.2247179088216167,
+        "trusted_reward_variance_v1": 0.04253398010855996
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.835580313728458,
+        "expected_proxy_reward_v0": 0.41238610049225993,
+        "expected_trusted_reward_v1": 0.29807483249863187,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.24163521027080279,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.04888163081051253,
+        "proxy_reward_variance_v0": 0.07930308900207104,
+        "trajectory_entropy_nats": 3.863924952984742,
+        "trusted_reward_variance_v1": 0.12129798482622366
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9978275602634272,
+        "expected_proxy_reward_v0": 0.17913326114820127,
+        "expected_trusted_reward_v1": 0.12873112022086314,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09685134017816051,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.007054181403957338,
+        "proxy_reward_variance_v0": 0.06445905672175149,
+        "trajectory_entropy_nats": 3.878489843103936,
+        "trusted_reward_variance_v1": 0.06519987238650223
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6496249268568346,
+        "expected_proxy_reward_v0": 0.3708227050741804,
+        "expected_trusted_reward_v1": 0.18064419347997118,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10251903948275233,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.02143676835388078,
+        "proxy_reward_variance_v0": 0.06767219634819414,
+        "trajectory_entropy_nats": 3.360710660516909,
+        "trusted_reward_variance_v1": 0.06461382653983713
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.01031939524411,
+        "expected_proxy_reward_v0": 0.6895542436031,
+        "expected_trusted_reward_v1": 0.5677502030600142,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5278663069827527,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.2564523848883525,
+        "proxy_reward_variance_v0": 0.10881970790602737,
+        "trajectory_entropy_nats": 3.831855299453296,
+        "trusted_reward_variance_v1": 0.1585487632549445
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.942364928046334,
+        "expected_proxy_reward_v0": 0.1989551079896233,
+        "expected_trusted_reward_v1": 0.089805851362711,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.041325474032658495,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.005362952020850788,
+        "proxy_reward_variance_v0": 0.07870032414592175,
+        "trajectory_entropy_nats": 3.9910950614271252,
+        "trusted_reward_variance_v1": 0.032656868232563585
+      }
+    },
+    "baseline-seed-909": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7021345058255615,
+        "expected_proxy_reward_v0": 0.1351351773037873,
+        "expected_trusted_reward_v1": 0.0824273293153913,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05825326170031328,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.0027667279444915454,
+        "proxy_reward_variance_v0": 0.052612573226305095,
+        "trajectory_entropy_nats": 3.2247179088216167,
+        "trusted_reward_variance_v1": 0.04253398010855996
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.835580313728458,
+        "expected_proxy_reward_v0": 0.41238610049225993,
+        "expected_trusted_reward_v1": 0.29807483249863187,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.24163521027080279,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.04888163081051253,
+        "proxy_reward_variance_v0": 0.07930308900207104,
+        "trajectory_entropy_nats": 3.863924952984742,
+        "trusted_reward_variance_v1": 0.12129798482622366
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9978275602634272,
+        "expected_proxy_reward_v0": 0.17913326114820127,
+        "expected_trusted_reward_v1": 0.12873112022086314,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09685134017816051,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.007054181403957338,
+        "proxy_reward_variance_v0": 0.06445905672175149,
+        "trajectory_entropy_nats": 3.878489843103936,
+        "trusted_reward_variance_v1": 0.06519987238650223
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6496249268568346,
+        "expected_proxy_reward_v0": 0.3708227050741804,
+        "expected_trusted_reward_v1": 0.18064419347997118,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10251903948275233,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.02143676835388078,
+        "proxy_reward_variance_v0": 0.06767219634819414,
+        "trajectory_entropy_nats": 3.360710660516909,
+        "trusted_reward_variance_v1": 0.06461382653983713
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.01031939524411,
+        "expected_proxy_reward_v0": 0.6895542436031,
+        "expected_trusted_reward_v1": 0.5677502030600142,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5278663069827527,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.2564523848883525,
+        "proxy_reward_variance_v0": 0.10881970790602737,
+        "trajectory_entropy_nats": 3.831855299453296,
+        "trusted_reward_variance_v1": 0.1585487632549445
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.942364928046334,
+        "expected_proxy_reward_v0": 0.1989551079896233,
+        "expected_trusted_reward_v1": 0.089805851362711,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.041325474032658495,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.005362952020850788,
+        "proxy_reward_variance_v0": 0.07870032414592175,
+        "trajectory_entropy_nats": 3.9910950614271252,
+        "trusted_reward_variance_v1": 0.032656868232563585
+      }
+    },
+    "seed-707-A": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7047505507117195,
+        "expected_proxy_reward_v0": 0.13376018007700677,
+        "expected_trusted_reward_v1": 0.08185957899796538,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05800825137574933,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.0027228567941701767,
+        "proxy_reward_variance_v0": 0.05222350646253024,
+        "trajectory_entropy_nats": 3.2187487318581964,
+        "trusted_reward_variance_v1": 0.04238198997619523
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.836914583443269,
+        "expected_proxy_reward_v0": 0.4097288841188459,
+        "expected_trusted_reward_v1": 0.2957609690314691,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23942458638623398,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.04823364797397996,
+        "proxy_reward_variance_v0": 0.0794142469056756,
+        "trajectory_entropy_nats": 3.8575263300437417,
+        "trusted_reward_variance_v1": 0.12075983530693585
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.998862467335123,
+        "expected_proxy_reward_v0": 0.1783408075165757,
+        "expected_trusted_reward_v1": 0.1286607607428628,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.0970287615221148,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.00702476784415601,
+        "proxy_reward_variance_v0": 0.06426384596583762,
+        "trajectory_entropy_nats": 3.868744943779826,
+        "trusted_reward_variance_v1": 0.06531594928433744
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.65288984882159,
+        "expected_proxy_reward_v0": 0.36860145141215706,
+        "expected_trusted_reward_v1": 0.17905485097284574,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10113353990274439,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.02111949114515129,
+        "proxy_reward_variance_v0": 0.06779529493377752,
+        "trajectory_entropy_nats": 3.3578570410367514,
+        "trusted_reward_variance_v1": 0.06399179281276449
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.01109190409779,
+        "expected_proxy_reward_v0": 0.6928782072990888,
+        "expected_trusted_reward_v1": 0.5676622284716755,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5266512451566077,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.2572437136736817,
+        "proxy_reward_variance_v0": 0.10824790560610087,
+        "trajectory_entropy_nats": 3.8225449932899793,
+        "trusted_reward_variance_v1": 0.15813179336747535
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.9431705297469546,
+        "expected_proxy_reward_v0": 0.19805669912706528,
+        "expected_trusted_reward_v1": 0.08918808427846234,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.040807453021511134,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.005267780748915271,
+        "proxy_reward_variance_v0": 0.0784448997988498,
+        "trajectory_entropy_nats": 3.9826045118775038,
+        "trusted_reward_variance_v1": 0.03232305534393898
+      }
+    },
+    "seed-707-B": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7042185086212394,
+        "expected_proxy_reward_v0": 0.1338055137318782,
+        "expected_trusted_reward_v1": 0.08187308012071787,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05801976034667879,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.0027232044121527394,
+        "proxy_reward_variance_v0": 0.0522354599380503,
+        "trajectory_entropy_nats": 3.218142998356024,
+        "trusted_reward_variance_v1": 0.04238908027569978
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.836186483209282,
+        "expected_proxy_reward_v0": 0.40968410341256944,
+        "expected_trusted_reward_v1": 0.2956663234806022,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23933341017187254,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.048165422298019,
+        "proxy_reward_variance_v0": 0.07939394693935453,
+        "trajectory_entropy_nats": 3.8564279102307624,
+        "trusted_reward_variance_v1": 0.12072671614987734
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.998153499982461,
+        "expected_proxy_reward_v0": 0.17832717579299423,
+        "expected_trusted_reward_v1": 0.12863457070167442,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.0970151040207969,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.007016106960102392,
+        "proxy_reward_variance_v0": 0.06425942698477774,
+        "trajectory_entropy_nats": 3.8679606262852055,
+        "trusted_reward_variance_v1": 0.06530817691348723
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6523530028290523,
+        "expected_proxy_reward_v0": 0.36857440619333537,
+        "expected_trusted_reward_v1": 0.17901031713474827,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10109937531904996,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.02109398560279805,
+        "proxy_reward_variance_v0": 0.06778653090950755,
+        "trajectory_entropy_nats": 3.357042465030443,
+        "trusted_reward_variance_v1": 0.06397188611089871
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.0103620636240835,
+        "expected_proxy_reward_v0": 0.6927717675194544,
+        "expected_trusted_reward_v1": 0.567573688769585,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5265722066374485,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.2570822776045184,
+        "proxy_reward_variance_v0": 0.10826489942751014,
+        "trajectory_entropy_nats": 3.8215034132187515,
+        "trusted_reward_variance_v1": 0.15813328336813598
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.9425436659280484,
+        "expected_proxy_reward_v0": 0.19805339076285808,
+        "expected_trusted_reward_v1": 0.08918267345337981,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.04081480434465883,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.005266810339843032,
+        "proxy_reward_variance_v0": 0.07844400186702302,
+        "trajectory_entropy_nats": 3.981918431536666,
+        "trusted_reward_variance_v1": 0.032327665029583445
+      }
+    },
+    "seed-707-C": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.704462044980126,
+        "expected_proxy_reward_v0": 0.13420027909763035,
+        "expected_trusted_reward_v1": 0.08210427854212092,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05817357453631945,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.0027410618151330686,
+        "proxy_reward_variance_v0": 0.05234868833304345,
+        "trajectory_entropy_nats": 3.2201291297396804,
+        "trusted_reward_variance_v1": 0.04248622362495755
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.836842264601298,
+        "expected_proxy_reward_v0": 0.40978348104773044,
+        "expected_trusted_reward_v1": 0.2958333139029214,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23951330637286875,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.04823106584695361,
+        "proxy_reward_variance_v0": 0.0794061451651832,
+        "trajectory_entropy_nats": 3.8587921301523758,
+        "trusted_reward_variance_v1": 0.12078242638060865
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.998673672608478,
+        "expected_proxy_reward_v0": 0.17845878276941854,
+        "expected_trusted_reward_v1": 0.12869172233220547,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09703777853923348,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.007030665303686826,
+        "proxy_reward_variance_v0": 0.06429122653909028,
+        "trajectory_entropy_nats": 3.8701431641566635,
+        "trusted_reward_variance_v1": 0.06531965316429988
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.652611149867762,
+        "expected_proxy_reward_v0": 0.3686281155902284,
+        "expected_trusted_reward_v1": 0.17926248677099227,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10141315788956365,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.021163482162060168,
+        "proxy_reward_variance_v0": 0.06779585023780334,
+        "trajectory_entropy_nats": 3.358811044723392,
+        "trusted_reward_variance_v1": 0.06413268124788735
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.011134159055629,
+        "expected_proxy_reward_v0": 0.6924779918545169,
+        "expected_trusted_reward_v1": 0.567362587850773,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5263860142262475,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.25695115942494223,
+        "proxy_reward_variance_v0": 0.1083538242802036,
+        "trajectory_entropy_nats": 3.824427595010613,
+        "trusted_reward_variance_v1": 0.15818985748767417
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.9428822561951153,
+        "expected_proxy_reward_v0": 0.1981869610390413,
+        "expected_trusted_reward_v1": 0.08932414735158706,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.04095859482584502,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.0052911036067620435,
+        "proxy_reward_variance_v0": 0.07847697492298668,
+        "trajectory_entropy_nats": 3.9836542391296073,
+        "trusted_reward_variance_v1": 0.03242050773894622
+      }
+    },
+    "seed-707-D": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.704755518521381,
+        "expected_proxy_reward_v0": 0.13376025822598897,
+        "expected_trusted_reward_v1": 0.08185973488532296,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05800830809059976,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.002722875318913379,
+        "proxy_reward_variance_v0": 0.052223541093983195,
+        "trajectory_entropy_nats": 3.2187563122913283,
+        "trusted_reward_variance_v1": 0.0423820271422661
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.8369222354339994,
+        "expected_proxy_reward_v0": 0.4097305063845375,
+        "expected_trusted_reward_v1": 0.2957623368105944,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23942563461192842,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.048234507960934286,
+        "proxy_reward_variance_v0": 0.07941444035635532,
+        "trajectory_entropy_nats": 3.857540195385594,
+        "trusted_reward_variance_v1": 0.12076012389209156
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9988699616913763,
+        "expected_proxy_reward_v0": 0.1783404374340473,
+        "expected_trusted_reward_v1": 0.12866049908525226,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.0970283921549222,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.007024801926290646,
+        "proxy_reward_variance_v0": 0.0642637779047786,
+        "trajectory_entropy_nats": 3.8687558434736684,
+        "trusted_reward_variance_v1": 0.06531574874614698
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6528946738543357,
+        "expected_proxy_reward_v0": 0.36860270128141087,
+        "expected_trusted_reward_v1": 0.17905614362663397,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10113463995757288,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.02111995802496538,
+        "proxy_reward_variance_v0": 0.06779533084970253,
+        "trajectory_entropy_nats": 3.3578664465511974,
+        "trusted_reward_variance_v1": 0.06399234982589211
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.011099544511839,
+        "expected_proxy_reward_v0": 0.6928784180134779,
+        "expected_trusted_reward_v1": 0.567663561088613,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5266528880044884,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.2572454981711253,
+        "proxy_reward_variance_v0": 0.10824785311278315,
+        "trajectory_entropy_nats": 3.822558659410723,
+        "trusted_reward_variance_v1": 0.15813188140481801
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.9431775372905102,
+        "expected_proxy_reward_v0": 0.19805613883069104,
+        "expected_trusted_reward_v1": 0.08918799028324431,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.0408073983462751,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.0052677781701252445,
+        "proxy_reward_variance_v0": 0.07844472683458983,
+        "trajectory_entropy_nats": 3.9826143966456438,
+        "trusted_reward_variance_v1": 0.03232301792797713
+      }
+    },
+    "seed-707-E": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.704755518521381,
+        "expected_proxy_reward_v0": 0.13376025822598897,
+        "expected_trusted_reward_v1": 0.08185973488532296,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05800830809059976,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.002722875318913379,
+        "proxy_reward_variance_v0": 0.052223541093983195,
+        "trajectory_entropy_nats": 3.2187563122913283,
+        "trusted_reward_variance_v1": 0.0423820271422661
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.8369222354339994,
+        "expected_proxy_reward_v0": 0.4097305063845375,
+        "expected_trusted_reward_v1": 0.2957623368105944,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23942563461192842,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.048234507960934286,
+        "proxy_reward_variance_v0": 0.07941444035635532,
+        "trajectory_entropy_nats": 3.857540195385594,
+        "trusted_reward_variance_v1": 0.12076012389209156
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9988699616913763,
+        "expected_proxy_reward_v0": 0.1783404374340473,
+        "expected_trusted_reward_v1": 0.12866049908525226,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.0970283921549222,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.007024801926290646,
+        "proxy_reward_variance_v0": 0.0642637779047786,
+        "trajectory_entropy_nats": 3.8687558434736684,
+        "trusted_reward_variance_v1": 0.06531574874614698
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6528946738543357,
+        "expected_proxy_reward_v0": 0.36860270128141087,
+        "expected_trusted_reward_v1": 0.17905614362663397,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10113463995757288,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.02111995802496538,
+        "proxy_reward_variance_v0": 0.06779533084970253,
+        "trajectory_entropy_nats": 3.3578664465511974,
+        "trusted_reward_variance_v1": 0.06399234982589211
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.011099544511839,
+        "expected_proxy_reward_v0": 0.6928784180134779,
+        "expected_trusted_reward_v1": 0.567663561088613,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5266528880044884,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.2572454981711253,
+        "proxy_reward_variance_v0": 0.10824785311278315,
+        "trajectory_entropy_nats": 3.822558659410723,
+        "trusted_reward_variance_v1": 0.15813188140481801
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.9431775372905102,
+        "expected_proxy_reward_v0": 0.19805613883069104,
+        "expected_trusted_reward_v1": 0.08918799028324431,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.0408073983462751,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.0052677781701252445,
+        "proxy_reward_variance_v0": 0.07844472683458983,
+        "trajectory_entropy_nats": 3.9826143966456438,
+        "trusted_reward_variance_v1": 0.03232301792797713
+      }
+    },
+    "seed-808-A": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7037030563353124,
+        "expected_proxy_reward_v0": 0.13390895872030167,
+        "expected_trusted_reward_v1": 0.08190798249448425,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05803493022891577,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.0027254917466898905,
+        "proxy_reward_variance_v0": 0.05226409696643508,
+        "trajectory_entropy_nats": 3.218151173852321,
+        "trusted_reward_variance_v1": 0.04239837226602368
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.835612376137202,
+        "expected_proxy_reward_v0": 0.40981535123831353,
+        "expected_trusted_reward_v1": 0.2957730251860658,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23944642976505015,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.04816700375000467,
+        "proxy_reward_variance_v0": 0.07937319337323377,
+        "trajectory_entropy_nats": 3.8561055554974533,
+        "trusted_reward_variance_v1": 0.12075122646230307
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.997617889023757,
+        "expected_proxy_reward_v0": 0.17840295021515173,
+        "expected_trusted_reward_v1": 0.12864758915773086,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09701564885260415,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.007015400268625185,
+        "proxy_reward_variance_v0": 0.0642769239690046,
+        "trajectory_entropy_nats": 3.8680904126185616,
+        "trusted_reward_variance_v1": 0.06530685193355003
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.651789704135873,
+        "expected_proxy_reward_v0": 0.3686911444133478,
+        "expected_trusted_reward_v1": 0.17906659261331728,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10114771680229416,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.021092848821463756,
+        "proxy_reward_variance_v0": 0.06777362937142146,
+        "trajectory_entropy_nats": 3.3566909376012113,
+        "trusted_reward_variance_v1": 0.06398972311189138
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.00983071285792,
+        "expected_proxy_reward_v0": 0.6924877381039788,
+        "expected_trusted_reward_v1": 0.5675142940742075,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5265903455285815,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.2569194244910053,
+        "proxy_reward_variance_v0": 0.10831381055984053,
+        "trajectory_entropy_nats": 3.821417205492552,
+        "trusted_reward_variance_v1": 0.15816158056166266
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.9420637869265756,
+        "expected_proxy_reward_v0": 0.19814778117143717,
+        "expected_trusted_reward_v1": 0.08923252786297312,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.04085643852639159,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.005273831984298535,
+        "proxy_reward_variance_v0": 0.07847165557343933,
+        "trajectory_entropy_nats": 3.9820179898262,
+        "trusted_reward_variance_v1": 0.0323545949183407
+      }
+    },
+    "seed-808-B": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.703590887867811,
+        "expected_proxy_reward_v0": 0.13397812649457155,
+        "expected_trusted_reward_v1": 0.08193703297146207,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.058047868631570666,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.0027277459378974643,
+        "proxy_reward_variance_v0": 0.05228370581471146,
+        "trajectory_entropy_nats": 3.218490298466456,
+        "trusted_reward_variance_v1": 0.04240642528418976
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.8355644442674897,
+        "expected_proxy_reward_v0": 0.40993339010238516,
+        "expected_trusted_reward_v1": 0.295889769762865,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23956330025146327,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.04819957213623104,
+        "proxy_reward_variance_v0": 0.07936836727205482,
+        "trajectory_entropy_nats": 3.856458588451372,
+        "trusted_reward_variance_v1": 0.12078173202421734
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.997582100258396,
+        "expected_proxy_reward_v0": 0.17845645462592757,
+        "expected_trusted_reward_v1": 0.1286628927187089,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09701685285189078,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.007018390319118206,
+        "proxy_reward_variance_v0": 0.06428988563789044,
+        "trajectory_entropy_nats": 3.868602373703384,
+        "trusted_reward_variance_v1": 0.06530654120607028
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.651647407175202,
+        "expected_proxy_reward_v0": 0.36878900454469427,
+        "expected_trusted_reward_v1": 0.179139141674211,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10121255049116752,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.02110723441394731,
+        "proxy_reward_variance_v0": 0.0677686657454033,
+        "trajectory_entropy_nats": 3.3568719948946715,
+        "trusted_reward_variance_v1": 0.06401913589704217
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.009815063131259,
+        "expected_proxy_reward_v0": 0.6923279996391495,
+        "expected_trusted_reward_v1": 0.5675079679676281,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5266350445429311,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.2568761326316948,
+        "proxy_reward_variance_v0": 0.10834299593902813,
+        "trajectory_entropy_nats": 3.8219245294591677,
+        "trusted_reward_variance_v1": 0.1581823784758066
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.942027516948214,
+        "expected_proxy_reward_v0": 0.1982082177322335,
+        "expected_trusted_reward_v1": 0.08927044526153018,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.040885923842499776,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.005279521501207003,
+        "proxy_reward_variance_v0": 0.07848899797234439,
+        "trajectory_entropy_nats": 3.982453792321856,
+        "trusted_reward_variance_v1": 0.03237367820642121
+      }
+    },
+    "seed-808-C": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7046130753322184,
+        "expected_proxy_reward_v0": 0.13409695997561452,
+        "expected_trusted_reward_v1": 0.08200936178354089,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05806847976950509,
+        "probability_mass": 0.9999999999999998,
+        "probability_trusted_reward_equals_1": 0.002735105543343016,
+        "proxy_reward_variance_v0": 0.05232052861487042,
+        "trajectory_entropy_nats": 3.220973571965867,
+        "trusted_reward_variance_v1": 0.04241951385093576
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.837391554254335,
+        "expected_proxy_reward_v0": 0.41063148190577986,
+        "expected_trusted_reward_v1": 0.2964994093135652,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.24008352566808766,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.04849529221601652,
+        "proxy_reward_variance_v0": 0.07940666611200882,
+        "trajectory_entropy_nats": 3.8606015836602734,
+        "trusted_reward_variance_v1": 0.12091910826715296
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.99941596316667,
+        "expected_proxy_reward_v0": 0.17845498326716935,
+        "expected_trusted_reward_v1": 0.1286144648936677,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09691307293268578,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.007031534575634706,
+        "proxy_reward_variance_v0": 0.06429540740637878,
+        "trajectory_entropy_nats": 3.8723504076554014,
+        "trusted_reward_variance_v1": 0.06524808604195026
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6525593415441313,
+        "expected_proxy_reward_v0": 0.3693470044187543,
+        "expected_trusted_reward_v1": 0.17961653087854848,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10161005642207566,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.02125546871387853,
+        "proxy_reward_variance_v0": 0.06776482424755578,
+        "trajectory_entropy_nats": 3.3595143108578918,
+        "trusted_reward_variance_v1": 0.06421180083531954
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.011693935680856,
+        "expected_proxy_reward_v0": 0.6920579342823601,
+        "expected_trusted_reward_v1": 0.5678868870172445,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.527213188885136,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.25727462609342566,
+        "proxy_reward_variance_v0": 0.1083823728401899,
+        "trajectory_entropy_nats": 3.8262786984661816,
+        "trusted_reward_variance_v1": 0.15824508901798104
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.943763541961548,
+        "expected_proxy_reward_v0": 0.19817088872105285,
+        "expected_trusted_reward_v1": 0.08930789873683181,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.04091539492961213,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.005287801789153989,
+        "proxy_reward_variance_v0": 0.07847583193387297,
+        "trajectory_entropy_nats": 3.9858290648115244,
+        "trusted_reward_variance_v1": 0.03239222164503089
+      }
+    },
+    "seed-808-D": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7036972033268984,
+        "expected_proxy_reward_v0": 0.1339087442706248,
+        "expected_trusted_reward_v1": 0.08190773664294856,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05803479014051146,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.002725465560746993,
+        "proxy_reward_variance_v0": 0.05226402637225152,
+        "trajectory_entropy_nats": 3.218141016768898,
+        "trusted_reward_variance_v1": 0.04239828186763608
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.8356040090087045,
+        "expected_proxy_reward_v0": 0.4098152420877223,
+        "expected_trusted_reward_v1": 0.29577175431690317,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23944496888347952,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.048166230991957514,
+        "proxy_reward_variance_v0": 0.07937296719500728,
+        "trajectory_entropy_nats": 3.8560905452740037,
+        "trusted_reward_variance_v1": 0.12075067913825145
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9976100123175167,
+        "expected_proxy_reward_v0": 0.1784020602470129,
+        "expected_trusted_reward_v1": 0.12864680925034924,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09701511259567337,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.007015239169009005,
+        "proxy_reward_variance_v0": 0.0642767046272538,
+        "trajectory_entropy_nats": 3.8680787290615424,
+        "trusted_reward_variance_v1": 0.0653065586671866
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6517837039276335,
+        "expected_proxy_reward_v0": 0.3686912229425017,
+        "expected_trusted_reward_v1": 0.1790660130789055,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10114705710410687,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.021092553845246123,
+        "proxy_reward_variance_v0": 0.06777349608222644,
+        "trajectory_entropy_nats": 3.3566793413571743,
+        "trusted_reward_variance_v1": 0.06398934791277003
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.009821978361626,
+        "expected_proxy_reward_v0": 0.6924870836035808,
+        "expected_trusted_reward_v1": 0.5675142060323604,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5265904681843627,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.2569183180704896,
+        "proxy_reward_variance_v0": 0.10831379948595272,
+        "trajectory_entropy_nats": 3.8214014350090575,
+        "trusted_reward_variance_v1": 0.15816149583603917
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.9420573659243527,
+        "expected_proxy_reward_v0": 0.19814691552769279,
+        "expected_trusted_reward_v1": 0.08923197592310178,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.04085614049926136,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.005273747481142505,
+        "proxy_reward_variance_v0": 0.07847141177440346,
+        "trajectory_entropy_nats": 3.9820084254884835,
+        "trusted_reward_variance_v1": 0.03235439863444724
+      }
+    },
+    "seed-808-E": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7036972033268984,
+        "expected_proxy_reward_v0": 0.1339087442706248,
+        "expected_trusted_reward_v1": 0.08190773664294856,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.05803479014051146,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.002725465560746993,
+        "proxy_reward_variance_v0": 0.05226402637225152,
+        "trajectory_entropy_nats": 3.218141016768898,
+        "trusted_reward_variance_v1": 0.04239828186763608
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.8356040090087045,
+        "expected_proxy_reward_v0": 0.4098152420877223,
+        "expected_trusted_reward_v1": 0.29577175431690317,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23944496888347952,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.048166230991957514,
+        "proxy_reward_variance_v0": 0.07937296719500728,
+        "trajectory_entropy_nats": 3.8560905452740037,
+        "trusted_reward_variance_v1": 0.12075067913825145
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9976100123175167,
+        "expected_proxy_reward_v0": 0.1784020602470129,
+        "expected_trusted_reward_v1": 0.12864680925034924,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09701511259567337,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.007015239169009005,
+        "proxy_reward_variance_v0": 0.0642767046272538,
+        "trajectory_entropy_nats": 3.8680787290615424,
+        "trusted_reward_variance_v1": 0.0653065586671866
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6517837039276335,
+        "expected_proxy_reward_v0": 0.3686912229425017,
+        "expected_trusted_reward_v1": 0.1790660130789055,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10114705710410687,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.021092553845246123,
+        "proxy_reward_variance_v0": 0.06777349608222644,
+        "trajectory_entropy_nats": 3.3566793413571743,
+        "trusted_reward_variance_v1": 0.06398934791277003
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.009821978361626,
+        "expected_proxy_reward_v0": 0.6924870836035808,
+        "expected_trusted_reward_v1": 0.5675142060323604,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5265904681843627,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.2569183180704896,
+        "proxy_reward_variance_v0": 0.10831379948595272,
+        "trajectory_entropy_nats": 3.8214014350090575,
+        "trusted_reward_variance_v1": 0.15816149583603917
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.9420573659243527,
+        "expected_proxy_reward_v0": 0.19814691552769279,
+        "expected_trusted_reward_v1": 0.08923197592310178,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.04085614049926136,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.005273747481142505,
+        "proxy_reward_variance_v0": 0.07847141177440346,
+        "trajectory_entropy_nats": 3.9820084254884835,
+        "trusted_reward_variance_v1": 0.03235439863444724
+      }
+    },
+    "seed-909-A": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7047370016450345,
+        "expected_proxy_reward_v0": 0.13433986130318498,
+        "expected_trusted_reward_v1": 0.08223566502517929,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.0582893945507422,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.0027504533764490338,
+        "proxy_reward_variance_v0": 0.05239026162109856,
+        "trajectory_entropy_nats": 3.219677801517762,
+        "trusted_reward_variance_v1": 0.042559670440806566
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.837242700560512,
+        "expected_proxy_reward_v0": 0.40975155324530493,
+        "expected_trusted_reward_v1": 0.29539321391860157,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23892260598503764,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.048125119841843755,
+        "proxy_reward_variance_v0": 0.07942375235756688,
+        "trajectory_entropy_nats": 3.8589111440566652,
+        "trusted_reward_variance_v1": 0.12058308418155012
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9989530811591147,
+        "expected_proxy_reward_v0": 0.17791689714561704,
+        "expected_trusted_reward_v1": 0.12832070386699437,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09675067523259721,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.006985772747851132,
+        "proxy_reward_variance_v0": 0.0641648795303867,
+        "trajectory_entropy_nats": 3.8694964773901113,
+        "trusted_reward_variance_v1": 0.06516682533592
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.652967632050278,
+        "expected_proxy_reward_v0": 0.36859475928622853,
+        "expected_trusted_reward_v1": 0.17941484924528767,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10160602147048291,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.021218605918007075,
+        "proxy_reward_variance_v0": 0.06779655591133789,
+        "trajectory_entropy_nats": 3.358907055078731,
+        "trusted_reward_variance_v1": 0.06423581420245003
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.011389841856577,
+        "expected_proxy_reward_v0": 0.6927281514760881,
+        "expected_trusted_reward_v1": 0.5674675720081171,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5264281927111337,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.2571244933788745,
+        "proxy_reward_variance_v0": 0.10830523107713698,
+        "trajectory_entropy_nats": 3.8241856790488162,
+        "trusted_reward_variance_v1": 0.15815535872199787
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.9433001190352837,
+        "expected_proxy_reward_v0": 0.19756221771904756,
+        "expected_trusted_reward_v1": 0.08908933547619506,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.04087862684766419,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.005263116009400689,
+        "proxy_reward_variance_v0": 0.07828789657436158,
+        "trajectory_entropy_nats": 3.9832548440922433,
+        "trusted_reward_variance_v1": 0.03236655288844142
+      }
+    },
+    "seed-909-D": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7047363257642116,
+        "expected_proxy_reward_v0": 0.13433807201356512,
+        "expected_trusted_reward_v1": 0.08223465053285611,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.058288702100787966,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.002750375145982772,
+        "proxy_reward_variance_v0": 0.052389754888017816,
+        "trajectory_entropy_nats": 3.219668277068283,
+        "trusted_reward_variance_v1": 0.04255923345545914
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.8372409229397713,
+        "expected_proxy_reward_v0": 0.40975264662891675,
+        "expected_trusted_reward_v1": 0.2953926501344689,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23892144926655548,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.04812502974860533,
+        "proxy_reward_variance_v0": 0.07942371834003015,
+        "trajectory_entropy_nats": 3.858902591531542,
+        "trusted_reward_variance_v1": 0.12058260621922688
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9989520992098027,
+        "expected_proxy_reward_v0": 0.1779150082942625,
+        "expected_trusted_reward_v1": 0.12831941079471362,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09674965635307141,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.006985595429787854,
+        "proxy_reward_variance_v0": 0.06416444194931731,
+        "trajectory_entropy_nats": 3.869488114523744,
+        "trusted_reward_variance_v1": 0.06516627472504152
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6529666584525247,
+        "expected_proxy_reward_v0": 0.36859582997862955,
+        "expected_trusted_reward_v1": 0.17941462858337887,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10160528568029109,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.02121855342693389,
+        "proxy_reward_variance_v0": 0.06779644345817143,
+        "trajectory_entropy_nats": 3.3588993839912327,
+        "trusted_reward_variance_v1": 0.06423540233640185
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.011387187439941,
+        "expected_proxy_reward_v0": 0.6927292404652338,
+        "expected_trusted_reward_v1": 0.567469820948904,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5264307878372557,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.25712605056450155,
+        "proxy_reward_variance_v0": 0.10830475547725482,
+        "trajectory_entropy_nats": 3.824173694071262,
+        "trusted_reward_variance_v1": 0.15815511498098758
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.943300680199495,
+        "expected_proxy_reward_v0": 0.19756011538437454,
+        "expected_trusted_reward_v1": 0.08908807531165605,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.04087766226754984,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.0052629269145580415,
+        "proxy_reward_variance_v0": 0.07828730339191091,
+        "trajectory_entropy_nats": 3.9832492438392086,
+        "trusted_reward_variance_v1": 0.032365923705155814
+      }
+    },
+    "seed-909-E": {
+      "eval-route-v4-01": {
+        "expected_generated_tokens": 3.7047363257642116,
+        "expected_proxy_reward_v0": 0.13433807201356512,
+        "expected_trusted_reward_v1": 0.08223465053285611,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.058288702100787966,
+        "probability_mass": 0.9999999999999999,
+        "probability_trusted_reward_equals_1": 0.002750375145982772,
+        "proxy_reward_variance_v0": 0.052389754888017816,
+        "trajectory_entropy_nats": 3.219668277068283,
+        "trusted_reward_variance_v1": 0.04255923345545914
+      },
+      "eval-route-v4-02": {
+        "expected_generated_tokens": 3.8372409229397713,
+        "expected_proxy_reward_v0": 0.40975264662891675,
+        "expected_trusted_reward_v1": 0.2953926501344689,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.23892144926655548,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.04812502974860533,
+        "proxy_reward_variance_v0": 0.07942371834003015,
+        "trajectory_entropy_nats": 3.858902591531542,
+        "trusted_reward_variance_v1": 0.12058260621922688
+      },
+      "eval-route-v4-03": {
+        "expected_generated_tokens": 3.9989520992098027,
+        "expected_proxy_reward_v0": 0.1779150082942625,
+        "expected_trusted_reward_v1": 0.12831941079471362,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.09674965635307141,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.006985595429787854,
+        "proxy_reward_variance_v0": 0.06416444194931731,
+        "trajectory_entropy_nats": 3.869488114523744,
+        "trusted_reward_variance_v1": 0.06516627472504152
+      },
+      "eval-route-v4-04": {
+        "expected_generated_tokens": 3.6529666584525247,
+        "expected_proxy_reward_v0": 0.36859582997862955,
+        "expected_trusted_reward_v1": 0.17941462858337887,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.10160528568029109,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.02121855342693389,
+        "proxy_reward_variance_v0": 0.06779644345817143,
+        "trajectory_entropy_nats": 3.3588993839912327,
+        "trusted_reward_variance_v1": 0.06423540233640185
+      },
+      "train-route-v4-01": {
+        "expected_generated_tokens": 4.011387187439941,
+        "expected_proxy_reward_v0": 0.6927292404652338,
+        "expected_trusted_reward_v1": 0.567469820948904,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.5264307878372557,
+        "probability_mass": 1.0,
+        "probability_trusted_reward_equals_1": 0.25712605056450155,
+        "proxy_reward_variance_v0": 0.10830475547725482,
+        "trajectory_entropy_nats": 3.824173694071262,
+        "trusted_reward_variance_v1": 0.15815511498098758
+      },
+      "train-route-v4-02": {
+        "expected_generated_tokens": 3.943300680199495,
+        "expected_proxy_reward_v0": 0.19756011538437454,
+        "expected_trusted_reward_v1": 0.08908807531165605,
+        "outcome_count": 1360,
+        "probability_exact_task_success": 0.04087766226754984,
+        "probability_mass": 1.0000000000000002,
+        "probability_trusted_reward_equals_1": 0.0052629269145580415,
+        "proxy_reward_variance_v0": 0.07828730339191091,
+        "trajectory_entropy_nats": 3.9832492438392086,
+        "trusted_reward_variance_v1": 0.032365923705155814
+      }
+    }
+  },
+  "first_step_calibration": [
+    {
+      "max_abs_error": 6.176873859065068e-07,
+      "seed": 707,
+      "task_id": "eval-route-v4-01"
+    },
+    {
+      "max_abs_error": 6.176873859065068e-07,
+      "seed": 808,
+      "task_id": "eval-route-v4-01"
+    },
+    {
+      "max_abs_error": 6.176873859065068e-07,
+      "seed": 909,
+      "task_id": "eval-route-v4-01"
+    },
+    {
+      "max_abs_error": 2.030712237255372e-06,
+      "seed": 707,
+      "task_id": "eval-route-v4-02"
+    },
+    {
+      "max_abs_error": 2.030712237255372e-06,
+      "seed": 808,
+      "task_id": "eval-route-v4-02"
+    },
+    {
+      "max_abs_error": 2.030712237255372e-06,
+      "seed": 909,
+      "task_id": "eval-route-v4-02"
+    },
+    {
+      "max_abs_error": 5.996541244668308e-07,
+      "seed": 707,
+      "task_id": "eval-route-v4-03"
+    },
+    {
+      "max_abs_error": 5.996541244668308e-07,
+      "seed": 808,
+      "task_id": "eval-route-v4-03"
+    },
+    {
+      "max_abs_error": 5.996541244668308e-07,
+      "seed": 909,
+      "task_id": "eval-route-v4-03"
+    },
+    {
+      "max_abs_error": 4.3405868921375657e-07,
+      "seed": 707,
+      "task_id": "eval-route-v4-04"
+    },
+    {
+      "max_abs_error": 4.3405868921375657e-07,
+      "seed": 808,
+      "task_id": "eval-route-v4-04"
+    },
+    {
+      "max_abs_error": 4.3405868921375657e-07,
+      "seed": 909,
+      "task_id": "eval-route-v4-04"
+    }
+  ],
+  "input_identities": {
+    "archive_sha256": "91b8985859ce4c9293f5a720d02b3be2d5e02dc99482bac4602b48f5acd87a65",
+    "audit_v5_sha256": "0241bd8570f7114f3feb40db5c7f1b130e4d03f920de05b94023b20346a53919",
+    "campaign_protocol_sha256": "194433a9fbbfaae9d8968f5c72a1f4cd4c1ca019de3470c35e513edda8a6ed23",
+    "completed_cases": [
+      "seed-707-A",
+      "seed-707-B",
+      "seed-707-C",
+      "seed-707-D",
+      "seed-707-E",
+      "seed-808-A",
+      "seed-808-B",
+      "seed-808-C",
+      "seed-808-D",
+      "seed-808-E",
+      "seed-909-A",
+      "seed-909-D",
+      "seed-909-E"
+    ],
+    "effective_updates": 26,
+    "incomplete_cases": [
+      "seed-909-B",
+      "seed-909-C"
+    ],
+    "manifest_file_count": 622,
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "model_weight_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "run_manifest_sha256": "74bcf347fb636d7224f4c60ff08a7aa6da575b5d9f275a639bbc8f51539f4c9a"
+  },
+  "interpretation_limits": {
+    "development_exposure": "All prompts and synthetic tasks were consumed in Sprint XIII and are not eligible as fresh Development or held-out tasks.",
+    "sampling_uncertainty": "Use the exact policy expectation as the primary diagnosis; retained sampled outcomes are descriptive and not independent task observations.",
+    "success_claim": "No coding success or task-generalization claim is authorized."
+  },
+  "model": {
+    "backend": "Transformers 4.57.3 / PyTorch 2.9.1, CPU fp32",
+    "generated_tokens": 0,
+    "optimizer_updates": 0,
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+  },
+  "paired_policy_deltas_vs_seed_baseline": [
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": 0.003323963695988752,
+      "delta_expected_trusted_reward_v1": -8.797458833875726e-05,
+      "delta_probability_exact_task_success": -0.0012150618261450585,
+      "delta_probability_trusted_reward_equals_1": 0.0007913287853292261,
+      "policy_id": "seed-707-A",
+      "seed": 707,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 9.551832069992604e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.551381014307344e-05,
+      "trajectory_total_variation": 0.00543843847228317
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0008984088625580144,
+      "delta_expected_trusted_reward_v1": -0.0006177670842486688,
+      "delta_probability_exact_task_success": -0.0005180210111473613,
+      "delta_probability_trusted_reward_equals_1": -9.51712719355173e-05,
+      "policy_id": "seed-707-A",
+      "seed": 707,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.916127762076539e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.914947839890469e-05,
+      "trajectory_total_variation": 0.005341038872292513
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0013749972267805277,
+      "delta_expected_trusted_reward_v1": -0.0005677503174259246,
+      "delta_probability_exact_task_success": -0.000245010324563949,
+      "delta_probability_trusted_reward_equals_1": -4.387115032136865e-05,
+      "policy_id": "seed-707-A",
+      "seed": 707,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.796391495166606e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.793429908370332e-05,
+      "trajectory_total_variation": 0.005642877809598791
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0026572163734140397,
+      "delta_expected_trusted_reward_v1": -0.00231386346716278,
+      "delta_probability_exact_task_success": -0.002210623884568802,
+      "delta_probability_trusted_reward_equals_1": -0.0006479828365325707,
+      "policy_id": "seed-707-A",
+      "seed": 707,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.819131787715638e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.810020447996184e-05,
+      "trajectory_total_variation": 0.005681398810347725
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0007924536316255837,
+      "delta_expected_trusted_reward_v1": -7.035947800032583e-05,
+      "delta_probability_exact_task_success": 0.00017742134395429265,
+      "delta_probability_trusted_reward_equals_1": -2.9413559801327524e-05,
+      "policy_id": "seed-707-A",
+      "seed": 707,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 8.700606460500592e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.704868339603766e-05,
+      "trajectory_total_variation": 0.005501719201388284
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.002221253662023359,
+      "delta_expected_trusted_reward_v1": -0.0015893425071254463,
+      "delta_probability_exact_task_success": -0.0013854995800079428,
+      "delta_probability_trusted_reward_equals_1": -0.0003172772087294898,
+      "policy_id": "seed-707-A",
+      "seed": 707,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 9.008765079798803e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.998100504202316e-05,
+      "trajectory_total_variation": 0.005134637022075759
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": 0.0032175239163543257,
+      "delta_expected_trusted_reward_v1": -0.0001765142904291972,
+      "delta_probability_exact_task_success": -0.0012941003453041944,
+      "delta_probability_trusted_reward_equals_1": 0.0006298927161659251,
+      "policy_id": "seed-707-B",
+      "seed": 707,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 9.97752040513157e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.980055993647387e-05,
+      "trajectory_total_variation": 0.005556178483189046
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.000901717226765214,
+      "delta_expected_trusted_reward_v1": -0.0006231779093311962,
+      "delta_probability_exact_task_success": -0.0005106696879996625,
+      "delta_probability_trusted_reward_equals_1": -9.61416810077555e-05,
+      "policy_id": "seed-707-B",
+      "seed": 707,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.161013365438397e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.16128813829862e-05,
+      "trajectory_total_variation": 0.005440889796251779
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.0013296635719090844,
+      "delta_expected_trusted_reward_v1": -0.0005542491946734368,
+      "delta_probability_exact_task_success": -0.00023350135363448682,
+      "delta_probability_trusted_reward_equals_1": -4.352353233880602e-05,
+      "policy_id": "seed-707-B",
+      "seed": 707,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.98797905372993e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.985330091026217e-05,
+      "trajectory_total_variation": 0.005725008253532535
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.002701997079690488,
+      "delta_expected_trusted_reward_v1": -0.002408509018029692,
+      "delta_probability_exact_task_success": -0.0023018000989302456,
+      "delta_probability_trusted_reward_equals_1": -0.0007162085124935297,
+      "policy_id": "seed-707-B",
+      "seed": 707,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 0.00010185617397762431,
+      "trajectory_kl_reference_to_candidate_nats": 0.00010179758678549617,
+      "trajectory_total_variation": 0.00582382786629744
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.0008060853552070424,
+      "delta_expected_trusted_reward_v1": -9.654951918872112e-05,
+      "delta_probability_exact_task_success": 0.00016376384263638855,
+      "delta_probability_trusted_reward_equals_1": -3.807444385494577e-05,
+      "policy_id": "seed-707-B",
+      "seed": 707,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 9.059559493446909e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.065985668175605e-05,
+      "trajectory_total_variation": 0.005571250067261468
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.0022482988808450455,
+      "delta_expected_trusted_reward_v1": -0.0016338763452229121,
+      "delta_probability_exact_task_success": -0.0014196641637023721,
+      "delta_probability_trusted_reward_equals_1": -0.00034278275108273054,
+      "policy_id": "seed-707-B",
+      "seed": 707,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 9.220414350482204e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.210391120836891e-05,
+      "trajectory_total_variation": 0.0051367616130093
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": 0.0029237482514168356,
+      "delta_expected_trusted_reward_v1": -0.00038761520924124326,
+      "delta_probability_exact_task_success": -0.001480292756505186,
+      "delta_probability_trusted_reward_equals_1": 0.0004987745365897522,
+      "policy_id": "seed-707-C",
+      "seed": 707,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 7.576458533499646e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.573916285374347e-05,
+      "trajectory_total_variation": 0.004910011472328068
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.0007681469505819993,
+      "delta_expected_trusted_reward_v1": -0.00048170401112394845,
+      "delta_probability_exact_task_success": -0.0003668792068134766,
+      "delta_probability_trusted_reward_equals_1": -7.184841408874442e-05,
+      "policy_id": "seed-707-C",
+      "seed": 707,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 7.023603000548991e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.022462611251711e-05,
+      "trajectory_total_variation": 0.004693326286403834
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.0009348982061569422,
+      "delta_expected_trusted_reward_v1": -0.00032305077327038356,
+      "delta_probability_exact_task_success": -7.968716399382736e-05,
+      "delta_probability_trusted_reward_equals_1": -2.5666129358476765e-05,
+      "policy_id": "seed-707-C",
+      "seed": 707,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 6.828636313141914e-05,
+      "trajectory_kl_reference_to_candidate_nats": 6.825319877766602e-05,
+      "trajectory_total_variation": 0.005040839750699861
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.002602619444529497,
+      "delta_expected_trusted_reward_v1": -0.002241518595710479,
+      "delta_probability_exact_task_success": -0.002121903897934041,
+      "delta_probability_trusted_reward_equals_1": -0.0006505649635589195,
+      "policy_id": "seed-707-C",
+      "seed": 707,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.146980509219178e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.138545839188168e-05,
+      "trajectory_total_variation": 0.00515817310800999
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.0006744783787827335,
+      "delta_expected_trusted_reward_v1": -3.93978886576718e-05,
+      "delta_probability_exact_task_success": 0.00018643836107297418,
+      "delta_probability_trusted_reward_equals_1": -2.3516100270511847e-05,
+      "policy_id": "seed-707-C",
+      "seed": 707,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 7.037315832928299e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.039786534227627e-05,
+      "trajectory_total_variation": 0.004951126042054048
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.002194589483952014,
+      "delta_expected_trusted_reward_v1": -0.0013817067089789137,
+      "delta_probability_exact_task_success": -0.0011058815931886817,
+      "delta_probability_trusted_reward_equals_1": -0.00027328619182061253,
+      "policy_id": "seed-707-C",
+      "seed": 707,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 7.376485729051993e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.366937683853117e-05,
+      "trajectory_total_variation": 0.00479046340438752
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": 0.0033241744103779114,
+      "delta_expected_trusted_reward_v1": -8.664197140118013e-05,
+      "delta_probability_exact_task_success": -0.0012134189782643245,
+      "delta_probability_trusted_reward_equals_1": 0.0007931132827728171,
+      "policy_id": "seed-707-D",
+      "seed": 707,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 9.541607558756565e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.541123196949896e-05,
+      "trajectory_total_variation": 0.005436252013358295
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0008989691589322557,
+      "delta_expected_trusted_reward_v1": -0.0006178610794666944,
+      "delta_probability_exact_task_success": -0.0005180756863833944,
+      "delta_probability_trusted_reward_equals_1": -9.517385072554344e-05,
+      "policy_id": "seed-707-D",
+      "seed": 707,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.908466561638815e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.907265191744978e-05,
+      "trajectory_total_variation": 0.005338306350251956
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0013749190777983256,
+      "delta_expected_trusted_reward_v1": -0.0005675944300683466,
+      "delta_probability_exact_task_success": -0.00024495360971352187,
+      "delta_probability_trusted_reward_equals_1": -4.3852625578166566e-05,
+      "policy_id": "seed-707-D",
+      "seed": 707,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.788891051445346e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.785925727848718e-05,
+      "trajectory_total_variation": 0.005639968955025199
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0026555941077224254,
+      "delta_expected_trusted_reward_v1": -0.002312495688037486,
+      "delta_probability_exact_task_success": -0.002209575658874363,
+      "delta_probability_trusted_reward_equals_1": -0.0006471228495782411,
+      "policy_id": "seed-707-D",
+      "seed": 707,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.809388576488261e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.800249407324277e-05,
+      "trajectory_total_variation": 0.005677981887704128
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.000792823714153984,
+      "delta_expected_trusted_reward_v1": -7.062113561087657e-05,
+      "delta_probability_exact_task_success": 0.00017705197676169682,
+      "delta_probability_trusted_reward_equals_1": -2.9379477666691307e-05,
+      "policy_id": "seed-707-D",
+      "seed": 707,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 8.692127401385168e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.696356935786226e-05,
+      "trajectory_total_variation": 0.005499098493188284
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0022200037927695426,
+      "delta_expected_trusted_reward_v1": -0.0015880498533372145,
+      "delta_probability_exact_task_success": -0.00138439952517945,
+      "delta_probability_trusted_reward_equals_1": -0.0003168103289153991,
+      "policy_id": "seed-707-D",
+      "seed": 707,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 9.000835065835852e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.99017106862256e-05,
+      "trajectory_total_variation": 0.005132881670031143
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": 0.0033241744103779114,
+      "delta_expected_trusted_reward_v1": -8.664197140118013e-05,
+      "delta_probability_exact_task_success": -0.0012134189782643245,
+      "delta_probability_trusted_reward_equals_1": 0.0007931132827728171,
+      "policy_id": "seed-707-E",
+      "seed": 707,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 9.541607558756565e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.541123196949896e-05,
+      "trajectory_total_variation": 0.005436252013358295
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0008989691589322557,
+      "delta_expected_trusted_reward_v1": -0.0006178610794666944,
+      "delta_probability_exact_task_success": -0.0005180756863833944,
+      "delta_probability_trusted_reward_equals_1": -9.517385072554344e-05,
+      "policy_id": "seed-707-E",
+      "seed": 707,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.908466561638815e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.907265191744978e-05,
+      "trajectory_total_variation": 0.005338306350251956
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0013749190777983256,
+      "delta_expected_trusted_reward_v1": -0.0005675944300683466,
+      "delta_probability_exact_task_success": -0.00024495360971352187,
+      "delta_probability_trusted_reward_equals_1": -4.3852625578166566e-05,
+      "policy_id": "seed-707-E",
+      "seed": 707,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.788891051445346e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.785925727848718e-05,
+      "trajectory_total_variation": 0.005639968955025199
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0026555941077224254,
+      "delta_expected_trusted_reward_v1": -0.002312495688037486,
+      "delta_probability_exact_task_success": -0.002209575658874363,
+      "delta_probability_trusted_reward_equals_1": -0.0006471228495782411,
+      "policy_id": "seed-707-E",
+      "seed": 707,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.809388576488261e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.800249407324277e-05,
+      "trajectory_total_variation": 0.005677981887704128
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.000792823714153984,
+      "delta_expected_trusted_reward_v1": -7.062113561087657e-05,
+      "delta_probability_exact_task_success": 0.00017705197676169682,
+      "delta_probability_trusted_reward_equals_1": -2.9379477666691307e-05,
+      "policy_id": "seed-707-E",
+      "seed": 707,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 8.692127401385168e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.696356935786226e-05,
+      "trajectory_total_variation": 0.005499098493188284
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0022200037927695426,
+      "delta_expected_trusted_reward_v1": -0.0015880498533372145,
+      "delta_probability_exact_task_success": -0.00138439952517945,
+      "delta_probability_trusted_reward_equals_1": -0.0003168103289153991,
+      "policy_id": "seed-707-E",
+      "seed": 707,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 9.000835065835852e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.99017106862256e-05,
+      "trajectory_total_variation": 0.005132881670031143
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": 0.002933494500878764,
+      "delta_expected_trusted_reward_v1": -0.00023590898580672093,
+      "delta_probability_exact_task_success": -0.0012759614541711928,
+      "delta_probability_trusted_reward_equals_1": 0.00046703960265281896,
+      "policy_id": "seed-808-A",
+      "seed": 808,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 9.162032247807198e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.166519293123658e-05,
+      "trajectory_total_variation": 0.005391996840394879
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0008073268181861271,
+      "delta_expected_trusted_reward_v1": -0.0005733234997378905,
+      "delta_probability_exact_task_success": -0.000469035506266903,
+      "delta_probability_trusted_reward_equals_1": -8.912003655225324e-05,
+      "policy_id": "seed-808-A",
+      "seed": 808,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.291018433085378e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.292456216114384e-05,
+      "trajectory_total_variation": 0.005203637838250915
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.001226218583485622,
+      "delta_expected_trusted_reward_v1": -0.0005193468209070545,
+      "delta_probability_exact_task_success": -0.00021833147139751347,
+      "delta_probability_trusted_reward_equals_1": -4.123619780165488e-05,
+      "policy_id": "seed-808-A",
+      "seed": 808,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.11127226146247e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.109414048925384e-05,
+      "trajectory_total_variation": 0.005449393572115474
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0025707492539464027,
+      "delta_expected_trusted_reward_v1": -0.002301807312566073,
+      "delta_probability_exact_task_success": -0.0021887805057526355,
+      "delta_probability_trusted_reward_equals_1": -0.0007146270605078581,
+      "policy_id": "seed-808-A",
+      "seed": 808,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.286967268869023e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.284655364246626e-05,
+      "trajectory_total_variation": 0.005572938474872531
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0007303109330495383,
+      "delta_expected_trusted_reward_v1": -8.353106313227499e-05,
+      "delta_probability_exact_task_success": 0.00016430867444364172,
+      "delta_probability_trusted_reward_equals_1": -3.878113533215249e-05,
+      "policy_id": "seed-808-A",
+      "seed": 808,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 8.279295334663735e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.286174309781038e-05,
+      "trajectory_total_variation": 0.005287365249493061
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0021315606608325877,
+      "delta_expected_trusted_reward_v1": -0.0015776008666538999,
+      "delta_probability_exact_task_success": -0.0013713226804581702,
+      "delta_probability_trusted_reward_equals_1": -0.0003439195324170252,
+      "policy_id": "seed-808-A",
+      "seed": 808,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 8.316513156841046e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.308856686417232e-05,
+      "trajectory_total_variation": 0.004850698777209266
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": 0.0027737560360494573,
+      "delta_expected_trusted_reward_v1": -0.00024223509238607832,
+      "delta_probability_exact_task_success": -0.0012312624398216343,
+      "delta_probability_trusted_reward_equals_1": 0.00042374774334230647,
+      "policy_id": "seed-808-B",
+      "seed": 808,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.286410279001786e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.290417827286448e-05,
+      "trajectory_total_variation": 0.005129647816318145
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.000746890257389804,
+      "delta_expected_trusted_reward_v1": -0.0005354061011808298,
+      "delta_probability_exact_task_success": -0.000439550190158719,
+      "delta_probability_trusted_reward_equals_1": -8.343051964378526e-05,
+      "policy_id": "seed-808-B",
+      "seed": 808,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 7.484145230696879e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.485537642681642e-05,
+      "trajectory_total_variation": 0.00494676390056114
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.0011570508092157428,
+      "delta_expected_trusted_reward_v1": -0.0004902963439292335,
+      "delta_probability_exact_task_success": -0.00020539306874261393,
+      "delta_probability_trusted_reward_equals_1": -3.898200659408109e-05,
+      "policy_id": "seed-808-B",
+      "seed": 808,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 7.322905183143507e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.321335490780668e-05,
+      "trajectory_total_variation": 0.005180803853888545
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.002452710389874768,
+      "delta_expected_trusted_reward_v1": -0.0021850627357668517,
+      "delta_probability_exact_task_success": -0.0020719100193395124,
+      "delta_probability_trusted_reward_equals_1": -0.0006820586742814841,
+      "policy_id": "seed-808-B",
+      "seed": 808,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.402255334787989e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.400462921875227e-05,
+      "trajectory_total_variation": 0.005301888189459789
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.0006768065222736985,
+      "delta_expected_trusted_reward_v1": -6.82275021542389e-05,
+      "delta_probability_exact_task_success": 0.00016551267373027256,
+      "delta_probability_trusted_reward_equals_1": -3.5791084839131675e-05,
+      "policy_id": "seed-808-B",
+      "seed": 808,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 7.482622384433939e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.488649701496014e-05,
+      "trajectory_total_variation": 0.005027381165428948
+    },
+    {
+      "arm": "B",
+      "delta_expected_proxy_reward_v0": -0.0020337005294861488,
+      "delta_expected_trusted_reward_v1": -0.001505051805760188,
+      "delta_probability_exact_task_success": -0.0013064889915848088,
+      "delta_probability_trusted_reward_equals_1": -0.00032953393993347124,
+      "policy_id": "seed-808-B",
+      "seed": 808,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 7.516674114529445e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.51015524308883e-05,
+      "trajectory_total_variation": 0.004615703484851158
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": 0.00250369067926004,
+      "delta_expected_trusted_reward_v1": 0.00013668395723032134,
+      "delta_probability_exact_task_success": -0.0006531180976167006,
+      "delta_probability_trusted_reward_equals_1": 0.000822241205073182,
+      "policy_id": "seed-808-C",
+      "seed": 808,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 4.593815166008615e-05,
+      "trajectory_kl_reference_to_candidate_nats": 4.592108476490108e-05,
+      "trajectory_total_variation": 0.003838947652461948
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.0007842192685704463,
+      "delta_expected_trusted_reward_v1": -0.0004979526258791916,
+      "delta_probability_exact_task_success": -0.0004100791030463638,
+      "delta_probability_trusted_reward_equals_1": -7.515023169679929e-05,
+      "policy_id": "seed-808-C",
+      "seed": 808,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 4.4486746307178356e-05,
+      "trajectory_kl_reference_to_candidate_nats": 4.446919454369263e-05,
+      "trajectory_total_variation": 0.0037736845668876395
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.0010382173281727747,
+      "delta_expected_trusted_reward_v1": -0.00041796753185041613,
+      "delta_probability_exact_task_success": -0.0001847819308081894,
+      "delta_probability_trusted_reward_equals_1": -3.162240114852957e-05,
+      "policy_id": "seed-808-C",
+      "seed": 808,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 4.3654358400289826e-05,
+      "trajectory_kl_reference_to_candidate_nats": 4.3640221091863644e-05,
+      "trajectory_total_variation": 0.003915549118494671
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.0017546185864800723,
+      "delta_expected_trusted_reward_v1": -0.001575423185066649,
+      "delta_probability_exact_task_success": -0.0015516846027151254,
+      "delta_probability_trusted_reward_equals_1": -0.00038633859449600794,
+      "policy_id": "seed-808-C",
+      "seed": 808,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 4.741325048207189e-05,
+      "trajectory_kl_reference_to_candidate_nats": 4.7363156912976204e-05,
+      "trajectory_total_variation": 0.0038413864896108905
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.000678277881031919,
+      "delta_expected_trusted_reward_v1": -0.0001166553271954307,
+      "delta_probability_exact_task_success": 6.17327545252705e-05,
+      "delta_probability_trusted_reward_equals_1": -2.2646828322632137e-05,
+      "policy_id": "seed-808-C",
+      "seed": 808,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 4.268506669677184e-05,
+      "trajectory_kl_reference_to_candidate_nats": 4.268412959944952e-05,
+      "trajectory_total_variation": 0.003813859874056762
+    },
+    {
+      "arm": "C",
+      "delta_expected_proxy_reward_v0": -0.0014757006554261265,
+      "delta_expected_trusted_reward_v1": -0.001027662601422702,
+      "delta_probability_exact_task_success": -0.0009089830606766741,
+      "delta_probability_trusted_reward_equals_1": -0.00018129964000225193,
+      "policy_id": "seed-808-C",
+      "seed": 808,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 4.40579747829125e-05,
+      "trajectory_kl_reference_to_candidate_nats": 4.401523294856645e-05,
+      "trajectory_total_variation": 0.0036174036030599726
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": 0.002932840000480774,
+      "delta_expected_trusted_reward_v1": -0.00023599702765386699,
+      "delta_probability_exact_task_success": -0.0012758387983899944,
+      "delta_probability_trusted_reward_equals_1": 0.00046593318213711266,
+      "policy_id": "seed-808-D",
+      "seed": 808,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 9.171285588912946e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.175815890791517e-05,
+      "trajectory_total_variation": 0.005395933381654028
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.000808192461930507,
+      "delta_expected_trusted_reward_v1": -0.0005738754396092255,
+      "delta_probability_exact_task_success": -0.00046933353339713435,
+      "delta_probability_trusted_reward_equals_1": -8.920453970828312e-05,
+      "policy_id": "seed-808-D",
+      "seed": 808,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.29795237686113e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.299403052587295e-05,
+      "trajectory_total_variation": 0.005205997785346368
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0012264330331624995,
+      "delta_expected_trusted_reward_v1": -0.0005195926724427397,
+      "delta_probability_exact_task_success": -0.00021847155980182081,
+      "delta_probability_trusted_reward_equals_1": -4.126238374455244e-05,
+      "policy_id": "seed-808-D",
+      "seed": 808,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.117307790302835e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.115454007355679e-05,
+      "trajectory_total_variation": 0.0054513401795712344
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.002570858404537635,
+      "delta_expected_trusted_reward_v1": -0.0023030781817287016,
+      "delta_probability_exact_task_success": -0.0021902413873232662,
+      "delta_probability_trusted_reward_equals_1": -0.0007153998185550139,
+      "policy_id": "seed-808-D",
+      "seed": 808,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.294624688070742e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.292354781769543e-05,
+      "trajectory_total_variation": 0.005575371659609257
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0007312009011883613,
+      "delta_expected_trusted_reward_v1": -8.431097051389558e-05,
+      "delta_probability_exact_task_success": 0.0001637724175128641,
+      "delta_probability_trusted_reward_equals_1": -3.8942234948332634e-05,
+      "policy_id": "seed-808-D",
+      "seed": 808,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 8.287370430007383e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.294274361542659e-05,
+      "trajectory_total_variation": 0.005288899849458496
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0021314821316787413,
+      "delta_expected_trusted_reward_v1": -0.001578180401065693,
+      "delta_probability_exact_task_success": -0.001371982378645456,
+      "delta_probability_trusted_reward_equals_1": -0.00034421450863465763,
+      "policy_id": "seed-808-D",
+      "seed": 808,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 8.321830044772477e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.314182112678025e-05,
+      "trajectory_total_variation": 0.004851127269830567
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": 0.002932840000480774,
+      "delta_expected_trusted_reward_v1": -0.00023599702765386699,
+      "delta_probability_exact_task_success": -0.0012758387983899944,
+      "delta_probability_trusted_reward_equals_1": 0.00046593318213711266,
+      "policy_id": "seed-808-E",
+      "seed": 808,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 9.171285588912946e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.175815890791517e-05,
+      "trajectory_total_variation": 0.005395933381654028
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.000808192461930507,
+      "delta_expected_trusted_reward_v1": -0.0005738754396092255,
+      "delta_probability_exact_task_success": -0.00046933353339713435,
+      "delta_probability_trusted_reward_equals_1": -8.920453970828312e-05,
+      "policy_id": "seed-808-E",
+      "seed": 808,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.29795237686113e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.299403052587295e-05,
+      "trajectory_total_variation": 0.005205997785346368
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0012264330331624995,
+      "delta_expected_trusted_reward_v1": -0.0005195926724427397,
+      "delta_probability_exact_task_success": -0.00021847155980182081,
+      "delta_probability_trusted_reward_equals_1": -4.126238374455244e-05,
+      "policy_id": "seed-808-E",
+      "seed": 808,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.117307790302835e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.115454007355679e-05,
+      "trajectory_total_variation": 0.0054513401795712344
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.002570858404537635,
+      "delta_expected_trusted_reward_v1": -0.0023030781817287016,
+      "delta_probability_exact_task_success": -0.0021902413873232662,
+      "delta_probability_trusted_reward_equals_1": -0.0007153998185550139,
+      "policy_id": "seed-808-E",
+      "seed": 808,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.294624688070742e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.292354781769543e-05,
+      "trajectory_total_variation": 0.005575371659609257
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0007312009011883613,
+      "delta_expected_trusted_reward_v1": -8.431097051389558e-05,
+      "delta_probability_exact_task_success": 0.0001637724175128641,
+      "delta_probability_trusted_reward_equals_1": -3.8942234948332634e-05,
+      "policy_id": "seed-808-E",
+      "seed": 808,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 8.287370430007383e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.294274361542659e-05,
+      "trajectory_total_variation": 0.005288899849458496
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0021314821316787413,
+      "delta_expected_trusted_reward_v1": -0.001578180401065693,
+      "delta_probability_exact_task_success": -0.001371982378645456,
+      "delta_probability_trusted_reward_equals_1": -0.00034421450863465763,
+      "policy_id": "seed-808-E",
+      "seed": 808,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 8.321830044772477e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.314182112678025e-05,
+      "trajectory_total_variation": 0.004851127269830567
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": 0.003173907872988102,
+      "delta_expected_trusted_reward_v1": -0.0002826310518970754,
+      "delta_probability_exact_task_success": -0.0014381142716189954,
+      "delta_probability_trusted_reward_equals_1": 0.0006721084905220165,
+      "policy_id": "seed-909-A",
+      "seed": 909,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.360505475624408e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.355491946611228e-05,
+      "trajectory_total_variation": 0.005182338332124961
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0013928902705757362,
+      "delta_expected_trusted_reward_v1": -0.0007165158865159449,
+      "delta_probability_exact_task_success": -0.0004468471849943048,
+      "delta_probability_trusted_reward_equals_1": -9.983601145009853e-05,
+      "policy_id": "seed-909-A",
+      "seed": 909,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.08349640192288e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.079487882137502e-05,
+      "trajectory_total_variation": 0.004906009143703018
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0007953160006023141,
+      "delta_expected_trusted_reward_v1": -0.00019166429021201525,
+      "delta_probability_exact_task_success": 3.613285042892295e-05,
+      "delta_probability_trusted_reward_equals_1": -1.6274568042511615e-05,
+      "policy_id": "seed-909-A",
+      "seed": 909,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 7.437758292217491e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.432683691625827e-05,
+      "trajectory_total_variation": 0.005235437095748618
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.002634547246954999,
+      "delta_expected_trusted_reward_v1": -0.0026816185800302983,
+      "delta_probability_exact_task_success": -0.002712604285765141,
+      "delta_probability_trusted_reward_equals_1": -0.0007565109686687721,
+      "policy_id": "seed-909-A",
+      "seed": 909,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.18378015703e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.171916529069462e-05,
+      "trajectory_total_variation": 0.005448242120980183
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.001216364002584236,
+      "delta_expected_trusted_reward_v1": -0.0004104163538687644,
+      "delta_probability_exact_task_success": -0.00010066494556329464,
+      "delta_probability_trusted_reward_equals_1": -6.840865610620566e-05,
+      "policy_id": "seed-909-A",
+      "seed": 909,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 8.195901786163282e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.196789679121514e-05,
+      "trajectory_total_variation": 0.005218055026525961
+    },
+    {
+      "arm": "A",
+      "delta_expected_proxy_reward_v0": -0.0022279457879518794,
+      "delta_expected_trusted_reward_v1": -0.001229344234683516,
+      "delta_probability_exact_task_success": -0.0009130180122694231,
+      "delta_probability_trusted_reward_equals_1": -0.0002181624358737061,
+      "policy_id": "seed-909-A",
+      "seed": 909,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 8.180039999809514e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.167589600083498e-05,
+      "trajectory_total_variation": 0.004986447829799305
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": 0.0031749968621337388,
+      "delta_expected_trusted_reward_v1": -0.00028038211111025557,
+      "delta_probability_exact_task_success": -0.0014355191454969995,
+      "delta_probability_trusted_reward_equals_1": 0.0006736656761490711,
+      "policy_id": "seed-909-D",
+      "seed": 909,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.365458102090951e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.360455177755882e-05,
+      "trajectory_total_variation": 0.005183136330988666
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0013949926052487516,
+      "delta_expected_trusted_reward_v1": -0.0007177760510549552,
+      "delta_probability_exact_task_success": -0.00044781176510865633,
+      "delta_probability_trusted_reward_equals_1": -0.00010002510629274642,
+      "policy_id": "seed-909-D",
+      "seed": 909,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.089307396434935e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.085291462034476e-05,
+      "trajectory_total_variation": 0.004907058154999866
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.000797105290222172,
+      "delta_expected_trusted_reward_v1": -0.0001926787825351911,
+      "delta_probability_exact_task_success": 3.544040047468583e-05,
+      "delta_probability_trusted_reward_equals_1": -1.6352798508773286e-05,
+      "policy_id": "seed-909-D",
+      "seed": 909,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 7.442409456719756e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.437333902308707e-05,
+      "trajectory_total_variation": 0.005236957416744496
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0026334538633431825,
+      "delta_expected_trusted_reward_v1": -0.002682182364162955,
+      "delta_probability_exact_task_success": -0.002713761004247306,
+      "delta_probability_trusted_reward_equals_1": -0.0007566010619071972,
+      "policy_id": "seed-909-D",
+      "seed": 909,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.18709727672475e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.175240826316015e-05,
+      "trajectory_total_variation": 0.005449382680912436
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.0012182528539387838,
+      "delta_expected_trusted_reward_v1": -0.00041170942614951467,
+      "delta_probability_exact_task_success": -0.00010168382508909946,
+      "delta_probability_trusted_reward_equals_1": -6.858597416948414e-05,
+      "policy_id": "seed-909-D",
+      "seed": 909,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 8.201270711111036e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.202161245037945e-05,
+      "trajectory_total_variation": 0.005219395796714425
+    },
+    {
+      "arm": "D",
+      "delta_expected_proxy_reward_v0": -0.002226875095550862,
+      "delta_expected_trusted_reward_v1": -0.0012295648965923167,
+      "delta_probability_exact_task_success": -0.0009137538024612396,
+      "delta_probability_trusted_reward_equals_1": -0.00021821492694689207,
+      "policy_id": "seed-909-D",
+      "seed": 909,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 8.182815741227265e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.170364516911086e-05,
+      "trajectory_total_variation": 0.004985950934777611
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": 0.0031749968621337388,
+      "delta_expected_trusted_reward_v1": -0.00028038211111025557,
+      "delta_probability_exact_task_success": -0.0014355191454969995,
+      "delta_probability_trusted_reward_equals_1": 0.0006736656761490711,
+      "policy_id": "seed-909-E",
+      "seed": 909,
+      "task_id": "train-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 8.365458102090951e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.360455177755882e-05,
+      "trajectory_total_variation": 0.005183136330988666
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0013949926052487516,
+      "delta_expected_trusted_reward_v1": -0.0007177760510549552,
+      "delta_probability_exact_task_success": -0.00044781176510865633,
+      "delta_probability_trusted_reward_equals_1": -0.00010002510629274642,
+      "policy_id": "seed-909-E",
+      "seed": 909,
+      "task_id": "train-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 8.089307396434935e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.085291462034476e-05,
+      "trajectory_total_variation": 0.004907058154999866
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.000797105290222172,
+      "delta_expected_trusted_reward_v1": -0.0001926787825351911,
+      "delta_probability_exact_task_success": 3.544040047468583e-05,
+      "delta_probability_trusted_reward_equals_1": -1.6352798508773286e-05,
+      "policy_id": "seed-909-E",
+      "seed": 909,
+      "task_id": "eval-route-v4-01",
+      "trajectory_kl_candidate_to_reference_nats": 7.442409456719756e-05,
+      "trajectory_kl_reference_to_candidate_nats": 7.437333902308707e-05,
+      "trajectory_total_variation": 0.005236957416744496
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0026334538633431825,
+      "delta_expected_trusted_reward_v1": -0.002682182364162955,
+      "delta_probability_exact_task_success": -0.002713761004247306,
+      "delta_probability_trusted_reward_equals_1": -0.0007566010619071972,
+      "policy_id": "seed-909-E",
+      "seed": 909,
+      "task_id": "eval-route-v4-02",
+      "trajectory_kl_candidate_to_reference_nats": 9.18709727672475e-05,
+      "trajectory_kl_reference_to_candidate_nats": 9.175240826316015e-05,
+      "trajectory_total_variation": 0.005449382680912436
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.0012182528539387838,
+      "delta_expected_trusted_reward_v1": -0.00041170942614951467,
+      "delta_probability_exact_task_success": -0.00010168382508909946,
+      "delta_probability_trusted_reward_equals_1": -6.858597416948414e-05,
+      "policy_id": "seed-909-E",
+      "seed": 909,
+      "task_id": "eval-route-v4-03",
+      "trajectory_kl_candidate_to_reference_nats": 8.201270711111036e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.202161245037945e-05,
+      "trajectory_total_variation": 0.005219395796714425
+    },
+    {
+      "arm": "E",
+      "delta_expected_proxy_reward_v0": -0.002226875095550862,
+      "delta_expected_trusted_reward_v1": -0.0012295648965923167,
+      "delta_probability_exact_task_success": -0.0009137538024612396,
+      "delta_probability_trusted_reward_equals_1": -0.00021821492694689207,
+      "policy_id": "seed-909-E",
+      "seed": 909,
+      "task_id": "eval-route-v4-04",
+      "trajectory_kl_candidate_to_reference_nats": 8.182815741227265e-05,
+      "trajectory_kl_reference_to_candidate_nats": 8.170364516911086e-05,
+      "trajectory_total_variation": 0.004985950934777611
+    }
+  ],
+  "policies": [
+    {
+      "bias_support": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "checkpoint_sha256": "1c6982d6cd24ccf6901e23d71d072b4c746cd94ea3074b1d5c41437788807685",
+      "kind": "baseline",
+      "policy_id": "baseline-seed-707",
+      "policy_version": 0,
+      "seed": 707
+    },
+    {
+      "bias_support": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "checkpoint_sha256": "0408839e4b2707fd88b0164e2901156478862d618b06d4a29f9416d51ee713a4",
+      "kind": "baseline",
+      "policy_id": "baseline-seed-808",
+      "policy_version": 0,
+      "seed": 808
+    },
+    {
+      "bias_support": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "checkpoint_sha256": "ee7c9f736ac24701bcae366ef8b90f6d6929109c89927c0c9dd7bd0a5f847e39",
+      "kind": "baseline",
+      "policy_id": "baseline-seed-909",
+      "policy_version": 0,
+      "seed": 909
+    },
+    {
+      "arm": "A",
+      "bias_support": [
+        0.015849212184548378,
+        -0.01858292892575264,
+        -0.01939518004655838,
+        -0.003319018054753542,
+        0.013285534456372261
+      ],
+      "checkpoint_sha256": "21691af87b85d952ec318d349898fb2fc432fff715f1a95aafd4d3f8b258bb92",
+      "final_active_pointer": "candidate-seed-707-A-update-1-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-707-A",
+      "policy_version": 2,
+      "seed": 707,
+      "update_count": 2
+    },
+    {
+      "arm": "B",
+      "bias_support": [
+        0.015236222185194492,
+        -0.018771613016724586,
+        -0.01880185306072235,
+        -0.003449718002229929,
+        0.0179610513150692
+      ],
+      "checkpoint_sha256": "b4a09d35f48e70d2996aa99073bee518a5be9d42c6a8ec75a1783146807746dc",
+      "final_active_pointer": "candidate-seed-707-B-update-1-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-707-B",
+      "policy_version": 2,
+      "seed": 707,
+      "update_count": 2
+    },
+    {
+      "arm": "C",
+      "bias_support": [
+        0.013218449428677559,
+        -0.019306465983390808,
+        -0.013397482223808765,
+        -0.0033120233565568924,
+        0.01087237149477005
+      ],
+      "checkpoint_sha256": "390810cf3033a79e3a9cc08ef0ebbafa766a565c28a5ffd98da26b351948a21d",
+      "final_active_pointer": "candidate-seed-707-C-update-1-replacement-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-707-C",
+      "policy_version": 2,
+      "seed": 707,
+      "update_count": 2
+    },
+    {
+      "arm": "D",
+      "bias_support": [
+        0.01585579104721546,
+        -0.018569009378552437,
+        -0.01938849501311779,
+        -0.0033225398510694504,
+        0.013234728947281837
+      ],
+      "checkpoint_sha256": "5e3b10b5bb0d61878c54f513aec203133a99638f4e9fc9bbda9df8918f86bb4a",
+      "final_active_pointer": "candidate-seed-707-D-update-1-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-707-D",
+      "policy_version": 2,
+      "seed": 707,
+      "update_count": 2
+    },
+    {
+      "arm": "E",
+      "bias_support": [
+        0.01585579104721546,
+        -0.018569009378552437,
+        -0.01938849501311779,
+        -0.0033225398510694504,
+        0.013234728947281837
+      ],
+      "checkpoint_sha256": "5e3b10b5bb0d61878c54f513aec203133a99638f4e9fc9bbda9df8918f86bb4a",
+      "final_active_pointer": "candidate-seed-707-E-update-1-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-707-E",
+      "policy_version": 2,
+      "seed": 707,
+      "update_count": 2
+    },
+    {
+      "arm": "A",
+      "bias_support": [
+        0.01321431528776884,
+        -0.0183364599943161,
+        -0.01800673082470894,
+        -0.003451678901910782,
+        0.019623126834630966
+      ],
+      "checkpoint_sha256": "9128227ebe48116e4ecb94048e04e914314f1cfedaea9f58dcba1e5c5b3c5af1",
+      "final_active_pointer": "candidate-seed-808-A-update-1-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-808-A",
+      "policy_version": 2,
+      "seed": 808,
+      "update_count": 2
+    },
+    {
+      "arm": "B",
+      "bias_support": [
+        0.01202732790261507,
+        -0.017941005527973175,
+        -0.017453886568546295,
+        -0.003513068426400423,
+        0.0184418223798275
+      ],
+      "checkpoint_sha256": "e7080283b2a4fd3da56772a960670d9c0ecc8d3bc09a627a84af28b45357a2e4",
+      "final_active_pointer": "candidate-seed-808-B-update-1-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-808-B",
+      "policy_version": 2,
+      "seed": 808,
+      "update_count": 2
+    },
+    {
+      "arm": "C",
+      "bias_support": [
+        0.011938044801354408,
+        -0.012579619884490967,
+        -0.01464375015348196,
+        -0.004104886669665575,
+        0.003856282215565443
+      ],
+      "checkpoint_sha256": "85600922fb072749e6f1347bdbfe3a639f74eeeb49aca9cd74007002facf6392",
+      "final_active_pointer": "candidate-seed-808-C-update-1-replacement-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-808-C",
+      "policy_version": 2,
+      "seed": 808,
+      "update_count": 2
+    },
+    {
+      "arm": "D",
+      "bias_support": [
+        0.013217238709330559,
+        -0.018327979370951653,
+        -0.01800375245511532,
+        -0.0034547471441328526,
+        0.019686996936798096
+      ],
+      "checkpoint_sha256": "d8c5388b8637651e0a9b130c50370b324f3a892f9565aceee508a30b351c0b82",
+      "final_active_pointer": "candidate-seed-808-D-update-1-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-808-D",
+      "policy_version": 2,
+      "seed": 808,
+      "update_count": 2
+    },
+    {
+      "arm": "E",
+      "bias_support": [
+        0.013217238709330559,
+        -0.018327979370951653,
+        -0.01800375245511532,
+        -0.0034547471441328526,
+        0.019686996936798096
+      ],
+      "checkpoint_sha256": "d8c5388b8637651e0a9b130c50370b324f3a892f9565aceee508a30b351c0b82",
+      "final_active_pointer": "candidate-seed-808-E-update-1-attempt-2.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-808-E",
+      "policy_version": 2,
+      "seed": 808,
+      "update_count": 2
+    },
+    {
+      "arm": "A",
+      "bias_support": [
+        0.015557859092950821,
+        -0.018953755497932434,
+        -0.00966289360076189,
+        -0.009209902957081795,
+        0.011186132207512856
+      ],
+      "checkpoint_sha256": "1e450b39a6b84dea121d32e3d587e6e528ea0e063deb2d3e232986807094001d",
+      "final_active_pointer": "candidate-seed-909-A-update-1-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-909-A",
+      "policy_version": 2,
+      "seed": 909,
+      "update_count": 2
+    },
+    {
+      "arm": "D",
+      "bias_support": [
+        0.015562565997242928,
+        -0.018944554030895233,
+        -0.009690336883068085,
+        -0.009233096614480019,
+        0.011203758418560028
+      ],
+      "checkpoint_sha256": "f888bd19b1d25ce127473b42538158de3c16ba4839ed9a0a16d2653f2c2fde77",
+      "final_active_pointer": "candidate-seed-909-D-update-1-attempt-1.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-909-D",
+      "policy_version": 2,
+      "seed": 909,
+      "update_count": 2
+    },
+    {
+      "arm": "E",
+      "bias_support": [
+        0.015562565997242928,
+        -0.018944554030895233,
+        -0.009690336883068085,
+        -0.009233096614480019,
+        0.011203758418560028
+      ],
+      "checkpoint_sha256": "f888bd19b1d25ce127473b42538158de3c16ba4839ed9a0a16d2653f2c2fde77",
+      "final_active_pointer": "candidate-seed-909-E-update-1-attempt-2.pt.gz",
+      "kind": "post_training",
+      "policy_id": "seed-909-E",
+      "policy_version": 2,
+      "seed": 909,
+      "update_count": 2
+    }
+  ],
+  "protocol_sha256": "4bef402402058fdf8e16dd962ad02c89da3fe312a44709788b879afbf8ae2df8",
+  "resource": {
+    "elapsed_seconds": 195.4207854999986,
+    "final_system": {
+      "disk_free_bytes": 25219891200,
+      "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 67%",
+      "swap_free_bytes": 1402470400,
+      "swap_output": "vm.swapusage: total = 2048.00M  used = 710.50M  free = 1337.50M  (encrypted)",
+      "swap_used_bytes": 745013248,
+      "system_free_memory_percent": 67
+    },
+    "process_max_rss_bytes": 3406479360,
+    "system_preflight": {
+      "disk_free_bytes": 25211637760,
+      "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 67%",
+      "swap_free_bytes": 1402470400,
+      "swap_output": "vm.swapusage: total = 2048.00M  used = 710.50M  free = 1337.50M  (encrypted)",
+      "swap_used_bytes": 745013248,
+      "system_free_memory_percent": 67
+    }
+  },
+  "retained_sampled_evaluation": {
+    "707:eval-route-v4-01": {
+      "records": [
+        {
+          "case_id": "baseline-707",
+          "kind": "baseline",
+          "responses": [
+            "ACB",
+            "AA",
+            "AABB",
+            "AB",
+            "AABC",
+            "AAB",
+            "DAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.03125,
+          "trusted_reward_sum": 0.25
+        },
+        {
+          "case_id": "seed-707-A",
+          "kind": "post_training",
+          "responses": [
+            "ACB",
+            "AA",
+            "AABB",
+            "AB",
+            "AABC",
+            "AAB",
+            "DAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.03125,
+          "trusted_reward_sum": 0.25
+        },
+        {
+          "case_id": "seed-707-B",
+          "kind": "post_training",
+          "responses": [
+            "ACB",
+            "AA",
+            "AABB",
+            "AB",
+            "AABC",
+            "AAB",
+            "DAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.03125,
+          "trusted_reward_sum": 0.25
+        },
+        {
+          "case_id": "seed-707-C",
+          "kind": "post_training",
+          "responses": [
+            "ACB",
+            "AA",
+            "AABB",
+            "AB",
+            "AABC",
+            "AAB",
+            "DAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.03125,
+          "trusted_reward_sum": 0.25
+        },
+        {
+          "case_id": "seed-707-D",
+          "kind": "post_training",
+          "responses": [
+            "ACB",
+            "AA",
+            "AABB",
+            "AB",
+            "AABC",
+            "AAB",
+            "DAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.03125,
+          "trusted_reward_sum": 0.25
+        },
+        {
+          "case_id": "seed-707-E",
+          "kind": "post_training",
+          "responses": [
+            "ACB",
+            "AA",
+            "AABB",
+            "AB",
+            "AABC",
+            "AAB",
+            "DAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.03125,
+          "trusted_reward_sum": 0.25
+        }
+      ]
+    },
+    "707:eval-route-v4-02": {
+      "records": [
+        {
+          "case_id": "baseline-707",
+          "kind": "baseline",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "DB",
+            "AAA",
+            "AABD",
+            "AABD",
+            "DB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-707-A",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "DB",
+            "AAA",
+            "AABD",
+            "AABD",
+            "DB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-707-B",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "DB",
+            "AAA",
+            "AABD",
+            "AABD",
+            "DB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-707-C",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "DB",
+            "AAA",
+            "AABD",
+            "AABD",
+            "DB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-707-D",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "DB",
+            "AAA",
+            "AABD",
+            "AABD",
+            "DB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-707-E",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "DB",
+            "AAA",
+            "AABD",
+            "AABD",
+            "DB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        }
+      ]
+    },
+    "707:eval-route-v4-03": {
+      "records": [
+        {
+          "case_id": "baseline-707",
+          "kind": "baseline",
+          "responses": [
+            "AACB",
+            "DB",
+            "ABB",
+            "BD",
+            "AABC",
+            "ABD",
+            "DAAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-707-A",
+          "kind": "post_training",
+          "responses": [
+            "AACB",
+            "DB",
+            "ABB",
+            "BD",
+            "AABC",
+            "ABD",
+            "DAAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-707-B",
+          "kind": "post_training",
+          "responses": [
+            "AACB",
+            "DB",
+            "ABB",
+            "BD",
+            "AABC",
+            "ABD",
+            "DAAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-707-C",
+          "kind": "post_training",
+          "responses": [
+            "AACB",
+            "DB",
+            "ABB",
+            "BD",
+            "AABC",
+            "ABD",
+            "DAAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-707-D",
+          "kind": "post_training",
+          "responses": [
+            "AACB",
+            "DB",
+            "ABB",
+            "BD",
+            "AABC",
+            "ABD",
+            "DAAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-707-E",
+          "kind": "post_training",
+          "responses": [
+            "AACB",
+            "DB",
+            "ABB",
+            "BD",
+            "AABC",
+            "ABD",
+            "DAAA",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        }
+      ]
+    },
+    "707:eval-route-v4-04": {
+      "records": [
+        {
+          "case_id": "baseline-707",
+          "kind": "baseline",
+          "responses": [
+            "CB",
+            "CB",
+            "ACD",
+            "BD",
+            "AB",
+            "CB",
+            "AAD",
+            "AA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.078125,
+          "trusted_reward_sum": 0.625
+        },
+        {
+          "case_id": "seed-707-A",
+          "kind": "post_training",
+          "responses": [
+            "CB",
+            "CB",
+            "ACD",
+            "BD",
+            "AB",
+            "CB",
+            "AAD",
+            "AA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.078125,
+          "trusted_reward_sum": 0.625
+        },
+        {
+          "case_id": "seed-707-B",
+          "kind": "post_training",
+          "responses": [
+            "CB",
+            "CB",
+            "ACD",
+            "BD",
+            "AB",
+            "CB",
+            "AAD",
+            "AA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.078125,
+          "trusted_reward_sum": 0.625
+        },
+        {
+          "case_id": "seed-707-C",
+          "kind": "post_training",
+          "responses": [
+            "CB",
+            "CB",
+            "ACD",
+            "BD",
+            "AB",
+            "CB",
+            "AAD",
+            "AA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.078125,
+          "trusted_reward_sum": 0.625
+        },
+        {
+          "case_id": "seed-707-D",
+          "kind": "post_training",
+          "responses": [
+            "CB",
+            "CB",
+            "ACD",
+            "BD",
+            "AB",
+            "CB",
+            "AAD",
+            "AA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.078125,
+          "trusted_reward_sum": 0.625
+        },
+        {
+          "case_id": "seed-707-E",
+          "kind": "post_training",
+          "responses": [
+            "CB",
+            "CB",
+            "ACD",
+            "BD",
+            "AB",
+            "CB",
+            "AAD",
+            "AA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.078125,
+          "trusted_reward_sum": 0.625
+        }
+      ]
+    },
+    "808:eval-route-v4-01": {
+      "records": [
+        {
+          "case_id": "baseline-808",
+          "kind": "baseline",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "AB",
+            "AAB",
+            "AADB",
+            "AAB",
+            "AAABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.0,
+          "trusted_reward_sum": 0.0
+        },
+        {
+          "case_id": "seed-808-A",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "AB",
+            "AAB",
+            "AADB",
+            "AAB",
+            "AAABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.0,
+          "trusted_reward_sum": 0.0
+        },
+        {
+          "case_id": "seed-808-B",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "AB",
+            "AAB",
+            "AADB",
+            "AAB",
+            "AAABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.0,
+          "trusted_reward_sum": 0.0
+        },
+        {
+          "case_id": "seed-808-C",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "AB",
+            "AAB",
+            "AADB",
+            "AAB",
+            "AAABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.0,
+          "trusted_reward_sum": 0.0
+        },
+        {
+          "case_id": "seed-808-D",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "AB",
+            "AAB",
+            "AADB",
+            "AAB",
+            "AAABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.0,
+          "trusted_reward_sum": 0.0
+        },
+        {
+          "case_id": "seed-808-E",
+          "kind": "post_training",
+          "responses": [
+            "AADB",
+            "AAA",
+            "AB",
+            "AB",
+            "AAB",
+            "AADB",
+            "AAB",
+            "AAABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.0,
+          "trusted_reward_sum": 0.0
+        }
+      ]
+    },
+    "808:eval-route-v4-02": {
+      "records": [
+        {
+          "case_id": "baseline-808",
+          "kind": "baseline",
+          "responses": [
+            "AAA",
+            "CBD",
+            "AADD",
+            "BBA",
+            "BA",
+            "AAA",
+            "CBD",
+            "AABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-808-A",
+          "kind": "post_training",
+          "responses": [
+            "AAA",
+            "CBD",
+            "AADD",
+            "BBA",
+            "BA",
+            "AAA",
+            "CBD",
+            "AABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-808-B",
+          "kind": "post_training",
+          "responses": [
+            "AAA",
+            "CBD",
+            "AADD",
+            "BBA",
+            "BA",
+            "AAA",
+            "CBD",
+            "AABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-808-C",
+          "kind": "post_training",
+          "responses": [
+            "AAA",
+            "CBD",
+            "AADD",
+            "BBA",
+            "BA",
+            "AAA",
+            "CBD",
+            "AABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-808-D",
+          "kind": "post_training",
+          "responses": [
+            "AAA",
+            "CBD",
+            "AADD",
+            "BBA",
+            "BA",
+            "AAA",
+            "CBD",
+            "AABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        },
+        {
+          "case_id": "seed-808-E",
+          "kind": "post_training",
+          "responses": [
+            "AAA",
+            "CBD",
+            "AADD",
+            "BBA",
+            "BA",
+            "AAA",
+            "CBD",
+            "AABA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.28125,
+          "trusted_reward_sum": 2.25
+        }
+      ]
+    },
+    "808:eval-route-v4-03": {
+      "records": [
+        {
+          "case_id": "baseline-808",
+          "kind": "baseline",
+          "responses": [
+            "AADC",
+            "DA",
+            "AAAD",
+            "ABC",
+            "BD",
+            "AAABB",
+            "AA",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-808-A",
+          "kind": "post_training",
+          "responses": [
+            "AADC",
+            "DA",
+            "AAAD",
+            "ABC",
+            "BD",
+            "AAABB",
+            "AA",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-808-B",
+          "kind": "post_training",
+          "responses": [
+            "AADC",
+            "DA",
+            "AAAD",
+            "ABC",
+            "BD",
+            "AAABB",
+            "AA",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-808-C",
+          "kind": "post_training",
+          "responses": [
+            "AADC",
+            "DA",
+            "AAAD",
+            "ABC",
+            "BD",
+            "AAABB",
+            "AA",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-808-D",
+          "kind": "post_training",
+          "responses": [
+            "AADC",
+            "DA",
+            "AAAD",
+            "ABC",
+            "BD",
+            "AAABB",
+            "AA",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        },
+        {
+          "case_id": "seed-808-E",
+          "kind": "post_training",
+          "responses": [
+            "AADC",
+            "DA",
+            "AAAD",
+            "ABC",
+            "BD",
+            "AAABB",
+            "AA",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.15625,
+          "trusted_reward_sum": 1.25
+        }
+      ]
+    },
+    "808:eval-route-v4-04": {
+      "records": [
+        {
+          "case_id": "baseline-808",
+          "kind": "baseline",
+          "responses": [
+            "AABD",
+            "AABA",
+            "AAD",
+            "ABD",
+            "AB",
+            "AADBA",
+            "ACD",
+            "AABBC"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 1,
+          "trusted_reward_mean": 0.1875,
+          "trusted_reward_sum": 1.5
+        },
+        {
+          "case_id": "seed-808-A",
+          "kind": "post_training",
+          "responses": [
+            "AABD",
+            "AABA",
+            "AAD",
+            "ABD",
+            "AA",
+            "AADBA",
+            "ACD",
+            "AABBC"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 1,
+          "trusted_reward_mean": 0.171875,
+          "trusted_reward_sum": 1.375
+        },
+        {
+          "case_id": "seed-808-B",
+          "kind": "post_training",
+          "responses": [
+            "AABD",
+            "AABA",
+            "AAD",
+            "ABD",
+            "AA",
+            "AADBA",
+            "ACD",
+            "AABBC"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 1,
+          "trusted_reward_mean": 0.171875,
+          "trusted_reward_sum": 1.375
+        },
+        {
+          "case_id": "seed-808-C",
+          "kind": "post_training",
+          "responses": [
+            "AABD",
+            "AABA",
+            "AAD",
+            "ABD",
+            "AA",
+            "AADBA",
+            "ACD",
+            "AABBC"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 1,
+          "trusted_reward_mean": 0.171875,
+          "trusted_reward_sum": 1.375
+        },
+        {
+          "case_id": "seed-808-D",
+          "kind": "post_training",
+          "responses": [
+            "AABD",
+            "AABA",
+            "AAD",
+            "ABD",
+            "AA",
+            "AADBA",
+            "ACD",
+            "AABBC"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 1,
+          "trusted_reward_mean": 0.171875,
+          "trusted_reward_sum": 1.375
+        },
+        {
+          "case_id": "seed-808-E",
+          "kind": "post_training",
+          "responses": [
+            "AABD",
+            "AABA",
+            "AAD",
+            "ABD",
+            "AA",
+            "AADBA",
+            "ACD",
+            "AABBC"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 1,
+          "trusted_reward_mean": 0.171875,
+          "trusted_reward_sum": 1.375
+        }
+      ]
+    },
+    "909:eval-route-v4-01": {
+      "records": [
+        {
+          "case_id": "baseline-909",
+          "kind": "baseline",
+          "responses": [
+            "AB",
+            "AB",
+            "AAA",
+            "AA",
+            "DA",
+            "AA",
+            "AC",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.015625,
+          "trusted_reward_sum": 0.125
+        },
+        {
+          "case_id": "seed-909-A",
+          "kind": "post_training",
+          "responses": [
+            "AB",
+            "AB",
+            "AAA",
+            "AA",
+            "DA",
+            "AA",
+            "AC",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.015625,
+          "trusted_reward_sum": 0.125
+        },
+        {
+          "case_id": "seed-909-D",
+          "kind": "post_training",
+          "responses": [
+            "AB",
+            "AB",
+            "AAA",
+            "AA",
+            "DA",
+            "AA",
+            "AC",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.015625,
+          "trusted_reward_sum": 0.125
+        },
+        {
+          "case_id": "seed-909-E",
+          "kind": "post_training",
+          "responses": [
+            "AB",
+            "AB",
+            "AAA",
+            "AA",
+            "DA",
+            "AA",
+            "AC",
+            "AAA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.015625,
+          "trusted_reward_sum": 0.125
+        }
+      ]
+    },
+    "909:eval-route-v4-02": {
+      "records": [
+        {
+          "case_id": "baseline-909",
+          "kind": "baseline",
+          "responses": [
+            "AB",
+            "BD",
+            "ABC",
+            "BC",
+            "AABBB",
+            "ABBC",
+            "AB",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.25,
+          "trusted_reward_sum": 2.0
+        },
+        {
+          "case_id": "seed-909-A",
+          "kind": "post_training",
+          "responses": [
+            "AB",
+            "BD",
+            "ABC",
+            "BC",
+            "AABBB",
+            "ABBC",
+            "AB",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.25,
+          "trusted_reward_sum": 2.0
+        },
+        {
+          "case_id": "seed-909-D",
+          "kind": "post_training",
+          "responses": [
+            "AB",
+            "BD",
+            "ABC",
+            "BC",
+            "AABBB",
+            "ABBC",
+            "AB",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.25,
+          "trusted_reward_sum": 2.0
+        },
+        {
+          "case_id": "seed-909-E",
+          "kind": "post_training",
+          "responses": [
+            "AB",
+            "BD",
+            "ABC",
+            "BC",
+            "AABBB",
+            "ABBC",
+            "AB",
+            "AB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.25,
+          "trusted_reward_sum": 2.0
+        }
+      ]
+    },
+    "909:eval-route-v4-03": {
+      "records": [
+        {
+          "case_id": "baseline-909",
+          "kind": "baseline",
+          "responses": [
+            "AABCC",
+            "AB",
+            "ABA",
+            "AAA",
+            "AADB",
+            "AADB",
+            "ABD",
+            "ACB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.046875,
+          "trusted_reward_sum": 0.375
+        },
+        {
+          "case_id": "seed-909-A",
+          "kind": "post_training",
+          "responses": [
+            "AABCC",
+            "AB",
+            "ABA",
+            "AAA",
+            "AADB",
+            "AADB",
+            "ABD",
+            "ACB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.046875,
+          "trusted_reward_sum": 0.375
+        },
+        {
+          "case_id": "seed-909-D",
+          "kind": "post_training",
+          "responses": [
+            "AABCC",
+            "AB",
+            "ABA",
+            "AAA",
+            "AADB",
+            "AADB",
+            "ABD",
+            "ACB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.046875,
+          "trusted_reward_sum": 0.375
+        },
+        {
+          "case_id": "seed-909-E",
+          "kind": "post_training",
+          "responses": [
+            "AABCC",
+            "AB",
+            "ABA",
+            "AAA",
+            "AADB",
+            "AADB",
+            "ABD",
+            "ACB"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.046875,
+          "trusted_reward_sum": 0.375
+        }
+      ]
+    },
+    "909:eval-route-v4-04": {
+      "records": [
+        {
+          "case_id": "baseline-909",
+          "kind": "baseline",
+          "responses": [
+            "BD",
+            "BD",
+            "AAA",
+            "AABBD",
+            "BA",
+            "BD",
+            "AADC",
+            "CA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.09375,
+          "trusted_reward_sum": 0.75
+        },
+        {
+          "case_id": "seed-909-A",
+          "kind": "post_training",
+          "responses": [
+            "BD",
+            "BD",
+            "AAA",
+            "AABBD",
+            "BA",
+            "BD",
+            "AADC",
+            "CA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.09375,
+          "trusted_reward_sum": 0.75
+        },
+        {
+          "case_id": "seed-909-D",
+          "kind": "post_training",
+          "responses": [
+            "BD",
+            "BD",
+            "AAA",
+            "AABBD",
+            "BA",
+            "BD",
+            "AADC",
+            "CA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.09375,
+          "trusted_reward_sum": 0.75
+        },
+        {
+          "case_id": "seed-909-E",
+          "kind": "post_training",
+          "responses": [
+            "BD",
+            "BD",
+            "AAA",
+            "AABBD",
+            "BA",
+            "BD",
+            "AADC",
+            "CA"
+          ],
+          "sample_count": 8,
+          "successes_reward_1": 0,
+          "trusted_reward_mean": 0.09375,
+          "trusted_reward_sum": 0.75
+        }
+      ]
+    }
+  },
+  "schema_version": 1,
+  "scope": {
+    "baseline_count": 3,
+    "final_checkpoint_count": 13,
+    "policy_count": 16,
+    "task_count": 6,
+    "task_unit": "one already-consumed synthetic prompt; not independent coding tasks",
+    "terminal_sequences_per_task": 1360
+  }
+}

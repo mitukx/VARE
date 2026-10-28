@@ -1,0 +1,22 @@
+flowchart TD
+  P99[PR #99 MLX-LM calibration] --> P114[PR #114 publication evidence]
+  P114 --> P117[PR #117 snapshot isolation]
+  P133[PR #133 source navigation] --> P136[PR #136 syntax checks]
+  P136 --> P137[PR #137 review fixes; Python 3.12 CI failure]
+  P137 --> P139[PR #139 runtime + evidence; 1081 files]
+  P139 --> P146[PR #146 partial ABBA evidence]
+  P148[PR #148 online actor; 143 files]:::evidence
+  P142[PR #142 external campaign; split and human-review blocker]:::blocked
+  P108[PR #108 dual-Python; orphan base]:::evidence
+  P118[PR #118 edit library; orphan base]:::extract
+  P131[PR #131 historical recovery inventory]:::evidence
+  P135[PR #135 process-boundary preflight; orphan base]:::extract
+  P120[PR #120 evaluator P1s; old main]:::blocked
+  P121[PR #121 replay; behind main]:::blocked
+  P122[PR #122 leakage fix; behind main]:::blocked
+  P126[PR #126 verifier drift; old stack]:::evidence
+  P145[PR #145 merged to main b1e5882]:::merged
+  classDef blocked fill:#fee,stroke:#b00
+  classDef evidence fill:#eef,stroke:#55a
+  classDef extract fill:#ffe,stroke:#aa0
+  classDef merged fill:#dfd,stroke:#080

@@ -1,0 +1,120 @@
+{
+  "calibration_addenda": [
+    {
+      "path": "protocols/sprint_xiv_transformers_49900_development_v2_calibration_addendum_1.json",
+      "sha256": "2561d972fdd5d44ec71351239c9c31ba0995ad52e878bec8e7e262d9b1037db9"
+    },
+    {
+      "path": "protocols/sprint_xiv_transformers_49900_development_v2_calibration_addendum_2.json",
+      "sha256": "3175402a48092f5b7a1529d90606b67e2e5a1ef9c70e4953da529713ed3b6a0d"
+    }
+  ],
+  "formal_v2_1_controls": {
+    "baseline": {
+      "grader_sha256": "ab66889ecd84ae81c8f6d7684d772d1bf3244f57ac027e5875be5937048c4532",
+      "passed": false,
+      "path": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/v2_1-control-baseline.json",
+      "sha256": "0f7ad4a2270a17a9def95e8f40c92864c5471370d1e8c8ae8d4e31e856c6d762",
+      "source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+      "status": "grader_rejected",
+      "wrong_cases": [
+        "int32_label_ids_np",
+        "int32_label_ids_pt",
+        "int32_label_np",
+        "int32_label_pt",
+        "int64_label_ids_np",
+        "int64_label_ids_pt",
+        "int64_label_np",
+        "int64_label_pt"
+      ]
+    },
+    "incorrect-mutant": {
+      "grader_sha256": "ab66889ecd84ae81c8f6d7684d772d1bf3244f57ac027e5875be5937048c4532",
+      "passed": false,
+      "path": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/v2_1-control-incorrect-mutant.json",
+      "sha256": "8b62cc5d2031cd5888c623e34fceeef60390ff891694085cd9fff0a4d0df0440",
+      "source_sha256": "6775958ba0552673b3742609d9c75aed022b26e70fedf797b72feaf2283075a2",
+      "status": "grader_rejected",
+      "wrong_cases": [
+        "int32_label_ids_np",
+        "int32_label_np",
+        "int64_label_ids_np",
+        "int64_label_np"
+      ]
+    },
+    "known-fix": {
+      "grader_sha256": "ab66889ecd84ae81c8f6d7684d772d1bf3244f57ac027e5875be5937048c4532",
+      "passed": true,
+      "path": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/v2_1-control-known-fix.json",
+      "sha256": "2dcdc3be6bda489e430a8429cbf96c84563565740b87b64d8802302646229820",
+      "source_sha256": "7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6",
+      "status": "passed",
+      "wrong_cases": []
+    },
+    "static-spoof": {
+      "grader_sha256": "ab66889ecd84ae81c8f6d7684d772d1bf3244f57ac027e5875be5937048c4532",
+      "passed": false,
+      "path": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/v2_1-control-static-spoof.json",
+      "sha256": "1f80e4c2106ecd742b0edec29b4429c89fb87a1b4c3a2d4a26657dd1131e223e",
+      "source_sha256": "d0c4e5fa9fa6eff85ac3d4c7e94adf48a9c73c7cb05801b493e28e11d5f0ce14",
+      "status": "grader_rejected",
+      "wrong_cases": []
+    }
+  },
+  "grader_path": "benchmarks/external_development/transformers_49900_numpy_label_dtype/evaluator/grade_v2_1.py",
+  "grader_sha256": "ab66889ecd84ae81c8f6d7684d772d1bf3244f57ac027e5875be5937048c4532",
+  "heldout_use": false,
+  "model_inference_performed": false,
+  "pretraining_exposure": "UNKNOWN",
+  "prior_setup_failure_records": [
+    "Wrong CLI grader SHA argument was rejected fail-closed and retained at calibration/baseline-grade.json.",
+    "The first public-runner launch under system Python 3.9.6 failed before starting Docker; retained at calibration/public-runner-python39-launch-failure.json."
+  ],
+  "public_smoke_controls": {
+    "baseline-runner-retry1": {
+      "elapsed_seconds": 1.422,
+      "passed": false,
+      "path": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/public-baseline-runner-retry1.json",
+      "returncode": 1,
+      "sha256": "549e70330f2da5adcb937b12a1e31121c140b7429729944b3cc819550d857aa7",
+      "source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055"
+    },
+    "incorrect_mutant": {
+      "elapsed_seconds": 1.348,
+      "passed": false,
+      "path": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/public-incorrect_mutant.json",
+      "returncode": 1,
+      "sha256": "bd372a0bc5c38790fa4298d99609e17c9e2049fac01f6325c921aed4f64a86ef",
+      "source_sha256": "6775958ba0552673b3742609d9c75aed022b26e70fedf797b72feaf2283075a2"
+    },
+    "known_fix": {
+      "elapsed_seconds": 1.408,
+      "passed": true,
+      "path": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/public-known_fix.json",
+      "returncode": 0,
+      "sha256": "6a76a59733be76cf8a5cad23da1c42ecb4cd029d71ed4aec2220defdf08b3c6a",
+      "source_sha256": "7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6"
+    }
+  },
+  "qualification_gate": {
+    "baseline_fail": true,
+    "incorrect_mutant_fail": true,
+    "known_fix_pass": true,
+    "public_baseline_fail": true,
+    "public_fix_pass": true,
+    "public_mutant_fail": true,
+    "stdout_spoof_rejected": true
+  },
+  "qualification_protocol": "protocols/sprint_xiv_transformers_49900_development_v2.json plus calibration addenda 1 and 2; v2.1 grader only",
+  "qualification_protocol_sha256": "76d6eba477d1d51cb52ecee279f26ddddaf33414a0f3e260cdb6f2e903213241",
+  "recorded_at_utc": "2026-10-28T21:35:22.349317+00:00",
+  "schema_version": 1,
+  "shared_file_overlap": "Unrelated Transformers #45852 4D attention-mask task used the same module file but a different bug family.",
+  "status": "QUALIFIED_FOR_ONE_CONDITIONAL_DEVELOPMENT_MODEL_ATTEMPT",
+  "task_family_count": 1,
+  "task_id": "transformers-49900-numpy-label-dtype-v1",
+  "task_split": "development",
+  "training_or_optimizer_updates": 0,
+  "v1_fixed_case_results_retained_not_authorizing": true,
+  "v2_float_equality_bug_results_retained_not_authorizing": true
+}

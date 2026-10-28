@@ -1,0 +1,14 @@
+{
+  "baseline_source_sha256": "d87652762ba0eafb8c7aacf60cab81afae135928de735fed097fc405c69796a5",
+  "candidate_workspace_commit_after_harness_correction": "ee211972b681e61865d45e23aa641be2b0567c81",
+  "candidate_workspace_tree_after_harness_correction": "9be85ec8a682d6c124a22af519777da71cec742b",
+  "corrected_public_test_sha256": "18b284aafbf529887a1241e2fce7a85d60478f6d658dfb498cf5bd244ba539f5",
+  "failure": "Docker smoke runner executed test_public.py without adding workspace/src to PYTHONPATH; import failed before task assertions: ModuleNotFoundError: No module named transformers. No model weights loaded; no inference; no candidate task outcome.",
+  "initial_public_test_retained": "benchmarks/external_development/transformers_50044_janus_text_str/evaluator/harness_failures/test_public_import_failure_v0.py",
+  "initial_public_test_sha256": "4f7b5b983d5468834d5cb4e68862a344dc3004ac15ae277c053f787be5b24796",
+  "recorded_at_utc": "2026-10-28T21:55:17Z",
+  "schema_version": 1,
+  "stage": "public-test harness calibration before task qualification",
+  "status": "HARNESS_FAILURE_RETAINED",
+  "task_json_sha256": "1736561f9b637757793e8be885ad267534c2e529e676618a2df0b7e9429df1e4"
+}

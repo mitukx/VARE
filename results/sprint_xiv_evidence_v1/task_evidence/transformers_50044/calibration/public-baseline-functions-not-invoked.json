@@ -1,0 +1,11 @@
+{
+  "corrective_change": "Version 2 invokes all assertion functions when run as a script; require baseline FAIL, known fix PASS, and mode-limited mutant FAIL under the actual VARE runner.",
+  "failure": "VARE run_public_tests invokes python test_public.py directly, so the v1 file defined pytest functions without calling them. Baseline returned exit 0 but executed no assertions. Not a baseline pass; no model weights loaded; no inference.",
+  "first_import_harness_failure_record": "results/sprint_xiv_transformers_50044_qualification_v1/calibration/public-baseline-import-error.json",
+  "recorded_at_utc": "2026-10-28T21:55:59Z",
+  "schema_version": 1,
+  "stage": "public-test harness calibration before task qualification",
+  "status": "HARNESS_INVALIDATION_RETAINED",
+  "v1_public_test_path": "benchmarks/external_development/transformers_50044_janus_text_str/evaluator/harness_failures/test_public_functions_not_invoked_v1.py",
+  "v1_public_test_sha256": "18b284aafbf529887a1241e2fce7a85d60478f6d658dfb498cf5bd244ba539f5"
+}

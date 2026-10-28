@@ -1,0 +1,109 @@
+{
+  "analysis_boundary": "One model attempt on one Development family. Pretraining exposure is UNKNOWN. It cannot establish model superiority, held-out generalization, training gain, or broad coding capability. No SFT/GRPO or optimizer update is authorized.",
+  "cheapest_falsification": "Before model loading, the public script must fail on upstream baseline, pass on exact known fix, and fail on a mode-limited mutant; the host grader must also pass/fail those controls and reject static stdout spoof. Stop if any expected classification fails.",
+  "falsifiable_hypothesis": "On a fresh, compact upstream repair family with a short source file, the same Qwen2.5-Coder-7B-Instruct-4bit strict VARE tool loop can progress from localization/read into an applied edit and independently verified repair within the frozen interaction budget. This is a one-family feasibility test, not a comparison or capability estimate.",
+  "frozen_at_utc": "2026-10-28T21:57:36Z",
+  "model_trial": {
+    "authorization": "One attempt only, conditional on all predeclared public and hidden controls meeting their expected outcomes and the fresh host/model preflight passing.",
+    "backend": "MLX/Apple Metal",
+    "checkpoint": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "do_sample": false,
+    "edit_format": "unified_diff",
+    "instruction": "Inspect the named source file, make the smallest repair, run the immutable public smoke test, then finish. Do not use network or infer hidden tests.",
+    "max_context_tokens": 32768,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "public_test_image": "vare/datasets-dev-arm64@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "public_test_image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "quantization": "4-bit MLX safetensors",
+    "retry_after_model_start": false,
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "runner_path": "scripts/run_local_agent.py",
+    "runner_sha256": "7b95007c605ce7475de7c1f4bdc1816dd5abbc3fc14c6d7a55c409df5ee724a7",
+    "runtime": {
+      "mlx": "0.32.2",
+      "mlx_lm": "0.32.2",
+      "python": "3.12.12"
+    },
+    "seed": 102,
+    "snapshot_manifest_sha256": "efa28f970e9651168c3baec22bf575b2432c8331aa0d83b8899e2502bad96b54",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_total_size_bytes": 4295890004,
+    "tool_allowlist": [
+      "list_files",
+      "read_file",
+      "search_text",
+      "apply_patch",
+      "check_syntax",
+      "run_public_tests",
+      "finish"
+    ],
+    "training_or_optimizer_updates": 0,
+    "wall_seconds": 900
+  },
+  "primary_outcome": "One unique Development task-family repair with a changed target source hash and all randomized hidden behavior cases passing. Count at most one family-level success.",
+  "protocol_id": "sprint-xiv-transformers-50044-development-v1",
+  "qualification": {
+    "candidate_source_mount_read_only": true,
+    "candidate_stdout_is_untrusted": true,
+    "expected_hidden_controls": {
+      "baseline": "grader_rejected",
+      "incorrect_text_mode_only": "grader_rejected",
+      "known_fix": "passed",
+      "static_stdout_spoof": "grader_rejected"
+    },
+    "expected_public_controls": {
+      "baseline": "FAIL",
+      "incorrect_text_mode_only": "FAIL",
+      "known_fix": "PASS"
+    },
+    "hidden_grader_cases_per_invocation": 5,
+    "no_grader_mounted_in_candidate_workspace": true,
+    "random_nonce_and_random_prompt_strings": true
+  },
+  "resource_gates": {
+    "host": "Apple M1 Pro, 32 GiB unified memory, macOS arm64",
+    "max_mlx_peak_memory_bytes": 8589934592,
+    "max_process_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 2147483648,
+    "minimum_disk_free_bytes": 17179869184,
+    "minimum_free_swap_bytes": 536870912,
+    "parallel_model_processes": 1,
+    "sample_interval_seconds": 1,
+    "stop_on": "Any host memory/swap/disk gate failure, MLX peak/RSS/swap cap breach, model/device load failure, or 900-second wall/process limit. Do not increase caps."
+  },
+  "schema_version": 1,
+  "secondary_outcomes": [
+    "raw model tool-call and source-reading sequence",
+    "applied edit and public test result",
+    "independent hidden grader receipt",
+    "tokens, wall time, RSS, MLX peak, swap growth and resource-abort category"
+  ],
+  "stopping_rule": "Stop on any fresh resource gate failure, attempt cap breach, runner/model failure, context exhaustion, or completion of the single trial; do not repeat or raise caps.",
+  "task": {
+    "VARE_prior_exposure_search": "No #50044/JanusProcessor source family occurrence found in prior docs/protocol/results; this task is selected from a different file and bug family than consumed Transformers #49900. Model pretraining exposure remains UNKNOWN.",
+    "baseline_source_sha256": "d87652762ba0eafb8c7aacf60cab81afae135928de735fed097fc405c69796a5",
+    "candidate_TASK_md_sha256": "08e914036a64ff300cc75d4ee65581c3dbaea9c857d42e776259c6d8ea0fd77b",
+    "candidate_task_json_sha256": "6c4604c8acd2bae27ceea2743ff1a08fcdcbdec33b9dabbbeb349201d3e27312",
+    "candidate_workspace_commit": "01e16fb65c0175e09e905e97e14ec93b5b40c2ce",
+    "candidate_workspace_tree": "3bd04d3cd940cc8fb461b83ef56caab4ff8d0745",
+    "family": "Transformers PR #50044: JanusProcessor treats one prompt string as characters",
+    "fixed_source_sha256": "fe1caf4a8371f53af418ded80404d8cf02d948087bff2e2f6be774d15733c935",
+    "grader_path": "benchmarks/external_development/transformers_50044_janus_text_str/evaluator/grade.py",
+    "grader_sha256": "f1f7524054e58353e51ba3cc86b09dff668c50b2c5c9e86995987df50cab6491",
+    "heldout_use": false,
+    "incorrect_mutant_sha256": "f40da9f74f19b1aa25fadad73d4735b7cf302c7410b7bdfcc79319ea595a87a4",
+    "public_test_interface": "VARE run_public_tests executes `python /workspace/test_public.py`; the file invokes its assertions under __main__.",
+    "public_test_sha256": "d567e19f8dfd80d1be31583d41ff575156e082e31942539a57b8179cb1a71e8e",
+    "repository": "https://github.com/huggingface/transformers",
+    "source_path": "src/transformers/models/janus/processing_janus.py",
+    "task_id": "transformers-50044-janus-string-prompt-v1",
+    "task_split": "development",
+    "upstream_baseline_commit": "a1a59ea46ee8dd36ce743c2e5eb378cc8d0d4568",
+    "upstream_fix_commit": "0b437423aae1c8bf3b214d47d3a88de10309be03",
+    "upstream_merge_commit": "c27795950091cdaf1b0e32c4aed58618fb41ffa0"
+  }
+}

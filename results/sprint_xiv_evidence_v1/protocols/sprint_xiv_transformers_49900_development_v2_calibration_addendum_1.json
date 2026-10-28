@@ -1,0 +1,16 @@
+{
+  "attack": "On module import, print the exact deterministic v1 expected-results JSON to stdout and exit successfully before any collator probe call.",
+  "candidate_source_path": "benchmarks/external_development/transformers_49900_numpy_label_dtype/evaluator/controls/static_v1_stdout_spoof_data_collator.py",
+  "candidate_source_sha256": "d0c4e5fa9fa6eff85ac3d4c7e94adf48a9c73c7cb05801b493e28e11d5f0ce14",
+  "candidate_workspace": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/controls/static_v1_stdout_spoof/workspace",
+  "control_id": "static_v1_stdout_spoof",
+  "expected_v2_outcome": "grader_rejected because its output schema has no per-invocation nonce and does not contain the v2 response envelope.",
+  "frozen_at_utc": "2026-10-28T21:31:56.349637+00:00",
+  "model_inference": false,
+  "parent_protocol": "protocols/sprint_xiv_transformers_49900_development_v2.json",
+  "parent_protocol_sha256": "76d6eba477d1d51cb52ecee279f26ddddaf33414a0f3e260cdb6f2e903213241",
+  "protocol_id": "sprint-xiv-transformers-49900-development-v2-calibration-addendum-1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_V2_CONTROLS",
+  "task_source_hashes_unchanged": true
+}

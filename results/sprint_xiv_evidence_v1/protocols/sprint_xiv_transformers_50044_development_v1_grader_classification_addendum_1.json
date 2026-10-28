@@ -1,0 +1,29 @@
+{
+  "candidate_source_workspace_hashes_unchanged": true,
+  "corrected_grader_path": "benchmarks/external_development/transformers_50044_janus_text_str/evaluator/grade.py",
+  "corrected_grader_sha256": "4bd7d6483ab7af72c1ed72cb0620c796e27868e84fd3f6c2e0bb1162d590ba7d",
+  "expected_corrected_controls": {
+    "baseline": "grader_rejected",
+    "incorrect_text_mode_only": "grader_rejected",
+    "known_fix": "passed",
+    "static_stdout_spoof": "grader_rejected"
+  },
+  "frozen_at_utc": "2026-10-28T22:00:26Z",
+  "heldout_use": false,
+  "model_inference_performed": false,
+  "observed_issue": "The initial hidden grader correctly failed baseline and incorrect candidates and passed the known fix, but left candidate-contract failures labeled infrastructure_failure. This conflated a valid negative task result with grader/runtime infrastructure failure.",
+  "parent_protocol": "protocols/sprint_xiv_transformers_50044_development_v1.json",
+  "parent_protocol_sha256": "0953996db7c5fcaf4d6de7f92caf5da85b1ab3c9e4151fea01481b413e8e1d29",
+  "preserved_v1_control_receipts": [
+    "results/sprint_xiv_transformers_50044_qualification_v1/calibration/hidden-baseline.json",
+    "results/sprint_xiv_transformers_50044_qualification_v1/calibration/hidden-known_fix.json",
+    "results/sprint_xiv_transformers_50044_qualification_v1/calibration/hidden-incorrect_text_mode_only.json",
+    "results/sprint_xiv_transformers_50044_qualification_v1/calibration/hidden-static_stdout_spoof.json"
+  ],
+  "prior_grader_path": "benchmarks/external_development/transformers_50044_janus_text_str/evaluator/grade_v1_frozen.py",
+  "prior_grader_sha256": "f1f7524054e58353e51ba3cc86b09dff668c50b2c5c9e86995987df50cab6491",
+  "prospective_correction": "Assign grader_rejected when the grader container returns but the candidate behavior, output schema, nonce, process outcome, or source immutability check fails. Reserve infrastructure_failure for preflight/container orchestration exceptions. Preserve all v1 receipts unchanged.",
+  "protocol_id": "sprint-xiv-transformers-50044-development-v1-grader-classification-addendum-1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_CORRECTED_HIDDEN_CONTROLS_AND_MODEL_INFERENCE"
+}

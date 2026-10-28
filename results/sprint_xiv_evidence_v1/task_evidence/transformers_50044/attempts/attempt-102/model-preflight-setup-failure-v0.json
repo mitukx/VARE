@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "PREFLIGHT_HARNESS_FAILURE",
+  "classification": "Pre-inference instrumentation error; not a model/resource abort and no model weights were loaded.",
+  "recorded_at_utc": "2026-10-28T22:05:04Z",
+  "stage": "runtime-version-serialization-after-host-task-snapshot-and-tokenizer-checks",
+  "failure": "AttributeError: module 'mlx' has no attribute '__version__'",
+  "attempt_consumed": false,
+  "model_weights_loaded": false,
+  "generated_tokens": 0,
+  "preflight_source": "results/sprint_xiv_transformers_50044_qualification_v1/attempts/attempt-102/preflight_setup_failure_v0.py",
+  "preflight_source_sha256": "324139bb4c77ecd7531fa13d752348dbf48c31a1f5aafc596455c907e6706467",
+  "protocol_modified": false,
+  "resource_caps_modified": false
+}

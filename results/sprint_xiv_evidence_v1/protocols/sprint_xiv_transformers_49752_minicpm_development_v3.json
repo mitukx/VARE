@@ -1,0 +1,221 @@
+{
+  "cheapest_falsification": "Do not load weights if task/control receipts fail, the candidate workspace is not exactly pinned and clean, the snapshot or container identity drifts, context exceeds the fixed budget, or any host resource gate fails.",
+  "controller_intervention": {
+    "change": "search_text matches source queries across arbitrary whitespace/newlines and returns bounded source line spans; after a source file has been read, an incomplete no-tool response prompts a concise search or minimal edit instead of rereading the full file. The search_text tool schema description now documents the flexible-whitespace behavior so the agent can use it.",
+    "id": "progress-aware-source-navigation-v1",
+    "motivation": "Transformers #50021 attempt 103 sent a multiline expression that the former literal per-line search could not find, then a generic retry caused a second full-source read and context exhaustion.",
+    "protocol_boundary": "No source-specific string, task answer, or task id is embedded in the controller. One prospective attempt; no prompt tuning or rerun after results.",
+    "runner_path": "scripts/run_local_agent.py",
+    "runner_sha256": "2aa5a88d8124456d5311b19ca5a0f42a64c5803b1655a8b2ad9faea6a12a1bff",
+    "tests_path": "tests/test_run_local_agent_tool_format.py",
+    "tests_sha256": "1bf769b0ebfc7b4e9c5bce89611f4bfeb4619d67ab3105edaef8f185835623d2"
+  },
+  "decision_changed_by_result": "A verified repair would establish the first Sprint XIV positive external code trajectory and allow data-eligibility review only. A no-edit trace triggers one next failure-specific controller experiment; schema/tool parse defects would halt controller claims.",
+  "frozen_at_utc": "2026-10-28T22:36:53Z",
+  "heldout_eligible": false,
+  "hypothesis": "On one fresh, independently qualified MiniCPM-V video-processing Development family, Qwen2.5-Coder-7B with the progress-aware navigation controller will make and apply a source repair that passes the visible test and the nonce-bound independent behavior grader within one attempt.",
+  "model_trial": {
+    "authorization": "One attempt, only after fresh preflight passes all frozen gates and controls.",
+    "backend": "MLX/Apple Metal",
+    "checkpoint": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "do_sample": false,
+    "edit_format": "unified_diff",
+    "instruction": "Read the exact source file named in the task, make the smallest correct repair, run the immutable public smoke test, then finish. Do not use network or infer hidden tests.",
+    "max_context_tokens": 32768,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "public_test_image": "vare/datasets-dev-arm64@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "public_test_image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "quantization": "4-bit MLX safetensors",
+    "resource_guard_path": "scripts/sprint_xiv/run_guarded_agent.py",
+    "resource_guard_sha256": "f8708f986283cbef882547798e3627c467a46b02d5e2e0a9d57ab2ab8860548c",
+    "retry_after_model_start": false,
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "runner_path": "scripts/run_local_agent.py",
+    "runner_sha256": "2aa5a88d8124456d5311b19ca5a0f42a64c5803b1655a8b2ad9faea6a12a1bff",
+    "seed": 104,
+    "snapshot_manifest": {
+      ".gitattributes": {
+        "path_is_symlink": true,
+        "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+        "size_bytes": 1519
+      },
+      "README.md": {
+        "path_is_symlink": true,
+        "sha256": "900637f68349b42803bd0779765ef87bd8ad54e4eba57991336911b3b1655e97",
+        "size_bytes": 847
+      },
+      "added_tokens.json": {
+        "path_is_symlink": true,
+        "sha256": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+        "size_bytes": 605
+      },
+      "config.json": {
+        "path_is_symlink": true,
+        "sha256": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+        "size_bytes": 787
+      },
+      "merges.txt": {
+        "path_is_symlink": true,
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "size_bytes": 1671853
+      },
+      "model.safetensors": {
+        "path_is_symlink": true,
+        "sha256": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+        "size_bytes": 4284346255
+      },
+      "model.safetensors.index.json": {
+        "path_is_symlink": true,
+        "sha256": "23cd562592dd96686d2e799eb02e4b578a4038b6045eaefe860d270cc060e24f",
+        "size_bytes": 51711
+      },
+      "special_tokens_map.json": {
+        "path_is_symlink": true,
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "size_bytes": 613
+      },
+      "tokenizer.json": {
+        "path_is_symlink": true,
+        "sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+        "size_bytes": 7031673
+      },
+      "tokenizer_config.json": {
+        "path_is_symlink": true,
+        "sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+        "size_bytes": 7308
+      },
+      "vocab.json": {
+        "path_is_symlink": true,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "size_bytes": 2776833
+      }
+    },
+    "snapshot_manifest_sha256": "e034df8c803f2d8c9477f28fd781777f2c7f61a229e9df67ab8c7132246db91d",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_total_size_bytes": 4295890004,
+    "temperature": 0.2,
+    "tool_allowlist": [
+      "list_files",
+      "read_file",
+      "search_text",
+      "apply_patch",
+      "check_syntax",
+      "run_public_tests",
+      "finish"
+    ],
+    "top_k": 20,
+    "top_p": 0.95,
+    "training_or_optimizer_updates": 0,
+    "wall_seconds": 900
+  },
+  "primary_outcome": "One independently verified repair for this unique Development family at one fixed attempt; count at most one family-level success.",
+  "protocol_id": "sprint-xiv-transformers-49752-minicpm-development-v3",
+  "resource_gates": {
+    "host": "Apple M1 Pro, 32 GiB unified memory, macOS arm64",
+    "max_mlx_peak_memory_bytes": 8589934592,
+    "max_process_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 2147483648,
+    "minimum_disk_free_bytes": 17179869184,
+    "minimum_free_swap_bytes": 536870912,
+    "parallel_model_processes": 1,
+    "sample_interval_seconds": 1,
+    "stop_on": "Any static or sampled resource breach, workspace/task/model/grader identity drift, context-budget overrun, task completion, or 900-second wall budget. Do not increase caps or repeat this task."
+  },
+  "schema_version": 1,
+  "secondary_outcomes": [
+    "schema-valid tool-call sequence",
+    "source search/read behavior",
+    "edit attempt and applied edit",
+    "public-test result",
+    "independent hidden grader receipt",
+    "generation tokens and wall time",
+    "process RSS, MLX peak, swap growth and minimum available memory",
+    "failure classification"
+  ],
+  "status": "FROZEN_BEFORE_MODEL_GENERATION",
+  "stopping_rule": "One attempt only. Stop on resource/identity failure, task completion, wall/token/turn cap, tool runner failure, or context-budget exhaustion. Preserve the full raw trajectory; do not retry or reuse this task family.",
+  "supersedes": {
+    "protocol_id": "sprint-xiv-transformers-49752-minicpm-development-v2",
+    "reason": "Preflight failed before tokenizer/model weights were loaded because AgentTaskContract only accepts metadata.split values train/heldout/null; Development task was incorrectly encoded as lowercase development. v3 sets the internal task contract split to null and retains Development in the research protocol. Candidate prompt and source files are unchanged.",
+    "sha256": "01ac8fb1ae27b1bf1082a8c1979c11be94ed1d1c4b971fd24cafdbef1d415e55"
+  },
+  "task": {
+    "baseline_source_sha256": "c0479fc2f6a14e493f6be020f6685a7c3ebbc72891c8bdbfca66f3e24ed3d7ee",
+    "candidate_workspace_clean": true,
+    "candidate_workspace_commit": "7d933d9fb7f49136b5ed84d77b9618bfb276505d",
+    "candidate_workspace_no_remotes": true,
+    "candidate_workspace_source_sha256": "c0479fc2f6a14e493f6be020f6685a7c3ebbc72891c8bdbfca66f3e24ed3d7ee",
+    "candidate_workspace_tree": "e4a45e3e0e71588003c3cf016cfce35d7766afe9",
+    "control_receipts": {
+      "hidden-v2-baseline.json": {
+        "classification": "grader_rejected",
+        "passed": false,
+        "sha256": "9cb205edc1906c33fbb3d6ae479ae84f51b1c90dd9dc0efe6154a0dc2534f9a2"
+      },
+      "hidden-v2-known-fix.json": {
+        "classification": "passed",
+        "passed": true,
+        "sha256": "d2bc1e33649a701ca37d1716db2410c9d30fbad967e6504986246ebbb4c876b0"
+      },
+      "hidden-v2-static-spoof.json": {
+        "classification": "grader_rejected",
+        "passed": false,
+        "sha256": "60ac247af080f4e5420a18df34f16ad01d774a1f6b231954e311f253c7729aee"
+      },
+      "hidden-v2-wrong-mutant.json": {
+        "classification": "grader_rejected",
+        "passed": false,
+        "sha256": "d7962d462246131be444bbb44ccf96f06452aebbbe68a030e78533eba85e8cd0"
+      },
+      "public-v2-baseline.json": {
+        "classification": "FAIL",
+        "passed": false,
+        "sha256": "c1696a588251e4585fc5034a3dcd6f6c64abbe46c170e0d26a97ebde8d40221c"
+      },
+      "public-v2-known-fix.json": {
+        "classification": "PASS",
+        "passed": true,
+        "sha256": "a00d72cb2c5ad0d08290d25f4df7445aa059b4d86b24f6faa30cab3568dd54c0"
+      },
+      "public-v2-wrong-mutant.json": {
+        "classification": "FAIL",
+        "passed": false,
+        "sha256": "7033570d8dcb0a5d62248cad3dcbceaf760e923430250636bb410ab094a97276"
+      }
+    },
+    "family": "Transformers PR #49752 MiniCPM-V 4.6 stacked visual units",
+    "fixed_source_sha256": "19f2f1b936c9ca45614fefb388d07e69564d7d0dc9665c620d00832f56e61380",
+    "grader_sha256": "d28523cb2fdc3e11caae36f147cc0f63873908dcc73816e7429bb99b992d2ac3",
+    "prior_vare_exposure_search": "No prior model attempt or task-family evidence found for Transformers PR #49752 or MiniCPM-V 4.6 video-processing; Sprint XII branch audit mention of the string was unrelated to task exposure.",
+    "public_test_sha256": "3612f3213524628ee7402224f716242590c2065c5de066c5e5c3a640d556582b",
+    "qualification": {
+      "candidate_workspace_excludes_evaluator": true,
+      "hidden_baseline": "grader_rejected",
+      "hidden_known_fix": "passed",
+      "hidden_source_mount_read_only": true,
+      "hidden_static_stdout_spoof": "grader_rejected",
+      "hidden_wrong_mutant": "grader_rejected",
+      "public_and_hidden_checks_are_behavioral": true,
+      "public_baseline": "FAIL",
+      "public_known_fix": "PASS",
+      "public_wrong_mutant": "FAIL"
+    },
+    "qualification_initial_harness_failure": "An initial public probe omitted the injected group_videos_by_shape callback and failed both controls with NameError; this raw receipt is retained but excluded. Corrected probe controls v2 are the frozen evidence.",
+    "repository": "https://github.com/huggingface/transformers",
+    "source_path": "src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py",
+    "source_pretraining_exposure": "UNKNOWN",
+    "split": "Development",
+    "task_id": "transformers-49752-minicpm-stacked-visual-units-v1",
+    "task_json_sha256": "618c46d54cefe2d556d0d11f5b26ec90fd51afae26907ba9d0b04c6d35c0450b",
+    "task_md_sha256": "acb525b138c4e14fd93d0e8fa15cc61b7d82a5d1055188ac24e5d08daf1eb71b",
+    "upstream_baseline_commit": "6f2e80bdad560947903bb4bde8043ae95387069a",
+    "upstream_fix_commit": "482e80ae5910ecab54f9284c36343ff122db80ad",
+    "upstream_merge_commit": "bc0e71ffef22474fc14fcaa4b399d824eebc0e50"
+  },
+  "training_authorized": false,
+  "training_reason": "No previously verified positive coding trajectory; current task is Development and the 15-family held-out gate remains incomplete."
+}

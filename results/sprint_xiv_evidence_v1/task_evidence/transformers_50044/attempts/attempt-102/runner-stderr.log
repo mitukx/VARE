@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/run_local_agent.py", line 664, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/run_local_agent.py", line 615, in main
+    diff = candidate_source_diff(workspace, sorted(allowed), source_before, workspace_revision)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/run_local_agent.py", line 212, in candidate_source_diff
+    raise ValueError("candidate workspace contains staged or non-allowlisted changes")
+ValueError: candidate workspace contains staged or non-allowlisted changes
