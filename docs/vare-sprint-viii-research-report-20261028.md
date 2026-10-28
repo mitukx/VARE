@@ -43,6 +43,8 @@ PR状態表はSprint VIIIの実験・証拠公開開始前の監査スナップ�
 
 回帰テスト`test_transactional_guidance_matches_available_verification_tool`を追加し、tool集合とguidanceの対応を確認した。作業commitは`cac34bc5ec2f5580582e5a49825ae3b4a6e5147f`。ローカルの関連回帰群はpytest plugin自動読込を無効にしてpassした。通常のplugin自動読込では、global Hydra/OmegaConfとANTLRのversion不整合でtest collection前に失敗した。これはテスト対象の失敗ではなく、再現コマンドの環境条件として記録する。
 
+証拠PRの最初のexact-head CIではPython 3.13の2 testが、standalone campaign runnerのoptional `psutil` importで失敗した。実験時にprotocol v5が記録した旧test source（SHA-256 `75314a676e33c8d26503a90fa05111a9f493f33e677879489a7699b12f9f52ad`）を`tests/fixtures/sprint_viii_campaign_exposure_v1.py`へbyte-identicalに保存し、現在のhelper testsではresource-monitor dependencyをstubしてimportするよう修正した。変更はtest loaderだけで、凍結済みcampaign runner、protocol、model outcomesは変更していない。修正後の2 testはlocalでpassし、最新PR CIを再実行中。
+
 ### 実験時の実装同一性
 
 外部campaign v5はrunner/controller/graderとimportされたVARE moduleの実ファイルhashを凍結し、source snapshotを保存した。independent runtime auditは`PASS`、runtime manifest SHA-256は`38af64e499a174af715857c0a8924c063dd4c23098878a72d76e87f8fa01e026`。ただし実験時checkoutはdirtyで、auditにも`worktree_dirty=true`および`runtime_sources_dirty=true`が記録されている。実行bytesはmanifestとsnapshotに結び付いておりhash mismatchは報告されていないが、Git commit単独では実行状態を再構成できない。Sprint VIIの旧attemptに残るrunner bytes不完全性も修復・書換えしていない。
@@ -131,6 +133,7 @@ Sprint VIIIが新たに示したものは、厳格なtool schemaを通るモデ�
 - Sprint VII consumed-task navigation replay source: `results/sprint_vii_20261028/external_dev_trl7913/attempt_001/events.jsonl`（SHA-256 `6a2961c05918d916bf9f4e9d1c689347bddba3bb397d30f45bed773eeb3b22e6`）
 - synthetic post-edit campaign: `results/sprint_viii_20261028/post_edit_completion_diagnostic_v5/`
 - independent graders: `scripts/sprint_viii_transformers_49703_grader_v1.py`, `scripts/sprint_viii_synthetic_grader_v1.py`
+- Python 3.13 evidence-only CI failure and portability fix record: `results/sprint_viii_20261028/ci/python-3.13-failure-v1.json`, raw log `python-3.13-failure-v1.log`
 - relevant tests: `tests/test_sprint_viii_transformers_49703_grader.py`, `tests/test_sprint_viii_synthetic_grader.py`, `tests/test_sprint_viii_campaign_exposure.py`, `tests/test_agent_runtime_snapshot_v1.py`, `tests/test_post_edit_navigation_gate.py`
 
 実験済みDevelopment familyを同条件で再実行してはいけない。以後の利用は非盲検診断として明示する。

@@ -3,6 +3,8 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+import sys
+from types import ModuleType
 
 import pytest
 
@@ -14,7 +16,11 @@ RUNNER_PATH = (
 )
 
 
-def _load_runner():
+def _load_runner(monkeypatch):
+    # These tests exercise pure protocol/journal helpers. The standalone
+    # campaign runner uses psutil for resource monitoring, but importing it
+    # must not make these helper tests depend on that optional runtime package.
+    monkeypatch.setitem(sys.modules, "psutil", ModuleType("psutil"))
     spec = importlib.util.spec_from_file_location("sprint_viii_campaign_runner", RUNNER_PATH)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
@@ -23,7 +29,7 @@ def _load_runner():
 
 
 def test_task_exposure_events_are_durable_and_append_only(tmp_path, monkeypatch):
-    runner = _load_runner()
+    runner = _load_runner(monkeypatch)
     real_fsync = runner.os.fsync
     fsync_calls: list[int] = []
 
@@ -43,8 +49,8 @@ def test_task_exposure_events_are_durable_and_append_only(tmp_path, monkeypatch)
     assert len(fsync_calls) == 2
 
 
-def test_campaign_protocol_shape_rejects_missing_decoding_fields():
-    runner = _load_runner()
+def test_campaign_protocol_shape_rejects_missing_decoding_fields(monkeypatch):
+    runner = _load_runner(monkeypatch)
     protocol = {
         "protocol_id": "vare.sprint-viii.transformers-49703-development.v5",
         "frozen_before_model_inference": True,

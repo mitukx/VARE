@@ -1,0 +1,32 @@
+{
+  "failed_step": "python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py",
+  "failures": [
+    "tests/test_sprint_viii_campaign_exposure.py::test_task_exposure_events_are_durable_and_append_only",
+    "tests/test_sprint_viii_campaign_exposure.py::test_campaign_protocol_shape_rejects_missing_decoding_fields"
+  ],
+  "fix": "test-only psutil module stub; original frozen test source retained under tests/fixtures with protocol-v5 SHA-256.",
+  "head_revision": "3ebddfdf39c90680c162cd4c688ae0325d5297e7",
+  "outcome": {
+    "duration_seconds": 204.51,
+    "failed": 2,
+    "passed": 1452,
+    "skipped": 111
+  },
+  "protocol_or_model_outcomes_changed": false,
+  "raw_log": "results/sprint_viii_20261028/ci/python-3.13-failure-v1.log",
+  "raw_log_sha256": "8842c273cefe83d7ea27b5f90c14787fbc69d4b7d4885cb02345d4be0ffceb79",
+  "record_id": "sprint-viii-ci-python-3.13-optional-psutil-import-failure-v1",
+  "root_cause": "campaign test imports standalone runner, which imports optional psutil not installed by CI test dependencies; both tests exercise helpers that do not use resource monitoring.",
+  "workflow_runs": [
+    {
+      "job_id": 122669010802,
+      "run_id": 40644168167,
+      "url": "https://github.com/mitukx/VARE/actions/runs/40644168167/job/122669010802"
+    },
+    {
+      "job_id": 122669024495,
+      "run_id": 40644172981,
+      "url": "https://github.com/mitukx/VARE/actions/runs/40644172981/job/122669024495"
+    }
+  ]
+}
