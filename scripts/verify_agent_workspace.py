@@ -7,10 +7,13 @@ This is consistency evidence, not tamper-proof external attestation.
 from __future__ import annotations
 
 import hashlib
-import os
 from pathlib import Path, PurePosixPath
-import subprocess
+import sys
+import tempfile
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from pinned_workspace_git import pinned_git, read_regular_source  # noqa: E402
 
 
 class WorkspaceMismatch(ValueError):
@@ -23,17 +26,10 @@ def _expect(predicate: bool, message: str) -> None:
 
 
 def _git(root: Path, *args: str) -> bytes:
-    env = dict(os.environ, GIT_NO_LAZY_FETCH="1", GIT_TERMINAL_PROMPT="0",
-               GIT_EXTERNAL_DIFF="", GIT_PAGER="cat")
-    completed = subprocess.run(
-        ["git", "-C", str(root), "--no-optional-locks", "-c", "diff.external=",
-         "-c", "core.quotePath=false", "-c", "core.fsmonitor=false", *args],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
-        env=env, timeout=20,
-    )
-    _expect(completed.returncode == 0, f"Git verification failed: {args[0]}")
-    _expect(len(completed.stdout) <= 4 * 1024 * 1024, "Git verification output oversized")
-    return completed.stdout
+    try:
+        return pinned_git(root, *args, max_output_bytes=4 * 1024 * 1024)
+    except ValueError as exc:
+        raise WorkspaceMismatch(f"Git verification failed: {args[0]}") from exc
 
 
 def verify_workspace(workspace: Path, task: dict[str, Any], agent: dict[str, Any],
@@ -65,15 +61,10 @@ def verify_workspace(workspace: Path, task: dict[str, Any], agent: dict[str, Any
     before: dict[str, str] = {}
     after: dict[str, str] = {}
     for name in files:
-        candidate = workspace / name
-        _expect(candidate.is_file() and not candidate.is_symlink(),
-                f"missing or linked candidate file: {name}")
-        for parent in candidate.relative_to(workspace).parents:
-            if parent == Path("."):
-                continue
-            _expect(not (workspace / parent).is_symlink(), "linked source parent directory")
-        content = candidate.read_bytes()
-        _expect(len(content) <= 16 * 1024 * 1024, "oversized candidate source")
+        try:
+            content = read_regular_source(workspace, name)
+        except ValueError as exc:
+            raise WorkspaceMismatch(f"missing, linked, or oversized candidate file: {name}") from exc
         after[name] = hashlib.sha256(content).hexdigest()
         original = _git(workspace, "cat-file", "blob", f"{expected_rev}:{name}")
         before[name] = hashlib.sha256(original).hexdigest()
@@ -82,8 +73,18 @@ def verify_workspace(workspace: Path, task: dict[str, Any], agent: dict[str, Any
     _expect(grade.get("source_file_sha256") == after, "grader did not hash verified workspace")
     recorded_diff = agent.get("candidate_diff")
     _expect(type(recorded_diff) is str, "missing candidate diff")
-    actual_diff = _git(workspace, "diff", "--no-ext-diff", "--no-textconv", "--no-renames",
-                       "--binary", expected_rev, "--", *sorted(files)).decode("utf-8").strip()
+    with tempfile.TemporaryDirectory(prefix="vare-verify-index-") as temp_dir:
+        index_file = Path(temp_dir) / "index"
+        try:
+            pinned_git(workspace, "read-tree", expected_rev, index_file=index_file)
+            actual_diff_bytes = pinned_git(
+                workspace, "diff", "--no-ext-diff", "--no-textconv", "--no-renames",
+                "--binary", "--", *sorted(files), index_file=index_file,
+                max_output_bytes=2 * 1024 * 1024,
+            )
+        except ValueError as exc:
+            raise WorkspaceMismatch("Git diff could not be verified from the pinned base") from exc
+    actual_diff = actual_diff_bytes.decode("utf-8").strip()
     _expect(recorded_diff == actual_diff, "Git workspace diff does not match agent record")
     _expect(grade.get("candidate_diff_sha256") == hashlib.sha256(actual_diff.encode()).hexdigest(),
             "grader did not hash verified Git diff")
