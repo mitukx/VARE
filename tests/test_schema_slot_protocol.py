@@ -190,7 +190,7 @@ def test_terminal_newline_constraint_checks_exact_generated_string_suffix():
     assert not terminal_newline_is_present([], tokenizer)
 
 
-@pytest.mark.parametrize('protocol', ['vare.schema-slots.v1', 'vare.schema-slots.v2', 'vare.schema-slots.v3', 'vare.schema-slots.v4', 'vare.schema-slots.v5', 'vare.schema-slots.v6', 'vare.schema-slots.v7', 'vare.schema-slots.v8', 'vare.schema-slots.v9'])
+@pytest.mark.parametrize('protocol', ['vare.schema-slots.v1', 'vare.schema-slots.v2', 'vare.schema-slots.v3', 'vare.schema-slots.v4', 'vare.schema-slots.v5', 'vare.schema-slots.v6', 'vare.schema-slots.v7', 'vare.schema-slots.v8', 'vare.schema-slots.v9', 'vare.schema-slots.v10'])
 def test_internal_slot_budget_failure_is_not_a_parser_failure(protocol):
     detail = {'protocol_id': protocol, 'stop_reason': 'argument_slot_token_budget_exhausted'}
     assert generation_protocol_failure(detail) == 'argument_slot_token_budget_exhausted'
@@ -210,6 +210,12 @@ def test_schema_slot_controller_source_is_in_run_identity():
     )
     assert exact_text['src/vare/schema_slot_protocol.py']
     assert exact_text['src/vare/source_navigation_v2.py']
+
+    cached_slots = controller_source_hashes(
+        'lease_bound_exact_text_transactional_v1', 'schema_slots_v10',
+    )
+    assert cached_slots['src/vare/schema_slot_protocol.py']
+    assert cached_slots['scripts/run_local_agent.py']
 
 
 @pytest.mark.parametrize(('raw', 'original_newline', 'expected'), [

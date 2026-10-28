@@ -55,6 +55,7 @@ from vare.schema_slot_protocol import (  # noqa: E402
     PROTOCOL_ID_V7 as SCHEMA_SLOT_PROTOCOL_V7_ID,
     PROTOCOL_ID_V8 as SCHEMA_SLOT_PROTOCOL_V8_ID,
     PROTOCOL_ID_V9 as SCHEMA_SLOT_PROTOCOL_V9_ID,
+    PROTOCOL_ID_V10 as SCHEMA_SLOT_PROTOCOL_V10_ID,
     SchemaSlotError,
     function_body_normalization_choices,
     dynamic_function_slot_choices,
@@ -667,7 +668,7 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
             'schema_validation': 'strict_post_generation_parser',
         }
         return raw, len(tokenizer.encode(raw, add_special_tokens=False)), len(prompt_ids)
-    if args.generation_protocol in {'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'}:
+    if args.generation_protocol in {'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'}:
         if backend != 'mlx':
             raise RuntimeError(f'{args.generation_protocol} currently requires the MLX backend')
         return generate_schema_slot_turn(model, tokenizer, messages, tools, limit=limit, args=args)
@@ -757,8 +758,15 @@ def generate_schema_slot_turn(
 
     def generate_profiled(
         prompt_ids: list[int], *, max_tokens: int, logits_processors: list[Any] | None,
+        prepared: dict[str, Any] | None = None,
     ) -> tuple[str, dict[str, Any]]:
         """Collect stream timing and Metal memory without changing decode policy."""
+        prepared = prepared or prepare_stage_prompt(prompt_ids)
+        generation_prompt_ids = prepared['prompt_ids']
+        stage_cache = prepared['prompt_cache']
+        reused_prefix_tokens = prepared['reused_prefix_tokens']
+        cache_fallback_reason = prepared['fallback_reason']
+        cache_restore_seconds = prepared['restore_wall_seconds']
         mx.reset_peak_memory()
         generation_start = time.perf_counter()
         first_response_at: float | None = None
@@ -767,8 +775,9 @@ def generate_schema_slot_turn(
         output_parts: list[str] = []
         last_response = None
         for response in stream_generate(
-                model, tokenizer, prompt=prompt_ids, max_tokens=max_tokens,
-                sampler=sampler, logits_processors=logits_processors):
+                model, tokenizer, prompt=generation_prompt_ids, max_tokens=max_tokens,
+                sampler=sampler, logits_processors=logits_processors,
+                **({'prompt_cache': stage_cache} if stage_cache is not None else {})):
             response_at = time.perf_counter()
             if first_response_at is None:
                 first_response_at = response_at
@@ -802,7 +811,8 @@ def generate_schema_slot_turn(
         peak_memory = getattr(mx, 'get_peak_memory', None) or mx.metal.get_peak_memory
         text = ''.join(output_parts)
         return text, {
-            'prefill_input_tokens': len(prompt_ids),
+            'prefill_input_tokens': len(generation_prompt_ids),
+            'full_prompt_tokens': len(prompt_ids),
             'prompt_prefill_seconds': round(prefill_seconds, 6) if prefill_seconds is not None else None,
             'prompt_tokens_per_second': round(prompt_tps, 6) if prompt_tps is not None else None,
             'time_to_first_token_seconds': round(first_token_seconds, 6) if first_token_seconds is not None else None,
@@ -813,8 +823,10 @@ def generate_schema_slot_turn(
             'metal_active_memory_bytes_after': int(active_memory()),
             'metal_peak_memory_bytes_this_stage': int(peak_memory()),
             'host_process_peak_rss_bytes_to_date': int(peak_rss),
-            'kv_cache_policy': 'fresh_prompt_cache_per_generation_stage',
-            'kv_cache_reused_prefix_tokens': 0,
+            'kv_cache_policy': 'shared_turn_prefix_cache' if stage_cache is not None else 'fresh_prompt_cache_per_generation_stage',
+            'kv_cache_reused_prefix_tokens': reused_prefix_tokens,
+            'kv_cache_restore_wall_seconds': round(cache_restore_seconds, 6),
+            'kv_cache_fallback_reason': cache_fallback_reason,
         }
 
     sampler = make_sampler(
@@ -823,15 +835,20 @@ def generate_schema_slot_turn(
         top_k=0 if not args.do_sample else args.top_k,
     )
     names = [item['function']['name'] for item in tools]
-    protocol_v2 = args.generation_protocol in {'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'}
-    protocol_v3 = args.generation_protocol in {'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'}
-    protocol_v4 = args.generation_protocol in {'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'}
-    protocol_v5 = args.generation_protocol in {'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'}
+    protocol_v10 = args.generation_protocol == 'schema_slots_v10'
+    if protocol_v10:
+        from mlx_lm.generate import generation_stream
+        from mlx_lm.models.cache import make_prompt_cache
+    protocol_v2 = args.generation_protocol in {'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'}
+    protocol_v3 = args.generation_protocol in {'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'}
+    protocol_v4 = args.generation_protocol in {'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'}
+    protocol_v5 = args.generation_protocol in {'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'}
     protocol_v6 = args.generation_protocol == 'schema_slots_v6'
-    protocol_v7 = args.generation_protocol in {'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'}
-    protocol_v8 = args.generation_protocol in {'schema_slots_v8', 'schema_slots_v9'}
-    protocol_v9 = args.generation_protocol == 'schema_slots_v9'
+    protocol_v7 = args.generation_protocol in {'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'}
+    protocol_v8 = args.generation_protocol in {'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'}
+    protocol_v9 = args.generation_protocol in {'schema_slots_v9', 'schema_slots_v10'}
     protocol_id = (
+        SCHEMA_SLOT_PROTOCOL_V10_ID if protocol_v10 else
         SCHEMA_SLOT_PROTOCOL_V9_ID if protocol_v9 else
         SCHEMA_SLOT_PROTOCOL_V8_ID if protocol_v8 else
         SCHEMA_SLOT_PROTOCOL_V7_ID if protocol_v7 else
@@ -844,10 +861,91 @@ def generate_schema_slot_turn(
     )
     detail: dict[str, Any] = {
         'protocol_id': protocol_id,
-        'kv_cache_policy': 'fresh_prompt_cache_per_generation_stage',
+        'kv_cache_policy': 'shared_turn_prefix_cache' if protocol_v10 else 'fresh_prompt_cache_per_generation_stage',
         'tool_choice_constraints': {'allowed_tool_names': names, 'token_level_mask': True},
         'stages': [],
     }
+    shared_prefix_ids: list[int] = []
+    shared_prefix_states: list[Any] | None = None
+    if protocol_v10:
+        prefix_text = tokenizer.apply_chat_template(
+            messages, tools=tools, tokenize=False, add_generation_prompt=False,
+            enable_thinking=False,
+        )
+        shared_prefix_ids = prompt_ids_for(prefix_text)
+        prefix_started = time.perf_counter()
+        if shared_prefix_ids:
+            prefix_cache = make_prompt_cache(model)
+            with mx.stream(generation_stream):
+                prefix_logits = model(mx.array([shared_prefix_ids]), cache=prefix_cache)
+                mx.eval(prefix_logits)
+                mx.eval([cache.state for cache in prefix_cache])
+
+            def clone_cache_value(value: Any) -> Any:
+                if isinstance(value, tuple):
+                    return tuple(clone_cache_value(item) for item in value)
+                if isinstance(value, list):
+                    return [clone_cache_value(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: clone_cache_value(item) for key, item in value.items()}
+                if value is None or isinstance(value, (bool, int, float, str)):
+                    return value
+                # MLX arrays use functional updates; a new wrapper gives each
+                # generation stage its own cache state without host round-trips.
+                return mx.array(value)
+
+            shared_prefix_states = [
+                clone_cache_value(cache.state) for cache in prefix_cache
+            ]
+        shared_prefix_build_seconds = time.perf_counter() - prefix_started
+        detail['shared_prefix_cache'] = {
+            'prefix_tokens': len(shared_prefix_ids),
+            'prefix_text_sha256': hashlib.sha256(prefix_text.encode('utf-8')).hexdigest(),
+            'build_wall_seconds': round(shared_prefix_build_seconds, 6),
+            'cache_entries': len(shared_prefix_states or ()),
+        }
+
+    def restored_prefix_cache() -> list[Any] | None:
+        if shared_prefix_states is None:
+            return None
+        stage_cache = make_prompt_cache(model)
+        if len(stage_cache) != len(shared_prefix_states):
+            return None
+        try:
+            for cache, state in zip(stage_cache, shared_prefix_states):
+                cache.state = clone_cache_value(state)
+        except (AttributeError, TypeError, ValueError):
+            return None
+        return stage_cache
+
+    def prepare_stage_prompt(prompt_ids: list[int]) -> dict[str, Any]:
+        generation_prompt_ids = prompt_ids
+        stage_cache = None
+        reused_prefix_tokens = 0
+        fallback_reason = None
+        restore_started = time.perf_counter()
+        if protocol_v10:
+            if not shared_prefix_ids or shared_prefix_states is None:
+                fallback_reason = 'shared_prefix_cache_unavailable'
+            elif (len(prompt_ids) > len(shared_prefix_ids)
+                    and prompt_ids[:len(shared_prefix_ids)] == shared_prefix_ids):
+                candidate_cache = restored_prefix_cache()
+                if candidate_cache is None:
+                    fallback_reason = 'shared_prefix_cache_restore_failed'
+                else:
+                    stage_cache = candidate_cache
+                    generation_prompt_ids = prompt_ids[len(shared_prefix_ids):]
+                    reused_prefix_tokens = len(shared_prefix_ids)
+            else:
+                fallback_reason = 'rendered_prompt_not_exact_prefix'
+        return {
+            'prompt_ids': generation_prompt_ids,
+            'prompt_cache': stage_cache,
+            'reused_prefix_tokens': reused_prefix_tokens,
+            'fallback_reason': fallback_reason,
+            'restore_wall_seconds': time.perf_counter() - restore_started,
+        }
+
     prompt_tokens_total = 0
     generated_tokens_total = 0
 
@@ -860,8 +958,9 @@ def generate_schema_slot_turn(
         ),
     }]
     choice_prompt, choice_ids, choice_prompt_timing = render_prompt(choice_messages)
+    choice_prepared = prepare_stage_prompt(choice_ids)
     choice_processor, token_sequences = make_choice_logits_processor(
-        tokenizer, tools, prompt_token_count=len(choice_ids), mx=mx,
+        tokenizer, tools, prompt_token_count=len(choice_prepared['prompt_ids']), mx=mx,
     )
     choice_limit = min(limit, max(len(sequence) for sequence in token_sequences.values()) + 1)
     if choice_limit < 1:
@@ -869,6 +968,7 @@ def generate_schema_slot_turn(
     capture_rendered_prompt(args, choice_prompt)
     choice_text, choice_generation_timing = generate_profiled(
         choice_ids, max_tokens=choice_limit, logits_processors=[choice_processor],
+        prepared=choice_prepared,
     )
     choice_token_ids = [int(token) for token in tokenizer.encode(choice_text, add_special_tokens=False)]
     prompt_tokens_total += len(choice_ids)
@@ -1032,6 +1132,7 @@ def generate_schema_slot_turn(
             )
         slot_turn_messages = slot_messages + [{'role': 'user', 'content': instruction}]
         slot_prompt, slot_ids, slot_prompt_timing = render_prompt(slot_turn_messages)
+        slot_prepared = prepare_stage_prompt(slot_ids)
         capture_rendered_prompt(args, slot_prompt)
         slot_limit = remaining
         required_suffix = None
@@ -1077,12 +1178,14 @@ def generate_schema_slot_turn(
                         break
             if forced_prefix_text:
                 prefix_processor, forced_prefix_token_ids = make_prefix_logits_processor(
-                    tokenizer, forced_prefix_text, prompt_token_count=len(slot_ids), mx=mx,
+                    tokenizer, forced_prefix_text,
+                    prompt_token_count=len(slot_prepared['prompt_ids']), mx=mx,
                 )
                 slot_processors = [prefix_processor]
         if enum_choices is not None:
             enum_processor, enum_sequences = make_string_choice_logits_processor(
-                tokenizer, enum_choices, prompt_token_count=len(slot_ids), mx=mx,
+                tokenizer, enum_choices,
+                prompt_token_count=len(slot_prepared['prompt_ids']), mx=mx,
             )
             slot_processors = [*(slot_processors or []), enum_processor]
         if required_suffix == '\n':
@@ -1090,7 +1193,8 @@ def generate_schema_slot_turn(
             eos_ids = {int(eos)} if eos is not None else set()
             eos_ids.update(int(token) for token in (getattr(tokenizer, 'eos_token_ids', None) or []))
             newline_processor = make_terminal_newline_logits_processor(
-                tokenizer, prompt_token_count=len(slot_ids), eos_ids=eos_ids, mx=mx,
+                tokenizer, prompt_token_count=len(slot_prepared['prompt_ids']),
+                eos_ids=eos_ids, mx=mx,
             )
             slot_processors = [*(slot_processors or []), newline_processor]
         if single_line_body:
@@ -1098,11 +1202,13 @@ def generate_schema_slot_turn(
             eos_ids = {int(eos)} if eos is not None else set()
             eos_ids.update(int(token) for token in (getattr(tokenizer, 'eos_token_ids', None) or []))
             single_line_processor = make_single_line_termination_logits_processor(
-                tokenizer, prompt_token_count=len(slot_ids), eos_ids=eos_ids, mx=mx,
+                tokenizer, prompt_token_count=len(slot_prepared['prompt_ids']),
+                eos_ids=eos_ids, mx=mx,
             )
             slot_processors = [*(slot_processors or []), single_line_processor]
         raw_value, slot_generation_timing = generate_profiled(
             slot_ids, max_tokens=slot_limit, logits_processors=slot_processors,
+            prepared=slot_prepared,
         )
         slot_token_ids = [int(token) for token in tokenizer.encode(raw_value, add_special_tokens=False)]
         slot_count = len(slot_token_ids)
@@ -1408,7 +1514,7 @@ def controller_source_hashes(tool_interface: str, generation_protocol: str = 'ra
         paths['src/vare/source_navigation_v2.py'] = ROOT / 'src/vare/source_navigation_v2.py'
     if tool_interface in FUNCTION_EDIT_TOOL_INTERFACES | SINGLE_LINE_FUNCTION_EDIT_TOOL_INTERFACES | ARRAY_FUNCTION_EDIT_TOOL_INTERFACES:
         paths['src/vare/agent_function_edit_v1.py'] = ROOT / 'src/vare/agent_function_edit_v1.py'
-    if generation_protocol in {'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'}:
+    if generation_protocol in {'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'}:
         paths['src/vare/schema_slot_protocol.py'] = ROOT / 'src/vare/schema_slot_protocol.py'
     if generation_protocol == 'raw_json_eos_v1':
         paths['src/vare/agent_json_eos_v1.py'] = ROOT / 'src/vare/agent_json_eos_v1.py'
@@ -1854,7 +1960,7 @@ def main() -> int:
     parser.add_argument('--top-k', type=int, default=20)
     parser.add_argument('--do-sample', action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file', 'structured_replace'), default='unified_diff')
-    parser.add_argument('--generation-protocol', choices=('raw_v1', 'raw_json_eos_v1', 'raw_json_eos_v2', 'raw_json_eos_v3', 'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'), default='raw_v1',
+    parser.add_argument('--generation-protocol', choices=('raw_v1', 'raw_json_eos_v1', 'raw_json_eos_v2', 'raw_json_eos_v3', 'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'), default='raw_v1',
                         help='raw_json_eos versions constrain chat markers and terminate at completed JSON boundaries; schema_slots versions constrain tool choice and typed argument slots')
     parser.add_argument('--replace-text-guidance', choices=('original', 'source_only_v1'), default='original',
                         help='versioned task-independent instruction appended only to replace_lines.text generation')
@@ -1912,12 +2018,12 @@ def main() -> int:
     )
     if args.require_source_read_before_edit and args.tool_interface not in lease_tool_interfaces:
         parser.error('--require-source-read-before-edit requires a lease-bound tool interface')
-    if args.generation_protocol in {'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'} and args.backend != 'mlx':
+    if args.generation_protocol in {'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'} and args.backend != 'mlx':
         parser.error(f'--generation-protocol {args.generation_protocol} currently requires --backend mlx')
     if args.generation_protocol in {'raw_json_eos_v1', 'raw_json_eos_v2', 'raw_json_eos_v3'} and args.backend != 'mlx':
         parser.error(f'--generation-protocol {args.generation_protocol} currently requires --backend mlx')
     if (args.replace_text_guidance != 'original'
-            and args.generation_protocol not in {'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9'}):
+            and args.generation_protocol not in {'schema_slots_v1', 'schema_slots_v2', 'schema_slots_v3', 'schema_slots_v4', 'schema_slots_v5', 'schema_slots_v6', 'schema_slots_v7', 'schema_slots_v8', 'schema_slots_v9', 'schema_slots_v10'}):
         parser.error('--replace-text-guidance requires schema-slot generation')
     # Hash the controller modules loaded by this process before model loading
     # or any generation; the run-start journal is written later but retains

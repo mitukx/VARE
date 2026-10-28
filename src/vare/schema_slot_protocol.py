@@ -23,6 +23,7 @@ PROTOCOL_ID_V6 = "vare.schema-slots.v6"
 PROTOCOL_ID_V7 = "vare.schema-slots.v7"
 PROTOCOL_ID_V8 = "vare.schema-slots.v8"
 PROTOCOL_ID_V9 = "vare.schema-slots.v9"
+PROTOCOL_ID_V10 = "vare.schema-slots.v10"
 INTERNAL_GENERATION_FAILURES = frozenset({
     "per_turn_token_budget_exhausted",
     "argument_slot_token_budget_exhausted",
@@ -45,6 +46,7 @@ def generation_protocol_failure(detail: dict[str, Any] | None) -> str | None:
         PROTOCOL_ID, PROTOCOL_ID_V2, PROTOCOL_ID_V3, PROTOCOL_ID_V4,
         PROTOCOL_ID_V5, PROTOCOL_ID_V6, PROTOCOL_ID_V7, PROTOCOL_ID_V8,
         PROTOCOL_ID_V9,
+        PROTOCOL_ID_V10,
     } and failure in INTERNAL_GENERATION_FAILURES:
         return str(failure)
     return None

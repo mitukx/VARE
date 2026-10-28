@@ -693,6 +693,136 @@ def test_schema_slot_stream_generation_uses_mlx_lm_stream_api_without_generate_o
     assert all(stage['generation_wall_seconds'] >= 0 for stage in args._last_generation_detail['stages'])
 
 
+def test_schema_slots_v10_reuses_only_an_exact_cloned_turn_prefix(monkeypatch):
+    from contextlib import nullcontext
+    from types import ModuleType, SimpleNamespace
+
+    fake_mlx = ModuleType('mlx')
+    fake_mlx.__path__ = []
+    fake_core = ModuleType('mlx.core')
+    fake_core.array = lambda value: value
+    fake_core.copy = lambda value: list(value) if isinstance(value, list) else value
+    fake_core.eval = lambda *values: None
+    fake_core.stream = lambda _stream: nullcontext()
+    fake_core.reset_peak_memory = lambda: None
+    fake_core.get_active_memory = lambda: 10
+    fake_core.get_peak_memory = lambda: 20
+    fake_core.metal = SimpleNamespace(get_active_memory=lambda: 10, get_peak_memory=lambda: 20)
+    fake_mlx.core = fake_core
+
+    cache_instances = []
+
+    class Cache:
+        def __init__(self):
+            self.state = ([],)
+            cache_instances.append(self)
+
+    fake_cache_module = ModuleType('mlx_lm.models.cache')
+    fake_cache_module.make_prompt_cache = lambda model: [Cache()]
+    fake_generate = ModuleType('mlx_lm.generate')
+    fake_generate.generation_stream = object()
+    calls = []
+    outputs = iter(['finish', 'done'])
+
+    def stream_generate(model, tokenizer, *, prompt, max_tokens, sampler,
+                        logits_processors, prompt_cache=None):
+        text = next(outputs)
+        calls.append({
+            'prompt': list(prompt),
+            'max_tokens': max_tokens,
+            'cached_prefix': list(prompt_cache[0].state[0]) if prompt_cache else None,
+        })
+        if prompt_cache is not None:
+            prompt_cache[0].state[0].extend(prompt)
+        yield SimpleNamespace(
+            text=text, prompt_tokens=len(prompt), prompt_tps=100.0,
+            generation_tokens=1, finish_reason='length',
+        )
+
+    fake_generate.stream_generate = stream_generate
+    fake_sample_utils = ModuleType('mlx_lm.sample_utils')
+    fake_sample_utils.make_sampler = lambda **kwargs: 'fixture-sampler'
+    fake_mlx_lm = ModuleType('mlx_lm')
+    fake_mlx_lm.__path__ = []
+    fake_models = ModuleType('mlx_lm.models')
+    fake_models.__path__ = []
+    monkeypatch.setitem(sys.modules, 'mlx', fake_mlx)
+    monkeypatch.setitem(sys.modules, 'mlx.core', fake_core)
+    monkeypatch.setitem(sys.modules, 'mlx_lm', fake_mlx_lm)
+    monkeypatch.setitem(sys.modules, 'mlx_lm.generate', fake_generate)
+    monkeypatch.setitem(sys.modules, 'mlx_lm.models', fake_models)
+    monkeypatch.setitem(sys.modules, 'mlx_lm.models.cache', fake_cache_module)
+    monkeypatch.setitem(sys.modules, 'mlx_lm.sample_utils', fake_sample_utils)
+
+    class Tokenizer:
+        bos_token = None
+        eos_token_id = 99
+        eos_token_ids = [99]
+
+        def apply_chat_template(self, messages, **kwargs):
+            return ''.join(f"<{item['role']}>{item.get('content', '')}</{item['role']}>" for item in messages)
+
+        def encode(self, text, add_special_tokens=False):
+            return [ord(char) for char in text]
+
+        def decode(self, tokens, skip_special_tokens=False):
+            return ''.join(chr(token) for token in tokens)
+
+    class Model:
+        def __call__(self, token_batch, *, cache):
+            cache[0].state = (list(token_batch[0]),)
+            return [0.0]
+
+    tool = {
+        'type': 'function',
+        'function': {
+            'name': 'finish',
+            'parameters': {
+                'type': 'object', 'properties': {'summary': {'type': 'string'}},
+                'required': ['summary'], 'additionalProperties': False,
+            },
+        },
+    }
+    args = SimpleNamespace(
+        max_context_tokens=4096, do_sample=False, temperature=0.0,
+        top_p=1.0, top_k=0, generation_protocol='schema_slots_v10',
+        tool_interface='lease_bound_exact_text_transactional_v1',
+        replace_text_guidance='original',
+    )
+    history = [{'role': 'user', 'content': 'synthetic context ' * 32}]
+    choice_prompt_counts = []
+    original_choice_processor = run_local_agent.make_choice_logits_processor
+
+    def record_choice_prompt_count(*args, **kwargs):
+        choice_prompt_counts.append(kwargs['prompt_token_count'])
+        return original_choice_processor(*args, **kwargs)
+
+    monkeypatch.setattr(
+        run_local_agent, 'make_choice_logits_processor', record_choice_prompt_count,
+    )
+
+    raw, generated_tokens, _ = run_local_agent.generate_schema_slot_turn(
+        Model(), Tokenizer(), history, [tool], limit=32, args=args,
+    )
+
+    status, parsed = parse_tool_output_v1(raw, [tool])
+    assert status == 'complete_tool_call'
+    assert parsed['arguments'] == {'summary': 'done'}
+    assert generated_tokens == 10
+    assert len(calls) == 2
+    prefix = calls[0]['cached_prefix']
+    assert prefix and calls[1]['cached_prefix'] == prefix
+    assert all(call['prompt'] and call['cached_prefix'] is not None for call in calls)
+    assert choice_prompt_counts == [len(calls[0]['prompt'])]
+    assert len(calls[0]['prompt']) + len(prefix) > choice_prompt_counts[0]
+    assert len(cache_instances) == 3  # one prefix cache plus a cloned cache per stage
+    detail = args._last_generation_detail
+    assert detail['protocol_id'] == 'vare.schema-slots.v10'
+    assert detail['shared_prefix_cache']['prefix_tokens'] == len(prefix)
+    assert all(stage['kv_cache_reused_prefix_tokens'] == len(prefix) for stage in detail['stages'])
+    assert all(stage['kv_cache_fallback_reason'] is None for stage in detail['stages'])
+
+
 def test_mocked_full_edit_reaches_an_independent_fixture_oracle(tmp_path):
     import json
     import runpy
