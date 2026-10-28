@@ -90,6 +90,14 @@ def validate_protocol_contract(p: dict) -> None:
     manifest_tasks = p.get("task_manifest", {}).get("tasks")
     if not isinstance(tasks, list) or tasks != manifest_tasks:
         raise ValueError("protocol tasks must exactly match task_manifest.tasks")
+    expected_train = [task["task_id"] for task in tasks if task["split"] == "train"]
+    expected_eval = [
+        task["task_id"] for task in tasks if task["split"] == "evaluation"
+    ]
+    if p.get("training_tasks") != expected_train:
+        raise ValueError("training_tasks must match tasks in the train split")
+    if p.get("evaluation", {}).get("task_ids") != expected_eval:
+        raise ValueError("evaluation.task_ids must match tasks in the evaluation split")
 
 
 def trusted(actions: str, task: dict) -> float:

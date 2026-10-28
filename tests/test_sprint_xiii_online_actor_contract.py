@@ -62,6 +62,8 @@ def test_calibration_enumerates_the_frozen_variable_length_action_space() -> Non
         ],
     }
     p["task_manifest"] = {"tasks": p["tasks"]}
+    p["training_tasks"] = ["t"]
+    p["evaluation"] = {"task_ids": ["e"]}
     result = audit.calibrate(p)
     assert result["v0"]["n"] == 2 * (4**2 + 4**3 + 4**4)
     assert result["v1"]["n"] == result["v0"]["n"]
@@ -71,8 +73,17 @@ def test_calibration_enumerates_the_frozen_variable_length_action_space() -> Non
 
 
 def test_frozen_protocol_requires_runner_tasks_to_match_manifest() -> None:
-    tasks = [{"task_id": "train-1", "split": "train"}]
-    valid = {"run_id": "run-test", "tasks": tasks, "task_manifest": {"tasks": tasks}}
+    tasks = [
+        {"task_id": "train-1", "split": "train"},
+        {"task_id": "eval-1", "split": "evaluation"},
+    ]
+    valid = {
+        "run_id": "run-test",
+        "tasks": tasks,
+        "task_manifest": {"tasks": tasks},
+        "training_tasks": ["train-1"],
+        "evaluation": {"task_ids": ["eval-1"]},
+    }
     online.validate_protocol_contract(valid)
     audit.validate_protocol_contract(valid)
     freezer.validate_protocol_task_contract(
@@ -84,14 +95,32 @@ def test_frozen_protocol_requires_runner_tasks_to_match_manifest() -> None:
         freezer.validate_protocol_task_contract,
     ):
         try:
-            validator({"tasks": tasks, "task_manifest": {"tasks": tasks}})
+            validator(
+                {
+                    "tasks": tasks,
+                    "task_manifest": {"tasks": tasks},
+                    "training_tasks": ["train-1"],
+                    "evaluation": {"task_ids": ["eval-1"]},
+                }
+            )
         except (RuntimeError, ValueError) as error:
             assert "run_id" in str(error)
         else:
             raise AssertionError("protocol missing run_id must be rejected")
+        invalid_split = dict(valid)
+        invalid_split["training_tasks"] = ["not-in-train-split"]
+        try:
+            validator(invalid_split)
+        except (RuntimeError, ValueError) as error:
+            assert "training_tasks" in str(error)
+        else:
+            raise AssertionError("protocol task split mismatch must be rejected")
     try:
         freezer.validate_protocol_task_contract(
-            {"run_id": "run-test", "task_manifest": {"tasks": tasks}}
+            {
+                "run_id": "run-test",
+                "task_manifest": {"tasks": tasks},
+            }
         )
     except ValueError as error:
         assert str(error) == "protocol tasks must exactly match task_manifest.tasks"

@@ -68,6 +68,14 @@ def validate_protocol_task_contract(root: dict) -> None:
     manifest_tasks = root.get("task_manifest", {}).get("tasks")
     if not isinstance(tasks, list) or tasks != manifest_tasks:
         raise ValueError("protocol tasks must exactly match task_manifest.tasks")
+    expected_train = [task["task_id"] for task in tasks if task["split"] == "train"]
+    expected_eval = [
+        task["task_id"] for task in tasks if task["split"] == "evaluation"
+    ]
+    if root.get("training_tasks") != expected_train:
+        raise ValueError("training_tasks must match tasks in the train split")
+    if root.get("evaluation", {}).get("task_ids") != expected_eval:
+        raise ValueError("evaluation.task_ids must match tasks in the evaluation split")
 
 
 def main() -> None:
@@ -297,7 +305,7 @@ def main() -> None:
             "seed_rule": "fixed integer formulas in the checked-in runner; no reseeding or resampling after outcomes",
             "response_token_count_includes_eos": True,
         },
-        "training_tasks": ["train-route-01", "train-route-02"],
+        "training_tasks": [task["task_id"] for task in tasks if task["split"] == "train"],
         "evaluation": {
             "task_ids": [task["task_id"] for task in tasks if task["split"] == "evaluation"],
             "samples_per_task": 8,
