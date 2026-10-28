@@ -11,7 +11,7 @@ Qwen2.5-0.5B-Instructを使い、可変長の合成trajectory生成、実optimiz
 
 ## GitHubとmainline
 
-`git fetch --all --prune`後に確認した開始時・終了時の`origin/main`はともに `40f7b38fe619217c0ebd534c4d89d42617859be8`。mainは保護されている。Sprint XIIIで既存PRを更新・close・mergeした件数は0。今回の実験コード・凍結protocol・結果・監査は本報告のDraft PRにまとめる。Draft作成はmainline integrationとは数えず、独立reviewと必要なCIが揃うまでmerge対象にしない。
+`git fetch --all --prune`後に確認した開始時・終了時の`origin/main`はともに `40f7b38fe619217c0ebd534c4d89d42617859be8`。mainは保護されている。Sprint XIIIで既存PRを更新・close・mergeした件数は0。今回の実験コード・凍結protocol・結果・監査は[Draft PR #148](https://github.com/mitukx/VARE/pull/148)にまとめた。作成時headは`519995fc14253e68c7266c33ac43922524bbac89`、baseは上記main SHA。作成直後のlive open数は19（Draft 10）で、#148には独立review 0件、thread 0件、head check 19件が実行中だった。最初の18件のPR台帳は作成前のsnapshotであり、#148を含まない。Draft作成はmainline integrationとは数えず、独立reviewと必要なCIが揃うまでmerge対象にしない。
 
 取得したopen PRは18件、Draftは9件。全18件に独立した`APPROVED` reviewはなかった。live snapshotの機械可読台帳は [`github-open-pr-audit-v1.json`](../results/sprint_xiii_20261029/github-open-pr-audit-v1.json)（SHA-256 `1dea493c026d15e24576bd7eba39795ec2eeea41674ca5b42037a18ea77404b0`）。check-run件数は同じhead上の再実行を含むGitHub記録件数である。
 
