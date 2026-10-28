@@ -1,0 +1,219 @@
+{
+  "arms": {
+    "A": {
+      "commits": 15,
+      "contaminated": 0,
+      "mean_v1_reward": 0.09845869408713447,
+      "v1_reward_range": [
+        0.09824953724940617,
+        0.09879651168982188
+      ],
+      "mean_trajectories_s": 4.377541270220985,
+      "mean_useful_trajectories_s": 4.377541270220985,
+      "queue_p50_s": 2.584156036376953,
+      "queue_p95_s": 3.0050530433654785,
+      "peak_child_rss_bytes": 6582337536,
+      "swap_growth": 0,
+      "mean_checkpoint_io_s": 0.015164188866037875,
+      "total_case_wall_s": 55.270807498978684
+    },
+    "B": {
+      "commits": 15,
+      "contaminated": 6,
+      "mean_v1_reward": 0.09239092138078478,
+      "v1_reward_range": [
+        0.0921946515639623,
+        0.09251075983047485
+      ],
+      "mean_trajectories_s": 4.526806524228154,
+      "mean_useful_trajectories_s": 4.526806524228154,
+      "queue_p50_s": 5.568166255950928,
+      "queue_p95_s": 9.622432947158813,
+      "peak_child_rss_bytes": 6667927552,
+      "swap_growth": 0,
+      "mean_checkpoint_io_s": 0.015685335932842766,
+      "total_case_wall_s": 53.046257000009064
+    },
+    "C": {
+      "commits": 9,
+      "contaminated": 0,
+      "mean_v1_reward": 0.09692595485183927,
+      "v1_reward_range": [
+        0.09686727573474248,
+        0.09702567756175995
+      ],
+      "mean_trajectories_s": 5.689970412852252,
+      "mean_useful_trajectories_s": 3.413982247711351,
+      "queue_p50_s": 2.591517925262451,
+      "queue_p95_s": 5.214648008346558,
+      "peak_child_rss_bytes": 6323470336,
+      "swap_growth": 0,
+      "mean_checkpoint_io_s": 0.015521694333680594,
+      "total_case_wall_s": 42.72339716600254
+    },
+    "D": {
+      "commits": 15,
+      "contaminated": 0,
+      "mean_v1_reward": 0.09845869408713447,
+      "v1_reward_range": [
+        0.09824953724940617,
+        0.09879651168982188
+      ],
+      "mean_trajectories_s": 4.5691707887779485,
+      "mean_useful_trajectories_s": 4.5691707887779485,
+      "queue_p50_s": 5.4079790115356445,
+      "queue_p95_s": 9.124292135238647,
+      "peak_child_rss_bytes": 6839386112,
+      "swap_growth": 0,
+      "mean_checkpoint_io_s": 0.015131777730615189,
+      "total_case_wall_s": 52.59584979197825
+    },
+    "E": {
+      "commits": 15,
+      "contaminated": 0,
+      "mean_v1_reward": 0.09845869408713447,
+      "v1_reward_range": [
+        0.09824953724940617,
+        0.09879651168982188
+      ],
+      "mean_trajectories_s": 2.3660922475553052,
+      "mean_useful_trajectories_s": 2.3660922475553052,
+      "queue_p50_s": 11.428730964660645,
+      "queue_p95_s": 24.489927768707275,
+      "peak_child_rss_bytes": 6483968000,
+      "swap_growth": 0,
+      "mean_checkpoint_io_s": 0.015027974999975413,
+      "total_case_wall_s": 101.53335145901656
+    }
+  },
+  "effective_commits": 69,
+  "optimizer_computations": 72,
+  "generated_trajectories_total": 1200,
+  "unique_seeded_draws": 240,
+  "independent_seeds": 3,
+  "recovery_observations": [
+    {
+      "seed": 101,
+      "cutpoint": "worker-fault",
+      "marker_sha256": "b05ec87f9d3566ef9d6a75cc784deeec5b1366478e0e7bca0c85c7a33cf007d1",
+      "observer_filesystem_mtime": 1793201079.2179854,
+      "terminal_unix": 1793201083.739147,
+      "observed_recovery_seconds": 4.5211615562438965,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 101,
+      "cutpoint": "fault-optimizer",
+      "marker_sha256": "ee94f61a577b0388c62df0aa55ef1837cb0ef06ce3457cc66b745fb178724bd3",
+      "observer_filesystem_mtime": 1793201088.4064164,
+      "terminal_unix": 1793201094.5070112,
+      "observed_recovery_seconds": 6.100594758987427,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 101,
+      "cutpoint": "fault-before-publication",
+      "marker_sha256": "3ad0fe5c66e75604dd2c487d0bf03eaab59adf070325b8dfbf0079a6c70e96d0",
+      "observer_filesystem_mtime": 1793201096.6268895,
+      "terminal_unix": 1793201100.368874,
+      "observed_recovery_seconds": 3.7419846057891846,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 101,
+      "cutpoint": "fault-after-publication",
+      "marker_sha256": "37a4a17f6fb1fc7d5929fe572cf43bec62c04752e01b08274c46f5a336f4bc27",
+      "observer_filesystem_mtime": 1793201102.7211545,
+      "terminal_unix": 1793201106.456623,
+      "observed_recovery_seconds": 3.735468626022339,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 202,
+      "cutpoint": "worker-fault",
+      "marker_sha256": "9143fd257dac3ea2b6a63352ffb312bcae7a2d0eb5180873509279e9e2abf74b",
+      "observer_filesystem_mtime": 1793201175.3222125,
+      "terminal_unix": 1793201180.004331,
+      "observed_recovery_seconds": 4.682118654251099,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 202,
+      "cutpoint": "fault-optimizer",
+      "marker_sha256": "f64290ea79ecc68ba83349f3acd9de5a971aef3abbad3faab753075cc07d05f4",
+      "observer_filesystem_mtime": 1793201184.9969974,
+      "terminal_unix": 1793201191.435613,
+      "observed_recovery_seconds": 6.438615560531616,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 202,
+      "cutpoint": "fault-before-publication",
+      "marker_sha256": "75b848d2e81c3f03064a64081ee0abe0094a62f9475ea3c5565358a0a70e1139",
+      "observer_filesystem_mtime": 1793201193.8985057,
+      "terminal_unix": 1793201197.7532349,
+      "observed_recovery_seconds": 3.854729175567627,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 202,
+      "cutpoint": "fault-after-publication",
+      "marker_sha256": "425eaa5c7dd9478959078e541d32a5656e5ca19052af4ff15001018049966136",
+      "observer_filesystem_mtime": 1793201200.062829,
+      "terminal_unix": 1793201203.926006,
+      "observed_recovery_seconds": 3.8631770610809326,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 303,
+      "cutpoint": "worker-fault",
+      "marker_sha256": "405c810e7f1d425ab84cdde32383c95f379173d581f801b717ea8b9157bc78ea",
+      "observer_filesystem_mtime": 1793201275.7515206,
+      "terminal_unix": 1793201280.245552,
+      "observed_recovery_seconds": 4.4940314292907715,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 303,
+      "cutpoint": "fault-optimizer",
+      "marker_sha256": "97c30e930c225384f7170218671dde3000138f1c9bf5c16ff5cfa097c4c8a7bf",
+      "observer_filesystem_mtime": 1793201285.9994402,
+      "terminal_unix": 1793201293.155998,
+      "observed_recovery_seconds": 7.15655779838562,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 303,
+      "cutpoint": "fault-before-publication",
+      "marker_sha256": "9fb640d6bb73ed83c4abf1017a860f760cd17bb3f7e15a8d904969b1f22da2f0",
+      "observer_filesystem_mtime": 1793201295.4278424,
+      "terminal_unix": 1793201299.3380082,
+      "observed_recovery_seconds": 3.910165786743164,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    },
+    {
+      "seed": 303,
+      "cutpoint": "fault-after-publication",
+      "marker_sha256": "ca22eed64ece08f4766c4ee2070b321b86ce59e2ce358c85d3c8b127bad04f81",
+      "observer_filesystem_mtime": 1793201301.72135,
+      "terminal_unix": 1793201305.503337,
+      "observed_recovery_seconds": 3.781986951828003,
+      "timing_limit": "Fault time captured after run from local filesystem mtime; terminal event timestamp is durable. Not a pre-instrumented monotonic cutpoint timer."
+    }
+  ],
+  "gradient_comparisons": [
+    {
+      "seed": 101,
+      "first_stale_gradient_cosine": -1.0
+    },
+    {
+      "seed": 202,
+      "first_stale_gradient_cosine": -1.0
+    },
+    {
+      "seed": 303,
+      "first_stale_gradient_cosine": -1.0
+    }
+  ],
+  "verifier_cost": "80 original reward decisions per case; D/E add32 trusted regrades; each case additionally computes80 shadow current rewards for diagnostic receipts. Per-call wall cost not instrumented (NOT_MEASURED)."
+}

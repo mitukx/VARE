@@ -1,0 +1,41 @@
+{
+  "recorded_utc": "2026-10-28T15:28:54.846205+00:00",
+  "inventory_correction_head": "a25a7d61615fce536c5bb2cf19a988ebc3620e60",
+  "inventory_artifact_sha256": "7fc013e942cf7686059a8d3d1bfd044758caf543ad34e1eb7a412577810890c2",
+  "current_prospective_source_grader_certified": 8,
+  "required": 15,
+  "fully_model_eligible": "UNKNOWN_NOT_ESTABLISHED",
+  "pretraining_exposure": "UNKNOWN",
+  "readiness_committed_sha256_rechecked": "ead678711dc1f5da7fdcdc7b127cd8e122e8f20b6bd116542633524aac788f39",
+  "open_items": [
+    {
+      "decided_disqualification": false,
+      "id": "readiness_hash_mismatch",
+      "observed": "exposure-disposition-append-v1.json and docs/mlsys-heldout-task-readiness-v2-report.md cite sha256 cde4489049e9f6e685528651907d63a1ef88ad4121fb33c4914468a7add2d65a. The committed results/mlsys-heldout-task-readiness-v2.json bytes hash to ead678711dc1f5da7fdcdc7b127cd8e122e8f20b6bd116542633524aac788f39, which is also the sidecar value. The same bytes were present on every fetched branch that contains the file. Raw bytes, newline-stripped bytes, and json.dumps sort_keys forms (indent 2 and compact) did not reproduce cde44890. The readiness file is absent from PR #142 head 91d3d19a, the branch that cites it.",
+      "status": "OPEN_UNVERIFIED",
+      "unverified": "What bytes the cited digest cde44890 was computed over."
+    },
+    {
+      "decided_disqualification": false,
+      "id": "1926_fix_commit_discrepancy",
+      "observed": "Readiness task mlxlm-1926-falcon-cache-gradient fixed_revision is 3051e26bc72b8ab426af17d14c5599447eb306a5. exposure-disposition-append-v1.json sprint_iv_exposure.known_fix_revision is ebba55f5176fe451b94f04212e975f052a6d96e0. Both records use baseline 87b7b583a697537aa68f47130b40884700b5f55f. Append-v1 already removes this family from the prospective count. This correction does not restore it and does not open the fix diffs.",
+      "status": "OPEN_UNVERIFIED",
+      "unverified": "Which recorded fix revision is the upstream change, and whether the two commits are the same tree."
+    },
+    {
+      "decided_disqualification": false,
+      "id": "49412_split_conflict",
+      "observed": "Readiness task transformers-49412-fusion-idempotence is split heldout, status EXCLUDED_TASK_EXPOSURE_NINE_QWEN3_RECEIPTS, fixed_revision 01269bc99768ad45f8aeaeb701e1315371e25239, baseline cb33194ad6152bd9fad6305378d92db385dd7b32. Commit 19516567 on PR #102 adds benchmarks/mlsys_repo_eval_v4/transformers_49412_fusion_idempotence/task.json (sha256 c6846ab89cd21f66b0b2071ab5390bc7cbde66583c663e3e359281d984fd82a5) and the v2 task.json (sha256 65a5984196f4918bcaf4eff5f751d3f76dd3e7e94fca7a1dcfe73a5eeb81f024). Both metadata.split values are development and both source.fixed_revision values are 527725cace0b038a0ac8ab738e921f118bb2668a, with the same baseline. PR #139 results/sprint_ii_20261027/external_coding_dev/move_to_device_mapping_type_v1/task/task.json (sha256 86612b94f2e7e9f57f4f8fd92afb85b2ab4a1777056ac13a83d6f29e13202a4b) is split development for upstream PR 49731 and sets external_upstream_revision to 01269bc99768ad45f8aeaeb701e1315371e25239, the readiness fix revision of #49412. Only those identifier fields were read.",
+      "status": "OPEN_UNVERIFIED",
+      "unverified": "Whether the split and fix-commit conflict, or the shared revision string with #49731, changes any prospective count beyond the #49412 family readiness already excluded."
+    },
+    {
+      "decided_disqualification": false,
+      "id": "snapshot_or_theme_overlaps",
+      "observed": "From readiness identity fields only: #49147 baseline cb33194ad6152bd9fad6305378d92db385dd7b32 equals the #49412 baseline; #1938 baseline caed1943d38ecb58f6e466a72bed98310c9d45a5 equals the train #1904 fixed revision; #1979 baseline 8fda5e976a2da412d9f8119361edefd405381cf9 equals the Development #1971 fixed revision. These eight tasks stay in the 8/15 count.",
+      "status": "OPEN_UNVERIFIED",
+      "unverified": "Whether those shared revisions exposed the held-out target files, and whether #1921 or #1979 overlap the exposed #1913 left-padding theme. Resolving either question would require reading held-out content, which this record does not do. Neither item is a disqualification."
+    }
+  ],
+  "method": "Task identity/exposure metadata only; no held-out source, hidden grader or fix diff opened. Counts unchanged; unresolved identity discrepancies retained."
+}

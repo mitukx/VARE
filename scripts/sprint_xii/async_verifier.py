@@ -640,6 +640,9 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int)
     parser.add_argument("--arm")
     a = parser.parse_args()
+    # Reject before the failure recorder can mutate a prior partial run.
+    if a.mode == "run" and a.output.exists():
+        raise FileExistsError(f"append-only output already exists: {a.output}")
     P_PATH = a.protocol.resolve()
     p = load(P_PATH)
     os.environ.update(

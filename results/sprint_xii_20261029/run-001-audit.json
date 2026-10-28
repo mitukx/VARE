@@ -1,0 +1,3822 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "101/0/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "101/0/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "101/1/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "101/1/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "101/2/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "101/2/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "101/3/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "101/3/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "101/4/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "101/4/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "101/A/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "101/A/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/A/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/A/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/A/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/A/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/A/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/A/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "101/A/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "101/B/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "101/B/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/B/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/B/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/B/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/B/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/B/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/B/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "101/B/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "101/C/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "101/C/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/C/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/C/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/C/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/C/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/C/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/C/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/C/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/C/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/C/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/C/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/C/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/C/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "101/C/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "101/D/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "101/D/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/D/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/D/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/D/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/D/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/D/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/D/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "101/D/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "101/E/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "101/E/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/E/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/E/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/E/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/E/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "101/E/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "101/E/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "101/E/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "101/E/fresh-process-restarts",
+      "pass": true
+    },
+    {
+      "check": "101/A-D/exact-adapter",
+      "pass": true
+    },
+    {
+      "check": "101/A-D/exact-RNG",
+      "pass": true
+    },
+    {
+      "check": "101/A-D/exact-Adam",
+      "pass": true
+    },
+    {
+      "check": "101/A-E/exact-adapter",
+      "pass": true
+    },
+    {
+      "check": "101/A-E/exact-RNG",
+      "pass": true
+    },
+    {
+      "check": "101/A-E/exact-Adam",
+      "pass": true
+    },
+    {
+      "check": "202/0/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "202/0/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "202/1/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "202/1/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "202/2/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "202/2/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "202/3/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "202/3/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "202/4/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "202/4/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "202/A/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "202/A/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/A/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/A/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/A/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/A/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/A/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/A/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "202/A/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "202/B/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "202/B/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/B/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/B/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/B/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/B/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/B/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/B/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "202/B/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "202/C/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "202/C/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/C/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/C/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/C/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/C/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/C/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/C/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/C/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/C/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/C/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/C/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/C/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/C/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "202/C/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "202/D/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "202/D/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/D/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/D/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/D/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/D/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/D/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/D/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "202/D/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "202/E/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "202/E/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/E/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/E/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/E/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/E/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "202/E/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "202/E/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "202/E/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "202/E/fresh-process-restarts",
+      "pass": true
+    },
+    {
+      "check": "202/A-D/exact-adapter",
+      "pass": true
+    },
+    {
+      "check": "202/A-D/exact-RNG",
+      "pass": true
+    },
+    {
+      "check": "202/A-D/exact-Adam",
+      "pass": true
+    },
+    {
+      "check": "202/A-E/exact-adapter",
+      "pass": true
+    },
+    {
+      "check": "202/A-E/exact-RNG",
+      "pass": true
+    },
+    {
+      "check": "202/A-E/exact-Adam",
+      "pass": true
+    },
+    {
+      "check": "303/0/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "303/0/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "303/1/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "303/1/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "303/2/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "303/2/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "303/3/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "303/3/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "303/4/behavior-model-logits",
+      "pass": true
+    },
+    {
+      "check": "303/4/behavior-logprobs",
+      "pass": true
+    },
+    {
+      "check": "303/A/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "303/A/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/A/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/A/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/A/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/A/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/A/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/A/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "303/A/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "303/B/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "303/B/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/B/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/B/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/B/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/B/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/B/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/B/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "303/B/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "303/C/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "303/C/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/C/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/C/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/C/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/C/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/C/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/C/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/C/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/C/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/C/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/C/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/C/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/C/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "303/C/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "303/D/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "303/D/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/D/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/D/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/D/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/D/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/D/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/D/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "303/D/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "303/E/journal-chain",
+      "pass": true
+    },
+    {
+      "check": "303/E/unique-effective-commits",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/E/0/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/E/1/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/E/2/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/E/3/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/matched-generated-actions",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/artifact-hash",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/raw-reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/use-time-admission",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/reward-identity",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/real-update-record",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/independent-gradient",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/Adam-parameter-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/Adam-state-replay",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/RNG-state",
+      "pass": true
+    },
+    {
+      "check": "303/E/4/only-declared-adapter-changed",
+      "pass": true
+    },
+    {
+      "check": "303/E/active-pointer",
+      "pass": true
+    },
+    {
+      "check": "303/E/actual-SIGKILL-count",
+      "pass": true
+    },
+    {
+      "check": "303/E/fresh-process-restarts",
+      "pass": true
+    },
+    {
+      "check": "303/A-D/exact-adapter",
+      "pass": true
+    },
+    {
+      "check": "303/A-D/exact-RNG",
+      "pass": true
+    },
+    {
+      "check": "303/A-D/exact-Adam",
+      "pass": true
+    },
+    {
+      "check": "303/A-E/exact-adapter",
+      "pass": true
+    },
+    {
+      "check": "303/A-E/exact-RNG",
+      "pass": true
+    },
+    {
+      "check": "303/A-E/exact-Adam",
+      "pass": true
+    }
+  ],
+  "checks_passed": 897,
+  "details": [
+    {
+      "arm": "A",
+      "contaminated_updates": 0,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 10801184768,
+      "peak_child_rss": 6582337536,
+      "seed": 101,
+      "swap_growth": 0,
+      "trajectories_per_second": 3.874399131711522,
+      "useful_trajectories_per_second": 3.874399131711522,
+      "v1_reward": 0.09824953724940617,
+      "wall_seconds": 20.648363082989817
+    },
+    {
+      "arm": "B",
+      "contaminated_updates": 2,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 10449371136,
+      "peak_child_rss": 5850398720,
+      "seed": 101,
+      "swap_growth": 0,
+      "trajectories_per_second": 4.396925617397869,
+      "useful_trajectories_per_second": 4.396925617397869,
+      "v1_reward": 0.09246735274791718,
+      "wall_seconds": 18.194531124987407
+    },
+    {
+      "arm": "C",
+      "contaminated_updates": 0,
+      "effective_commits": 3,
+      "generated_trajectories": 80,
+      "minimum_host_available": 9277898752,
+      "peak_child_rss": 4823613440,
+      "seed": 101,
+      "swap_growth": 0,
+      "trajectories_per_second": 4.834622265031024,
+      "useful_trajectories_per_second": 2.9007733590186144,
+      "v1_reward": 0.09686727573474248,
+      "wall_seconds": 16.547311375004938
+    },
+    {
+      "arm": "D",
+      "contaminated_updates": 0,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 10089496576,
+      "peak_child_rss": 6494830592,
+      "seed": 101,
+      "swap_growth": 0,
+      "trajectories_per_second": 4.3915502447911186,
+      "useful_trajectories_per_second": 4.3915502447911186,
+      "v1_reward": 0.09824953724940617,
+      "wall_seconds": 18.216801707982086
+    },
+    {
+      "arm": "E",
+      "contaminated_updates": 0,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 9672261632,
+      "peak_child_rss": 6483968000,
+      "seed": 101,
+      "swap_growth": 0,
+      "trajectories_per_second": 2.460049872719358,
+      "useful_trajectories_per_second": 2.460049872719358,
+      "v1_reward": 0.09824953724940617,
+      "wall_seconds": 32.519665917003294
+    },
+    {
+      "seed": 101,
+      "naive_reference_parameter_l2": 0.08520682156085968,
+      "naive_reference_evaluation_delta": -0.005782184501488999
+    },
+    {
+      "arm": "A",
+      "contaminated_updates": 0,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 10153967616,
+      "peak_child_rss": 5602902016,
+      "seed": 202,
+      "swap_growth": 0,
+      "trajectories_per_second": 4.819527956161045,
+      "useful_trajectories_per_second": 4.819527956161045,
+      "v1_reward": 0.09833003332217534,
+      "wall_seconds": 16.59913599997526
+    },
+    {
+      "arm": "B",
+      "contaminated_updates": 2,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 10174627840,
+      "peak_child_rss": 6667927552,
+      "seed": 202,
+      "swap_growth": 0,
+      "trajectories_per_second": 4.528557034837226,
+      "useful_trajectories_per_second": 4.528557034837226,
+      "v1_reward": 0.09251075983047485,
+      "wall_seconds": 17.6656712910044
+    },
+    {
+      "arm": "C",
+      "contaminated_updates": 0,
+      "effective_commits": 3,
+      "generated_trajectories": 80,
+      "minimum_host_available": 9857122304,
+      "peak_child_rss": 5586370560,
+      "seed": 202,
+      "swap_growth": 0,
+      "trajectories_per_second": 6.295918622879196,
+      "useful_trajectories_per_second": 3.7775511737275176,
+      "v1_reward": 0.09702567756175995,
+      "wall_seconds": 12.706644541001879
+    },
+    {
+      "arm": "D",
+      "contaminated_updates": 0,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 9660137472,
+      "peak_child_rss": 6839386112,
+      "seed": 202,
+      "swap_growth": 0,
+      "trajectories_per_second": 4.79420099421699,
+      "useful_trajectories_per_second": 4.79420099421699,
+      "v1_reward": 0.09833003332217534,
+      "wall_seconds": 16.686826458986616
+    },
+    {
+      "arm": "E",
+      "contaminated_updates": 0,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 9998696448,
+      "peak_child_rss": 6075187200,
+      "seed": 202,
+      "swap_growth": 0,
+      "trajectories_per_second": 2.360334560015893,
+      "useful_trajectories_per_second": 2.360334560015893,
+      "v1_reward": 0.09833003332217534,
+      "wall_seconds": 33.89350025000749
+    },
+    {
+      "seed": 202,
+      "naive_reference_parameter_l2": 0.07228896766901016,
+      "naive_reference_evaluation_delta": -0.005819273491700486
+    },
+    {
+      "arm": "A",
+      "contaminated_updates": 0,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 9397239808,
+      "peak_child_rss": 5892292608,
+      "seed": 303,
+      "swap_growth": 0,
+      "trajectories_per_second": 4.438696722790388,
+      "useful_trajectories_per_second": 4.438696722790388,
+      "v1_reward": 0.09879651168982188,
+      "wall_seconds": 18.023308416013606
+    },
+    {
+      "arm": "B",
+      "contaminated_updates": 2,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 9829105664,
+      "peak_child_rss": 5574770688,
+      "seed": 303,
+      "swap_growth": 0,
+      "trajectories_per_second": 4.654936920449366,
+      "useful_trajectories_per_second": 4.654936920449366,
+      "v1_reward": 0.0921946515639623,
+      "wall_seconds": 17.186054584017256
+    },
+    {
+      "arm": "C",
+      "contaminated_updates": 0,
+      "effective_commits": 3,
+      "generated_trajectories": 80,
+      "minimum_host_available": 10037116928,
+      "peak_child_rss": 6323470336,
+      "seed": 303,
+      "swap_growth": 0,
+      "trajectories_per_second": 5.939370350646534,
+      "useful_trajectories_per_second": 3.5636222103879205,
+      "v1_reward": 0.0968849112590154,
+      "wall_seconds": 13.469441249995725
+    },
+    {
+      "arm": "D",
+      "contaminated_updates": 0,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 9816440832,
+      "peak_child_rss": 6165200896,
+      "seed": 303,
+      "swap_growth": 0,
+      "trajectories_per_second": 4.521761127325738,
+      "useful_trajectories_per_second": 4.521761127325738,
+      "v1_reward": 0.09879651168982188,
+      "wall_seconds": 17.69222162500955
+    },
+    {
+      "arm": "E",
+      "contaminated_updates": 0,
+      "effective_commits": 5,
+      "generated_trajectories": 80,
+      "minimum_host_available": 10402938880,
+      "peak_child_rss": 6201507840,
+      "seed": 303,
+      "swap_growth": 0,
+      "trajectories_per_second": 2.277892309930665,
+      "useful_trajectories_per_second": 2.277892309930665,
+      "v1_reward": 0.09879651168982188,
+      "wall_seconds": 35.12018529200577
+    },
+    {
+      "seed": 303,
+      "naive_reference_parameter_l2": 0.08424058556556702,
+      "naive_reference_evaluation_delta": -0.006601860125859588
+    }
+  ],
+  "scope": "synthetic categorical routing objective reversal; one-token bias-adapter systems experiment"
+}

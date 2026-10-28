@@ -34,3 +34,31 @@ def test_atomic_writer_preserves_complete_artifact(tmp_path):
     xii.write(path, b"second")
     assert path.read_bytes() == b"second"
     assert not list(path.parent.glob("*.tmp-*"))
+
+
+def test_existing_partial_run_is_not_modified_by_cli(tmp_path):
+    import subprocess
+    import sys
+
+    folder = tmp_path / "prior-run"
+    folder.mkdir()
+    original = b'{"failure":"historical"}\n'
+    (folder / "failure.json").write_bytes(original)
+    script = Path(__file__).parents[1] / "scripts/sprint_xii/async_verifier.py"
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(script),
+            "run",
+            "--protocol",
+            str(tmp_path / "missing.json"),
+            "--output",
+            str(folder),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode != 0
+    assert "append-only output already exists" in proc.stderr
+    assert (folder / "failure.json").read_bytes() == original
+    assert sorted(p.name for p in folder.iterdir()) == ["failure.json"]
