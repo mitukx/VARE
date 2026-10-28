@@ -584,5 +584,89 @@ class SourceEditLeaseStoreV1:
                 record[key] = result[key]
         return {**result, "lease": lease}
 
+    def replace_exact_text_transactional(
+        self, lease: object, expected_text: object, replacement_text: object,
+    ) -> dict[str, Any]:
+        """Apply one exact unique span edit under the read lease and full preimage hash.
+
+        Unlike line replacement, the model emits only the changed source span.
+        The controller does not infer a diff: it requires a nonempty exact match
+        that occurs once inside the leased range, then routes the complete range
+        through the existing syntax-checked atomic writer.
+        """
+        if not isinstance(lease, str) or lease not in self._leases:
+            return {"applied": False, "status": "valid_call_rejected_by_policy",
+                    "error": "unknown_or_consumed_lease"}
+        record = self._leases[lease]
+        if record["consumed"]:
+            return {"applied": False, "status": "valid_call_rejected_by_policy",
+                    "error": "unknown_or_consumed_lease", "lease": lease}
+        record["consumed"] = True
+        if (not isinstance(expected_text, str) or not expected_text
+                or not isinstance(replacement_text, str)
+                or any("\x00" in value or "\r" in value
+                       for value in (expected_text, replacement_text))):
+            result = {"applied": False, "status": "invalid_json_or_schema",
+                      "error": "invalid_exact_text_edit"}
+            record["outcome"] = result["status"]
+            return {**result, "lease": lease}
+        try:
+            expected_bytes = expected_text.encode("utf-8", errors="strict")
+            replacement_bytes = replacement_text.encode("utf-8", errors="strict")
+        except UnicodeEncodeError:
+            result = {"applied": False, "status": "invalid_json_or_schema",
+                      "error": "invalid_utf8_exact_text_edit"}
+            record["outcome"] = result["status"]
+            return {**result, "lease": lease}
+        if len(expected_bytes) > MAX_REPLACEMENT_BYTES or len(replacement_bytes) > MAX_REPLACEMENT_BYTES:
+            result = {"applied": False, "status": "valid_call_rejected_by_policy",
+                      "error": "exact_text_edit_exceeds_byte_limit"}
+            record["outcome"] = result["status"]
+            return {**result, "lease": lease}
+
+        read = read_source_lines_v1(
+            self.workspace, record["path"], record["start_line"],
+            record["end_line"], self.allowed,
+        )
+        if read.get("status") != "read_complete":
+            result = {"applied": False, "status": "valid_call_rejected_by_policy",
+                      "error": "leased_range_unavailable"}
+            record["outcome"] = result["status"]
+            return {**result, "lease": lease}
+        selected = read.get("content")
+        if not isinstance(selected, str):
+            result = {"applied": False, "status": "valid_call_rejected_by_policy",
+                      "error": "leased_range_unavailable"}
+            record["outcome"] = result["status"]
+            return {**result, "lease": lease}
+        first = selected.find(expected_text)
+        if first < 0:
+            result = {"applied": False, "status": "valid_call_rejected_by_policy",
+                      "error": "exact_text_not_found"}
+            record["outcome"] = result["status"]
+            return {**result, "lease": lease}
+        if selected.find(expected_text, first + len(expected_text)) >= 0:
+            result = {"applied": False, "status": "valid_call_rejected_by_policy",
+                      "error": "exact_text_not_unique"}
+            record["outcome"] = result["status"]
+            return {**result, "lease": lease}
+        replacement = selected[:first] + replacement_text + selected[first + len(expected_text):]
+        result = replace_python_source_lines_transactional_v1(
+            self.workspace, record["path"], record["expected_sha256"],
+            record["start_line"], record["end_line"], replacement, self.allowed,
+            normalization="none",
+        )
+        record["outcome"] = result.get("status", "valid_call_rejected_by_policy")
+        record["expected_text_sha256"] = hashlib.sha256(expected_bytes).hexdigest()
+        record["replacement_text_sha256"] = hashlib.sha256(replacement_bytes).hexdigest()
+        if result.get("after_sha256"):
+            record["after_sha256"] = result["after_sha256"]
+        for key in ("syntax_valid", "syntax_error", "before_sha256", "after_sha256"):
+            if key in result:
+                record[key] = result[key]
+        return {**result, "lease": lease,
+                "expected_text_sha256": record["expected_text_sha256"],
+                "replacement_text_sha256": record["replacement_text_sha256"]}
+
     def audit_records(self) -> list[dict[str, Any]]:
         return [dict(record) for record in self._leases.values()]

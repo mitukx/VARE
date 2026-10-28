@@ -22,6 +22,7 @@ PROTOCOL_ID_V5 = "vare.schema-slots.v5"
 PROTOCOL_ID_V6 = "vare.schema-slots.v6"
 PROTOCOL_ID_V7 = "vare.schema-slots.v7"
 PROTOCOL_ID_V8 = "vare.schema-slots.v8"
+PROTOCOL_ID_V9 = "vare.schema-slots.v9"
 INTERNAL_GENERATION_FAILURES = frozenset({
     "per_turn_token_budget_exhausted",
     "argument_slot_token_budget_exhausted",
@@ -43,6 +44,7 @@ def generation_protocol_failure(detail: dict[str, Any] | None) -> str | None:
     if detail.get("protocol_id") in {
         PROTOCOL_ID, PROTOCOL_ID_V2, PROTOCOL_ID_V3, PROTOCOL_ID_V4,
         PROTOCOL_ID_V5, PROTOCOL_ID_V6, PROTOCOL_ID_V7, PROTOCOL_ID_V8,
+        PROTOCOL_ID_V9,
     } and failure in INTERNAL_GENERATION_FAILURES:
         return str(failure)
     return None
@@ -71,7 +73,8 @@ def function_body_normalization_choices(
 
 
 def dynamic_function_slot_choices(
-    tool_name: str, argument_name: str, messages: list[dict[str, Any]],
+    tool_name: str, argument_name: str, messages: list[dict[str, Any]], *,
+    include_transactional_exact_text: bool = False,
 ) -> tuple[list[str], str] | None:
     """Return exact prior-tool values for function navigation and edit leases.
 
@@ -84,6 +87,9 @@ def dynamic_function_slot_choices(
         source_tool = "list_functions"
     elif tool_name == "replace_function_body_transactional" and argument_name == "lease":
         source_tool = "read_function"
+    elif (include_transactional_exact_text and tool_name == "replace_exact_text_transactional"
+          and argument_name == "lease"):
+        source_tool = "read_lines"
     else:
         return None
 
@@ -126,11 +132,15 @@ def dynamic_function_slot_choices(
         )
 
     if source_result.get("status") != "read_complete":
-        return ([], "dynamic_choice_source_not_successful:read_function")
+        return ([], f"dynamic_choice_source_not_successful:{source_tool}")
     lease = source_result.get("lease")
-    return ([lease], "prior_read_function_lease_v1") if isinstance(lease, str) and lease else (
-        [], "dynamic_choice_value_missing:read_function.lease",
+    lease_provenance = (
+        "prior_read_lines_lease_v1" if source_tool == "read_lines"
+        else "prior_read_function_lease_v1"
     )
+    return ([lease], lease_provenance) if isinstance(lease, str) and lease else (
+        [], f"dynamic_choice_value_missing:{source_tool}.lease",
+        )
 
 
 def prefix_token_sequences(tokenizer: Any, prefix: str) -> tuple[int, ...]:

@@ -237,3 +237,87 @@ def test_transactional_python_edit_rejects_inexact_fence_transform_without_write
     assert result["applied"] is False
     assert result["error"] == "python_fence_not_exact"
     assert source.read_bytes() == before
+
+
+def test_exact_text_transactional_edit_applies_only_one_span_under_lease(tmp_path: Path) -> None:
+    source, rel = _source(tmp_path, "def value(x):\n    old = max(0, x)\n    return old\n")
+    store = SourceEditLeaseStoreV1(tmp_path, {rel}, token_factory=lambda: "0123456789ab")
+    observed = store.read_lines(rel, 1, 3)
+
+    result = store.replace_exact_text_transactional(
+        observed["lease"], "max(0, x)", "max(1, x)",
+    )
+
+    assert result["applied"] is True
+    assert result["syntax_valid"] is True
+    assert result["before_sha256"] == hashlib.sha256(
+        b"def value(x):\n    old = max(0, x)\n    return old\n",
+    ).hexdigest()
+    assert source.read_text(encoding="utf-8") == (
+        "def value(x):\n    old = max(1, x)\n    return old\n"
+    )
+    audit = store.audit_records()[0]
+    assert audit["expected_text_sha256"] == hashlib.sha256(b"max(0, x)").hexdigest()
+    assert audit["replacement_text_sha256"] == hashlib.sha256(b"max(1, x)").hexdigest()
+    assert audit["outcome"] == "edit_applied"
+
+
+@pytest.mark.parametrize(
+    ("source_text", "expected", "error"),
+    [
+        ("def value():\n    return 1\n", "return 9", "exact_text_not_found"),
+        (
+            "def value():\n    return 1\n    return 1\n",
+            "return 1\n", "exact_text_not_unique",
+        ),
+    ],
+)
+def test_exact_text_transactional_edit_rejects_missing_or_ambiguous_matches(
+        tmp_path: Path, source_text: str, expected: str, error: str) -> None:
+    source, rel = _source(tmp_path, source_text)
+    before = source.read_bytes()
+    store = SourceEditLeaseStoreV1(tmp_path, {rel}, token_factory=lambda: "0123456789ab")
+    observed = store.read_lines(rel, 1, len(source_text.splitlines()))
+
+    result = store.replace_exact_text_transactional(observed["lease"], expected, "return 2\n")
+
+    assert result["applied"] is False
+    assert result["error"] == error
+    assert source.read_bytes() == before
+
+
+def test_exact_text_transactional_edit_rejects_incomplete_syntax_without_write(tmp_path: Path) -> None:
+    source, rel = _source(tmp_path)
+    before = source.read_bytes()
+    store = SourceEditLeaseStoreV1(tmp_path, {rel}, token_factory=lambda: "0123456789ab")
+    observed = store.read_lines(rel, 1, 2)
+
+    result = store.replace_exact_text_transactional(
+        observed["lease"], "return 1", "return (",
+    )
+
+    assert result["applied"] is False
+    assert result["status"] == "candidate_rejected_syntax"
+    assert source.read_bytes() == before
+    assert not list(source.parent.glob(".*.vare-*.tmp"))
+
+
+def test_exact_text_transactional_edit_rolls_back_atomic_publish_failure(
+        tmp_path: Path, monkeypatch,
+) -> None:
+    source, rel = _source(tmp_path)
+    before = source.read_bytes()
+    store = SourceEditLeaseStoreV1(tmp_path, {rel}, token_factory=lambda: "0123456789ab")
+    observed = store.read_lines(rel, 1, 2)
+
+    def fail_replace(*_args, **_kwargs):
+        raise OSError("injected rename failure")
+
+    monkeypatch.setattr("vare.agent_edit_v2.os.replace", fail_replace)
+    result = store.replace_exact_text_transactional(
+        observed["lease"], "return 1", "return 2",
+    )
+
+    assert result["applied"] is False
+    assert source.read_bytes() == before
+    assert not list(source.parent.glob(".*.vare-*.tmp"))

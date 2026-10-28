@@ -149,6 +149,25 @@ def test_v8_dynamic_function_values_fail_closed_without_successful_provenance():
     assert malformed == ([], 'dynamic_choice_source_invalid:list_functions')
 
 
+def test_v9_exact_text_edit_lease_is_bound_to_a_successful_read_lines_result():
+    messages = [{
+        'role': 'tool', 'name': 'read_lines', 'content': json.dumps({
+            'status': 'read_complete', 'path': 'module.py', 'lease': 'line-lease-9',
+        }),
+    }]
+    assert dynamic_function_slot_choices(
+        'replace_exact_text_transactional', 'lease', messages,
+        include_transactional_exact_text=True,
+    ) == (['line-lease-9'], 'prior_read_lines_lease_v1')
+    assert dynamic_function_slot_choices(
+        'replace_exact_text_transactional', 'lease', messages,
+    ) is None
+    assert dynamic_function_slot_choices(
+        'replace_exact_text_transactional', 'lease', [],
+        include_transactional_exact_text=True,
+    ) == ([], 'dynamic_choice_source_missing:read_lines')
+
+
 @pytest.mark.parametrize('raw_array', [
     '    return max(0, value)',
     '["    return max(0, value)"] trailing',
@@ -171,7 +190,7 @@ def test_terminal_newline_constraint_checks_exact_generated_string_suffix():
     assert not terminal_newline_is_present([], tokenizer)
 
 
-@pytest.mark.parametrize('protocol', ['vare.schema-slots.v1', 'vare.schema-slots.v2', 'vare.schema-slots.v3', 'vare.schema-slots.v4', 'vare.schema-slots.v5', 'vare.schema-slots.v6', 'vare.schema-slots.v7', 'vare.schema-slots.v8'])
+@pytest.mark.parametrize('protocol', ['vare.schema-slots.v1', 'vare.schema-slots.v2', 'vare.schema-slots.v3', 'vare.schema-slots.v4', 'vare.schema-slots.v5', 'vare.schema-slots.v6', 'vare.schema-slots.v7', 'vare.schema-slots.v8', 'vare.schema-slots.v9'])
 def test_internal_slot_budget_failure_is_not_a_parser_failure(protocol):
     detail = {'protocol_id': protocol, 'stop_reason': 'argument_slot_token_budget_exhausted'}
     assert generation_protocol_failure(detail) == 'argument_slot_token_budget_exhausted'
@@ -185,6 +204,12 @@ def test_schema_slot_controller_source_is_in_run_identity():
     sources = controller_source_hashes('lease_bound_navigation_v1', 'schema_slots_v2')
     assert sources['src/vare/schema_slot_protocol.py']
     assert sources['scripts/run_local_agent.py']
+
+    exact_text = controller_source_hashes(
+        'lease_bound_exact_text_transactional_v1', 'schema_slots_v9',
+    )
+    assert exact_text['src/vare/schema_slot_protocol.py']
+    assert exact_text['src/vare/source_navigation_v2.py']
 
 
 @pytest.mark.parametrize(('raw', 'original_newline', 'expected'), [

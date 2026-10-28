@@ -67,6 +67,29 @@ def test_source_read_gate_hides_edits_until_a_fresh_lease_is_read():
     ) is tools
 
 
+def test_exact_text_transactional_interface_is_lease_gated_and_schema_closed():
+    tools = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_exact_text_transactional_v1',
+    )
+    edit = next(tool for tool in tools
+                if tool['function']['name'] == 'replace_exact_text_transactional')
+    schema = edit['function']['parameters']
+    assert schema['required'] == ['lease', 'expected_text', 'replacement_text']
+    assert schema['additionalProperties'] is False
+    assert {tool['function']['name'] for tool in tools_for_source_read_gate(
+        tools, lease_read_succeeded=False, enabled=True,
+    )} == {'list_files', 'read_lines', 'search_source'}
+    valid = ('<tool_call>{"name":"replace_exact_text_transactional","arguments":'
+             '{"lease":"lease-v1","expected_text":"return 1",'
+             '"replacement_text":"return 2"}}</tool_call>')
+    assert parse_tool_output_v1(valid, tools)[0] == 'complete_tool_call'
+    invalid = ('<tool_call>{"name":"replace_exact_text_transactional","arguments":'
+               '{"lease":"lease-v1","expected_text":"return 1",'
+               '"replacement_text":"return 2","path":"other.py"}}</tool_call>')
+    assert parse_tool_output_v1(invalid, tools)[0] == 'invalid_json_or_schema'
+
+
 def test_legacy_public_contract_grader_registration_remains_available():
     grader = run_local_agent.ROOT / 'scripts/grade_corrected_template_candidate_v1.py'
     sources = pinned_public_contract_grader_sources(grader, 'gqa-repeat')
