@@ -61,7 +61,9 @@ def sha_map(root: Path, paths: list[Path]) -> dict[str, str]:
 
 
 def validate_protocol_task_contract(root: dict) -> None:
-    """Require the task array consumed by runner/auditor to match the manifest."""
+    """Require run and task identities before model work can start."""
+    if not isinstance(root.get("run_id"), str) or not root["run_id"].strip():
+        raise ValueError("protocol requires a non-empty run_id")
     tasks = root.get("tasks")
     manifest_tasks = root.get("task_manifest", {}).get("tasks")
     if not isinstance(tasks, list) or tasks != manifest_tasks:
@@ -73,7 +75,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("protocols/sprint_xiii_online_actor_v2.lock.json"),
+        default=Path("protocols/sprint_xiii_online_actor_v3.lock.json"),
     )
     args = parser.parse_args()
     repository_root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel"))
@@ -102,46 +104,46 @@ def main() -> None:
 
     raw_tasks = [
         {
-            "task_id": "train-route-01",
+            "task_id": "train-route-v3-01",
             "split": "train",
-            "instruction": "Plan a feasible route for training case train-route-01.",
-            "target_pair": "AB",
-            "forbidden_pair": "CD",
+            "instruction": "Plan a feasible route for synthetic cohort v3 training case train-route-v3-01.",
+            "target_pair": "AC",
+            "forbidden_pair": "BD",
         },
         {
-            "task_id": "train-route-02",
+            "task_id": "train-route-v3-02",
             "split": "train",
-            "instruction": "Plan a feasible route for training case train-route-02.",
-            "target_pair": "DC",
-            "forbidden_pair": "BA",
-        },
-        {
-            "task_id": "eval-route-01",
-            "split": "evaluation",
-            "instruction": "Plan a feasible route for independent evaluation case eval-route-01.",
-            "target_pair": "CA",
-            "forbidden_pair": "DB",
-        },
-        {
-            "task_id": "eval-route-02",
-            "split": "evaluation",
-            "instruction": "Plan a feasible route for independent evaluation case eval-route-02.",
-            "target_pair": "BD",
+            "instruction": "Plan a feasible route for synthetic cohort v3 training case train-route-v3-02.",
+            "target_pair": "DB",
             "forbidden_pair": "AC",
         },
         {
-            "task_id": "eval-route-03",
+            "task_id": "eval-route-v3-01",
             "split": "evaluation",
-            "instruction": "Plan a feasible route for independent evaluation case eval-route-03.",
-            "target_pair": "DA",
-            "forbidden_pair": "CB",
+            "instruction": "Plan a feasible route for synthetic cohort v3 evaluation case eval-route-v3-01.",
+            "target_pair": "BA",
+            "forbidden_pair": "CD",
         },
         {
-            "task_id": "eval-route-04",
+            "task_id": "eval-route-v3-02",
             "split": "evaluation",
-            "instruction": "Plan a feasible route for independent evaluation case eval-route-04.",
-            "target_pair": "BC",
-            "forbidden_pair": "AD",
+            "instruction": "Plan a feasible route for synthetic cohort v3 evaluation case eval-route-v3-02.",
+            "target_pair": "CB",
+            "forbidden_pair": "DA",
+        },
+        {
+            "task_id": "eval-route-v3-03",
+            "split": "evaluation",
+            "instruction": "Plan a feasible route for synthetic cohort v3 evaluation case eval-route-v3-03.",
+            "target_pair": "CD",
+            "forbidden_pair": "AB",
+        },
+        {
+            "task_id": "eval-route-v3-04",
+            "split": "evaluation",
+            "instruction": "Plan a feasible route for synthetic cohort v3 evaluation case eval-route-v3-04.",
+            "target_pair": "AD",
+            "forbidden_pair": "BC",
         },
     ]
     tasks = []
@@ -174,11 +176,11 @@ def main() -> None:
 
     import torch
 
-    seeds = [101, 202, 303]
+    seeds = [404, 505, 606]
     execution_order = [
-        [101, "A"], [101, "B"], [101, "C"], [101, "D"], [101, "E"],
-        [202, "C"], [202, "E"], [202, "B"], [202, "D"], [202, "A"],
-        [303, "E"], [303, "D"], [303, "A"], [303, "C"], [303, "B"],
+        [404, "A"], [404, "B"], [404, "C"], [404, "D"], [404, "E"],
+        [505, "C"], [505, "E"], [505, "B"], [505, "D"], [505, "A"],
+        [606, "E"], [606, "D"], [606, "A"], [606, "C"], [606, "B"],
     ]
     required_faults = [
         "rollout_write_before_ack",
@@ -189,7 +191,8 @@ def main() -> None:
     ]
     root = {
         "schema_version": 1,
-        "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v2",
+        "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v3",
+        "run_id": "sprint-xiii-20261029-online-actor-v3",
         "status": "PREREGISTERED_NO_MODEL_FORWARD_OR_GENERATION",
         "frozen_utc": datetime.now(timezone.utc).isoformat(),
         "hypothesis": (
@@ -339,12 +342,12 @@ def main() -> None:
             },
         },
         "fault_plan": {
-            "seed-101-E": {"rollout_write_before_ack": True},
-            "seed-202-E": {
+            "seed-404-E": {"rollout_write_before_ack": True},
+            "seed-505-E": {
                 "verifier_write_before_admission": True,
                 "optimizer_apply_before_commit": True,
             },
-            "seed-303-E": {
+            "seed-606-E": {
                 "checkpoint_before_publication": True,
                 "publication_before_actor_refresh": True,
             },
@@ -404,9 +407,9 @@ def main() -> None:
             "No retry or replacement cohort after model generation begins."
         ),
         "reproduction": {
-            "freeze": f"{sys.executable} scripts/sprint_xiii/freeze_online_actor_protocol.py --output protocols/sprint_xiii_online_actor_v2.lock.json",
-            "campaign": f"{sys.executable} scripts/sprint_xiii/online_actor.py campaign --protocol protocols/sprint_xiii_online_actor_v2.lock.json --output results/sprint_xiii_20261029/run-001",
-            "audit": f"{sys.executable} scripts/sprint_xiii/audit_online_actor.py --protocol protocols/sprint_xiii_online_actor_v2.lock.json --output results/sprint_xiii_20261029/run-001 --receipt results/sprint_xiii_20261029/run-001/independent-audit.json",
+            "freeze": f"{sys.executable} scripts/sprint_xiii/freeze_online_actor_protocol.py --output protocols/sprint_xiii_online_actor_v3.lock.json",
+            "campaign": f"{sys.executable} scripts/sprint_xiii/online_actor.py campaign --protocol protocols/sprint_xiii_online_actor_v3.lock.json --output results/sprint_xiii_20261029/run-002",
+            "audit": f"{sys.executable} scripts/sprint_xiii/audit_online_actor.py --protocol protocols/sprint_xiii_online_actor_v3.lock.json --output results/sprint_xiii_20261029/run-002 --receipt results/sprint_xiii_20261029/run-002/independent-audit.json",
             "environment": "Use the recorded offline Python environment and preserve the cached snapshot; do not overwrite an existing run directory.",
         },
     }

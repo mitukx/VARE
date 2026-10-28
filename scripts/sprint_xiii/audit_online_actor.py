@@ -83,6 +83,15 @@ def distribution_metrics(before: list[float], after: list[float]) -> dict:
     return {"total_variation": tv, "kl_before_to_after": kl}
 
 
+def validate_protocol_contract(p: dict) -> None:
+    if not isinstance(p.get("run_id"), str) or not p["run_id"].strip():
+        raise ValueError("protocol requires a non-empty run_id")
+    tasks = p.get("tasks")
+    manifest_tasks = p.get("task_manifest", {}).get("tasks")
+    if not isinstance(tasks, list) or tasks != manifest_tasks:
+        raise ValueError("protocol tasks must exactly match task_manifest.tasks")
+
+
 def trusted(actions: str, task: dict) -> float:
     target = task["target_pair"]
     forbidden = task["forbidden_pair"]
@@ -1275,6 +1284,7 @@ def audit_eval_file(
 def calibrate(p: dict) -> dict:
     from itertools import product
 
+    validate_protocol_contract(p)
     rows = []
     for task in p["tasks"]:
         if task["split"] not in ("train", "evaluation"):
@@ -1315,6 +1325,7 @@ def calibrate(p: dict) -> dict:
 
 def audit(p_path: Path, root: Path) -> dict:
     p = load_json(p_path)
+    validate_protocol_contract(p)
     sidecar = load_json(Path(str(p_path) + ".sha256"))
     findings: list[str] = []
     check(

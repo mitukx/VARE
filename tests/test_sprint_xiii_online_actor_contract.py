@@ -43,6 +43,7 @@ def test_proxy_verifiers_are_distinct_and_trusted_rule_checks_full_route() -> No
 
 def test_calibration_enumerates_the_frozen_variable_length_action_space() -> None:
     p = {
+        "run_id": "synthetic-calibration-test",
         "action_labels": ["A", "B", "C", "D"],
         "generation": {"maximum_actions": 4},
         "tasks": [
@@ -60,6 +61,7 @@ def test_calibration_enumerates_the_frozen_variable_length_action_space() -> Non
             },
         ],
     }
+    p["task_manifest"] = {"tasks": p["tasks"]}
     result = audit.calibrate(p)
     assert result["v0"]["n"] == 2 * (4**2 + 4**3 + 4**4)
     assert result["v1"]["n"] == result["v0"]["n"]
@@ -70,12 +72,26 @@ def test_calibration_enumerates_the_frozen_variable_length_action_space() -> Non
 
 def test_frozen_protocol_requires_runner_tasks_to_match_manifest() -> None:
     tasks = [{"task_id": "train-1", "split": "train"}]
+    valid = {"run_id": "run-test", "tasks": tasks, "task_manifest": {"tasks": tasks}}
+    online.validate_protocol_contract(valid)
+    audit.validate_protocol_contract(valid)
     freezer.validate_protocol_task_contract(
-        {"tasks": tasks, "task_manifest": {"tasks": tasks}}
+        valid
     )
+    for validator in (
+        online.validate_protocol_contract,
+        audit.validate_protocol_contract,
+        freezer.validate_protocol_task_contract,
+    ):
+        try:
+            validator({"tasks": tasks, "task_manifest": {"tasks": tasks}})
+        except (RuntimeError, ValueError) as error:
+            assert "run_id" in str(error)
+        else:
+            raise AssertionError("protocol missing run_id must be rejected")
     try:
         freezer.validate_protocol_task_contract(
-            {"task_manifest": {"tasks": tasks}}
+            {"run_id": "run-test", "task_manifest": {"tasks": tasks}}
         )
     except ValueError as error:
         assert str(error) == "protocol tasks must exactly match task_manifest.tasks"

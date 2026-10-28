@@ -97,6 +97,15 @@ def protocol(path: Path) -> dict:
     return value
 
 
+def validate_protocol_contract(value: dict) -> None:
+    if not isinstance(value.get("run_id"), str) or not value["run_id"].strip():
+        raise RuntimeError("protocol requires a non-empty run_id before model execution")
+    tasks = value.get("tasks")
+    manifest_tasks = value.get("task_manifest", {}).get("tasks")
+    if not isinstance(tasks, list) or tasks != manifest_tasks:
+        raise RuntimeError("protocol tasks must exactly match task_manifest.tasks")
+
+
 def task_by_id(p: dict, task_id: str) -> dict:
     for task in p["tasks"]:
         if task["task_id"] == task_id:
@@ -1451,6 +1460,7 @@ def campaign(p_path: Path, output: Path) -> None:
     if output.exists():
         raise FileExistsError(f"append-only output already exists: {output}")
     p = protocol(p_path)
+    validate_protocol_contract(p)
     for rel, digest in p["source_hashes"].items():
         if file_sha(Path(p["repository_root"]) / rel) != digest:
             raise RuntimeError(f"frozen experiment source mismatch: {rel}")
@@ -1973,6 +1983,7 @@ def main() -> None:
             raise
     else:
         p = protocol(args.protocol.resolve())
+        validate_protocol_contract(p)
         root = args.output.resolve()
         child(p, root, args)
 

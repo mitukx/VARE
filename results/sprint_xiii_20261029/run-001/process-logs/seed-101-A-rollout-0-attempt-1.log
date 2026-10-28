@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/sprint_xiii/online_actor.py", line 1981, in <module>
+    main()
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/sprint_xiii/online_actor.py", line 1977, in main
+    child(p, root, args)
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/sprint_xiii/online_actor.py", line 1108, in child
+    child_rollout(p, root, args)
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/sprint_xiii/online_actor.py", line 463, in child_rollout
+    "run_id": p["run_id"],
+              ~^^^^^^^^^^
+KeyError: 'run_id'
