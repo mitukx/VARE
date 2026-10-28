@@ -1,0 +1,2153 @@
+{
+  "data": {
+    "repository": {
+      "p108": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p114": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": [
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Reserve the evidence destination atomically**\n\nWhen the output parent is writable by another process, the separate `exists()`/`is_symlink()` preflight leaves a race before the pinned child creates the directory. An attacker can insert a symlink to a nonexistent external target during that interval; the legacy child calls `resolve()` and then creates and writes the target, potentially returning success while the requested output remains a retargetable symlink. Reserve and validate the destination atomically so redirected or raced output fails closed.\n\nAGENTS.md reference: [AGENTS.md:L48-L52](https://github.com/mitukx/VARE/blob/45fd0da592955205e6518c12e9e9b315797541e2/AGENTS.md#L48-L52)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:22:44Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4357556888"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Proposed correction in 3ff93739: one exclusive mkdir reserves output at mode 0700 before worktree/child execution, with an operator-owned parent that rejects group/world write access. Child raw evidence goes to the absent records/ leaf, and reservation inode/type is checked before and after child execution. A regression attempts symlink insertion at child launch and confirms rejection and retention of negative child records; existing outputs cannot be reused. The ancestor namespace and same-UID processes remain explicitly operator-controlled. Please independently reassess this correction; leaving this P1 open pending review, particularly namespace assumptions. No calibration/model inference ran.",
+                    "createdAt": "2026-10-23T08:37:50Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4357674000"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "scripts/run_attested_mlxlm_1971_v9_calibration.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve symlink identity for the pinned exporter**\n\nWhen `run_pinned_v9_task(\"export\", ...)` receives a symlinked source checkout or patch, resolving these arguments here converts them into ordinary target paths before the pinned v9 code sees them. This bypasses the historical exporter's explicit rejection of a symlinked source root and symlinked patch, so an export can be accepted under inputs that the frozen protocol deliberately rejects. Reject symlinks before canonicalization or pass the original absolute paths to the pinned validator.\n\nAGENTS.md reference: [AGENTS.md:L72-L72](https://github.com/mitukx/VARE/blob/45fd0da592955205e6518c12e9e9b315797541e2/AGENTS.md#L72-L72)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:22:44Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4357556894"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed in new head 3ff93739: source, patch and workspace paths (including ancestors) reject symlinks before canonicalization/dispatch. Export snapshots a bounded regular patch via O_NOFOLLOW before creating the pinned worktree; the child's validate/apply/hash uses the private read-only copy even if the caller later replaces the original. New regressions failed before the fix; operator plus immutable-attestation tests now pass 20/20. Ruff, mypy and diff check pass. This does not change #117's historical 45fd0da pin or frozen v9.",
+                    "createdAt": "2026-10-23T08:37:48Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4357673765"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "scripts/run_attested_mlxlm_1971_v9_calibration.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable Git hooks before adding the worktree**\n\nWhen the repository or operator's Git configuration sets `core.hooksPath`, this command executes its `post-checkout` hook before `attest_current_v9` runs; the same exposure exists in the calibration call above. Git explicitly documents that `post-checkout` runs for `git worktree add` unless `--no-checkout` is used ([githooks documentation](https://git-scm.com/docs/githooks#_post_checkout)), and I reproduced it with Git 2.43 despite `GIT_NO_REPLACE_OBJECTS=1`. Thus mutable, unattested configuration can execute arbitrary operator-privileged code and alter external inputs or evidence before attestation, so these Git invocations need a hook-disabled/sanitized configuration rather than inheriting `os.environ` and repository config.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/3ff937397164027b5ec4fc226cea411c97666980/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:42:32Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4357710306"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed in c5b52a4a. Both operator paths now discard ambient GIT_* routing/config overrides, disable system/global config, and inherit command-scope core.hooksPath=/dev/null and core.fsmonitor=false through the pinned historical child. A real tiny Git fixture first confirms its configured post-checkout hook executes, then verifies run_frozen_calibration does not execute it despite injected GIT_DIR and GIT_CONFIG_COUNT overrides. No model/Docker calibration runs in the fixture. Focused operator/attestation suite: 21 passed; Ruff/mypy/diff check passed. This is a scoped hook/routing fix, not a complete certification of arbitrary local Git filters. #117's old pin is unchanged.",
+                    "createdAt": "2026-10-23T08:47:27Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4357750233"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 288,
+              "path": "scripts/run_attested_mlxlm_1971_v9_calibration.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve staged records when cross-filesystem publication fails**\n\nWhen the requested output is on a different filesystem from the default temporary directory, this rename raises `EXDEV`, and the enclosing `TemporaryDirectory` cleanup then deletes the only copy of the raw records. This affects successful and failed children alike, leaving an empty reserved output instead of recoverable evidence. I reproduced this with staging under `/tmp` and an operator-owned output parent under `/dev/shm`: a child returning 1 wrote `failure.json`, publication failed, and the staged records were deleted. Stage records on the destination filesystem while preserving descriptor-relative publication, or retain a durable recovery location whenever publication fails.\n\nAGENTS.md reference: [AGENTS.md:L52-L52](https://github.com/mitukx/VARE/blob/2e463441e158342efabf60ee7743b01c102e0f59/AGENTS.md#L52-L52)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T18:55:21Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4363185925"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Fixed in `38eaf6dce670d5d8be0fcecc99cbcd35491aee0e`: raw records stage in a fresh mode-0700 directory under the reserved output's parent, so normal publication stays on the same filesystem. If publication still errors, the error reports the retained staging path and the code leaves those files in place. A regression injects EXDEV at the rename and confirms the failure record remains. Focused suite: 16 passed; Ruff, mypy, and diff check passed. Please recheck the exact head.",
+                    "createdAt": "2026-10-23T21:49:50Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4364526718"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "scripts/run_attested_mlxlm_1971_v9_calibration.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Apply the sanitized Git environment during attestation**\n\nWhen ambient Git configuration defines an executable `core.fsmonitor`, this in-process attestation bypasses `_git_environment()`: its Git calls use `GIT_ENV` from `audit_mlxlm_1971_historical_implementation_hashes.py`, which retains the original environment and global configuration. Fresh evidence at this exact head: with Git 2.43, an ambient fsmonitor script executed during the real attestation despite the sanitized worktree commands; only the subsequent calibration child was mocked. Git documents this setting as the pathname of the [\u201cfsmonitor\u201d hook command](https://git-scm.com/docs/git-config/2.43.0#Documentation/git-config.txt-corefsmonitor). Because `attest_current_v9` runs `ls-files` after checking evaluator bytes, that command can modify already-verified files before dispatch without another byte check. Pass the sanitized environment through every attestation Git call in both operator paths, rather than only worktree creation and child execution.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/38eaf6dce670d5d8be0fcecc99cbcd35491aee0e/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T22:47:16Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4364847890"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "The attestation environment is sanitized in the current PR head. `audit_mlxlm_1971_historical_implementation_hashes.py::_git_environment()` removes all inherited `GIT_*` variables, disables system/global config, sets `GIT_NO_REPLACE_OBJECTS=1`, and applies command-scope `core.fsmonitor=false`; `GIT_ENV` is used by `audit_frozen_pair`, `_git_bytes`, and the attestation `ls-files` call. The regression `test_v9_attestation_disables_repository_fsmonitor` proves the local-config hook runs in an unsanitized positive control and does not run during attestation. I ran that test and `test_operator_disables_real_configured_checkout_hook_and_ambient_git_routes` on the current descendant; both pass. Please recheck the current PR head `8257a4dfe2106055a048ddd4b1520a08c7e4d658` and resolve this thread if the fix is confirmed.",
+                    "createdAt": "2026-10-23T23:16:42Z",
+                    "url": "https://github.com/mitukx/VARE/pull/114#discussion_r4365004289"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 168,
+              "path": "scripts/run_attested_mlxlm_1971_v9_calibration.py"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `45fd0da592`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:22:44Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:37:48Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:37:50Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `3ff9373971`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:42:32Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:47:27Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `2e463441e1`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T18:55:21Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T21:49:50Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `38eaf6dce6`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T22:47:15Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T23:16:42Z"
+            }
+          ]
+        }
+      },
+      "p117": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": [
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable repository hooks before staging trusted code**\n\nWhen the repository has an attacker-controlled `post-checkout` hook, including one selected through `core.hooksPath`, this command executes it inside the new worktree; the [Git hook documentation](https://git-scm.com/docs/githooks) confirms that `post-checkout` runs after `git worktree add` unless `--no-checkout` is used. The hook can add an untracked `scripts/__init__.py` or crafted bytecode, neither of which is covered by `PINNED_OPERATOR_SOURCES`, so the `-I` child can execute attacker code and emit forged passing evidence while all three checked source files still match Git. Disable hooks and untrusted Git configuration during both worktree checkouts and reject extra import artifacts before launching Python.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/2c1109b141ed469e3de84fe9a8011663a937fff7/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:23:13Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4357560734"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed on `316f89011d9a94b9df7a9218fec617ac37d2dc20`: the trusted worktree is now added with `--no-checkout`; sparse checkout and `read-tree -mu` materialize the selected trusted paths without invoking `post-checkout`. The real temporary-repository regression configures a malicious local `core.hooksPath` and verifies the hook marker is never created. The 56-test focused suite passes.",
+                    "createdAt": "2026-10-23T21:58:59Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364582172"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": null,
+              "path": "scripts/run_mlxlm_1971_v10_operator.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Validate the child evidence schema before returning it**\n\nIf the pinned subprocess returns a syntactically valid but incomplete object such as `{\"passed\": true}`, this check accepts it and the CLI exits successfully; the new dispatch test even treats `{\"passed\": false}` alone as valid. Consequently, missing task/protocol identities, case inventory, candidate hash, and grader/expected-output hashes are not treated as malformed output, so callers cannot distinguish complete v9 evidence from a truncated or forged result. Validate the exact action-specific evidence envelope before returning it.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/2c1109b141ed469e3de84fe9a8011663a937fff7/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:23:13Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4357560745"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "The current parent validates the complete action-specific evidence before returning the child result via `_validate_child_report`; it checks exact fields, pinned task/protocol/grader identities, all six cases, each outcome/timing, and aggregate consistency. The existing dispatch regression rejects `{\"passed\": false}`; on `316f89011d9a94b9df7a9218fec617ac37d2dc20` it now also rejects `{\"passed\": true}` and a partial identity-plus-pass object for both actions. Focused suite: 56 passed.",
+                    "createdAt": "2026-10-23T21:59:02Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364582395"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 526,
+              "path": "scripts/run_mlxlm_1971_v11_operator.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject export symlinks before canonicalizing paths**\n\nWhen `--source-repo` or `--patch` names a symlink, resolving it here erases that fact before the pinned v9 dispatcher receives the request, bypassing v9's explicit `source_root.is_symlink()` and `patch_path.is_symlink()` rejection. For a mutable patch referent, the historical exporter then validates, applies, and hashes the path in separate operations, allowing replacement between those steps and producing evidence for bytes different from those applied. Reject symlinks before resolution and bind the export to a stable snapshot rather than weakening the frozen input checks.\n\nAGENTS.md reference: [AGENTS.md:L72-L73](https://github.com/mitukx/VARE/blob/2c1109b141ed469e3de84fe9a8011663a937fff7/AGENTS.md#L72-L73)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:23:13Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4357560750"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": null,
+              "path": "scripts/run_mlxlm_1971_v10_operator.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Open patch inputs nonblocking before checking their file type**\n\nIf a mutable patch is replaced with a FIFO after the earlier `patch_path.is_file()` check, this `O_RDONLY` open blocks waiting for a writer before the regular-file validation can run. `O_NOFOLLOW` does not prevent opening FIFOs, and patch snapshotting runs in the parent without a timeout, so the operation can hang indefinitely despite the child-process timeout. Calling `_snapshot_patch` with a FIFO reproduces the hang. Include `O_NONBLOCK` when opening the input, then reject non-regular files using `fstat` before reading.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T21:51:43Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364538222"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed on `316f89011d9a94b9df7a9218fec617ac37d2dc20`: `_snapshot_patch` opens with `O_NONBLOCK` before checking `fstat`, then rejects FIFOs as non-regular. A subprocess regression has a two-second timeout and verifies the FIFO exits with the expected rejection instead of blocking. Focused suite: 56 passed.",
+                    "createdAt": "2026-10-23T21:59:03Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364582575"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 207,
+              "path": "scripts/run_mlxlm_1971_v11_operator.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Isolate local Git filters before materializing trusted source**\n\nIf the repository's Git metadata is attacker-controlled, disabling hooks and fsmonitor still leaves checkout filters executable: `.git/info/attributes` can assign a filter to the pinned operator, and `.git/config` can define its smudge command. Git documents that, upon checkout, the command's \u201cstandard output is used to update the worktree file.\u201d ([Git documentation](https://git-scm.com/docs/gitattributes#_filter)) I reproduced this against the integrated materialization helper: a smudge command executed inside `trusted-operator`, while `_verify_clean_checkout` passed and the pinned source bytes remained unchanged. Thus code runs before the trust checks even without any checkout hook. Materialize blobs without checkout conversion, or use an isolated Git repository that cannot inherit local filter configuration or attributes.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/316f89011d9a94b9df7a9218fec617ac37d2dc20/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T22:37:02Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364794431"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 111,
+              "path": "scripts/run_mlxlm_1971_v11_operator.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Read protocol inputs through bounded nonblocking descriptors**\n\nIf a mutable protocol or lock file is replaced with a FIFO after the preceding `is_file()` check, these ordinary `read_bytes()` calls block indefinitely before digest validation. This happens in the parent, before any subprocess timeout applies; a synchronized FIFO substitution reproduced the hang under a two-second external timeout. The patch snapshot's nonblocking protection does not cover these inputs. Open both files with no-follow/nonblocking descriptors, verify their regular-file type with `fstat`, and bound the bytes read before checking their pinned digests.\n\nAGENTS.md reference: [AGENTS.md:L103-L103](https://github.com/mitukx/VARE/blob/316f89011d9a94b9df7a9218fec617ac37d2dc20/AGENTS.md#L103-L103)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T22:37:02Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364794432"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": null,
+              "path": "scripts/run_mlxlm_1971_v10_operator.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve required test files in the nested v9 checkout**\n\nOn Git 2.43.0, the nested `git worktree add` in the pinned `run_pinned_v9_task` inherits this sparse selection, excluding `tests/`. Both actions consequently fail before export or grading: `attest_current_v9` requires the two test files listed in the frozen implementation manifest and raises `ValueError: v9 input is not a regular file: tests/test_mlxlm_1971_calibration_v9.py`. Exercising the real materialization helper and nested checkout confirmed that this tracked file is absent with index flag `S`; the mocked dispatcher tests do not exercise that boundary. Git documents that sparse checkout uses skip-worktree bits to \u201cavoid populating the contents of those files.\u201d ([Git documentation](https://git-scm.com/docs/git-sparse-checkout#_internals_sparse_checkout)) Include the required `tests` directory in the selection or ensure the nested historical checkout is non-sparse.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T22:48:16Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364853009"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": null,
+              "path": "scripts/run_mlxlm_1971_v10_operator.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Isolate export-source Git metadata before invoking v9**\n\nWhen `--source-repo` has attacker-controlled Git metadata, forwarding its original path leaves executable filters active despite isolating the operator checkout. The pinned exporter calls `verify_pinned_source_tree`, whose first `git status` runs against that repository before checking its baseline identity. I reproduced a `.git/info/attributes` plus `filter.evil.clean` command executing under the inherited child environment, before the verifier rejected the source. Git documents that filter drivers are [specified in repository configuration](https://git-scm.com/docs/gitattributes#_filter). The fresh evidence concerns the separate export-source repository, not the operator-materialization path addressed previously. Validate/export through isolated source metadata or raw Git objects so an invalid source cannot execute host commands before rejection.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/6884aa70276c57d9d218d7068ca51e4dbc741bbe/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T23:06:06Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364947053"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed by the prospective v12 operator already present in this PR. I extended its source-only regression to reproduce this exact clean-filter path: `.git/info/attributes` selects a `filter.clean` command, a direct `git status` executes the marker, and the v12 export path then snapshots the pinned commit into fresh bare metadata and completes without executing the marker. The same test retains the existing smudge-filter and upload-pack-hook checks. Focused validation: `tests/test_run_mlxlm_1971_v12_operator.py` \u2014 4 passed; Ruff, mypy, and `git diff --check` pass. No candidate grading or model inference ran. Please reassess this finding against head `6709aed996ce5ec315cf7a87930350dca6c0ee20`; I have left the thread unresolved pending independent confirmation.",
+                    "createdAt": "2026-10-24T00:35:34Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4365337228"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 475,
+              "path": "scripts/run_mlxlm_1971_v11_operator.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Materialize an isolated worktree before delegating export**\n\nEvery v12 export passes the bare snapshot directly to the historical exporter, but that exporter requires a populated working tree: `export_candidate_v9` calls `verify_pinned_source_tree`, whose first Git operation is `git status --porcelain --untracked-files=all`, followed by filesystem inventory checks under `mlx_lm/`. Against the snapshot, this status operation exits 128 with `fatal: this operation must be run in a work tree`, so even a valid pinned baseline cannot be exported. The synthetic regression and real manifest preflight explicitly create an isolated worktree, but this public dispatch path omits that step. Create the same detached worktree from the fresh bare metadata and pass its path to v11, with a regression covering the actual export handoff.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T23:17:33Z",
+                    "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4365008187"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 225,
+              "path": "scripts/run_mlxlm_1971_v12_operator.py"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `2c1109b141`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:23:13Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `96f76c98e4`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T21:51:42Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T21:58:59Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T21:59:02Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T21:59:03Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `316f89011d`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T22:37:02Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `3564947485`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T22:48:16Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `6884aa7027`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T23:06:06Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `00914d22d1`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T23:17:33Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T00:35:34Z"
+            }
+          ]
+        }
+      },
+      "p118": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": [
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Preserve missing-newline boundaries in generated diffs**\n\nWhen an allowlisted file has no trailing newline, `splitlines(keepends=True)` leaves its final line unterminated and `\"\".join(...)` concatenates the deletion and addition into a single hunk line such as `-one+two`. The function nevertheless returns `applied: true` and hashes this malformed diff, so the retained output cannot reliably represent or replay the applied edit; generate explicit no-newline markers or otherwise validate the diff before reporting success.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/83da0a80b8d78ca2045d4938e3728714cdab6585/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:23:10Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357560295"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed in 1758d16e. Shared LF-delimited rendering emits explicit missing-newline markers and snapshot reads preserve CRLF bytes. The regression failed on the prior implementation (2 failures/1 control pass) and now replays both generated diffs through Git, asserting exact bytes for LF, CRLF, no final newline, bare CR, and Unicode line separators. Structured/edit-format suite: 35 passed; Ruff and mypy passed. Frozen runtime/protocol/evidence files are unchanged.",
+                    "createdAt": "2026-10-23T08:25:42Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357580214"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "src/vare/agent_structured_edit.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject symlinks in the complete workspace-root path**\n\nWhen `root` is something like `alias/workspace` and `alias` is a symlink, `root.is_symlink()` is false and the subsequent component walk starts below that alias, so reads and `os.replace` operate through the symlink even without a concurrent writer. This bypasses the newly added workspace-alias protection and can expose or replace files outside the lexical candidate directory; require a canonical root identity or validate the root's ancestor components before reading allowlisted sources.\n\nAGENTS.md reference: [AGENTS.md:L97-L104](https://github.com/mitukx/VARE/blob/83da0a80b8d78ca2045d4938e3728714cdab6585/AGENTS.md#L97-L104)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:23:10Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357560308"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed in 1758d16e. Root validation now checks the absolute root and every ancestor component for symlinks before opening allowlisted source. A static alias/workspace regression failed before the change and now rejects workspace_revision, unified_diff, and apply_structured_edit while preserving the original bytes. Concurrent untrusted writers remain explicitly unsupported. Final-head CI and a new independent review remain required.",
+                    "createdAt": "2026-10-23T08:25:44Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357580472"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "src/vare/agent_structured_edit.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Quote control characters in diff paths**\n\nWhen an allowlisted filename contains a tab or newline, `_safe_path` accepts it but this raw header is not Git-applicable: a tab is parsed as the header\u2019s timestamp separator and a newline splits the header. I reproduced both cases at this head\u2014`apply_structured_edit()` returned `applied: true`, while `git apply --check -` failed\u2014so either Git-quote such paths or reject control characters before applying the edit.\n\nAGENTS.md reference: [AGENTS.md:L52-L52](https://github.com/mitukx/VARE/blob/1758d16ec653577e8a2039065763d5bf5fc9140b/AGENTS.md#L52-L52)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:30:39Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357618396"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed in e6631706. _safe_path now rejects ASCII control characters (including tab, LF, CR, ESC and DEL) before reading or mutating an allowlisted file. Five new regressions preserve original bytes and reject before stale-hash handling; 40 structured/edit-format tests now pass. Ruff, mypy and diff check pass. Please review this new head; no previous review or green CI is treated as its approval.",
+                    "createdAt": "2026-10-23T08:33:26Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357639764"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 31,
+              "path": "src/vare/agent_structured_edit.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject dot components before normalizing the path**\n\nWhen an exact allowlist entry is `./module.py` or `src/./module.py`, `PurePosixPath` removes the dot component before this condition examines `parsed.parts`, so the edit is accepted and applied. The generated header retains the original noncanonical name, however, and `git apply --check` rejects the retained diff with `invalid path`, leaving an `applied: true` result whose hashed diff cannot replay the edit; inspect the raw path components or use the canonical path consistently.\n\nAGENTS.md reference: [AGENTS.md:L52-L52](https://github.com/mitukx/VARE/blob/e6631706e967859ba2f7a340e1fe6aa09223f64d/AGENTS.md#L52-L52)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:37:35Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357672087"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed in 1c64e5ed. The raw name must now equal PurePosixPath(name).as_posix() before any file access, rejecting dot components, repeated separators and trailing separators. Four regressions fail on the prior head and preserve source on rejection; four additional canonical filenames (spaces, Unicode, quote, colon) round-trip through Git. Focused suite: 48 passed; Ruff/mypy/diff check pass. No frozen agent/evaluator implementation or historical evidence changed.",
+                    "createdAt": "2026-10-23T08:43:07Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357714755"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 73,
+              "path": "src/vare/agent_structured_edit.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject overlapping replacement matches**\n\nWhen the source contains overlapping occurrences, such as `aaa` with `old_text=\"aa\"`, `str.count()` reports one non-overlapping match even though the text starts at two offsets, so this supposedly exact edit is accepted and silently modifies the first occurrence (`Xa`) rather than rejecting the ambiguity. The same issue affects overlapping insertion anchors; count matches by advancing one character at a time, or otherwise verify that there is only one possible start offset.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:47:58Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357754476"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed in 451b8932. Replacement text and insertion anchors now verify a unique start offset by searching again from first_offset+1, including overlaps. Both aaa/aa regressions fail on the previous code and now reject without mutation or temporary files. Git replay controls also cover bare-CR source endings. Focused suite: 53 passed; Ruff/mypy/diff check pass. This is only the standalone prospective library; frozen #102 code and historical results are untouched.",
+                    "createdAt": "2026-10-23T08:51:45Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357785327"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "src/vare/agent_structured_edit.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject Git-metadata path components**\n\nWhen an exact allowlist entry contains a Git-metadata component such as `.git/config` or `dir/.git/config`, these predicates accept it and the source is mutated, but `git apply --check -` rejects the returned patch with `invalid path`. The operation therefore reports `applied: true` while its retained, hashed diff cannot reproduce the edit; reject Git-protected path components before mutation.\n\nAGENTS.md reference: [AGENTS.md:L52-L52](https://github.com/mitukx/VARE/blob/451b8932c02cc58b4fd378304d418bcbbe3a369a/AGENTS.md#L52-L52)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T08:56:13Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357820932"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed in 709ad06b: any case-insensitive .git component is rejected before source access or mutation, including nested and mixed-case paths. Three metadata-path regressions preserve original bytes. Structured/edit-format suite: 56 passed; Ruff/mypy/diff check pass. No frozen runtime/evaluator or protocol/evidence files changed. A separate main-based test-only PR #119 addresses the durable lease-fixture failure seen in this branch's CPU CI; it is not merged yet.",
+                    "createdAt": "2026-10-23T08:59:39Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357847149"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 76,
+              "path": "src/vare/agent_structured_edit.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject Git's protected metadata aliases**\n\nFresh evidence at exact head `709ad06` shows that an allowlisted `.git./config` path (likewise `dir/.git /config`, `git~1/config`, and `.git::$INDEX_ALLOCATION/config`) still passes this exact-component predicate: `apply_structured_edit()` mutates the file and returns `applied: true`, but Git 2.43 rejects the generated diff under `git apply --check -` with `invalid path`. Extend the check to cover Git's protected metadata aliases so the retained diff can replay the reported edit.\n\nAGENTS.md reference: [AGENTS.md:L52-L52](https://github.com/mitukx/VARE/blob/709ad06be86741836a2441f4b79589be1ea49645/AGENTS.md#L52-L52)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T09:03:45Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357879961"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed in 552d6f61. The metadata predicate now rejects trailing-dot/space and alternate-stream aliases, NTFS short-name aliases, and aliases containing Unicode format characters in addition to mixed-case .git. All reported alias paths and additional HFS/NTFS controls are rejected before mutation. Structured/edit-format suite: 62 passed; Ruff/mypy/diff check pass. No frozen source/protocol/evidence changes. #119 has now merged independently into main; this stacked branch has not silently absorbed its fixture change.",
+                    "createdAt": "2026-10-23T09:10:28Z",
+                    "url": "https://github.com/mitukx/VARE/pull/118#discussion_r4357934462"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "src/vare/agent_structured_edit.py"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `83da0a80b8`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:23:09Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:25:42Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:25:44Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `1758d16ec6`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:30:39Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:33:27Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `e6631706e9`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:37:35Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:43:07Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `1c64e5ed6a`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:47:58Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:51:45Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `451b8932c0`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:56:13Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T08:59:39Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `709ad06be8`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T09:03:45Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T09:10:28Z"
+            }
+          ]
+        }
+      },
+      "p120": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": [
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Reject candidates that forge evaluator completion**\n\nWhen candidate source executes code during import, it controls the same stdout and process exit status used to establish evaluator success. A replacement module can emit the expected oracle JSON and call `os._exit(0)` before `CAL.CHILD` invokes any parser; under pytest, it can simply exit zero during collection. A local subprocess reproduction of these execution paths satisfied both acceptance conditions despite providing no `parse_tool_call` implementation. Container isolation does not prevent this in-process spoofing, so the grader can award a positive training reward without executing the regression tests. Enforce a candidate execution boundary that rejects evaluator interference and add this early-exit/output-forgery case to calibration.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/58ecd9c9727a1544a5a08c9c250f1f36dd9a5f8d/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-26T10:08:58Z",
+                    "url": "https://github.com/mitukx/VARE/pull/120#discussion_r4376048244"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed on head c4f53f6b. The task-specific candidate boundary now rejects process-control imports, dynamic execution, candidate output, and early-exit APIs before entering the isolated evaluator. The regression test uses the reported import/print/os._exit(0) spoof and asserts neither the source archive nor Docker candidate runner is invoked. Focused validation: 8 tests passed; Ruff, compileall, and git diff --check passed. The PR remains open for human review.",
+                    "createdAt": "2026-10-26T21:07:03Z",
+                    "url": "https://github.com/mitukx/VARE/pull/120#discussion_r4382487326"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Follow-up at head `8aacae54d0f8893580a77cb8bb831e7621a2403a`: the grader now verifies the pinned baseline file hash and requires the complete candidate module AST to match that baseline outside the body of `_convert_param_value`. This prevents import-time statements, new imports, test-surface changes, and early exits; the existing static checks also reject process/output APIs.\n\nI reproduced a module-level forged-completion candidate using `pathlib.Path` to write a fake valid oracle JSON line followed by `SystemExit(0)`. The grader rejects it immediately with `candidate changes code outside _convert_param_value body`; neither Docker execution nor public tests are invoked. On the actual pinned upstream sources, baseline grades FAIL, known fix grades PASS, and the incorrect `mutant_restore_default_string` grades FAIL. The known fix changes only `_convert_param_value` and passes the scope comparison. Focused tests: 7 passed; Ruff, compileall, and `git diff --check` pass. Exact-head CI is running. This finding remains open for independent reviewer confirmation; I am not treating this comment as approval.",
+                    "createdAt": "2026-10-27T11:13:11Z",
+                    "url": "https://github.com/mitukx/VARE/pull/120#discussion_r4387981610"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Independent Sprint VI verification at exact head `8aacae54d0f8893580a77cb8bb831e7621a2403a`: I reran `tests/test_mlx_lm_1910_candidate_grader.py` locally with the project\u2019s Python 3.12 environment; all 7 tests passed. The tests include the module-level forged completion case and assert that neither candidate Docker execution nor the public test runner is reached. GitHub exact-head required checks are green. I am leaving this finding unresolved for independent reviewer confirmation; this is regression evidence, not an approval.",
+                    "createdAt": "2026-10-27T15:09:19Z",
+                    "url": "https://github.com/mitukx/VARE/pull/120#discussion_r4390398788"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": 194,
+              "path": "scripts/grade_mlx_lm_1910_candidate_v1.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Reject manifests without a nonempty file inventory**\n\nIf a malformed manifest omits `files`, this default silently converts it into a valid empty inventory. Running the verifier against a directory containing only `evidence-manifest.json` with `{}` returns exit code zero and `status=COMPLETED`, although no evidence was verified; explicit empty objects and arrays also pass. This success marker is consumed by `run_mlx_lm_1910_qwen25_debug_v1.py` as its prior-run evidence check. Require the inventory field and reject empty inventories so missing provenance cannot be reported as successful verification.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/58ecd9c9727a1544a5a08c9c250f1f36dd9a5f8d/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-26T10:08:58Z",
+                    "url": "https://github.com/mitukx/VARE/pull/120#discussion_r4376048257"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Addressed on head c4f53f6b. The verifier now fails when files is absent or when its object/list inventory is empty. Added regression coverage for {}, {\"files\": {}}, and {\"files\": []}; the focused manifest and candidate-grader suite passes 8 tests. The PR remains open for human review.",
+                    "createdAt": "2026-10-26T21:07:05Z",
+                    "url": "https://github.com/mitukx/VARE/pull/120#discussion_r4382487643"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "I extracted the nonempty-inventory fix into focused PR #140, based directly on `main`. It rejects a missing `files` field and empty object/list inventories. The focused suite passes 5 tests and Ruff is clean; exact-head GitHub CI is still running. I am leaving this finding unresolved until the human review and CI gates complete.",
+                    "createdAt": "2026-10-27T06:49:05Z",
+                    "url": "https://github.com/mitukx/VARE/pull/120#discussion_r4385854684"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": null,
+              "path": "scripts/verify_coding_agent_evidence_manifest_v1.py"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `58ecd9c972`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-26T10:08:57Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-26T21:07:03Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-26T21:07:05Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-27T06:49:05Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-27T11:13:11Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-27T15:09:19Z"
+            }
+          ]
+        }
+      },
+      "p121": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": [
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Require the specific second-registration conflict for baseline success**\n\nIf the first registration raises an unrelated `ValueError`, or the final converter assertions fail, this branch still reports `BASELINE_FAIL_REPRODUCED` and exits successfully. I confirmed this by substituting a registration double that raises an initialization `ValueError`: only one registration was attempted, yet the baseline was classified as reproduced. This recreates the false-positive failure mode that the replay is intended to resolve, rather than establishing the protocol's required second-registration conflict. Require the first registration to succeed and validate the expected conflict specifically around the second call; classify other failures as replay failures.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/93953c28bb433cb4b8a554dc4b9fdf4550051dc3/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T00:04:26Z",
+                    "url": "https://github.com/mitukx/VARE/pull/121#discussion_r4365213522"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "The false-positive was isolated to the retained v2 replay. I left its raw files and source manifest unchanged and added the prospective v3 replay, whose baseline property requires the first registration to succeed and the second to raise the exact expected conflict. Its retained `control-first-call-error` record is `FIRST_CALL_ERROR_REJECTED`. I added a focused parameterized regression for both the valid baseline sequence and an unrelated first-call `ValueError`; both tests pass on head `a937f4ad6eacb63d679952f7a05d39d04afab59a`. No model inference or hidden grading ran. Please reassess the finding against v3 and the new regression; I have left the thread unresolved pending independent confirmation.",
+                    "createdAt": "2026-10-24T00:36:39Z",
+                    "url": "https://github.com/mitukx/VARE/pull/121#discussion_r4365341001"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 246,
+              "path": "scripts/reproduce_transformers_49412_source_replay_v2.py"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `93953c28bb`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T00:04:25Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T00:36:39Z"
+            }
+          ]
+        }
+      },
+      "p122": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p126": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": [
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Account for corrected sources in the matched-run preflight**\n\nOn this committed tree, the documented reproduction command always aborts before inference with `independent auditor hash differs from frozen protocol`: the protocol pins auditor hash `62e220\u2026`, while the committed corrected auditor hashes to `ead69e\u2026`. The crash-runner hash also differs. Although the crash runner and auditor support correction manifests, this runner has no equivalent path and repeats the original hashes in its source-inventory check. Preserve the frozen protocol, but provide a hash-bound correction path here or document how to reconstruct the frozen execution worktree; otherwise the reproduction commands in `crash-recovery-results-v6.md` cannot produce the prerequisite seed bundles.\n\nAGENTS.md reference: [AGENTS.md:L192-L192](https://github.com/mitukx/VARE/blob/a8a507a5ed55940ee70db01e9f72fb5595883796/AGENTS.md#L192-L192)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T13:50:51Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367320350"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 482,
+              "path": "scripts/benchmark_verifier_consistent_async_grpo.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Require each declared recovery cutpoint exactly once**\n\nIf a crash summary repeats one valid cutpoint five times and omits the other four, this audit still reports `PASS`: the initial check only verifies the list length and declared kill count, and the loop only checks that each name belongs to `expected_attempts`. It consequently rereads the same case files five times and reports five successful recovery cases without evidence for the omitted phases. Compare the cutpoint names against the complete required set and reject duplicates before auditing individual cases, so malformed bundles cannot satisfy the five-cutpoint recovery criterion.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/a8a507a5ed55940ee70db01e9f72fb5595883796/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T13:50:51Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367320353"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 476,
+              "path": "scripts/audit_verifier_consistent_async_grpo.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject non-finite tensor differences before reducing errors**\n\nIf a later parameter or Adam-state tensor contains NaN while an earlier tensor has a finite difference, Python's `max(errors)` can ignore the NaN and return `0.0`. Consequently, `replay_update` can accept a non-finite checkpoint as matching the independent numerical reference within `2e-6`. The runner's `max_tensor_error` has the same issue. Explicitly reject non-finite tensor differences in both helpers before reducing them, so corrupted or numerically unstable states cannot pass the audit.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/79b3d2fb324133d2a6fb738d431f97fcf7cde269/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T13:55:18Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367331318"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "scripts/audit_verifier_consistent_async_grpo.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Use a corrected auditor for the reproduction pilot gate**\n\nFollowing these instructions runs the original auditor from `69e9ab9`, whose `replay_update` assigns to `task.metadata` even though `Task` is a frozen dataclass. This deterministically raises `FrozenInstanceError`, as already documented in `auditor-correction.md`, so `audit-82106.json` is never written and the conditional second-seed step cannot proceed. Run this pilot audit from a correction-compatible checkout with the appropriate manifests instead of the frozen execution checkout, while preserving the original protocol and rollout artifacts.\n\nAGENTS.md reference: [AGENTS.md:L192-L192](https://github.com/mitukx/VARE/blob/302b4707c036d0650732a064daaae10f5669e83f/AGENTS.md#L192-L192)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T14:12:57Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367378574"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "benchmarks/verifier_consistent_async_grpo_v6/crash-recovery-results-v6.md"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Allow the corrected pilot audit without a crash bundle**\n\nThe documented pilot audit in `crash-recovery-results-v6.md` still aborts before writing `audit-82106.json`. The corrected checkout avoids the previously reported `FrozenInstanceError`, but its crash runner differs from the frozen hash, so this preflight now unconditionally requires `--crash-run` and its correction manifest\u2014even for `--allow-partial`. I reproduced this failure using retained frozen-source snapshots and the documented auditor/runner manifests. Because the reproduction procedure runs the pilot gate before creating the crash bundle, it cannot reach the conditional second-seed step. Allow the crash-source correction to be validated without requiring crash artifacts, or otherwise provide a working pilot-only audit path.\n\nAGENTS.md reference: [AGENTS.md:L192-L192](https://github.com/mitukx/VARE/blob/814141b092e402863e6c032f3b7ed0f1be75d998/AGENTS.md#L192-L192)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T14:24:58Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367408296"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Fixed in 73b62971b8fe4df6c8ec0a6fa80a67af3a784093. The corrected auditor now requires and hash-validates the crash-runner correction when the source differs from the protocol, without requiring --crash-run for the seed-only pilot gate; auditor-correction-v4 also binds that manifest hash. The retained seed-82106 pilot audit passed and returned expand_after_pilot=true. The complete two-seed/five-cut audit passed with outcome equivalence to the previous audit. Focused audit/crash tests (15) and Ruff passed; README, report, and index v5 now document the runnable sequence.",
+                    "createdAt": "2026-10-24T14:29:53Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367420484"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "scripts/audit_verifier_consistent_async_grpo.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve existing run artifacts when rejecting an output path**\n\nWhen `--output` points to an existing run, `run()` correctly raises `output directory already exists`, but this exception handler then writes into that same directory. I reproduced an existing `failure.json` being overwritten with the new preflight error, destroying the original failure evidence; targeting a completed run instead adds an unmanifested file and makes its inventory fail verification. Track whether this invocation created the output directory, and write failure artifacts only in that case so rejected invocations leave retained runs untouched.\n\nAGENTS.md reference: [AGENTS.md:L49-L49](https://github.com/mitukx/VARE/blob/e7c7a26883686917dc1abf0efbde8b64de88c5d2/AGENTS.md#L49-L49)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T14:33:50Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367430039"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Fixed in 1dacc790da69a88c14d44e65ff311ddb4eefcbbb. The exception path records output ownership only after this invocation creates the directory, and writes failure.json only for an owned directory. Reproduced the original overwrite/addition against temporary completed-run and failed-run fixtures; the new regression tests confirm both directory snapshots are byte-for-byte unchanged (2 passed). Correction manifest runner-output-safety-correction-v1 binds the new runner/test hashes and leaves the frozen v6 protocol hash unchanged.",
+                    "createdAt": "2026-10-24T14:46:27Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367462740"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "scripts/benchmark_verifier_consistent_async_grpo.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Bind the output-safety runner in the auditor correction chain**\n\nWhen auditing retained bundles from this committed checkout, the auditor aborts with `runner correction manifest does not bind this code to frozen protocol` before inspecting the results. The new output-safety change moves the matched runner's hash to `8406b56\u2026`, but `matched-runner-correction-v1.json` still binds `158ab176\u2026`. The new output-safety manifest cannot substitute because this check rejects its schema, and the auditor manifest also pins the old correction manifest's hash. I reproduced this preflight failure using retained frozen-source snapshots and all three prescribed correction manifests. Update the hash-bound correction chain so the current auditor remains usable without reverting to the historical checkout.\n\nAGENTS.md reference: [AGENTS.md:L192-L192](https://github.com/mitukx/VARE/blob/1dacc790da69a88c14d44e65ff311ddb4eefcbbb/AGENTS.md#L192-L192)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T14:50:26Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367473415"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Fixed in 12910fb44b1b03289ccd272cf6f650a6c703fb0c and documented in 613bd3f33bab6e085ef8fb114874da7a87a96eaf. The new matched-runner correction revision binds the current output-safe runner and chains the prior v1 runner fix plus runner-output-safety-correction-v1; the new auditor correction manifest binds that exact runner-manifest hash without modifying the auditor or frozen v6 manifests. I reran the retained seed-only and full two-seed/five-cut offline audits through this chain; both pass, and the full outcome is exactly equivalent to v4 after excluding only the auditor/runner correction-manifest hashes. README/report commands now audit retained bundles and do not regenerate consumed seeds.",
+                    "createdAt": "2026-10-24T14:58:55Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367498264"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 626,
+              "path": "scripts/audit_verifier_consistent_async_grpo.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Verify recovered consumption counts against the SQLite snapshot**\n\nIf a recovery bundle contains a stale pre-acknowledgment snapshot but a final worker summary claiming eight consumed trajectories, this audit still passes: the consumption check reads only `worker[\"store_counts\"]`. `audit_trajectory_store` verifies internal consistency, not completion; I confirmed that even an empty store returns `pass=True`. Consequently, the independent audit can report successful exactly-once consumption without that evidence in the retained database. Query the snapshot's trajectory states and acknowledgment records and compare them with the claimed counts before accepting recovery.\n\nAGENTS.md reference: [AGENTS.md:L52-L52](https://github.com/mitukx/VARE/blob/613bd3f33bab6e085ef8fb114874da7a87a96eaf/AGENTS.md#L52-L52)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T15:03:32Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367510160"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "scripts/audit_verifier_consistent_async_grpo.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Enforce the frozen behavior-logprob alignment threshold**\n\nFor a bundle whose stored behavior log-probabilities do not match its incumbent checkpoint, numerical replay can still match the candidate if training used those same incorrect probabilities. This function computes the independent alignment error but only includes it in the report; neither it nor its caller rejects an error exceeding the frozen `1e-4` limit. Unlike `checked_train` in the matched runner, the independent auditor can therefore authorize continuation despite a protocol-defined correctness abort. Require a finite alignment error below the frozen threshold before accepting the replay.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/613bd3f33bab6e085ef8fb114874da7a87a96eaf/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T15:03:32Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367510163"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 330,
+              "path": "scripts/audit_verifier_consistent_async_grpo.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Verify the durable active pointer in the recovery audit**\n\nIf a recovered promotion database still points to `policy-0`, this audit can nevertheless report `PASS`: it checks only transaction states in SQLite, then compares `active.json` with the worker's summarized journal rather than the database's `active` row. I reproduced acceptance with all five SQLite active pointers left at `policy-0` while the JSON records claimed `policy-1`. The subsequent checkpoint comparison does not establish which checkpoint the durable journal actually selects. Read the persisted active policy and checkpoint digest, and require them to match both `active.json` and the actual recovered checkpoint hash before accepting recovery.\n\nAGENTS.md reference: [AGENTS.md:L52-L52](https://github.com/mitukx/VARE/blob/613bd3f33bab6e085ef8fb114874da7a87a96eaf/AGENTS.md#L52-L52)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-24T15:11:21Z",
+                    "url": "https://github.com/mitukx/VARE/pull/126#discussion_r4367530986"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "scripts/audit_verifier_consistent_async_grpo.py"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `a8a507a5ed`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T13:50:51Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `79b3d2fb32`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T13:55:18Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `302b4707c0`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T14:12:57Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `814141b092`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T14:24:58Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T14:29:53Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `e7c7a26883`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T14:33:50Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T14:46:27Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `1dacc790da`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T14:50:26Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T14:58:55Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `613bd3f33b`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T15:03:32Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `613bd3f33b`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-24T15:11:21Z"
+            }
+          ]
+        }
+      },
+      "p131": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p133": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": [
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Bound the path inventory independently of search results**\n\nWhen the allowlist contains many moderately long paths, `indexed_paths` alone exceeds the response budget, and `_bounded()` discards every match before returning `output_limit_too_small`. I reproduced this with 128 valid source paths of 116 characters each under the default 8 KiB limit: indexing succeeds, but every search fails regardless of query. Truncate or omit the path inventory independently so that supported source sets still return useful bounded search results.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-26T10:10:07Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4376057864"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Implemented downstream in descendant PR #139 at head `25c16910f47f5f1b1aa84d7325723a1a3ad4dc29` (still Draft, not merged). `_bounded()` prunes `indexed_paths` independently to keep the actual serialized JSON result within the byte cap while retaining ranked hits. Regression coverage includes `tests/test_navigation_review_regressions_v1.py::test_large_inventory_does_not_displace_a_useful_hit` (128-path inventory, hit retained, inventory marked truncated, exact byte count) and `tests/test_source_navigation_v1.py::test_search_response_has_a_hard_serialized_output_bound`. The exact-head #139 CI snapshot reported 20/20 checks successful. I\u2019m leaving this thread unresolved because the fix is carried by the descendant PR, not this PR\u2019s own head.",
+                    "createdAt": "2026-10-26T19:57:26Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4381823268"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Rechecked descendant PR #139 at exact head `087914fb9fc127302ab632cc665f9b7352b0c47c`: this fix and its regression tests are still present. Local verification: `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3.12 -m pytest -q tests/test_navigation_review_regressions_v1.py` -> 4 passed. The newer full run on this head passes Python 3.11, 3.12, and 3.13; GitHub still displays an earlier Python 3.13 run that timed out in a 5-second subprocess audit. PR #139 remains Draft and unmerged, so I am leaving this PR #133 thread unresolved; the fix is only on the descendant branch.",
+                    "createdAt": "2026-10-26T23:45:13Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4383704021"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Implemented on PR #133 head `947bbb08054174f7e3c569e257f129091c8df04f`. `_bounded()` now trims auxiliary `indexed_paths` before dropping ranked search hits and marks the inventory truncated. I copied the regression test to the unchanged prior head `a65d59e5704b84a934a49385551a8d2311a01575`; it failed with `output_limit_too_small`. On `947bbb08`, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q tests/test_source_navigation_v1.py tests/test_run_local_agent_tool_format.py` passes (37 tests), and Ruff plus `git diff --check` pass. The useful hit remains in the bounded result with exact serialized byte accounting. I am leaving the thread unresolved for reviewer confirmation.",
+                    "createdAt": "2026-10-27T16:49:23Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4391562163"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Final exact-head evidence at PR #133 head `e8ab4705b84d82cd79e2883c391083087e82b4e8`: the 37-test source-navigation/tool regression suite passes locally; exact-head `ci` [40554669721](https://github.com/mitukx/VARE/actions/runs/40554669721), `cpu-evidence` [40554669903](https://github.com/mitukx/VARE/actions/runs/40554669903), and `e2e-system-cpu` [40554669884](https://github.com/mitukx/VARE/actions/runs/40554669884) all pass. The historical V4 continuation suite completed 95/95 and GRPO CPU regression 4/4. The source-navigation fix remains on the PR branch; it is not in main. Leaving this thread unresolved for independent reviewer confirmation.",
+                    "createdAt": "2026-10-27T18:07:47Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4392393318"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": 328,
+              "path": "src/vare/source_navigation_v1.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Retry index construction after a recoverable build failure**\n\nIf a source temporarily exceeds an index limit or becomes unreadable, the failed rebuild clears the snapshot and sets `_last_build_error`; this early return then prevents all subsequent freshness checks and rebuilds, even after the source is repaired. I reproduced this by exceeding the per-file line limit, searching once, restoring a valid two-line file, and searching again: the navigator permanently reports the old limit error. Retry a bounded rebuild on subsequent searches so a recoverable source problem does not disable navigation for the remainder of the repair session.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-26T10:10:07Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4376057870"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Implemented downstream in descendant PR #139 at head `25c16910f47f5f1b1aa84d7325723a1a3ad4dc29` (still Draft, not merged). `SourceNavigatorV1.search()` now retries `_rebuild()` whenever a prior build error exists, as well as when an index becomes stale. Regression coverage includes `tests/test_navigation_review_regressions_v1.py::test_failed_rebuild_is_retried_after_source_repair` and `test_failed_initial_read_can_recover`. The exact-head #139 CI snapshot reported 20/20 checks successful. I\u2019m leaving this thread unresolved because the fix is carried by the descendant PR, not this PR\u2019s own head.",
+                    "createdAt": "2026-10-26T19:57:28Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4381823557"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Rechecked descendant PR #139 at exact head `087914fb9fc127302ab632cc665f9b7352b0c47c`: this fix and its regression tests are still present. Local verification: `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3.12 -m pytest -q tests/test_navigation_review_regressions_v1.py` -> 4 passed. The newer full run on this head passes Python 3.11, 3.12, and 3.13; GitHub still displays an earlier Python 3.13 run that timed out in a 5-second subprocess audit. PR #139 remains Draft and unmerged, so I am leaving this PR #133 thread unresolved; the fix is only on the descendant branch.",
+                    "createdAt": "2026-10-26T23:45:04Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4383702872"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Implemented on PR #133 head `947bbb08054174f7e3c569e257f129091c8df04f`. `search()` now retries a bounded `_rebuild()` when a prior index build failed, while still returning a fail-closed error if the retry fails. The new fail-once index read regression failed on unchanged head `a65d59e5704b84a934a49385551a8d2311a01575` with `source_read_failed`; it passes on `947bbb08`. The same relevant suite passes 37 tests, with Ruff and `git diff --check` clean. I am leaving the thread unresolved for reviewer confirmation.",
+                    "createdAt": "2026-10-27T16:49:25Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4391562670"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Final exact-head evidence at PR #133 head `e8ab4705b84d82cd79e2883c391083087e82b4e8`: the 37-test source-navigation/tool regression suite passes locally; exact-head `ci` [40554669721](https://github.com/mitukx/VARE/actions/runs/40554669721), `cpu-evidence` [40554669903](https://github.com/mitukx/VARE/actions/runs/40554669903), and `e2e-system-cpu` [40554669884](https://github.com/mitukx/VARE/actions/runs/40554669884) all pass. The historical V4 continuation suite completed 95/95 and GRPO CPU regression 4/4. The source-navigation fix remains on the PR branch; it is not in main. Leaving this thread unresolved for independent reviewer confirmation.",
+                    "createdAt": "2026-10-27T18:07:49Z",
+                    "url": "https://github.com/mitukx/VARE/pull/133#discussion_r4392393617"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": null,
+              "path": "src/vare/source_navigation_v1.py"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `a65d59e570`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-26T10:10:06Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-26T19:57:26Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-26T19:57:28Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-26T23:45:04Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-26T23:45:13Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-27T16:49:23Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-27T16:49:25Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-27T18:07:47Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-27T18:07:49Z"
+            }
+          ]
+        }
+      },
+      "p135": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p136": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p137": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p139": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p142": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p145": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": [
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Make the public-test tool contract conditional on the family**\n\nFor `trl-7913`, the protocol explicitly sets `public_test_sha256` to null and says no public test is exposed, but this global setting and the frozen allowlist require public-test mode. In the unchanged runner, `scripts/run_local_agent.py:374-376` rejects a configured public-test image unless the task contains exactly one `test_public.py`; omitting the image instead removes `run_public_tests` from the model's tools. Consequently, this included family cannot execute under the frozen tool contract. Freeze a family-specific public-test setting and corresponding allowlist so families without public tests can use syntax checks without changing the protocol at execution time.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-28T14:26:56Z",
+                    "url": "https://github.com/mitukx/VARE/pull/145#discussion_r4401798596"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Added prospective v2 at 1226dedc without changing frozen v1. Each family now pins public-test availability, tool allowlist, container requirement and validation tools. trl-7913 omits the public-test image/tool and uses syntax feedback before independent grading. transformers-49703 has no pinned public-test availability in v1, so v2 explicitly blocks it pending a separate qualification rather than guessing. The contract is checked against the actual runner tools_for(): 8 tests passed across v1/v2; Ruff and diff checks passed. CI is running. Leaving the thread for reviewer confirmation; no model inference has run under this protocol.",
+                    "createdAt": "2026-10-28T15:26:29Z",
+                    "url": "https://github.com/mitukx/VARE/pull/145#discussion_r4402526211"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Resolved prospectively in protocol v2 without modifying frozen v1. Each included family now pins public-test availability and the runner allowlist; `trl-7913` omits both the public-test image and `run_public_tests` and uses syntax feedback, while `transformers-49703` is blocked because its public-test metadata is unknown. On main-synced head `1a99df2861b79bedc29ca400a35505bceb47c686`, the targeted protocol/runner tests passed (25 passed), `git diff --check` passed, and all 19 exact-head CI checks passed. V2 keeps `inference_authorized: false`; no model inference was run under it.",
+                    "createdAt": "2026-10-28T21:11:32Z",
+                    "url": "https://github.com/mitukx/VARE/pull/145#discussion_r4406129634"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 141,
+              "path": "protocols/development_repository_repair_campaign_v1.json"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `875b66a9b4`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-28T14:26:56Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-28T15:26:29Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-28T21:11:32Z"
+            }
+          ]
+        }
+      },
+      "p146": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p148": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": []
+        },
+        "reviews": {
+          "nodes": []
+        }
+      },
+      "p99": {
+        "reviewDecision": null,
+        "reviewThreads": {
+          "nodes": [
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Test more than the exposed 0.5 scale**\n\nBecause the only candidate-visible case always supplies `value_scale = 0.5`, an implementation that uses a constant 0.5 whenever `attention_value_scale` is present will match both golden outputs and pass while producing incorrect results for every other configured scale. Add multiple distinct scale cases so this grader establishes that the configuration value itself is honored.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/a892e39b6baa746b63e4ab2133039b09b958be4a/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-21T02:24:37Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4332389672"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 33,
+              "path": "src/vare/mlxlm_1971_repo_task.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Exercise the cache path before accepting patches**\n\nBoth oracle calls run a cache-free full forward, so a patch that applies the scale after attention (or after the bias-free output projection) produces the same tensors and passes even though it leaves cached values unscaled, contrary to the task's required pre-cache placement. Include incremental calls with `make_cache()` and verify the resulting cached-generation behavior so such patches cannot count as successful.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/a892e39b6baa746b63e4ab2133039b09b958be4a/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-21T02:24:37Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4332389677"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 32,
+              "path": "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Use a fresh output path in the reproduction command**\n\nIn a fresh checkout, this documented command fails before calibration because the committed `results/mlxlm-1971-isolated-v3/run-1` directory already exists while `main()` calls `output.mkdir(..., exist_ok=False)`. Point the example at a new path such as `/tmp/mlxlm-1971-v3-run` so readers can reproduce the retained result without first deleting it.\n\nAGENTS.md reference: [AGENTS.md:L150-L152](https://github.com/mitukx/VARE/blob/370bf130659bfbee31e2ea99cecf3175926e1a3d/AGENTS.md#L150-L152)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-22T20:45:28Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4353343850"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "docs/mlsys-repository-task-mlxlm-1971-v3-report.md"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Include all versioned task modules in the audit inventory**\n\nWhen a continuation campaign runs from the current tree, `scripts/benchmark_e2e_rl_continuation.py` snapshots every Python file under `src/vare`\u2014now 81 files\u2014but this inventory adds only the base #1971 module and omits `mlxlm_1971_repo_task_v2.py`, `_v3.py`, and `_v4.py`. Because `validate_source_inventory()` accepts only an exact `EXPECTED_SOURCES` set, the auditor will reject the manifest from any such campaign as `pinned source inventory differs`; the environment-gated test also retains the stale expected count of 78. Add all three modules to the inventory and update the count.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-22T20:56:21Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4353441429"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Fixed in current-source inventory: added `src/vare/mlxlm_1971_repo_task_v9.py` to the runtime source set. `tests/test_e2e_rl_continuation.py` now passes its exact inventory equality check. The frozen historical source set and run manifest were not rewritten.",
+                    "createdAt": "2026-10-23T03:20:07Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355764214"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 86,
+              "path": "scripts/audit_e2e_rl_continuation.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Require semantic mismatches from negative controls**\n\nIf the baseline or either mutant times out, crashes during import, or emits malformed output, its report still has `passed == False`, so this predicate can declare the calibration successful as long as the known fix and red-team checks pass. That does not demonstrate that the grader distinguishes the intended value-scale defects; require the expected per-case pattern, including `wrong_output` failures and the constant mutant's passing 0.5 case, rather than accepting any failure mode.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/1bc1b434fd63e55558a69381618ed1209818a20f/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-22T20:56:21Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4353441452"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "The unversioned grader now dispatches to v9. Its frozen calibration requires six per-case outcomes: baseline wrong_output on all cases, exact fix pass on all, constant-0.5 pass only at 0.5, and post-cache mutant pass on full-forward but wrong_output on cached cases. Raw v9 evidence records those exact patterns; v4 historical code/evidence remains unchanged.",
+                    "createdAt": "2026-10-23T03:20:09Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355764317"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 288,
+              "path": "scripts/run_mlxlm_1971_calibration_v4.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Use a fresh output path for the v2 reproduction**\n\nIn the checkout containing this report and its retained evidence, the documented output directory already exists, while the runner creates it with `exist_ok=False`; consequently the command cannot reproduce the run without first deleting retained evidence. Point the example to a fresh path such as `/tmp/mlxlm-1971-v2-run` and, because v2 is now historical, state the locked implementation revision that must be checked out.\n\nAGENTS.md reference: [AGENTS.md:L150-L152](https://github.com/mitukx/VARE/blob/1bc1b434fd63e55558a69381618ed1209818a20f/AGENTS.md#L150-L152)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-22T20:56:21Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4353441459"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "The current v2 report now uses a unique `/tmp/mlxlm-1971-v2-run-<uuid>` destination and identifies the exact locked implementation revision `4c0ae92128f1bea4098a18e130294f562c95c6ff`. I verified the v2 protocol and lock inventories match and all 11 locked file hashes match that Git tree; the command no longer targets the retained run-1 path. V2 and its historical evidence remain unchanged.",
+                    "createdAt": "2026-10-23T03:29:50Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355808660"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "docs/mlsys-repository-task-mlxlm-1971-v2-report.md"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve no-cache scaling in the cache mutant**\n\nWhen `cache is None`, this replacement now omits value scaling entirely. Since every case also compares the full-forward result, the mutant is rejected by that unrelated mismatch even if the grader's cache-state comparison is removed or broken, so the retained calibration does not establish that the cache check detects post-update scaling. Keep the scaling after `update_and_fetch` but outside the cache guard so only the cached values distinguish this control.\n\nAGENTS.md reference: [AGENTS.md:L58-L58](https://github.com/mitukx/VARE/blob/97830a2ea699fb92c63fd1d0f46b4ccf28100791/AGENTS.md#L58-L58)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-22T21:04:44Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4353515290"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "The old v5 calibration is retained as historical and is not treated as current proof. V9 reruns the post-cache mutant against the current grader; raw evidence shows all three full-forward cases pass and all three cached cases fail specifically as wrong_output.",
+                    "createdAt": "2026-10-23T03:20:11Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355764424"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 226,
+              "path": "scripts/run_mlxlm_1971_calibration_v5.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Validate every file copied from the pinned checkout**\n\n`verify_baseline()` checks hidden index flags only for `TARGET_PATH`, although `_copy_package()` exports every Python file under `mlx_lm`. If any imported dependency has an assume-unchanged or skip-worktree modification, `git status` remains clean and the target hash still matches, so the supposedly pinned workspace can contain unverified runtime code and its grading result is no longer attributable to the frozen revision. Inspect flags and committed bytes for all exported files, or export them directly from the pinned commit object.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/97830a2ea699fb92c63fd1d0f46b4ccf28100791/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-22T21:04:44Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4353515303"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Current candidate export calls `verify_pinned_source_tree()` before copying. It verifies the exact Python inventory, working bytes against the independent manifest and pinned Git blobs, and index flags for every manifest path. The v9 calibration lock covers that verifier and the current public exporter.",
+                    "createdAt": "2026-10-23T03:20:12Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355764555"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 105,
+              "path": "src/vare/mlxlm_1971_repo_task.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Validate hidden Git flags for every v8 input**\n\nWhen the v8 protocol, lock, or v8-specific implementation files carry `assume-unchanged` or `skip-worktree`, the later `git status` check still reports a clean tree, while this verifier merely compares their mutually editable working-tree hashes. A modified calibration script plus correspondingly modified protocol and lock can therefore pass verification and be retained as evidence under the frozen v8 identity. Check `git ls-files -v` for `PROTOCOL`, `LOCK`, and every `IMPLEMENTATION_FILES` entry, as the v7 verifier does.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/bda97d835f8099f64f96e029f92e1a6ef089008b/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-22T21:28:36Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4353724640"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "V8 is preserved as historical. The current v9 verifier checks `git ls-files -v` for protocol, lock, source manifest, task inputs, and every implementation file, rejecting S/lowercase index tags before calibration or grading. The v9 verifier and tests are hash-locked; no v8 identity was resealed.",
+                    "createdAt": "2026-10-23T03:20:14Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355764661"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 68,
+              "path": "scripts/run_mlxlm_1971_calibration_v8.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Dispatch the public grader to the inventory-enforcing version**\n\nWhen callers use the unversioned `grade_workspace()` entry point, this still selects v4, whose workspace check validates only the target path and then copies arbitrary Python dependencies supplied in the candidate workspace. Thus a candidate can modify an imported non-target module despite the task's one-file restriction, bypassing the dependency inventory checks added in v7. Publish a newly locked current protocol that routes this entry point through the inventory-enforcing grader.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/bda97d835f8099f64f96e029f92e1a6ef089008b/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-22T21:28:36Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4353724647"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Resolved in the current tree: the public unversioned `export_candidate()` and `grade_workspace()` dispatch to v9, whose protocol and implementation lock cover the complete evaluator/source inventory. `tests/test_mlxlm_1971_repo_task_v9.py::test_public_entrypoints_are_versioned_v9_dispatchers` verifies the route; the v9 baseline/fix/mutant calibration and its raw evidence manifest pass. This does not alter v2.",
+                    "createdAt": "2026-10-23T03:29:50Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355808640"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "src/vare/mlxlm_1971_repo_task.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Pin all imported evaluator modules in the v8 inventory**\n\nWhen v8 is rerun from a later clean commit, this inventory can still verify successfully after unlisted evaluator dependencies change: importing `vare.isolated_candidate` executes `vare/__init__.py` and `_public.py`, while `container_isolation.py` imports the unlisted `attestation.py`, `types.py`, and `evidence.py`. Because neither the implementation hash check nor the clean-worktree check binds those committed files, their import-time code can alter grading behavior while the run is recorded under the frozen v8 identity; include every transitive evaluator module in the locked inventory.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/1b6eaadb8f9d7c842819c9fbc37756564ccb07fc/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-22T21:33:17Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4353766908"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "V9 adds the complete local evaluator import set to its independent implementation manifest (`vare.__init__`, `_public`, attestation, container_isolation, evidence, isolated_candidate, types, and task modules), plus the verifier and calibration files. Its protocol lock contains 20 paths and the recorded run binds their hashes.",
+                    "createdAt": "2026-10-23T03:20:16Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355764798"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 44,
+              "path": "scripts/run_mlxlm_1971_calibration_v8.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Verify every historical implementation hash**\n\nThis loop deliberately skips 10 of the 12 v5 implementation entries, and the analogous v6 test verifies only one of 14. Because the protocol and lock are mutable files checked only against each other, coordinated corruption of an unchecked evaluator file and both JSON records would still pass these tests while invalidating the claimed historical provenance. Compare every locked path\u2014and preferably the protocol and lock themselves\u2014with blobs from the historical revision.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/11cd1ec72cdc228e27f9826cb505919957874333/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T03:33:07Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355822811"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Fixed in commit 6329bd4c. Added an auditor for frozen v4\u2013v9 protocol/lock pairs that verifies each protocol and lock byte-for-byte against its recoverable source commit and hashes all 85 declared implementation blobs there. The new regression coherently edits the implementation hash in both worktree JSON files and confirms the frozen Git-source comparison rejects it. Append-only evidence: results/mlxlm-1971-historical-implementation-audit-v1/audit.json; targeted tests, Ruff, mypy, and its SHA manifest pass.",
+                    "createdAt": "2026-10-23T03:50:04Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355900966"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 37,
+              "path": "tests/test_mlxlm_1971_calibration_v5.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable replacement refs when resolving audit commits**\n\nThis verification claim is not fail-closed when the repository has a local `refs/replace/<source_commit>` entry: both `git cat-file` and `git show` in the auditor follow the replacement object. With the working protocol, lock, and implementation coherently changed to match a tampered replacement commit, `audit_frozen_pair()` succeeds and records the original source SHA even though it never read that listed object; this is reproducible with `git replace <trusted> <tampered>`. Set `GIT_NO_REPLACE_OBJECTS=1` for every Git subprocess, as the continuation auditor already does, before claiming the pinned objects were verified.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/6329bd4cb54185166ae2438e40052aa98faf3db4/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T03:53:32Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355917294"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Fixed on final HEAD ceee8195: every historical object read (`cat-file` and `show`) sets GIT_NO_REPLACE_OBJECTS=1. Added a git replace regression that redirects the trusted commit to coordinated tampered protocol/lock/implementation bytes and confirms the audit rejects them. Replacement-safe evidence v2 is retained under results/mlxlm-1971-historical-implementation-audit-v2/.",
+                    "createdAt": "2026-10-23T03:59:20Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4355944358"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": 3,
+              "path": "docs/mlxlm-1971-historical-implementation-hash-audit-v1.md"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Anchor the v9 lock outside mutable working files**\n\nWhen the public `grade_workspace()` or `export_candidate()` entrypoint runs from a checkout where the protocol, lock, and evaluator files have been edited coherently, this check still succeeds because it compares only mutually editable working-tree data; unlike the historical auditor, it never compares v9 against the pinned `3f12eef...` Git objects. An altered grader can therefore accept a candidate while still reporting the v9 protocol identity, so the public verification path must validate the frozen protocol, lock, and implementation bytes against an immutable commit before grading.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/784b370fd11be7968834204efeae4523ff705c07/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T04:12:14Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4356004859"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": 85,
+              "path": "src/vare/mlxlm_1971_repo_task_v9.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable replacement refs in the v9 calibration**\n\nWhen `HEAD` has a replacement ref to a coherently tampered commit and the index/worktree is reset through that replacement, this `git status` reports clean while the later `rev-parse HEAD` still records the original SHA; the replacement can contain matching altered protocol, lock, and evaluator bytes, so the runner can emit passing evidence under the trusted implementation identity. Set `GIT_NO_REPLACE_OBJECTS=1` on this and the other revision-sensitive v9 Git calls (`show` and `worktree add/remove`), as the historical auditor now does.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/784b370fd11be7968834204efeae4523ff705c07/AGENTS.md#L48-L48)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T04:12:14Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4356004865"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": 241,
+              "path": "scripts/run_mlxlm_1971_calibration_v9.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Create append-only audit outputs exclusively**\n\nWhen another process or a symlink swap creates `args.output` after this existence check, `write_text()` opens it with truncation and overwrites the destination, contradicting the CLI's append-only guarantee and potentially destroying retained evidence. Open the final path with exclusive-create semantics (`\"x\"`/`O_EXCL`) so the non-overwrite property is enforced atomically rather than by a time-of-check/time-of-use sequence.\n\nAGENTS.md reference: [AGENTS.md:L49-L49](https://github.com/mitukx/VARE/blob/784b370fd11be7968834204efeae4523ff705c07/AGENTS.md#L49-L49)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-23T04:12:14Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4356004871"
+                  },
+                  {
+                    "author": {
+                      "login": "mitukx"
+                    },
+                    "body": "Fixed on exact head 0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc: scripts/audit_mlxlm_1971_historical_implementation_hashes.py uses Path.open(\"x\") with exclusive creation instead of a TOCTOU existence check and write_text; test_mlxlm_1971_historical_implementation_hash_audit.py tests an existing target, symlink target and append-only repeated invocation. All three exact-head workflows (ci, cpu-evidence, e2e-system-cpu) completed successfully. Historical evidence untouched. The two separate v9 direct-entrypoint P1 findings remain open.",
+                    "createdAt": "2026-10-23T05:37:13Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4356478456"
+                  }
+                ]
+              },
+              "isResolved": true,
+              "line": null,
+              "path": "scripts/audit_mlxlm_1971_historical_implementation_hashes.py"
+            },
+            {
+              "comments": {
+                "nodes": [
+                  {
+                    "author": {
+                      "login": "chatgpt-codex-connector"
+                    },
+                    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Make the preflight importable when invoked as a script**\n\nWhen invoked from the repository root as `python scripts/attest_mlxlm_1971_v9_current_git.py --help` with no custom `PYTHONPATH`, this exits with `ModuleNotFoundError: No module named 'scripts'` before argument parsing or attestation. Python puts the script directory, rather than its parent, on the import path. Add the repository root to `sys.path` before this import, as the calibration runners do, so the new operator-facing CLI works without undocumented environment setup.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+                    "createdAt": "2026-10-28T13:38:32Z",
+                    "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4401251292"
+                  }
+                ]
+              },
+              "isResolved": false,
+              "line": 18,
+              "path": "scripts/attest_mlxlm_1971_v9_current_git.py"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `a892e39b6b`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-21T02:24:36Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "Preparation / executable acceptance criteria for the two open P1 grader defects (no code or frozen evidence modified):\n\n1. **Scale diversity:** v1's single `CASE` uses `value_scale=0.5`, so a constant-0.5 patch can win. Under a prospective v2 protocol, generate independent trusted goldens at e.g. `0.25`, `0.5`, `0.8` using the pinned fixed revision. Cases must compare complete relevant outputs, and a hardcoded-0.5 candidate must fail at least one non-0.5 case.\n2. **Incremental KV-cache:** the current adapter invokes only `model(tokens)` without cache. Add `model.make_cache()` / incremental prefill+decode behavior using the pinned fixed implementation, compare outputs *and cache tensors* with independent expected values. A patch that applies scaling after output projection instead of before cache must fail. Confirm API and cache tensor structures against the actual pinned upstream source; do not guess expected values.\n3. Baseline FAIL / exact known fix PASS / both mutants FAIL with Colima, isolation red-team and final-head CI. Store append-only prospective v2 evidence; v1's `expected-output-v1.json`, lock and run-1 remain immutable. Do not merge before those runtime checks. #98 must land first, then synchronize the stack.",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-22T13:32:01Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `370bf13065`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-22T20:45:28Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `1bc1b434fd`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-22T20:56:21Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `97830a2ea6`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-22T21:04:44Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `bda97d835f`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-22T21:28:36Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `1b6eaadb8f`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-22T21:33:17Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:20:07Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:20:09Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:20:11Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:20:12Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:20:14Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:20:16Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:29:50Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `11cd1ec72c`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:33:07Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:50:04Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `6329bd4cb5`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:53:32Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T03:59:21Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `784b370fd1`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T04:12:14Z"
+            },
+            {
+              "author": {
+                "login": "mitukx"
+              },
+              "body": "",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-23T05:37:13Z"
+            },
+            {
+              "author": {
+                "login": "chatgpt-codex-connector"
+              },
+              "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `762a5a6559`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+              "state": "COMMENTED",
+              "submittedAt": "2026-10-28T13:38:32Z"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

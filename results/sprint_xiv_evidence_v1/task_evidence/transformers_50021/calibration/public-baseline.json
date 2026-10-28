@@ -1,0 +1,14 @@
+{
+  "control": "baseline",
+  "controls_expected_classification": true,
+  "elapsed_seconds": 1.306,
+  "expected_pass": false,
+  "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+  "observed_pass": false,
+  "passed": false,
+  "returncode": 1,
+  "source_sha256": "7b625e923ac83da1b89c68e7c3c5d596fc645a3e39d761b307a36c8af690667e",
+  "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 73, in <module>\n    test_large_pad_value_does_not_raise_for_fp16()\n  File \"/workspace/test_public.py\", line 61, in test_large_pad_value_does_not_raise_for_fp16\n    outputs, _ = model._forward_transform(inputs, torch.ones_like(inputs))\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"timesfm_probe.py\", line 363, in _forward_transform\n  File \"/workspace/test_public.py\", line 24, in strict_full\n    raise OverflowError(\"strict fp16 scalar conversion overflow\")\nOverflowError: strict fp16 scalar conversion overflow\n",
+  "stdout": "",
+  "test_sha256": "0dce5027fd264801a2ad23dbdcc53cfabfbb8a054ba2d8dca0ef00e89b65e05b"
+}

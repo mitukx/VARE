@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "classification": "development_only_not_blind_heldout",
+  "pretraining_exposure": "UNKNOWN for pretrained model exposure",
+  "task_families": [
+    {
+      "task_id": "transformers-49900-numpy-label-dtype-v1",
+      "upstream_pr": 49900,
+      "baseline_commit": "50a952d06c8f593b5a0cea5dc8040fad9761ea67",
+      "family_status": "qualified_development",
+      "attempt": "attempt-101",
+      "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "seed": 101,
+      "attempt_status": "completed_no_edit",
+      "public_test": "not_run",
+      "independent_grade": "grader_rejected_unchanged_baseline",
+      "classification": "context_budget_exhausted after repeated source read; no repair",
+      "fix_commit": "5922731af57ec4359b5a8cbadb73384a78f62fa1",
+      "model_snapshot_revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "model_weights_sha256": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e"
+    },
+    {
+      "task_id": "transformers-50044-janus-string-prompt-v1",
+      "upstream_pr": 50044,
+      "baseline_commit": "a1a59ea46ee8dd36ce743c2e5eb378cc8d0d4568",
+      "fix_commit": "2d0bb18d7cc961011cbc929511193e82b72ea707",
+      "family_status": "qualified_development",
+      "attempt": "attempt-102",
+      "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "seed": 102,
+      "attempt_status": "invalidated_infrastructure",
+      "public_test": "not_run",
+      "independent_grade": "not_run",
+      "classification": "tracked symlink copy drift invalidated candidate diff after model load; raw trajectory unavailable",
+      "model_snapshot_revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "model_weights_sha256": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e"
+    },
+    {
+      "task_id": "transformers-50021-timesfm-fp16-pad-value-v1",
+      "upstream_pr": 50021,
+      "baseline_commit": "6e06886cc3c933741c47783296a8292be3f292c2",
+      "fix_commit": "0cca4b0e36857e5acbcf3ce9497233846bd8d9be",
+      "family_status": "qualified_development",
+      "attempt": "attempt-103",
+      "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "seed": 103,
+      "attempt_status": "completed_no_edit",
+      "public_test": "not_run",
+      "independent_grade": "not_run",
+      "classification": "source read/search then full-file reread; no edit or grade",
+      "model_snapshot_revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "model_weights_sha256": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e"
+    },
+    {
+      "task_id": "transformers-49752-minicpm-stacked-visual-units-v1",
+      "upstream_pr": 49752,
+      "baseline_commit": "6f2e80bdad560947903bb4bde8043ae95387069a",
+      "fix_commit": "482e80ae5910ecab54f9284c36343ff122db80ad",
+      "family_status": "qualified_development",
+      "attempt": "attempt-104",
+      "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "seed": 104,
+      "attempt_status": "completed_no_edit",
+      "public_test": "not_run",
+      "independent_grade": "grader_rejected_unchanged_baseline",
+      "classification": "3 valid tool calls including source read and flexible-whitespace search; then 2 no-tool responses",
+      "model_snapshot_revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "model_weights_sha256": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e"
+    }
+  ],
+  "totals": {
+    "qualified_families": 4,
+    "model_processes_started": 4,
+    "completed_preserved_trajectories": 3,
+    "invalidated_infrastructure_attempts": 1,
+    "verified_repairs": 0,
+    "resource_aborts": 0,
+    "training_updates": 0
+  }
+}

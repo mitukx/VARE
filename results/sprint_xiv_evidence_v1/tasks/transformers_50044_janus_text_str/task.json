@@ -1,0 +1,32 @@
+{
+  "license": "Apache-2.0",
+  "metadata": {
+    "editable_files": [
+      "src/transformers/models/janus/processing_janus.py",
+      "test_public.py"
+    ],
+    "grader_interface": "independent_external_grader",
+    "grader_visibility": "hidden_from_candidate_tools",
+    "historical_upstream_commit": true,
+    "split": null,
+    "task_type": "upstream-correctness-repair"
+  },
+  "prompt": "Repair src/transformers/models/janus/processing_janus.py so a single string prompt is treated as one prompt in both text and image generation modes. Preserve the behavior for list inputs. Run the public smoke test and finish with the source repair.",
+  "schema_version": 1,
+  "source": {
+    "base_revision": "01e16fb65c0175e09e905e97e14ec93b5b40c2ce",
+    "baseline_source_sha256": "d87652762ba0eafb8c7aacf60cab81afae135928de735fed097fc405c69796a5",
+    "calibration_revision": null,
+    "candidate_workspace_commit": "01e16fb65c0175e09e905e97e14ec93b5b40c2ce",
+    "candidate_workspace_tree": "3bd04d3cd940cc8fb461b83ef56caab4ff8d0745",
+    "fixed_source_sha256": "fe1caf4a8371f53af418ded80404d8cf02d948087bff2e2f6be774d15733c935",
+    "local_path": "subject",
+    "repository": "https://github.com/huggingface/transformers",
+    "upstream_baseline_commit": "a1a59ea46ee8dd36ce743c2e5eb378cc8d0d4568",
+    "upstream_fix_commit": "0b437423aae1c8bf3b214d47d3a88de10309be03",
+    "upstream_merge_commit": "c27795950091cdaf1b0e32c4aed58618fb41ffa0"
+  },
+  "task_id": "transformers-50044-janus-string-prompt-v1",
+  "tests": [],
+  "title": "Preserve single-string Janus processor prompts"
+}

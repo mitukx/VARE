@@ -1,0 +1,30 @@
+{
+  "license": "Apache-2.0",
+  "metadata": {
+    "editable_files": [
+      "src/transformers/models/timesfm/modeling_timesfm.py",
+      "test_public.py"
+    ],
+    "grader_interface": "independent_external_grader",
+    "grader_visibility": "hidden_from_candidate_tools",
+    "historical_upstream_commit": true,
+    "split": null,
+    "task_type": "upstream-correctness-repair"
+  },
+  "prompt": "Repair TimesFmModel._forward_transform in src/transformers/models/timesfm/modeling_timesfm.py so a large configured pad value does not trigger strict fp16 scalar-conversion overflow. Preserve the pad value and ordinary normalized values. Run the public smoke test and finish with the source repair.",
+  "schema_version": 1,
+  "source": {
+    "base_revision": "a4d5a63c9eb5a5fd85c5b271857427305b441990",
+    "baseline_source_sha256": "7b625e923ac83da1b89c68e7c3c5d596fc645a3e39d761b307a36c8af690667e",
+    "calibration_revision": null,
+    "fixed_source_sha256": "b1b9a385176b064a1c26152a18e82f6e886a6f255ff48b72feabbe20278cddda",
+    "repository": "https://github.com/huggingface/transformers",
+    "source_path": "src/transformers/models/timesfm/modeling_timesfm.py",
+    "upstream_baseline_commit": "6e06886cc3c933741c47783296a8292be3f292c2",
+    "upstream_fix_commit": "0cca4b0e36857e5acbcf3ce9497233846bd8d9be",
+    "upstream_merge_commit": "24f3b85a2d950923016fcbf35d4b59b2fb44a43"
+  },
+  "task_id": "transformers-50021-timesfm-fp16-pad-value-v1",
+  "tests": [],
+  "title": "Avoid fp16 overflow when preserving TimesFM pad values"
+}

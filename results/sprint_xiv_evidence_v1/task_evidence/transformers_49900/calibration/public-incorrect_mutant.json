@@ -1,0 +1,13 @@
+{
+  "control": "incorrect_mutant",
+  "result": {
+    "elapsed_seconds": 1.348,
+    "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+    "passed": false,
+    "returncode": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 27, in <module>\n    test_numpy_int32_scalar_label_keeps_numpy_integer_dtype()\n  File \"/workspace/test_public.py\", line 22, in test_numpy_int32_scalar_label_keeps_numpy_integer_dtype\n    assert batch[\"labels\"].dtype == np.dtype(np.int64)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+    "stdout": ""
+  },
+  "source_sha256_after": "6775958ba0552673b3742609d9c75aed022b26e70fedf797b72feaf2283075a2",
+  "test_sha256": "d6443e50cf6e0b2eeaad3641b42f131fdbcf1783e432d56fb651b63aa51b1d64"
+}

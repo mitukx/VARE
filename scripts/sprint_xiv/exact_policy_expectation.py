@@ -28,8 +28,56 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PROTOCOL = ROOT / "protocols/sprint_xiv_exact_policy_expectation_v1.json"
 DEFAULT_RUN = ROOT / "results/sprint_xiii_20261029/run-003"
 DEFAULT_OUTPUT = ROOT / "results/sprint_xiv_exact_policy_expectation_v1"
-sys.path.insert(0, str(ROOT))
-from scripts.sprint_xiii.online_actor import prompt_text, verifier_score  # noqa: E402
+
+
+# Frozen copies of the pure prompt and reward helpers used by Sprint XIII.
+# Their source was scripts/sprint_xiii/online_actor.py at Git blob
+# f3b27930b49e43a92810f35b4f9f8d2fe195589c. Keeping this retrospective
+# analysis self-contained avoids importing the still-unmerged Sprint XIII
+# runtime while preserving the exact prompt and verifier definitions.
+def verifier_score(actions: str, task: dict[str, Any], version: int) -> float:
+    target = task["target_pair"]
+    forbidden = task["forbidden_pair"]
+    if version == 0:
+        return min(1.0, actions[:3].count(target[0]) / 2.0)
+    if version == 1:
+        target_found = any(
+            target == actions[i : i + 2] for i in range(max(0, len(actions) - 1))
+        )
+        checked = actions[:3]
+        forbidden_found = any(
+            forbidden == checked[i : i + 2]
+            for i in range(max(0, len(checked) - 1))
+        )
+        if forbidden_found:
+            return 0.0
+        partial = min(2, actions.count(target[0])) / 2.0
+        return 0.75 * float(target_found) + 0.25 * partial
+    raise ValueError(f"unknown verifier version {version}")
+
+
+def prompt_text(tok, task: dict[str, Any]) -> tuple[str, list[int]]:
+    messages = [
+        {
+            "role": "system",
+            "content": "Produce a route as a short sequence of labels. Follow the stopping rule.",
+        },
+        {
+            "role": "user",
+            "content": (
+                f"{task['instruction']} The desired consecutive pair is {task['target_pair']}. "
+                f"Avoid the consecutive pair {task['forbidden_pair']}. Use only A, B, C, or D, "
+                "with at least two and at most five route labels."
+            ),
+        },
+    ]
+    text = tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    ids = tok.encode(text, add_special_tokens=False)
+    if not ids:
+        raise RuntimeError("empty prompt")
+    if digest_bytes(text.encode()) != task["prompt_sha256"] or ids != task["prompt_token_ids"]:
+        raise RuntimeError(f"frozen prompt identity mismatch: {task['task_id']}")
+    return text, ids
 
 
 def digest_bytes(data: bytes) -> str:

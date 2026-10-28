@@ -1,0 +1,39 @@
+{
+  "all_expected_classifications": true,
+  "controls": {
+    "baseline": {
+      "controls_expected_classification": true,
+      "elapsed_seconds": 4.023,
+      "error": null,
+      "expected_pass": false,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "d87652762ba0eafb8c7aacf60cab81afae135928de735fed097fc405c69796a5",
+      "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 42, in <module>\n    test_single_string_is_one_item_in_text_mode_with_default_prompt()\n  File \"/workspace/test_public.py\", line 27, in test_single_string_is_one_item_in_text_mode_with_default_prompt\n    assert _forwarded(\"cedar\", mode=\"text\", default_prompt=True) == [DEFAULT_SYSTEM_PROMPT + \"cedar\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "stdout": ""
+    },
+    "incorrect_mutant": {
+      "controls_expected_classification": true,
+      "elapsed_seconds": 4.098,
+      "error": null,
+      "expected_pass": false,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "f40da9f74f19b1aa25fadad73d4735b7cf302c7410b7bdfcc79319ea595a87a4",
+      "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 43, in <module>\n    test_single_string_is_one_item_in_image_mode()\n  File \"/workspace/test_public.py\", line 31, in test_single_string_is_one_item_in_image_mode\n    assert _forwarded(\"cedar\", mode=\"image\") == [\"cedar<public-image-start>\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "stdout": ""
+    },
+    "known_fix": {
+      "controls_expected_classification": true,
+      "elapsed_seconds": 4.136,
+      "error": null,
+      "expected_pass": true,
+      "passed": true,
+      "returncode": 0,
+      "source_sha256": "fe1caf4a8371f53af418ded80404d8cf02d948087bff2e2f6be774d15733c935",
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "schema_version": 1
+}

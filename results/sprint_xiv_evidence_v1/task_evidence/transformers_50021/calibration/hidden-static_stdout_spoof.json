@@ -1,0 +1,55 @@
+{
+  "challenge": {
+    "cases": [
+      {
+        "dtype": "float16",
+        "name": "strict_fp16",
+        "values": [
+          -6.33,
+          -8.083,
+          0.056,
+          -4.975
+        ]
+      },
+      {
+        "dtype": "float32",
+        "name": "fp32_pad_preservation",
+        "values": [
+          1123581321.0,
+          -12.912,
+          1123581321.0
+        ]
+      },
+      {
+        "dtype": "float64",
+        "name": "fp64_pad_preservation",
+        "values": [
+          17.705,
+          1123581321.0,
+          -12.912
+        ]
+      }
+    ],
+    "nonce": "623ea273760afb454a4ad65783933d68",
+    "pad_value": 1123581321.0,
+    "tolerance": 0.001
+  },
+  "challenge_sha256": "142c576c63d555f15855ce16ffa4f3f8b41ee2e7503153b4c15be79026d082ee",
+  "container_exit_code": 0,
+  "container_stderr": "",
+  "container_stdout": "{\"nonce\":\"static\",\"results\":{}}\n{\"nonce\":\"static\",\"results\":{}}\n{\"nonce\":\"static\",\"results\":{}}\n{\"nonce\":\"623ea273760afb454a4ad65783933d68\",\"results\":{\"fp32_pad_preservation\":{\"inputs\":[1123581312.0,-12.911999702453613,1123581312.0],\"outputs\":[1123581312.0,-12.911999702453613,1123581312.0]},\"fp64_pad_preservation\":{\"inputs\":[17.705,1123581321.0,-12.912],\"outputs\":[17.705,1123581321.0,-12.912]},\"strict_fp16\":{\"inputs\":[-6.328125,-8.0859375,0.055999755859375,-4.9765625],\"outputs\":[-6.328125,-8.0859375,0.055999755859375,-4.9765625]}}}\n",
+  "controls_expected_classification": true,
+  "elapsed_seconds": 1.126,
+  "expected_control_status": "grader_rejected",
+  "failure": "grader output must contain exactly one JSON line",
+  "grader_sha256": "6abb40baab19a4ac1cc86c110bdc30c59073bdb59970b741a07a3360e3ce57b5",
+  "image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "passed": false,
+  "schema_version": 1,
+  "source_sha256_after": "39920a10ea8ee448533e697f438e0ac854e37b5ca31f98bbe74b869335f1da37",
+  "source_sha256_before": "39920a10ea8ee448533e697f438e0ac854e37b5ca31f98bbe74b869335f1da37",
+  "source_unchanged": true,
+  "status": "grader_rejected",
+  "task_id": "transformers-50021-timesfm-fp16-pad-value-v1",
+  "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/results/sprint_xiv_transformers_50021_qualification_v1/calibration/hidden-workspaces/static_stdout_spoof"
+}

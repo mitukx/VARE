@@ -1,0 +1,182 @@
+{
+  "analysis_boundary": "One task family is a feasibility observation. It does not estimate model superiority, held-out performance, learning gain, or broad coding capability. Report pretraining exposure as UNKNOWN.",
+  "attempt_budget": {
+    "greedy_repetitions_are_not_independent_samples": true,
+    "model_attempts": 1,
+    "unique_task_families": 1
+  },
+  "cheapest_falsification": "Run the frozen baseline/fix/wrong-mutant grader controls first; if the baseline passes, known fix fails, or wrong mutant passes, do not load the model.",
+  "falsifiable_hypothesis": "A locally cached Qwen2.5-Coder-7B model, using the existing strict VARE tool loop with a frozen 12-turn budget, can produce a changed Transformers source patch on a qualified real upstream bug that passes an independent hidden behavior grader.",
+  "frozen_at_utc": "2026-10-28T21:31:31.550411+00:00",
+  "long_horizon_claim_authorized": false,
+  "model_trial": {
+    "authorization": "Conditional on all four v2 controls passing their expected classifications; one frozen attempt only.",
+    "backend": "MLX/Apple Metal",
+    "candidate_instruction": "Repair the task using the allowed tools. Inspect the exact source path in the task statement, make a minimal patch, run the immutable public test after editing, then finish. Do not use network or infer hidden tests.",
+    "checkpoint": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "decoding": {
+      "do_sample": false,
+      "seed": 101,
+      "seed_is_repetition_label": true,
+      "temperature": 0
+    },
+    "edit_format": "unified_diff",
+    "independent_grader_version": 2,
+    "max_context_tokens": 32768,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "public_test_image": "vare/datasets-dev-arm64@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "public_test_image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "public_test_limits": {
+      "cpus": 1,
+      "memory_mb": 512,
+      "network": "none",
+      "pids": 32,
+      "rootfs": "read-only",
+      "timeout_seconds": 45,
+      "tmpfs_mb": 16,
+      "uid": 65534
+    },
+    "quantization": "4-bit MLX safetensors, upstream snapshot configuration",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "runner_path": "scripts/run_local_agent.py",
+    "runner_sha256": "7b95007c605ce7475de7c1f4bdc1816dd5abbc3fc14c6d7a55c409df5ee724a7",
+    "runtime": {
+      "mlx": "0.32.2",
+      "mlx_lm": "0.32.2",
+      "python": "3.12.12"
+    },
+    "snapshot_manifest_sha256": "efa28f970e9651168c3baec22bf575b2432c8331aa0d83b8899e2502bad96b54",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_total_size_bytes": 4295890004,
+    "tool_allowlist": [
+      "list_files",
+      "read_file",
+      "search_text",
+      "apply_patch",
+      "check_syntax",
+      "run_public_tests",
+      "finish"
+    ],
+    "wall_seconds": 900,
+    "weights_download_permitted": false
+  },
+  "primary_outcome": "One unique Development task-family independently correct repair at one attempt, counted only if the target source changes and the host grader passes all 16 frozen cases.",
+  "protocol_id": "sprint-xiv-transformers-49900-development-v2",
+  "qualification": {
+    "candidate_stdout_is_untrusted": true,
+    "challenge_generation": "Fresh per invocation: 128-bit nonce, random int32 and int64 values, random Python int/float and NumPy float32 controls. The grader checks exact returned dtypes and values.",
+    "challenge_transport": "The generic probe source is in process argv; it contains no fixed test values or expected results. The per-invocation random challenge arrives through container stdin. No grader directory is mounted. Candidate source sees only the candidate src tree mounted read-only.",
+    "container_limits": {
+      "cpus": 1,
+      "memory_mb": 1536,
+      "network": "none",
+      "pids": 32,
+      "rootfs": "read-only",
+      "timeout_seconds": 90,
+      "tmpfs_mb": 16,
+      "uid": 65534
+    },
+    "control_source_hashes": [
+      {
+        "expected": "FAIL",
+        "id": "baseline",
+        "source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+        "workspace": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/controls/baseline/workspace"
+      },
+      {
+        "expected": "PASS",
+        "id": "known_fix",
+        "source_sha256": "7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6",
+        "workspace": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/controls/known_fix/workspace"
+      },
+      {
+        "expected": "FAIL",
+        "id": "incorrect_mutant",
+        "source_sha256": "6775958ba0552673b3742609d9c75aed022b26e70fedf797b72feaf2283075a2",
+        "workspace": "results/sprint_xiv_transformers_49900_qualification_v1/calibration/controls/incorrect_mutant/workspace"
+      }
+    ],
+    "grader_cases_per_invocation": 16,
+    "grader_path": "benchmarks/external_development/transformers_49900_numpy_label_dtype/evaluator/grade_v2.py",
+    "grader_sha256": "be0513074b295f8c15c001c814239a19e1964465584221923972ea7518688bd5",
+    "grader_version": 2,
+    "integer_cases": 8,
+    "output_acceptance": "Require return code zero, unchanged candidate-source hash, exactly one JSON line, exact response keys, matching random nonce, exactly the 16 expected case keys, and all expected dtype/value pairs. Any malformed response, stale nonce, unexpected/missing case, or wrong dtype/value is a candidate rejection.",
+    "pre_v1_control_results_preserved": [
+      "baseline fail on 8/8 integer cases; known fix pass 16/16; PyTorch-only mutant fail on four NumPy integer cases",
+      "v1 public smoke: baseline fail; known fix pass; PyTorch-only mutant fail",
+      "v1 completion-spoof weakness found before any model inference; do not count v1 as final grader qualification"
+    ],
+    "public_test_image": "vare/datasets-dev-arm64@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "public_test_image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "public_test_sha256": "d6443e50cf6e0b2eeaad3641b42f131fdbcf1783e432d56fb651b63aa51b1d64",
+    "required_v2_controls": [
+      {
+        "expected": "grader_rejected",
+        "id": "baseline"
+      },
+      {
+        "expected": "passed",
+        "id": "known_fix"
+      },
+      {
+        "expected": "grader_rejected",
+        "id": "incorrect_torch_only_mutant"
+      },
+      {
+        "expected": "grader_rejected",
+        "id": "static_v1_stdout_spoof"
+      }
+    ],
+    "stop_rule": "Do not start model inference unless all four v2 controls meet their predeclared outcomes and their grader/image/workspace hashes match.",
+    "type_behavior_controls": 8
+  },
+  "resource_gates": {
+    "host": "Apple M1 Pro, 32 GiB unified memory, macOS arm64",
+    "max_mlx_peak_memory_bytes": 8589934592,
+    "max_process_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 2147483648,
+    "minimum_disk_free_bytes": 17179869184,
+    "minimum_free_swap_bytes": 536870912,
+    "parallel_model_processes": 1,
+    "sample_interval_seconds": 1,
+    "stop_on": "Any host memory/swap/disk gate failure, MLX peak/RSS/swap cap breach, model/device load failure, or 900-second wall/process limit. Do not increase caps."
+  },
+  "schema_version": 1,
+  "source_task": {
+    "baseline_source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+    "candidate_workspace_commit": "130c831a1d869aab4d60d9eecd9191ebcfc9dc57",
+    "candidate_workspace_tree": "c5eed120c21a036c25ef7f2cc82d58d2328bc8ff",
+    "family": "Transformers PR #49900: NumPy integer label dtype preservation",
+    "fixed_source_sha256": "7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6",
+    "pretraining_exposure": "UNKNOWN",
+    "prior_exposure": {
+      "future_use": "Once the real model attempt starts, mark this Development family consumed and exclude it from blind held-out claims.",
+      "pretraining_exposure": "UNKNOWN; no assertion of pretraining non-exposure is made.",
+      "prior_agent_attempts_on_exact_bug_family": "None located in VARE records searched.",
+      "prior_vare_exact_task_or_issue_match": "No exact #49900, NumPy scalar dtype, or np.integer label task record found in tracked VARE files and prior run evidence searched on 2026-10-29 JST.",
+      "reserved_heldout": "Not assigned to any reserved held-out split; this protocol assigns it to Development only.",
+      "shared_source_file_overlap": "A distinct Transformers #45852 4D attention-mask task previously referenced tests/trainer/test_data_collator.py and imports from the same data_collator.py module; it is a different function and bug family. Treat the source-file overlap as prior exposure risk, not independent family replication."
+    },
+    "public_test_sha256": "d6443e50cf6e0b2eeaad3641b42f131fdbcf1783e432d56fb651b63aa51b1d64",
+    "reserved_heldout_used": false,
+    "task_and_solution_scope_unchanged_from_v1": true,
+    "task_id": "transformers-49900-numpy-label-dtype-v1",
+    "task_json_sha256": "17cb4e98565bdc519e212bb888dd5cb3f20f9324e661e71f7de14aa70ac1b88b",
+    "task_markdown_sha256": "ca4a4878785665c0b6670286efc4d550d56a1f056ace984d74bc85bc32866abc",
+    "upstream_baseline_commit": "50a952d06c8f593b5a0cea5dc8040fad9761ea67",
+    "upstream_fix_commit": "5922731af57ec4359b5a8cbadb73384a78f62fa1"
+  },
+  "status": "FROZEN_BEFORE_V2_QUALIFICATION_AND_MODEL_INFERENCE",
+  "supersedes_for_execution": {
+    "historical_v1_results_preserved": true,
+    "protocol_path": "protocols/sprint_xiv_transformers_49900_development_v1.json",
+    "protocol_sha256": "96d3af937c9c8a74f381115472ba5051002e0f2d23f1ecc6e0d04e13ee6db2c9",
+    "reason": "Review of v1 found deterministic hidden cases embedded in a python -c command argument visible through the process command line to candidate code imported by the probe. A candidate could spoof its fixed output before the probe completed. V1 controls remain diagnostic only and are not sufficient to authorize model inference."
+  },
+  "training_authorized": false
+}
