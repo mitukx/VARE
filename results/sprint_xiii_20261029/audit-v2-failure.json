@@ -1,0 +1,21 @@
+{
+  "audit_id": "vare-sprint-xiii-v4-completed-subset-audit-v2",
+  "audit_protocol_sha256": "3bb09536d1842bcda02e10379962f2a3b085bae0f3ed469601c622104d272d4e",
+  "baseline_evaluation_replays_completed": 3,
+  "baseline_task_forward_batches_replayed": 12,
+  "campaign_protocol_sha256": "194433a9fbbfaae9d8968f5c72a1f4cd4c1ca019de3470c35e513edda8a6ed23",
+  "case_rollout_forward_replay_count": 0,
+  "command": "scripts/sprint_xiii/audit_completed_online_actor_subset.py --protocol protocols/sprint_xiii_online_actor_v4.lock.json --output results/sprint_xiii_20261029/run-003/independent-audit-v2.json",
+  "exception": {
+    "message": "missing sidecar for fresh-policy-probe.ack.json.sha256",
+    "type": "FileNotFoundError"
+  },
+  "generation_count": 0,
+  "historical_run_or_receipts_modified": false,
+  "optimizer_replay_count": 0,
+  "outcome": "AUDIT_ABORT_AFTER_BASELINE_REPLAY_BEFORE_COMPLETED_CASE_REPLAY",
+  "record_type": "independent_audit_failure",
+  "recorded_utc": "2026-10-28T18:30:01.455558Z",
+  "remediation": "Append audit v3 with a data-group enumerator that explicitly excludes *.ack.json; run against all completed cases.",
+  "root_cause": "v1 audit_case enumerates every *.json file under groups, including acknowledgement JSON, as if each were a rollout group requiring a .sha256 sidecar."
+}
