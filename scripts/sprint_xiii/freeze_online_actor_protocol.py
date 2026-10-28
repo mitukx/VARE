@@ -83,7 +83,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("protocols/sprint_xiii_online_actor_v3.lock.json"),
+        default=Path("protocols/sprint_xiii_online_actor_v4.lock.json"),
     )
     args = parser.parse_args()
     repository_root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel"))
@@ -112,46 +112,46 @@ def main() -> None:
 
     raw_tasks = [
         {
-            "task_id": "train-route-v3-01",
+            "task_id": "train-route-v4-01",
             "split": "train",
-            "instruction": "Plan a feasible route for synthetic cohort v3 training case train-route-v3-01.",
-            "target_pair": "AC",
-            "forbidden_pair": "BD",
+            "instruction": "Plan a feasible route for synthetic cohort v4 training case train-route-v4-01.",
+            "target_pair": "AB",
+            "forbidden_pair": "DB",
         },
         {
-            "task_id": "train-route-v3-02",
+            "task_id": "train-route-v4-02",
             "split": "train",
-            "instruction": "Plan a feasible route for synthetic cohort v3 training case train-route-v3-02.",
-            "target_pair": "DB",
+            "instruction": "Plan a feasible route for synthetic cohort v4 training case train-route-v4-02.",
+            "target_pair": "DC",
             "forbidden_pair": "AC",
         },
         {
-            "task_id": "eval-route-v3-01",
+            "task_id": "eval-route-v4-01",
             "split": "evaluation",
-            "instruction": "Plan a feasible route for synthetic cohort v3 evaluation case eval-route-v3-01.",
-            "target_pair": "BA",
+            "instruction": "Plan a feasible route for synthetic cohort v4 evaluation case eval-route-v4-01.",
+            "target_pair": "CA",
+            "forbidden_pair": "BA",
+        },
+        {
+            "task_id": "eval-route-v4-02",
+            "split": "evaluation",
+            "instruction": "Plan a feasible route for synthetic cohort v4 evaluation case eval-route-v4-02.",
+            "target_pair": "BD",
             "forbidden_pair": "CD",
         },
         {
-            "task_id": "eval-route-v3-02",
+            "task_id": "eval-route-v4-03",
             "split": "evaluation",
-            "instruction": "Plan a feasible route for synthetic cohort v3 evaluation case eval-route-v3-02.",
-            "target_pair": "CB",
-            "forbidden_pair": "DA",
-        },
-        {
-            "task_id": "eval-route-v3-03",
-            "split": "evaluation",
-            "instruction": "Plan a feasible route for synthetic cohort v3 evaluation case eval-route-v3-03.",
-            "target_pair": "CD",
-            "forbidden_pair": "AB",
-        },
-        {
-            "task_id": "eval-route-v3-04",
-            "split": "evaluation",
-            "instruction": "Plan a feasible route for synthetic cohort v3 evaluation case eval-route-v3-04.",
-            "target_pair": "AD",
+            "instruction": "Plan a feasible route for synthetic cohort v4 evaluation case eval-route-v4-03.",
+            "target_pair": "DA",
             "forbidden_pair": "BC",
+        },
+        {
+            "task_id": "eval-route-v4-04",
+            "split": "evaluation",
+            "instruction": "Plan a feasible route for synthetic cohort v4 evaluation case eval-route-v4-04.",
+            "target_pair": "BC",
+            "forbidden_pair": "AD",
         },
     ]
     tasks = []
@@ -184,11 +184,11 @@ def main() -> None:
 
     import torch
 
-    seeds = [404, 505, 606]
+    seeds = [707, 808, 909]
     execution_order = [
-        [404, "A"], [404, "B"], [404, "C"], [404, "D"], [404, "E"],
-        [505, "C"], [505, "E"], [505, "B"], [505, "D"], [505, "A"],
-        [606, "E"], [606, "D"], [606, "A"], [606, "C"], [606, "B"],
+        [707, "A"], [707, "B"], [707, "C"], [707, "D"], [707, "E"],
+        [808, "C"], [808, "E"], [808, "B"], [808, "D"], [808, "A"],
+        [909, "E"], [909, "D"], [909, "A"], [909, "C"], [909, "B"],
     ]
     required_faults = [
         "rollout_write_before_ack",
@@ -199,8 +199,8 @@ def main() -> None:
     ]
     root = {
         "schema_version": 1,
-        "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v3",
-        "run_id": "sprint-xiii-20261029-online-actor-v3",
+        "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v4",
+        "run_id": "sprint-xiii-20261029-online-actor-v4",
         "status": "PREREGISTERED_NO_MODEL_FORWARD_OR_GENERATION",
         "frozen_utc": datetime.now(timezone.utc).isoformat(),
         "hypothesis": (
@@ -350,12 +350,12 @@ def main() -> None:
             },
         },
         "fault_plan": {
-            "seed-404-E": {"rollout_write_before_ack": True},
-            "seed-505-E": {
+            "seed-707-E": {"rollout_write_before_ack": True},
+            "seed-808-E": {
                 "verifier_write_before_admission": True,
                 "optimizer_apply_before_commit": True,
             },
-            "seed-606-E": {
+            "seed-909-E": {
                 "checkpoint_before_publication": True,
                 "publication_before_actor_refresh": True,
             },
@@ -415,9 +415,9 @@ def main() -> None:
             "No retry or replacement cohort after model generation begins."
         ),
         "reproduction": {
-            "freeze": f"{sys.executable} scripts/sprint_xiii/freeze_online_actor_protocol.py --output protocols/sprint_xiii_online_actor_v3.lock.json",
-            "campaign": f"{sys.executable} scripts/sprint_xiii/online_actor.py campaign --protocol protocols/sprint_xiii_online_actor_v3.lock.json --output results/sprint_xiii_20261029/run-002",
-            "audit": f"{sys.executable} scripts/sprint_xiii/audit_online_actor.py --protocol protocols/sprint_xiii_online_actor_v3.lock.json --output results/sprint_xiii_20261029/run-002 --receipt results/sprint_xiii_20261029/run-002/independent-audit.json",
+            "freeze": f"{sys.executable} scripts/sprint_xiii/freeze_online_actor_protocol.py --output protocols/sprint_xiii_online_actor_v4.lock.json",
+            "campaign": f"{sys.executable} scripts/sprint_xiii/online_actor.py campaign --protocol protocols/sprint_xiii_online_actor_v4.lock.json --output results/sprint_xiii_20261029/run-003",
+            "audit": f"{sys.executable} scripts/sprint_xiii/audit_online_actor.py --protocol protocols/sprint_xiii_online_actor_v4.lock.json --output results/sprint_xiii_20261029/run-003 --receipt results/sprint_xiii_20261029/run-003/independent-audit.json",
             "environment": "Use the recorded offline Python environment and preserve the cached snapshot; do not overwrite an existing run directory.",
         },
     }

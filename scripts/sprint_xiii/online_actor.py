@@ -738,7 +738,7 @@ def child_train(p: dict, root: Path, args) -> None:
     if len(set(scores["rewards"])) < 2:
         raise RuntimeError("NO_GO_constant_reward_group")
 
-    p_src = Path(p["vare_source_root"]) / "src"
+    p_src = Path(p["repository_root"]) / "src"
     rvl_src = Path(p["rvl_source_root"]) / "src"
     sys.path.insert(0, str(p_src))
     sys.path.insert(0, str(rvl_src))

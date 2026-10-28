@@ -1,0 +1,152 @@
+{
+  "case_id": "seed-404-A",
+  "findings": [],
+  "generated_token_count": 62,
+  "group_id": "seed-404-A-group-0",
+  "group_sha256": "299f0f72fdebfdc887ade3709f700fc20a419934558e604344152a96b72e00ec",
+  "independent_posthoc_trusted_correct": 2.0,
+  "independent_posthoc_trusted_mean": 0.125,
+  "journal_event_count": 4,
+  "optimizer_update": "NOT_RUN; learner process exited before trainer initialization",
+  "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v3",
+  "protocol_sha256": "8ecac1a1e78a95e88acc3bd9918038be25eec9203ad6152f735f81b9c3b80db3",
+  "proxy_trusted_disagreements": 13,
+  "record_type": "partial_rollout_independent_adjudication",
+  "run_id": "sprint-xiii-20261029-online-actor-v3",
+  "sample_count": 16,
+  "samples": [
+    {
+      "generated_tokens": 5,
+      "proxy_reward": 1.0,
+      "response": "AAAA",
+      "sample_index": 0,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 3,
+      "proxy_reward": 0.5,
+      "response": "AB",
+      "sample_index": 1,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 4,
+      "proxy_reward": 1.0,
+      "response": "AAA",
+      "sample_index": 2,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 5,
+      "proxy_reward": 1.0,
+      "response": "AAAB",
+      "sample_index": 3,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 4,
+      "proxy_reward": 0.5,
+      "response": "ABC",
+      "sample_index": 4,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 4,
+      "proxy_reward": 0.5,
+      "response": "DAC",
+      "sample_index": 5,
+      "trusted_posthoc": 1.0
+    },
+    {
+      "generated_tokens": 4,
+      "proxy_reward": 1.0,
+      "response": "AAA",
+      "sample_index": 6,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 5,
+      "proxy_reward": 1.0,
+      "response": "AADD",
+      "sample_index": 7,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 3,
+      "proxy_reward": 0.5,
+      "response": "BA",
+      "sample_index": 8,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 3,
+      "proxy_reward": 0.5,
+      "response": "AB",
+      "sample_index": 9,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 4,
+      "proxy_reward": 0.5,
+      "response": "DDA",
+      "sample_index": 10,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 3,
+      "proxy_reward": 0.5,
+      "response": "AB",
+      "sample_index": 11,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 3,
+      "proxy_reward": 0.0,
+      "response": "BC",
+      "sample_index": 12,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 4,
+      "proxy_reward": 0.5,
+      "response": "ACB",
+      "sample_index": 13,
+      "trusted_posthoc": 1.0
+    },
+    {
+      "generated_tokens": 3,
+      "proxy_reward": 0.5,
+      "response": "DA",
+      "sample_index": 14,
+      "trusted_posthoc": 0.0
+    },
+    {
+      "generated_tokens": 5,
+      "proxy_reward": 0.5,
+      "response": "ABBC",
+      "sample_index": 15,
+      "trusted_posthoc": 0.0
+    }
+  ],
+  "status": "PASS",
+  "token_level_behavior_probability_replay": "NOT_RUN",
+  "v0_group_reward_variation": true,
+  "v0_proxy_reward_values": [
+    1.0,
+    0.5,
+    1.0,
+    1.0,
+    0.5,
+    0.5,
+    1.0,
+    1.0,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.0,
+    0.5,
+    0.5,
+    0.5
+  ]
+}
