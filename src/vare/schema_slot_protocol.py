@@ -107,15 +107,19 @@ def dynamic_function_slot_choices(
             return ([], "dynamic_choice_source_not_successful:list_functions")
         if argument_name == "path":
             path = source_result.get("path")
-            return ([path], "prior_list_functions_path_v1") if isinstance(path, str) and path else (
-                [], "dynamic_choice_value_missing:list_functions.path",
-            )
+            if isinstance(path, str) and path:
+                return ([path], "prior_list_functions_path_v1")
+            return ([], "dynamic_choice_value_missing:list_functions.path")
         functions = source_result.get("functions")
         if not isinstance(functions, list):
             return ([], "dynamic_choice_value_invalid:list_functions.functions")
-        names = [item.get("qualified_name") for item in functions
-                 if isinstance(item, dict) and isinstance(item.get("qualified_name"), str)
-                 and item.get("qualified_name")]
+        names: list[str] = []
+        for item in functions:
+            if not isinstance(item, dict):
+                continue
+            name = item.get("qualified_name")
+            if isinstance(name, str) and name:
+                names.append(name)
         names = list(dict.fromkeys(names))
         return (names, "prior_list_functions_names_v1") if names else (
             [], "dynamic_choice_value_missing:list_functions.qualified_name",
