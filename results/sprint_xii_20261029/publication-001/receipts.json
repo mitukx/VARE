@@ -1,0 +1,127 @@
+{
+  "results": [
+    {
+      "active_checkpoint_sha256": "269311f30a73fd181914ecf3c6fe6fdffa500f496981556cc5383935511c9fe7",
+      "candidate": {
+        "adapter_tensor_sha256": "912fcf68cff4771be6cf5f95ba7479ad50d08d5bd9f6600a2d3aa480e4c1b0d8",
+        "adverse_override": false,
+        "checkpoint_sha256": "269311f30a73fd181914ecf3c6fe6fdffa500f496981556cc5383935511c9fe7",
+        "prompt_scores": [
+          0.1858753114938736,
+          0.11643105745315552,
+          0.10250857472419739
+        ],
+        "score": 0.1349383145570755
+      },
+      "incumbent": {
+        "adapter_tensor_sha256": "d07fc47d674409a2db176b342db77530ef131082a7611b11c9682dbf30153f96",
+        "adverse_override": false,
+        "checkpoint_sha256": "6886a2f5205603213476e0f6ae653056cec380fe6c93f373ca2cb30e44f8ac73",
+        "prompt_scores": [
+          0.18129731714725494,
+          0.11343774199485779,
+          0.09984095394611359
+        ],
+        "score": 0.13152533769607544
+      },
+      "negative_control": {
+        "adapter_tensor_sha256": "9795536df4556e4a40b42bf1ae9a59a161caf88a6483ed96a14cffa9c754e67f",
+        "adverse_override": true,
+        "checkpoint_sha256": "269311f30a73fd181914ecf3c6fe6fdffa500f496981556cc5383935511c9fe7",
+        "prompt_scores": [
+          4.705883460687232e-10,
+          2.7160562687811307e-10,
+          2.354184347463928e-10
+        ],
+        "score": 3.258708025644097e-10
+      },
+      "negative_rejected": true,
+      "promoted": true,
+      "seed": 101
+    },
+    {
+      "active_checkpoint_sha256": "79b1a38f4c8093b8cfe4d8083bfba31e3f3604f681d2b99505a4a0d6ebc5b8f4",
+      "candidate": {
+        "adapter_tensor_sha256": "f34569e01ced375af93883f59e77dda5552459cd01fe5b17896f290045527645",
+        "adverse_override": false,
+        "checkpoint_sha256": "79b1a38f4c8093b8cfe4d8083bfba31e3f3604f681d2b99505a4a0d6ebc5b8f4",
+        "prompt_scores": [
+          0.1837361454963684,
+          0.1150621771812439,
+          0.10126709938049316
+        ],
+        "score": 0.13335514068603516
+      },
+      "incumbent": {
+        "adapter_tensor_sha256": "e8339faa7348947df1b566fbb06a579bf7fb4dafac15749daca9ab6c9d79e6bc",
+        "adverse_override": false,
+        "checkpoint_sha256": "0c791527e30b5d506e1e02647c4cda2fa757adc3d0cb765855323a76f606fd9f",
+        "prompt_scores": [
+          0.18119537830352783,
+          0.11339126527309418,
+          0.09980501234531403
+        ],
+        "score": 0.131463885307312
+      },
+      "negative_control": {
+        "adapter_tensor_sha256": "f85ae26ed583071843b095a6bda89fa0d01592901379aab78a85f96c27e88c57",
+        "adverse_override": true,
+        "checkpoint_sha256": "79b1a38f4c8093b8cfe4d8083bfba31e3f3604f681d2b99505a4a0d6ebc5b8f4",
+        "prompt_scores": [
+          4.63953458984534e-10,
+          2.6799709673674954e-10,
+          2.3224590306458737e-10
+        ],
+        "score": 3.213988195952903e-10
+      },
+      "negative_rejected": true,
+      "promoted": true,
+      "seed": 202
+    },
+    {
+      "active_checkpoint_sha256": "ecbc5fd606ae4eefa493f8e1ca7372f468dc13010559a4ea946e63fbf2187ef4",
+      "candidate": {
+        "adapter_tensor_sha256": "891a1c927de7666c6987f440b001362625c2f66ae09a583c4f7172d8f7c51b78",
+        "adverse_override": false,
+        "checkpoint_sha256": "ecbc5fd606ae4eefa493f8e1ca7372f468dc13010559a4ea946e63fbf2187ef4",
+        "prompt_scores": [
+          0.18629390001296997,
+          0.11682265996932983,
+          0.10287635028362274
+        ],
+        "score": 0.13533097008864084
+      },
+      "incumbent": {
+        "adapter_tensor_sha256": "464ef5497e31f6f54fb62bc5a171896e00031916a3f7192bbf5873aef212d383",
+        "adverse_override": false,
+        "checkpoint_sha256": "52adb4633d4eab7438e3cbe8347e5cdbfdb252bd065c83db6c593ddea0dd9a5f",
+        "prompt_scores": [
+          0.18119537830352783,
+          0.11339126527309418,
+          0.09980501234531403
+        ],
+        "score": 0.131463885307312
+      },
+      "negative_control": {
+        "adapter_tensor_sha256": "26164e9aea1afb8cdcb27f6f83b3f0270545d6a1be08bb24a85e863d44c2a75d",
+        "adverse_override": true,
+        "checkpoint_sha256": "ecbc5fd606ae4eefa493f8e1ca7372f468dc13010559a4ea946e63fbf2187ef4",
+        "prompt_scores": [
+          4.718906931877598e-10,
+          2.7263974411440017e-10,
+          2.363596540710944e-10
+        ],
+        "score": 3.2696336379108476e-10
+      },
+      "negative_rejected": true,
+      "promoted": true,
+      "seed": 303
+    }
+  ],
+  "rss_bytes": 2603663360,
+  "rule": "Current verifier v1 expected reward is P(C)+P(D) at temperature1. Promote final D checkpoint over its group0 incumbent iff nondecreasing score; reject a declared -20 C/D-bias adverse control and preserve active pointer. Independent evaluator loads actual checkpoints.",
+  "scope": "synthetic publication control only; no independent model capability improvement",
+  "status": "PASS",
+  "swap_growth": 0,
+  "wall_seconds": 3.520048209000379
+}

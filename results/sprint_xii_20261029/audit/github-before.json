@@ -1,0 +1,450 @@
+{
+  "observed_utc": "2026-10-28T15:28:52.413100+00:00",
+  "main": "5acc077969d60141827a259495ca77792dbb7f44",
+  "open": 19,
+  "draft": 9,
+  "pull_requests": [
+    {
+      "baseRefName": "codex/development-navigation-campaign-v1",
+      "baseRefOid": "df0a360ead3927f72d33972634251469b50c2368",
+      "headRefOid": "027e16aebbf1f7e812579df95bf0aee748541c1d",
+      "isDraft": true,
+      "mergeStateStatus": "CLEAN",
+      "number": 146,
+      "reviewDecision": "",
+      "title": "v9/v10 multi-turn shared-prefix ABBA measurement (partial run-001)",
+      "ci": {
+        "total": 20,
+        "success": 20,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": []
+    },
+    {
+      "baseRefName": "main",
+      "baseRefOid": "41512fb1900bd9b0db0b86f6ca5e5ddf32d63327",
+      "headRefOid": "1226dedcaf026ec034f83845ffb17369c9529150",
+      "isDraft": false,
+      "mergeStateStatus": "BEHIND",
+      "number": 145,
+      "reviewDecision": "",
+      "title": "Freeze a prospective Development repository-repair protocol",
+      "ci": {
+        "total": 19,
+        "success": 12,
+        "pending": 7,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "tests/test_development_repository_repair_campaign_v1.py",
+        "tests/test_development_repository_repair_campaign_v2.py"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "baseRefOid": "5acc077969d60141827a259495ca77792dbb7f44",
+      "headRefOid": "a25a7d61615fce536c5bb2cf19a988ebc3620e60",
+      "isDraft": false,
+      "mergeStateStatus": "BLOCKED",
+      "number": 144,
+      "reviewDecision": "",
+      "title": "Correct the prospective held-out inventory to 8/15",
+      "ci": {
+        "total": 19,
+        "success": 18,
+        "pending": 0,
+        "failures": [
+          {
+            "name": "test (3.11)",
+            "url": "https://github.com/mitukx/VARE/actions/runs/40713815515/job/122905931098"
+          }
+        ]
+      },
+      "changed_implementation_files": [
+        "tests/test_heldout_inventory_correction_v1.py"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "baseRefOid": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "headRefOid": "91d3d19a4c9e10ffacea0f6d2c5f48f453ea4c9c",
+      "isDraft": true,
+      "mergeStateStatus": "BEHIND",
+      "number": 142,
+      "reviewDecision": "",
+      "title": "Publish verified external repair campaign evidence",
+      "ci": {
+        "total": 19,
+        "success": 19,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": []
+    },
+    {
+      "baseRefName": "codex/navigation-integrity-fixes-v1",
+      "baseRefOid": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1",
+      "headRefOid": "df0a360ead3927f72d33972634251469b50c2368",
+      "isDraft": true,
+      "mergeStateStatus": "CLEAN",
+      "number": 139,
+      "reviewDecision": "",
+      "title": "Fix navigation regressions and measure fresh Development agent failures",
+      "ci": {
+        "total": 20,
+        "success": 20,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": []
+    },
+    {
+      "baseRefName": "codex/navigation-symlink-fix-v1",
+      "baseRefOid": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f",
+      "headRefOid": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1",
+      "isDraft": false,
+      "mergeStateStatus": "CLEAN",
+      "number": 137,
+      "reviewDecision": "",
+      "title": "Fix source-navigation review findings",
+      "ci": {
+        "total": 29,
+        "success": 28,
+        "pending": 0,
+        "failures": [
+          {
+            "name": "test (3.12)",
+            "url": "https://github.com/mitukx/VARE/actions/runs/40309249100/job/121525994633"
+          }
+        ]
+      },
+      "changed_implementation_files": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/benchmark_e2e_rl_continuation.py",
+        "scripts/run_local_agent.py",
+        "src/vare/agent_task_contract.py",
+        "src/vare/source_navigation_v1.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_run_local_agent_tool_format.py",
+        "tests/test_source_navigation_v1.py"
+      ]
+    },
+    {
+      "baseRefName": "codex/source-navigation-v1",
+      "baseRefOid": "a65d59e5704b84a934a49385551a8d2311a01575",
+      "headRefOid": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f",
+      "isDraft": false,
+      "mergeStateStatus": "CLEAN",
+      "number": 136,
+      "reviewDecision": "",
+      "title": "Harden source navigation syntax checks",
+      "ci": {
+        "total": 19,
+        "success": 19,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/run_local_agent.py",
+        "tests/test_agent_syntax_tool_v1.py",
+        "tests/test_source_navigation_v1.py"
+      ]
+    },
+    {
+      "baseRefName": "codex/transformers-47468-qualification-v1",
+      "baseRefOid": "d8636def094cd83a2010980570a5c4804725166a",
+      "headRefOid": "b258c69fc0295e421eab3aaae965d70b693cd1e6",
+      "isDraft": true,
+      "mergeStateStatus": "CLEAN",
+      "number": 135,
+      "reviewDecision": "",
+      "title": "Add process-creation boundary preflight for 47468 v4",
+      "ci": {
+        "total": 19,
+        "success": 19,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/run_transformers_47468_qualification_v4.py",
+        "tests/test_transformers_47468_qualification_v4.py"
+      ]
+    },
+    {
+      "baseRefName": "codex/mlx-pr4748-qwen3-pilot-v1",
+      "baseRefOid": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+      "headRefOid": "e8ab4705b84d82cd79e2883c391083087e82b4e8",
+      "isDraft": false,
+      "mergeStateStatus": "CLEAN",
+      "number": 133,
+      "reviewDecision": "",
+      "title": "Add bounded source navigation for repair agents",
+      "ci": {
+        "total": 20,
+        "success": 20,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/benchmark_e2e_rl_continuation.py",
+        "scripts/run_local_agent.py",
+        "src/vare/agent_task_contract.py",
+        "src/vare/source_navigation_v1.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_source_navigation_v1.py"
+      ]
+    },
+    {
+      "baseRefName": "codex/mlx-core-development-agent-feasibility-v1",
+      "baseRefOid": "071352981ad2e6bb1601ae50f935600f28aba8fc",
+      "headRefOid": "139de5381989531691673be08e906233dd00468c",
+      "isDraft": true,
+      "mergeStateStatus": "CLEAN",
+      "number": 131,
+      "reviewDecision": "",
+      "title": "Measure deterministic edit replay and recovery; pin E2E inventories",
+      "ci": {
+        "total": 20,
+        "success": 20,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": []
+    },
+    {
+      "baseRefName": "codex/real-agent-interface-v1",
+      "baseRefOid": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76",
+      "headRefOid": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48",
+      "isDraft": false,
+      "mergeStateStatus": "CLEAN",
+      "number": 126,
+      "reviewDecision": "",
+      "title": "Measure verifier-version-aware GRPO under drift and crashes",
+      "ci": {
+        "total": 20,
+        "success": 20,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/audit_verifier_consistent_async_grpo.py",
+        "scripts/benchmark_verifier_consistent_async_grpo.py",
+        "scripts/benchmark_verifier_consistent_grpo_sigkill.py",
+        "src/vare/engine.py",
+        "src/vare/promotion.py",
+        "tests/test_checkpoint_bound_promotion.py",
+        "tests/test_verifier_consistent_async_grpo_audit_safety.py",
+        "tests/test_verifier_consistent_async_grpo_controls.py",
+        "tests/test_verifier_consistent_async_grpo_crash_eval.py",
+        "tests/test_verifier_consistent_async_grpo_output_safety.py"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "baseRefOid": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "headRefOid": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+      "isDraft": false,
+      "mergeStateStatus": "BEHIND",
+      "number": 122,
+      "reviewDecision": "",
+      "title": "Close installed-repair leakage and record the 7B teacher NO-GO",
+      "ci": {
+        "total": 28,
+        "success": 28,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/audit_flagship_results_v1.py",
+        "scripts/probe_flagship_compiled_repair_v1.py",
+        "scripts/qualify_flagship_development_v1.py",
+        "scripts/replay_flagship_dependency_leakage_v1.py",
+        "scripts/run_flagship_teacher_v1.py",
+        "tests/test_flagship_development_v1.py",
+        "tests/test_flagship_image_sanitizer.py",
+        "tests/test_flagship_results_v1.py",
+        "tests/test_flagship_teacher_v1.py"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "baseRefOid": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "headRefOid": "a937f4ad6eacb63d679952f7a05d39d04afab59a",
+      "isDraft": false,
+      "mergeStateStatus": "BEHIND",
+      "number": 121,
+      "reviewDecision": "",
+      "title": "Add independent source replay for Transformers fusion registration",
+      "ci": {
+        "total": 19,
+        "success": 19,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/reproduce_transformers_49412_source_replay_v2.py",
+        "scripts/reproduce_transformers_49412_source_replay_v3.py",
+        "tests/test_transformers_49412_source_replay_v3.py"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "baseRefOid": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "headRefOid": "8aacae54d0f8893580a77cb8bb831e7621a2403a",
+      "isDraft": false,
+      "mergeStateStatus": "DIRTY",
+      "number": 120,
+      "reviewDecision": "",
+      "title": "Record real-model coding-agent feasibility and tool-boundary fixes",
+      "ci": {
+        "total": 20,
+        "success": 20,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": []
+    },
+    {
+      "baseRefName": "codex/transformers-49752-repo-task",
+      "baseRefOid": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+      "headRefOid": "552d6f61187926d78719aad8c4c7ec9e8663c242",
+      "isDraft": true,
+      "mergeStateStatus": "CLEAN",
+      "number": 118,
+      "reviewDecision": "",
+      "title": "Extract hash-checked structured edit library without changing frozen agent runtime",
+      "ci": {
+        "total": 20,
+        "success": 20,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "src/vare/agent_structured_edit.py",
+        "tests/test_agent_structured_edit.py"
+      ]
+    },
+    {
+      "baseRefName": "codex/mlxlm-1971-attested-calibration",
+      "baseRefOid": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "headRefOid": "6709aed996ce5ec315cf7a87930350dca6c0ee20",
+      "isDraft": true,
+      "mergeStateStatus": "CLEAN",
+      "number": 117,
+      "reviewDecision": "",
+      "title": "Isolate MLX-LM source snapshots before trusted export",
+      "ci": {
+        "total": 19,
+        "success": 19,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/run_mlxlm_1971_v11_operator.py",
+        "scripts/run_mlxlm_1971_v12_operator.py",
+        "tests/test_run_mlxlm_1971_v11_operator.py",
+        "tests/test_run_mlxlm_1971_v12_operator.py"
+      ]
+    },
+    {
+      "baseRefName": "codex/mlxlm-1971-isolation",
+      "baseRefOid": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc",
+      "headRefOid": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "isDraft": true,
+      "mergeStateStatus": "CLEAN",
+      "number": 114,
+      "reviewDecision": "",
+      "title": "Preserve attested MLX-LM calibration evidence on publication failure",
+      "ci": {
+        "total": 19,
+        "success": 19,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/audit_mlxlm_1971_historical_implementation_hashes.py",
+        "scripts/run_attested_mlxlm_1971_v9_calibration.py",
+        "tests/test_attest_mlxlm_1971_v9_current_git.py",
+        "tests/test_run_attested_mlxlm_1971_v9_calibration.py"
+      ]
+    },
+    {
+      "baseRefName": "codex/fresh-hf-dev-candidates-v1",
+      "baseRefOid": "ab8d7c0b55d5b1c28365f2f002509ce3a37df501",
+      "headRefOid": "710dbc0d28aa33a78521a29f067c9a9493f6c56d",
+      "isDraft": true,
+      "mergeStateStatus": "CLEAN",
+      "number": 108,
+      "reviewDecision": "",
+      "title": "Add dual-Python HF Coding Development protocol v2",
+      "ci": {
+        "total": 19,
+        "success": 19,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/dry_run_hf_coding_dev_v2_dual_python.py",
+        "scripts/preflight_hf_coding_dev_v1_host_grader.py",
+        "tests/test_hf_coding_dev_v2_dual_python_dry_run.py"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "baseRefOid": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "headRefOid": "762a5a65598756014d957a206ba1548cb19a348f",
+      "isDraft": false,
+      "mergeStateStatus": "BEHIND",
+      "number": 99,
+      "reviewDecision": "",
+      "title": "Calibrate isolated MLX-LM 1971 Development task",
+      "ci": {
+        "total": 20,
+        "success": 20,
+        "pending": 0,
+        "failures": []
+      },
+      "changed_implementation_files": [
+        "scripts/attest_mlxlm_1971_v9_current_git.py",
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/audit_mlxlm_1971_historical_implementation_hashes.py",
+        "scripts/benchmark_trajectory_runtime.py",
+        "scripts/generate_mlxlm_1971_v2_goldens.py",
+        "scripts/run_mlxlm_1971_calibration.py",
+        "scripts/run_mlxlm_1971_calibration_v2.py",
+        "scripts/run_mlxlm_1971_calibration_v3.py",
+        "scripts/run_mlxlm_1971_calibration_v4.py",
+        "scripts/run_mlxlm_1971_calibration_v5.py",
+        "scripts/run_mlxlm_1971_calibration_v6.py",
+        "scripts/run_mlxlm_1971_calibration_v7.py",
+        "scripts/run_mlxlm_1971_calibration_v8.py",
+        "scripts/run_mlxlm_1971_calibration_v9.py",
+        "src/vare/mlxlm_1971_repo_task.py",
+        "src/vare/mlxlm_1971_repo_task_v2.py",
+        "src/vare/mlxlm_1971_repo_task_v3.py",
+        "src/vare/mlxlm_1971_repo_task_v4.py",
+        "src/vare/mlxlm_1971_repo_task_v6.py",
+        "src/vare/mlxlm_1971_repo_task_v7.py",
+        "src/vare/mlxlm_1971_repo_task_v9.py",
+        "tests/test_attest_mlxlm_1971_v9_current_git.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_mlxlm_1971_calibration_v5.py",
+        "tests/test_mlxlm_1971_calibration_v6.py",
+        "tests/test_mlxlm_1971_calibration_v7.py",
+        "tests/test_mlxlm_1971_calibration_v8.py",
+        "tests/test_mlxlm_1971_calibration_v9.py",
+        "tests/test_mlxlm_1971_historical_implementation_hash_audit.py",
+        "tests/test_mlxlm_1971_repo_task.py",
+        "tests/test_mlxlm_1971_repo_task_v2.py",
+        "tests/test_mlxlm_1971_repo_task_v3.py",
+        "tests/test_mlxlm_1971_repo_task_v4.py",
+        "tests/test_mlxlm_1971_repo_task_v6.py",
+        "tests/test_mlxlm_1971_repo_task_v7.py",
+        "tests/test_mlxlm_1971_repo_task_v9.py"
+      ]
+    }
+  ]
+}
