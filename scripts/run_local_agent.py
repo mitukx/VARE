@@ -27,7 +27,7 @@ MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
 TOOLS = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace.', 'parameters': {'type': 'object', 'properties': {}, 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file. Provide its repository-relative path; a workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in the allowed task source files.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search literal source code in the allowed task files. Whitespace in a query, including newlines, matches any source whitespace; results include bounded line spans.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a small unified diff to existing task source files. Keep the patch minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'finish', 'description': 'Finish the attempt when you believe the task is complete. The evaluator will judge the workspace.', 'parameters': {'type': 'object', 'properties': {'summary': {'type': 'string'}}, 'required': ['summary'], 'additionalProperties': False}}},
@@ -181,6 +181,25 @@ def snapshot_allowed_sources(root: Path, files: list[str]) -> dict[str, bytes]:
     return {name: read_regular_source(root, name) for name in sorted(files)}
 
 
+def validate_candidate_workspace_before_model(
+    root: Path, files: list[str], expected_revision: str,
+) -> dict[str, bytes]:
+    """Reject a dirty or source-drifted task checkout before loading model weights."""
+    if re.fullmatch(r"[0-9a-f]{40}", expected_revision) is None:
+        raise ValueError("candidate base revision is not a full Git commit SHA")
+    if run_git(root, "rev-parse", "HEAD") != expected_revision:
+        raise ValueError("candidate workspace HEAD differs from the pinned task revision")
+    status = run_git(root, "status", "--porcelain=v1", "--untracked-files=all")
+    if status:
+        raise ValueError("candidate workspace must be clean before model loading")
+    snapshot = snapshot_allowed_sources(root, files)
+    for name, content in snapshot.items():
+        committed = pinned_git(root, "cat-file", "blob", f"{expected_revision}:{name}")
+        if content != committed:
+            raise ValueError(f"candidate source differs from the pinned Git blob before model loading: {name}")
+    return snapshot
+
+
 def run_git(root: Path, *args: str) -> str:
     return pinned_git(root, *args).decode("utf-8").strip()
 
@@ -221,6 +240,16 @@ def candidate_source_diff(
     return diff
 
 
+def canonical_candidate_diff_or_error(
+    root: Path, files: list[str], before: dict[str, bytes], base_revision: str,
+) -> tuple[str, str | None]:
+    """Return a patch or retain the exact integrity failure with the trajectory."""
+    try:
+        return candidate_source_diff(root, files, before, base_revision), None
+    except Exception as exc:
+        return '', f'{type(exc).__name__}: {exc}'
+
+
 def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     """Map a model-supplied path to one exact allowlisted relative file."""
     normalized = raw_path.replace('\\', '/').lstrip('./')
@@ -229,7 +258,7 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
 
 
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
-                           token_limit: int) -> str:
+                           token_limit: int, source_already_read: bool = False) -> str:
     """Give the agent actionable feedback when a bounded response has no tool call."""
     if '<tool_call>' in raw and '</tool_call>' not in raw:
         path_list = ', '.join(allowed_paths)
@@ -245,10 +274,52 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
             'Do not reread the source or rewrite the whole file. Emit one complete apply_patch tool call '
             f'with a minimal change and exact allowed paths ({path_list}); end it with </tool_call>.'
         )
+    if source_already_read:
+        return (
+            'Your previous response did not call a tool and no source file changed. Continue from the source '
+            'already present in the conversation; do not reread the full file. Emit one useful tool call now: '
+            'use a short search_text query, apply a minimal patch, or run the next task-relevant check. '
+            'Do not ask a question.'
+        )
     return (
         'Your previous response did not call a tool and no source file changed. Continue the task now. '
         'Call read_file on the exact path named in my first instruction. Do not ask a question.'
     )
+
+
+def search_source_content(query: str, sources: dict[str, str], *, limit: int = 80) -> list[dict[str, Any]]:
+    """Search source with whitespace-insensitive matching, including across lines.
+
+    Model-generated queries often contain a complete expression copied from a
+    source read. Treat whitespace in such a query as flexible while preserving
+    literal matching for every non-whitespace character. Return the source line
+    and a bounded excerpt so a multiline hit can be localized without dumping
+    the whole file back into the conversation.
+    """
+    tokens = re.findall(r'\w+|[^\w\s]', query, flags=re.UNICODE)
+    if not tokens:
+        return []
+    pieces = [re.escape(tokens[0])]
+    for previous, token in zip(tokens, tokens[1:]):
+        separator = r'\s+' if previous.isalnum() and token.isalnum() else r'\s*'
+        pieces.extend((separator, re.escape(token)))
+    pattern = re.compile(''.join(pieces))
+    matches: list[dict[str, Any]] = []
+    for path, content in sorted(sources.items()):
+        lines = content.splitlines()
+        for match in pattern.finditer(content):
+            start_line = content.count('\n', 0, match.start()) + 1
+            end_line = content.count('\n', 0, match.end()) + 1
+            excerpt = '\n'.join(lines[start_line - 1:end_line])
+            matches.append({
+                'path': path,
+                'line': start_line,
+                'end_line': end_line,
+                'text': excerpt[:500],
+            })
+            if len(matches) >= limit:
+                return matches
+    return matches
 
 
 def normalize_tool_call_format(raw: str, tool_names: set[str]) -> tuple[str, bool]:
@@ -337,6 +408,15 @@ def main() -> int:
         parser.error(f'workspace missing allowed source files: {missing}')
     if not os.environ.get('HF_HUB_OFFLINE') == '1' or not os.environ.get('TRANSFORMERS_OFFLINE') == '1':
         parser.error('HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1 are required')
+    try:
+        workspace_revision = run_git(workspace, 'rev-parse', 'HEAD')
+        source_before = validate_candidate_workspace_before_model(
+            workspace, sorted(allowed), workspace_revision,
+        )
+        if workspace_revision != contract.diff_revision:
+            raise ValueError('candidate workspace HEAD differs from the task contract revision')
+    except (OSError, ValueError) as exc:
+        parser.error(f'candidate workspace preflight failed before model loading: {exc}')
 
     start = time.perf_counter()
     if args.backend == 'mlx':
@@ -403,10 +483,6 @@ def main() -> int:
     ]
     initial_messages = [dict(message) for message in messages]
     transcript: list[dict[str, Any]] = []
-    workspace_revision = run_git(workspace, 'rev-parse', 'HEAD')
-    if workspace_revision != contract.diff_revision:
-        parser.error('candidate workspace HEAD differs from the task diff revision')
-    source_before = snapshot_allowed_sources(workspace, sorted(allowed))
     before = digest_tree(workspace, sorted(allowed))
     token_total = 0
     stop_reason = 'turn_budget_exhausted'
@@ -414,6 +490,7 @@ def main() -> int:
     no_tool_retries = 0
     edit_attempted = False
     edit_applied = False
+    source_read_paths: set[str] = set()
     public_test_hash = sha256(workspace / next(iter(test_files))) if test_files else None
     public_test_result = None
     format_parse_failure = None
@@ -490,7 +567,7 @@ def main() -> int:
                 no_tool_retries += 1
                 messages.append({'role': 'user', 'content': no_tool_retry_reminder(
                     raw, edit_format=args.edit_format, allowed_paths=sorted(editable),
-                    token_limit=limit,
+                    token_limit=limit, source_already_read=bool(source_read_paths),
                 )})
                 entry['automatic_reminder'] = no_tool_retries
                 continue
@@ -524,6 +601,7 @@ def main() -> int:
                     if path is None:
                         result = {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
                     else:
+                        source_read_paths.add(path)
                         result = {'resolved_path': path,
                                   'content': (workspace / path).read_text(encoding='utf-8')}
                 elif name == 'search_text':
@@ -531,12 +609,11 @@ def main() -> int:
                     if not query:
                         result = {'error': 'query must not be empty'}
                     else:
-                        matches = []
-                        for path in sorted(allowed):
-                            for line_no, line in enumerate((workspace / path).read_text(encoding='utf-8').splitlines(), 1):
-                                if query in line:
-                                    matches.append({'path': path, 'line': line_no, 'text': line[:500]})
-                        result = matches[:80]
+                        source_text = {
+                            path: (workspace / path).read_text(encoding='utf-8')
+                            for path in sorted(allowed)
+                        }
+                        result = search_source_content(query, source_text)
                 elif name == 'apply_patch':
                     result = attempt_configured_edit(
                         workspace, str(arguments.get('patch', '')), args.edit_format, editable,
@@ -612,7 +689,14 @@ def main() -> int:
 
     elapsed = time.perf_counter() - start
     after = digest_tree(workspace, sorted(allowed))
-    diff = candidate_source_diff(workspace, sorted(allowed), source_before, workspace_revision)
+    diff, diff_validation_error = canonical_candidate_diff_or_error(
+        workspace, sorted(allowed), source_before, workspace_revision,
+    )
+    if diff_validation_error is not None:
+        # Keep the raw model trajectory even when candidate changes cannot be
+        # admitted as a canonical patch. The resource wrapper can then classify
+        # the task result without losing model outputs from an integrity failure.
+        stop_reason = 'candidate_diff_validation_failed'
     if args.backend == 'mlx':
         runtime['mlx_active_memory_bytes'] = int(mx.metal.get_active_memory())
         runtime['mlx_peak_memory_bytes'] = int(mx.metal.get_peak_memory())
@@ -635,6 +719,7 @@ def main() -> int:
         'edit_format': args.edit_format,
         'edit_attempted': edit_attempted,
         'edit_applied': edit_applied,
+        'candidate_diff_validation_error': diff_validation_error,
         'public_test_result': public_test_result,
         'format_parse_failure': format_parse_failure,
         'format_parse_failure_count': format_parse_failure_count,
@@ -657,7 +742,7 @@ def main() -> int:
     except FileExistsError:
         parser.error(f'refusing to overwrite existing agent record: {result_path}')
     print(json.dumps({key: result[key] for key in ['task_id', 'seed', 'stop_reason', 'elapsed_seconds', 'new_tokens', 'tool_turns', 'candidate_diff_sha256']}, indent=2))
-    return 0
+    return 1 if diff_validation_error else 0
 
 
 if __name__ == '__main__':
