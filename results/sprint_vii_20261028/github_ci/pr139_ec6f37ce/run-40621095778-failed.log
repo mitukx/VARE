@@ -1,0 +1,104 @@
+typecheck	Run mypy src/vare	﻿2026-10-28T02:28:33.3150118Z ##[group]Run mypy src/vare
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3150404Z ^[[36;1mmypy src/vare^[[0m
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3207682Z shell: /usr/bin/bash -e {0}
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3207905Z env:
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3208134Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3208487Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3208824Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3209129Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3209642Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3210018Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+typecheck	Run mypy src/vare	2026-10-28T02:28:33.3210340Z ##[endgroup]
+typecheck	Run mypy src/vare	2026-10-28T02:28:35.4520618Z src/vare/schema_slot_protocol.py:120: error: Incompatible return value type (got "tuple[list[Any | None], str]", expected "tuple[list[str], str] | None")  [return-value]
+typecheck	Run mypy src/vare	2026-10-28T02:28:36.6653310Z Found 1 error in 1 file (checked 86 source files)
+typecheck	Run mypy src/vare	2026-10-28T02:28:36.6757118Z ##[error]Process completed with exit code 1.
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	﻿2026-10-28T02:28:54.8119054Z ##[group]Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8119666Z ^[[36;1mpython -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py^[[0m
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8175130Z shell: /usr/bin/bash -e {0}
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8175342Z env:
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8175566Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8175911Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8176249Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8176550Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8176838Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8177130Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8177474Z   VARE_TEST_DIAGNOSTICS_DIR: /home/runner/work/_temp/durable-test-diagnostics
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8177851Z   VARE_RUN_AUTHORED_MLSYS_ISOLATION_TESTS: 0
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:54.8178070Z ##[endgroup]
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9669648Z 
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9670291Z ==================================== ERRORS ====================================
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9685876Z _______________ ERROR collecting tests/test_agent_json_eos_v2.py _______________
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9686714Z ImportError while importing test module '/home/runner/work/VARE/VARE/tests/test_agent_json_eos_v2.py'.
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9687433Z Hint: make sure your test modules/packages have valid Python names.
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9687847Z Traceback:
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9688313Z /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/importlib/__init__.py:126: in import_module
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9688953Z     return _bootstrap._gcd_import(name[level:], package, level)
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9689384Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9689772Z tests/test_agent_json_eos_v2.py:3: in <module>
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9690141Z     import numpy as np
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9690446Z E   ModuleNotFoundError: No module named 'numpy'
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9690871Z =========================== short test summary info ============================
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9691300Z ERROR tests/test_agent_json_eos_v2.py
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9691709Z !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:58.9692122Z 1 skipped, 1 error in 3.49s
+test (3.11)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:59.0567584Z ##[error]Process completed with exit code 2.
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	﻿2026-10-28T02:28:37.0518961Z ##[group]Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0520184Z ^[[36;1mpython -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py^[[0m
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0606463Z shell: /usr/bin/bash -e {0}
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0606990Z env:
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0607470Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0608131Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0608945Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0609500Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0610227Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0610967Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0611837Z   VARE_TEST_DIAGNOSTICS_DIR: /home/runner/work/_temp/durable-test-diagnostics
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0612625Z   VARE_RUN_AUTHORED_MLSYS_ISOLATION_TESTS: 0
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:37.0612996Z ##[endgroup]
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6319128Z 
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6319918Z ==================================== ERRORS ====================================
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6334470Z _______________ ERROR collecting tests/test_agent_json_eos_v2.py _______________
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6335582Z ImportError while importing test module '/home/runner/work/VARE/VARE/tests/test_agent_json_eos_v2.py'.
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6336620Z Hint: make sure your test modules/packages have valid Python names.
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6337229Z Traceback:
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6337963Z /opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/importlib/__init__.py:88: in import_module
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6338995Z     return _bootstrap._gcd_import(name[level:], package, level)
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6339638Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6340239Z tests/test_agent_json_eos_v2.py:3: in <module>
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6340831Z     import numpy as np
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6341252Z E   ModuleNotFoundError: No module named 'numpy'
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6341980Z =========================== short test summary info ============================
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6342665Z ERROR tests/test_agent_json_eos_v2.py
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6343384Z !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.6344091Z 1 skipped, 1 error in 4.90s
+test (3.13)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:42.8163828Z ##[error]Process completed with exit code 2.
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	﻿2026-10-28T02:28:44.6183393Z ##[group]Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6184434Z ^[[36;1mpython -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py^[[0m
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6258916Z shell: /usr/bin/bash -e {0}
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6259205Z env:
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6259534Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6260114Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6260686Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6261330Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6261827Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6262318Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6262714Z   VARE_TEST_DIAGNOSTICS_DIR: /home/runner/work/_temp/durable-test-diagnostics
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6263202Z   VARE_RUN_AUTHORED_MLSYS_ISOLATION_TESTS: 1
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:44.6263553Z ##[endgroup]
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9546133Z 
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9547497Z ==================================== ERRORS ====================================
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9548151Z _______________ ERROR collecting tests/test_agent_json_eos_v2.py _______________
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9548849Z ImportError while importing test module '/home/runner/work/VARE/VARE/tests/test_agent_json_eos_v2.py'.
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9549509Z Hint: make sure your test modules/packages have valid Python names.
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9549910Z Traceback:
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9563713Z /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9564495Z     return _bootstrap._gcd_import(name[level:], package, level)
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9564936Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9565364Z tests/test_agent_json_eos_v2.py:3: in <module>
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9565736Z     import numpy as np
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9566035Z E   ModuleNotFoundError: No module named 'numpy'
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9566450Z =========================== short test summary info ============================
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9566883Z ERROR tests/test_agent_json_eos_v2.py
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9567287Z !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:48.9567686Z 1 skipped, 1 error in 3.74s
+test (3.12)	Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py	2026-10-28T02:28:49.0254690Z ##[error]Process completed with exit code 2.

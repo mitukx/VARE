@@ -1,0 +1,34 @@
+[
+  {
+    "control": "baseline",
+    "expected": "FAIL",
+    "result": {
+      "additions": [],
+      "reason": "expected exactly one approved train and eval filter",
+      "removals": [],
+      "status": "FAIL"
+    }
+  },
+  {
+    "control": "fixed",
+    "expected": "PASS",
+    "result": {
+      "added_filters": [
+        "eval_dataset",
+        "train_dataset"
+      ],
+      "allowed_removals": [
+        "known_empty_completion_warning"
+      ],
+      "status": "PASS"
+    }
+  },
+  {
+    "control": "wrong_mutant",
+    "expected": "FAIL",
+    "result": {
+      "reason": "changes exceed the two approved filters and optional known warning removal",
+      "status": "FAIL"
+    }
+  }
+]
