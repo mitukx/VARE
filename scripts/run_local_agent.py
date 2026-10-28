@@ -124,6 +124,7 @@ SOURCE_LEASE_READ_TOOL_NAMES = {'read_lines', 'read_function'}
 SOURCE_NAVIGATION_TOOL_NAMES = {
     'list_files', 'search_source', 'read_lines', 'list_functions', 'read_function',
 }
+SOURCE_POST_EDIT_TERMINAL_TOOL_NAMES = {'check_syntax', 'run_public_tests', 'finish'}
 POST_EDIT_INVENTORY_TOOL_NAMES = {'list_files', 'list_functions'}
 RUNTIME_SOURCE_FILES = (
     'scripts/run_local_agent.py',
@@ -499,13 +500,17 @@ def tools_for(edit_format: str, *, public_tests: bool = False,
 
 def tools_for_source_read_gate(
     tools: list[dict[str, Any]], *, lease_read_succeeded: bool, enabled: bool,
+    edit_applied: bool = False,
 ) -> list[dict[str, Any]]:
-    """Keep source-edit tools unavailable until a fresh source lease was read."""
+    """Keep source edits gated by a lease while preserving safe post-edit completion tools."""
     if not enabled or lease_read_succeeded:
         return tools
+    allowed_names = set(SOURCE_NAVIGATION_TOOL_NAMES)
+    if edit_applied:
+        allowed_names.update(SOURCE_POST_EDIT_TERMINAL_TOOL_NAMES)
     return [
         tool for tool in tools
-        if tool['function']['name'] in SOURCE_NAVIGATION_TOOL_NAMES
+        if tool['function']['name'] in allowed_names
         and tool['function']['name'] not in SOURCE_EDIT_TOOL_NAMES
     ]
 
@@ -2376,6 +2381,7 @@ def main() -> int:
             tools,
             lease_read_succeeded=source_lease_read_succeeded,
             enabled=args.require_source_read_before_edit,
+            edit_applied=edit_applied,
         )
         turn_tools = tools_for_post_edit_navigation_gate(
             turn_tools,

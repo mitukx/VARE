@@ -67,6 +67,24 @@ def test_source_read_gate_hides_edits_until_a_fresh_lease_is_read():
     ) is tools
 
 
+def test_source_read_gate_keeps_safe_completion_tools_after_edit_lease_closes():
+    tools = tools_for(
+        'structured_replace', public_tests=True,
+        tool_interface='lease_bound_function_edit_v2',
+    )
+    gated = tools_for_source_read_gate(
+        tools, lease_read_succeeded=False, enabled=True, edit_applied=True,
+    )
+    names = {tool['function']['name'] for tool in gated}
+    assert {'check_syntax', 'run_public_tests', 'finish'} <= names
+    assert 'replace_function_body_transactional' not in names
+
+    before_edit = tools_for_source_read_gate(
+        tools, lease_read_succeeded=False, enabled=True, edit_applied=False,
+    )
+    assert 'finish' not in {tool['function']['name'] for tool in before_edit}
+
+
 def test_exact_text_transactional_interface_is_lease_gated_and_schema_closed():
     tools = tools_for(
         'structured_replace', public_tests=True,
