@@ -103,6 +103,10 @@ def test_controller_identity_tracks_edit_format_module_drift(monkeypatch, tmp_pa
     names = (
         "src/vare/agent_edit_v2.py",
         "src/vare/agent_edit_format.py",
+        "src/vare/agent_function_edit_v1.py",
+        "src/vare/agent_json_eos_v1.py",
+        "src/vare/agent_json_eos_v2.py",
+        "src/vare/agent_json_eos_v3.py",
         "src/vare/agent_task_contract.py",
         "src/vare/source_navigation_v1.py",
     )
