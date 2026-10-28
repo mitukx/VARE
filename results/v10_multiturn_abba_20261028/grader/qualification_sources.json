@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "note": "Harness-validation controls only; never shown to the model.",
+  "known_fix": {
+    "inventory": "def parse_quantity(text):\n    value = int(text.strip())\n    if value < 0:\n        raise ValueError('quantity must be non-negative')\n    return value\n\n\ndef restock(levels, item, amount):\n    updated = dict(levels)\n    updated[item] = levels.get(item, 0) + amount\n    return updated\n\n\ndef total_units(levels):\n    total = 0\n    for count in levels.values():\n        total += count\n    return total\n",
+    "textstats": "def word_count(text):\n    return len(text.split())\n\n\ndef average_word_length(text):\n    words = text.split()\n    if not words:\n        return 0.0\n    return sum(len(word) for word in words) / len(words)\n\n\ndef longest_word(text):\n    words = text.split()\n    return max(words, key=len) if words else ''\n",
+    "intervals": "def overlaps(first, second):\n    return first[0] <= second[1] and second[0] <= first[1]\n\n\ndef merge(intervals):\n    merged = []\n    for start, end in sorted(intervals):\n        if merged and start <= merged[-1][1]:\n            merged[-1] = (merged[-1][0], max(merged[-1][1], end))\n        else:\n            merged.append((start, end))\n    return merged\n\n\ndef total_length(intervals):\n    return sum(end - start for start, end in merge(intervals))\n"
+  },
+  "wrong_mutant": {
+    "inventory": "def parse_quantity(text):\n    return int(text.strip())\n\n\ndef restock(levels, item, amount):\n    levels[item] = levels.get(item, 0) + amount\n    return levels\n\n\ndef total_units(levels):\n    return sum(levels.values())\n",
+    "textstats": "def word_count(text):\n    return len(text.split())\n\n\ndef average_word_length(text):\n    words = text.split()\n    return sum(len(word) for word in words) / max(len(words), 1) if words else 0.0\n\n\ndef longest_word(text):\n    words = text.split()\n    return sorted(words, key=len)[-1] if words else ''\n",
+    "intervals": "def overlaps(first, second):\n    return first[0] <= second[1] and second[0] <= first[1]\n\n\ndef merge(intervals):\n    return sorted(intervals)\n\n\ndef total_length(intervals):\n    return sum(end - start for start, end in merge(intervals))\n"
+  }
+}
