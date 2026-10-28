@@ -276,6 +276,33 @@ def test_transactional_navigation_guidance_v2_is_explicit_and_keeps_edit_contrac
     }
 
 
+def test_transactional_guidance_matches_available_verification_tool():
+    tools_without_public_tests = tools_for(
+        'structured_replace',
+        public_tests=False,
+        tool_interface='lease_bound_transactional_localized_v1',
+    )
+    without_public_tests = transactional_edit_guidance(
+        localized=False,
+        search_available=True,
+        navigation_guidance='v2',
+        public_tests_available=False,
+    )
+    with_public_tests = transactional_edit_guidance(
+        localized=False,
+        search_available=True,
+        navigation_guidance='v2',
+        public_tests_available=True,
+    )
+
+    assert 'call check_syntax on the edited path' in without_public_tests
+    assert 'run_public_tests' not in without_public_tests
+    assert 'call run_public_tests' in with_public_tests
+    exposed_names = {tool['function']['name'] for tool in tools_without_public_tests}
+    assert 'check_syntax' in exposed_names
+    assert 'run_public_tests' not in exposed_names
+
+
 def test_function_scoped_interface_uses_closed_schemas_and_only_function_edits():
     tools = tools_for(
         'structured_replace', public_tests=True,

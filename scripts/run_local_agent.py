@@ -1326,6 +1326,7 @@ def transactional_navigation_guidance_sentence(version: str = 'v1') -> str:
 
 def transactional_edit_guidance(
     *, localized: bool, search_available: bool = False, navigation_guidance: str = 'v1',
+    public_tests_available: bool = True,
 ) -> str:
     """Versioned controller instructions for syntax-gated source transactions."""
     navigation = (
@@ -1341,7 +1342,9 @@ def transactional_edit_guidance(
         'before writing it; a syntax-invalid proposal is rejected without changing the candidate. '
         'Only choose a fence or newline normalization when the raw replacement actually needs that exact mechanical '
         'transformation. Semantic code is never inferred or repaired by the controller. '
-        'After a committed edit, call run_public_tests and use its feedback before finishing. '
+        + ('After a committed edit, call run_public_tests and use its feedback before finishing. '
+           if public_tests_available else
+           'After a committed edit, call check_syntax on the edited path, then finish for independent grading. ')
     )
 
 
@@ -1965,6 +1968,7 @@ def main() -> int:
             localized=localization_record is not None,
             search_available='search_source' in tool_names,
             navigation_guidance=args.navigation_guidance,
+            public_tests_available='run_public_tests' in tool_names,
         )
     elif args.tool_interface in SINGLE_LINE_FUNCTION_EDIT_TOOL_INTERFACES:
         function_test_sentence = (
