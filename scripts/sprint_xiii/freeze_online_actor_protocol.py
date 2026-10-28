@@ -60,12 +60,20 @@ def sha_map(root: Path, paths: list[Path]) -> dict[str, str]:
     return {path.relative_to(root).as_posix(): file_sha(path) for path in paths}
 
 
+def validate_protocol_task_contract(root: dict) -> None:
+    """Require the task array consumed by runner/auditor to match the manifest."""
+    tasks = root.get("tasks")
+    manifest_tasks = root.get("task_manifest", {}).get("tasks")
+    if not isinstance(tasks, list) or tasks != manifest_tasks:
+        raise ValueError("protocol tasks must exactly match task_manifest.tasks")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("protocols/sprint_xiii_online_actor_v1.lock.json"),
+        default=Path("protocols/sprint_xiii_online_actor_v2.lock.json"),
     )
     args = parser.parse_args()
     repository_root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel"))
@@ -181,7 +189,7 @@ def main() -> None:
     ]
     root = {
         "schema_version": 1,
-        "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v1",
+        "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v2",
         "status": "PREREGISTERED_NO_MODEL_FORWARD_OR_GENERATION",
         "frozen_utc": datetime.now(timezone.utc).isoformat(),
         "hypothesis": (
@@ -275,6 +283,8 @@ def main() -> None:
             "trusted_evaluator_location": "scripts/sprint_xiii/audit_online_actor.py only",
             "trusted_labels_available_to_learner": False,
         },
+        # Runtime and auditor consume this canonical task array directly.
+        "tasks": tasks,
         "generation": {
             "minimum_actions": 2,
             "maximum_actions": 5,
@@ -394,12 +404,13 @@ def main() -> None:
             "No retry or replacement cohort after model generation begins."
         ),
         "reproduction": {
-            "freeze": f"{sys.executable} scripts/sprint_xiii/freeze_online_actor_protocol.py",
-            "campaign": f"{sys.executable} scripts/sprint_xiii/online_actor.py campaign --protocol protocols/sprint_xiii_online_actor_v1.lock.json --output results/sprint_xiii_20261029/run-001",
-            "audit": f"{sys.executable} scripts/sprint_xiii/audit_online_actor.py --protocol protocols/sprint_xiii_online_actor_v1.lock.json --output results/sprint_xiii_20261029/run-001 --receipt results/sprint_xiii_20261029/run-001/independent-audit.json",
+            "freeze": f"{sys.executable} scripts/sprint_xiii/freeze_online_actor_protocol.py --output protocols/sprint_xiii_online_actor_v2.lock.json",
+            "campaign": f"{sys.executable} scripts/sprint_xiii/online_actor.py campaign --protocol protocols/sprint_xiii_online_actor_v2.lock.json --output results/sprint_xiii_20261029/run-001",
+            "audit": f"{sys.executable} scripts/sprint_xiii/audit_online_actor.py --protocol protocols/sprint_xiii_online_actor_v2.lock.json --output results/sprint_xiii_20261029/run-001 --receipt results/sprint_xiii_20261029/run-001/independent-audit.json",
             "environment": "Use the recorded offline Python environment and preserve the cached snapshot; do not overwrite an existing run directory.",
         },
     }
+    validate_protocol_task_contract(root)
     payload = json.dumps(root, sort_keys=True, indent=2, ensure_ascii=False).encode() + b"\n"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(payload)

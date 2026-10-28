@@ -18,6 +18,14 @@ audit = importlib.util.module_from_spec(audit_spec)
 assert audit_spec and audit_spec.loader
 audit_spec.loader.exec_module(audit)
 
+FREEZER_SCRIPT = Path(__file__).parents[1] / "scripts" / "sprint_xiii" / "freeze_online_actor_protocol.py"
+freezer_spec = importlib.util.spec_from_file_location(
+    "sprint_xiii_freeze_online_actor_protocol", FREEZER_SCRIPT
+)
+freezer = importlib.util.module_from_spec(freezer_spec)
+assert freezer_spec and freezer_spec.loader
+freezer_spec.loader.exec_module(freezer)
+
 
 TASK = {"target_pair": "AB", "forbidden_pair": "CD"}
 
@@ -58,6 +66,21 @@ def test_calibration_enumerates_the_frozen_variable_length_action_space() -> Non
     assert result["v0_v1_disagreement"] > 0
     assert result["v0"]["false_positive"] > 0
     assert result["v1"]["false_positive"] > 0
+
+
+def test_frozen_protocol_requires_runner_tasks_to_match_manifest() -> None:
+    tasks = [{"task_id": "train-1", "split": "train"}]
+    freezer.validate_protocol_task_contract(
+        {"tasks": tasks, "task_manifest": {"tasks": tasks}}
+    )
+    try:
+        freezer.validate_protocol_task_contract(
+            {"task_manifest": {"tasks": tasks}}
+        )
+    except ValueError as error:
+        assert str(error) == "protocol tasks must exactly match task_manifest.tasks"
+    else:
+        raise AssertionError("protocol missing runner tasks must be rejected")
 
 
 class _Selection(list):
