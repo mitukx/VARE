@@ -43,7 +43,7 @@ PR状態表はSprint VIIIの実験・証拠公開開始前の監査スナップ�
 
 回帰テスト`test_transactional_guidance_matches_available_verification_tool`を追加し、tool集合とguidanceの対応を確認した。作業commitは`cac34bc5ec2f5580582e5a49825ae3b4a6e5147f`。ローカルの関連回帰群はpytest plugin自動読込を無効にしてpassした。通常のplugin自動読込では、global Hydra/OmegaConfとANTLRのversion不整合でtest collection前に失敗した。これはテスト対象の失敗ではなく、再現コマンドの環境条件として記録する。
 
-証拠PRの最初のexact-head CIではPython 3.13の2 testが、standalone campaign runnerのoptional `psutil` importで失敗した。実験時にprotocol v5が記録した旧test source（SHA-256 `75314a676e33c8d26503a90fa05111a9f493f33e677879489a7699b12f9f52ad`）を`tests/fixtures/sprint_viii_campaign_exposure_v1.py`へbyte-identicalに保存し、現在のhelper testsではresource-monitor dependencyをstubしてimportするよう修正した。変更はtest loaderだけで、凍結済みcampaign runner、protocol、model outcomesは変更していない。修正後の2 testはlocalでpassし、最新PR CIを再実行中。
+証拠PRの最初のexact-head CIではPython 3.13の2 testが、standalone campaign runnerのoptional `psutil` importで失敗した。実験時にprotocol v5が記録した旧test source（SHA-256 `75314a676e33c8d26503a90fa05111a9f493f33e677879489a7699b12f9f52ad`）を`tests/fixtures/sprint_viii_campaign_exposure_v1.py`へbyte-identicalに保存し、現在のhelper testsではresource-monitor dependencyをstubしてimportするよう修正した。変更はtest loaderだけで、凍結済みcampaign runner、protocol、model outcomesは変更していない。修正後の2 testはlocalでpass。コード・証拠head `cefdb0d4813dde3c92c15a190f85ea241453f617`のexact-head CIはPython 3.11/3.12/3.13、lint、typecheck、blob budget、RVL inference、seeded summary、Math500 grader、calibrated CPU tasksを含め全てpassした。Python 3.13の旧失敗記録はappend-onlyで保持している。
 
 ### 実験時の実装同一性
 
