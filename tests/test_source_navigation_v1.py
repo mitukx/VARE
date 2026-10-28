@@ -53,6 +53,7 @@ def test_navigation_run_identity_includes_all_selected_interface_sources() -> No
     assert set(sources) == {
         "scripts/run_local_agent.py",
         "src/vare/agent_edit_v2.py",
+        "src/vare/agent_edit_format.py",
         "src/vare/agent_task_contract.py",
         "src/vare/source_navigation_v1.py",
     }
@@ -61,6 +62,9 @@ def test_navigation_run_identity_includes_all_selected_interface_sources() -> No
     )
     assert sources["src/vare/agent_task_contract.py"] == sha256(
         Path(__file__).parents[1] / "src/vare/agent_task_contract.py"
+    )
+    assert sources["src/vare/agent_edit_format.py"] == sha256(
+        Path(__file__).parents[1] / "src/vare/agent_edit_format.py"
     )
 
 
