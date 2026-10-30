@@ -55,6 +55,7 @@ def _verify_candidate_diff(tmp_path, relative_path, original, replacement):
     before = snapshot_allowed_sources(tmp_path, [relative_path])
     source.write_bytes(replacement)
     diff = candidate_source_diff(tmp_path, [relative_path], before, base_revision)
+    assert diff.endswith('\n')
     source_before = {relative_path: hashlib.sha256(original).hexdigest()}
     source_after = {relative_path: hashlib.sha256(replacement).hexdigest()}
     agent = {'candidate_diff': diff, 'source_hashes_before': source_before,
@@ -232,6 +233,7 @@ def test_candidate_diff_ignores_replace_refs_and_rebuilds_a_pinned_index(tmp_pat
     diff = candidate_source_diff(tmp_path, ['module.py'], before, base_revision)
 
     assert '-value=1' in diff and '+value=2' in diff
+    assert diff.endswith('\n')
     after = {'module.py': hashlib.sha256(b'value=2\n').hexdigest()}
     agent = {
         'candidate_diff': diff,

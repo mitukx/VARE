@@ -296,7 +296,9 @@ def candidate_source_diff(
             "--binary", "--", *ordered, index_file=index_file,
             max_output_bytes=2 * 1024 * 1024,
         )
-    diff = diff_bytes.decode('utf-8').strip()
+    diff = diff_bytes.decode('utf-8')
+    if diff and not diff.endswith('\n'):
+        diff += '\n'
     if len(diff.encode('utf-8')) > 2 * 1024 * 1024:
         raise ValueError('candidate diff exceeds the evidence parser limit')
     return diff
