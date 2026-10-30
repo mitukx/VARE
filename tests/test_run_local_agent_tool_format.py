@@ -326,8 +326,8 @@ def test_bounded_source_page_reads_requested_inclusive_range():
     assert page['start_line'] == 201
     assert page['end_line'] == 220
     assert page['total_lines'] == 450
-    assert page['has_more'] is True
-    assert page['next_cursor'] == {'start_line': 221, 'char_offset': 0}
+    assert page['has_more'] is False
+    assert page['next_cursor'] is None
 
 
 def test_bounded_source_page_caps_requests_at_200_lines():
@@ -443,6 +443,21 @@ def test_source_lookup_and_patch_application_fixture(tmp_path):
     applied = attempt_configured_edit(tmp_path, patch, 'unified_diff', {'pkg/source.py'})
     assert applied == {'applied': True, 'paths': ['pkg/source.py'], 'format_parse_failure': None}
     assert source.read_text() == 'value = 2\n'
+
+
+def test_malformed_diff_returns_actionable_format_feedback(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\n')
+
+    result = attempt_configured_edit(
+        tmp_path, 'value = 2', 'unified_diff', {'pkg/source.py'},
+    )
+
+    assert result['applied'] is False
+    assert result['format_parse_failure'] == 'malformed_diff'
+    assert 'not a unified diff' in result['error']
+    assert '--- a/pkg/source.py' in result['error']
+    assert '+++ b/pkg/source.py' in result['error']
+    assert source.read_text() == 'value = 1\n'
 
 
 @pytest.mark.parametrize(

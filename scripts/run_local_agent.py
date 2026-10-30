@@ -32,9 +32,9 @@ MAX_SEARCH_MATCHES = 80
 MAX_SEARCH_SNIPPET_CHARS = 500
 TOOLS = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List exact source paths available in this task workspace. Results are paginated; use next_offset as offset to continue.', 'parameters': {'type': 'object', 'properties': {'offset': {'type': 'integer', 'minimum': 0}}, 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns lines 1-180, capped at 200 lines. For large files, pass inclusive start_line/end_line; follow next_cursor.start_line and next_cursor.char_offset to continue exactly. The result includes the resolved path and full-file SHA-256.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns at most 180 lines. Pass inclusive start_line/end_line to inspect an exact range; a completed explicit range has no next_cursor even when later file lines exist. Follow next_cursor only when the returned page was truncated by a line or response limit. The result includes the resolved path and full-file SHA-256.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in allowed task source files. Returns at most 80 matches in a hard 12,000-byte and 2,048-token response; use offset from next_offset to continue.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}}, 'required': ['query'], 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a small unified diff to existing task source files. Keep the patch minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a complete unified diff, not replacement source code. The patch must start with --- a/<exact allowed path> and +++ b/<exact allowed path>, then include @@ hunk headers and -old/+new lines. Keep it minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'finish', 'description': 'Finish the attempt when you believe the task is complete. The evaluator will judge the workspace.', 'parameters': {'type': 'object', 'properties': {'summary': {'type': 'string'}}, 'required': ['summary'], 'additionalProperties': False}}},
 ]
@@ -180,7 +180,15 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
         reason = parsed.reason if parsed.reason != 'no_edit' else (
             'malformed_diff' if edit_format == 'unified_diff' else 'malformed_file'
         )
-        return {'applied': False, 'format_parse_failure': reason}
+        result = {'applied': False, 'format_parse_failure': reason}
+        if edit_format == 'unified_diff' and reason == 'malformed_diff':
+            path = sorted(allowed)[0] if allowed else '<allowed path>'
+            result['error'] = (
+                'The patch was not a unified diff. Send a complete diff, not replacement code, '
+                'with these exact headers and hunk form (replace the example lines with exact source context): '
+                f'--- a/{path}\n+++ b/{path}\n@@ -10,1 +10,1 @@\n-old line\n+new line'
+            )
+        return result
     applied = apply_parsed_edit(workspace, parsed, allowed)
     if not applied.applied:
         return {
@@ -303,13 +311,14 @@ def bounded_source_page(
         raise ValueError('char_offset exceeds the source length (0 characters)')
     if total_lines and char_offset > len(lines[start_line - 1]):
         raise ValueError('char_offset exceeds the selected source line')
-    requested_end = end_line if end_line is not None else start_line + DEFAULT_READ_LINES - 1
-    returned_end = min(requested_end, start_line + MAX_READ_LINES - 1, total_lines)
+    source_range_end = min(end_line, total_lines) if end_line is not None else total_lines
+    page_limit = MAX_READ_LINES if end_line is not None else DEFAULT_READ_LINES
+    returned_end = min(source_range_end, start_line + page_limit - 1)
     identity = dict(source_identity or {})
     identity.setdefault('source_sha256', hashlib.sha256(text.encode('utf-8')).hexdigest())
 
     def next_after(line_number: int) -> dict[str, int] | None:
-        if line_number < total_lines:
+        if line_number < source_range_end:
             return {'start_line': line_number + 1, 'char_offset': 0}
         return None
 
@@ -697,7 +706,9 @@ def main() -> int:
     else:
         edit_sentence = (
             'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
-            'The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. '
+            'The apply_patch patch argument must be a complete unified diff, not replacement code. Use exact headers and hunk syntax, with no Markdown fence: '
+            '--- a/<exact allowed path> newline +++ b/<same exact path> newline @@ -10,1 +10,1 @@ newline -old line newline +new line. '
+            'Replace example lines with exact source context; do not send only the replacement function body. '
         )
     system = (
         'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
