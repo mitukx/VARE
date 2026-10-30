@@ -79,9 +79,24 @@
         "accelerator": "disabled",
         "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates",
         "cpu_limit": 2,
+        "entrypoint": "python3",
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "",
+          "HF_HUB_OFFLINE": "1",
+          "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONPATH": "/source",
+          "TOKENIZERS_PARALLELISM": "false",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
         "max_aggregate_wall_seconds_for_baseline_and_fixed": 600,
         "memory_limit_bytes": 2684354560,
         "memory_plus_swap_limit_bytes": 2684354560,
+        "mounts": {
+          "baseline_source": "work/mlsys-fresh-dev-qualification-v1/transformers-context/base/src -> /source:ro",
+          "fixed_source": "work/mlsys-fresh-dev-qualification-v1/transformers-context/fixed/src -> /source:ro",
+          "trusted_test": "work/mlsys-fresh-dev-qualification-v1/transformers-context/trusted-tests/tests/utils/test_cache_utils.py -> /trusted/test_cache_utils.py:ro"
+        },
         "network": "none",
         "pids_limit": 256,
         "root_filesystem": "read-only",
@@ -148,9 +163,27 @@
         "accelerator": "disabled",
         "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_model_utils.py::TestUnwrapModelForGeneration::test_restores_gradient_checkpointing_kwargs",
         "cpu_limit": 2,
+        "entrypoint": "python3",
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "",
+          "HF_DATASETS_OFFLINE": "1",
+          "HF_HOME": "/hf-home",
+          "HF_HUB_OFFLINE": "1",
+          "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONPATH": "/upstream",
+          "TOKENIZERS_PARALLELISM": "false",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
         "max_aggregate_wall_seconds_for_baseline_and_fixed": 600,
         "memory_limit_bytes": 2684354560,
         "memory_plus_swap_limit_bytes": 2684354560,
+        "mounts": {
+          "baseline_source": "work/mlsys-fresh-dev-qualification-v1/trl-context/base -> /upstream:ro",
+          "fixed_source": "work/mlsys-fresh-dev-qualification-v1/trl-context/fixed -> /upstream:ro",
+          "fixture": "work/mlsys-fresh-dev-qualification-v1/hf-home -> /hf-home:ro",
+          "trusted_test": "work/mlsys-fresh-dev-qualification-v1/trl-context/trusted-tests/tests/test_model_utils.py -> /trusted/test_model_utils.py:ro"
+        },
         "network": "none",
         "pids_limit": 256,
         "root_filesystem": "read-only",
@@ -218,9 +251,21 @@
         "accelerator": "disabled",
         "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_autograd.py::TestAutograd::test_complex_power_vjps",
         "cpu_limit": 2,
+        "entrypoint": "python3",
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "",
+          "DEVICE": "cpu",
+          "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONPATH": "/trusted"
+        },
         "max_aggregate_wall_seconds_for_baseline_and_fixed": 600,
         "memory_limit_bytes": 2684354560,
         "memory_plus_swap_limit_bytes": 2684354560,
+        "mounts": {
+          "source": "exact compiled source is baked into baseline/fixed pinned images",
+          "trusted_test_directory": "work/mlsys-fresh-dev-qualification-v1/runtime-mlx/tests/python/tests -> /trusted:ro"
+        },
         "network": "none",
         "pids_limit": 256,
         "root_filesystem": "read-only",
