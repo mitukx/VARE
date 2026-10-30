@@ -21,7 +21,7 @@ Source-qualified tasks: **2/3**. None is assigned to Development or exposed to a
 
 ## Immediate next action
 
-The metadata-only replacement selection protocol is frozen at `protocols/mlsys_fresh_development_task_replacement_selection_v1.json` (SHA-256 `db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b`). Apply it to the existing 71-row sample and record the selected task without opening any unselected source or test. Then freeze a task-specific baseline-first qualification addendum. Do not assign Development tasks or run model inference.
+The frozen metadata-only selector chose **Ray PR #66694**, rank 1 of 12 eligible rows (selection record SHA-256 `716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95`). Selection used the 71-row sample only; no source/test content was opened. Next, freeze a task-specific baseline-first qualification addendum before source/test review. Do not assign Development tasks or run model inference.
 
 ## External blockers
 

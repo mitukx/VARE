@@ -130,8 +130,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Apply the frozen replacement-selection rule to the 71-row metadata sample and record the selected task without opening any source or test. Then freeze a task-specific baseline-first source-qualification addendum before source/test review.",
-  "last_completed_step": "MLX #4778 source-level qualification passed and was committed/pushed. Frozen a deterministic metadata-only replacement selection protocol; no unselected source or test inputs have been opened.",
+  "highest_priority_next_task": "Freeze a task-specific baseline-first qualification addendum for Ray PR #66694 before opening its source or tests. Keep the task unassigned and do not run model/agent inference.",
+  "last_completed_step": "Applied the frozen metadata-only selector: Ray PR #66694 (rank 1 of 12 eligible rows) selected from the 71-row sample. Selection used metadata only; no source/test content was opened and no split assignment or inference occurred.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -423,6 +423,11 @@
       "path": "protocols/mlsys_fresh_development_task_replacement_selection_v1.json",
       "sha256": "db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b",
       "status": "frozen metadata-only replacement selection protocol"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/replacement-selection.json",
+      "sha256": "716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95",
+      "status": "metadata-only replacement selection; Ray PR #66694 selected rank 1/12; no source/test opened"
     }
   ],
   "run_ids": [
@@ -467,5 +472,5 @@
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T08:54:36+09:00"
+  "updated_at": "2026-10-31T08:55:23+09:00"
 }

@@ -163,3 +163,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Apply the ranked selector exactly once. If the first eligible task cannot satisfy the frozen qualification gate, record that outcome without substituting a lower-ranked task. Keep all existing task outcomes and the exposure ledger unchanged.
 - **Falsification criteria:** Any input sample hash mismatch, non-deterministic selection, source/test inspection before selection is recorded, or post-selection change to the eligibility/ranking rule.
 - **Follow-up:** Record the selected metadata row; then freeze the task-specific baseline-first qualification addendum before opening the selected source/test files.
+
+
+## 2026-10-31 — Select Ray PR #66694 by the frozen metadata rule
+
+- **Hypothesis:** Applying the precommitted ranked rule selects a repository-diverse replacement without selecting on source/test outcomes.
+- **Evidence:** `results/mlsys-fresh-development-task-qualification-v1/replacement-selection.json` (SHA-256 `716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95`) records Ray PR #66694 at rank 1 of 12 eligible rows from the exact 71-row sample. The selection used metadata fields only; source/test files were not opened.
+- **Alternative explanations:** The row is only a metadata candidate; its test may be environment-dependent, incomplete, or unsuitable for a CPU-only source-level pair.
+- **Decision:** Select Ray PR #66694 as the sole replacement under the frozen protocol. Leave it unassigned and unqualified until the source-level gate is completed. Do not inspect or substitute lower-ranked rows.
+- **Falsification criteria:** The sample/protocol hash does not match; rerunning the deterministic selector yields another row; or evidence shows source/test content influenced selection.
+- **Follow-up:** Freeze the task-specific qualification addendum, then inspect only the selected PR's hash-pinned changed paths.

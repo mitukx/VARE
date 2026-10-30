@@ -1,0 +1,53 @@
+{
+  "eligible_candidate_count": 12,
+  "model_or_agent_inference_authorized": false,
+  "sample_candidate_count": 71,
+  "sample_path": "results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json",
+  "sample_sha256": "810fb823781f3bc44a0272db230cc3d65b43751c415e53229c81104a6183baad",
+  "schema_version": 1,
+  "selected_metadata_row": {
+    "additions": 78,
+    "base_ref_sha_at_capture": "43b706d733c590cf497cc322c57b9fd610bf214f",
+    "changed_file_count": 4,
+    "changed_paths": [
+      "python/ray/data/_internal/stats.py",
+      "python/ray/data/block.py",
+      "python/ray/data/tests/conftest.py",
+      "python/ray/data/tests/test_stats.py"
+    ],
+    "changed_paths_complete": true,
+    "coarse_screen": "provisional_for_manual_review",
+    "created_at": "2026-10-03T11:11:40Z",
+    "deletions": 30,
+    "head_sha": "4ec20f4047ecd405bd744d95f6c07a0b275d6677",
+    "is_draft": false,
+    "merge_base_sha": "8374f91cad9e89050368fdbb34ee78f042d73902",
+    "merge_commit_sha": "5808b33e30092d7761d545f8ce059b14c4cf0098",
+    "merged_at": "2026-10-05T22:38:56Z",
+    "number": 66694,
+    "qualification_status": "UNQUALIFIED",
+    "repository": "ray-project/ray",
+    "sample_rank_sha256": "01519a7192150614a6056aabad2927f4cbc9dbd32dcbf7e8843eff819a1d2a6e",
+    "screen_reasons": [],
+    "search_result_number": 66694,
+    "split_assignment": "UNASSIGNED",
+    "state": "MERGED",
+    "task_family_overlap": "NOT_ASSESSED",
+    "test_paths": [
+      "python/ray/data/tests/conftest.py",
+      "python/ray/data/tests/test_stats.py"
+    ],
+    "title": "[Data] Fix operator wall time on multi-node clusters",
+    "updated_at": "2026-10-05T22:38:57Z",
+    "url": "https://github.com/ray-project/ray/pull/66694"
+  },
+  "selected_metadata_row_canonical_sha256": "9ae268d840a96e3d4acab1f994061a500942bb21607875194a63c8ad68ac1fbd",
+  "selected_task_key": "ray-project/ray#66694",
+  "selection_order": "sample_rank_sha256 ascending, repository ascending, number ascending",
+  "selection_protocol_path": "protocols/mlsys_fresh_development_task_replacement_selection_v1.json",
+  "selection_protocol_sha256": "db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b",
+  "selection_rank": 1,
+  "source_test_content_opened_during_selection": false,
+  "split_assignment": "NOT_ASSIGNED",
+  "task_qualification_status": "NOT_YET_QUALIFIED"
+}
