@@ -35,7 +35,12 @@ def test_each_family_exposes_only_executable_validation_tools():
             t["function"]["name"]
             for t in tools_for("unified_diff", public_tests=bool(available))
         ]
-        assert contract["allowlist"] == actual
+        # V2 is hash-bound and not authorized for inference. Keep its per-family
+        # allowlist fixed while ensuring the runner's later edit tool stays out.
+        assert "replace_text" in actual
+        assert contract["allowlist"] == [
+            name for name in actual if name != "replace_text"
+        ]
         assert ("run_public_tests" in actual) == (available is True)
         assert contract["public_test_container_required"] == (available is True)
         if available is None:

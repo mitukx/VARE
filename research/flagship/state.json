@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-10-31T06:17:00+09:00",
+  "milestone_id": "p0-pr150-ci-integration",
+  "last_completed_step": "Reproduced the three PR #150 failures and updated test expectations; all three affected test files pass on Python 3.11, 3.12, and 3.13.",
+  "go_no_go": {
+    "integration": "GO_PENDING_REMOTE_CI",
+    "coding_capability": "NO_GO",
+    "rl_update": "NO_GO"
+  },
+  "git_refs": {
+    "repository": "mitukx/VARE",
+    "last_verified_main_sha": "b1e5882cbf89a8f925bf6e5f0a2f288f2d4c8a02",
+    "active_branch": "codex/bounded-agent-file-read-v1",
+    "verified_pr_head_sha_before_checkpoint_changes": "86abbd4df86dcebc539143de3f2f84b1207fff16",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/150",
+    "active_pr_state": "open"
+  },
+  "frozen_protocols": [
+    {
+      "protocol_id": "development-repository-repair-campaign-v1",
+      "path": "protocols/development_repository_repair_campaign_v1.json",
+      "sha256": "9239406621a3ac68a6977cf341e4debd35278735a91783626ff764c87210c354",
+      "status": "frozen_before_inference; inference_authorized=false"
+    },
+    {
+      "protocol_id": "development-repository-repair-campaign-v2",
+      "path": "protocols/development_repository_repair_campaign_v2.json",
+      "sha256": "64cfb42524cfbb1e04fa243dd1141d9490bbe2cbe5c9573ba7b6b01a145254a1",
+      "status": "hash_bound; inference_authorized=false"
+    }
+  ],
+  "task_exposure_ledger": {
+    "path": "../../outputs/VARE-stage3-2026-10-31/task-exposure-ledger.json",
+    "sha256": "a2da858454745c86ef7e5162d47552bb659943e03a47442cd03c0e9dff77693a",
+    "fresh_stage3_families_used": 0,
+    "historical_heldout_1979_touched": false
+  },
+  "run_ids": [
+    "41105309069",
+    "41105317116",
+    "qwen3_4b_instruct_2507_4bit__transformers-45852-4d-mask",
+    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1912-top-p-min-token",
+    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1971-mimo-value-scale",
+    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1912-top-p-min-token",
+    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1971-mimo-value-scale",
+    "stage3_qwen3_4b_controller_v2__mlxlm-1912-top-p-min-token",
+    "stage3_qwen3_4b_controller_v3__mlxlm-1912-top-p-min-token",
+    "stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token"
+  ],
+  "result_hash_references": [
+    {
+      "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
+      "sha256": "0fef09c05deb27073cbee9e4aa5a1eedad16a8dd3fe7a2c15b0a5722bca2fd77",
+      "status": "verified"
+    },
+    {
+      "path": "../../outputs/VARE-stage3-2026-10-31/evidence-sha256.txt",
+      "sha256": "8266b3a048616ef1f629da23998b083433cbf58a06552f370383bb18ecd7e124",
+      "status": "2,194 listed file hashes matched"
+    }
+  ],
+  "unresolved_blockers": [
+    "The corrected PR head is not pushed yet; full Python matrix CI is pending.",
+    "No fresh task/model/update pairing has cleared the independent task-success and resource gates."
+  ],
+  "highest_priority_next_task": "Commit and push the PR #150 regression-test correction, inspect the new full CI matrix and review state, then merge only when required checks and repository rules permit; verify the merged SHA on remote main."
+}

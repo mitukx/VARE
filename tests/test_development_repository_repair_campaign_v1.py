@@ -120,13 +120,18 @@ def test_model_budgets_and_fail_closed_limits():
     )
 
 
-def test_tool_schema_follows_the_existing_runner():
+def test_frozen_tool_allowlist_remains_valid_as_runner_grows():
     protocol, _lock = load_pair()
     names = [
         item["function"]["name"]
         for item in tools_for("unified_diff", public_tests=True)
     ]
-    assert protocol["tool_schema"]["allowlist"] == names
+    # The campaign is hash-locked and not authorized for inference. The runner's
+    # later exact-text editing tool must not silently expand this frozen contract.
+    assert "replace_text" in names
+    assert protocol["tool_schema"]["allowlist"] == [
+        name for name in names if name != "replace_text"
+    ]
     steps = [item["step"] for item in protocol["tool_schema"]["required_progression"]]
     assert steps == [
         "inspect",
