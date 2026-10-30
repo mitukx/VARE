@@ -1,0 +1,25 @@
+ERROR: found no collectors for /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates
+
+
+==================================== ERRORS ====================================
+_____________________ ERROR collecting test_cache_utils.py _____________________
+ImportError while importing test module '/trusted/test_cache_utils.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+usr/local/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trusted/test_cache_utils.py:23: in <module>
+    from transformers import logging, set_seed
+source/transformers/__init__.py:30: in <module>
+    from . import dependency_versions_check
+source/transformers/dependency_versions_check.py:16: in <module>
+    from .utils.versions import require_version, require_version_core
+source/transformers/utils/__init__.py:77: in <module>
+    from .hub import (
+source/transformers/utils/hub.py:29: in <module>
+    from huggingface_hub import (
+E   ImportError: cannot import name 'ResolvedRevision' from 'huggingface_hub' (/usr/local/lib/python3.12/site-packages/huggingface_hub/__init__.py)
+=========================== short test summary info ============================
+ERROR trusted/test_cache_utils.py
+1 error in 0.61s

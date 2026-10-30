@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-10-31T08:29:10+09:00",
+  "updated_at": "2026-10-31T08:31:22+09:00",
   "milestone_id": "p3-fresh-repository-task-qualification",
-  "last_completed_step": "Verified PR #150 and PR #152 merged with successful required checks; advanced fresh task discovery through a deterministic 71-row review sample; selected three repository-diverse post-proxy fixes; froze exact selectors, source/test hashes, pinned CPU runtimes, and offline fixture in qualification addendum 1 before any selected regression test. No task test or model/agent inference has run.",
+  "last_completed_step": "Qualification addendum 1 was pushed before tests. Transformers #49418 baseline attempt 1 failed at collection before any assertions because the image had incompatible Hub/tokenizers versions; the failure log is retained. Pinned corrected runtime and addendum 2 are prepared before retry. No fixed arm or other task test has run.",
   "go_no_go": {
     "integration": "GO_PENDING_REMOTE_CI",
     "coding_capability": "NO_GO",
@@ -101,7 +101,13 @@
       "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-1",
       "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-1.json",
       "sha256": "18010e86e1838a77d8b4f091434c3a9ec1195b6486d8e2dba0d04d7bbea704b6",
-      "status": "frozen before selected regression tests; exact selectors, hashes, CPU images, offline fixture, and budgets locked"
+      "status": "frozen; original runtime retained; Transformers runtime superseded only by addendum 2"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-2",
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-2.json",
+      "sha256": "9f8f4ce84dbbfcaf9bd9093aa71d00c69034764d5616f1d6946133512746458a",
+      "status": "frozen before Transformers baseline retry; corrects only the runtime dependency mismatch"
     }
   ],
   "task_exposure_ledger": {
@@ -233,16 +239,41 @@
     },
     {
       "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
-      "sha256": "7fec9f0c4d16a104fc044297c0654be95b2be01034fb5c07255ebcac0325e16f",
+      "sha256": "5257f20aa1de1099c1d57986f086ccb58557608e492e8401c6b1a32ceff1da23",
       "status": "verified pinned CPU test runtimes and retained environment setup failures"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-2.json",
+      "sha256": "9f8f4ce84dbbfcaf9bd9093aa71d00c69034764d5616f1d6946133512746458a",
+      "status": "frozen runtime correction before rerun"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-001-baseline.json",
+      "sha256": "9498df99fd2cf1b6d9ffdb971b1ff82f58925ba787a90ae6aaab8cb94ee77e67",
+      "status": "preserved environment collection failure; no test cases executed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/baseline.log",
+      "sha256": "3567b92059651c3a3a9eeee1b6bd59d96b51c6c561fb46c9bd14629907085439",
+      "status": "raw first-attempt log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v2",
+      "sha256": "c08ba83252edeabd650c8c5aa2417b92e51e55d63f052a6c09fec2f0a1e6de5c",
+      "status": "pinned dependency correction build file"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/build-transformers-v2.log",
+      "sha256": "1e29ce6a6db29f315ab74ad31e52c066ef3b4cc1339bc86da40b9c7ee370e2df",
+      "status": "pinned dependency correction image build log"
     }
   ],
   "unresolved_blockers": [
-    "No selected task is qualified yet; exact baseline/fixed regression runs remain pending under the frozen no-network CPU protocol.",
+    "No selected task is qualified yet. The first Transformers baseline attempt stopped at collection because of a runtime dependency mismatch; corrected addendum 2 is frozen for a baseline retry. TRL and MLX task tests remain pending under addendum 1.",
     "The audited 24-entry historical manual queue had zero fresh Development tasks; new candidate source tasks remain unassigned until all qualification gates pass.",
     "Public pretraining exposure is unknown even for post-cutoff-proxy upstream tasks.",
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or held-out evaluation has run.",
     "PR #149 remains an unrelated legacy open PR on a pre-#150 base; it does not block this qualification branch."
   ],
-  "highest_priority_next_task": "Run the three frozen upstream regression selectors one task at a time: exact baseline with test-only delta, then exact fixed source, inside the pinned no-network CPU containers; preserve all logs and classify skips/environment failures as non-qualifying."
+  "highest_priority_next_task": "Rerun the exact Transformers #49418 baseline with the corrected no-network image pinned in qualification addendum 2; only after targeted assertions execute and fail, run its exact fixed arm. Then proceed to TRL and MLX sequentially under addendum 1."
 }

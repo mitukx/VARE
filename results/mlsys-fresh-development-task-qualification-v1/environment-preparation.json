@@ -14,6 +14,10 @@
       "sha256": "c8d43fb1df7437768d1382eb12e1563163c38517981d1bd36dc2d4a72dfcda92",
       "size_bytes": 231
     },
+    "environment/Dockerfile.transformers-v2": {
+      "sha256": "c08ba83252edeabd650c8c5aa2417b92e51e55d63f052a6c09fec2f0a1e6de5c",
+      "size_bytes": 440
+    },
     "environment/build-mlx-baseline-incremental.log": {
       "sha256": "d518da2f05e6186ab706b4cb5922222d1ab59d604b7a39e2f21ae110a9ef857c",
       "size_bytes": 605
@@ -21,6 +25,10 @@
     "environment/build-mlx-fixed.log": {
       "sha256": "182d13661b0d9a482493a9d2e5dea9dbad84e9cf0738e39f6dd7f424d3ead866",
       "size_bytes": 38263
+    },
+    "environment/build-transformers-v2.log": {
+      "sha256": "1e29ce6a6db29f315ab74ad31e52c066ef3b4cc1339bc86da40b9c7ee370e2df",
+      "size_bytes": 2856
     },
     "environment/build-transformers.log": {
       "sha256": "0cf9c6fc4e724f903fec017f7cfd8c371c573e82cbfbb62b596ddc17144df2db",
@@ -66,6 +74,13 @@
     },
     "source_package_version": "0.32.5"
   },
+  "preserved_task_test_failures": [
+    {
+      "classification": "environment collection failure; zero cases collected",
+      "record": "transformers-49418/attempt-001-baseline.json",
+      "sha256": "9498df99fd2cf1b6d9ffdb971b1ff82f58925ba787a90ae6aaab8cb94ee77e67"
+    }
+  ],
   "pretest_checks": [
     "Imports and package versions only; no selected regression selector was executed.",
     "Fixture snapshot downloaded at exact revision; refs/main points to that commit for offline test loading.",
@@ -73,7 +88,7 @@
   ],
   "runtime_entrypoint_override": "python3 for all task test containers, because the baseline MLX image was committed from a disposable builder container with shell entrypoint metadata.",
   "schema_version": 1,
-  "state": "environment_prepared; no task regression tests executed at freeze time",
+  "state": "one baseline test invocation was attempted and failed during collection for an environment dependency mismatch; corrected runtime image pinned in addendum 2; no regression assertions have run yet",
   "transformers_runtime": {
     "base_image": "vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
     "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.1 --file Dockerfile .",
@@ -95,6 +110,24 @@
         "resolution": "install dependency as root during image construction; run tests as uid 65534"
       }
     ]
+  },
+  "transformers_runtime_v2": {
+    "base_image": "vare/fresh-qualification-transformers:0.1@sha256:a5cb6acc290c620cda548f033b413a690e58c6c2179d638b68687dbed7c80f90",
+    "dockerfile": "environment/Dockerfile.transformers-v2",
+    "dockerfile_sha256": "c08ba83252edeabd650c8c5aa2417b92e51e55d63f052a6c09fec2f0a1e6de5c",
+    "image_id": "sha256:72844693faee9d2b814cd7c0fc59fc1f8b968bcb1933121e9efb008705d5a457",
+    "packages": {
+      "accelerate": "1.12.0",
+      "huggingface-hub": "1.31.0",
+      "optimum-quanto": "0.2.7",
+      "parameterized": "0.9.0",
+      "pytest": "8.4.2",
+      "safetensors": "0.8.0",
+      "tokenizers": "0.23.3",
+      "torch": "2.9.1",
+      "transformers": "4.57.3"
+    },
+    "pretest_import_check": "Passed: ResolvedRevision import and tokenizers 0.23.3 under --network=none; no selected regression test executed."
   },
   "trl_runtime": {
     "fixture_revision": "ce8d0bf270b28c8fab026ced69fe8aa14b0f0eda",

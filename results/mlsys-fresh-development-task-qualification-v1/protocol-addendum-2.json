@@ -1,0 +1,77 @@
+{
+  "acceptance_rule": "The task qualifies only if the corrected image collects and runs all six cases, the baseline fails a targeted correctness assertion, and the exact fixed source passes all six with zero skips under the frozen isolation and limits.",
+  "authorization_unchanged": {
+    "agent_or_policy_inference": false,
+    "candidate_or_agent_prompt": false,
+    "development_assignment": false,
+    "heldout_access": false,
+    "model_training_or_policy_update": false,
+    "paid_compute_or_api_spend_usd": 0
+  },
+  "corrected_runtime": {
+    "base_image": "vare/fresh-qualification-transformers:0.1@sha256:a5cb6acc290c620cda548f033b413a690e58c6c2179d638b68687dbed7c80f90",
+    "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.2 --file Dockerfile.transformers-v2 results/mlsys-fresh-development-task-qualification-v1/environment",
+    "build_log": "results/mlsys-fresh-development-task-qualification-v1/environment/build-transformers-v2.log",
+    "build_log_sha256": "1e29ce6a6db29f315ab74ad31e52c066ef3b4cc1339bc86da40b9c7ee370e2df",
+    "dockerfile": "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v2",
+    "dockerfile_sha256": "c08ba83252edeabd650c8c5aa2417b92e51e55d63f052a6c09fec2f0a1e6de5c",
+    "entrypoint_override": "python3",
+    "environment_validation": "No-network package import confirmed `from huggingface_hub import ResolvedRevision`; no selected regression code was run during this check.",
+    "image": "vare/fresh-qualification-transformers:0.2",
+    "image_id": "sha256:72844693faee9d2b814cd7c0fc59fc1f8b968bcb1933121e9efb008705d5a457",
+    "retained_packages": {
+      "accelerate": "1.12.0",
+      "optimum-quanto": "0.2.7",
+      "parameterized": "0.9.0",
+      "pytest": "8.4.2",
+      "safetensors": "0.8.0",
+      "torch": "2.9.1",
+      "transformers": "4.57.3"
+    },
+    "updated_packages": {
+      "huggingface-hub": "1.31.0",
+      "tokenizers": "0.23.3"
+    }
+  },
+  "frozen_at_utc": "2026-10-30T23:31:22Z",
+  "parent_addendum_path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-1.json",
+  "parent_addendum_sha256": "18010e86e1838a77d8b4f091434c3a9ec1195b6486d8e2dba0d04d7bbea704b6",
+  "prior_attempt": {
+    "attempt_id": "freshdev-qualification-transformers-49418-attempt-001-baseline",
+    "collected_cases": 0,
+    "exit_code": 4,
+    "failure": "ImportError: cannot import name ResolvedRevision from huggingface_hub 0.36.2. Pinned source requires huggingface-hub>=1.31.0,<3.0 and tokenizers>=0.23.1,<0.24.0; initial image had tokenizers 0.22.2.",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/baseline.log",
+    "log_sha256": "3567b92059651c3a3a9eeee1b6bd59d96b51c6c561fb46c9bd14629907085439",
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-001-baseline.json",
+    "record_sha256": "9498df99fd2cf1b6d9ffdb971b1ff82f58925ba787a90ae6aaab8cb94ee77e67",
+    "regression_assertions_executed": false,
+    "status": "INCONCLUSIVE_ENVIRONMENT_FAILURE"
+  },
+  "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-2",
+  "protocol_status": "frozen_before_transformers_49418_baseline_retry_and_before_any_fixed_arm",
+  "retry_order": [
+    "Rerun the exact baseline selector in the corrected image; count it only if test assertions execute and fail for the targeted correctness reason.",
+    "If the baseline behaves as expected, run the exact fixed selector in the same corrected image.",
+    "Preserve the first environment failure; do not overwrite or reinterpret it."
+  ],
+  "schema_version": 1,
+  "scope": "Supersedes only the Transformers #49418 runtime image/package section in addendum 1. Task identity, base/fixed commits, test delta, selector, test-only patching rule, negative control, resource limits, no-network execution, and acceptance criteria are unchanged. TRL and MLX remain governed by addendum 1.",
+  "unchanged_test": {
+    "baseline_and_test_mounts": "unchanged from addendum 1; exact base source or exact fixed source and trusted fixed-commit test delta are separate read-only mounts",
+    "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates",
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "HF_HUB_OFFLINE": "1",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": "/source",
+      "TOKENIZERS_PARALLELISM": "false",
+      "TRANSFORMERS_OFFLINE": "1"
+    },
+    "execution_limits": "unchanged from addendum 1: 600 seconds aggregate baseline+fixed for this task; 2.5 GiB memory and memory+swap; 2 CPUs; pids 256; network none; read-only root; unprivileged user; no accelerator",
+    "expected_cases": 6,
+    "selector": "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates",
+    "task_id": "transformers-49418-quantized-cache-residual-flush"
+  }
+}

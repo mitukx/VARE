@@ -1,0 +1,17 @@
+{
+  "arm": "baseline source with frozen test delta",
+  "attempt_id": "freshdev-qualification-transformers-49418-attempt-001-baseline",
+  "collected_cases": 0,
+  "error": "Test collection failed before selector execution: the pinned Transformers source imports ResolvedRevision from huggingface_hub, but runtime image contained huggingface-hub 0.36.2; source requires >=1.31.0. The same image also contained tokenizers 0.22.2 while source requires >=0.23.1,<0.24.0.",
+  "exit_code": 4,
+  "host_command_wall_seconds": 0.923,
+  "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/baseline.log",
+  "log_sha256": "3567b92059651c3a3a9eeee1b6bd59d96b51c6c561fb46c9bd14629907085439",
+  "observed_at_utc": "2026-10-30T23:30:36Z",
+  "protocol": "mlsys-fresh-development-task-qualification-v1-addendum-1",
+  "pytest_reported_seconds": 0.61,
+  "qualification_effect": "No baseline result; does not qualify or disqualify task. Preserve and rerun under a versioned environment addendum before any fixed arm.",
+  "regression_assertions_executed": false,
+  "schema_version": 1,
+  "status": "INCONCLUSIVE_ENVIRONMENT_FAILURE"
+}

@@ -4,7 +4,7 @@
 
 **Milestone:** P3 — prospectively qualify a fresh Development task cohort
 
-**Decision:** PR #150 is merged at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`; its recorded required checks passed. PR #152 is merged on `main` at `ce097a5d2c695d4fa7a2e2119c3e25bc3a460578`, and the latest remote `main` matches. The candidate pipeline found 1,278 metadata-review rows and produced a deterministic 71-task sample. Three repository-diverse fixes are selected, but **zero tasks are qualified so far**. The exact source/test hashes, selectors, runtimes, fixture, and budgets are frozen in qualification addendum 1. No selected task regression test has run; no model or agent saw candidate content.
+**Decision:** PR #150 is merged at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`; its recorded required checks passed. PR #152 is merged on `main` at `ce097a5d2c695d4fa7a2e2119c3e25bc3a460578`, and the latest remote `main` matches. The candidate pipeline found 1,278 metadata-review rows and produced a deterministic 71-task sample. Three repository-diverse fixes are selected, but **zero tasks are qualified so far**. The exact source/test hashes, selectors, runtimes, fixture, and budgets are frozen in qualification addendum 1. No regression assertion has executed. Transformers baseline attempt 1 failed at collection due to a Hub/tokenizer dependency mismatch (zero cases); the raw log is retained and addendum 2 pins a corrected runtime before retry. No model or agent saw candidate content.
 
 ## GitHub state
 
@@ -27,7 +27,7 @@
 
 - PR #150 and PR #152 required-check records: **PASSED**.
 - Candidate discovery, corrected metadata screen, deterministic sample, source/test hashes, and offline fixture manifest: **verified**.
-- Selected task regression tests: **NOT RUN** at this checkpoint.
+- Selected task regression assertions: **NOT RUN**. Transformers baseline collection attempt 1: **INCONCLUSIVE — environment failure**, zero cases; no fixed arm started.
 - Qualified fresh Development tasks: **0**.
 - Coding capability milestone: **NO-GO** pending a qualified prospective Development cohort and independent model evaluation.
 - Model policy update, SFT, GRPO, RL comparison, Development generalization, and Held-out evaluation: **NOT RUN**.
@@ -35,7 +35,7 @@
 
 ## Immediate next action
 
-Run baseline and fixed selectors for each of the three tasks one at a time in the frozen no-network containers. A task qualifies only if the baseline fails the targeted assertions, the exact fix passes every expected parameter case, and no cases skip or fail for environmental reasons. Do not assign any task to Development unless all three qualify.
+Rerun the Transformers baseline under addendum 2, then its fixed arm if the targeted assertions execute. Next run TRL and MLX under addendum 1, one task at a time, in no-network containers. A task qualifies only if the baseline fails the targeted assertions, the exact fix passes every expected parameter case, and no cases skip or fail for environmental reasons. Do not assign any task to Development unless all three qualify.
 
 ## External blockers
 

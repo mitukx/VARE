@@ -74,3 +74,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Freeze addendum 1 before running any selected test. Require exact baseline failure, exact fixed-source pass of every expected case, zero skips, network-disabled execution, and one task at a time. The baseline source is the predeclared wrong-patch negative control. Do not assign a Development split based on metadata or partial calibration.
 - **Falsification criteria:** Any input hash mismatch; baseline not failing the targeted correctness assertion; fixed source failing or skipping a case; resource/network limit violation; or inability to verify the exact fixed source.
 - **Follow-up:** Run baseline then fixed selectors sequentially for the three tasks; preserve all results. Only after all three qualify, freeze a separate Development assignment and model evaluation protocol.
+
+
+## 2026-10-31 — Classify the first Transformers qualification attempt as an environment failure
+
+- **Hypothesis:** Transformers #49418's fixed regression can be evaluated after matching the source commit's minimum Hub and tokenizer versions.
+- **Evidence:** Baseline attempt 1 exited 4 during test-module import, collected zero cases, and executed no correctness assertion. The source at the pinned fixed commit requires `huggingface-hub>=1.31.0,<3.0` and `tokenizers>=0.23.1,<0.24.0`; the initial image had `huggingface-hub==0.36.2` and `tokenizers==0.22.2`. The raw log is retained at `results/mlsys-fresh-development-task-qualification-v1/transformers-49418/baseline.log`. A new CPU image pins Hub 1.31.0 and tokenizers 0.23.3; addendum 2 SHA-256 is `9f8f4ce84dbbfcaf9bd9093aa71d00c69034764d5616f1d6946133512746458a`.
+- **Alternative explanations:** Treat any nonzero baseline return as the desired bug failure, or proceed to the fixed arm in the same broken environment. Both would confuse missing test prerequisites with the task regression.
+- **Decision:** Classify attempt 1 as `INCONCLUSIVE_ENVIRONMENT_FAILURE`, preserve it, and rerun only after addendum 2 is frozen and pushed. Do not count it toward qualification.
+- **Falsification criteria:** The corrected no-network image cannot import the pinned source or collect the exact selector; baseline assertions do not fail for the targeted residual-boundary bug; fixed-source cases skip or fail; or any source/test hash differs.
+- **Follow-up:** Run exact baseline then fixed selectors under the corrected image; record each case and preserve all output.

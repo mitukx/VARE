@@ -1,0 +1,45 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  48.64kB
+Step 1/5 : FROM vare/fresh-qualification-transformers:0.1@sha256:a5cb6acc290c620cda548f033b413a690e58c6c2179d638b68687dbed7c80f90
+ ---> a5cb6acc290c
+Step 2/5 : USER 0:0
+ ---> Running in 978d8b1bc3c4
+ ---> Removed intermediate container 978d8b1bc3c4
+ ---> 81953415fca5
+Step 3/5 : RUN python -m pip install --disable-pip-version-check --no-cache-dir --no-deps huggingface-hub==1.31.0 tokenizers==0.23.3
+ ---> Running in 93971a0d6e18
+Collecting huggingface-hub==1.31.0
+  Downloading huggingface_hub-1.31.0-py3-none-any.whl.metadata (16 kB)
+Collecting tokenizers==0.23.3
+  Downloading tokenizers-0.23.3-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (9.8 kB)
+Downloading huggingface_hub-1.31.0-py3-none-any.whl (798 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 798.3/798.3 kB 26.1 MB/s eta 0:00:00
+Downloading tokenizers-0.23.3-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (3.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 29.5 MB/s eta 0:00:00
+Installing collected packages: tokenizers, huggingface-hub
+  Attempting uninstall: tokenizers
+    Found existing installation: tokenizers 0.22.2
+    Uninstalling tokenizers-0.22.2:
+      Successfully uninstalled tokenizers-0.22.2
+  Attempting uninstall: huggingface-hub
+    Found existing installation: huggingface_hub 0.36.2
+    Uninstalling huggingface_hub-0.36.2:
+      Successfully uninstalled huggingface_hub-0.36.2
+Successfully installed huggingface-hub-1.31.0 tokenizers-0.23.3
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0m ---> Removed intermediate container 93971a0d6e18
+ ---> fb2058128013
+Step 4/5 : RUN python -c "import importlib.metadata as m; from huggingface_hub import ResolvedRevision; import tokenizers; print(m.version('huggingface-hub'), tokenizers.__version__)"
+ ---> Running in 97d3f05213a4
+1.31.0 0.23.3
+ ---> Removed intermediate container 97d3f05213a4
+ ---> bc4e6dad9d96
+Step 5/5 : USER 65534:65534
+ ---> Running in b3cc31e598e4
+ ---> Removed intermediate container b3cc31e598e4
+ ---> 72844693faee
+Successfully built 72844693faee
+Successfully tagged vare/fresh-qualification-transformers:0.2
