@@ -113,6 +113,12 @@
       "protocol_id": "mlsys-fresh-development-task-replacement-selection-v1",
       "sha256": "db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b",
       "status": "frozen before selecting a replacement or opening any unselected source/test inputs; metadata-only deterministic selection"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-1.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-1",
+      "sha256": "9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9",
+      "status": "frozen before Ray PR #66694 source/test review; no test execution authorized"
     }
   ],
   "git_refs": {
@@ -130,8 +136,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Freeze a task-specific baseline-first qualification addendum for Ray PR #66694 before opening its source or tests. Keep the task unassigned and do not run model/agent inference.",
-  "last_completed_step": "Applied the frozen metadata-only selector: Ray PR #66694 (rank 1 of 12 eligible rows) selected from the 71-row sample. Selection used metadata only; no source/test content was opened and no split assignment or inference occurred.",
+  "highest_priority_next_task": "Review only the hash-pinned changed paths for Ray PR #66694 under addendum 1. Freeze exact selectors, input hashes, runtime, and a wrong-mutant diff in a follow-up addendum before any regression test execution.",
+  "last_completed_step": "Ray PR #66694 was selected by the frozen metadata-only rule. Task-specific addendum 1 is frozen before source/test review; it authorizes review only, not test execution or inference.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -428,6 +434,11 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/replacement-selection.json",
       "sha256": "716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95",
       "status": "metadata-only replacement selection; Ray PR #66694 selected rank 1/12; no source/test opened"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-1.json",
+      "sha256": "9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9",
+      "status": "frozen source-review and qualification boundary for Ray PR #66694"
     }
   ],
   "run_ids": [
@@ -472,5 +483,5 @@
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T08:55:23+09:00"
+  "updated_at": "2026-10-31T08:55:59+09:00"
 }

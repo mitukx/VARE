@@ -173,3 +173,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Select Ray PR #66694 as the sole replacement under the frozen protocol. Leave it unassigned and unqualified until the source-level gate is completed. Do not inspect or substitute lower-ranked rows.
 - **Falsification criteria:** The sample/protocol hash does not match; rerunning the deterministic selector yields another row; or evidence shows source/test content influenced selection.
 - **Follow-up:** Freeze the task-specific qualification addendum, then inspect only the selected PR's hash-pinned changed paths.
+
+
+## 2026-10-31 — Freeze Ray #66694 source-review and qualification gates
+
+- **Hypothesis:** Ray PR #66694 can be assessed through a source-only review followed by a preregistered baseline, wrong-mutant, and fixed-source test sequence without exposing a task to a model.
+- **Evidence:** Addendum 1 (SHA-256 `9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9`) pins the base, PR head, merge commit, allowed path set, source-review boundary, CPU/offline resource ceiling, and assertion-based acceptance gate. It explicitly authorizes no test execution.
+- **Alternative explanations:** The metadata-listed tests may not isolate the task or run under a small CPU-only environment.
+- **Decision:** Review only the pinned changed paths; freeze exact tests, input hashes, runtime, and one wrong mutant before executing any test. If a gate fails, keep the replacement unqualified and do not select a fallback.
+- **Falsification criteria:** Any unpinned source/test is read, test execution precedes its own freeze, an assertion gate is relaxed after outcome, or resource/inference boundaries are crossed.
+- **Follow-up:** Conduct the authorized path-limited source review and prepare a second addendum before testing.

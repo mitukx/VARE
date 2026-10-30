@@ -1,0 +1,84 @@
+{
+  "execution_prohibitions": {
+    "accelerator": false,
+    "development_split_assignment": false,
+    "generation_or_training": false,
+    "held_out_access": false,
+    "model_or_agent_inference": false,
+    "network_during_test": true,
+    "optimizer_or_policy_update": false,
+    "paid_compute_or_api": false,
+    "prompt_or_task_workspace_exposure": false
+  },
+  "failure_policy": "If commit/path identity fails, a baseline assertion does not fail, the fixed source fails/skips, the wrong mutant is not rejected, or the bounded offline runtime cannot support the exact test, preserve evidence and leave the task unqualified. Do not substitute another task or weaken gates.",
+  "frozen_on_utc": "2026-10-30T23:55:59Z",
+  "permitted_source_review": {
+    "allowed_paths_only": [
+      "python/ray/data/_internal/stats.py",
+      "python/ray/data/block.py",
+      "python/ray/data/tests/conftest.py",
+      "python/ray/data/tests/test_stats.py"
+    ],
+    "no_other_repo_paths_or_issue_discussion_may_be_opened": true,
+    "purpose": "Determine whether this single metadata-selected task has an exact, assertion-based, CPU-replayable regression test and a bounded known fix.",
+    "required_identity_checks": [
+      "verify all commits exist",
+      "verify PR head is the fixed change represented by the merge commit",
+      "verify the exact changed-path set against the frozen metadata record",
+      "hash every reviewed source/test input before any test execution"
+    ],
+    "source_revisions_only": [
+      "8374f91cad9e89050368fdbb34ee78f042d73902",
+      "4ec20f4047ecd405bd744d95f6c07a0b275d6677",
+      "5808b33e30092d7761d545f8ce059b14c4cf0098"
+    ],
+    "source_test_content_opened_at_freeze": false,
+    "stop_if_identity_check_fails": true
+  },
+  "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-1",
+  "resource_ceiling": {
+    "cpu_cores": 2,
+    "infrastructure_retry_requires_new_frozen_addendum": true,
+    "memory_bytes": 4294967296,
+    "memory_swap_bytes": 4294967296,
+    "pids": 256,
+    "test_attempts_per_arm": 1
+  },
+  "schema_version": 1,
+  "selection_record": "results/mlsys-fresh-development-task-qualification-v1/replacement-selection.json",
+  "selection_record_sha256": "716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95",
+  "status": "FROZEN_BEFORE_SELECTED_SOURCE_TEST_REVIEW",
+  "task": {
+    "base_commit": "8374f91cad9e89050368fdbb34ee78f042d73902",
+    "exposure": "PUBLIC_UPSTREAM_TASK; MODEL_EXPOSURE_FALSE; PRETRAINING_EXPOSURE_UNKNOWN",
+    "fixed_commit": "5808b33e30092d7761d545f8ce059b14c4cf0098",
+    "pr_head_commit": "4ec20f4047ecd405bd744d95f6c07a0b275d6677",
+    "pull_request": 66694,
+    "repository": "ray-project/ray",
+    "task_family": "NOT_ASSESSED",
+    "url": "https://github.com/ray-project/ray/pull/66694"
+  },
+  "test_selection_and_run_boundary": {
+    "baseline_gate": "At least one targeted correctness assertion tied to the PR change must execute and fail on baseline; environment errors, collection errors, exceptions before the assertion, or skips do not meet the gate.",
+    "fixed_gate": "Every frozen expected case must pass on the exact fixed revision with zero skips.",
+    "same_test_inputs_all_arms": true,
+    "selector_freeze_required_before_any_test_execution": true,
+    "selector_source": "After the permitted source review, enumerate only executable test cases newly added or changed by PR #66694 in python/ray/data/tests/test_stats.py; do not select from unchanged or unrelated tests.",
+    "source_arm_revisions": {
+      "baseline": "8374f91cad9e89050368fdbb34ee78f042d73902",
+      "fixed": "5808b33e30092d7761d545f8ce059b14c4cf0098"
+    },
+    "support_file": "python/ray/data/tests/conftest.py may be used only as the exact fixed-commit test fixture support file and must be mounted identically in baseline, mutant, and fixed arms.",
+    "task_qualification_requires": [
+      "input and commit identities verified",
+      "baseline gate met",
+      "wrong-mutant gate met",
+      "fixed gate met",
+      "offline CPU-only bounded execution",
+      "no skips",
+      "raw logs and per-attempt JSON retained"
+    ],
+    "test_execution_authorized_by_this_addendum": false,
+    "wrong_mutant_gate": "Before execution, freeze one semantically plausible wrong mutant of the PR fix and its exact source diff/hash; it must be rejected by at least one targeted correctness assertion. Do not use an outcome-selected mutant."
+  }
+}
