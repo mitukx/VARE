@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import difflib
 import hashlib
 import json
 import os
@@ -35,6 +36,7 @@ TOOLS = [
     {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns at most 180 lines. Pass inclusive start_line/end_line to inspect an exact range; a completed explicit range has no next_cursor even when later file lines exist. Follow next_cursor only when the returned page was truncated by a line or response limit. The result includes the resolved path and full-file SHA-256.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in allowed task source files. Returns at most 80 matches in a hard 12,000-byte and 2,048-token response; use offset from next_offset to continue.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}}, 'required': ['query'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a complete unified diff, not replacement source code. The patch must start with --- a/<exact allowed path> and +++ b/<exact allowed path>, then include @@ hunk headers and -old/+new lines. Keep it minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'replace_text', 'description': 'Safely replace one exact source snippet in one allowlisted file. Copy old_text exactly from read_file and provide the full new_text. It applies only when old_text occurs exactly once; ambiguous or missing context is rejected. Use this for one focused change; use apply_patch for multi-hunk edits.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'old_text': {'type': 'string'}, 'new_text': {'type': 'string'}}, 'required': ['path', 'old_text', 'new_text'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'finish', 'description': 'Finish the attempt when you believe the task is complete. The evaluator will judge the workspace.', 'parameters': {'type': 'object', 'properties': {'summary': {'type': 'string'}}, 'required': ['summary'], 'additionalProperties': False}}},
 ]
@@ -69,7 +71,10 @@ def tools_for(edit_format: str, *, public_tests: bool = False) -> list[dict[str,
     if edit_format == 'unified_diff':
         tools = list(TOOLS)
     else:
-        tools = [WRITE_FILE_TOOL if item['function']['name'] == 'apply_patch' else item for item in TOOLS]
+        tools = [
+            WRITE_FILE_TOOL if item['function']['name'] == 'apply_patch' else item
+            for item in TOOLS if item['function']['name'] != 'replace_text'
+        ]
     if public_tests:
         tools.insert(-1, PUBLIC_TEST_TOOL)
     return tools
@@ -198,6 +203,43 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
             'paths': list(applied.paths),
         }
     return {'applied': True, 'paths': list(applied.paths), 'format_parse_failure': None}
+
+
+def attempt_exact_text_replacement(
+    workspace: Path, path: str, old_text: str, new_text: str, allowed: set[str],
+    *, max_snippet_chars: int = 6_000,
+) -> dict[str, Any]:
+    """Apply an exact, unique snippet replacement through the normal diff guard."""
+    resolved = resolve_allowed_path(path, allowed)
+    if resolved is None:
+        return {'applied': False, 'error': 'path is not an exact allowlisted source file'}
+    if not isinstance(old_text, str) or not isinstance(new_text, str):
+        return {'applied': False, 'error': 'old_text and new_text must be strings'}
+    if not old_text:
+        return {'applied': False, 'error': 'old_text must not be empty'}
+    if len(old_text) > max_snippet_chars or len(new_text) > max_snippet_chars:
+        return {'applied': False, 'error': f'snippets exceed the {max_snippet_chars}-character limit'}
+    try:
+        original = read_regular_source(workspace, resolved).decode('utf-8')
+    except (OSError, UnicodeDecodeError, ValueError) as exc:
+        return {'applied': False, 'error': f'could not read allowlisted source: {type(exc).__name__}'}
+    count = original.count(old_text)
+    if count != 1:
+        return {
+            'applied': False,
+            'error': 'old_text must match exactly once; narrow the source context and retry',
+            'match_count': count,
+        }
+    updated = original.replace(old_text, new_text, 1)
+    patch = ''.join(difflib.unified_diff(
+        original.splitlines(keepends=True), updated.splitlines(keepends=True),
+        fromfile=f'a/{resolved}', tofile=f'b/{resolved}', n=3,
+    ))
+    if not patch:
+        return {'applied': False, 'error': 'replacement does not change the source'}
+    result = attempt_configured_edit(workspace, patch, 'unified_diff', allowed)
+    result['edit_mode'] = 'exact_text_replacement'
+    return result
 
 
 def sha256(path: Path) -> str:
@@ -705,7 +747,7 @@ def main() -> int:
         )
     else:
         edit_sentence = (
-            'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
+            'Read the source path named in the user instruction, then use tools to inspect and edit. For one focused change, prefer replace_text: copy an exact old_text snippet from the source and provide its full new_text. It succeeds only when old_text matches exactly once. Use apply_patch for multi-hunk changes; never rewrite a whole file. '
             'The apply_patch patch argument must be a complete unified diff, not replacement code. Use exact headers and hunk syntax, with no Markdown fence: '
             '--- a/<exact allowed path> newline +++ b/<same exact path> newline @@ -10,1 +10,1 @@ newline -old line newline +new line. '
             'Replace example lines with exact source context; do not send only the replacement function body. '
@@ -878,6 +920,22 @@ def main() -> int:
                 elif name == 'apply_patch':
                     result = attempt_configured_edit(
                         workspace, str(arguments.get('patch', '')), args.edit_format, editable,
+                    )
+                    note_edit(result)
+                    if result.get('applied') is True:
+                        public_test_result = refresh_public_tests_after_edit(
+                            result, workspace, args.public_test_image, public_test_hash,
+                        )
+                        if public_test_result is not None:
+                            entry['automatic_public_test'] = public_test_result
+                            result = {**result, 'automatic_public_test': public_test_result}
+                elif name == 'replace_text':
+                    result = attempt_exact_text_replacement(
+                        workspace,
+                        arguments.get('path', ''),
+                        arguments.get('old_text', ''),
+                        arguments.get('new_text', ''),
+                        editable,
                     )
                     note_edit(result)
                     if result.get('applied') is True:

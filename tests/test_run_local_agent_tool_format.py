@@ -15,6 +15,7 @@ from scripts.run_local_agent import (
     MAX_TOOL_RESULT_TOKENS,
     append_tool_interaction,
     attempt_configured_edit,
+    attempt_exact_text_replacement,
     bounded_list_page,
     bounded_search_results,
     bounded_source_page,
@@ -304,6 +305,15 @@ def test_read_file_schema_exposes_bounded_inclusive_line_ranges():
     assert '12,000-byte' in read_file['description']
 
 
+def test_replace_text_schema_requires_exact_source_context():
+    tools = tools_for('unified_diff')
+    replace = next(item['function'] for item in tools if item['function']['name'] == 'replace_text')
+
+    assert replace['parameters']['required'] == ['path', 'old_text', 'new_text']
+    assert 'exactly once' in replace['description']
+    assert all(item['function']['name'] != 'replace_text' for item in tools_for('whole_file'))
+
+
 def test_bounded_source_page_defaults_to_180_lines_and_reports_more():
     source = ''.join(f'line-{number}\n' for number in range(1, 451))
 
@@ -458,6 +468,43 @@ def test_malformed_diff_returns_actionable_format_feedback(tmp_path):
     assert '--- a/pkg/source.py' in result['error']
     assert '+++ b/pkg/source.py' in result['error']
     assert source.read_text() == 'value = 1\n'
+
+
+def test_exact_text_replacement_applies_one_allowlisted_unique_snippet(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\nother = 3\n')
+
+    result = attempt_exact_text_replacement(
+        tmp_path, 'pkg/source.py', 'value = 1', 'value = 2', {'pkg/source.py'},
+    )
+
+    assert result == {
+        'applied': True,
+        'paths': ['pkg/source.py'],
+        'format_parse_failure': None,
+        'edit_mode': 'exact_text_replacement',
+    }
+    assert source.read_text() == 'value = 2\nother = 3\n'
+
+
+def test_exact_text_replacement_rejects_missing_ambiguous_and_unallowlisted_context(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\nvalue = 1\n')
+
+    ambiguous = attempt_exact_text_replacement(
+        tmp_path, 'pkg/source.py', 'value = 1', 'value = 2', {'pkg/source.py'},
+    )
+    missing = attempt_exact_text_replacement(
+        tmp_path, 'pkg/source.py', 'value = 9', 'value = 2', {'pkg/source.py'},
+    )
+    unallowlisted = attempt_exact_text_replacement(
+        tmp_path, 'other.py', 'value = 1', 'value = 2', {'pkg/source.py'},
+    )
+
+    assert ambiguous['match_count'] == 2
+    assert 'exactly once' in ambiguous['error']
+    assert missing['match_count'] == 0
+    assert 'exactly once' in missing['error']
+    assert 'allowlisted' in unallowlisted['error']
+    assert source.read_text() == 'value = 1\nvalue = 1\n'
 
 
 @pytest.mark.parametrize(
