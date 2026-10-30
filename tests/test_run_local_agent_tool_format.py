@@ -1,4 +1,5 @@
 import hashlib
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -10,9 +11,18 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from record_coding_agent_baseline import parse_diff
 from verify_agent_workspace import verify_workspace
 from scripts.run_local_agent import (
+    MAX_TOOL_RESULT_BYTES,
+    MAX_TOOL_RESULT_TOKENS,
+    append_tool_interaction,
+    attempt_configured_edit,
+    bounded_list_page,
+    bounded_search_results,
     bounded_source_page,
+    bounded_tool_result,
     normalize_tool_call_format,
+    render_chat_prompt,
     refresh_public_tests_after_edit,
+    resolve_allowed_path,
     tools_for,
 )
 from scripts.run_local_agent import candidate_source_diff, snapshot_allowed_sources
@@ -290,7 +300,8 @@ def test_read_file_schema_exposes_bounded_inclusive_line_ranges():
     assert parameters['required'] == ['path']
     assert parameters['properties']['start_line'] == {'type': 'integer', 'minimum': 1}
     assert parameters['properties']['end_line'] == {'type': 'integer', 'minimum': 1}
-    assert 'at most 200 lines' in read_file['description']
+    assert parameters['properties']['char_offset'] == {'type': 'integer', 'minimum': 0}
+    assert '12,000-byte' in read_file['description']
 
 
 def test_bounded_source_page_defaults_to_180_lines_and_reports_more():
@@ -298,13 +309,12 @@ def test_bounded_source_page_defaults_to_180_lines_and_reports_more():
 
     page = bounded_source_page(source)
 
-    assert page == {
-        'content': ''.join(f'line-{number}\n' for number in range(1, 181)),
-        'start_line': 1,
-        'end_line': 180,
-        'total_lines': 450,
-        'has_more': True,
-    }
+    assert page['content'] == ''.join(f'line-{number}\n' for number in range(1, 181))
+    assert page['start_line'] == 1
+    assert page['end_line'] == 180
+    assert page['total_lines'] == 450
+    assert page['has_more'] is True
+    assert page['next_cursor'] == {'start_line': 181, 'char_offset': 0}
 
 
 def test_bounded_source_page_reads_requested_inclusive_range():
@@ -312,13 +322,12 @@ def test_bounded_source_page_reads_requested_inclusive_range():
 
     page = bounded_source_page(source, start_line=201, end_line=220)
 
-    assert page == {
-        'content': ''.join(f'line-{number}\n' for number in range(201, 221)),
-        'start_line': 201,
-        'end_line': 220,
-        'total_lines': 450,
-        'has_more': True,
-    }
+    assert page['content'] == ''.join(f'line-{number}\n' for number in range(201, 221))
+    assert page['start_line'] == 201
+    assert page['end_line'] == 220
+    assert page['total_lines'] == 450
+    assert page['has_more'] is True
+    assert page['next_cursor'] == {'start_line': 221, 'char_offset': 0}
 
 
 def test_bounded_source_page_caps_requests_at_200_lines():
@@ -331,6 +340,109 @@ def test_bounded_source_page_caps_requests_at_200_lines():
     assert page['end_line'] == 200
     assert page['total_lines'] == 450
     assert page['has_more'] is True
+    assert page['next_cursor'] == {'start_line': 201, 'char_offset': 0}
+
+
+class _CharacterTokenizer:
+    def encode(self, text, add_special_tokens=False):
+        return list(text)
+
+
+def test_bounded_source_page_enforces_token_budget_and_continues_long_line():
+    tokenizer = _CharacterTokenizer()
+    source = 'x' * 1_200 + '\nnext line\n'
+    identity = {'resolved_path': 'pkg/source.py'}
+    page = bounded_source_page(
+        source, tokenizer=tokenizer, source_identity=identity,
+        max_output_bytes=10_000, max_output_tokens=240,
+    )
+    encoded = json.dumps(page, ensure_ascii=False, separators=(',', ':'))
+    assert len(encoded.encode()) <= 10_000
+    assert len(tokenizer.encode(encoded)) <= 240
+    assert page['resolved_path'] == 'pkg/source.py'
+    assert page['source_sha256'] == hashlib.sha256(source.encode()).hexdigest()
+    assert page['start_line'] == page['end_line'] == 1
+    assert page['has_more'] is True
+    assert page['next_cursor']['start_line'] == 1
+    assert page['next_cursor']['char_offset'] == len(page['content'])
+
+    cursor = page['next_cursor']
+    continuation = bounded_source_page(
+        source, start_line=cursor['start_line'], char_offset=cursor['char_offset'],
+        tokenizer=tokenizer, source_identity=identity,
+        max_output_bytes=10_000, max_output_tokens=240,
+    )
+    assert continuation['content']
+    assert continuation['source_sha256'] == page['source_sha256']
+
+
+def test_search_and_file_listing_are_tokenizer_bounded_and_paginated():
+    tokenizer = _CharacterTokenizer()
+    matches = [{'path': f'src/file_{i}.py', 'line': i + 1, 'text': 'match ' * 100}
+               for i in range(40)]
+    result = bounded_search_results(
+        matches, tokenizer=tokenizer, max_output_bytes=10_000,
+        max_output_tokens=500,
+    )
+    encoded = json.dumps(result, ensure_ascii=False, separators=(',', ':'))
+    assert len(encoded.encode()) <= 10_000
+    assert len(tokenizer.encode(encoded)) <= 500
+    assert result['matches'][0]['path'] == 'src/file_0.py'
+    assert result['has_more'] is True
+    assert result['next_offset'] == len(result['matches'])
+    assert bounded_search_results(matches, offset=result['next_offset'])['matches'][0]['line'] == result['next_offset'] + 1
+
+    files = bounded_list_page(
+        [f'src/module_{i:03}.py' for i in range(200)], tokenizer=tokenizer,
+        max_output_tokens=180,
+    )
+    assert len(tokenizer.encode(json.dumps(files, separators=(',', ':')))) <= 180
+    assert files['has_more'] is True
+    assert files['next_offset'] == len(files['files'])
+
+
+def test_tool_result_final_cap_and_native_template_keep_multiturn_continuity():
+    tokenizer = _CharacterTokenizer()
+    oversized = bounded_tool_result({'stdout': 'z' * 20_000}, tokenizer)
+    encoded = json.dumps(oversized, ensure_ascii=False, separators=(',', ':'))
+    assert len(encoded.encode()) <= MAX_TOOL_RESULT_BYTES
+    assert len(tokenizer.encode(encoded)) <= MAX_TOOL_RESULT_TOKENS
+    assert oversized['response_truncated'] is True
+
+    class RecordingTokenizer(_CharacterTokenizer):
+        def apply_chat_template(self, messages, **kwargs):
+            self.messages = messages
+            self.kwargs = kwargs
+            return 'native-template-prompt'
+
+    recording = RecordingTokenizer()
+    messages = [{'role': 'user', 'content': 'inspect and edit'}]
+    append_tool_interaction(messages, [
+        ('read_file', {'path': 'pkg/source.py'}, {'content': 'value = 1', 'start_line': 1}),
+        ('apply_patch', {'patch': '...'}, {'applied': True, 'paths': ['pkg/source.py']}),
+    ])
+    prompt = render_chat_prompt(recording, messages, tools_for('unified_diff'))
+    assert prompt == 'native-template-prompt'
+    assert [message['role'] for message in recording.messages] == [
+        'user', 'assistant', 'tool', 'tool',
+    ]
+    assert recording.messages[2]['name'] == 'read_file'
+    assert recording.messages[3]['name'] == 'apply_patch'
+    assert recording.messages[1]['tool_calls'][0]['id'] == recording.messages[2]['tool_call_id']
+    assert recording.messages[1]['tool_calls'][1]['id'] == recording.messages[3]['tool_call_id']
+    assert recording.kwargs['tools'] == tools_for('unified_diff')
+
+
+def test_source_lookup_and_patch_application_fixture(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\n')
+    assert resolve_allowed_path('/candidate/pkg/source.py', {'pkg/source.py'}) == 'pkg/source.py'
+    patch = (
+        '--- a/pkg/source.py\n+++ b/pkg/source.py\n'
+        '@@ -1 +1 @@\n-value = 1\n+value = 2\n'
+    )
+    applied = attempt_configured_edit(tmp_path, patch, 'unified_diff', {'pkg/source.py'})
+    assert applied == {'applied': True, 'paths': ['pkg/source.py'], 'format_parse_failure': None}
+    assert source.read_text() == 'value = 2\n'
 
 
 @pytest.mark.parametrize(
@@ -350,7 +462,9 @@ def test_bounded_source_page_rejects_invalid_ranges(kwargs, message):
 
 def test_bounded_source_page_handles_empty_files():
     assert bounded_source_page('') == {
-        'content': '', 'start_line': 1, 'end_line': 0, 'total_lines': 0, 'has_more': False,
+        'source_sha256': hashlib.sha256(b'').hexdigest(),
+        'content': '', 'start_line': 1, 'end_line': 0, 'total_lines': 0,
+        'has_more': False, 'next_cursor': None,
     }
 
 

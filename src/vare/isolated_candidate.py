@@ -56,6 +56,11 @@ _MAX_ARGS = 512_000
 _MAX_LINE = 512_000
 # Allow the isolated Docker worker to launch before candidate import timing.
 _STARTUP_GRACE_S = 10.0
+_TRANSPORT_FAILURES = frozenset({
+    "container_start_failure", "container_start_timeout", "candidate_startup_timeout",
+    "resource_timeout", "unexpected_process_exit", "truncated_output",
+    "frame_parse_failure", "protocol_mismatch",
+})
 # Two-sided 95% Student-t critical values, df = repeats - 1.
 _T_975 = {
     1: 12.706204736432095,
@@ -155,6 +160,10 @@ class CandidateHarnessError(ValueError):
 
 class _OutputLimit(Exception):
     """The child wrote more than the framed-result cap."""
+
+
+class _TruncatedOutput(EOFError):
+    """The child closed its output in the middle of a protocol line."""
 
 
 @dataclass
@@ -311,6 +320,8 @@ class _Lines:
                 continue
             block = os.read(fd, 65536)
             if not block:
+                if self.pending:
+                    raise _TruncatedOutput("candidate closed its output mid-frame")
                 raise EOFError("candidate closed its output")
             self.pending.extend(block)
         line, _, rest = self.pending.partition(b"\n")
@@ -324,7 +335,7 @@ class _Lines:
 
         A closed pipe is readable. ``os.read`` then returns ``b""``. That EOF
         is not extra output: an honest child that writes one line and exits
-        must not be scored ``malformed_result``.
+        must not be scored as a protocol mismatch.
         """
         if self.pending:
             return True
@@ -646,7 +657,7 @@ def _invoke(
     nonce = secrets.token_hex(32)
     name = "vare-call-" + secrets.token_hex(12)
     if task_deadline is not None and time.monotonic() >= task_deadline:
-        return None, None, "missing_result"
+        return None, None, "resource_timeout"
     deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
     if task_deadline is not None:
         deadline = min(deadline, task_deadline)
@@ -664,44 +675,68 @@ def _invoke(
         "memory_mb": memory_mb,
         "discard_candidate_stdout": discard_candidate_stdout,
     }
-    proc = subprocess.Popen(
-        [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-        start_new_session=True,
-        env=_src_env(),
-    )
+    try:
+        proc = subprocess.Popen(
+            [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+            env=_src_env(),
+        )
+    except OSError:
+        return None, None, "unexpected_process_exit"
     assert proc.stdin is not None and proc.stdout is not None
     reader = _Lines(proc.stdout)
     try:
         proc.stdin.write((_canonical(spec) + "\n").encode("utf-8"))
         proc.stdin.flush()
-        ready = reader.readline(deadline)
+        try:
+            ready = reader.readline(deadline)
+        except TimeoutError:
+            return None, None, "container_start_timeout"
+        except _TruncatedOutput:
+            return None, None, "truncated_output"
+        except EOFError:
+            return None, None, "unexpected_process_exit"
         importing = ready == f"VARE_IMPORTING {nonce} 1".encode("ascii")
         if not importing:
             _value, failure = _parse_result(ready, nonce)
-            return None, None, failure or "malformed_result"
-        ready = reader.readline(min(deadline, time.monotonic() + timeout_s))
+            return None, None, failure or "protocol_mismatch"
+        try:
+            ready = reader.readline(min(deadline, time.monotonic() + timeout_s))
+        except TimeoutError:
+            return None, None, "candidate_startup_timeout"
+        except _TruncatedOutput:
+            return None, None, "truncated_output"
+        except EOFError:
+            return None, None, "unexpected_process_exit"
         startup_s = _ready_startup(ready, nonce)
         if startup_s is None:
             _value, failure = _parse_result(ready, nonce)
-            return None, None, failure or "malformed_result"
+            return None, None, failure or "protocol_mismatch"
         if reader.has_pending():
-            return None, None, "malformed_result"
+            return None, None, "protocol_mismatch"
         call_started = time.perf_counter()
         proc.stdin.write(b"GO\n")
         proc.stdin.flush()
-        result = reader.readline(min(deadline, time.monotonic() + timeout_s))
+        try:
+            result = reader.readline(min(deadline, time.monotonic() + timeout_s))
+        except TimeoutError:
+            return None, None, "resource_timeout"
+        except _TruncatedOutput:
+            return None, None, "truncated_output"
+        except EOFError:
+            return None, None, "unexpected_process_exit"
         elapsed = startup_s + (time.perf_counter() - call_started)
         parsed, failure = _parse_result(result, nonce)
         if failure is not None:
             return None, elapsed, failure
         return parsed, elapsed, None
     except _OutputLimit:
-        return None, None, "malformed_result"
-    except (TimeoutError, EOFError, BrokenPipeError):
-        return None, None, "missing_result"
+        return None, None, "frame_parse_failure"
+    except BrokenPipeError:
+        return None, None, "unexpected_process_exit"
     finally:
         try:
             runner.force_remove_sync(name)
@@ -726,7 +761,7 @@ def _invoke_session(
     if not calls:
         return []
     if task_deadline is not None and time.monotonic() >= task_deadline:
-        return [(None, None, "missing_result")] * len(calls)
+        return [(None, None, "resource_timeout")] * len(calls)
     nonce = secrets.token_hex(32)
     name = "vare-call-" + secrets.token_hex(12)
     deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
@@ -739,31 +774,52 @@ def _invoke_session(
         "memory_mb": memory_mb,
         "discard_candidate_stdout": discard_candidate_stdout,
     }
-    proc = subprocess.Popen(
-        [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
-        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-        start_new_session=True, env=_src_env(),
-    )
+    try:
+        proc = subprocess.Popen(
+            [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            start_new_session=True, env=_src_env(),
+        )
+    except OSError:
+        return [(None, None, "unexpected_process_exit")] * len(calls)
     assert proc.stdin is not None and proc.stdout is not None
     reader = _Lines(proc.stdout)
     results: list[tuple[Any | None, float | None, str | None]] = []
     try:
         proc.stdin.write((_canonical(spec) + "\n").encode("utf-8"))
         proc.stdin.flush()
-        ready = reader.readline(
-            min(deadline, time.monotonic() + timeout_s + _STARTUP_GRACE_S)
-        )
+        try:
+            ready = reader.readline(
+                min(deadline, time.monotonic() + timeout_s + _STARTUP_GRACE_S)
+            )
+        except TimeoutError:
+            return [(None, None, "container_start_timeout")] * len(calls)
+        except _TruncatedOutput:
+            return [(None, None, "truncated_output")] * len(calls)
+        except EOFError:
+            return [(None, None, "unexpected_process_exit")] * len(calls)
         if ready != f"VARE_IMPORTING {nonce} 1".encode("ascii"):
-            return [(None, None, "malformed_result")] * len(calls)
-        ready = reader.readline(min(deadline, time.monotonic() + timeout_s))
+            _value, failure = _parse_result(ready, nonce)
+            return [(None, None, failure or "protocol_mismatch")] * len(calls)
+        try:
+            ready = reader.readline(min(deadline, time.monotonic() + timeout_s))
+        except TimeoutError:
+            return [(None, None, "candidate_startup_timeout")] * len(calls)
+        except _TruncatedOutput:
+            return [(None, None, "truncated_output")] * len(calls)
+        except EOFError:
+            return [(None, None, "unexpected_process_exit")] * len(calls)
         startup_s = _ready_startup(ready, nonce)
-        if startup_s is None or reader.has_pending():
-            return [(None, None, "malformed_result")] * len(calls)
+        if startup_s is None:
+            _value, failure = _parse_result(ready, nonce)
+            return [(None, None, failure or "protocol_mismatch")] * len(calls)
+        if reader.has_pending():
+            return [(None, None, "protocol_mismatch")] * len(calls)
         proc.stdin.write(b"GO\n")
         proc.stdin.flush()
         for args, kwargs, tuple_paths in calls:
             if task_deadline is not None and time.monotonic() >= task_deadline:
-                results.extend([(None, None, "missing_result")] * (len(calls) - len(results)))
+                results.extend([(None, None, "resource_timeout")] * (len(calls) - len(results)))
                 break
             request = {
                 "args": list(args), "kwargs": dict(kwargs),
@@ -772,16 +828,29 @@ def _invoke_session(
             started = time.perf_counter()
             proc.stdin.write((_canonical(request) + "\n").encode("utf-8"))
             proc.stdin.flush()
-            line = reader.readline(min(deadline, time.monotonic() + timeout_s))
+            try:
+                line = reader.readline(min(deadline, time.monotonic() + timeout_s))
+            except TimeoutError:
+                failure = "resource_timeout"
+            except _TruncatedOutput:
+                failure = "truncated_output"
+            except EOFError:
+                failure = "unexpected_process_exit"
+            else:
+                value, failure = _parse_result(line, nonce)
             elapsed = time.perf_counter() - started
-            value, failure = _parse_result(line, nonce)
             results.append((value, elapsed, failure))
             if failure is not None:
-                results.extend([(None, None, "missing_result")] * (len(calls) - len(results)))
+                results.extend([(None, None, failure)] * (len(calls) - len(results)))
                 break
         return results
-    except (_OutputLimit, TimeoutError, EOFError, BrokenPipeError):
-        results.extend([(None, None, "missing_result")] * (len(calls) - len(results)))
+    except _OutputLimit:
+        failure = "frame_parse_failure"
+        results.extend([(None, None, failure)] * (len(calls) - len(results)))
+        return results
+    except BrokenPipeError:
+        failure = "unexpected_process_exit"
+        results.extend([(None, None, failure)] * (len(calls) - len(results)))
         return results
     finally:
         try:
@@ -818,25 +887,25 @@ def _ready_startup(line: bytes, nonce: str) -> float | None:
 def _parse_result(line: bytes, nonce: str) -> tuple[Any | None, str | None]:
     parts = line.split(b" ", 2)
     if len(parts) != 3 or parts[0] not in {b"VARE_RESULT", b"VARE_FAIL"}:
-        return None, "malformed_result"
+        return None, "frame_parse_failure"
     if not _same_token(parts[1], nonce):
-        return None, "malformed_result"
+        return None, "protocol_mismatch"
     if parts[0] == b"VARE_FAIL":
         reason = parts[2].decode("utf-8", "replace")
-        if reason not in {"missing_result", "malformed_result"}:
-            reason = "missing_result"
+        if reason not in _TRANSPORT_FAILURES:
+            reason = "frame_parse_failure"
         return None, reason
     try:
         payload = json.loads(parts[2].decode("utf-8"))
     except (UnicodeError, json.JSONDecodeError):
-        return None, "malformed_result"
+        return None, "frame_parse_failure"
     if type(payload) is dict and set(payload) == {"exception"}:
         exception = payload["exception"]
         if type(exception) is str and exception.isidentifier():
             return CandidateException(exception), None
-        return None, "malformed_result"
+        return None, "frame_parse_failure"
     if type(payload) is not dict or set(payload) != {"value"}:
-        return None, "malformed_result"
+        return None, "frame_parse_failure"
     return payload["value"], None
 
 
@@ -858,7 +927,7 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
             command=_container_command(),
         )
     except (IsolationError, CandidateHarnessError, OSError, ValueError):
-        _emit_fail(nonce, "missing_result")
+        _emit_fail(nonce, "container_start_failure")
         return 0
     started = time.perf_counter()
     discard_candidate_stdout = spec.get("discard_candidate_stdout") is True
@@ -871,7 +940,7 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
             env=runner._client_env,
         )
     except OSError:
-        _emit_fail(nonce, "missing_result")
+        _emit_fail(nonce, "container_start_failure")
         return 0
     protocol_stream = child.stderr if discard_candidate_stdout else child.stdout
     assert child.stdin is not None and protocol_stream is not None
@@ -884,25 +953,59 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         }
         child.stdin.write((_canonical(header) + "\n").encode("utf-8"))
         child.stdin.flush()
-        importing = reader.readline(deadline)
+        try:
+            importing = reader.readline(deadline)
+        except TimeoutError:
+            _emit_fail(nonce, "container_start_timeout")
+            return 0
+        except _TruncatedOutput:
+            _emit_fail(nonce, "truncated_output")
+            return 0
+        except EOFError:
+            try:
+                child.wait(timeout=0.1)
+            except subprocess.TimeoutExpired:
+                pass
+            _emit_fail(
+                nonce,
+                "container_start_failure"
+                if child.returncode not in (None, 0)
+                else "unexpected_process_exit",
+            )
+            return 0
         if importing != b"IMPORTING":
-            _emit_fail(nonce, "malformed_result")
+            _emit_fail(
+                nonce,
+                "container_start_failure"
+                if child.poll() is not None and child.returncode != 0
+                else "protocol_mismatch",
+            )
             return 0
         _emit_importing(nonce)
-        ready = reader.readline(time.monotonic() + timeout_s)
+        try:
+            ready = reader.readline(time.monotonic() + timeout_s)
+        except TimeoutError:
+            _emit_fail(nonce, "candidate_startup_timeout")
+            return 0
+        except _TruncatedOutput:
+            _emit_fail(nonce, "truncated_output")
+            return 0
+        except EOFError:
+            _emit_fail(nonce, "unexpected_process_exit")
+            return 0
         startup_s = time.perf_counter() - started
         if ready != b"READY" or reader.has_pending():
-            _emit_fail(nonce, "malformed_result")
+            _emit_fail(nonce, "protocol_mismatch")
             return 0
         _emit_ready(nonce, startup_s)
         go = parent.readline(time.monotonic() + _STARTUP_GRACE_S)
         if go != b"GO":
-            _emit_fail(nonce, "missing_result")
+            _emit_fail(nonce, "protocol_mismatch")
             return 0
         if spec.get("session") is True:
             count = int(spec.get("call_count", 0))
             if count <= 0 or count > 100_000:
-                _emit_fail(nonce, "malformed_result")
+                _emit_fail(nonce, "frame_parse_failure")
                 return 0
             for _index in range(count):
                 raw_request = parent.readline(time.monotonic() + _STARTUP_GRACE_S)
@@ -911,9 +1014,22 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
                     child.stdin.write((_canonical(request) + "\n").encode("utf-8"))
                     child.stdin.flush()
                     raw = reader.readline(time.monotonic() + timeout_s)
+                except TimeoutError:
+                    _emit_fail(nonce, "resource_timeout")
+                    return 0
+                except _TruncatedOutput:
+                    _emit_fail(nonce, "truncated_output")
+                    return 0
+                except EOFError:
+                    _emit_fail(nonce, "unexpected_process_exit")
+                    return 0
+                except BrokenPipeError:
+                    _emit_fail(nonce, "unexpected_process_exit")
+                    return 0
+                try:
                     payload = json.loads(raw.decode("utf-8"))
-                except (UnicodeError, json.JSONDecodeError, TimeoutError, EOFError):
-                    _emit_fail(nonce, "missing_result")
+                except (UnicodeError, json.JSONDecodeError):
+                    _emit_fail(nonce, "frame_parse_failure")
                     return 0
                 valid_value = type(payload) is dict and set(payload) == {"value"}
                 valid_exception = (
@@ -921,8 +1037,11 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
                     and type(payload["exception"]) is str
                     and payload["exception"].isidentifier()
                 )
-                if not valid_value and not valid_exception or reader.has_pending():
-                    _emit_fail(nonce, "malformed_result")
+                if not valid_value and not valid_exception:
+                    _emit_fail(nonce, "frame_parse_failure")
+                    return 0
+                if reader.has_pending():
+                    _emit_fail(nonce, "protocol_mismatch")
                     return 0
                 _emit(nonce, "VARE_RESULT", _canonical(payload))
             child.stdin.write(b'{"close":true}\n')
@@ -934,14 +1053,24 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         }
         child.stdin.write((_canonical(request) + "\n").encode("utf-8"))
         child.stdin.flush()
-        raw = reader.readline(time.monotonic() + timeout_s)
-        if reader.has_pending():
-            _emit_fail(nonce, "malformed_result")
+        try:
+            raw = reader.readline(time.monotonic() + timeout_s)
+        except TimeoutError:
+            _emit_fail(nonce, "resource_timeout")
+            return 0
+        except _TruncatedOutput:
+            _emit_fail(nonce, "truncated_output")
+            return 0
+        except EOFError:
+            _emit_fail(nonce, "unexpected_process_exit")
+            return 0
+        except BrokenPipeError:
+            _emit_fail(nonce, "unexpected_process_exit")
             return 0
         try:
             payload = json.loads(raw.decode("utf-8"))
         except (UnicodeError, json.JSONDecodeError):
-            _emit_fail(nonce, "malformed_result")
+            _emit_fail(nonce, "frame_parse_failure")
             return 0
         valid_value = type(payload) is dict and set(payload) == {"value"}
         valid_exception = (
@@ -950,15 +1079,27 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
             and payload["exception"].isidentifier()
         )
         if not valid_value and not valid_exception:
-            _emit_fail(nonce, "malformed_result")
+            _emit_fail(nonce, "frame_parse_failure")
+            return 0
+        if reader.has_pending():
+            _emit_fail(nonce, "protocol_mismatch")
             return 0
         _emit(nonce, "VARE_RESULT", _canonical(payload))
         return 0
     except _OutputLimit:
-        _emit_fail(nonce, "malformed_result")
+        _emit_fail(nonce, "frame_parse_failure")
         return 0
-    except (TimeoutError, EOFError, BrokenPipeError):
-        _emit_fail(nonce, "missing_result")
+    except TimeoutError:
+        _emit_fail(nonce, "protocol_mismatch")
+        return 0
+    except _TruncatedOutput:
+        _emit_fail(nonce, "truncated_output")
+        return 0
+    except EOFError:
+        _emit_fail(nonce, "unexpected_process_exit")
+        return 0
+    except BrokenPipeError:
+        _emit_fail(nonce, "unexpected_process_exit")
         return 0
     finally:
         try:
@@ -1228,9 +1369,9 @@ def paired_timing(
                 )
                 if measured[role][2] is not None and failure is None:
                     failure = measured[role][2]
-            baseline = measured.get("baseline", (None, None, "missing_result"))
-            candidate = measured.get("candidate", (None, None, "missing_result"))
-            overhead = measured.get("overhead", (None, None, "missing_result"))
+            baseline = measured.get("baseline", (None, None, "unexpected_process_exit"))
+            candidate = measured.get("candidate", (None, None, "unexpected_process_exit"))
+            overhead = measured.get("overhead", (None, None, "unexpected_process_exit"))
             values_match = False
             if baseline[2] is None and candidate[2] is None:
                 values_match = (
@@ -1330,7 +1471,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         return _serve(spec, reader)
     except (CandidateHarnessError, IsolationError, OSError, ValueError, KeyError, TypeError):
-        _emit_fail(str(spec["nonce"]), "missing_result")
+        _emit_fail(str(spec["nonce"]), "frame_parse_failure")
         return 0
 
 

@@ -59,7 +59,7 @@ def test_baseline_source_symlink_is_rejected(tmp_path: Path, monkeypatch):
 
 
 
-def test_prospective_v4_fixtures_defeat_constant_index_zero(monkeypatch, tmp_path: Path):
+def test_v5_fixtures_defeat_constant_index_zero(monkeypatch, tmp_path: Path):
     import vare.mlxlm_1912_repo_task as repo_task
 
     source = tmp_path / "workspace"
@@ -77,7 +77,7 @@ def test_prospective_v4_fixtures_defeat_constant_index_zero(monkeypatch, tmp_pat
         return FakeReport()
 
     monkeypatch.setattr(repo_task, "grade_calls", capture)
-    repo_task.grade_workspace(source, image=repo_task.verify_protocol_v4()["runtime"]["image"])
+    repo_task.grade_workspace(source, image=repo_task.verify_protocol_v5()["runtime"]["image"])
     cases = {c.case_id: c for c in captured}
     shifted = cases["shifted_maximum_nonzero_values"]
     assert shifted.expected["kept_indices"] == [[1], [2]]
@@ -88,15 +88,15 @@ def test_prospective_v4_fixtures_defeat_constant_index_zero(monkeypatch, tmp_pat
     assert cases["leading_maximum_nonzero_value"].expected["kept_values"] == [[-0.75]]
 
 
-def test_v4_protocol_and_implementation_locks_are_verified():
+def test_v5_protocol_and_implementation_locks_are_verified():
     import vare.mlxlm_1912_repo_task as repo_task
 
-    protocol = repo_task.verify_protocol_v4()
-    assert protocol["protocol_id"] == "mlxlm-1912-isolated-task-v4"
+    protocol = repo_task.verify_protocol_v5()
+    assert protocol["protocol_id"] == "mlxlm-1912-isolated-task-v5"
     assert protocol["evaluation"]["success"].startswith("all 14")
 
 
-def test_v4_rejects_altered_implementation_hash(monkeypatch):
+def test_v5_rejects_altered_implementation_hash(monkeypatch):
     import vare.mlxlm_1912_repo_task as repo_task
 
     original = repo_task.sha256_file
@@ -108,11 +108,11 @@ def test_v4_rejects_altered_implementation_hash(monkeypatch):
 
     monkeypatch.setattr(repo_task, "sha256_file", altered)
     with pytest.raises(MlxLm1912TaskError, match="implementation hash mismatch"):
-        repo_task.verify_protocol_v4()
+        repo_task.verify_protocol_v5()
 
 
 @pytest.mark.parametrize("timeout_s,memory_mb", [(31, 1536), (30, 2048)])
-def test_v4_grade_rejects_altered_resource_limits(
+def test_v5_grade_rejects_altered_resource_limits(
     tmp_path: Path, timeout_s: float, memory_mb: int
 ):
     import vare.mlxlm_1912_repo_task as repo_task
@@ -120,29 +120,29 @@ def test_v4_grade_rejects_altered_resource_limits(
     with pytest.raises(MlxLm1912TaskError, match="limits differ"):
         repo_task.grade_workspace(
             tmp_path,
-            image=repo_task.verify_protocol_v4()["runtime"]["image"],
+            image=repo_task.verify_protocol_v5()["runtime"]["image"],
             timeout_s=timeout_s,
             memory_mb=memory_mb,
         )
 
 
-def test_v4_grade_rejects_wrong_image(tmp_path: Path):
+def test_v5_grade_rejects_wrong_image(tmp_path: Path):
     import vare.mlxlm_1912_repo_task as repo_task
 
     with pytest.raises(MlxLm1912TaskError, match="image differs"):
         repo_task.grade_workspace(tmp_path, image="wrong-image")
 
 
-def test_v4_protocol_bytes_tamper_rejected(monkeypatch):
+def test_v5_protocol_bytes_tamper_rejected(monkeypatch):
     import vare.mlxlm_1912_repo_task as repo_task
 
     original = repo_task.sha256_file
 
     def altered(path: Path) -> str:
-        if path.name == "protocol-v4.json":
+        if path.name == "protocol-v5.json":
             return "0" * 64
         return original(path)
 
     monkeypatch.setattr(repo_task, "sha256_file", altered)
     with pytest.raises(MlxLm1912TaskError, match="protocol lock mismatch"):
-        repo_task.verify_protocol_v4()
+        repo_task.verify_protocol_v5()
