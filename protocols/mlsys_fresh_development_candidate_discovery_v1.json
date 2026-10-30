@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-discovery-v1",
+  "protocol_status": "frozen_before_metadata_collection; candidate_qualification_not_authorized",
+  "frozen_at_utc": "2026-10-30T22:49:17Z",
+  "source_main_commit": "ce097a5d2c695d4fa7a2e2119e3c25bc3a460578",
+  "purpose": "Discover a new metadata-only pool of recent merged ML systems fixes for prospective Development-task qualification after the prior 24-entry queue was exhausted.",
+  "hypothesis": "A complete metadata-only scan of recent merged PRs in the six previously screened ML systems repositories will yield a tractable set of post-cutoff, small-diff fixes with changed test paths that can be manually checked for distinct task families and then deeply qualified.",
+  "cheaper_alternative_considered": "The frozen 24-entry manual queue was already reconciled against Stage 2/3 exposure and contains zero fresh Development candidates. No model call or source checkout is needed for this metadata discovery pass.",
+  "primary_output": "Count and immutable metadata of PRs that pass the frozen coarse screen; this is only a discovery output and cannot be used as task qualification or model-capability evidence.",
+  "discovery": {
+    "api": "GitHub GraphQL Search and PullRequest metadata fields",
+    "search_query_template": "repo:{repository} is:pr is:merged merged:2026-10-01..2026-10-30",
+    "repositories": [
+      "huggingface/transformers",
+      "ml-explore/mlx-lm",
+      "ml-explore/mlx",
+      "huggingface/trl",
+      "vllm-project/vllm",
+      "ray-project/ray"
+    ],
+    "merged_date_start": "2026-10-01",
+    "merged_date_end": "2026-10-30",
+    "model_training_cutoff_proxy": "2025-08-09",
+    "search_page_size": 100,
+    "search_result_limit_per_repository": 1000,
+    "max_parallel_pull_queries": 8,
+    "metadata_fields": [
+      "repository",
+      "pull_request_number",
+      "title",
+      "url",
+      "state",
+      "created_at",
+      "updated_at",
+      "merged_at",
+      "merge_commit_sha",
+      "merge_base_sha",
+      "head_sha",
+      "additions",
+      "deletions",
+      "changed_file_count",
+      "changed_paths"
+    ],
+    "excluded_api_fields": [
+      "pull_request_body",
+      "comments",
+      "review_comments",
+      "patches",
+      "source_contents",
+      "test_contents"
+    ],
+    "collector_path": "scripts/discover_mlsys_fresh_development_candidates_v1.py",
+    "collector_sha256": "f6dbdaf5b17a80d1e97989a84794952fff48f8164ff67bf6d2703de690cfa1e2",
+    "prior_queue_audit_path": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+    "queue_audit_sha256": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+    "prior_qualification_catalog_path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+    "prior_qualification_catalog_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "additional_prior_identities": [
+      {
+        "repository": "ml-explore/mlx-lm",
+        "number": 1971,
+        "reason": "Previously exposed Development task outside the 24-entry manual queue."
+      }
+    ],
+    "output_path": "results/mlsys-fresh-development-candidate-discovery-v1/"
+  },
+  "coarse_screen": {
+    "strict_merged_date_after_cutoff_proxy": true,
+    "merged_date_must_fall_inside_frozen_window": true,
+    "merged_pull_request_and_merge_commit_required": true,
+    "complete_changed_path_inventory_required": true,
+    "at_least_one_changed_test_spec_or_fixture_path_required": true,
+    "maximum_changed_lines": 250,
+    "maximum_changed_files": 8,
+    "specialized_title_markers": [
+      "gpu",
+      "metal",
+      "cuda",
+      "fsdp",
+      "distributed",
+      "expert parallel",
+      "neuron",
+      "architecture",
+      "support ",
+      "add ",
+      "integration test",
+      "preemption"
+    ],
+    "exclude_exact_identity_in_prior_candidate_or_exposure_audit": true,
+    "meaning": "Manual-review shortlist only. Does not establish executable regression, grader independence, family distinctness, license suitability, model familiarity, or split eligibility."
+  },
+  "authorization": {
+    "source_or_test_content_fetch": false,
+    "heldout_source_or_test_access": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "paid_compute_or_api": false
+  },
+  "stop_rules": [
+    "Preserve partial metadata and record failure if GitHub search is incomplete, exceeds the 1,000-result ceiling, or any candidate metadata query fails.",
+    "Do not inspect PR source diffs, test contents, discussions, or task patches in this pass.",
+    "Do not open or execute any historical Held-out task or test.",
+    "Keep every source-level shortlist item UNQUALIFIED and UNASSIGNED until a separate prospective protocol pins source/test hashes, exposure checks, license review, baseline-fails/fixed-pass reproduction, and an independent grader."
+  ],
+  "limitations": [
+    "A merge date after the 2025-08-09 public model training-completion proxy does not prove absence from pretraining.",
+    "GitHub titles and changed paths are not evidence that a task is independent, CPU-runnable, objectively gradable, or suitable for model evaluation.",
+    "A successful metadata scan is not a coding-agent attempt, policy update, Development success, or held-out result."
+  ]
+}
