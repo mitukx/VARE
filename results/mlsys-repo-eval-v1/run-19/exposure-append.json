@@ -1,0 +1,37 @@
+{
+  "append_id": "mlsys-repo-eval-v1-run-19",
+  "created_at_utc": "2026-10-30T22:23:33Z",
+  "disposition": "Append one Train-task model exposure after the frozen queue audit. Historical Stage 2/3 ledgers, queue audit, split, qualification, and held-out files are unchanged.",
+  "event": {
+    "attempt_count": 1,
+    "candidate_diff_sha256": "e95091b6c6ff482234360c01e59ef8a31cd5fd1ff2956ea8d47872decc5d8419",
+    "candidate_source_sha256": "58facacda929918a0ccb0cd14e22b38d0b80162dea54106b6e023e08679bcbfc",
+    "correctness_cases_passed": 2,
+    "correctness_cases_total": 2,
+    "development_evaluation": false,
+    "feedback_to_agent": false,
+    "heldout_opened_or_used": false,
+    "independent_grade_passed": true,
+    "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "model_training_or_update": false,
+    "model_weights_sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+    "pretraining_exposure": "unknown",
+    "run_id": "mlsys-repo-eval-v1-run-19",
+    "source_pull_request": 1904,
+    "source_repository": "ml-explore/mlx-lm",
+    "split": "train",
+    "stage": "local base-model agent inference",
+    "task_family": "tool_call_dict_arguments",
+    "task_id": "mlxlm-1904-tool-arguments"
+  },
+  "prior_ledger": {
+    "path": "../../outputs/VARE-stage3-2026-10-31/task-exposure-ledger.json",
+    "sha256": "a2da858454745c86ef7e5162d47552bb659943e03a47442cd03c0e9dff77693a"
+  },
+  "queue_audit": {
+    "path": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+    "sha256": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7"
+  },
+  "schema_version": 1
+}

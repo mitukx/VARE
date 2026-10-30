@@ -2,45 +2,43 @@
 
 **Updated:** 2026-10-31 (JST)
 
-**Milestone:** P1 — harden task grading and reconcile Development exposure
+**Milestone:** P2 — first independently graded base-model trajectory on the frozen Train split
 
-**Decision:** PR #150 is integrated. The narrow #1904 Train-task grader calibration remains the current E0/E1 engineering check. Do not run a model on the frozen deep-qualification Development split: all three allocated tasks have prior Stage 2 model exposure, and #1912 also has three Stage 3 attempts. No held-out task was touched by this audit.
+**Decision:** PR #151 is merged on `main` at `818fd8c802277ad360ee9b5250d0315cfb8dad81`. The 24-entry queue audit found no fresh Development candidates. One preregistered Qwen3-4B attempt on the already assigned Train task MLX-LM #1904 passed its two-case independent grader. This is a narrow Train-task trajectory, not Development generalization or model-learning evidence. No Held-out task or test was opened.
 
 ## GitHub state
 
-- Last verified `main`: `cb5c9d91ce269014b4166644248aa2b71a5c3dae`
-- Last integration: [PR #150 — Bound coding-agent tools and grader receipts](https://github.com/mitukx/VARE/pull/150), merged at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`.
-- PR #150's corrected head `e3b48a9cc84a877ba84fc1ae8b35fecfc86e613f` passed the required Python 3.11/3.12/3.13 CI matrix and companion recovery/CPU checks. Recorded Actions runs: `41129971394`, `41129977978`, `41129977929`, `41129977995`.
-- Current branch: `codex/mlsys-qualification-gates`, based on the verified merge commit. [PR #151 — Harden repository-task source staging against symlinked parents](https://github.com/mitukx/VARE/pull/151) is open; the v12 FIFO follow-up and run-18 evidence are committed on the branch, with exact-head checks pending.
-- PR #149 is still open with no review submissions or inline review threads recorded at inspection; it has 296 changed files / 79,741 additions and is based on pre-#150 `main`. Its reported 0/4 verified repairs are not an integrated result.
+- Last verified remote `main`: `818fd8c802277ad360ee9b5250d0315cfb8dad81`.
+- Last integration: [PR #151 — Harden repository-task source staging against symlinked parents](https://github.com/mitukx/VARE/pull/151), merged at the SHA above. Exact-head Python 3.11/3.12/3.13, lint, typecheck, CPU evidence, and E2E recovery checks passed.
+- Current branch: `codex/mlsys-candidate-exposure-audit-v1`, based on `main`.
+- Active PR: [#152 — Audit candidate exposure and record a bounded Train-task model pass](https://github.com/mitukx/VARE/pull/152), open against `main`. Exact-head checks are running.
+- PR #149 remains open on a pre-#150 base with no recorded review; it is unrelated to this checkpoint.
 
-## Work completed in this checkpoint
+## Work completed
 
-- Fetched the latest remote state and verified PR #150's merge commit on `origin/main`.
-- Reproduced a concrete #1904 grader staging defect: a `mlx_lm` parent symlink caused `grade_workspace` to copy an external `server.py` into its subject snapshot. The new path reader opens each component with `O_NOFOLLOW`, validates the file descriptor as regular, and grades the exact bytes it hashed. A regression test requires rejection before the grader call.
-- Audited the deep-qualification Development task IDs against the retained Stage 2/3 exposure ledger. All three are previously exposed: Transformers #45852 (1 Stage 2 attempt), MLX-LM #1912 (2 Stage 2 + 3 Stage 3 attempts), MLX-LM #1971 (2 Stage 2 attempts). None produced an independently verified repair; the #1912 edit failed all 14 hidden cases.
-- Preserved the original frozen split and qualification catalog. Added a hash-bound, append-only exposure disposition: fresh Development tasks in that 3-task allocation = 0/3. The audit did not rerun tasks, use held-out tests, or launch a model.
-- Froze #1904 calibration protocol v11 and executed run 17. It added a parent-symlink rejection probe while keeping the task in Train and authorizing no model rollout.
-- Executed run 17 from clean implementation commit `36af6f17908b50cb53bb159013eecfa8b0263da0`: baseline failed, exact known fix passed, fixed-source swap was rejected, and all 9 v2 red-team probes passed. The symlinked `mlx_lm` parent was rejected before the grader call.
-- Addressed the valid P1 review finding on PR #151: opening an unwritten FIFO could block before container timeout. Leaf files now open with `O_NONBLOCK` before descriptor type validation. Protocol v12 freezes this change and adds a FIFO rejection probe; run 18 passed.
+- Audited all 24 entries of the frozen manual qualification queue against the retained qualification and Stage 2/3 exposure records. The output verifies 1,120 Stage 2 and 2,194 Stage 3 evidence-file hashes.
+- Queue disposition: 2 previously model-exposed Development tasks, 8 historical Held-out tasks still reserved, 3 Train tasks, 11 excluded/collapsed candidates, and **0 fresh Development-eligible tasks**. The frozen queue and historical splits were not changed. The raw survey screen is absent from this checkout, so changed-path and merge-SHA metadata could not be independently revalidated; pretraining exposure also remains unknown.
+- Froze protocol v1 before inference for one deterministic local Qwen3-4B attempt on Train task `mlxlm-1904-tool-arguments`; the exact 4-bit snapshot and source/runtime/grader inputs are hash-bound.
+- Run 19 passed the independent v12 grader: structured object arguments and the JSON-string control both passed (2/2). The agent used 302 generated tokens, five tool turns, and 31.679 seconds on Apple Metal. The grader was called once and returned no feedback to the agent.
+- Recorded a pre-inference launch failure caused by the runner requiring a real `.git` directory; no prompt was rendered and no tokens were generated in that launch. The workspace was corrected at the same pinned source SHA before the one authorized inference.
+- Appended the new Train exposure without modifying prior Stage 2/3 ledgers or the earlier queue audit.
 
 ## Validation and experiment state
 
-- Local targeted tests: `tests/test_mlsys_repo_task.py` and `tests/test_mlsys_deep_qualification_exposure.py` passed all 25 tests on each of Python 3.11, 3.12, and 3.13.
-- Ruff 0.15.12 passed on the changed source, test, and script files. `py_compile` and `git diff --check` passed.
-- Formal #1904 protocol-v11 run 17: **PASSED** as a narrow E1 historical function-contract calibration. Raw JSON, report, protocol snapshot, manifest, and checksums are retained under `results/mlsys-repo-eval-v1/run-17/`; the run manifest SHA-256 is `921e1260451bf94d9a7d8f19e3f62fed4b5b2c3dfec6d09aeca71ab0756c9ed6`.
-- Formal #1904 protocol-v12 run 18: **PASSED** as a narrow E1 Train-only calibration. Baseline failed, exact known fix passed, source swap was rejected, and all 10 red-team probes passed. The FIFO was rejected in `0.00012s` before grader invocation. Manifest SHA-256: `24e4ed3e7e5749a3bd19bdf721cc54104fae913d8902352487a9f3f8801b7d4a`.
-- Coding capability: narrow prior feasibility evidence exists—Qwen3-4B completed 1/2 independently graded tasks in an authored exploratory cohort. This is one task result, not a generalization or model-learning claim. The frozen deep-qualification Development split cannot supply a fresh evaluation.
-- Policy update / coding RL: **NO-GO**. No task-success policy update or held-out improvement is established.
-- No paid compute, external inference, or model rollout was used in this checkpoint.
+- Run-19 evidence bundle checksum verification: passed.
+- Independent grader: **PASSED, 2/2 cases** (`dict_arguments`, `json_string_control`).
+- Model policy update, SFT, GRPO, RL comparison, Development generalization, and Held-out evaluation: **NOT RUN**.
+- Coding-capability milestone: **NO-GO** until a prospective Development cohort exists and is evaluated independently. RL update: **NO-GO**.
+- No paid compute, paid API, or external inference was used. Apple Metal inference was local.
 
 ## Immediate next action
 
-Inspect exact-head required checks and review on PR #151, resolve actionable findings, and integrate only when repository rules permit. After integration, audit the 24-entry manual candidate queue against the full prior exposure history and assemble a replacement Development cohort without opening Held-out tasks.
+Inspect exact-head required checks and review on PR #152, fix any actionable issues, and integrate only after repository requirements are met. Then prospectively qualify a new, non-overlapping Development cohort without opening any Held-out files or tests.
 
 ## External blockers
 
-- The source-level 15-task pool's original Development allocation is fully exposed; it cannot support a fresh pass@k experiment.
-- The remaining manual queue has not yet been reconciled against all Stage 2/3 task-family exposure.
-- No multi-family fresh Development run or post-training coding capability comparison has been executed.
-- PR #151's valid FIFO-blocking review finding is addressed in protocol v12. Exact-head CI/review for the v12 update remain pending.
+- The audited 24-entry manual queue contains no task currently assigned and qualified as fresh Development.
+- The raw survey screen artifact was not present, limiting retrospective revalidation of its source changed-path and merge-SHA metadata.
+- Public-task pretraining exposure is unknown; the single Train-task pass cannot establish generalization.
+- No real policy update or independent post-update task-success comparison has been executed.
+- PR #149 is an unrelated legacy open PR based on a pre-#150 integration point.

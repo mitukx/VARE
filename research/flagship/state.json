@@ -1,21 +1,21 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-10-31T07:00:51+09:00",
-  "milestone_id": "p1-repo-task-isolation-and-exposure-reconciliation",
-  "last_completed_step": "Verified PR #150 merge cb5c9d91ce269014b4166644248aa2b71a5c3dae on remote main. Reconciled all three deep-qualification Development tasks as previously exposed. Passed protocol-v11 run 17, then addressed the PR #151 FIFO-blocking finding with O_NONBLOCK validation and protocol v12. Run 18 passed on clean commit a7d39bda1da662c18bc7b6738b95f605b679ee30: baseline fail, known-fix pass, source swap rejected, and 10/10 probes passed.",
+  "updated_at": "2026-10-31T07:27:39+09:00",
+  "milestone_id": "p2-train-only-model-trajectory-after-exposure-audit",
+  "last_completed_step": "Verified PR #151 merge 818fd8c802277ad360ee9b5250d0315cfb8dad81; audited the 24-entry candidate queue and found zero fresh Development tasks; froze protocol v1 before one Qwen3-4B inference on Train task #1904; run 19 passed both independent v12 grader cases (one attempt, 302 tokens, no policy update, no Held-out access).",
   "go_no_go": {
-    "integration": "GO",
-    "coding_capability": "GO",
+    "integration": "GO_PENDING_REMOTE_CI",
+    "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
   "git_refs": {
     "repository": "mitukx/VARE",
-    "last_verified_main_sha": "cb5c9d91ce269014b4166644248aa2b71a5c3dae",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/150",
-    "last_integrated_pr_merge_sha": "cb5c9d91ce269014b4166644248aa2b71a5c3dae",
-    "active_branch": "codex/mlsys-qualification-gates",
-    "verified_pr_head_sha_before_checkpoint_changes": "8eb5eb2352b6a5197a277bc093bc19a38e296b87",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/151",
+    "last_verified_main_sha": "818fd8c802277ad360ee9b5250d0315cfb8dad81",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/151",
+    "last_integrated_pr_merge_sha": "818fd8c802277ad360ee9b5250d0315cfb8dad81",
+    "active_branch": "codex/mlsys-candidate-exposure-audit-v1",
+    "verified_pr_head_sha_before_checkpoint_changes": "55a31a732101eb88c1515bada322f5b1c93bbcfc",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/152",
     "active_pr_state": "open"
   },
   "frozen_protocols": [
@@ -48,11 +48,23 @@
       "path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v12.json",
       "sha256": "36c5932ab46e00573535f1d6826396cc24cc5021703566f49b9169cad45460c4",
       "status": "locked_before_run18; run18 PASSED Train-only calibration and 10/10 probes; FIFO rejected before grader call; no model inference authorized"
+    },
+    {
+      "protocol_id": "mlsys-candidate-queue-exposure-audit-v1",
+      "path": "protocols/mlsys_candidate_queue_exposure_audit_v1.json",
+      "sha256": "d8f3307f3564a4fed5781795e642565a757a22d18d1ec86985a57a62896c818f",
+      "status": "frozen against merged main 818fd8c; retrospective output reports 0 fresh Development tasks; no model inference"
+    },
+    {
+      "protocol_id": "mlsys-task-model-attempt-mlxlm-1904-v1",
+      "path": "protocols/mlsys_task_model_attempt_mlxlm_1904_v1.json",
+      "sha256": "7bdef7ee8210dfbd25b3ca811d8bb7c1450b97e4c6015e39d653879aee51ad3d",
+      "status": "frozen before inference; one Qwen3-4B base-model attempt on Train; run 19 PASSED 2/2 independent grader cases; no update or Held-out use"
     }
   ],
   "task_exposure_ledger": {
-    "path": "../../outputs/VARE-stage3-2026-10-31/task-exposure-ledger.json",
-    "sha256": "a2da858454745c86ef7e5162d47552bb659943e03a47442cd03c0e9dff77693a",
+    "path": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
+    "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
     "fresh_stage3_families_used": 0,
     "historical_heldout_1979_touched": false
   },
@@ -73,7 +85,8 @@
     "qwen3_4b_instruct_2507_4bit__transformers-45852-4d-mask",
     "stage3_qwen3_4b_controller_v2__mlxlm-1912-top-p-min-token",
     "stage3_qwen3_4b_controller_v3__mlxlm-1912-top-p-min-token",
-    "stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token"
+    "stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token",
+    "mlsys-repo-eval-v1-run-19"
   ],
   "result_hash_references": [
     {
@@ -120,14 +133,40 @@
       "path": "results/mlsys-repo-eval-v1/run-18/manifest.json",
       "sha256": "24e4ed3e7e5749a3bd19bdf721cc54104fae913d8902352487a9f3f8801b7d4a",
       "status": "verified: protocol-v12 E1 Train-only calibration evidence bundle"
+    },
+    {
+      "path": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+      "sha256": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+      "status": "24 candidates audited; 3,314 Stage 2/3 evidence-file hashes verified; zero fresh Development candidates"
+    },
+    {
+      "path": "results/mlsys-repo-eval-v1/run-19/agent-attempt-1.json",
+      "sha256": "13f4d095288bc8262608b5127a0362cf67b0feccfaf344c1f02ec90a3e44b15e",
+      "status": "one frozen Train-task base-model trajectory; 302 generated tokens; five tool turns"
+    },
+    {
+      "path": "results/mlsys-repo-eval-v1/run-19/independent-grade.json",
+      "sha256": "325e5aec5fc781682255f5b6ba3551b35b9bd6a54688c62b982c05b7a0a0dbfd",
+      "status": "one independent grader call; 2/2 correctness cases passed; no feedback to agent"
+    },
+    {
+      "path": "results/mlsys-repo-eval-v1/run-19/manifest.json",
+      "sha256": "620c985f1ddefe38487a8c00c3eb5095638ffcd5c7667e91b39f97e2f5a242d1",
+      "status": "verified run-19 evidence bundle; PASS_TRAIN_ONLY"
+    },
+    {
+      "path": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
+      "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
+      "status": "append-only one-task Train exposure; prior Stage 2/3 ledgers unchanged"
     }
   ],
   "unresolved_blockers": [
-    "The frozen deep-qualification Development allocation is exhausted for fresh evaluation: #45852, #1912, and #1971 have prior model attempts.",
-    "A replacement Development pool must be drawn from the remaining candidate queue after a full Stage 2/3 family-overlap audit; held-out tasks must stay untouched.",
-    "No RL policy update, coding-agent training, or held-out evaluation has been run.",
-    "PR #149 remains open without recorded review; its head is based on the pre-#150 main and it is not integrated.",
-    "PR #151 exact-head CI and review requirements for the protocol-v12 FIFO fix and run-18 evidence are pending."
+    "The audited 24-entry manual queue contains zero tasks currently assigned and qualified as fresh Development; held-out tasks remain reserved.",
+    "The raw survey screen artifact is missing from the checkout, so original changed-path and merge-SHA metadata could not be independently revalidated.",
+    "Run 19 is one Train-task result on a public upstream task; pretraining exposure is unknown and the pass does not establish Development generalization.",
+    "No real model policy update, SFT, GRPO, RL comparison, or independent post-update task-success evaluation has been run.",
+    "PR #149 remains open on an obsolete pre-#150 base without recorded review; unrelated to this checkpoint.",
+    "PR #152 exact-head required checks and review are pending before integration."
   ],
-  "highest_priority_next_task": "Inspect exact-head CI/review for the protocol-v12 FIFO fix and run-18 evidence on PR #151, resolve actionable findings, and integrate only when repository rules permit; then audit the manual candidate queue for a fresh Development cohort."
+  "highest_priority_next_task": "Inspect exact-head required checks and review on PR #152; resolve actionable findings, verify all required checks on the final PR head, and integrate when repository rules permit. Then prospectively qualify a diverse fresh Development cohort without opening Held-out files or tests."
 }

@@ -1,0 +1,63 @@
+{
+  "agent": {
+    "candidate_diff_sha256": "e95091b6c6ff482234360c01e59ef8a31cd5fd1ff2956ea8d47872decc5d8419",
+    "candidate_source_sha256": "58facacda929918a0ccb0cd14e22b38d0b80162dea54106b6e023e08679bcbfc",
+    "generated_tokens": 302,
+    "stop_reason": "agent_finished",
+    "tool_turns": 5,
+    "wall_seconds": 31.679
+  },
+  "agent_attempts": 1,
+  "created_at_utc": "2026-10-30T22:23:33Z",
+  "decision": "PASS_TRAIN_ONLY",
+  "exposure_append_sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
+  "files": {
+    "agent-attempt-1.json": "13f4d095288bc8262608b5127a0362cf67b0feccfaf344c1f02ec90a3e44b15e",
+    "candidate.patch": "e95091b6c6ff482234360c01e59ef8a31cd5fd1ff2956ea8d47872decc5d8419",
+    "exposure-append.json": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
+    "independent-grade.json": "325e5aec5fc781682255f5b6ba3551b35b9bd6a54688c62b982c05b7a0a0dbfd",
+    "launch-error-pre-inference.json": "747eeb191c69f63458482086eba501a76acd09f04042518883724ce8fefcf536",
+    "launch-error-pre-inference.txt": "0a1ab1eac62d141dddc4993c9c7b3a7db795a732d26496997604ac5306202a01",
+    "report.md": "f5a3b4931ee9898e38afaa58a80aaacc662eb7d98bbfbe1afb3507d2437ba88b",
+    "snapshots/agent-task-spec-v1.json": "e80f2e89f613953345b662dbf17535b19a21157267079048cd964d9054cf2d1a",
+    "snapshots/model-protocol-v1.json": "7bdef7ee8210dfbd25b3ca811d8bb7c1450b97e4c6015e39d653879aee51ad3d",
+    "snapshots/task.md": "3855eae179864cddd35af9cb5b6e65812f414ceae7b5affc1a29b7e7d9c67699"
+  },
+  "grader": {
+    "calls": 1,
+    "feedback_to_agent": false,
+    "grader_adapter_sha256": "5813b83f446362aca75cd10c10164d864f8d92f6e818df565d5abd4856fb482d",
+    "grader_source_sha256": "6c7bee955b2350812bf49d8195969f62d4e0bf00ec33892a13dc32028588183a",
+    "passed": true,
+    "passed_cases": 2,
+    "total_cases": 2
+  },
+  "heldout_opened_or_used": false,
+  "inference_attempt_consumed_by_launch_failure": false,
+  "limitations": [
+    "One Train task only; no Development/generalization estimate.",
+    "Pretraining exposure to the public upstream task is unknown.",
+    "The isolated grader covers two function-contract cases, not the full HTTP/model-serving fixture or upstream test suite.",
+    "No model update, SFT, GRPO, or RL experiment was run."
+  ],
+  "model": {
+    "backend": "apple_metal",
+    "max_rss_bytes": 2617196544,
+    "mlx_lm": "0.32.2",
+    "peak_mlx_memory_bytes": 3429948504,
+    "python": "3.12.12",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "weight_sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+  },
+  "model_training_or_update": false,
+  "pre_inference_infrastructure_launch_failures": 1,
+  "protocol_commit": "0b5a3f091f71aabe005fa09b2c584dc94cf17922",
+  "protocol_id": "mlsys-task-model-attempt-mlxlm-1904-v1",
+  "protocol_sha256": "7bdef7ee8210dfbd25b3ca811d8bb7c1450b97e4c6015e39d653879aee51ad3d",
+  "run_id": "mlsys-repo-eval-v1-run-19",
+  "schema_version": 1,
+  "source_baseline_commit": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+  "split": "train",
+  "task_id": "mlxlm-1904-tool-arguments"
+}

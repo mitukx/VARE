@@ -1,0 +1,229 @@
+{
+  "agent": {
+    "attempt_count": 1,
+    "backend": "mlx",
+    "budgets": {
+      "max_context_tokens": 4096,
+      "max_new_tokens_per_turn": 256,
+      "max_no_tool_retries": 2,
+      "max_total_new_tokens": 2048,
+      "max_turns": 12,
+      "outer_process_timeout_seconds": 360,
+      "runner_wall_seconds": 300
+    },
+    "controller_paths": {
+      "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+      "scripts/run_local_agent.py": "4e4fb0162d7fa12de447f996657a5749ebb8964a600ea6461bfe3f0342b4df0f",
+      "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+      "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd"
+    },
+    "decoding": {
+      "do_sample": false,
+      "seed": 1904,
+      "temperature": 0.0,
+      "top_k": 0,
+      "top_p": 1.0
+    },
+    "edit_format": "unified_diff",
+    "environment": {
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1",
+      "network_access_from_agent": "none"
+    },
+    "host_preflight": {
+      "free_disk_bytes_approx": 13958643712,
+      "machine": "arm64",
+      "physical_memory_bytes": 34359738368,
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "system_memory_free_percent_before_model_load": 77
+    },
+    "model_files": [
+      {
+        "path": ".gitattributes",
+        "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+        "size_bytes": 1570
+      },
+      {
+        "path": "README.md",
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+        "size_bytes": 969
+      },
+      {
+        "path": "added_tokens.json",
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+        "size_bytes": 707
+      },
+      {
+        "path": "chat_template.jinja",
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+        "size_bytes": 4040
+      },
+      {
+        "path": "config.json",
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+        "size_bytes": 938
+      },
+      {
+        "path": "generation_config.json",
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+        "size_bytes": 238
+      },
+      {
+        "path": "merges.txt",
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "size_bytes": 1671853
+      },
+      {
+        "path": "model.safetensors",
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+        "size_bytes": 2263022417
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+        "size_bytes": 63964
+      },
+      {
+        "path": "special_tokens_map.json",
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "size_bytes": 613
+      },
+      {
+        "path": "tokenizer.json",
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "size_bytes": 11422654
+      },
+      {
+        "path": "tokenizer_config.json",
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+        "size_bytes": 5440
+      },
+      {
+        "path": "vocab.json",
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "size_bytes": 2776833
+      }
+    ],
+    "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "model_snapshot_path": "$HF_HOME/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "model_snapshot_total_bytes": 2278972236,
+    "software": {
+      "mlx": "0.32.4",
+      "mlx_lm": "0.32.2",
+      "python": "3.12.12",
+      "tokenizers": "0.23.3"
+    },
+    "task_instruction": "Inspect the task statement and make the minimal source change it requests. Use the tools to inspect and edit the workspace, then finish.",
+    "tool_public_tests_enabled": false,
+    "tools": [
+      "list_files",
+      "read_file",
+      "search_text",
+      "apply_patch",
+      "replace_text",
+      "check_syntax",
+      "finish"
+    ]
+  },
+  "compute_policy": {
+    "heldout_access_authorized": false,
+    "maximum_generated_tokens": 2048,
+    "maximum_model_wall_seconds": 300,
+    "model_attempts": 1,
+    "model_training_authorized": false,
+    "paid_compute_or_api_budget_usd": 0
+  },
+  "decision_rule": {
+    "failure": "No valid source edit, invalid/empty diff, source path violation, agent stop/timeout, or grader passed=false.",
+    "infrastructure_failure": "If preflight fails, do not load the model. If grading fails for infrastructure reasons after inference, retain the attempt and grader error; no new model attempt is authorized.",
+    "no_retries": "No second model attempt, prompt edit, sampling adjustment, test feedback, or repair after observing grader feedback.",
+    "primary_metric": "Independent grader passed on all correctness cases (binary).",
+    "result_scope": "At most one E1-style independently graded Train-task trajectory. Does not establish Development success, generalization, SFT benefit, policy update, RL improvement, or algorithmic advantage.",
+    "success": "The single candidate source file is changed, diff is confined to mlx_lm/server.py, and independent v12 grader returns passed=true for the dict-arguments and JSON-string control cases."
+  },
+  "frozen_against_vare_commit": "a2a7182fb880b75cbd01a6171b88278be42f5e53",
+  "frozen_at_utc": "2026-10-30T22:17:59Z",
+  "hypothesis": "On the narrow MLX-LM #1904 task, the pinned Qwen3-4B policy and current bounded native-tool controller can make an independently graded source repair within one short greedy attempt.",
+  "independent_grader": {
+    "attempts": 1,
+    "call": "vare.mlsys_repo_task.grade_workspace(candidate_workspace, image=PINNED_IMAGE)",
+    "container": {
+      "candidate_mount": "source-only read-only",
+      "cpus": 1.0,
+      "docker_context": "colima",
+      "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+      "memory_mb": 512,
+      "network": "none",
+      "pids_limit": 64,
+      "server": "29.5.2/arm64",
+      "timeout_seconds": 5
+    },
+    "feedback_to_agent": false,
+    "implementation_paths": {
+      "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/grader_adapter.py": "5813b83f446362aca75cd10c10164d864f8d92f6e818df565d5abd4856fb482d",
+      "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+      "src/vare/isolated_candidate.py": "e26017bbb942514bc7c131fa511b9e28ddc4a7dbb9c1f152371e4994ab3a2e10",
+      "src/vare/mlsys_repo_task.py": "6c7bee955b2350812bf49d8195969f62d4e0bf00ec33892a13dc32028588183a"
+    }
+  },
+  "input_sha256": {
+    "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/grader_adapter.py": "5813b83f446362aca75cd10c10164d864f8d92f6e818df565d5abd4856fb482d",
+    "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch": "48cf825e9b9b3fe994dbfd3d69db6c596a7053f72a0dfe978d42295d2fb889d7",
+    "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v12.json": "36c5932ab46e00573535f1d6826396cc24cc5021703566f49b9169cad45460c4",
+    "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/task.md": "3855eae179864cddd35af9cb5b6e65812f414ceae7b5affc1a29b7e7d9c67699",
+    "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+    "scripts/run_local_agent.py": "4e4fb0162d7fa12de447f996657a5749ebb8964a600ea6461bfe3f0342b4df0f",
+    "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+    "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "e26017bbb942514bc7c131fa511b9e28ddc4a7dbb9c1f152371e4994ab3a2e10",
+    "src/vare/mlsys_repo_task.py": "6c7bee955b2350812bf49d8195969f62d4e0bf00ec33892a13dc32028588183a"
+  },
+  "protocol_id": "mlsys-task-model-attempt-mlxlm-1904-v1",
+  "protocol_status": "frozen_before_model_inference",
+  "purpose": "One bounded local base-model coding-agent attempt on an already assigned Train task, followed by one independent offline grader call.",
+  "retained_outputs": [
+    "results/mlsys-repo-eval-v1/run-19/agent-attempt-1.json",
+    "results/mlsys-repo-eval-v1/run-19/independent-grade.json",
+    "results/mlsys-repo-eval-v1/run-19/candidate.patch",
+    "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
+    "results/mlsys-repo-eval-v1/run-19/report.md",
+    "results/mlsys-repo-eval-v1/run-19/manifest.json",
+    "results/mlsys-repo-eval-v1/run-19/SHA256SUMS"
+  ],
+  "schema_version": 1,
+  "selection_rationale": {
+    "distinct_pairing": "This is the frozen Train task mlxlm-1904-tool-arguments with a narrow structured-arguments contract, not the retired ticket-tool task/model screen. The task has independent v12 grader calibration and no recorded Stage 2/3 model attempt.",
+    "pretraining_exposure": "Unknown; the upstream PR is public and could have appeared in pretraining.",
+    "queue_audit": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+    "queue_audit_sha256": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+    "reason_for_train_only": "The queue audit found zero fresh Development tasks; this pre-existing Train assignment is used without changing its split."
+  },
+  "task": {
+    "base_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+    "base_source_path": "mlx_lm/server.py",
+    "base_source_sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+    "editable_files": [
+      "mlx_lm/server.py"
+    ],
+    "historical_calibration_manifest": "results/mlsys-repo-eval-v1/run-18/manifest.json",
+    "historical_calibration_manifest_sha256": "24e4ed3e7e5749a3bd19bdf721cc54104fae913d8902352487a9f3f8801b7d4a",
+    "historical_calibration_protocol": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v12.json",
+    "historical_calibration_protocol_sha256": "36c5932ab46e00573535f1d6826396cc24cc5021703566f49b9169cad45460c4",
+    "known_fix_not_visible_to_agent": true,
+    "known_fixed_revision": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+    "known_fixed_source_sha256": "361a790e0743e50e66cea6509e64be8b8b67c6612e2274331624cbd244b29ead",
+    "public_tests": "none; unavailable to the agent",
+    "qualification_catalog_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "source_pull_request": 1904,
+    "source_repository": "https://github.com/ml-explore/mlx-lm",
+    "split": "train",
+    "task_family": "tool_call_dict_arguments",
+    "task_id": "mlxlm-1904-tool-arguments",
+    "task_spec_path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/agent-task-spec-v1.json",
+    "task_spec_sha256": "e80f2e89f613953345b662dbf17535b19a21157267079048cd964d9054cf2d1a",
+    "task_statement_path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/task.md",
+    "task_statement_sha256": "3855eae179864cddd35af9cb5b6e65812f414ceae7b5affc1a29b7e7d9c67699"
+  }
+}
