@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
+import os
 import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -77,6 +79,59 @@ def test_patch_input_and_candidate_workspace_symlinks_fail_closed(
         apply_candidate_patch(root, patch_link, tmp_path / "fresh")
     with pytest.raises(RepositoryTaskError, match="already exists"):
         apply_candidate_patch(root, patch, workspace)
+
+
+def test_grade_workspace_rejects_symlinked_parent_before_grader_call(
+    tmp_path: Path, monkeypatch
+):
+    workspace = tmp_path / "workspace"
+    external = tmp_path / "external"
+    workspace.mkdir()
+    external.mkdir()
+    (external / "server.py").write_text("external source\n", encoding="utf-8")
+    (workspace / "mlx_lm").symlink_to(external, target_is_directory=True)
+    grade_calls = []
+
+    def unexpected_grade_call(*_args, **_kwargs):
+        grade_calls.append(True)
+        raise AssertionError("symlinked workspace reached the grader")
+
+    monkeypatch.setattr(repo_task, "grade_calls", unexpected_grade_call)
+    with pytest.raises(RepositoryTaskError, match="symlink"):
+        repo_task.grade_workspace(
+            workspace, image="python@sha256:" + "0" * 64
+        )
+    assert grade_calls == []
+
+
+def test_grade_workspace_rejects_fifo_without_blocking_before_grader_call(
+    tmp_path: Path,
+):
+    workspace = tmp_path / "workspace"
+    target = workspace / repo_task.TARGET_PATH
+    target.parent.mkdir(parents=True)
+    os.mkfifo(target)
+    script = """
+import sys
+from pathlib import Path
+import vare.mlsys_repo_task as task
+task.grade_calls = lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("grader called"))
+try:
+    task.grade_workspace(Path(sys.argv[1]), image="python@sha256:example")
+except task.RepositoryTaskError as exc:
+    print(str(exc))
+else:
+    raise SystemExit("FIFO workspace was accepted")
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", script, str(workspace)],
+        capture_output=True,
+        text=True,
+        timeout=2,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "regular file" in result.stdout.lower()
 
 
 def test_pinned_source_target_symlink_fails_closed(tmp_path: Path, monkeypatch):
@@ -219,6 +274,7 @@ def _red_team_report() -> dict:
         "environment_probe",
         "network_probe",
         "subprocess_write_probe",
+        "workspace_parent_symlink_probe",
     }
     attempts = {
         name: {
@@ -229,14 +285,32 @@ def _red_team_report() -> dict:
         for name in repo_task.RED_TEAM_PROBES
     }
     attempts["subprocess_write_probe"]["host_workspace_write"] = False
+    attempts["workspace_parent_symlink_probe"].update(
+        workspace_parent_symlink_rejected=True,
+        grade_call_attempted=False,
+    )
     return {
-        "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v1",
+        "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v2",
         "source_checkout": repo_task.BASELINE_COMMIT,
         "image": "python@sha256:example",
         "network": "none",
         "attempts": attempts,
         "decision": {"all_attacks_checked": True},
     }
+
+
+def _red_team_report_v3() -> dict:
+    report = _red_team_report()
+    report["experiment_id"] = "mlsys-repository-task-mlxlm-1904-red-team-v3"
+    report["attempts"]["workspace_fifo_probe"] = {
+        "audit_check_passed": True,
+        "expected_grader_passed": True,
+        "grader_passed": True,
+        "workspace_fifo_rejected": True,
+        "grade_call_attempted": False,
+        "completed_without_blocking": True,
+    }
+    return report
 
 
 def test_red_team_evidence_requires_complete_consistent_suite_and_pinned_bytes(
@@ -250,7 +324,7 @@ def test_red_team_evidence_requires_complete_consistent_suite_and_pinned_bytes(
         image="python@sha256:example",
         expected_sha256=hashlib.sha256(raw).hexdigest(),
     )
-    assert verified["probe_count"] == 8
+    assert verified["probe_count"] == 9
 
     for mutate, match in [
         (lambda report: report["attempts"].pop("timeout"), "required suite"),
@@ -272,12 +346,56 @@ def test_red_team_evidence_requires_complete_consistent_suite_and_pinned_bytes(
             ),
             "escaped",
         ),
+        (
+            lambda report: report["attempts"][
+                "workspace_parent_symlink_probe"
+            ].update(grade_call_attempted=True),
+            "rejected before grading",
+        ),
     ]:
         report = _red_team_report()
         mutate(report)
         path.write_text(json.dumps(report), encoding="utf-8")
         with pytest.raises(RepositoryTaskError, match=match):
             repo_task.verify_red_team_evidence(path, image="python@sha256:example")
+
+
+def test_red_team_v3_requires_nonblocking_fifo_rejection(tmp_path: Path):
+    path = tmp_path / "red-team-v3.json"
+    report = _red_team_report_v3()
+    raw = json.dumps(report, sort_keys=True).encode()
+    path.write_bytes(raw)
+    verified = repo_task.verify_red_team_evidence(
+        path,
+        image="python@sha256:example",
+        expected_sha256=hashlib.sha256(raw).hexdigest(),
+    )
+    assert verified["probe_count"] == 10
+
+    for update, match in [
+        ({"workspace_fifo_rejected": False}, "without blocking"),
+        ({"grade_call_attempted": True}, "without blocking"),
+        ({"completed_without_blocking": False}, "without blocking"),
+    ]:
+        mutated = _red_team_report_v3()
+        mutated["attempts"]["workspace_fifo_probe"].update(update)
+        path.write_text(json.dumps(mutated), encoding="utf-8")
+        with pytest.raises(RepositoryTaskError, match=match):
+            repo_task.verify_red_team_evidence(path, image="python@sha256:example")
+
+
+def test_historical_red_team_v1_evidence_remains_verifiable(tmp_path: Path):
+    report = _red_team_report()
+    report["experiment_id"] = "mlsys-repository-task-mlxlm-1904-red-team-v1"
+    report["attempts"].pop("workspace_parent_symlink_probe")
+    path = tmp_path / "red-team-v1.json"
+    path.write_text(json.dumps(report), encoding="utf-8")
+
+    verified = repo_task.verify_red_team_evidence(
+        path, image="python@sha256:example"
+    )
+
+    assert verified["probe_count"] == 8
 
 
 def test_red_team_evidence_missing_malformed_or_hash_tampered_fails_closed(

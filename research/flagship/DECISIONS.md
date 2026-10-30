@@ -11,6 +11,42 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Falsification criteria:** Any other runtime tool addition or removal must make the contract test fail until explicitly versioned; a campaign allowlist containing a tool unavailable to its runner or including an unapproved edit tool invalidates this decision.
 - **Follow-up:** After PR #150 CI passes, integrate the correction and version any new campaign schema prospectively before using it.
 
+## 2026-10-31 — Reclassify the deep-qualification Development split after exposure audit
+
+- **Hypothesis:** The three source-qualified Development tasks in deep-qualification v1 can be treated as unexposed because that qualification run itself started no model rollouts.
+- **Evidence:** The qualification catalog is pinned at SHA-256 `2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d` and labels all three tasks unseen. The retained Stage 2/3 exposure ledger at SHA-256 `a2da858454745c86ef7e5162d47552bb659943e03a47442cd03c0e9dff77693a` matches each by exact task ID, source PR, and task family: #45852 has one Stage 2 model attempt, #1912 has two Stage 2 and three Stage 3 attempts, and #1971 has two Stage 2 attempts. The eight attempts yielded no independently verified repair; #1912's applied edit failed 0/14 hidden cases. The frozen source protocol assigns these same three families to Development.
+- **Alternative explanations:** Count only successful repairs as exposure; or leave the original “unseen” flags unchanged because the deep-qualification protocol did not itself call a model. Both would ignore that model prompts and task workspaces had already been presented in earlier campaigns.
+- **Decision:** Preserve the original source protocol, catalog, and raw evidence byte-for-byte. Append an exposure disposition that marks all three Development tasks previously exposed and makes this split ineligible for fresh Development evaluation or reallocation to Train. No held-out task was used.
+- **Falsification criteria:** The pinned task identity, source PR, family, Stage 2/3 attempt totals, or source hashes fail to match the retained records.
+- **Follow-up:** Audit the manual candidate queue against the full exposure history, select a replacement Development pool from unexposed families, and independently qualify its baseline, known fix, wrong mutants, and grader boundary before any model run.
+
+## 2026-10-31 — Reject symlinked parents before repository-task grading
+
+- **Hypothesis:** A repository-task workspace can redirect a grader's source snapshot through a symlinked parent even when the final `server.py` path is checked for symlinks; every path component must be opened without following links, and the graded bytes must be the same bytes whose digest is recorded.
+- **Evidence:** A pre-fix local reproducer showed that a workspace with `mlx_lm` symlinked to a sibling directory was accepted and its external `server.py` entered the subject snapshot. After the fix, protocol-v11 run 17 rejected the workspace before invoking `grade_calls`. The same run failed the pinned baseline on `dict_arguments`, passed both known-fix controls, matched the fixed source SHA, rejected the fixed-source swap, and verified all nine red-team probes. Raw evidence is in `results/mlsys-repo-eval-v1/run-17/`; run manifest SHA-256 is `921e1260451bf94d9a7d8f19e3f62fed4b5b2c3dfec6d09aeca71ab0756c9ed6`.
+- **Alternative explanations:** Rechecking only the final path component could suffice; or the symlink case could be left to the Docker boundary. The direct reproducer showed that workspace export followed the parent before the container boundary, so the grader otherwise received the redirected bytes.
+- **Decision:** Read the source through directory descriptors with `O_NOFOLLOW` on each parent and the final file, require a regular file, and use exactly those bytes for source hashing and snapshotting. Accept this as a narrow task-grader integrity fix, not general sandbox certification.
+- **Falsification criteria:** A symlink in any workspace path component reaches the grader; graded bytes differ from the hashed bytes; any v1 receipt stops validating; or a required v2 red-team assertion can be forged or omitted.
+- **Follow-up:** Push the implementation and run-17 evidence as a focused PR, pass required CI, integrate if repository rules permit, then audit the manual candidate queue for a fresh Development cohort. No model or held-out run is authorized by this calibration.
+
+## 2026-10-31 — Open untrusted workspace targets nonblocking
+
+- **Hypothesis:** A no-follow open still needs `O_NONBLOCK` before `fstat`; otherwise a candidate-controlled named pipe can block host-side source validation before the container timeout begins.
+- **Evidence:** Automated PR review on #151 identified the FIFO path and a bounded local subprocess reproduction; repository guidance requires explicit timeout/resource ceilings. The implementation now opens the leaf with `O_NONBLOCK`, rejects non-regular files by descriptor metadata, and adds a subprocess-bounded FIFO regression test. The focused local suite passes 25 tests on Python 3.11, 3.12, and 3.13. Protocol v12 pins this fix and adds a FIFO probe to the red-team suite; run 18 is pending.
+- **Alternative explanations:** Rely on the candidate grader timeout or reject special files using a path check before open. The timeout begins only after source staging; a path-only type check introduces a path race and does not bind validation to the opened file.
+- **Decision:** Keep no-follow descriptor traversal, add nonblocking leaf open and a regular-file check, and require the FIFO rejection probe to finish before one second without calling the grader. Do not modify the v11 protocol or run-17 evidence.
+- **Falsification criteria:** An unwritten FIFO blocks or reaches the grader; v1/v2 red-team receipts stop validating; or v3 evidence can omit or forge the FIFO outcome.
+- **Follow-up:** Execute protocol-v12 run 18 on Train task #1904, preserve new raw evidence separately, then push the updated PR head and rerun required CI/review.
+
+## 2026-10-31 — Validate nonblocking FIFO rejection in run 18
+
+- **Hypothesis:** Opening the target with `O_NONBLOCK` permits a regular-file descriptor check to reject an unwritten FIFO promptly without changing the pinned task grader's baseline/known-fix semantics.
+- **Evidence:** Protocol-v12 run 18 on clean VARE commit `a7d39bda1da662c18bc7b6738b95f605b679ee30` failed the baseline, passed the known fix with exact pinned source bytes, rejected the source swap, and passed all 10 red-team probes. The FIFO was rejected in `0.00012` seconds with no grader call. The 25-test focused suite passed on Python 3.11/3.12/3.13. Run manifest SHA-256: `24e4ed3e7e5749a3bd19bdf721cc54104fae913d8902352487a9f3f8801b7d4a`.
+- **Alternative explanations:** The new test or protocol might be reporting an expected outcome without exercising the real staging path. The red-team probe invokes `grade_workspace` with an actual named pipe and replaces `grade_calls` with a trap; run 18 records rejection and confirms the trap was not entered.
+- **Decision:** Accept protocol v12's narrow calibration as **PASSED** and preserve it as separate evidence from the immutable v11/run-17 record. The FIFO fix resolves the automated P1 review finding but does not certify general-purpose sandboxing or model capability.
+- **Falsification criteria:** Replaying the pinned implementation fails either task arm; any of the 10 probes fails or is malformed; the FIFO enters `grade_calls`; or run-18 hashes disagree.
+- **Follow-up:** Push the FIFO fix and run-18 evidence to PR #151, rerun exact-head checks and review, integrate only under repository rules, then audit the remaining candidate queue for a fresh Development split.
+
 ## 2026-10-31 — Classify a mismatched worker nonce as a protocol failure
 
 - **Hypothesis:** A syntactically valid frame with the wrong nonce is a protocol mismatch and must not yield candidate data.
