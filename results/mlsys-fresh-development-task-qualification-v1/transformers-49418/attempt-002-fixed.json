@@ -1,0 +1,17 @@
+{
+  "arm": "fixed source; Docker entrypoint argument error before pytest startup",
+  "attempt_id": "freshdev-qualification-transformers-49418-attempt-002-fixed",
+  "container_started": true,
+  "error": "The frozen command string begins with python3, but Docker already used --entrypoint=python3, so the wrapper passed python3 as a script filename. The container exited with \"python3: can't open file '//python3'\" before pytest startup.",
+  "exit_code": 2,
+  "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-fixed.log",
+  "log_sha256": "2bc702fb3ae1856b21fe1635349a718ebbcd9d59d13da292ed1ff44728cf5270",
+  "observed_at_utc": "2026-10-30T23:45:36Z",
+  "protocol": "mlsys-fresh-development-task-qualification-v1-addendum-5",
+  "pytest_selected_cases": 0,
+  "pytest_started": false,
+  "qualification_effect": "No fixed-source test case or assertion ran. The frozen fixed arm remains pending; invoke the exact frozen pytest arguments after removing only the leading python3 token from the JSON command.",
+  "regression_assertions_executed": false,
+  "schema_version": 1,
+  "status": "INCONCLUSIVE_RUNNER_LAUNCH_FAILURE"
+}

@@ -66,6 +66,10 @@
       "sha256": "c1f49b746f561ebdb700c34d7a47f79059e1af72a213f57914defae066eacfa4",
       "size_bytes": 2223
     },
+    "transformers-49418/attempt-002-fixed.log": {
+      "sha256": "2bc702fb3ae1856b21fe1635349a718ebbcd9d59d13da292ed1ff44728cf5270",
+      "size_bytes": 74
+    },
     "transformers-49418/attempt-004-baseline.log": {
       "sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
       "size_bytes": 5506
@@ -134,6 +138,13 @@
       "log_sha256": "c1f49b746f561ebdb700c34d7a47f79059e1af72a213f57914defae066eacfa4",
       "record": "transformers-49418/attempt-001-fixed.json",
       "record_sha256": "2f3cd089cd873ca061f7ce9eec87fa139240933a60db96ea2b87a647041664b4"
+    },
+    {
+      "classification": "container launched but pytest did not start; Python treated the duplicate entrypoint token as script path; zero cases",
+      "log": "transformers-49418/attempt-002-fixed.log",
+      "log_sha256": "2bc702fb3ae1856b21fe1635349a718ebbcd9d59d13da292ed1ff44728cf5270",
+      "record": "transformers-49418/attempt-002-fixed.json",
+      "record_sha256": "1b209cee03b18f174b99c341bf618d604c87b2c807f4951937052569913ddd84"
     }
   ],
   "pretest_checks": [
@@ -186,7 +197,7 @@
     }
   ],
   "schema_version": 1,
-  "state": "Runtime v3 fixed the Quanto cache environment: baseline attempt 004 ran the six exact nodes and produced the expected residual-boundary assertion failure in 4/6 cases (2/6 passed). A first fixed-arm invocation was rejected before test execution because two manually transcribed node selectors omitted the class/method delimiter; attempt 001-fixed is preserved with zero cases. Addendum 5 freezes the exact invocation correction; no fixed-source test case has run.",
+  "state": "The exact fixed-arm selector invocation attempt 001 was rejected before collection due to two hand-transcribed delimiters. A protocol-driven invocation then launched the container but passed the leading python3 token twice, so pytest never started. Both are preserved as zero-case runner failures. Addendum 5 remains unchanged; the fixed task test has not executed.",
   "transformers_runtime": {
     "base_image": "vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
     "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.1 --file Dockerfile .",

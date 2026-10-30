@@ -114,3 +114,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Count attempt 004 as the valid expected baseline failure. Keep the malformed fixed invocation inconclusive and unscored; do not rerun the baseline or change the tests. Construct the one fixed-run argv from addendum 5’s node list.
 - **Falsification criteria:** Any source/test hash mismatch; the fixed invocation selects other than six nodes; any fixed node fails or skips; or the frozen container/resource limits are violated.
 - **Follow-up:** Run the exact fixed-source nodes once. If all six pass, Transformers #49418 qualifies at source level; otherwise preserve the failure and leave the task unqualified. Then run TRL #7668 and MLX #4778 sequentially.
+
+
+## 2026-10-31 — Preserve a fixed-arm launcher failure before test startup
+
+- **Hypothesis:** The frozen fixed-source test remains runnable when the Docker wrapper passes only the pytest arguments after its configured Python entrypoint.
+- **Evidence:** A protocol-driven launcher selected the six frozen IDs correctly but passed the leading `python3` token a second time after `--entrypoint=python3`. The container exited before pytest startup; zero cases were selected. The raw output and attempt record are retained.
+- **Alternative explanations:** Count a container start as a test attempt or relax/alter the frozen selectors. The output says Python could not open the duplicate `//python3` script and contains no pytest output.
+- **Decision:** Treat this as an inconclusive launcher error; no fixed result is observed and the frozen A5 test authorization remains pending. Keep the exact test node strings unchanged; pass only the pytest argv tail.
+- **Falsification criteria:** The corrected container fails before test collection, selects other than six exact nodes, or any fixed node fails/skips.
+- **Follow-up:** Run the one fixed-source arm under addendum 5; qualify only if all six cases pass with zero skips and exact inputs/limits match.

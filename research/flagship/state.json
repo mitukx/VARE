@@ -124,8 +124,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Run the six fixed-source Transformers #49418 nodes once, constructing selectors from addendum 5, after rechecking exact source/test hashes. Qualification requires 6/6 pass with zero skips; then run TRL #7668 and MLX #4778 sequentially under their frozen protocol.",
-  "last_completed_step": "Transformers #49418 baseline attempt 004 ran all six frozen nodes under addendum 4: the expected residual-boundary assertion failed in four cases and two passed, establishing a valid negative control. A fixed-arm command transcription error was rejected before test execution (zero cases); it is retained as inconclusive. Addendum 5 freezes an exact-selector invocation before retry.",
+  "highest_priority_next_task": "Launch the fixed-source container with the frozen addendum-5 selectors, passing only the pytest arguments after removing the command string\u2019s initial python3 token because Docker already fixes the entrypoint. Verify six cases execute and pass with zero skips; then proceed to TRL #7668 and MLX #4778 sequentially.",
+  "last_completed_step": "Baseline attempt 004 is a valid expected negative control (4/6 target assertion failures, 2/6 passes). Two fixed-arm launch attempts are retained as inconclusive zero-case errors: attempt 001 had malformed selector delimiters; attempt 002 passed a duplicate python3 entrypoint token so pytest did not start. Addendum 5 already freezes the unchanged selectors; the fixed-source test has not run.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -324,14 +324,24 @@
       "status": "raw fixed invocation selector error; no test case output"
     },
     {
-      "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
-      "sha256": "8c1294476565c67cf35f29953aadde2bce92f44b1d8c80827e42db7a2a61e461",
-      "status": "qualification runtime and preserved-attempt log/index updated"
-    },
-    {
       "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-5.json",
       "sha256": "e16c19fb20ea09e4a559b6e3d8353dd6ebef046c3d0cf9ed7b8744847104ec86",
       "status": "frozen before corrected fixed invocation; no selectors or test inputs changed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-fixed.json",
+      "sha256": "1b209cee03b18f174b99c341bf618d604c87b2c807f4951937052569913ddd84",
+      "status": "fixed-arm launcher error; zero pytest cases"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-fixed.log",
+      "sha256": "2bc702fb3ae1856b21fe1635349a718ebbcd9d59d13da292ed1ff44728cf5270",
+      "status": "raw launcher output; pytest did not start"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
+      "sha256": "f2bfd3802b8f1ffc8ee5dc3f7c72831a045f0d7fd5f35452be0e445c9175b6dd",
+      "status": "runtime and attempt index updated"
     }
   ],
   "run_ids": [
@@ -355,7 +365,8 @@
     "mlsys-repo-eval-v1-run-19",
     "freshdev-qualification-transformers-49418-attempt-003-baseline",
     "freshdev-qualification-transformers-49418-attempt-004-baseline",
-    "freshdev-qualification-transformers-49418-attempt-001-fixed"
+    "freshdev-qualification-transformers-49418-attempt-001-fixed",
+    "freshdev-qualification-transformers-49418-attempt-002-fixed"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -365,11 +376,11 @@
     "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884"
   },
   "unresolved_blockers": [
-    "The fresh-development cohort remains at 0 qualified tasks. Transformers #49418 has a valid baseline negative control (4/6 expected failures, 2/6 passes); the fixed arm is pending after one rejected selector-transcription invocation that selected zero cases. Addendum 5 freezes the corrected invocation.",
+    "The fresh-development cohort remains at 0 qualified tasks. Transformers #49418 has a valid baseline negative control (4/6 expected failures, 2/6 passes); two fixed-arm launch attempts selected zero cases and are preserved. Addendum 5 freezes the exact selectors; the fixed arm remains pending.",
     "The audited historical queue has no fresh Development task; new candidates remain unassigned until source-level qualification passes.",
     "Public pretraining exposure of the selected upstream patches remains unknown.",
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T08:44:29+09:00"
+  "updated_at": "2026-10-31T08:45:36+09:00"
 }
