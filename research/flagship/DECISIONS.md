@@ -20,6 +20,15 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Falsification criteria:** The pinned task identity, source PR, family, Stage 2/3 attempt totals, or source hashes fail to match the retained records.
 - **Follow-up:** Audit the manual candidate queue against the full exposure history, select a replacement Development pool from unexposed families, and independently qualify its baseline, known fix, wrong mutants, and grader boundary before any model run.
 
+## 2026-10-31 — Reject symlinked parents before repository-task grading
+
+- **Hypothesis:** A repository-task workspace can redirect a grader's source snapshot through a symlinked parent even when the final `server.py` path is checked for symlinks; every path component must be opened without following links, and the graded bytes must be the same bytes whose digest is recorded.
+- **Evidence:** A pre-fix local reproducer showed that a workspace with `mlx_lm` symlinked to a sibling directory was accepted and its external `server.py` entered the subject snapshot. After the fix, protocol-v11 run 17 rejected the workspace before invoking `grade_calls`. The same run failed the pinned baseline on `dict_arguments`, passed both known-fix controls, matched the fixed source SHA, rejected the fixed-source swap, and verified all nine red-team probes. Raw evidence is in `results/mlsys-repo-eval-v1/run-17/`; run manifest SHA-256 is `921e1260451bf94d9a7d8f19e3f62fed4b5b2c3dfec6d09aeca71ab0756c9ed6`.
+- **Alternative explanations:** Rechecking only the final path component could suffice; or the symlink case could be left to the Docker boundary. The direct reproducer showed that workspace export followed the parent before the container boundary, so the grader otherwise received the redirected bytes.
+- **Decision:** Read the source through directory descriptors with `O_NOFOLLOW` on each parent and the final file, require a regular file, and use exactly those bytes for source hashing and snapshotting. Accept this as a narrow task-grader integrity fix, not general sandbox certification.
+- **Falsification criteria:** A symlink in any workspace path component reaches the grader; graded bytes differ from the hashed bytes; any v1 receipt stops validating; or a required v2 red-team assertion can be forged or omitted.
+- **Follow-up:** Push the implementation and run-17 evidence as a focused PR, pass required CI, integrate if repository rules permit, then audit the manual candidate queue for a fresh Development cohort. No model or held-out run is authorized by this calibration.
+
 ## 2026-10-31 — Classify a mismatched worker nonce as a protocol failure
 
 - **Hypothesis:** A syntactically valid frame with the wrong nonce is a protocol mismatch and must not yield candidate data.

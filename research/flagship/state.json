@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-10-31T06:45:01+09:00",
+  "updated_at": "2026-10-31T06:49:43+09:00",
   "milestone_id": "p1-repo-task-isolation-and-exposure-reconciliation",
-  "last_completed_step": "Verified PR #150 merge cb5c9d91ce269014b4166644248aa2b71a5c3dae on remote main. Reconciled the frozen deep-qualification Development split against the retained Stage 2/3 ledger: all 3 allocated tasks had prior model attempts. Reproduced a symlinked-parent workspace escape in the #1904 Train-task grader, implemented a no-follow snapshot fix, and added regression coverage; bounded run-17 calibration is pending.",
+  "last_completed_step": "Verified PR #150 merge cb5c9d91ce269014b4166644248aa2b71a5c3dae on remote main. Reconciled all three deep-qualification Development tasks as previously exposed. Committed grader symlink-boundary fix at 36af6f17908b50cb53bb159013eecfa8b0263da0 and executed protocol-v11 run 17: baseline fail, known-fix pass, source swap rejected, nine red-team probes passed, including rejection of parent symlink before grader invocation.",
   "go_no_go": {
     "integration": "GO",
     "coding_capability": "GO",
@@ -41,7 +41,7 @@
       "protocol_id": "mlsys-repository-task-mlxlm-1904-v11",
       "path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json",
       "sha256": "d7e5680faf5c7b15f32d7e432ee62ce8ddcdf6b835b27cc964988ce6294c2b77",
-      "status": "locked_before_run17; Train-task calibration only; no model inference authorized"
+      "status": "locked_before_run17; run17 PASSED Train-task calibration and 9/9 red-team probes; no model inference authorized"
     }
   ],
   "task_exposure_ledger": {
@@ -62,6 +62,7 @@
     "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1912-top-p-min-token",
     "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1971-mimo-value-scale",
     "mlsys_deep_qualification_exposure_audit_v1",
+    "mlsys-repo-eval-v1-run-17",
     "qwen3_4b_instruct_2507_4bit__transformers-45852-4d-mask",
     "stage3_qwen3_4b_controller_v2__mlxlm-1912-top-p-min-token",
     "stage3_qwen3_4b_controller_v3__mlxlm-1912-top-p-min-token",
@@ -82,13 +83,29 @@
       "path": "results/mlsys-task-deep-qualification-v1-exposure-append-v1.json",
       "sha256": "230148078352299683c9729acef82f38d0c550be4d6902e465db2b0d06604947",
       "status": "verified: 3/3 Development tasks already exposed; 0 available for fresh use"
+    },
+    {
+      "path": "results/mlsys-repo-eval-v1/run-17/calibration.json",
+      "sha256": "f2552f979539deb9814f244648da8a466f5300e673589d903bbcf97ccdb9b084",
+      "status": "verified: baseline failed, known fix passed, pinned source matched, run decision passed"
+    },
+    {
+      "path": "results/mlsys-repo-eval-v1/run-17/calibration.red-team.json",
+      "sha256": "87f4d36f7b0f62a02eb9213f1af19417dfae12355910e6180338e26ab53ed309",
+      "status": "verified: all 9 v2 probes passed; parent symlink rejected before grader invocation"
+    },
+    {
+      "path": "results/mlsys-repo-eval-v1/run-17/manifest.json",
+      "sha256": "921e1260451bf94d9a7d8f19e3f62fed4b5b2c3dfec6d09aeca71ab0756c9ed6",
+      "status": "verified: protocol-v11 E1 Train-only calibration evidence bundle"
     }
   ],
   "unresolved_blockers": [
     "The frozen deep-qualification Development allocation is exhausted for fresh evaluation: #45852, #1912, and #1971 have prior model attempts.",
     "A replacement Development pool must be drawn from the remaining candidate queue after a full Stage 2/3 family-overlap audit; held-out tasks must stay untouched.",
     "No RL policy update, coding-agent training, or held-out evaluation has been run.",
-    "PR #149 remains open without recorded review; its head is based on the pre-#150 main and it is not integrated."
+    "PR #149 remains open without recorded review; its head is based on the pre-#150 main and it is not integrated.",
+    "The #1904 run-17 implementation and result evidence are committed locally but not yet pushed or reviewed."
   ],
-  "highest_priority_next_task": "Commit the validated protocol-v11 symlink-boundary fix, then run the bounded Train-only #1904 baseline/known-fix calibration and nine-probe red-team suite as run 17. After that integration, audit the 24-entry manual candidate queue for family overlap before selecting a replacement Development cohort."
+  "highest_priority_next_task": "Push the committed #1904 symlink-boundary fix and protocol-v11 run-17 evidence, open a focused PR, inspect required CI and review threads, and integrate only when repository rules permit; then audit the 24-entry manual candidate queue for exposure overlap before selecting a fresh Development cohort."
 }

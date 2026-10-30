@@ -10,9 +10,12 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q \
   tests/test_development_repository_repair_campaign_v2.py \
   tests/test_isolated_candidate_expected_exception.py
 
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q \
-  tests/test_mlsys_repo_task.py \
-  tests/test_mlsys_deep_qualification_exposure.py
+for py in 311 312 313; do
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src \
+    "work/ci-py${py}/bin/python" -m pytest -q \
+    tests/test_mlsys_repo_task.py \
+    tests/test_mlsys_deep_qualification_exposure.py
+done
 
 ruff check \
   src/vare/mlsys_repo_task.py \
@@ -52,21 +55,21 @@ Requires a clean VARE commit containing protocol v11, Colima with the pinned ima
 git -C ../mlx-lm-source cat-file -e \
   2af5f7ce8620115bf37fbbddf9817f083118df59^{commit}
 git -C ../mlx-lm-source worktree add --detach \
-  "$PWD/work/mlx-lm-baseline-1904" \
+  "$PWD/../mlx-lm-baseline-1904-replay" \
   2af5f7ce8620115bf37fbbddf9817f083118df59
 
-mkdir -p work/colima-tmp
-TMPDIR="$PWD/work/colima-tmp" PYTHONPATH=src DOCKER_CONTEXT=colima \
-  python scripts/run_mlxlm_1904_calibration.py \
-  --source-root work/mlx-lm-baseline-1904 \
-  --output results/mlsys-repo-eval-v1/run-17/calibration.json
+mkdir -p ../colima-tmp
+TMPDIR="$PWD/../colima-tmp" PYTHONPATH=src DOCKER_CONTEXT=colima \
+  work/ci-py311/bin/python scripts/run_mlxlm_1904_calibration.py \
+  --source-root ../mlx-lm-baseline-1904-replay \
+  --output results/mlsys-repo-eval-v1/run-17-replay/calibration.json
 
 shasum -a 256 \
-  results/mlsys-repo-eval-v1/run-17/calibration.json \
-  results/mlsys-repo-eval-v1/run-17/calibration.red-team.json
+  results/mlsys-repo-eval-v1/run-17-replay/calibration.json \
+  results/mlsys-repo-eval-v1/run-17-replay/calibration.red-team.json
 ```
 
-The pinned implementation and runtime checks are in `benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json`. The acceptance gate requires baseline failure, known-fix success with exact fixed-source identity, source-swap rejection, all nine red-team controls, a clean implementation worktree at launch, and rejection of the symlinked-parent workspace before any grader call.
+Run 17 passed on implementation commit `36af6f17908b50cb53bb159013eecfa8b0263da0`: baseline failed, known fix passed with exact source identity, source swap was rejected, all nine red-team controls passed, and the symlinked parent was rejected before any grader call. Its manifest SHA-256 is `921e1260451bf94d9a7d8f19e3f62fed4b5b2c3dfec6d09aeca71ab0756c9ed6`. Verify run evidence with `(cd results/mlsys-repo-eval-v1/run-17 && shasum -a 256 -c SHA256SUMS)`, and verify the cumulative root index with `shasum -a 256 -c results/mlsys-repo-eval-v1/SHA256SUMS` from the VARE root. The affected 23-test suite passed on Python 3.11, 3.12, and 3.13. The pinned implementation and runtime checks are in `benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json`. The acceptance gate requires baseline failure, known-fix success with exact fixed-source identity, source-swap rejection, all nine red-team controls, a clean implementation worktree at launch, and rejection of the symlinked-parent workspace before any grader call.
 
 ## Full CI and PR state
 
@@ -79,4 +82,4 @@ PR #150 is integrated at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`. Its exact-h
 - The Stage 3 candidate receipt remains at `../../outputs/VARE-stage3-2026-10-31/capability-diagnostic-exact-replace-v4/grader-receipts/stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token.terminal-lf-regrade.json`; it is `wrong_output` on 0/14 correctness cases.
 - No resumable model or optimizer run exists. Do not relaunch the consumed task/model pairs.
 
-The highest-priority next work after the bounded grader calibration is a full family-overlap audit of the 24-entry manual candidate queue, followed by source qualification of a new Development cohort that does not consume any Held-out task.
+After this checkpoint is integrated, the highest-priority research work is a full family-overlap audit of the 24-entry manual candidate queue, followed by source qualification of a new Development cohort that does not consume any Held-out task.
