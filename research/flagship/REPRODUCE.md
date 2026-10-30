@@ -142,3 +142,8 @@ Run the baseline first. Do not run the fixed arm unless the intended residual-bo
 The baseline attempt under addendum 4 is a valid negative control: 4/6 expected assertions failed and 2/6 passed. A first fixed-arm invocation was rejected before case execution due to a shell selector typo; its log/record are retained as inconclusive. Addendum 5 freezes the exact selector strings and authorizes one fixed-source retry. Build the pytest argv from that `exact_test_node_ids` list rather than retyping it. The retry uses the same runtime v3 image and isolation flags listed above.
 
 A second launcher error is also retained: Docker started but pytest did not because the wrapper passed `python3` twice. This is not a test result. With `--entrypoint=python3`, pass only `-m pytest -q -p no:cacheprovider` plus the six IDs from addendum 5.
+
+
+### Transformers #49418 paired result
+
+The exact input manifest matched before both arms. Baseline attempt 004: 4 expected failures and 2 passes; fixed attempt 003: 6 passed, zero skipped, pytest 25.27s. The `qualification.json` record (SHA-256 `75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e`) is the concise paired summary; raw logs and attempt records remain beside it. The two zero-case fixed launcher errors are retained and excluded from the paired outcome. This source-level result does not assign a split or authorize model inference.

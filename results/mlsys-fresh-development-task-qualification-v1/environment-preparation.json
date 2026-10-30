@@ -70,9 +70,21 @@
       "sha256": "2bc702fb3ae1856b21fe1635349a718ebbcd9d59d13da292ed1ff44728cf5270",
       "size_bytes": 74
     },
+    "transformers-49418/attempt-003-fixed.json": {
+      "sha256": "3b08c0fcc444a2b0858016512784a8d00b0e4294efcb6b4b0c6af72f3511a140",
+      "size_bytes": 1973
+    },
+    "transformers-49418/attempt-003-fixed.log": {
+      "sha256": "a9b443f97a35933935592b869840c0523167d25ef4039ca1e72656a2ae47b5f6",
+      "size_bytes": 2142
+    },
     "transformers-49418/attempt-004-baseline.log": {
       "sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
       "size_bytes": 5506
+    },
+    "transformers-49418/qualification.json": {
+      "sha256": "75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e",
+      "size_bytes": 2387
     }
   },
   "mlx_runtime": {
@@ -197,7 +209,17 @@
     }
   ],
   "schema_version": 1,
-  "state": "The exact fixed-arm selector invocation attempt 001 was rejected before collection due to two hand-transcribed delimiters. A protocol-driven invocation then launched the container but passed the leading python3 token twice, so pytest never started. Both are preserved as zero-case runner failures. Addendum 5 remains unchanged; the fixed task test has not executed.",
+  "state": "Transformers #49418 source-level qualification PASSED: baseline attempt 004 had 4/6 expected assertion failures, fixed attempt 003 passed 6/6 with zero skips under runtime v3; hashes and limits verified. Two fixed-runner errors selected zero cases and remain preserved. TRL #7668 and MLX #4778 remain pending; no task is assigned to Development.",
+  "task_qualification_results": [
+    {
+      "development_assignment": "NOT_ASSIGNED",
+      "model_exposure": false,
+      "qualification_record": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/qualification.json",
+      "qualification_record_sha256": "75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e",
+      "status": "QUALIFIED_SOURCE_LEVEL",
+      "task_id": "transformers-49418-quantized-cache-residual-flush"
+    }
+  ],
   "transformers_runtime": {
     "base_image": "vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
     "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.1 --file Dockerfile .",
@@ -275,6 +297,13 @@
       "log_sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
       "record": "transformers-49418/attempt-004-baseline.json",
       "record_sha256": "c8cb78266f0e865740b5928625b705e3c734e137f43ef4a631a993465f9a9ec2"
+    },
+    {
+      "classification": "fixed arm PASSED 6/6 with zero skips; input hashes verified",
+      "log": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.log",
+      "log_sha256": "a9b443f97a35933935592b869840c0523167d25ef4039ca1e72656a2ae47b5f6",
+      "record": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.json",
+      "record_sha256": "3b08c0fcc444a2b0858016512784a8d00b0e4294efcb6b4b0c6af72f3511a140"
     }
   ]
 }

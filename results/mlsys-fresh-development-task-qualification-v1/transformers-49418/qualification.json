@@ -1,0 +1,39 @@
+{
+  "baseline": {
+    "expected_assertion_failures": 4,
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-004-baseline.log",
+    "log_sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
+    "passed": 2,
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-004-baseline.json",
+    "record_sha256": "c8cb78266f0e865740b5928625b705e3c734e137f43ef4a631a993465f9a9ec2",
+    "selected": 6,
+    "skipped": 0,
+    "status": "EXPECTED_BASELINE_FAILURE"
+  },
+  "claim_boundary": "Source-level historical regression qualification only. No model capability, Development generalization, SFT, policy learning, RL, held-out result, or algorithmic novelty is established.",
+  "fixed": {
+    "failed": 0,
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.log",
+    "log_sha256": "a9b443f97a35933935592b869840c0523167d25ef4039ca1e72656a2ae47b5f6",
+    "passed": 6,
+    "protocol_addendum": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-5.json",
+    "protocol_addendum_sha256": "e16c19fb20ea09e4a559b6e3d8353dd6ebef046c3d0cf9ed7b8744847104ec86",
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.json",
+    "record_sha256": "3b08c0fcc444a2b0858016512784a8d00b0e4294efcb6b4b0c6af72f3511a140",
+    "skipped": 0,
+    "status": "PASSED_FIXED_ARM"
+  },
+  "model_or_agent_exposure": false,
+  "pretraining_exposure": "UNKNOWN",
+  "qualified_at_utc": "2026-10-30T23:46:42Z",
+  "runtime_image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+  "schema_version": 1,
+  "selection_protocol": "protocols/mlsys_fresh_development_task_qualification_v1.json",
+  "selection_sample": "results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json",
+  "source_test_input_manifest": "results/mlsys-fresh-development-task-qualification-v1/source-test-input-manifest.json",
+  "source_test_input_manifest_sha256": "d29cfbffc94e3f66711094f7ce72cefb0bb0580cc10b6a5a016d98c67fa60633",
+  "split_assignment": "NOT_ASSIGNED",
+  "status": "QUALIFIED_SOURCE_LEVEL",
+  "task_id": "transformers-49418-quantized-cache-residual-flush",
+  "test_delta_sha256": "b602463ba73fbc3fb21fe3660f463b966ef139bd6316ad8dbbb49ab4009228ab"
+}

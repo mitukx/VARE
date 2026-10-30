@@ -124,3 +124,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Treat this as an inconclusive launcher error; no fixed result is observed and the frozen A5 test authorization remains pending. Keep the exact test node strings unchanged; pass only the pytest argv tail.
 - **Falsification criteria:** The corrected container fails before test collection, selects other than six exact nodes, or any fixed node fails/skips.
 - **Follow-up:** Run the one fixed-source arm under addendum 5; qualify only if all six cases pass with zero skips and exact inputs/limits match.
+
+
+## 2026-10-31 — Qualify Transformers #49418 at source level
+
+- **Hypothesis:** The selected fix resolves the frozen quantized-cache residual-boundary bug across the six specified parameter cases.
+- **Evidence:** On exact base source, baseline attempt 004 failed the target residual-length assertion in 4/6 cases and passed 2/6. Under the same pinned runtime v3, test-only delta, selectors, and offline limits, fixed attempt 003 passed 6/6 with zero skips in 25.27 seconds of pytest time. Source/test and patch hashes matched the frozen manifest. Paired summary SHA-256: `75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e`.
+- **Alternative explanations:** The fix could pass only because of runtime differences, changed inputs, skips, or broader tests masking the regression. Both arms used the pinned runtime/test file and selector list; source hashes were verified; no skips occurred. This remains a small historical regression suite and public pretraining exposure is unknown.
+- **Decision:** Mark Transformers #49418 `QUALIFIED_SOURCE_LEVEL`. Do not assign it to Development or claim model capability. Keep TRL and MLX pending.
+- **Falsification criteria:** Recomputed input hashes differ; the retained baseline log does not show the four target assertion failures; any fixed case is failed/skipped; or the exact runtime/selector protocol was not used.
+- **Follow-up:** Qualify TRL #7668 and MLX #4778 sequentially before considering a separate Development assignment protocol.
