@@ -154,3 +154,12 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Mark MLX #4778 `QUALIFIED_SOURCE_LEVEL`. Keep it unassigned and preserve the historical pretraining-exposure limitation. Together with Transformers this gives 2/3 qualified tasks; TRL remains unqualified under the baseline-assertion gate.
 - **Falsification criteria:** Source/test or image identity mismatch; baseline target assertion does not fail; fixed target fails or skips; or execution violates the frozen resource/network policy.
 - **Follow-up:** Freeze a deterministic replacement-task selection protocol before inspecting any unselected source/test inputs; qualify that task before considering a Development split.
+
+
+## 2026-10-31 — Freeze replacement-task selection before source/test review
+- **Hypothesis:** A deterministic metadata-only rule can select one repository-diverse replacement for TRL #7668 from the existing frozen sample without outcome-informed source/test screening.
+- **Evidence:** The selector is frozen in `protocols/mlsys_fresh_development_task_replacement_selection_v1.json` (SHA-256 `db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b`). Its sole input is the 71-row sample `results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json` (SHA-256 `810fb823781f3bc44a0272db230cc3d65b43751c415e53229c81104a6183baad`). No unselected source or test contents were used to define eligibility.
+- **Alternative explanations:** Metadata may not predict a runnable or well-targeted task. This protocol does not claim task qualification, exposure independence, or model capability.
+- **Decision:** Apply the ranked selector exactly once. If the first eligible task cannot satisfy the frozen qualification gate, record that outcome without substituting a lower-ranked task. Keep all existing task outcomes and the exposure ledger unchanged.
+- **Falsification criteria:** Any input sample hash mismatch, non-deterministic selection, source/test inspection before selection is recorded, or post-selection change to the eligibility/ranking rule.
+- **Follow-up:** Record the selected metadata row; then freeze the task-specific baseline-first qualification addendum before opening the selected source/test files.

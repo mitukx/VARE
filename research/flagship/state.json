@@ -107,6 +107,12 @@
       "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-5",
       "sha256": "e16c19fb20ea09e4a559b6e3d8353dd6ebef046c3d0cf9ed7b8744847104ec86",
       "status": "frozen before fixed retry; corrects only selector command transcription; exact six selectors unchanged"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_replacement_selection_v1.json",
+      "protocol_id": "mlsys-fresh-development-task-replacement-selection-v1",
+      "sha256": "db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b",
+      "status": "frozen before selecting a replacement or opening any unselected source/test inputs; metadata-only deterministic selection"
     }
   ],
   "git_refs": {
@@ -124,8 +130,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Freeze a replacement-task selection protocol based on the already frozen metadata sample before opening any unselected source or test. Qualify one replacement for TRL #7668 baseline-first; do not change prior outcomes, assign Development tasks, or run model inference.",
-  "last_completed_step": "MLX #4778 source-level qualification passed: the pinned CPU baseline failed the target complex VJP conjugation assertion, and the exact fixed image passed the same test with zero skips. A wrong fixed image tag caused one pre-container launcher error and is preserved. Current task count is 2/3: Transformers and MLX qualified; TRL paired evidence remains unqualified under its frozen assertion gate.",
+  "highest_priority_next_task": "Apply the frozen replacement-selection rule to the 71-row metadata sample and record the selected task without opening any source or test. Then freeze a task-specific baseline-first source-qualification addendum before source/test review.",
+  "last_completed_step": "MLX #4778 source-level qualification passed and was committed/pushed. Frozen a deterministic metadata-only replacement selection protocol; no unselected source or test inputs have been opened.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -412,6 +418,11 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
       "sha256": "995f6f7592ab7f9c257ab5210138427a7d3fb06b0648e01421b7624e9a004729",
       "status": "runtime and task outcome index updated"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_replacement_selection_v1.json",
+      "sha256": "db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b",
+      "status": "frozen metadata-only replacement selection protocol"
     }
   ],
   "run_ids": [
@@ -456,5 +467,5 @@
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T09:02:00+09:00"
+  "updated_at": "2026-10-31T08:54:36+09:00"
 }

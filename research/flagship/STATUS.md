@@ -21,7 +21,7 @@ Source-qualified tasks: **2/3**. None is assigned to Development or exposed to a
 
 ## Immediate next action
 
-Freeze a replacement-task selection protocol before inspecting any unselected source or tests. Select a replacement for TRL #7668 from the already frozen metadata sample without changing the two task outcomes or exposure ledger. Qualify it baseline-first; do not assign Development tasks or run model inference until the frozen three-task cohort meets its gates and a separate exposure/evaluation protocol is approved.
+The metadata-only replacement selection protocol is frozen at `protocols/mlsys_fresh_development_task_replacement_selection_v1.json` (SHA-256 `db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b`). Apply it to the existing 71-row sample and record the selected task without opening any unselected source or test. Then freeze a task-specific baseline-first qualification addendum. Do not assign Development tasks or run model inference.
 
 ## External blockers
 
