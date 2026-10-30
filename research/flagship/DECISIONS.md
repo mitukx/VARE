@@ -134,3 +134,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Mark Transformers #49418 `QUALIFIED_SOURCE_LEVEL`. Do not assign it to Development or claim model capability. Keep TRL and MLX pending.
 - **Falsification criteria:** Recomputed input hashes differ; the retained baseline log does not show the four target assertion failures; any fixed case is failed/skipped; or the exact runtime/selector protocol was not used.
 - **Follow-up:** Qualify TRL #7668 and MLX #4778 sequentially before considering a separate Development assignment protocol.
+
+
+## 2026-10-31 — Preserve the TRL #7668 pair without relaxing its frozen baseline gate
+
+- **Hypothesis:** TRL #7668 restores gradient-checkpointing kwargs for both reentrant and non-reentrant checkpointing, and its exact test can exercise only the pinned tiny fixture.
+- **Evidence:** The exact base selector ran two cases; both raised `TypeError` when the tested function rejected `gradient_checkpointing_kwargs` before entering the context body. No test assertion or forward/loss/autograd operation ran on baseline. The exact fixed source passed both cases; those cases performed the test’s two tiny fixture forward/loss/autograd checks, with no generation or optimizer. Source/test/fixture hashes matched the frozen manifests. Paired result: `f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c`.
+- **Alternative explanations:** Treat any baseline test failure as meeting the negative-control gate, or retroactively broaden the rule. The frozen acceptance rule requires a targeted assertion failure, and baseline raised before assertions.
+- **Decision:** Preserve both arms as useful source-level evidence, but mark TRL #7668 `NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE`. Do not alter the gate after outcome or assign the task to Development.
+- **Falsification criteria:** Reproduction shows any baseline assertion executed or a fixed test used a different fixture/source; either would contradict this classification.
+- **Follow-up:** Run MLX #4778 under addendum 1. The current qualified count remains 1/3.

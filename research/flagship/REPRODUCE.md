@@ -147,3 +147,8 @@ A second launcher error is also retained: Docker started but pytest did not beca
 ### Transformers #49418 paired result
 
 The exact input manifest matched before both arms. Baseline attempt 004: 4 expected failures and 2 passes; fixed attempt 003: 6 passed, zero skipped, pytest 25.27s. The `qualification.json` record (SHA-256 `75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e`) is the concise paired summary; raw logs and attempt records remain beside it. The two zero-case fixed launcher errors are retained and excluded from the paired outcome. This source-level result does not assign a split or authorize model inference.
+
+
+### TRL #7668 paired source result
+
+Baseline attempt 001: two target `TypeError` failures from the base function rejecting `gradient_checkpointing_kwargs`; assertions did not execute. Fixed attempt 001: 2 passed, including exactly the permitted tiny-fixture forward/loss/autograd checks. The frozen gate requires a baseline assertion failure, so the pair is retained but the task remains unqualified. Evidence summary SHA-256: `f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c`.

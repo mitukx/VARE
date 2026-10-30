@@ -85,6 +85,26 @@
     "transformers-49418/qualification.json": {
       "sha256": "75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e",
       "size_bytes": 2387
+    },
+    "trl-7668/attempt-001-baseline.json": {
+      "sha256": "5d090e644f69d72a64fb1dadf22c690cc0489a45db233b83bc5c2b8f34619ed8",
+      "size_bytes": 1830
+    },
+    "trl-7668/attempt-001-baseline.log": {
+      "sha256": "8b2b9ae7ed93c687d43fdad5e435afc3fc25f872fef9c881f9e6cc9c0dceeab6",
+      "size_bytes": 4628
+    },
+    "trl-7668/attempt-001-fixed.json": {
+      "sha256": "798d5bc36f186cda97e6901b9919cf88984bf3b778a40c56476ae80a5ab11ceb",
+      "size_bytes": 1457
+    },
+    "trl-7668/attempt-001-fixed.log": {
+      "sha256": "2b1de2f830d76664f66cfe4e0a619a803504508f18fb395c3ece000468f23876",
+      "size_bytes": 98
+    },
+    "trl-7668/qualification.json": {
+      "sha256": "f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c",
+      "size_bytes": 2443
     }
   },
   "mlx_runtime": {
@@ -126,6 +146,14 @@
     },
     "source_package_version": "0.32.5"
   },
+  "observed_task_baseline_failures": [
+    {
+      "classification": "target implementation raises TypeError for new frozen keyword in both parameter cases; no assertion executed",
+      "record": "trl-7668/attempt-001-baseline.json",
+      "record_sha256": "5d090e644f69d72a64fb1dadf22c690cc0489a45db233b83bc5c2b8f34619ed8",
+      "task_id": "trl-7668-gradient-checkpointing-kwargs-restore"
+    }
+  ],
   "preserved_task_test_failures": [
     {
       "classification": "environment collection failure; zero cases collected",
@@ -209,7 +237,7 @@
     }
   ],
   "schema_version": 1,
-  "state": "Transformers #49418 source-level qualification PASSED: baseline attempt 004 had 4/6 expected assertion failures, fixed attempt 003 passed 6/6 with zero skips under runtime v3; hashes and limits verified. Two fixed-runner errors selected zero cases and remain preserved. TRL #7668 and MLX #4778 remain pending; no task is assigned to Development.",
+  "state": "Transformers #49418 qualified source-level (1/3). TRL #7668 baseline produced target TypeError in both cases before any assertion; fixed arm passed both permitted tiny forward/loss/autograd cases. The pair is preserved but task remains unqualified because the frozen acceptance gate specifically requires a baseline assertion failure. MLX #4778 remains pending; no model/agent prompts, generation, optimizer updates, or Development assignment.",
   "task_qualification_results": [
     {
       "development_assignment": "NOT_ASSIGNED",
@@ -218,6 +246,14 @@
       "qualification_record_sha256": "75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e",
       "status": "QUALIFIED_SOURCE_LEVEL",
       "task_id": "transformers-49418-quantized-cache-residual-flush"
+    },
+    {
+      "development_assignment": "NOT_ASSIGNED",
+      "model_prompt_exposure": false,
+      "qualification_record": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/qualification.json",
+      "qualification_record_sha256": "f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c",
+      "status": "NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE",
+      "task_id": "trl-7668-gradient-checkpointing-kwargs-restore"
     }
   ],
   "transformers_runtime": {
@@ -304,6 +340,20 @@
       "log_sha256": "a9b443f97a35933935592b869840c0523167d25ef4039ca1e72656a2ae47b5f6",
       "record": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.json",
       "record_sha256": "3b08c0fcc444a2b0858016512784a8d00b0e4294efcb6b4b0c6af72f3511a140"
+    },
+    {
+      "classification": "baseline task code error in both cases; assertion-based gate not met",
+      "log": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-baseline.log",
+      "log_sha256": "8b2b9ae7ed93c687d43fdad5e435afc3fc25f872fef9c881f9e6cc9c0dceeab6",
+      "record": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-baseline.json",
+      "record_sha256": "5d090e644f69d72a64fb1dadf22c690cc0489a45db233b83bc5c2b8f34619ed8"
+    },
+    {
+      "classification": "fixed arm passed 2/2 permitted cases; paired task remains unqualified under frozen assertion rule",
+      "log": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-fixed.log",
+      "log_sha256": "2b1de2f830d76664f66cfe4e0a619a803504508f18fb395c3ece000468f23876",
+      "record": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-fixed.json",
+      "record_sha256": "798d5bc36f186cda97e6901b9919cf88984bf3b778a40c56476ae80a5ab11ceb"
     }
   ]
 }

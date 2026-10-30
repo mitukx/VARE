@@ -1,0 +1,35 @@
+{
+  "base_commit": "89246ca14ec3c26735276f6f75c4d3dbf66bd40f",
+  "baseline": {
+    "assertions_executed": false,
+    "cases": 2,
+    "failure_type": "target code TypeError before test assertions",
+    "failures": 2,
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-baseline.log",
+    "log_sha256": "8b2b9ae7ed93c687d43fdad5e435afc3fc25f872fef9c881f9e6cc9c0dceeab6",
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-baseline.json",
+    "record_sha256": "5d090e644f69d72a64fb1dadf22c690cc0489a45db233b83bc5c2b8f34619ed8"
+  },
+  "claim_boundary": "Strong source-level paired evidence for the API repair, but not a qualified task under the frozen assertion-based negative-control rule and not model capability evidence.",
+  "fixed": {
+    "cases": 2,
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-fixed.log",
+    "log_sha256": "2b1de2f830d76664f66cfe4e0a619a803504508f18fb395c3ece000468f23876",
+    "passed": 2,
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-fixed.json",
+    "record_sha256": "798d5bc36f186cda97e6901b9919cf88984bf3b778a40c56476ae80a5ab11ceb",
+    "skipped": 0
+  },
+  "fixed_commit": "989960ab989c3491dea585bb39d6144900b52852",
+  "fixture_manifest": "results/mlsys-fresh-development-task-qualification-v1/trl-model-fixture-manifest.json",
+  "fixture_manifest_sha256": "6a7647352ff558c8c2d07275257254b59c96ccd6bcbd9e0e3217ea79022516ce",
+  "model_or_agent_prompt_exposure": false,
+  "model_scope": "Tiny public test fixture only; fixed arm executed two permitted forward/loss/autograd checks; no generation, optimizer, or policy update.",
+  "protocol_acceptance": "The frozen gate requires at least one targeted assertion failure on baseline. Baseline fails for the task-specific missing keyword argument, but raises TypeError before any assertion. Do not reinterpret this post hoc; preserve paired result but do not count task as qualified.",
+  "schema_version": 1,
+  "source_test_input_manifest": "results/mlsys-fresh-development-task-qualification-v1/source-test-input-manifest.json",
+  "source_test_input_manifest_sha256": "d29cfbffc94e3f66711094f7ce72cefb0bb0580cc10b6a5a016d98c67fa60633",
+  "split_assignment": "NOT_ASSIGNED",
+  "status": "NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE",
+  "task_id": "trl-7668-gradient-checkpointing-kwargs-restore"
+}
