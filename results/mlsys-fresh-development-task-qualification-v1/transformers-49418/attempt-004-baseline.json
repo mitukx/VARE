@@ -1,0 +1,22 @@
+{
+  "arm": "baseline source with frozen test delta",
+  "attempt_id": "freshdev-qualification-transformers-49418-attempt-004-baseline",
+  "exit_code": 1,
+  "expected_failure_assertions": 4,
+  "failed_cases": 4,
+  "failure_class": "expected residual-boundary correctness assertion: retained residual keys exceeded the frozen expected residual length for four capacity boundary cases; two cases passed.",
+  "host_command_wall_seconds": 27.013,
+  "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-004-baseline.log",
+  "log_sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
+  "observed_at_utc": "2026-10-30T23:43:43Z",
+  "passed_cases": 2,
+  "protocol": "mlsys-fresh-development-task-qualification-v1-addendum-4",
+  "pytest_reported_seconds": 26.01,
+  "qualification_effect": "Valid baseline negative control. The targeted assertion executed and failed in four of six cases; the exact fixed arm is authorized by the frozen protocol.",
+  "regression_assertions_executed": true,
+  "schema_version": 1,
+  "selected_cases": 6,
+  "skipped_cases": 0,
+  "status": "EXPECTED_BASELINE_FAILURE",
+  "unexpected_failures": 0
+}

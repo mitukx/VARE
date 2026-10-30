@@ -104,3 +104,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Preserve attempt 3 as `INCONCLUSIVE_ENVIRONMENT_FAILURE`; it is not baseline evidence and does not authorize the fixed arm. Retry the baseline only under addendum 4. Keep source and trusted test mounts read-only, networking disabled, root read-only, uid 65534, and all prior test limits.
 - **Falsification criteria:** The extension cannot compile/load inside the bounded cache; any task source/test hash differs; the expected baseline assertion does not execute and fail; or any fixed case fails/skips or limits are violated.
 - **Follow-up:** Run the frozen six-node baseline once. If and only if the expected assertion fails, run the exact fixed arm; then proceed sequentially to TRL and MLX. No Development assignment or model inference until all qualification gates pass.
+
+
+## 2026-10-31 — Accept Transformers baseline negative control and correct the fixed-run invocation
+
+- **Hypothesis:** The base source for Transformers #49418 retains the quantized-cache residual-boundary bug, while the exact fixed source passes the same six frozen cases.
+- **Evidence:** Baseline attempt 004 under addendum 4 ran all six exact nodes: four failed the target assertion `layer.keys.numel() == expected_residual_length * 2 * 16` with excess residual keys, and two passed. The first fixed invocation was rejected because two command arguments used `CacheTest.test_...` instead of `CacheTest::test_...`; the log contains no case progress or pass/fail summary, so zero fixed cases executed. The source and trusted test hashes remain unchanged. Addendum 5 (SHA-256 `e16c19fb20ea09e4a559b6e3d8353dd6ebef046c3d0cf9ed7b8744847104ec86`) freezes the exact-selector retry.
+- **Alternative explanations:** Treat any baseline nonzero exit as evidence, count the malformed fixed invocation as a fixed result, or hand-retype selectors again. Baseline output locates four failures at the target assertion; pytest’s fixed-arm output is an argument-selection error with no test summary.
+- **Decision:** Count attempt 004 as the valid expected baseline failure. Keep the malformed fixed invocation inconclusive and unscored; do not rerun the baseline or change the tests. Construct the one fixed-run argv from addendum 5’s node list.
+- **Falsification criteria:** Any source/test hash mismatch; the fixed invocation selects other than six nodes; any fixed node fails or skips; or the frozen container/resource limits are violated.
+- **Follow-up:** Run the exact fixed-source nodes once. If all six pass, Transformers #49418 qualifies at source level; otherwise preserve the failure and leave the task unqualified. Then run TRL #7668 and MLX #4778 sequentially.

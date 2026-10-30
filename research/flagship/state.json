@@ -101,6 +101,12 @@
       "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-4",
       "sha256": "6be83fbf944ee60467ed87d30e5eebeb2f8ce4af8096235908a160e17d8b2598",
       "status": "frozen before retry; corrects only the Transformers Quanto writable build-cache runtime and serial compilation"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-5.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-5",
+      "sha256": "e16c19fb20ea09e4a559b6e3d8353dd6ebef046c3d0cf9ed7b8744847104ec86",
+      "status": "frozen before fixed retry; corrects only selector command transcription; exact six selectors unchanged"
     }
   ],
   "git_refs": {
@@ -118,8 +124,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Verify the pinned source/test input hashes and rerun the six Transformers #49418 baseline nodes once under addendum 4. Proceed to the exact fixed arm only if the targeted residual-boundary assertion executes and fails; then qualify TRL #7668 and MLX #4778 sequentially under addendum 1.",
-  "last_completed_step": "Transformers #49418 baseline attempt 3 selected all six frozen nodes but failed before the residual-boundary assertion because Quanto attempted to build its CPU extension in the read-only site-packages directory. The attempt is preserved as INCONCLUSIVE_ENVIRONMENT_FAILURE. Runtime v3 with serial C++ compilation and a single executable tmpfs cache mount passed a runtime-only extension preflight; addendum 4 is frozen before retry. No fixed arm has run.",
+  "highest_priority_next_task": "Run the six fixed-source Transformers #49418 nodes once, constructing selectors from addendum 5, after rechecking exact source/test hashes. Qualification requires 6/6 pass with zero skips; then run TRL #7668 and MLX #4778 sequentially under their frozen protocol.",
+  "last_completed_step": "Transformers #49418 baseline attempt 004 ran all six frozen nodes under addendum 4: the expected residual-boundary assertion failed in four cases and two passed, establishing a valid negative control. A fixed-arm command transcription error was rejected before test execution (zero cases); it is retained as inconclusive. Addendum 5 freezes an exact-selector invocation before retry.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -278,11 +284,6 @@
       "status": "frozen before retry; adds one writable Quanto build-cache tmpfs and MAX_JOBS=1"
     },
     {
-      "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
-      "sha256": "521795d97595f1d3ee82f56f298ffa0e7203b42d0ea36dd794a6d6671989a1c7",
-      "status": "updated pinned runtime v3, package/build hashes, retained environment diagnostics, and successful extension preflight"
-    },
-    {
       "path": "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v3",
       "sha256": "c62eaf32a8d172559a70417f1d4bd4dd4f7c3751e583d78c33bfca983cdcb4ad",
       "status": "reproducible runtime v3 Dockerfile based on pinned runtime v2 image"
@@ -301,6 +302,36 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/environment/quanto-extension-preflight.log",
       "sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
       "status": "raw successful Quanto extension compilation and load output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-004-baseline.json",
+      "sha256": "c8cb78266f0e865740b5928625b705e3c734e137f43ef4a631a993465f9a9ec2",
+      "status": "valid baseline negative control; 4/6 expected assertion failures and 2/6 passes"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-004-baseline.log",
+      "sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
+      "status": "raw exact-selector baseline output under runtime v3"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-001-fixed.json",
+      "sha256": "2f3cd089cd873ca061f7ce9eec87fa139240933a60db96ea2b87a647041664b4",
+      "status": "fixed-arm invocation rejected at selector parsing; zero cases executed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-001-fixed.log",
+      "sha256": "c1f49b746f561ebdb700c34d7a47f79059e1af72a213f57914defae066eacfa4",
+      "status": "raw fixed invocation selector error; no test case output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
+      "sha256": "8c1294476565c67cf35f29953aadde2bce92f44b1d8c80827e42db7a2a61e461",
+      "status": "qualification runtime and preserved-attempt log/index updated"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-5.json",
+      "sha256": "e16c19fb20ea09e4a559b6e3d8353dd6ebef046c3d0cf9ed7b8744847104ec86",
+      "status": "frozen before corrected fixed invocation; no selectors or test inputs changed"
     }
   ],
   "run_ids": [
@@ -322,7 +353,9 @@
     "stage3_qwen3_4b_controller_v3__mlxlm-1912-top-p-min-token",
     "stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token",
     "mlsys-repo-eval-v1-run-19",
-    "freshdev-qualification-transformers-49418-attempt-003-baseline"
+    "freshdev-qualification-transformers-49418-attempt-003-baseline",
+    "freshdev-qualification-transformers-49418-attempt-004-baseline",
+    "freshdev-qualification-transformers-49418-attempt-001-fixed"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -332,11 +365,11 @@
     "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884"
   },
   "unresolved_blockers": [
-    "The selected fresh-development cohort still has 0 qualified tasks. Transformers #49418 baseline attempt 3 was inconclusive: all six selected nodes failed at Quanto lazy C++ extension build-cache setup before any targeted correctness assertion. Addendum 4 freezes the corrected runtime before retry; the fixed arm is not authorized until a target baseline assertion failure is observed.",
-    "The audited 24-entry historical queue has no fresh Development task; new candidates remain unassigned until all source-level qualification gates pass.",
-    "Public pretraining exposure of the selected public upstream patches remains unknown.",
+    "The fresh-development cohort remains at 0 qualified tasks. Transformers #49418 has a valid baseline negative control (4/6 expected failures, 2/6 passes); the fixed arm is pending after one rejected selector-transcription invocation that selected zero cases. Addendum 5 freezes the corrected invocation.",
+    "The audited historical queue has no fresh Development task; new candidates remain unassigned until source-level qualification passes.",
+    "Public pretraining exposure of the selected upstream patches remains unknown.",
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T08:40:26+09:00"
+  "updated_at": "2026-10-31T08:44:29+09:00"
 }

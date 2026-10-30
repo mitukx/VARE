@@ -61,6 +61,14 @@
     "environment/quanto-extension-preflight.log": {
       "sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
       "size_bytes": 275
+    },
+    "transformers-49418/attempt-001-fixed.log": {
+      "sha256": "c1f49b746f561ebdb700c34d7a47f79059e1af72a213f57914defae066eacfa4",
+      "size_bytes": 2223
+    },
+    "transformers-49418/attempt-004-baseline.log": {
+      "sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
+      "size_bytes": 5506
     }
   },
   "mlx_runtime": {
@@ -119,6 +127,13 @@
       "log_sha256": "21244c9ddb946c9c81d667a0a1e1a1f7b0f7fa5799d1c6093f2c81b18b87a327",
       "record": "transformers-49418/attempt-003-baseline.json",
       "record_sha256": "4c64b37814bac28b10b9fabc351947a13f88d1ca432135f55605395485ee6098"
+    },
+    {
+      "classification": "fixed-arm selector transcription error; zero cases executed, no fixed outcome observed",
+      "log": "transformers-49418/attempt-001-fixed.log",
+      "log_sha256": "c1f49b746f561ebdb700c34d7a47f79059e1af72a213f57914defae066eacfa4",
+      "record": "transformers-49418/attempt-001-fixed.json",
+      "record_sha256": "2f3cd089cd873ca061f7ce9eec87fa139240933a60db96ea2b87a647041664b4"
     }
   ],
   "pretest_checks": [
@@ -171,7 +186,7 @@
     }
   ],
   "schema_version": 1,
-  "state": "Transformers baseline attempt 3 selected all six nodes, but the Quanto CPU extension loader failed to create its build directory under the read-only root before any target correctness assertion. Addendum 4 pins runtime v3, MAX_JOBS=1, and a single executable tmpfs cache mount; a runtime-only extension preflight passed. No fixed arm or regression retry has run since attempt 3.",
+  "state": "Runtime v3 fixed the Quanto cache environment: baseline attempt 004 ran the six exact nodes and produced the expected residual-boundary assertion failure in 4/6 cases (2/6 passed). A first fixed-arm invocation was rejected before test execution because two manually transcribed node selectors omitted the class/method delimiter; attempt 001-fixed is preserved with zero cases. Addendum 5 freezes the exact invocation correction; no fixed-source test case has run.",
   "transformers_runtime": {
     "base_image": "vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
     "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.1 --file Dockerfile .",
@@ -241,5 +256,14 @@
       "torch": "2.9.1",
       "transformers": "5.21.0"
     }
-  }
+  },
+  "valid_task_attempts": [
+    {
+      "classification": "valid expected baseline negative control: 4/6 target assertions failed, 2/6 passed",
+      "log": "transformers-49418/attempt-004-baseline.log",
+      "log_sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
+      "record": "transformers-49418/attempt-004-baseline.json",
+      "record_sha256": "c8cb78266f0e865740b5928625b705e3c734e137f43ef4a631a993465f9a9ec2"
+    }
+  ]
 }

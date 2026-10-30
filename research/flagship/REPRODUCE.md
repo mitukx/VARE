@@ -138,3 +138,5 @@ Prepare two separate `/source` trees from the frozen base (`bd3f926f52b55a0a59e8
 ```
 
 Run the baseline first. Do not run the fixed arm unless the intended residual-boundary correctness assertion executes and fails on baseline. Retain each raw log and a separate JSON attempt record. No candidate prompt, agent/model inference, optimizer update, Development assignment, or Held-out access is included in this qualification protocol.
+
+The baseline attempt under addendum 4 is a valid negative control: 4/6 expected assertions failed and 2/6 passed. A first fixed-arm invocation was rejected before case execution due to a shell selector typo; its log/record are retained as inconclusive. Addendum 5 freezes the exact selector strings and authorizes one fixed-source retry. Build the pytest argv from that `exact_test_node_ids` list rather than retyping it. The retry uses the same runtime v3 image and isolation flags listed above.

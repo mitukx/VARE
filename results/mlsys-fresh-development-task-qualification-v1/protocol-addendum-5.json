@@ -1,0 +1,53 @@
+{
+  "baseline_attempt": {
+    "attempt_id": "freshdev-qualification-transformers-49418-attempt-004-baseline",
+    "expected_assertion_failures": 4,
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-004-baseline.log",
+    "log_sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
+    "passed_cases": 2,
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-004-baseline.json",
+    "record_sha256": "c8cb78266f0e865740b5928625b705e3c734e137f43ef4a631a993465f9a9ec2",
+    "selected_cases": 6,
+    "status": "EXPECTED_BASELINE_FAILURE"
+  },
+  "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token",
+  "container_policy": "Use runtime and container policy exactly as frozen in addendum 4, including network=none, read-only root and source/test mounts, uid 65534, 2500m memory and memory-swap, 2 CPUs, pids 256, /tmp noexec tmpfs, Quanto cpp/build executable 256m tmpfs, and MAX_JOBS=1.",
+  "exact_test_node_ids": [
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token"
+  ],
+  "execution_order": [
+    "The valid baseline expected failure is recorded; no baseline rerun is authorized.",
+    "The malformed fixed invocation executed zero cases and does not count as the fixed arm.",
+    "Run the exact six frozen selectors once against the exact fixed source. Qualification requires all six pass with zero skip/xfail and all frozen hashes and limits match."
+  ],
+  "expected_cases": 6,
+  "frozen_at_utc": "2026-10-30T23:44:29Z",
+  "invalid_fixed_invocation": {
+    "attempt_id": "freshdev-qualification-transformers-49418-attempt-001-fixed",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-001-fixed.log",
+    "log_sha256": "c1f49b746f561ebdb700c34d7a47f79059e1af72a213f57914defae066eacfa4",
+    "pytest_selected_cases": 0,
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-001-fixed.json",
+    "record_sha256": "2f3cd089cd873ca061f7ce9eec87fa139240933a60db96ea2b87a647041664b4",
+    "status": "INCONCLUSIVE_SELECTOR_MISMATCH"
+  },
+  "invocation_rule": "Construct pytest argv by reading exact_test_node_ids from this frozen JSON; do not hand-transcribe the class/method separator. The permitted test invocation remains exactly one baseline run followed by one fixed-source run, and the fixed run is pending because the prior invocation selected zero cases.",
+  "nonclaims": [
+    "The baseline result alone does not qualify the task.",
+    "No fixed-source test case, Development assignment, model/agent inference, policy update, RL, or Held-out evaluation has yet occurred."
+  ],
+  "parent_addendum_path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-4.json",
+  "parent_addendum_sha256": "6be83fbf944ee60467ed87d30e5eebeb2f8ce4af8096235908a160e17d8b2598",
+  "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-5",
+  "protocol_status": "frozen_before_corrected_transformers_49418_fixed_invocation",
+  "qualification_rule": "The task qualifies only if all six fixed-source nodes pass with zero skips, the baseline has at least one targeted residual-boundary correctness assertion failure, all frozen source/test hashes match, and both arms remain within the frozen limits.",
+  "runtime_image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+  "schema_version": 1,
+  "scope": "Corrects only the rejected fixed-arm shell command transcription. The exact six selector strings are read from the frozen addendum and unchanged; task, source/test hashes, runtime image, mount policy, budgets, acceptance rule, and baseline-first protocol are unchanged. The preceding fixed invocation selected zero cases and is retained as an inconclusive runner error.",
+  "task_id": "transformers-49418-quantized-cache-residual-flush"
+}

@@ -1,0 +1,31 @@
+ERROR: not found: /trusted/test_cache_utils.py::CacheTest.test_quantized_layer_chunked_updates_2_nonempty_at_capacity
+(no match in any of [<Module test_cache_utils.py>])
+
+
+=============================== warnings summary ===============================
+source/transformers/testing_utils.py:436
+  /source/transformers/testing_utils.py:436: PytestUnknownMarkWarning: Unknown pytest.mark.slow - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    test_case = pytest.mark.slow(test_case)
+
+trusted/test_cache_utils.py:1044
+  /trusted/test_cache_utils.py:1044: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1090
+  /trusted/test_cache_utils.py:1090: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1132
+  /trusted/test_cache_utils.py:1132: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1228
+  /trusted/test_cache_utils.py:1228: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1305
+  /trusted/test_cache_utils.py:1305: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+6 warnings in 4.21s
