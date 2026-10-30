@@ -1,0 +1,24 @@
+{
+  "command_description": "Loaded the pinned optimum-quanto Extension class via runpy, compiled unpack.cpp and pybind_module.cpp with -O3, and imported the resulting quanto_cpp.so. No task repository or test files were mounted.",
+  "image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+  "log_path": "environment/quanto-extension-preflight.log",
+  "log_sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
+  "max_jobs": 1,
+  "model_or_agent_inference": false,
+  "network": "none",
+  "result": "PASSED_RUNTIME_PREPARATION_ONLY",
+  "root_filesystem": "read-only",
+  "runtime_user": "65534:65534",
+  "schema_version": 1,
+  "task_test_executed": false,
+  "tmpfs_mounts": [
+    {
+      "options": "rw,noexec,nosuid,nodev,size=256m,mode=1777",
+      "target": "/tmp"
+    },
+    {
+      "options": "rw,exec,nosuid,nodev,size=256m,mode=1777",
+      "target": "/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build"
+    }
+  ]
+}

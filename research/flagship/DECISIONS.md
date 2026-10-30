@@ -94,3 +94,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Preserve attempt 2 as `INCONCLUSIVE_SELECTOR_MISMATCH`. Retry only the six exact parameterized nodes; retain the 600-second aggregate budget and all isolation rules.
 - **Falsification criteria:** Any node name/hash mismatch, fewer or more than six collected cases, no target assertion failure on baseline, or any fixed-source skip/failure.
 - **Follow-up:** Execute baseline six-node selector, then the matching fixed-source selector if baseline assertions execute.
+
+
+## 2026-10-31 — Isolate Quanto's lazy extension cache for Transformers qualification
+
+- **Hypothesis:** The six Transformers #49418 parameter cases can reach their frozen residual-boundary assertions when Quanto's lazy CPU extension build has a bounded writable cache, while the task source/test inputs and container root remain read-only.
+- **Evidence:** Attempt 3 selected all six exact nodes but failed at `os.makedirs(.../optimum/quanto/library/extensions/cpp/build)` with `EROFS` before the expected equality assertion. A pinned runtime v3 image adds `build-essential` and Ninja. A runtime-only preflight compiled and loaded the exact Quanto extension with `MAX_JOBS=1` under the existing 2.5 GiB memory ceiling, using a 256 MiB tmpfs at only the extension cache path. Docker defaults that tmpfs to `noexec`; an explicit `exec` option was necessary for loading the compiled shared object. Addendum 4 is frozen before the regression retry.
+- **Alternative explanations:** The preflight could be mistaken for a successful regression test; compile pressure could invalidate the task resource limit; or a writable whole-root mount could hide unintended filesystem writes. The preflight mounted no task files, ran no test, used one compiler job within the existing memory/CPU limits, and permits writes only to `/tmp` plus the exact 256 MiB package cache.
+- **Decision:** Preserve attempt 3 as `INCONCLUSIVE_ENVIRONMENT_FAILURE`; it is not baseline evidence and does not authorize the fixed arm. Retry the baseline only under addendum 4. Keep source and trusted test mounts read-only, networking disabled, root read-only, uid 65534, and all prior test limits.
+- **Falsification criteria:** The extension cannot compile/load inside the bounded cache; any task source/test hash differs; the expected baseline assertion does not execute and fail; or any fixed case fails/skips or limits are violated.
+- **Follow-up:** Run the frozen six-node baseline once. If and only if the expected assertion fails, run the exact fixed arm; then proceed sequentially to TRL and MLX. No Development assignment or model inference until all qualification gates pass.

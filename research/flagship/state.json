@@ -1,147 +1,126 @@
 {
-  "schema_version": 2,
-  "updated_at": "2026-10-31T08:32:31+09:00",
-  "milestone_id": "p3-fresh-repository-task-qualification",
-  "last_completed_step": "Transformers #49418 baseline attempt 1 failed at import due to Hub/tokenizers mismatch; attempt 2 imported but selected zero tests because pytest expands the parameterized method into suffixed nodes. Both failures are retained. Addenda 2 and 3 pin a corrected runtime and six exact selectors before retry; no regression assertions have executed and no fixed arm has run.",
-  "go_no_go": {
-    "integration": "GO_PENDING_REMOTE_CI",
-    "coding_capability": "NO_GO",
-    "rl_update": "NO_GO"
-  },
-  "git_refs": {
-    "repository": "mitukx/VARE",
-    "last_verified_main_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/152",
-    "last_integrated_pr_merge_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
-    "active_branch": "codex/fresh-dev-candidate-discovery-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": null,
-    "active_pr_url": null,
-    "active_pr_state": "none"
-  },
   "frozen_protocols": [
     {
-      "protocol_id": "development-repository-repair-campaign-v1",
       "path": "protocols/development_repository_repair_campaign_v1.json",
+      "protocol_id": "development-repository-repair-campaign-v1",
       "sha256": "9239406621a3ac68a6977cf341e4debd35278735a91783626ff764c87210c354",
       "status": "frozen_before_inference; inference_authorized=false"
     },
     {
-      "protocol_id": "development-repository-repair-campaign-v2",
       "path": "protocols/development_repository_repair_campaign_v2.json",
+      "protocol_id": "development-repository-repair-campaign-v2",
       "sha256": "64cfb42524cfbb1e04fa243dd1141d9490bbe2cbe5c9573ba7b6b01a145254a1",
       "status": "hash_bound; inference_authorized=false"
     },
     {
-      "protocol_id": "mlsys-task-deep-qualification-v1",
       "path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+      "protocol_id": "mlsys-task-deep-qualification-v1",
       "sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
       "status": "frozen source split preserved; appended exposure correction marks all 3 Development tasks previously exposed"
     },
     {
-      "protocol_id": "mlsys-repository-task-mlxlm-1904-v11",
       "path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json",
+      "protocol_id": "mlsys-repository-task-mlxlm-1904-v11",
       "sha256": "d7e5680faf5c7b15f32d7e432ee62ce8ddcdf6b835b27cc964988ce6294c2b77",
       "status": "locked_before_run17; run17 PASSED Train-task calibration and 9/9 red-team probes; no model inference authorized"
     },
     {
-      "protocol_id": "mlsys-repository-task-mlxlm-1904-v12",
       "path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v12.json",
+      "protocol_id": "mlsys-repository-task-mlxlm-1904-v12",
       "sha256": "36c5932ab46e00573535f1d6826396cc24cc5021703566f49b9169cad45460c4",
       "status": "locked_before_run18; run18 PASSED Train-only calibration and 10/10 probes; FIFO rejected before grader call; no model inference authorized"
     },
     {
-      "protocol_id": "mlsys-candidate-queue-exposure-audit-v1",
       "path": "protocols/mlsys_candidate_queue_exposure_audit_v1.json",
+      "protocol_id": "mlsys-candidate-queue-exposure-audit-v1",
       "sha256": "d8f3307f3564a4fed5781795e642565a757a22d18d1ec86985a57a62896c818f",
       "status": "frozen against merged main 818fd8c; retrospective output reports 0 fresh Development tasks; no model inference"
     },
     {
-      "protocol_id": "mlsys-task-model-attempt-mlxlm-1904-v1",
       "path": "protocols/mlsys_task_model_attempt_mlxlm_1904_v1.json",
+      "protocol_id": "mlsys-task-model-attempt-mlxlm-1904-v1",
       "sha256": "7bdef7ee8210dfbd25b3ca811d8bb7c1450b97e4c6015e39d653879aee51ad3d",
       "status": "frozen before inference; one Qwen3-4B base-model attempt on Train; run 19 PASSED 2/2 independent grader cases; no update or Held-out use"
     },
     {
-      "protocol_id": "mlsys-fresh-development-candidate-discovery-v1",
       "path": "protocols/mlsys_fresh_development_candidate_discovery_v1.json",
+      "protocol_id": "mlsys-fresh-development-candidate-discovery-v1",
       "sha256": "8b6f52e32f81672ccd7395997fb589aca84a81903be511ef95e481b00bc8789f",
       "status": "frozen; v1 GraphQL query defect retained"
     },
     {
-      "protocol_id": "mlsys-fresh-development-candidate-discovery-v2",
       "path": "protocols/mlsys_fresh_development_candidate_discovery_v2.json",
+      "protocol_id": "mlsys-fresh-development-candidate-discovery-v2",
       "sha256": "87850264f2abb83b31345776b68811449bde6ab0a671a2c2795972d106ccd764",
       "status": "frozen; same-window query stopped at API result cap, no candidate rows accepted"
     },
     {
-      "protocol_id": "mlsys-fresh-development-candidate-discovery-v3",
       "path": "protocols/mlsys_fresh_development_candidate_discovery_v3.json",
+      "protocol_id": "mlsys-fresh-development-candidate-discovery-v3",
       "sha256": "bcab038708c533e9f8af4068db4e347f4c6a8f76fde1c221434d2eb6da41c276",
       "status": "frozen; weekly-partition raw metadata pool complete, original state filter defect retained"
     },
     {
-      "protocol_id": "mlsys-fresh-development-candidate-screen-v4",
       "path": "protocols/mlsys_fresh_development_candidate_screen_v4.json",
+      "protocol_id": "mlsys-fresh-development-candidate-screen-v4",
       "sha256": "45e75d3f616892514d22416c27163221b6d5eccdaed66dad691b8a33e1c737ff",
       "status": "frozen; corrected GraphQL MERGED state filter, 1,278 metadata-review rows, all unqualified/unassigned"
     },
     {
-      "protocol_id": "mlsys-fresh-development-candidate-metadata-sample-v1",
       "path": "protocols/mlsys_fresh_development_candidate_metadata_sample_v1.json",
+      "protocol_id": "mlsys-fresh-development-candidate-metadata-sample-v1",
       "sha256": "2bf791ea9d99184298a1be38f4d0f584b45ac509fe79b5e801f5749c8ee42c20",
       "status": "frozen before deterministic metadata sample; 71 rows across six repositories"
     },
     {
-      "protocol_id": "mlsys-fresh-development-task-qualification-v1",
       "path": "protocols/mlsys_fresh_development_task_qualification_v1.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1",
       "sha256": "3ea5a8f18832295ca07e9584e47fe04a63554a74d95133efc8d2db3a1e261828",
       "status": "frozen before source/test review; selects three tasks, no Development assignment or model inference"
     },
     {
-      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-1",
       "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-1.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-1",
       "sha256": "18010e86e1838a77d8b4f091434c3a9ec1195b6486d8e2dba0d04d7bbea704b6",
       "status": "frozen; original runtime retained; Transformers runtime superseded only by addendum 2"
     },
     {
-      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-2",
       "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-2.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-2",
       "sha256": "9f8f4ce84dbbfcaf9bd9093aa71d00c69034764d5616f1d6946133512746458a",
       "status": "frozen before retry; corrects Transformers dependencies; exact pytest nodes superseded by addendum 3"
     },
     {
-      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-3",
       "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-3.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-3",
       "sha256": "ca36eb3796dd49589316f5ac4ff47e19fe21003f5d8e9449f3930499d6deb08e",
       "status": "frozen before retry; records six exact parameterized Transformers nodes"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-4.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-4",
+      "sha256": "6be83fbf944ee60467ed87d30e5eebeb2f8ce4af8096235908a160e17d8b2598",
+      "status": "frozen before retry; corrects only the Transformers Quanto writable build-cache runtime and serial compilation"
     }
   ],
-  "task_exposure_ledger": {
-    "path": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
-    "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
-    "fresh_stage3_families_used": 0,
-    "historical_heldout_1979_touched": false
+  "git_refs": {
+    "active_branch": "codex/fresh-dev-candidate-discovery-v1",
+    "active_pr_state": "none",
+    "active_pr_url": null,
+    "last_integrated_pr_merge_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/152",
+    "last_verified_main_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
+    "repository": "mitukx/VARE",
+    "verified_pr_head_sha_before_checkpoint_changes": null
   },
-  "run_ids": [
-    "41105309069",
-    "41105317116",
-    "41129971394",
-    "41129977929",
-    "41129977978",
-    "41129977995",
-    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1912-top-p-min-token",
-    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1971-mimo-value-scale",
-    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1912-top-p-min-token",
-    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1971-mimo-value-scale",
-    "mlsys_deep_qualification_exposure_audit_v1",
-    "mlsys-repo-eval-v1-run-17",
-    "mlsys-repo-eval-v1-run-18",
-    "qwen3_4b_instruct_2507_4bit__transformers-45852-4d-mask",
-    "stage3_qwen3_4b_controller_v2__mlxlm-1912-top-p-min-token",
-    "stage3_qwen3_4b_controller_v3__mlxlm-1912-top-p-min-token",
-    "stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token",
-    "mlsys-repo-eval-v1-run-19"
-  ],
+  "go_no_go": {
+    "coding_capability": "NO_GO",
+    "integration": "GO_PENDING_REMOTE_CI",
+    "rl_update": "NO_GO"
+  },
+  "highest_priority_next_task": "Verify the pinned source/test input hashes and rerun the six Transformers #49418 baseline nodes once under addendum 4. Proceed to the exact fixed arm only if the targeted residual-boundary assertion executes and fails; then qualify TRL #7668 and MLX #4778 sequentially under addendum 1.",
+  "last_completed_step": "Transformers #49418 baseline attempt 3 selected all six frozen nodes but failed before the residual-boundary assertion because Quanto attempted to build its CPU extension in the read-only site-packages directory. The attempt is preserved as INCONCLUSIVE_ENVIRONMENT_FAILURE. Runtime v3 with serial C++ compilation and a single executable tmpfs cache mount passed a runtime-only extension preflight; addendum 4 is frozen before retry. No fixed arm has run.",
+  "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -244,11 +223,6 @@
       "status": "frozen before selected task regression tests"
     },
     {
-      "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
-      "sha256": "0a092ea99a2bbd672c71ee53e23b5a5f34a7641658c0b54658339276a8441ab6",
-      "status": "verified pinned CPU test runtimes and retained environment setup failures"
-    },
-    {
       "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-2.json",
       "sha256": "9f8f4ce84dbbfcaf9bd9093aa71d00c69034764d5616f1d6946133512746458a",
       "status": "frozen runtime correction before rerun"
@@ -287,14 +261,82 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-baseline.log",
       "sha256": "7e9651e0f8f421bee2de0f4dca30976008d3fc4622fc416a45f43ce0d1e981e5",
       "status": "raw second-attempt log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-baseline.json",
+      "sha256": "4c64b37814bac28b10b9fabc351947a13f88d1ca432135f55605395485ee6098",
+      "status": "attempt 003 retained as inconclusive environment failure; six nodes selected, zero targeted assertions executed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-baseline.log",
+      "sha256": "21244c9ddb946c9c81d667a0a1e1a1f7b0f7fa5799d1c6093f2c81b18b87a327",
+      "status": "raw attempt 003 baseline log; all six errors originate from the read-only Quanto extension build path"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-4.json",
+      "sha256": "6be83fbf944ee60467ed87d30e5eebeb2f8ce4af8096235908a160e17d8b2598",
+      "status": "frozen before retry; adds one writable Quanto build-cache tmpfs and MAX_JOBS=1"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
+      "sha256": "521795d97595f1d3ee82f56f298ffa0e7203b42d0ea36dd794a6d6671989a1c7",
+      "status": "updated pinned runtime v3, package/build hashes, retained environment diagnostics, and successful extension preflight"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v3",
+      "sha256": "c62eaf32a8d172559a70417f1d4bd4dd4f7c3751e583d78c33bfca983cdcb4ad",
+      "status": "reproducible runtime v3 Dockerfile based on pinned runtime v2 image"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/build-transformers-v3.log",
+      "sha256": "c38cb0c878b4e66aafdfbd4c65669cc4eef7eba7a9f74b945b7fa1702505b740",
+      "status": "runtime v3 image build succeeded"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/quanto-extension-preflight.json",
+      "sha256": "3a575f31694b539cabbd120e039090e51d545b877c785b9fb60a63f6d2ffbeb1",
+      "status": "runtime-only CPU extension preflight passed; no regression test"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/quanto-extension-preflight.log",
+      "sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
+      "status": "raw successful Quanto extension compilation and load output"
     }
   ],
-  "unresolved_blockers": [
-    "No selected task is qualified yet. Transformers baseline attempts 1 and 2 were blocked by environment import and selector mismatches respectively; addenda 2 and 3 are frozen before retry. TRL and MLX task tests remain pending.",
-    "The audited 24-entry historical manual queue had zero fresh Development tasks; new candidate source tasks remain unassigned until all qualification gates pass.",
-    "Public pretraining exposure is unknown even for post-cutoff-proxy upstream tasks.",
-    "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or held-out evaluation has run.",
-    "PR #149 remains an unrelated legacy open PR on a pre-#150 base; it does not block this qualification branch."
+  "run_ids": [
+    "41105309069",
+    "41105317116",
+    "41129971394",
+    "41129977929",
+    "41129977978",
+    "41129977995",
+    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1912-top-p-min-token",
+    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1971-mimo-value-scale",
+    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1912-top-p-min-token",
+    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1971-mimo-value-scale",
+    "mlsys_deep_qualification_exposure_audit_v1",
+    "mlsys-repo-eval-v1-run-17",
+    "mlsys-repo-eval-v1-run-18",
+    "qwen3_4b_instruct_2507_4bit__transformers-45852-4d-mask",
+    "stage3_qwen3_4b_controller_v2__mlxlm-1912-top-p-min-token",
+    "stage3_qwen3_4b_controller_v3__mlxlm-1912-top-p-min-token",
+    "stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token",
+    "mlsys-repo-eval-v1-run-19",
+    "freshdev-qualification-transformers-49418-attempt-003-baseline"
   ],
-  "highest_priority_next_task": "Run the six exact Transformers #49418 baseline nodes frozen in addendum 3 with the corrected no-network image; only after target assertions execute and fail, run the exact fixed arm. Then proceed to TRL and MLX sequentially."
+  "schema_version": 2,
+  "task_exposure_ledger": {
+    "fresh_stage3_families_used": 0,
+    "historical_heldout_1979_touched": false,
+    "path": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
+    "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884"
+  },
+  "unresolved_blockers": [
+    "The selected fresh-development cohort still has 0 qualified tasks. Transformers #49418 baseline attempt 3 was inconclusive: all six selected nodes failed at Quanto lazy C++ extension build-cache setup before any targeted correctness assertion. Addendum 4 freezes the corrected runtime before retry; the fixed arm is not authorized until a target baseline assertion failure is observed.",
+    "The audited 24-entry historical queue has no fresh Development task; new candidates remain unassigned until all source-level qualification gates pass.",
+    "Public pretraining exposure of the selected public upstream patches remains unknown.",
+    "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
+    "PR #149 and other older open branches are unrelated to this qualification experiment."
+  ],
+  "updated_at": "2026-10-31T08:40:26+09:00"
 }

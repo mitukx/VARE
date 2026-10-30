@@ -1,0 +1,6 @@
+FROM vare/fresh-qualification-transformers:0.2@sha256:72844693faee9d2b814cd7c0fc59fc1f8b968bcb1933121e9efb008705d5a457
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+USER 65534:65534

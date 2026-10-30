@@ -126,3 +126,15 @@ This is one independently graded task from Train. It is not Development/generali
 - No resumable model or optimizer run exists. Do not relaunch the consumed task/model pairs.
 
 Next, integrate the audit and run-19 evidence by focused PR. Then prospectively source-qualify a diverse Development cohort without opening Held-out files or tests.
+
+## Fresh Development task qualification — Transformers #49418
+
+The selected task and six parameter cases are frozen in `results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-4.json` (SHA-256 `6be83fbf944ee60467ed87d30e5eebeb2f8ce4af8096235908a160e17d8b2598`). Attempt 3 is an inconclusive runtime failure, not a baseline result. Runtime v3 is pinned by image ID `sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2`; its Dockerfile and build log are under `results/mlsys-fresh-development-task-qualification-v1/environment/`.
+
+Prepare two separate `/source` trees from the frozen base (`bd3f926f52b55a0a59e812376e7624ca9d471ac2`) and fixed (`1734d8d9d6a4c5331ba87dd4a1a36d3a3cb25ac1`) commits. Mount the fixed commit's `tests/utils/test_cache_utils.py` at `/trusted/test_cache_utils.py` in both runs. Verify the frozen source/test input manifest before launch. Use the six exact node IDs in addendum 4, the resource/security flags in addenda 1 and 4, `MAX_JOBS=1`, and read-only source/test mounts. The only additional writable mount is:
+
+```text
+/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build:rw,exec,nosuid,nodev,size=256m,mode=1777
+```
+
+Run the baseline first. Do not run the fixed arm unless the intended residual-boundary correctness assertion executes and fails on baseline. Retain each raw log and a separate JSON attempt record. No candidate prompt, agent/model inference, optimizer update, Development assignment, or Held-out access is included in this qualification protocol.

@@ -18,6 +18,10 @@
       "sha256": "c08ba83252edeabd650c8c5aa2417b92e51e55d63f052a6c09fec2f0a1e6de5c",
       "size_bytes": 440
     },
+    "environment/Dockerfile.transformers-v3": {
+      "sha256": "c62eaf32a8d172559a70417f1d4bd4dd4f7c3751e583d78c33bfca983cdcb4ad",
+      "size_bytes": 282
+    },
     "environment/build-mlx-baseline-incremental.log": {
       "sha256": "d518da2f05e6186ab706b4cb5922222d1ab59d604b7a39e2f21ae110a9ef857c",
       "size_bytes": 605
@@ -30,9 +34,33 @@
       "sha256": "1e29ce6a6db29f315ab74ad31e52c066ef3b4cc1339bc86da40b9c7ee370e2df",
       "size_bytes": 2856
     },
+    "environment/build-transformers-v3-attempt-001.log": {
+      "sha256": "195c8ccb99c1b50794443b589c00b9d43a7e5299acbc8e548d997289d437de5b",
+      "size_bytes": 322
+    },
+    "environment/build-transformers-v3.log": {
+      "sha256": "c38cb0c878b4e66aafdfbd4c65669cc4eef7eba7a9f74b945b7fa1702505b740",
+      "size_bytes": 20449
+    },
     "environment/build-transformers.log": {
       "sha256": "0cf9c6fc4e724f903fec017f7cfd8c371c573e82cbfbb62b596ddc17144df2db",
       "size_bytes": 1565
+    },
+    "environment/quanto-extension-preflight-attempt-001.log": {
+      "sha256": "c3ef0cab9b8a1beab35ee35e6fd03e3aff054534cc84e8a3639b18f08d7eaf12",
+      "size_bytes": 1566
+    },
+    "environment/quanto-extension-preflight-attempt-002.log": {
+      "sha256": "db5da35cbce15f2df03f1d54dd768b9fea80254e48829dc2a4fca9dd12dcec6b",
+      "size_bytes": 1247
+    },
+    "environment/quanto-extension-preflight-attempt-003.log": {
+      "sha256": "db5da35cbce15f2df03f1d54dd768b9fea80254e48829dc2a4fca9dd12dcec6b",
+      "size_bytes": 1247
+    },
+    "environment/quanto-extension-preflight.log": {
+      "sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
+      "size_bytes": 275
     }
   },
   "mlx_runtime": {
@@ -84,6 +112,13 @@
       "classification": "selector mismatch; zero test cases selected",
       "record": "transformers-49418/attempt-002-baseline.json",
       "sha256": "30c19c9faffdd6de5d3f4a9b8354ecf099b4835647e8247c4361a6a02b0854a0"
+    },
+    {
+      "classification": "six parameterized cases selected; all hit the read-only Quanto lazy C++ build-cache error before the targeted correctness assertion; inconclusive environment failure",
+      "log": "transformers-49418/attempt-003-baseline.log",
+      "log_sha256": "21244c9ddb946c9c81d667a0a1e1a1f7b0f7fa5799d1c6093f2c81b18b87a327",
+      "record": "transformers-49418/attempt-003-baseline.json",
+      "record_sha256": "4c64b37814bac28b10b9fabc351947a13f88d1ca432135f55605395485ee6098"
     }
   ],
   "pretest_checks": [
@@ -91,9 +126,52 @@
     "Fixture snapshot downloaded at exact revision; refs/main points to that commit for offline test loading.",
     "All selected task test/source files remain unmodified and have frozen hashes."
   ],
+  "quanto_extension_preflight": {
+    "container_settings": [
+      "network=none",
+      "read-only root",
+      "uid=65534:65534",
+      "memory=2500m",
+      "swap-inclusive=2500m",
+      "cpus=2",
+      "pids=256",
+      "MAX_JOBS=1",
+      "/tmp tmpfs rw,noexec",
+      "Quanto cpp/build tmpfs rw,exec,nosuid,nodev,size=256m,mode=1777"
+    ],
+    "extension_loader": "/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/extension.py",
+    "extension_source": "/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/{unpack.cpp,pybind_module.cpp}",
+    "image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+    "log_path": "environment/quanto-extension-preflight.log",
+    "log_sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
+    "result": "PASSED_RUNTIME_PREPARATION_ONLY",
+    "result_detail": "The exact optimum-quanto Extension loader compiled and loaded quanto_cpp.so from the writable tmpfs cache. No regression test or task source/test mount was used."
+  },
   "runtime_entrypoint_override": "python3 for all task test containers, because the baseline MLX image was committed from a disposable builder container with shell entrypoint metadata.",
+  "runtime_preparation_diagnostics": [
+    {
+      "classification": "standalone Quanto package import smoke used the installed Transformers wheel without the pinned repository source overlay and hit its tokenizers metadata constraint; no regression or task source was tested",
+      "log": "environment/quanto-extension-preflight-attempt-001.log",
+      "log_sha256": "c3ef0cab9b8a1beab35ee35e6fd03e3aff054534cc84e8a3639b18f08d7eaf12"
+    },
+    {
+      "classification": "default parallel Ninja compilation exceeded the 2500 MiB container memory limit and cc1plus was killed; MAX_JOBS=1 was selected. Transient raw output was replaced during file naming; the exact observed terminal diagnostic is summarized here.",
+      "raw_log_preserved": false,
+      "terminal_diagnostic": "c++: fatal error: Killed signal terminated program cc1plus; ninja: build stopped: subcommand failed."
+    },
+    {
+      "classification": "single-job compilation reached shared-object loading, then failed because Docker tmpfs defaults to noexec",
+      "log": "environment/quanto-extension-preflight-attempt-002.log",
+      "log_sha256": "db5da35cbce15f2df03f1d54dd768b9fea80254e48829dc2a4fca9dd12dcec6b"
+    },
+    {
+      "classification": "repeat tmpfs noexec mount reproduced the failed shared-object mapping",
+      "log": "environment/quanto-extension-preflight-attempt-003.log",
+      "log_sha256": "db5da35cbce15f2df03f1d54dd768b9fea80254e48829dc2a4fca9dd12dcec6b"
+    }
+  ],
   "schema_version": 1,
-  "state": "two Transformers baseline invocations were attempted; attempt 1 failed environment import (zero cases), attempt 2 missed the unexpanded parameterized node (zero cases); addenda 2 and 3 freeze corrected runtime and six exact nodes before retry.",
+  "state": "Transformers baseline attempt 3 selected all six nodes, but the Quanto CPU extension loader failed to create its build directory under the read-only root before any target correctness assertion. Addendum 4 pins runtime v3, MAX_JOBS=1, and a single executable tmpfs cache mount; a runtime-only extension preflight passed. No fixed arm or regression retry has run since attempt 3.",
   "transformers_runtime": {
     "base_image": "vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
     "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.1 --file Dockerfile .",
@@ -133,6 +211,25 @@
       "transformers": "4.57.3"
     },
     "pretest_import_check": "Passed: ResolvedRevision import and tokenizers 0.23.3 under --network=none; no selected regression test executed."
+  },
+  "transformers_runtime_v3": {
+    "added_packages": {
+      "build-essential": "12.9",
+      "g++": "4:12.2.0-3",
+      "gcc": "4:12.2.0-3",
+      "ninja-build": "1.11.1-2~deb12u1"
+    },
+    "architecture": "linux/arm64",
+    "base_image": "vare/fresh-qualification-transformers:0.2@sha256:72844693faee9d2b814cd7c0fc59fc1f8b968bcb1933121e9efb008705d5a457",
+    "build_attempt_001_log": "environment/build-transformers-v3-attempt-001.log",
+    "build_attempt_001_log_sha256": "195c8ccb99c1b50794443b589c00b9d43a7e5299acbc8e548d997289d437de5b",
+    "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.3 --file results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v3 .",
+    "build_log": "environment/build-transformers-v3.log",
+    "build_log_sha256": "c38cb0c878b4e66aafdfbd4c65669cc4eef7eba7a9f74b945b7fa1702505b740",
+    "dockerfile": "environment/Dockerfile.transformers-v3",
+    "dockerfile_sha256": "c62eaf32a8d172559a70417f1d4bd4dd4f7c3751e583d78c33bfca983cdcb4ad",
+    "final_image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+    "purpose": "Provide the C++ compiler and Ninja required by optimum-quanto 0.2.7 lazy CPU extension loading. Compilation occurs only in an explicit 256 MiB tmpfs cache mount during isolated task execution; no task test is run during image build."
   },
   "trl_runtime": {
     "fixture_revision": "ce8d0bf270b28c8fab026ced69fe8aa14b0f0eda",

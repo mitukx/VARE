@@ -1,0 +1,18 @@
+{
+  "arm": "baseline source with frozen test delta",
+  "attempt_id": "freshdev-qualification-transformers-49418-attempt-003-baseline",
+  "collected_cases": 6,
+  "error": "All six selected cases reached the Quanto CPU unpack operation and failed before the targeted equality assertion: optimum.quanto.library.extensions.extension.Extension.lib raised OSError [Errno 30] while creating /usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build in the read-only container root.",
+  "exit_code": 1,
+  "failure_location": "test_cache_utils.py:243 -> QuantizedCache._dequantize -> Quanto C++ unpack lazy loader -> os.makedirs(build_directory)",
+  "host_command_wall_seconds": null,
+  "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-baseline.log",
+  "log_sha256": "21244c9ddb946c9c81d667a0a1e1a1f7b0f7fa5799d1c6093f2c81b18b87a327",
+  "observed_at_utc": "2026-10-30T23:33:32Z",
+  "protocol": "mlsys-fresh-development-task-qualification-v1-addendum-3",
+  "pytest_reported_seconds": 7.68,
+  "qualification_effect": "No baseline negative-control outcome. The six selected cases failed on a runtime build-cache permission error before the expected residual-boundary assertion. Do not run the fixed arm; retry only after a frozen runtime addendum.",
+  "regression_assertions_executed": false,
+  "schema_version": 1,
+  "status": "INCONCLUSIVE_ENVIRONMENT_FAILURE"
+}
