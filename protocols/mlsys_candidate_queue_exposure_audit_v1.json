@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-candidate-manual-queue-exposure-audit-v1",
+  "frozen_at_utc": "2026-10-30T22:13:53Z",
+  "source_main_commit": "818fd8c802277ad360ee9b5250d0315cfb8dad81",
+  "purpose": "Reconcile all 24 manual MLSys candidates with the frozen source-level qualification catalog and retained Stage 2/3 model-attempt ledgers before selecting a replacement Development cohort.",
+  "candidate_queue": {
+    "path": "docs/mlsys-candidate-manual-qualification-queue.md",
+    "sha256": "8f9b188cc20646fd53c488157e50cb6fdeac50dc8401e43174cb5945fca2d31f",
+    "expected_candidate_count": 24,
+    "expected_pull_requests": [
+      "ml-explore/mlx-lm#1938",
+      "huggingface/trl#7768",
+      "ml-explore/mlx-lm#1935",
+      "huggingface/transformers#49147",
+      "huggingface/transformers#49116",
+      "ml-explore/mlx-lm#1904",
+      "ml-explore/mlx-lm#1910",
+      "huggingface/transformers#49412",
+      "ml-explore/mlx-lm#1902",
+      "ml-explore/mlx-lm#1787",
+      "ml-explore/mlx-lm#1926",
+      "huggingface/transformers#49208",
+      "ml-explore/mlx-lm#1912",
+      "ml-explore/mlx-lm#1930",
+      "ml-explore/mlx#4662",
+      "ml-explore/mlx-lm#1921",
+      "huggingface/transformers#45852",
+      "vllm-project/vllm#52626",
+      "huggingface/transformers#48319",
+      "ml-explore/mlx-lm#1925",
+      "ml-explore/mlx#4668",
+      "ml-explore/mlx-lm#1795",
+      "vllm-project/vllm#56841",
+      "huggingface/transformers#49500"
+    ]
+  },
+  "pinned_inputs": [
+    {
+      "path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+      "sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+      "role": "Frozen source-level task families, split assignments, and qualification exclusions."
+    },
+    {
+      "path": "../../outputs/VARE-stage2-final-2026-10-31/attempts-summary.json",
+      "sha256": "af6e33de632ab10fb66dbae6445a5355a75640b3920ab72dd6404cbd6a660187",
+      "role": "Stage 2 model attempt records."
+    },
+    {
+      "path": "../../outputs/VARE-stage3-2026-10-31/task-exposure-ledger.json",
+      "sha256": "a2da858454745c86ef7e5162d47552bb659943e03a47442cd03c0e9dff77693a",
+      "role": "Combined Stage 2/3 task identities and attempt records; count only rows explicitly labeled Stage 3 when adding Stage 3 attempts."
+    },
+    {
+      "path": "../../outputs/VARE-stage2-final-2026-10-31/evidence-sha256.txt",
+      "sha256": "321ca652768c9688c307d8be89430360d01272b7b08d15825d13588ac1476049",
+      "base_path": "../../",
+      "verified_entries": 1120,
+      "missing_entries": 0,
+      "mismatched_entries": 0,
+      "role": "Stage 2 raw-evidence integrity index."
+    },
+    {
+      "path": "../../outputs/VARE-stage3-2026-10-31/evidence-sha256.txt",
+      "sha256": "8266b3a048616ef1f629da23998b083433cbf58a06552f370383bb18ecd7e124",
+      "base_path": "../../outputs/VARE-stage3-2026-10-31",
+      "verified_entries": 2194,
+      "missing_entries": 0,
+      "mismatched_entries": 0,
+      "role": "Stage 3 raw-evidence integrity index."
+    },
+    {
+      "path": "docs/mlsys-task-candidate-survey-v1-report.md",
+      "sha256": "d81206893df3da00258188b45606fcae62dddee6700a602afe5d8c0a6e57f6c1",
+      "role": "Frozen coarse-screen limitations and family-correlation notes."
+    },
+    {
+      "path": "docs/mlsys-actual-model-update-readiness-v2-report.md",
+      "sha256": "e4721b9a679943388a1ec35b3cb1ddae55cf659ede617b09688a9b3081c96be4",
+      "role": "Historical VARE model-update and task-inventory context."
+    }
+  ],
+  "missing_source_artifact": {
+    "path": "results/mlsys-task-candidate-survey-v1/screen-1/screen.json",
+    "status": "not present in the VARE checkout",
+    "effect": "The audit can reconcile the frozen 24-row manual queue but cannot revalidate its raw API metadata, per-PR changed paths, or merge revisions."
+  },
+  "audit_rules": {
+    "match_identity_by": ["upstream repository", "upstream pull request number"],
+    "model_attempt_sources": [
+      "Stage 2 attempts-summary.json",
+      "Stage 3 rows in task-exposure-ledger.json"
+    ],
+    "do_not_count_stage2_rows_in_stage3_ledger_twice": true,
+    "preserve_original_qualification_catalog_and_splits": true,
+    "heldout_task_source_or_evaluator_files_may_be_opened": false,
+    "model_inference_authorized": false,
+    "training_authorized": false,
+    "fresh_development_assignment_authorized": false,
+    "task_qualification_authorized": false
+  },
+  "decision_rule": "A candidate is not cleared for fresh Development by absence from the Stage 2/3 ledgers alone. Previously exposed Development tasks remain consumed; historical Held-out tasks remain reserved; Train tasks require an explicit prospective split change; excluded, collapsed, or manual-only candidates remain ineligible until independently requalified.",
+  "limitations": [
+    "Public upstream issue/PR text may have appeared in model pretraining; pretraining exposure remains unknown.",
+    "The historical Qwen2.5-0.5B LoRA smoke used the authored grad_accum_tail task and its retained report does not supply a queue-PR exposure; it does not establish exposure to any of these exact upstream task families.",
+    "No task source, hidden grader, or held-out test was opened or executed by this audit."
+  ]
+}
