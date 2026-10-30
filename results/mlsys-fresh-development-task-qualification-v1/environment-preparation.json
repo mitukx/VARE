@@ -79,6 +79,11 @@
       "classification": "environment collection failure; zero cases collected",
       "record": "transformers-49418/attempt-001-baseline.json",
       "sha256": "9498df99fd2cf1b6d9ffdb971b1ff82f58925ba787a90ae6aaab8cb94ee77e67"
+    },
+    {
+      "classification": "selector mismatch; zero test cases selected",
+      "record": "transformers-49418/attempt-002-baseline.json",
+      "sha256": "30c19c9faffdd6de5d3f4a9b8354ecf099b4835647e8247c4361a6a02b0854a0"
     }
   ],
   "pretest_checks": [
@@ -88,7 +93,7 @@
   ],
   "runtime_entrypoint_override": "python3 for all task test containers, because the baseline MLX image was committed from a disposable builder container with shell entrypoint metadata.",
   "schema_version": 1,
-  "state": "one baseline test invocation was attempted and failed during collection for an environment dependency mismatch; corrected runtime image pinned in addendum 2; no regression assertions have run yet",
+  "state": "two Transformers baseline invocations were attempted; attempt 1 failed environment import (zero cases), attempt 2 missed the unexpanded parameterized node (zero cases); addenda 2 and 3 freeze corrected runtime and six exact nodes before retry.",
   "transformers_runtime": {
     "base_image": "vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
     "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.1 --file Dockerfile .",

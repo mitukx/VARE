@@ -84,3 +84,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Classify attempt 1 as `INCONCLUSIVE_ENVIRONMENT_FAILURE`, preserve it, and rerun only after addendum 2 is frozen and pushed. Do not count it toward qualification.
 - **Falsification criteria:** The corrected no-network image cannot import the pinned source or collect the exact selector; baseline assertions do not fail for the targeted residual-boundary bug; fixed-source cases skip or fail; or any source/test hash differs.
 - **Follow-up:** Run exact baseline then fixed selectors under the corrected image; record each case and preserve all output.
+
+
+## 2026-10-31 — Freeze exact parameterized Transformers test nodes
+
+- **Hypothesis:** The pinned Transformers regression is represented by six `parameterized.expand` node names, and selecting those exact nodes will execute the intended boundary assertions.
+- **Evidence:** Attempt 2 under the corrected dependency image imported the test module and reported no match for the unexpanded method; zero test cases were selected and no assertion ran. The six labels and order are frozen in addendum 3 (SHA-256 `ca36eb3796dd49589316f5ac4ff47e19fe21003f5d8e9449f3930499d6deb08e`) from the selected test delta.
+- **Alternative explanations:** Count a pytest selector error as a baseline bug failure, or run the entire `CacheTest` class. The log shows the requested node was absent; running a broader class would exceed the frozen scope.
+- **Decision:** Preserve attempt 2 as `INCONCLUSIVE_SELECTOR_MISMATCH`. Retry only the six exact parameterized nodes; retain the 600-second aggregate budget and all isolation rules.
+- **Falsification criteria:** Any node name/hash mismatch, fewer or more than six collected cases, no target assertion failure on baseline, or any fixed-source skip/failure.
+- **Follow-up:** Execute baseline six-node selector, then the matching fixed-source selector if baseline assertions execute.

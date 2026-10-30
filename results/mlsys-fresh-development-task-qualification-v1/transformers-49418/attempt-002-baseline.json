@@ -1,0 +1,17 @@
+{
+  "arm": "baseline source with frozen test delta",
+  "attempt_id": "freshdev-qualification-transformers-49418-attempt-002-baseline",
+  "error": "not found: /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates (no match in any of [<UnitTestCase CacheTest>]); parameterized.expand creates six suffixed method nodes.",
+  "exit_code": 4,
+  "host_command_wall_seconds": 5.248,
+  "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-baseline.log",
+  "log_sha256": "7e9651e0f8f421bee2de0f4dca30976008d3fc4622fc416a45f43ce0d1e981e5",
+  "module_import": "succeeded under corrected Hub/tokenizers runtime; pytest discovered CacheTest class but requested unexpanded method name was not a node",
+  "observed_at_utc": "2026-10-30T23:32:31Z",
+  "protocol": "mlsys-fresh-development-task-qualification-v1-addendum-2",
+  "pytest_cases_selected": 0,
+  "qualification_effect": "No baseline result; zero test cases selected. Preserve and rerun with the six exact parameterized node IDs frozen in addendum 3.",
+  "regression_assertions_executed": false,
+  "schema_version": 1,
+  "status": "INCONCLUSIVE_SELECTOR_MISMATCH"
+}

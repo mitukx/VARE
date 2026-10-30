@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-10-31T08:31:22+09:00",
+  "updated_at": "2026-10-31T08:32:31+09:00",
   "milestone_id": "p3-fresh-repository-task-qualification",
-  "last_completed_step": "Qualification addendum 1 was pushed before tests. Transformers #49418 baseline attempt 1 failed at collection before any assertions because the image had incompatible Hub/tokenizers versions; the failure log is retained. Pinned corrected runtime and addendum 2 are prepared before retry. No fixed arm or other task test has run.",
+  "last_completed_step": "Transformers #49418 baseline attempt 1 failed at import due to Hub/tokenizers mismatch; attempt 2 imported but selected zero tests because pytest expands the parameterized method into suffixed nodes. Both failures are retained. Addenda 2 and 3 pin a corrected runtime and six exact selectors before retry; no regression assertions have executed and no fixed arm has run.",
   "go_no_go": {
     "integration": "GO_PENDING_REMOTE_CI",
     "coding_capability": "NO_GO",
@@ -107,7 +107,13 @@
       "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-2",
       "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-2.json",
       "sha256": "9f8f4ce84dbbfcaf9bd9093aa71d00c69034764d5616f1d6946133512746458a",
-      "status": "frozen before Transformers baseline retry; corrects only the runtime dependency mismatch"
+      "status": "frozen before retry; corrects Transformers dependencies; exact pytest nodes superseded by addendum 3"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-3",
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-3.json",
+      "sha256": "ca36eb3796dd49589316f5ac4ff47e19fe21003f5d8e9449f3930499d6deb08e",
+      "status": "frozen before retry; records six exact parameterized Transformers nodes"
     }
   ],
   "task_exposure_ledger": {
@@ -239,7 +245,7 @@
     },
     {
       "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
-      "sha256": "5257f20aa1de1099c1d57986f086ccb58557608e492e8401c6b1a32ceff1da23",
+      "sha256": "0a092ea99a2bbd672c71ee53e23b5a5f34a7641658c0b54658339276a8441ab6",
       "status": "verified pinned CPU test runtimes and retained environment setup failures"
     },
     {
@@ -266,14 +272,29 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/environment/build-transformers-v2.log",
       "sha256": "1e29ce6a6db29f315ab74ad31e52c066ef3b4cc1339bc86da40b9c7ee370e2df",
       "status": "pinned dependency correction image build log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-3.json",
+      "sha256": "ca36eb3796dd49589316f5ac4ff47e19fe21003f5d8e9449f3930499d6deb08e",
+      "status": "frozen exact six-node selector before retry"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-baseline.json",
+      "sha256": "30c19c9faffdd6de5d3f4a9b8354ecf099b4835647e8247c4361a6a02b0854a0",
+      "status": "preserved selector miss; zero cases selected"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-baseline.log",
+      "sha256": "7e9651e0f8f421bee2de0f4dca30976008d3fc4622fc416a45f43ce0d1e981e5",
+      "status": "raw second-attempt log"
     }
   ],
   "unresolved_blockers": [
-    "No selected task is qualified yet. The first Transformers baseline attempt stopped at collection because of a runtime dependency mismatch; corrected addendum 2 is frozen for a baseline retry. TRL and MLX task tests remain pending under addendum 1.",
+    "No selected task is qualified yet. Transformers baseline attempts 1 and 2 were blocked by environment import and selector mismatches respectively; addenda 2 and 3 are frozen before retry. TRL and MLX task tests remain pending.",
     "The audited 24-entry historical manual queue had zero fresh Development tasks; new candidate source tasks remain unassigned until all qualification gates pass.",
     "Public pretraining exposure is unknown even for post-cutoff-proxy upstream tasks.",
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or held-out evaluation has run.",
     "PR #149 remains an unrelated legacy open PR on a pre-#150 base; it does not block this qualification branch."
   ],
-  "highest_priority_next_task": "Rerun the exact Transformers #49418 baseline with the corrected no-network image pinned in qualification addendum 2; only after targeted assertions execute and fail, run its exact fixed arm. Then proceed to TRL and MLX sequentially under addendum 1."
+  "highest_priority_next_task": "Run the six exact Transformers #49418 baseline nodes frozen in addendum 3 with the corrected no-network image; only after target assertions execute and fail, run the exact fixed arm. Then proceed to TRL and MLX sequentially."
 }
