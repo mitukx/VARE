@@ -38,6 +38,15 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Falsification criteria:** An unwritten FIFO blocks or reaches the grader; v1/v2 red-team receipts stop validating; or v3 evidence can omit or forge the FIFO outcome.
 - **Follow-up:** Execute protocol-v12 run 18 on Train task #1904, preserve new raw evidence separately, then push the updated PR head and rerun required CI/review.
 
+## 2026-10-31 — Validate nonblocking FIFO rejection in run 18
+
+- **Hypothesis:** Opening the target with `O_NONBLOCK` permits a regular-file descriptor check to reject an unwritten FIFO promptly without changing the pinned task grader's baseline/known-fix semantics.
+- **Evidence:** Protocol-v12 run 18 on clean VARE commit `a7d39bda1da662c18bc7b6738b95f605b679ee30` failed the baseline, passed the known fix with exact pinned source bytes, rejected the source swap, and passed all 10 red-team probes. The FIFO was rejected in `0.00012` seconds with no grader call. The 25-test focused suite passed on Python 3.11/3.12/3.13. Run manifest SHA-256: `24e4ed3e7e5749a3bd19bdf721cc54104fae913d8902352487a9f3f8801b7d4a`.
+- **Alternative explanations:** The new test or protocol might be reporting an expected outcome without exercising the real staging path. The red-team probe invokes `grade_workspace` with an actual named pipe and replaces `grade_calls` with a trap; run 18 records rejection and confirms the trap was not entered.
+- **Decision:** Accept protocol v12's narrow calibration as **PASSED** and preserve it as separate evidence from the immutable v11/run-17 record. The FIFO fix resolves the automated P1 review finding but does not certify general-purpose sandboxing or model capability.
+- **Falsification criteria:** Replaying the pinned implementation fails either task arm; any of the 10 probes fails or is malformed; the FIFO enters `grade_calls`; or run-18 hashes disagree.
+- **Follow-up:** Push the FIFO fix and run-18 evidence to PR #151, rerun exact-head checks and review, integrate only under repository rules, then audit the remaining candidate queue for a fresh Development split.
+
 ## 2026-10-31 — Classify a mismatched worker nonce as a protocol failure
 
 - **Hypothesis:** A syntactically valid frame with the wrong nonce is a protocol mismatch and must not yield candidate data.
