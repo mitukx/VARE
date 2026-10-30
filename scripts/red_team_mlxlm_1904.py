@@ -96,7 +96,7 @@ def main() -> int:
     }
     report = {
         "schema_version": 1,
-        "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v2",
+        "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v3",
         "source_checkout": "2af5f7ce8620115bf37fbbddf9817f083118df59",
         "image": args.image,
         "network": "none",
@@ -172,6 +172,42 @@ def main() -> int:
             "workspace_parent_symlink_rejected": symlink_rejected,
             "grade_call_attempted": grade_call_attempted,
             "wall_s": time.monotonic() - start,
+        }
+        fifo_workspace = root / "workspace-fifo"
+        fifo_package = fifo_workspace / "mlx_lm"
+        fifo_package.mkdir(parents=True)
+        os.mkfifo(fifo_package / "server.py")
+        grade_call_attempted = False
+        original_grade_calls = repo_task.grade_calls
+
+        def unexpected_fifo_grade_call(*_args, **_kwargs):
+            nonlocal grade_call_attempted
+            grade_call_attempted = True
+            raise AssertionError("FIFO workspace reached the candidate grader")
+
+        repo_task.grade_calls = unexpected_fifo_grade_call
+        start = time.monotonic()
+        try:
+            grade_workspace(fifo_workspace, image=args.image)
+            fifo_rejected = False
+        except RepositoryTaskError as exc:
+            fifo_rejected = "regular file" in str(exc).lower()
+        except AssertionError:
+            fifo_rejected = False
+        finally:
+            repo_task.grade_calls = original_grade_calls
+        fifo_wall_s = time.monotonic() - start
+        report["attempts"]["workspace_fifo_probe"] = {
+            "expected_isolation_outcome": "reject non-regular target without blocking before grader call",
+            "grader_passed": fifo_rejected and not grade_call_attempted,
+            "expected_grader_passed": True,
+            "audit_check_passed": (
+                fifo_rejected and not grade_call_attempted and fifo_wall_s < 1.0
+            ),
+            "workspace_fifo_rejected": fifo_rejected,
+            "grade_call_attempted": grade_call_attempted,
+            "completed_without_blocking": fifo_wall_s < 1.0,
+            "wall_s": fifo_wall_s,
         }
     report["decision"] = {
         "all_attacks_checked": all(item["audit_check_passed"] for item in report["attempts"].values()),

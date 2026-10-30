@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce the pinned MLX-LM #1904 v11 baseline/fix calibration."""
+"""Reproduce the pinned MLX-LM #1904 v12 baseline/fix calibration."""
 
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ def main() -> int:
     patch = Path(__file__).resolve().parents[1] / (
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch"
     )
-    protocol = patch.parent / "protocol-v11.json"
+    protocol = patch.parent / "protocol-v12.json"
     task = patch.parent / "task.md"
     started = time.monotonic()
     implementation_commit = subprocess.run(
@@ -79,8 +79,8 @@ def main() -> int:
         )
     output.parent.mkdir(parents=True, exist_ok=True)
     protocol_data = json.loads(protocol.read_text(encoding="utf-8"))
-    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v11":
-        raise SystemExit("calibration requires the v11 protocol")
+    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v12":
+        raise SystemExit("calibration requires the v12 protocol")
     try:
         verify_no_index_flags(ROOT, CALIBRATION_INPUT_FILES)
     except RepositoryTaskError as exc:
@@ -211,7 +211,7 @@ def main() -> int:
     ).stdout.strip()
     result = {
         "schema_version": 1,
-        "experiment_id": "mlsys-repository-task-mlxlm-1904-calibration-v3",
+        "experiment_id": "mlsys-repository-task-mlxlm-1904-calibration-v4",
         "implementation_commit": implementation_commit,
         "implementation_worktree_clean_at_start": implementation_worktree_clean,
         "protocol_sha256": sha256_file(protocol),

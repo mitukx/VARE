@@ -58,9 +58,13 @@ RED_TEAM_PROBES_V1 = frozenset(
         "memory_exhaustion",
     }
 )
-RED_TEAM_PROBES = RED_TEAM_PROBES_V1 | frozenset(
+RED_TEAM_PROBES_V2 = RED_TEAM_PROBES_V1 | frozenset(
     {"workspace_parent_symlink_probe"}
 )
+RED_TEAM_PROBES_V3 = RED_TEAM_PROBES_V2 | frozenset(
+    {"workspace_fifo_probe"}
+)
+RED_TEAM_PROBES = RED_TEAM_PROBES_V2
 LOCKED_IMPLEMENTATION_FILES = frozenset(
     {
         "src/vare/mlsys_repo_task.py",
@@ -78,6 +82,7 @@ CALIBRATION_INPUT_FILES = LOCKED_IMPLEMENTATION_FILES | frozenset(
     {
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v10.json",
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json",
+        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v12.json",
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/task.md",
     }
 )
@@ -111,12 +116,13 @@ def _read_regular_file_beneath(
     if (
         not hasattr(os, "O_NOFOLLOW")
         or not hasattr(os, "O_DIRECTORY")
+        or not hasattr(os, "O_NONBLOCK")
         or os.open not in os.supports_dir_fd
     ):
         raise RepositoryTaskError("platform does not support symlink-safe file reads")
 
     directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    file_flags = os.O_RDONLY | os.O_NOFOLLOW
+    file_flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
     directory_fd = -1
     try:
         directory_fd = os.open(root.resolve(strict=True), directory_flags)
@@ -170,7 +176,9 @@ def verify_red_team_evidence(
     if experiment_id == "mlsys-repository-task-mlxlm-1904-red-team-v1":
         expected_probes = RED_TEAM_PROBES_V1
     elif experiment_id == "mlsys-repository-task-mlxlm-1904-red-team-v2":
-        expected_probes = RED_TEAM_PROBES
+        expected_probes = RED_TEAM_PROBES_V2
+    elif experiment_id == "mlsys-repository-task-mlxlm-1904-red-team-v3":
+        expected_probes = RED_TEAM_PROBES_V3
     else:
         expected_probes = frozenset()
     if (
@@ -194,6 +202,7 @@ def verify_red_team_evidence(
             "network_probe",
             "subprocess_write_probe",
             "workspace_parent_symlink_probe",
+            "workspace_fifo_probe",
         }
         if (
             attempt.get("audit_check_passed") is not True
@@ -205,7 +214,10 @@ def verify_red_team_evidence(
             )
     if attempts["subprocess_write_probe"].get("host_workspace_write") is not False:
         raise RepositoryTaskError("red-team subprocess escaped into the host workspace")
-    if experiment_id == "mlsys-repository-task-mlxlm-1904-red-team-v2":
+    if experiment_id in {
+        "mlsys-repository-task-mlxlm-1904-red-team-v2",
+        "mlsys-repository-task-mlxlm-1904-red-team-v3",
+    }:
         symlink_attempt = attempts["workspace_parent_symlink_probe"]
         if (
             symlink_attempt.get("workspace_parent_symlink_rejected") is not True
@@ -213,6 +225,16 @@ def verify_red_team_evidence(
         ):
             raise RepositoryTaskError(
                 "workspace parent symlink was not rejected before grading"
+            )
+    if experiment_id == "mlsys-repository-task-mlxlm-1904-red-team-v3":
+        fifo_attempt = attempts["workspace_fifo_probe"]
+        if (
+            fifo_attempt.get("workspace_fifo_rejected") is not True
+            or fifo_attempt.get("grade_call_attempted") is not False
+            or fifo_attempt.get("completed_without_blocking") is not True
+        ):
+            raise RepositoryTaskError(
+                "workspace FIFO was not rejected before grading without blocking"
             )
     return {
         "sha256": digest,

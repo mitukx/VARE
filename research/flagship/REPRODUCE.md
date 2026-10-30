@@ -69,7 +69,25 @@ shasum -a 256 \
   results/mlsys-repo-eval-v1/run-17-replay/calibration.red-team.json
 ```
 
-Run 17 passed on implementation commit `36af6f17908b50cb53bb159013eecfa8b0263da0`: baseline failed, known fix passed with exact source identity, source swap was rejected, all nine red-team controls passed, and the symlinked parent was rejected before any grader call. Its manifest SHA-256 is `921e1260451bf94d9a7d8f19e3f62fed4b5b2c3dfec6d09aeca71ab0756c9ed6`. Verify run evidence with `(cd results/mlsys-repo-eval-v1/run-17 && shasum -a 256 -c SHA256SUMS)`, and verify the cumulative root index with `shasum -a 256 -c results/mlsys-repo-eval-v1/SHA256SUMS` from the VARE root. The affected 23-test suite passed on Python 3.11, 3.12, and 3.13. The pinned implementation and runtime checks are in `benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json`. The acceptance gate requires baseline failure, known-fix success with exact fixed-source identity, source-swap rejection, all nine red-team controls, a clean implementation worktree at launch, and rejection of the symlinked-parent workspace before any grader call.
+Run 17 passed on implementation commit `36af6f17908b50cb53bb159013eecfa8b0263da0`: baseline failed, known fix passed with exact source identity, source swap was rejected, all nine red-team controls passed, and the symlinked parent was rejected before any grader call. Its manifest SHA-256 is `921e1260451bf94d9a7d8f19e3f62fed4b5b2c3dfec6d09aeca71ab0756c9ed6`. Verify run evidence with `(cd results/mlsys-repo-eval-v1/run-17 && shasum -a 256 -c SHA256SUMS)`, and verify the cumulative root index with `shasum -a 256 -c results/mlsys-repo-eval-v1/SHA256SUMS` from the VARE root. Run 17's affected 23-test suite passed on Python 3.11, 3.12, and 3.13. The v11 protocol and evidence remain immutable.
+
+The PR #151 code review found that opening an unwritten FIFO with blocking `O_RDONLY` could stall host-side source validation before the Docker timeout. Protocol v12 adds nonblocking leaf open and a tenth probe, `workspace_fifo_probe`; it is frozen at SHA-256 `36c5932ab46e00573535f1d6826396cc24cc5021703566f49b9169cad45460c4`. Run 18 is **PENDING**. Reproduce it from a clean implementation commit containing v12, using a new source worktree and new evidence path:
+
+```bash
+git -C ../mlx-lm-source worktree add --detach \
+  "$PWD/../mlx-lm-baseline-1904-v12" \
+  2af5f7ce8620115bf37fbbddf9817f083118df59
+mkdir -p ../colima-tmp
+TMPDIR="$PWD/../colima-tmp" PYTHONPATH=src DOCKER_CONTEXT=colima \
+  work/ci-py311/bin/python scripts/run_mlxlm_1904_calibration.py \
+  --source-root ../mlx-lm-baseline-1904-v12 \
+  --output results/mlsys-repo-eval-v1/run-18/calibration.json
+shasum -a 256 \
+  results/mlsys-repo-eval-v1/run-18/calibration.json \
+  results/mlsys-repo-eval-v1/run-18/calibration.red-team.json
+```
+
+The 25-test focused suite passed locally on Python 3.11, 3.12, and 3.13. The v12 acceptance gate preserves all run-17 conditions and requires the FIFO to be rejected in under one second without invoking the candidate grader.
 
 ## Full CI and PR state
 

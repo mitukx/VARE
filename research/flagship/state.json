@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-10-31T06:50:23+09:00",
+  "updated_at": "2026-10-31T06:59:09+09:00",
   "milestone_id": "p1-repo-task-isolation-and-exposure-reconciliation",
-  "last_completed_step": "Verified PR #150 merge cb5c9d91ce269014b4166644248aa2b71a5c3dae on remote main. Reconciled all three deep-qualification Development tasks as previously exposed. Committed grader symlink-boundary fix at 36af6f17908b50cb53bb159013eecfa8b0263da0 and executed protocol-v11 run 17: baseline fail, known-fix pass, source swap rejected, nine red-team probes passed, including rejection of parent symlink before grader invocation.",
+  "last_completed_step": "Verified PR #150 merge cb5c9d91ce269014b4166644248aa2b71a5c3dae on remote main. Reconciled all three deep-qualification Development tasks as previously exposed. Committed grader symlink-boundary fix and passed protocol-v11 run 17. PR #151 review identified a blocking FIFO edge case; added O_NONBLOCK validation, bounded FIFO regression coverage, and froze protocol v12. Run 18 remains pending before updating the PR.",
   "go_no_go": {
     "integration": "GO",
     "coding_capability": "GO",
@@ -14,7 +14,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/150",
     "last_integrated_pr_merge_sha": "cb5c9d91ce269014b4166644248aa2b71a5c3dae",
     "active_branch": "codex/mlsys-qualification-gates",
-    "verified_pr_head_sha_before_checkpoint_changes": "ecefdec256835f49d1ea7e2988ad6740da81022e",
+    "verified_pr_head_sha_before_checkpoint_changes": "8eb5eb2352b6a5197a277bc093bc19a38e296b87",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/151",
     "active_pr_state": "open"
   },
@@ -42,6 +42,12 @@
       "path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json",
       "sha256": "d7e5680faf5c7b15f32d7e432ee62ce8ddcdf6b835b27cc964988ce6294c2b77",
       "status": "locked_before_run17; run17 PASSED Train-task calibration and 9/9 red-team probes; no model inference authorized"
+    },
+    {
+      "protocol_id": "mlsys-repository-task-mlxlm-1904-v12",
+      "path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v12.json",
+      "sha256": "36c5932ab46e00573535f1d6826396cc24cc5021703566f49b9169cad45460c4",
+      "status": "locked_before_run18; Train-task calibration only; FIFO nonblocking rejection required; no model inference authorized"
     }
   ],
   "task_exposure_ledger": {
@@ -105,7 +111,8 @@
     "A replacement Development pool must be drawn from the remaining candidate queue after a full Stage 2/3 family-overlap audit; held-out tasks must stay untouched.",
     "No RL policy update, coding-agent training, or held-out evaluation has been run.",
     "PR #149 remains open without recorded review; its head is based on the pre-#150 main and it is not integrated.",
-    "PR #151 exact-head CI and review requirements are pending."
+    "PR #151 has a valid FIFO-blocking review finding; protocol-v12 FIFO fix is prepared for run 18, which has not yet executed.",
+    "PR #151 exact-head CI and review requirements remain pending."
   ],
-  "highest_priority_next_task": "Inspect PR #151's exact-head CI and review threads, resolve any actionable failures, and integrate only when all repository rules permit; then audit the 24-entry manual candidate queue for exposure overlap before selecting a fresh Development cohort."
+  "highest_priority_next_task": "Run protocol-v12 #1904 Train-only calibration 18 from a clean commit, preserve its own evidence, then push the FIFO fix and inspect exact-head CI/review on PR #151; integrate only when repository rules permit, then audit the manual candidate queue for a fresh Development cohort."
 }

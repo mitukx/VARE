@@ -29,6 +29,15 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Falsification criteria:** A symlink in any workspace path component reaches the grader; graded bytes differ from the hashed bytes; any v1 receipt stops validating; or a required v2 red-team assertion can be forged or omitted.
 - **Follow-up:** Push the implementation and run-17 evidence as a focused PR, pass required CI, integrate if repository rules permit, then audit the manual candidate queue for a fresh Development cohort. No model or held-out run is authorized by this calibration.
 
+## 2026-10-31 — Open untrusted workspace targets nonblocking
+
+- **Hypothesis:** A no-follow open still needs `O_NONBLOCK` before `fstat`; otherwise a candidate-controlled named pipe can block host-side source validation before the container timeout begins.
+- **Evidence:** Automated PR review on #151 identified the FIFO path and a bounded local subprocess reproduction; repository guidance requires explicit timeout/resource ceilings. The implementation now opens the leaf with `O_NONBLOCK`, rejects non-regular files by descriptor metadata, and adds a subprocess-bounded FIFO regression test. The focused local suite passes 25 tests on Python 3.11, 3.12, and 3.13. Protocol v12 pins this fix and adds a FIFO probe to the red-team suite; run 18 is pending.
+- **Alternative explanations:** Rely on the candidate grader timeout or reject special files using a path check before open. The timeout begins only after source staging; a path-only type check introduces a path race and does not bind validation to the opened file.
+- **Decision:** Keep no-follow descriptor traversal, add nonblocking leaf open and a regular-file check, and require the FIFO rejection probe to finish before one second without calling the grader. Do not modify the v11 protocol or run-17 evidence.
+- **Falsification criteria:** An unwritten FIFO blocks or reaches the grader; v1/v2 red-team receipts stop validating; or v3 evidence can omit or forge the FIFO outcome.
+- **Follow-up:** Execute protocol-v12 run 18 on Train task #1904, preserve new raw evidence separately, then push the updated PR head and rerun required CI/review.
+
 ## 2026-10-31 — Classify a mismatched worker nonce as a protocol failure
 
 - **Hypothesis:** A syntactically valid frame with the wrong nonce is a protocol mismatch and must not yield candidate data.
