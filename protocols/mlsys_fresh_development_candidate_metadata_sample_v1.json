@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-metadata-sample-v1",
+  "protocol_status": "frozen_before_candidate_metadata_sample; task_qualification_not_authorized",
+  "frozen_at_utc": "2026-10-30T23:00:44Z",
+  "source_main_commit": "ce097a5d2c695d4fa7a2e2119e3c25bc3a460578",
+  "purpose": "Bound the metadata-only manual-review workload for the frozen 1,278-item provisional candidate set without selecting candidates by title, diff size, or observed task suitability.",
+  "hypothesis": "A deterministic sample of 12 provisional candidates per repository is sufficient to identify whether the fresh post-proxy pool contains source-level tasks worth deeper independent qualification, while preserving repository diversity.",
+  "source_screen_protocol_sha256": "45e75d3f616892514d22416c27163221b6d5eccdaed66dad691b8a33e1c737ff",
+  "source_screen_gzip_sha256": "8ad0cc6318991af9c6c19ed355c84400cce54817616adb7c2812733a0b038abd",
+  "source_screen_sha256": "f2805462d975ff33168d5ad7dcba420b9efc6ef0ec8b8a20a38d5d8a5a04afec",
+  "source_manifest_sha256": "acc4a1d92dadb88b26e785048dc1605f8b171240b55b3afd4274f20ee6b71043",
+  "source_compressed_manifest_sha256": "2167540cd65e2a4986f3370b114afd461e1b2236769f14f8b0cd28729c6b4720",
+  "source_candidate_count": 3305,
+  "provisional_candidate_count": 1278,
+  "repositories": [
+    "huggingface/transformers",
+    "ml-explore/mlx-lm",
+    "ml-explore/mlx",
+    "huggingface/trl",
+    "vllm-project/vllm",
+    "ray-project/ray"
+  ],
+  "selection": {
+    "method": "For each repository, sort provisional rows by SHA-256 of the UTF-8 bytes of '{seed}|{repository}#{pull_request_number}' and take the first N.",
+    "sha256_seed": "vare-mlsys-fresh-dev-sample-v1",
+    "sample_size_per_repository": 12,
+    "underfilled_repository_rule": "Take all available provisional rows for that repository; do not transfer the unused sample slots to another repository.",
+    "input_screen_status_required": "provisional_for_manual_review",
+    "output_qualification_status": "UNQUALIFIED",
+    "output_split_assignment": "UNASSIGNED",
+    "output_task_family_overlap": "NOT_ASSESSED"
+  },
+  "sampler_path": "scripts/sample_mlsys_fresh_development_candidate_metadata_v1.py",
+  "sampler_sha256": "b46bec96ccbb0aaa8132d2f0f7bd4e3433df9eff146de39136b8bc239a007544",
+  "output_path": "results/mlsys-fresh-development-metadata-review-sample-v1/",
+  "authorization": {
+    "source_diff_or_test_content_access": false,
+    "pull_request_body_or_comment_access": false,
+    "heldout_source_or_test_access": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "model_or_agent_inference": false,
+    "training": false
+  },
+  "limitations": [
+    "The deterministic sample is for metadata review only and is not a probability sample for capability estimates.",
+    "Candidate source dates are after the model training-completion proxy but public-source pretraining exposure remains unknown.",
+    "The sample cannot establish test executability, source-level baseline failure, known-fix success, grader independence, family distinctness, license suitability, or Development eligibility."
+  ]
+}
