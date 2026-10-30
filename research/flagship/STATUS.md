@@ -11,7 +11,7 @@
 - Last verified `main`: `cb5c9d91ce269014b4166644248aa2b71a5c3dae`
 - Last integration: [PR #150 — Bound coding-agent tools and grader receipts](https://github.com/mitukx/VARE/pull/150), merged at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`.
 - PR #150's corrected head `e3b48a9cc84a877ba84fc1ae8b35fecfc86e613f` passed the required Python 3.11/3.12/3.13 CI matrix and companion recovery/CPU checks. Recorded Actions runs: `41129971394`, `41129977978`, `41129977929`, `41129977995`.
-- Current branch: `codex/mlsys-qualification-gates` from the verified merge commit. No PR for this branch has been opened yet.
+- Current branch: `codex/mlsys-qualification-gates`, based on the verified merge commit. [PR #151 — Harden repository-task source staging against symlinked parents](https://github.com/mitukx/VARE/pull/151) is open; its CI is running.
 - PR #149 is still open with no review submissions or inline review threads recorded at inspection; it has 296 changed files / 79,741 additions and is based on pre-#150 `main`. Its reported 0/4 verified repairs are not an integrated result.
 
 ## Work completed in this checkpoint
@@ -34,11 +34,11 @@
 
 ## Immediate next action
 
-Push the committed v11 implementation and run-17 evidence, create a focused PR, inspect required Actions and review threads, and merge only if repository rules permit. After integration, audit the 24-entry manual candidate queue against the full prior exposure history and assemble a replacement Development cohort without opening Held-out tasks.
+Inspect PR #151's exact-head required checks and review threads, fix any actionable failure, and merge only if repository rules permit. After integration, audit the 24-entry manual candidate queue against the full prior exposure history and assemble a replacement Development cohort without opening Held-out tasks.
 
 ## External blockers
 
 - The source-level 15-task pool's original Development allocation is fully exposed; it cannot support a fresh pass@k experiment.
 - The remaining manual queue has not yet been reconciled against all Stage 2/3 task-family exposure.
 - No multi-family fresh Development run or post-training coding capability comparison has been executed.
-- The run-17 implementation and result-evidence commits are local and have not yet been pushed or reviewed.
+- PR #151's exact-head CI and review requirements remain pending.

@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-10-31T06:49:43+09:00",
+  "updated_at": "2026-10-31T06:50:23+09:00",
   "milestone_id": "p1-repo-task-isolation-and-exposure-reconciliation",
   "last_completed_step": "Verified PR #150 merge cb5c9d91ce269014b4166644248aa2b71a5c3dae on remote main. Reconciled all three deep-qualification Development tasks as previously exposed. Committed grader symlink-boundary fix at 36af6f17908b50cb53bb159013eecfa8b0263da0 and executed protocol-v11 run 17: baseline fail, known-fix pass, source swap rejected, nine red-team probes passed, including rejection of parent symlink before grader invocation.",
   "go_no_go": {
@@ -14,9 +14,9 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/150",
     "last_integrated_pr_merge_sha": "cb5c9d91ce269014b4166644248aa2b71a5c3dae",
     "active_branch": "codex/mlsys-qualification-gates",
-    "verified_pr_head_sha_before_checkpoint_changes": null,
-    "active_pr_url": null,
-    "active_pr_state": "none"
+    "verified_pr_head_sha_before_checkpoint_changes": "ecefdec256835f49d1ea7e2988ad6740da81022e",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/151",
+    "active_pr_state": "open"
   },
   "frozen_protocols": [
     {
@@ -105,7 +105,7 @@
     "A replacement Development pool must be drawn from the remaining candidate queue after a full Stage 2/3 family-overlap audit; held-out tasks must stay untouched.",
     "No RL policy update, coding-agent training, or held-out evaluation has been run.",
     "PR #149 remains open without recorded review; its head is based on the pre-#150 main and it is not integrated.",
-    "The #1904 run-17 implementation and result evidence are committed locally but not yet pushed or reviewed."
+    "PR #151 exact-head CI and review requirements are pending."
   ],
-  "highest_priority_next_task": "Push the committed #1904 symlink-boundary fix and protocol-v11 run-17 evidence, open a focused PR, inspect required CI and review threads, and integrate only when repository rules permit; then audit the 24-entry manual candidate queue for exposure overlap before selecting a fresh Development cohort."
+  "highest_priority_next_task": "Inspect PR #151's exact-head CI and review threads, resolve any actionable failures, and integrate only when all repository rules permit; then audit the 24-entry manual candidate queue for exposure overlap before selecting a fresh Development cohort."
 }
