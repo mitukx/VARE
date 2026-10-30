@@ -1,0 +1,46 @@
+{
+  "candidate_count_captured": 0,
+  "candidate_count_requested_from_search": 0,
+  "candidates": [],
+  "captured_at_utc": "2026-10-30T22:50:02.887774+00:00",
+  "failures": [
+    {
+      "error": "Command '['gh', 'api', 'graphql', '-f', 'query=\\nquery($query: String!, $cursor: String) {\\n  search(query: $query, type: ISSUE, first: 100, after: $cursor) {\\n    issueCount\\n    pageInfo { hasNextPage endCursor }\\n    nodes {\\n      ... on PullRequest { number title url state isDraft createdAt updatedAt mergedAt }\\n    }\\n  }\\n}\\n', '-f', 'query=repo:huggingface/transformers is:pr is:merged merged:2026-10-01..2026-10-30']' returned non-zero exit status 1.",
+      "repository": "huggingface/transformers"
+    },
+    {
+      "error": "Command '['gh', 'api', 'graphql', '-f', 'query=\\nquery($query: String!, $cursor: String) {\\n  search(query: $query, type: ISSUE, first: 100, after: $cursor) {\\n    issueCount\\n    pageInfo { hasNextPage endCursor }\\n    nodes {\\n      ... on PullRequest { number title url state isDraft createdAt updatedAt mergedAt }\\n    }\\n  }\\n}\\n', '-f', 'query=repo:ml-explore/mlx-lm is:pr is:merged merged:2026-10-01..2026-10-30']' returned non-zero exit status 1.",
+      "repository": "ml-explore/mlx-lm"
+    },
+    {
+      "error": "Command '['gh', 'api', 'graphql', '-f', 'query=\\nquery($query: String!, $cursor: String) {\\n  search(query: $query, type: ISSUE, first: 100, after: $cursor) {\\n    issueCount\\n    pageInfo { hasNextPage endCursor }\\n    nodes {\\n      ... on PullRequest { number title url state isDraft createdAt updatedAt mergedAt }\\n    }\\n  }\\n}\\n', '-f', 'query=repo:ml-explore/mlx is:pr is:merged merged:2026-10-01..2026-10-30']' returned non-zero exit status 1.",
+      "repository": "ml-explore/mlx"
+    },
+    {
+      "error": "Command '['gh', 'api', 'graphql', '-f', 'query=\\nquery($query: String!, $cursor: String) {\\n  search(query: $query, type: ISSUE, first: 100, after: $cursor) {\\n    issueCount\\n    pageInfo { hasNextPage endCursor }\\n    nodes {\\n      ... on PullRequest { number title url state isDraft createdAt updatedAt mergedAt }\\n    }\\n  }\\n}\\n', '-f', 'query=repo:huggingface/trl is:pr is:merged merged:2026-10-01..2026-10-30']' returned non-zero exit status 1.",
+      "repository": "huggingface/trl"
+    },
+    {
+      "error": "Command '['gh', 'api', 'graphql', '-f', 'query=\\nquery($query: String!, $cursor: String) {\\n  search(query: $query, type: ISSUE, first: 100, after: $cursor) {\\n    issueCount\\n    pageInfo { hasNextPage endCursor }\\n    nodes {\\n      ... on PullRequest { number title url state isDraft createdAt updatedAt mergedAt }\\n    }\\n  }\\n}\\n', '-f', 'query=repo:vllm-project/vllm is:pr is:merged merged:2026-10-01..2026-10-30']' returned non-zero exit status 1.",
+      "repository": "vllm-project/vllm"
+    },
+    {
+      "error": "Command '['gh', 'api', 'graphql', '-f', 'query=\\nquery($query: String!, $cursor: String) {\\n  search(query: $query, type: ISSUE, first: 100, after: $cursor) {\\n    issueCount\\n    pageInfo { hasNextPage endCursor }\\n    nodes {\\n      ... on PullRequest { number title url state isDraft createdAt updatedAt mergedAt }\\n    }\\n  }\\n}\\n', '-f', 'query=repo:ray-project/ray is:pr is:merged merged:2026-10-01..2026-10-30']' returned non-zero exit status 1.",
+      "repository": "ray-project/ray"
+    }
+  ],
+  "merged_date_end": "2026-10-30",
+  "merged_date_start": "2026-10-01",
+  "protocol_id": "mlsys-fresh-development-candidate-discovery-v1",
+  "repositories": [
+    "huggingface/transformers",
+    "ml-explore/mlx-lm",
+    "ml-explore/mlx",
+    "huggingface/trl",
+    "vllm-project/vllm",
+    "ray-project/ray"
+  ],
+  "schema_version": 1,
+  "search_counts": [],
+  "source": "GitHub Search Issues API and GitHub GraphQL pull-request metadata; no source diffs or test content fetched"
+}
