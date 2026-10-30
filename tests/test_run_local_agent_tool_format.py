@@ -9,7 +9,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 
 from record_coding_agent_baseline import parse_diff
 from verify_agent_workspace import verify_workspace
-from scripts.run_local_agent import normalize_tool_call_format, refresh_public_tests_after_edit
+from scripts.run_local_agent import (
+    bounded_source_page,
+    normalize_tool_call_format,
+    refresh_public_tests_after_edit,
+    tools_for,
+)
 from scripts.run_local_agent import candidate_source_diff, snapshot_allowed_sources
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
@@ -273,6 +278,80 @@ def test_normalizes_a_chatml_wrapped_json_tool_call():
         '<tool_call>{"name":"write_file","arguments":{"path":"x.py","content":"pass\\n"}}</tool_call>',
         True,
     )
+
+
+def test_read_file_schema_exposes_bounded_inclusive_line_ranges():
+    read_file = next(
+        item['function'] for item in tools_for('unified_diff')
+        if item['function']['name'] == 'read_file'
+    )
+    parameters = read_file['parameters']
+
+    assert parameters['required'] == ['path']
+    assert parameters['properties']['start_line'] == {'type': 'integer', 'minimum': 1}
+    assert parameters['properties']['end_line'] == {'type': 'integer', 'minimum': 1}
+    assert 'at most 200 lines' in read_file['description']
+
+
+def test_bounded_source_page_defaults_to_180_lines_and_reports_more():
+    source = ''.join(f'line-{number}\n' for number in range(1, 451))
+
+    page = bounded_source_page(source)
+
+    assert page == {
+        'content': ''.join(f'line-{number}\n' for number in range(1, 181)),
+        'start_line': 1,
+        'end_line': 180,
+        'total_lines': 450,
+        'has_more': True,
+    }
+
+
+def test_bounded_source_page_reads_requested_inclusive_range():
+    source = ''.join(f'line-{number}\n' for number in range(1, 451))
+
+    page = bounded_source_page(source, start_line=201, end_line=220)
+
+    assert page == {
+        'content': ''.join(f'line-{number}\n' for number in range(201, 221)),
+        'start_line': 201,
+        'end_line': 220,
+        'total_lines': 450,
+        'has_more': True,
+    }
+
+
+def test_bounded_source_page_caps_requests_at_200_lines():
+    source = ''.join(f'line-{number}\n' for number in range(1, 451))
+
+    page = bounded_source_page(source, end_line=450)
+
+    assert page['content'] == ''.join(f'line-{number}\n' for number in range(1, 201))
+    assert page['start_line'] == 1
+    assert page['end_line'] == 200
+    assert page['total_lines'] == 450
+    assert page['has_more'] is True
+
+
+@pytest.mark.parametrize(
+    ('kwargs', 'message'),
+    [
+        ({'start_line': 0}, 'start_line must be a positive integer'),
+        ({'start_line': True}, 'start_line must be a positive integer'),
+        ({'end_line': 0}, 'end_line must be a positive integer'),
+        ({'start_line': 4, 'end_line': 3}, 'end_line must be greater than or equal to start_line'),
+        ({'start_line': 4}, 'start_line exceeds the source length'),
+    ],
+)
+def test_bounded_source_page_rejects_invalid_ranges(kwargs, message):
+    with pytest.raises(ValueError, match=message):
+        bounded_source_page('one\ntwo\nthree\n', **kwargs)
+
+
+def test_bounded_source_page_handles_empty_files():
+    assert bounded_source_page('') == {
+        'content': '', 'start_line': 1, 'end_line': 0, 'total_lines': 0, 'has_more': False,
+    }
 
 
 def test_normalizes_json_before_a_trailing_chatml_generation_marker():

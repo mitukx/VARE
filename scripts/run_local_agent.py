@@ -24,9 +24,11 @@ from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submis
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
 MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
+DEFAULT_READ_LINES = 180
+MAX_READ_LINES = 200
 TOOLS = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace.', 'parameters': {'type': 'object', 'properties': {}, 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file. Provide its repository-relative path; a workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read at most 200 lines from one UTF-8 task source file. By default, returns lines 1-180. For large files, pass inclusive start_line and end_line; the result reports the returned range, total_lines, and has_more.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in the allowed task source files.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a small unified diff to existing task source files. Keep the patch minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
@@ -228,6 +230,35 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     return matches[0] if len(matches) == 1 else None
 
 
+def bounded_source_page(
+    text: str, *, start_line: int = 1, end_line: int | None = None,
+) -> dict[str, Any]:
+    """Return a bounded inclusive line range and enough metadata to page safely."""
+    if isinstance(start_line, bool) or not isinstance(start_line, int) or start_line < 1:
+        raise ValueError('start_line must be a positive integer')
+    if end_line is not None and (
+        isinstance(end_line, bool) or not isinstance(end_line, int) or end_line < 1
+    ):
+        raise ValueError('end_line must be a positive integer')
+    if end_line is not None and end_line < start_line:
+        raise ValueError('end_line must be greater than or equal to start_line')
+
+    lines = text.splitlines(keepends=True)
+    total_lines = len(lines)
+    if start_line > max(total_lines, 1):
+        raise ValueError(f'start_line exceeds the source length ({total_lines} lines)')
+    requested_end = end_line if end_line is not None else start_line + DEFAULT_READ_LINES - 1
+    returned_end = min(requested_end, start_line + MAX_READ_LINES - 1, total_lines)
+    content = ''.join(lines[start_line - 1:returned_end])
+    return {
+        'content': content,
+        'start_line': start_line,
+        'end_line': returned_end,
+        'total_lines': total_lines,
+        'has_more': returned_end < total_lines,
+    }
+
+
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
                            token_limit: int) -> str:
     """Give the agent actionable feedback when a bounded response has no tool call."""
@@ -390,6 +421,8 @@ def main() -> int:
         'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
         + edit_sentence
         + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then read the exact source path named in the task. '
+        + 'read_file returns at most 180 lines by default and 200 lines per call; use total_lines and has_more to request the next needed inclusive line range. '
+        + 'Use search_text to locate relevant code before paging through large files. '
         + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
         + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
         + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
@@ -524,8 +557,15 @@ def main() -> int:
                     if path is None:
                         result = {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
                     else:
-                        result = {'resolved_path': path,
-                                  'content': (workspace / path).read_text(encoding='utf-8')}
+                        text = read_regular_source(workspace, path).decode('utf-8')
+                        result = {
+                            'resolved_path': path,
+                            **bounded_source_page(
+                                text,
+                                start_line=arguments.get('start_line', 1),
+                                end_line=arguments.get('end_line'),
+                            ),
+                        }
                 elif name == 'search_text':
                     query = arguments.get('query', '')
                     if not query:
