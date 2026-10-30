@@ -91,7 +91,7 @@ The 25-test focused suite passed locally on Python 3.11, 3.12, and 3.13. The v12
 
 ## Full CI and PR state
 
-PR #151 is integrated at `818fd8c802277ad360ee9b5250d0315cfb8dad81`; PR #150 is in its history at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`. PR #151 exact-head Python 3.11/3.12/3.13, lint, typecheck, CPU evidence, and E2E recovery checks passed. See `state.json` for the verified merge and Actions records. The current audit/experiment branch still requires its own exact-head PR checks before integration.
+PR #151 is integrated at `818fd8c802277ad360ee9b5250d0315cfb8dad81`; PR #150 is in its history at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`. PR #151 exact-head Python 3.11/3.12/3.13, lint, typecheck, CPU evidence, and E2E recovery checks passed. PR #152 contains the current audit and run-19 evidence; its exact-head checks are pending. See `state.json` for the verified merge and current PR.
 
 ## Run 19 — one Train-only model trajectory
 

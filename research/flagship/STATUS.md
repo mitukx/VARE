@@ -11,7 +11,7 @@
 - Last verified remote `main`: `818fd8c802277ad360ee9b5250d0315cfb8dad81`.
 - Last integration: [PR #151 — Harden repository-task source staging against symlinked parents](https://github.com/mitukx/VARE/pull/151), merged at the SHA above. Exact-head Python 3.11/3.12/3.13, lint, typecheck, CPU evidence, and E2E recovery checks passed.
 - Current branch: `codex/mlsys-candidate-exposure-audit-v1`, based on `main`.
-- Active PR: none yet. The queue audit, frozen model protocol, and run-19 evidence are staged for a focused review PR.
+- Active PR: [#152 — Audit candidate exposure and record a bounded Train-task model pass](https://github.com/mitukx/VARE/pull/152), open against `main`. Exact-head checks are running.
 - PR #149 remains open on a pre-#150 base with no recorded review; it is unrelated to this checkpoint.
 
 ## Work completed
@@ -33,7 +33,7 @@
 
 ## Immediate next action
 
-Create and push a focused PR with the audit protocol/script/output, the frozen one-attempt task protocol, run-19 raw evidence, and durable mission updates. Inspect exact-head required checks and review, fix any actionable issues, and integrate only after repository requirements are met. Then prospectively qualify a new, non-overlapping Development cohort without opening any Held-out files or tests.
+Inspect exact-head required checks and review on PR #152, fix any actionable issues, and integrate only after repository requirements are met. Then prospectively qualify a new, non-overlapping Development cohort without opening any Held-out files or tests.
 
 ## External blockers
 

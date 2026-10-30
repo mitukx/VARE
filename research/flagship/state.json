@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-10-31T07:25:00+09:00",
+  "updated_at": "2026-10-31T07:27:39+09:00",
   "milestone_id": "p2-train-only-model-trajectory-after-exposure-audit",
   "last_completed_step": "Verified PR #151 merge 818fd8c802277ad360ee9b5250d0315cfb8dad81; audited the 24-entry candidate queue and found zero fresh Development tasks; froze protocol v1 before one Qwen3-4B inference on Train task #1904; run 19 passed both independent v12 grader cases (one attempt, 302 tokens, no policy update, no Held-out access).",
   "go_no_go": {
@@ -14,9 +14,9 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/151",
     "last_integrated_pr_merge_sha": "818fd8c802277ad360ee9b5250d0315cfb8dad81",
     "active_branch": "codex/mlsys-candidate-exposure-audit-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": null,
-    "active_pr_url": null,
-    "active_pr_state": "none"
+    "verified_pr_head_sha_before_checkpoint_changes": "55a31a732101eb88c1515bada322f5b1c93bbcfc",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/152",
+    "active_pr_state": "open"
   },
   "frozen_protocols": [
     {
@@ -166,7 +166,7 @@
     "Run 19 is one Train-task result on a public upstream task; pretraining exposure is unknown and the pass does not establish Development generalization.",
     "No real model policy update, SFT, GRPO, RL comparison, or independent post-update task-success evaluation has been run.",
     "PR #149 remains open on an obsolete pre-#150 base without recorded review; unrelated to this checkpoint.",
-    "The current audit/evidence branch still needs a focused PR, exact-head required checks, and review before integration."
+    "PR #152 exact-head required checks and review are pending before integration."
   ],
-  "highest_priority_next_task": "Create and push a focused PR containing the queue audit, frozen one-attempt model protocol, run-19 evidence, and checkpoint updates; pass exact-head CI/review and integrate when permitted. Then prospectively qualify a diverse fresh Development cohort without opening Held-out files or tests."
+  "highest_priority_next_task": "Inspect exact-head required checks and review on PR #152; resolve actionable findings, verify all required checks on the final PR head, and integrate when repository rules permit. Then prospectively qualify a diverse fresh Development cohort without opening Held-out files or tests."
 }
