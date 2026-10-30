@@ -1,0 +1,108 @@
+{
+  "generated_at_utc": "2026-10-30T23:25:26Z",
+  "repositories": {
+    "mlx": {
+      "base_commit": "9e2e8e233187ca3ca9f3d150652f7f462741c85f",
+      "files": [
+        {
+          "base_sha256": "031cfd345857d363618f6c5790f71d308d9dc12d5cc64dfe2ff8ff8a03dd5b63",
+          "fix_sha256": "9e5d225fbb0b1f0447311751946ed44f5f08a210c7b5beda56ef9bf76a369033",
+          "path": "mlx/primitives.cpp",
+          "test_delta_bytes": 0,
+          "test_delta_sha256": null
+        },
+        {
+          "base_sha256": "a9988697d4dbe071c1fdede768852b1b3b5450429852bab770bbfde4d06cfc6e",
+          "fix_sha256": "71974890117042087d22d78da3d4c90eaa313c5fcc719646091f228f57a709e0",
+          "path": "python/tests/test_autograd.py",
+          "test_delta_bytes": 1270,
+          "test_delta_sha256": "061d91c64d63625c56215fa787bcc0c1d114227f1a641554868785f5780c92d8"
+        }
+      ],
+      "fix_commit": "a21f892a6e8e83afb117cef1d1ceae3e82f48c32"
+    },
+    "transformers": {
+      "base_commit": "bd3f926f52b55a0a59e812376e7624ca9d471ac2",
+      "files": [
+        {
+          "base_sha256": "abdcb0ae88aa5b924ef7d76879db680e9af8f3ec1dafbba7ce446ecb521a944b",
+          "fix_sha256": "2bef552bc39e8a4dc7ddfcf25740e6a4a7c4b836d92f5e56629a8ebfcd9cb246",
+          "path": "src/transformers/cache_utils.py",
+          "test_delta_bytes": 0,
+          "test_delta_sha256": null
+        },
+        {
+          "base_sha256": "0491ab3303193650fc4631c3744c0bdc29a6ccfbdf77a9bfa94082e7ed28ef56",
+          "fix_sha256": "5088fd067cbc9d99e49b5edbb7a5d13431621922c6c651135b8f16a218f80bea",
+          "path": "tests/utils/test_cache_utils.py",
+          "test_delta_bytes": 2146,
+          "test_delta_sha256": "b602463ba73fbc3fb21fe3660f463b966ef139bd6316ad8dbbb49ab4009228ab"
+        }
+      ],
+      "fix_commit": "1734d8d9d6a4c5331ba87dd4a1a36d3a3cb25ac1"
+    },
+    "trl": {
+      "base_commit": "89246ca14ec3c26735276f6f75c4d3dbf66bd40f",
+      "files": [
+        {
+          "base_sha256": "ee0662ce14327d45601e249bf36b0ab5adde5142f543cca29ca5da1ac77c3020",
+          "fix_sha256": "914e282895a5c75cd2cf1471963d2573a78a4d218989ced2626b8a3e8633eb67",
+          "path": "tests/test_model_utils.py",
+          "test_delta_bytes": 2090,
+          "test_delta_sha256": "69a03d4a90802d37a1acde8d71341db89f4f10da87246b06b37ab98a970f8270"
+        },
+        {
+          "base_sha256": "30e5f088663e1109e9be197f6332d26d9f3eefc959f5f11f19aa64767f28fdc7",
+          "fix_sha256": "0f4e9f47a2c722fbd925ea006ba3172448ef4d15679883df3400569b49c254cd",
+          "path": "trl/experimental/gkd/gkd_trainer.py",
+          "test_delta_bytes": 0,
+          "test_delta_sha256": null
+        },
+        {
+          "base_sha256": "af11ebf7cd06307d1a9f320de6e6ad2235c6e589f130f14279aeb0c115bbb868",
+          "fix_sha256": "c52eaad66183bf45f853a63d786e700e1326cf0dd7fc5f7be8c464021255de5e",
+          "path": "trl/experimental/gold/gold_trainer.py",
+          "test_delta_bytes": 0,
+          "test_delta_sha256": null
+        },
+        {
+          "base_sha256": "e6521a677a4c0b676aad986acc50745fbb4536c0f5aa8ec441117e87ff1757b1",
+          "fix_sha256": "072ac504584f40270ba140805065896b006d684325bc11da841827587b53d203",
+          "path": "trl/models/utils.py",
+          "test_delta_bytes": 0,
+          "test_delta_sha256": null
+        },
+        {
+          "base_sha256": "7ccab20ea6e33beb920b7da4391a3cbf36b84aa8a827f5f1868b9b167f8be280",
+          "fix_sha256": "20ae5bbfeca32ad124fac96b5be230ec88bfd8da84f2b5c90ab87db9ebf0af3e",
+          "path": "trl/trainer/callbacks.py",
+          "test_delta_bytes": 0,
+          "test_delta_sha256": null
+        },
+        {
+          "base_sha256": "407f118d7af7034973565367d3a35e9bd457787291fc60c396b7605bc6aa9e16",
+          "fix_sha256": "c5ea123d910c799200c240377f6a0f4b7de0485183e19b170b1df7b5ff9df4b9",
+          "path": "trl/trainer/distillation_trainer.py",
+          "test_delta_bytes": 0,
+          "test_delta_sha256": null
+        },
+        {
+          "base_sha256": "d3d46e3e64ef0e230725b8ea7e6a86a0265fc423123de4f8200f760651f3cad1",
+          "fix_sha256": "6a3895887d984ded6d0ccfa3e29d2ba031294bba098004241f970a8b2a612d98",
+          "path": "trl/trainer/grpo_trainer.py",
+          "test_delta_bytes": 0,
+          "test_delta_sha256": null
+        },
+        {
+          "base_sha256": "58ff4858be93dcfdddf11399a1426353843f8dc1349d80b0de7b232f1313ca54",
+          "fix_sha256": "8c371896e35bb5c26587559436d83e1f088e933134cd9fa8d482a94af4b3cc1b",
+          "path": "trl/trainer/rloo_trainer.py",
+          "test_delta_bytes": 0,
+          "test_delta_sha256": null
+        }
+      ],
+      "fix_commit": "989960ab989c3491dea585bb39d6144900b52852"
+    }
+  },
+  "schema_version": 1
+}

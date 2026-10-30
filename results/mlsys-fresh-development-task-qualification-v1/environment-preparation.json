@@ -1,0 +1,110 @@
+{
+  "container_host": {
+    "architecture": "aarch64",
+    "context": "Colima",
+    "filesystem_free_bytes_at_build": 16106127360,
+    "vm_memory_bytes": 3040342016
+  },
+  "log_hashes": {
+    "environment/Dockerfile.mlx": {
+      "sha256": "193093c353d2ecb700b97f783bdf97cd3a0ceceabdf55d430ea93f7fb40f3653",
+      "size_bytes": 777
+    },
+    "environment/Dockerfile.transformers": {
+      "sha256": "c8d43fb1df7437768d1382eb12e1563163c38517981d1bd36dc2d4a72dfcda92",
+      "size_bytes": 231
+    },
+    "environment/build-mlx-baseline-incremental.log": {
+      "sha256": "d518da2f05e6186ab706b4cb5922222d1ab59d604b7a39e2f21ae110a9ef857c",
+      "size_bytes": 605
+    },
+    "environment/build-mlx-fixed.log": {
+      "sha256": "182d13661b0d9a482493a9d2e5dea9dbad84e9cf0738e39f6dd7f424d3ead866",
+      "size_bytes": 38263
+    },
+    "environment/build-transformers.log": {
+      "sha256": "0cf9c6fc4e724f903fec017f7cfd8c371c573e82cbfbb62b596ddc17144df2db",
+      "size_bytes": 1565
+    }
+  },
+  "mlx_runtime": {
+    "base_image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "baseline_build": "Copied exact base-commit mlx/primitives.cpp over fixed source in a disposable container, built a wheel offline using existing CMake object cache, installed it, and committed a distinct image. Wheel SHA-256 792e7d69bbcb48c9dffbf4b38c3b4ddb4663dc076ca1ec4b1781f702650c7323; wheel size 5831311 bytes.",
+    "baseline_image_id": "sha256:a40645c2c07d2d0719e3b28a4f9df9e211f9c8f0624f7cd47b69a4988ec8da1f",
+    "build_failures_before_success": [
+      {
+        "attempt": 1,
+        "error": "Cannot import setuptools.build_meta",
+        "resolution": "install setuptools==84.2.1"
+      },
+      {
+        "attempt": 2,
+        "error": "could not find git for clone of fmt-populate",
+        "resolution": "install git"
+      },
+      {
+        "attempt": 3,
+        "error": "LAPACK_INCLUDE_DIRS-NOTFOUND because lapacke.h was absent",
+        "resolution": "install liblapacke-dev"
+      }
+    ],
+    "cpu_build": "MLX_BUILD_METAL=OFF; MLX_BUILD_CPU=ON; CMAKE_BUILD_PARALLEL_LEVEL=1; no accelerator",
+    "dockerfile": "environment/Dockerfile.mlx",
+    "fixed_image_id": "sha256:d52bf4f4fcad8fafd9284057c342d21910e727e74ea939c652ac13301860ac0c",
+    "packages": {
+      "build-essential": "12.9",
+      "cmake": "3.25.1-1",
+      "g++": "4:12.2.0-3",
+      "gcc": "4:12.2.0-3",
+      "git": "1:2.39.5-0+deb12u3",
+      "liblapack-dev": "3.11.0-2",
+      "liblapacke-dev": "3.11.0-2",
+      "libopenblas-dev": "0.3.21+ds-4",
+      "ninja-build": "1.11.1-2~deb12u1",
+      "pkg-config": "1.8.1-1",
+      "setuptools": "84.2.1"
+    },
+    "source_package_version": "0.32.5"
+  },
+  "pretest_checks": [
+    "Imports and package versions only; no selected regression selector was executed.",
+    "Fixture snapshot downloaded at exact revision; refs/main points to that commit for offline test loading.",
+    "All selected task test/source files remain unmodified and have frozen hashes."
+  ],
+  "runtime_entrypoint_override": "python3 for all task test containers, because the baseline MLX image was committed from a disposable builder container with shell entrypoint metadata.",
+  "schema_version": 1,
+  "state": "environment_prepared; no task regression tests executed at freeze time",
+  "transformers_runtime": {
+    "base_image": "vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+    "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.1 --file Dockerfile .",
+    "dockerfile": "environment/Dockerfile.transformers",
+    "final_image_id": "sha256:a5cb6acc290c620cda548f033b413a690e58c6c2179d638b68687dbed7c80f90",
+    "packages": {
+      "accelerate": "1.12.0",
+      "optimum-quanto": "0.2.7",
+      "parameterized": "0.9.0",
+      "pytest": "8.4.2",
+      "torch": "2.9.1",
+      "transformers": "4.57.3"
+    },
+    "preparation_failures": [
+      {
+        "attempt": 1,
+        "outcome": "failed before task test",
+        "reason": "base image ran as uid 65534 with HOME=/nonexistent; pip could not install optimum-quanto into /nonexistent/.local",
+        "resolution": "install dependency as root during image construction; run tests as uid 65534"
+      }
+    ]
+  },
+  "trl_runtime": {
+    "fixture_revision": "ce8d0bf270b28c8fab026ced69fe8aa14b0f0eda",
+    "image": "vare-sprint-vii-trl-grader:v2",
+    "image_id": "sha256:d5b0300b60c61881ea30834a45bbe0e99bf3ee74482ad4d766d46e777a277077",
+    "packages": {
+      "accelerate": "1.12.0",
+      "pytest": "8.4.2",
+      "torch": "2.9.1",
+      "transformers": "5.21.0"
+    }
+  }
+}

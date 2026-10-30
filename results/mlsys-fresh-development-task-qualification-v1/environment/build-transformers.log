@@ -1,0 +1,27 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  3.072kB
+Step 1/4 : FROM vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97
+ ---> 0363cbea4db3
+Step 2/4 : USER 0:0
+ ---> Running in 58d2b61e1a06
+ ---> Removed intermediate container 58d2b61e1a06
+ ---> 0fa0fdb5e618
+Step 3/4 : RUN python -m pip install --disable-pip-version-check --no-cache-dir --no-deps optimum-quanto==0.2.7
+ ---> Running in fac09048b879
+Collecting optimum-quanto==0.2.7
+  Downloading optimum_quanto-0.2.7-py3-none-any.whl.metadata (13 kB)
+Downloading optimum_quanto-0.2.7-py3-none-any.whl (165 kB)
+Installing collected packages: optimum-quanto
+Successfully installed optimum-quanto-0.2.7
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0m ---> Removed intermediate container fac09048b879
+ ---> 227f6c312321
+Step 4/4 : USER 65534:65534
+ ---> Running in 42417508c608
+ ---> Removed intermediate container 42417508c608
+ ---> a5cb6acc290c
+Successfully built a5cb6acc290c
+Successfully tagged vare/fresh-qualification-transformers:0.1

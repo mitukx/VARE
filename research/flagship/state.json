@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-10-31T07:27:39+09:00",
-  "milestone_id": "p2-train-only-model-trajectory-after-exposure-audit",
-  "last_completed_step": "Verified PR #151 merge 818fd8c802277ad360ee9b5250d0315cfb8dad81; audited the 24-entry candidate queue and found zero fresh Development tasks; froze protocol v1 before one Qwen3-4B inference on Train task #1904; run 19 passed both independent v12 grader cases (one attempt, 302 tokens, no policy update, no Held-out access).",
+  "updated_at": "2026-10-31T08:28:30+09:00",
+  "milestone_id": "p3-fresh-repository-task-qualification",
+  "last_completed_step": "Verified PR #150 and PR #152 merged with successful required checks; advanced fresh task discovery through a deterministic 71-row review sample; selected three repository-diverse post-proxy fixes; froze exact selectors, source/test hashes, pinned CPU runtimes, and offline fixture in qualification addendum 1 before any selected regression test. No task test or model/agent inference has run.",
   "go_no_go": {
     "integration": "GO_PENDING_REMOTE_CI",
     "coding_capability": "NO_GO",
@@ -10,13 +10,13 @@
   },
   "git_refs": {
     "repository": "mitukx/VARE",
-    "last_verified_main_sha": "818fd8c802277ad360ee9b5250d0315cfb8dad81",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/151",
-    "last_integrated_pr_merge_sha": "818fd8c802277ad360ee9b5250d0315cfb8dad81",
-    "active_branch": "codex/mlsys-candidate-exposure-audit-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "55a31a732101eb88c1515bada322f5b1c93bbcfc",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/152",
-    "active_pr_state": "open"
+    "last_verified_main_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/152",
+    "last_integrated_pr_merge_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
+    "active_branch": "codex/fresh-dev-candidate-discovery-v1",
+    "verified_pr_head_sha_before_checkpoint_changes": null,
+    "active_pr_url": null,
+    "active_pr_state": "none"
   },
   "frozen_protocols": [
     {
@@ -60,6 +60,48 @@
       "path": "protocols/mlsys_task_model_attempt_mlxlm_1904_v1.json",
       "sha256": "7bdef7ee8210dfbd25b3ca811d8bb7c1450b97e4c6015e39d653879aee51ad3d",
       "status": "frozen before inference; one Qwen3-4B base-model attempt on Train; run 19 PASSED 2/2 independent grader cases; no update or Held-out use"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-candidate-discovery-v1",
+      "path": "protocols/mlsys_fresh_development_candidate_discovery_v1.json",
+      "sha256": "8b6f52e32f81672ccd7395997fb589aca84a81903be511ef95e481b00bc8789f",
+      "status": "frozen; v1 GraphQL query defect retained"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-candidate-discovery-v2",
+      "path": "protocols/mlsys_fresh_development_candidate_discovery_v2.json",
+      "sha256": "87850264f2abb83b31345776b68811449bde6ab0a671a2c2795972d106ccd764",
+      "status": "frozen; same-window query stopped at API result cap, no candidate rows accepted"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-candidate-discovery-v3",
+      "path": "protocols/mlsys_fresh_development_candidate_discovery_v3.json",
+      "sha256": "bcab038708c533e9f8af4068db4e347f4c6a8f76fde1c221434d2eb6da41c276",
+      "status": "frozen; weekly-partition raw metadata pool complete, original state filter defect retained"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-candidate-screen-v4",
+      "path": "protocols/mlsys_fresh_development_candidate_screen_v4.json",
+      "sha256": "45e75d3f616892514d22416c27163221b6d5eccdaed66dad691b8a33e1c737ff",
+      "status": "frozen; corrected GraphQL MERGED state filter, 1,278 metadata-review rows, all unqualified/unassigned"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-candidate-metadata-sample-v1",
+      "path": "protocols/mlsys_fresh_development_candidate_metadata_sample_v1.json",
+      "sha256": "2bf791ea9d99184298a1be38f4d0f584b45ac509fe79b5e801f5749c8ee42c20",
+      "status": "frozen before deterministic metadata sample; 71 rows across six repositories"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1",
+      "path": "protocols/mlsys_fresh_development_task_qualification_v1.json",
+      "sha256": "3ea5a8f18832295ca07e9584e47fe04a63554a74d95133efc8d2db3a1e261828",
+      "status": "frozen before source/test review; selects three tasks, no Development assignment or model inference"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-1",
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-1.json",
+      "sha256": "2c33483c06bbb3581ec95ed4e73eeb8d7abb9ccc86af6d4e456666bf6546f4a8",
+      "status": "frozen before selected regression tests; exact selectors, hashes, CPU images, offline fixture, and budgets locked"
     }
   ],
   "task_exposure_ledger": {
@@ -158,15 +200,49 @@
       "path": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
       "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
       "status": "append-only one-task Train exposure; prior Stage 2/3 ledgers unchanged"
+    },
+    {
+      "path": "results/mlsys-fresh-development-candidate-discovery-v3/candidate-pool.json.gz",
+      "sha256": "3e53e3c07c151bf94185aa8898a36bf1a65d620b9cacdc78a4ab7f6d9592986c",
+      "status": "verified raw metadata pool; compressed with deterministic gzip"
+    },
+    {
+      "path": "results/mlsys-fresh-development-candidate-screen-v4/screen.json.gz",
+      "sha256": "8ad0cc6318991af9c6c19ed355c84400cce54817616adb7c2812733a0b038abd",
+      "status": "verified corrected screen output; 3,305 candidates, 1,278 review rows"
+    },
+    {
+      "path": "results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json",
+      "sha256": "810fb823781f3bc44a0272db230cc3d65b43751c415e53229c81104a6183baad",
+      "status": "verified deterministic 71-row metadata sample"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/source-test-input-manifest.json",
+      "sha256": "d29cfbffc94e3f66711094f7ce72cefb0bb0580cc10b6a5a016d98c67fa60633",
+      "status": "verified base/fixed/test input hashes for all selected tasks"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-model-fixture-manifest.json",
+      "sha256": "6a7647352ff558c8c2d07275257254b59c96ccd6bcbd9e0e3217ea79022516ce",
+      "status": "verified public test-fixture revision and file hashes; not committed as weights"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-1.json",
+      "sha256": "2c33483c06bbb3581ec95ed4e73eeb8d7abb9ccc86af6d4e456666bf6546f4a8",
+      "status": "frozen before selected task regression tests"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
+      "sha256": "7fec9f0c4d16a104fc044297c0654be95b2be01034fb5c07255ebcac0325e16f",
+      "status": "verified pinned CPU test runtimes and retained environment setup failures"
     }
   ],
   "unresolved_blockers": [
-    "The audited 24-entry manual queue contains zero tasks currently assigned and qualified as fresh Development; held-out tasks remain reserved.",
-    "The raw survey screen artifact is missing from the checkout, so original changed-path and merge-SHA metadata could not be independently revalidated.",
-    "Run 19 is one Train-task result on a public upstream task; pretraining exposure is unknown and the pass does not establish Development generalization.",
-    "No real model policy update, SFT, GRPO, RL comparison, or independent post-update task-success evaluation has been run.",
-    "PR #149 remains open on an obsolete pre-#150 base without recorded review; unrelated to this checkpoint.",
-    "PR #152 exact-head required checks and review are pending before integration."
+    "No selected task is qualified yet; exact baseline/fixed regression runs remain pending under the frozen no-network CPU protocol.",
+    "The audited 24-entry historical manual queue had zero fresh Development tasks; new candidate source tasks remain unassigned until all qualification gates pass.",
+    "Public pretraining exposure is unknown even for post-cutoff-proxy upstream tasks.",
+    "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or held-out evaluation has run.",
+    "PR #149 remains an unrelated legacy open PR on a pre-#150 base; it does not block this qualification branch."
   ],
-  "highest_priority_next_task": "Inspect exact-head required checks and review on PR #152; resolve actionable findings, verify all required checks on the final PR head, and integrate when repository rules permit. Then prospectively qualify a diverse fresh Development cohort without opening Held-out files or tests."
+  "highest_priority_next_task": "Run the three frozen upstream regression selectors one task at a time: exact baseline with test-only delta, then exact fixed source, inside the pinned no-network CPU containers; preserve all logs and classify skips/environment failures as non-qualifying."
 }

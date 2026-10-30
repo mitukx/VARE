@@ -2,43 +2,43 @@
 
 **Updated:** 2026-10-31 (JST)
 
-**Milestone:** P2 — first independently graded base-model trajectory on the frozen Train split
+**Milestone:** P3 — prospectively qualify a fresh Development task cohort
 
-**Decision:** PR #151 is merged on `main` at `818fd8c802277ad360ee9b5250d0315cfb8dad81`. The 24-entry queue audit found no fresh Development candidates. One preregistered Qwen3-4B attempt on the already assigned Train task MLX-LM #1904 passed its two-case independent grader. This is a narrow Train-task trajectory, not Development generalization or model-learning evidence. No Held-out task or test was opened.
+**Decision:** PR #150 is merged at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`; its recorded required checks passed. PR #152 is merged on `main` at `ce097a5d2c695d4fa7a2e2119c3e25bc3a460578`, and the latest remote `main` matches. The candidate pipeline found 1,278 metadata-review rows and produced a deterministic 71-task sample. Three repository-diverse fixes are selected, but **zero tasks are qualified so far**. The exact source/test hashes, selectors, runtimes, fixture, and budgets are frozen in qualification addendum 1. No selected task regression test has run; no model or agent saw candidate content.
 
 ## GitHub state
 
-- Last verified remote `main`: `818fd8c802277ad360ee9b5250d0315cfb8dad81`.
-- Last integration: [PR #151 — Harden repository-task source staging against symlinked parents](https://github.com/mitukx/VARE/pull/151), merged at the SHA above. Exact-head Python 3.11/3.12/3.13, lint, typecheck, CPU evidence, and E2E recovery checks passed.
-- Current branch: `codex/mlsys-candidate-exposure-audit-v1`, based on `main`.
-- Active PR: [#152 — Audit candidate exposure and record a bounded Train-task model pass](https://github.com/mitukx/VARE/pull/152), open against `main`. Exact-head checks are running.
-- PR #149 remains open on a pre-#150 base with no recorded review; it is unrelated to this checkpoint.
+- Last verified remote `main`: `ce097a5d2c695d4fa7a2e2119c3e25bc3a460578`.
+- Last integration: [PR #152 — Audit candidate exposure and record a bounded Train-task model pass](https://github.com/mitukx/VARE/pull/152), merged at that SHA with all recorded required checks successful.
+- PR #150’s CI regressions are resolved in the merged PR; recorded exact-head checks passed.
+- Current branch: `codex/fresh-dev-candidate-discovery-v1`, based on the verified `main` SHA.
+- Active PR: none yet; qualification evidence is being prepared before PR creation.
+- PR #149 and other older branches remain open; they are unrelated and were not modified.
 
 ## Work completed
 
-- Audited all 24 entries of the frozen manual qualification queue against the retained qualification and Stage 2/3 exposure records. The output verifies 1,120 Stage 2 and 2,194 Stage 3 evidence-file hashes.
-- Queue disposition: 2 previously model-exposed Development tasks, 8 historical Held-out tasks still reserved, 3 Train tasks, 11 excluded/collapsed candidates, and **0 fresh Development-eligible tasks**. The frozen queue and historical splits were not changed. The raw survey screen is absent from this checkout, so changed-path and merge-SHA metadata could not be independently revalidated; pretraining exposure also remains unknown.
-- Froze protocol v1 before inference for one deterministic local Qwen3-4B attempt on Train task `mlxlm-1904-tool-arguments`; the exact 4-bit snapshot and source/runtime/grader inputs are hash-bound.
-- Run 19 passed the independent v12 grader: structured object arguments and the JSON-string control both passed (2/2). The agent used 302 generated tokens, five tool turns, and 31.679 seconds on Apple Metal. The grader was called once and returned no feedback to the agent.
-- Recorded a pre-inference launch failure caused by the runner requiring a real `.git` directory; no prompt was rendered and no tokens were generated in that launch. The workspace was corrected at the same pinned source SHA before the one authorized inference.
-- Appended the new Train exposure without modifying prior Stage 2/3 ledgers or the earlier queue audit.
+- Completed the fresh public-PR metadata scan across six upstream repositories. The corrected weekly-partition scan captured 3,305 merged PR metadata rows without reading source diffs, PR bodies/comments, test contents, or Held-out assets.
+- Corrected the GraphQL `MERGED` state screen; 1,278 rows remain for metadata review. All remain `UNQUALIFIED`, `UNASSIGNED`, and `NOT_ASSESSED` until source-level calibration.
+- Generated the fixed-seed 71-row stratified metadata sample. Selected Transformers #49418, TRL #7668, and MLX #4778 for source/test qualification.
+- After freezing task selection, inspected only the selected source/test paths and recorded base/fix/test hashes. Prepared pinned CPU-only runtime images and an offline 20.8 MB test fixture. Frozen addendum 1 explicitly permits only the two TRL regression test cases’ tiny forward/loss/autograd checks; it forbids generation, optimizer updates, model/agent prompts, policy inference/training, Development assignment, and Held-out access.
+- The preparation log retains the MLX build-environment setup failures and their fixes. The MLX package was built with CPU enabled and Metal disabled; fixed and baseline runtimes are separately pinned.
 
 ## Validation and experiment state
 
-- Run-19 evidence bundle checksum verification: passed.
-- Independent grader: **PASSED, 2/2 cases** (`dict_arguments`, `json_string_control`).
+- PR #150 and PR #152 required-check records: **PASSED**.
+- Candidate discovery, corrected metadata screen, deterministic sample, source/test hashes, and offline fixture manifest: **verified**.
+- Selected task regression tests: **NOT RUN** at this checkpoint.
+- Qualified fresh Development tasks: **0**.
+- Coding capability milestone: **NO-GO** pending a qualified prospective Development cohort and independent model evaluation.
 - Model policy update, SFT, GRPO, RL comparison, Development generalization, and Held-out evaluation: **NOT RUN**.
-- Coding-capability milestone: **NO-GO** until a prospective Development cohort exists and is evaluated independently. RL update: **NO-GO**.
-- No paid compute, paid API, or external inference was used. Apple Metal inference was local.
+- No paid compute or API spend; no accelerator was used.
 
 ## Immediate next action
 
-Inspect exact-head required checks and review on PR #152, fix any actionable issues, and integrate only after repository requirements are met. Then prospectively qualify a new, non-overlapping Development cohort without opening any Held-out files or tests.
+Run baseline and fixed selectors for each of the three tasks one at a time in the frozen no-network containers. A task qualifies only if the baseline fails the targeted assertions, the exact fix passes every expected parameter case, and no cases skip or fail for environmental reasons. Do not assign any task to Development unless all three qualify.
 
 ## External blockers
 
-- The audited 24-entry manual queue contains no task currently assigned and qualified as fresh Development.
-- The raw survey screen artifact was not present, limiting retrospective revalidation of its source changed-path and merge-SHA metadata.
-- Public-task pretraining exposure is unknown; the single Train-task pass cannot establish generalization.
-- No real policy update or independent post-update task-success comparison has been executed.
-- PR #149 is an unrelated legacy open PR based on a pre-#150 integration point.
+- The historical 24-entry queue has no fresh Development-eligible task; this new cohort is still in qualification.
+- Public pretraining exposure of these public upstream patches remains unknown.
+- No genuine policy update or independent post-update task-success comparison has been run.
