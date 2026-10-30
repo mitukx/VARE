@@ -10,23 +10,21 @@
 
 ## Candidate qualification
 
-A deterministic metadata sample selected Transformers #49418, TRL #7668, and MLX #4778 from a six-repository pool. Their exact source/test inputs and test delta hashes are frozen in `results/mlsys-fresh-development-task-qualification-v1/source-test-input-manifest.json` (SHA-256 `d29cfbffc94e3f66711094f7ce72cefb0bb0580cc10b6a5a016d98c67fa60633`).
+The frozen sample selected Transformers #49418, TRL #7668, and MLX #4778. Exact source/test inputs are pinned in `results/mlsys-fresh-development-task-qualification-v1/source-test-input-manifest.json` (SHA-256 `d29cfbffc94e3f66711094f7ce72cefb0bb0580cc10b6a5a016d98c67fa60633`).
 
-- **Transformers #49418 — `QUALIFIED_SOURCE_LEVEL`.** Baseline attempt 004 executed all six nodes: four had the expected residual-length assertion failure and two passed. Fixed attempt 003 passed all six with zero skips. The paired evidence and input hashes are summarized in `results/mlsys-fresh-development-task-qualification-v1/transformers-49418/qualification.json`.
-- Attempts 1–3 are preserved as inconclusive dependency, selector, and read-only Quanto extension-cache failures. Fixed-runner attempts 001 and 002 are also retained; both selected zero cases.
-- Runtime v3 is pinned to `sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2`. Its bounded Quanto cache tmpfs passed a runtime-only preflight.
-- **TRL #7668 — paired source result, not qualified under the frozen gate.** Baseline failed both cases with a task-specific `TypeError` because the base API rejects `gradient_checkpointing_kwargs`; no target assertion executed. Fixed source passed 2/2 permitted tiny-fixture forward/loss/autograd cases. The frozen gate requires a baseline assertion failure, so the task remains unqualified. No generation or optimizer ran.
-- **MLX #4778: NOT RUN.**
-- Source-qualified tasks: **1/3**. None is assigned to Development; no task was exposed to a model or agent.
+- **Transformers #49418 — `QUALIFIED_SOURCE_LEVEL`.** Baseline: four expected residual-length assertion failures, two passes. Fixed source: 6/6 pass, zero skips.
+- **MLX #4778 — `QUALIFIED_SOURCE_LEVEL`.** Baseline: the single frozen complex VJP assertion failed. Fixed CPU image: 1/1 pass.
+- **TRL #7668 — paired source evidence, not qualified.** Baseline: both cases failed with target `TypeError` because the base API rejects `gradient_checkpointing_kwargs`; no assertion executed. Fixed: 2/2 passed, including the only two permitted tiny-fixture forward/loss/autograd checks. The frozen gate requires a baseline assertion failure, so this task remains unqualified. No generation or optimizer ran.
+- Earlier environment and launcher failures remain preserved with their logs.
 
-Coding capability remains **NO-GO**. SFT, policy updates, GRPO/RL, fresh-task model inference, and Held-out evaluation are **NOT RUN**. Public pretraining exposure remains unknown. No paid compute/API spend or accelerator use.
+Source-qualified tasks: **2/3**. None is assigned to Development or exposed to an agent. Coding capability remains **NO-GO**. SFT, policy updates, GRPO/RL, fresh-task model inference, and Held-out evaluation are **NOT RUN**. Public pretraining exposure remains unknown. No paid compute/API spend or accelerator use.
 
 ## Immediate next action
 
-Run the MLX #4778 frozen baseline selector under addendum 1. Run its exact fixed arm only if the target baseline assertion executes and fails. Then reconcile all three source-level task outcomes; do not assign a Development split or run model inference without a separate frozen exposure/evaluation protocol.
+Freeze a replacement-task selection protocol before inspecting any unselected source or tests. Select a replacement for TRL #7668 from the already frozen metadata sample without changing the two task outcomes or exposure ledger. Qualify it baseline-first; do not assign Development tasks or run model inference until the frozen three-task cohort meets its gates and a separate exposure/evaluation protocol is approved.
 
 ## External blockers
 
-- Two selected tasks still need source-level qualification before the cohort can be considered for Development assignment.
+- The frozen cohort has only 2/3 source-qualified tasks because the TRL baseline did not execute an assertion.
 - Public pretraining exposure for the selected public upstream patches is unknown.
 - No independent fresh-task model result or post-update policy measurement exists.

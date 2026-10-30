@@ -124,8 +124,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Qualify MLX #4778 with the frozen CPU-only baseline-first selector and exact runtime/source/test hashes; only proceed according to its frozen acceptance rule. Keep the fresh-task qualified count at 1/3 pending that result.",
-  "last_completed_step": "TRL #7668 baseline and fixed arms were executed with pinned source/test/fixture hashes. Baseline cases both failed at the target API with TypeError before assertions; fixed cases passed 2/2 including only the two permitted tiny-fixture forward/loss/autograd checks. The task remains unqualified because the frozen acceptance gate requires a baseline assertion failure. No prompts, generation, optimizer, or Development assignment occurred.",
+  "highest_priority_next_task": "Freeze a replacement-task selection protocol based on the already frozen metadata sample before opening any unselected source or test. Qualify one replacement for TRL #7668 baseline-first; do not change prior outcomes, assign Development tasks, or run model inference.",
+  "last_completed_step": "MLX #4778 source-level qualification passed: the pinned CPU baseline failed the target complex VJP conjugation assertion, and the exact fixed image passed the same test with zero skips. A wrong fixed image tag caused one pre-container launcher error and is preserved. Current task count is 2/3: Transformers and MLX qualified; TRL paired evidence remains unqualified under its frozen assertion gate.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -379,9 +379,39 @@
       "status": "paired evidence retained; not qualified under frozen baseline assertion gate"
     },
     {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-baseline.log",
+      "sha256": "9ec836d04a5faa52fda14496d3b4053e06327db851a69853d5f522529c524c6d",
+      "status": "raw CPU baseline test output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed.log",
+      "sha256": "99a24796443a1d07f66a424f8116a06a2079063af758e7d3c87801c191ad2ecd",
+      "status": "raw CPU fixed test output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed-launch-error.txt",
+      "sha256": "f41b8f3fbd1fb3d64c7a9961766c1dca674624454b3f06d26df3f9c7416b9032",
+      "status": "stale image-tag invocation; Docker never started a test container"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-baseline.json",
+      "sha256": "f89813e8ddceb67039f00f7ca2dbd78b6105f80aaafbb0e292531677ab79c278",
+      "status": "baseline target VJP assertion failure"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed.json",
+      "sha256": "1f075d67591f197747d467b010962660d98ba7fd09cc1243634cc9f7e3cef5e8",
+      "status": "fixed CPU source passed one exact regression case"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/qualification.json",
+      "sha256": "29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee",
+      "status": "paired MLX task source-level qualification; not Development assignment"
+    },
+    {
       "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
-      "sha256": "df23d8fd92cc777c3a45cc30b01648ca25399f63e873430c8a75aedb2999f8f8",
-      "status": "environment and task result index updated"
+      "sha256": "995f6f7592ab7f9c257ab5210138427a7d3fb06b0648e01421b7624e9a004729",
+      "status": "runtime and task outcome index updated"
     }
   ],
   "run_ids": [
@@ -409,7 +439,9 @@
     "freshdev-qualification-transformers-49418-attempt-002-fixed",
     "freshdev-qualification-transformers-49418-attempt-003-fixed",
     "freshdev-qualification-trl-7668-attempt-001-baseline",
-    "freshdev-qualification-trl-7668-attempt-001-fixed"
+    "freshdev-qualification-trl-7668-attempt-001-fixed",
+    "freshdev-qualification-mlx-4778-attempt-001-baseline",
+    "freshdev-qualification-mlx-4778-attempt-001-fixed"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -419,10 +451,10 @@
     "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884"
   },
   "unresolved_blockers": [
-    "Only 1/3 selected tasks is source-qualified. TRL #7668 has a paired target-code failure/fix pass but no baseline assertion; under the frozen rule it remains unqualified. MLX #4778 is pending; no task is assigned to Development or exposed to a model.",
-    "Public pretraining exposure of selected public upstream patches remains unknown.",
+    "Only 2/3 selected tasks are source-qualified. TRL #7668 has paired target failure/fix pass but no baseline assertion; under the frozen gate it remains unqualified. A replacement must be selected and qualified before cohort assignment.",
+    "Public pretraining exposure of the selected public upstream patches remains unknown.",
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T08:49:30+09:00"
+  "updated_at": "2026-10-31T09:02:00+09:00"
 }

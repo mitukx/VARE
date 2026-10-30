@@ -144,3 +144,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Preserve both arms as useful source-level evidence, but mark TRL #7668 `NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE`. Do not alter the gate after outcome or assign the task to Development.
 - **Falsification criteria:** Reproduction shows any baseline assertion executed or a fixed test used a different fixture/source; either would contradict this classification.
 - **Follow-up:** Run MLX #4778 under addendum 1. The current qualified count remains 1/3.
+
+
+## 2026-10-31 — Qualify MLX #4778 at source level
+
+- **Hypothesis:** The selected fix corrects the complex-valued power VJP conjugation for the frozen CPU test case.
+- **Evidence:** On the pinned baseline CPU image, the single exact test executed the JVP check and failed the target VJP assertion `mx.allclose(vjp_z, cotangent * mx.conj(dz), atol=1e-4)`. The pinned fixed CPU image passed the same test. Source, test, image, and test-delta hashes match the frozen records. Paired qualification SHA-256: `29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee`.
+- **Alternative explanations:** A CPU/Metal difference or altered test/source could explain the result. Both images are CPU-only, Metal-disabled, and use the same frozen test tree and selector; source/test hashes were verified. The task is one mathematical case and says nothing about model capability.
+- **Decision:** Mark MLX #4778 `QUALIFIED_SOURCE_LEVEL`. Keep it unassigned and preserve the historical pretraining-exposure limitation. Together with Transformers this gives 2/3 qualified tasks; TRL remains unqualified under the baseline-assertion gate.
+- **Falsification criteria:** Source/test or image identity mismatch; baseline target assertion does not fail; fixed target fails or skips; or execution violates the frozen resource/network policy.
+- **Follow-up:** Freeze a deterministic replacement-task selection protocol before inspecting any unselected source/test inputs; qualify that task before considering a Development split.

@@ -152,3 +152,8 @@ The exact input manifest matched before both arms. Baseline attempt 004: 4 expec
 ### TRL #7668 paired source result
 
 Baseline attempt 001: two target `TypeError` failures from the base function rejecting `gradient_checkpointing_kwargs`; assertions did not execute. Fixed attempt 001: 2 passed, including exactly the permitted tiny-fixture forward/loss/autograd checks. The frozen gate requires a baseline assertion failure, so the pair is retained but the task remains unqualified. Evidence summary SHA-256: `f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c`.
+
+
+### MLX #4778 paired source result
+
+Baseline attempt 001: the exact CPU complex-power test failed the frozen VJP assertion. Fixed attempt 001: 1 passed, zero skipped. The first fixed-image launch used a stale tag and never started a container; the failed launch is retained separately and excluded. Paired qualification SHA-256: `29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee`.

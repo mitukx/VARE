@@ -1,0 +1,26 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________________ TestAutograd.test_complex_power_vjps _____________________
+
+self = <test_autograd.TestAutograd testMethod=test_complex_power_vjps>
+
+    def test_complex_power_vjps(self):
+        mx.random.seed(0)
+        z = mx.random.normal((3, 4, 5), dtype=mx.complex64) + 2.0
+        w = 0.5 * mx.random.normal((3, 4, 5), dtype=mx.complex64)
+        cotangent = mx.random.normal((3, 4, 5), dtype=mx.complex64)
+        dz = w * mx.power(z, w - 1)
+        dw = mx.log(z) * mx.power(z, w)
+    
+        _, (jvp,) = mx.jvp(mx.power, [z, w], [cotangent, cotangent])
+        expected = cotangent * (dz + dw)
+        self.assertTrue(mx.allclose(jvp, expected, atol=1e-4))
+    
+        _, (vjp_z, vjp_w) = mx.vjp(mx.power, [z, w], [cotangent])
+>       self.assertTrue(mx.allclose(vjp_z, cotangent * mx.conj(dz), atol=1e-4))
+E       AssertionError: array(False, dtype=bool) is not true
+
+/trusted/test_autograd.py:1703: AssertionError
+=========================== short test summary info ============================
+FAILED ../trusted/test_autograd.py::TestAutograd::test_complex_power_vjps - A...
+1 failed in 0.21s
