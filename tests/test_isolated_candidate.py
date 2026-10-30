@@ -20,6 +20,7 @@ from vare.isolated_candidate import (
     TimingPair,
     TimingReport,
     _candidate_temporary_directory,
+    _parse_result,
     grade_calls,
     overhead_adjusted,
     paired_difference_ci,
@@ -363,7 +364,7 @@ def test_import_time_os_exit_is_not_a_pass(tmp_path: Path) -> None:
     )
     report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
     assert report.passed is False
-    assert report.cases[0].failure == "missing_result"
+    assert report.cases[0].failure == "unexpected_process_exit"
 
 
 def test_sys_exit_inside_function_is_not_a_pass(tmp_path: Path) -> None:
@@ -373,7 +374,48 @@ def test_sys_exit_inside_function_is_not_a_pass(tmp_path: Path) -> None:
     )
     report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
     assert report.passed is False
-    assert report.cases[0].failure == "missing_result"
+    assert report.cases[0].failure == "unexpected_process_exit"
+
+
+def test_candidate_timeout_has_a_specific_resource_timeout_classification(tmp_path: Path) -> None:
+    subject = _subject(tmp_path, "slow", "def slow():\n    while True: pass\n")
+    report = _grade(
+        subject, FunctionCall("slow", "slow", "slow", [], None), timeout_s=0.5,
+    )
+    assert report.passed is False
+    assert report.cases[0].failure == "resource_timeout"
+
+
+def test_docker_daemon_start_failure_is_not_reported_as_malformed_output(
+    monkeypatch, tmp_path: Path,
+) -> None:
+    monkeypatch.setenv("DOCKER_HOST", "unix:///tmp/vare-missing-docker.sock")
+    monkeypatch.delenv("DOCKER_CONTEXT", raising=False)
+    subject = _subject(tmp_path, "solve", "def add(a, b):\n    return a + b\n")
+    report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
+    assert report.passed is False
+    assert report.cases[0].failure == "container_start_failure"
+
+
+def test_parent_child_nonce_mismatch_is_a_protocol_failure() -> None:
+    _value, failure = _parse_result(
+        b'VARE_RESULT ' + (b"00" * 32) + b' {"value":5}', "11" * 32,
+    )
+    assert failure == "protocol_mismatch"
+
+
+def test_partial_worker_frame_is_classified_as_truncated_output(tmp_path: Path) -> None:
+    subject = _subject(
+        tmp_path,
+        "solve",
+        "import os\n"
+        "def add(a, b):\n"
+        "    os.write(1, b'{\\\"value\\\":')\n"
+        "    os._exit(0)\n",
+    )
+    report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
+    assert report.passed is False
+    assert report.cases[0].failure == "truncated_output"
 
 
 def test_fake_speedup_json_on_stdout_is_not_a_pass(tmp_path: Path) -> None:
@@ -399,7 +441,7 @@ def test_stdout_noise_before_result_is_not_a_pass(tmp_path: Path) -> None:
     )
     report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
     assert report.passed is False
-    assert report.cases[0].failure == "malformed_result"
+    assert report.cases[0].failure == "frame_parse_failure"
 
 
 def test_builtins_patch_cannot_change_the_expected_value(tmp_path: Path) -> None:
@@ -515,7 +557,7 @@ def test_result_channel_tamper_is_not_a_pass(tmp_path: Path) -> None:
     assert report.passed is False
     blob = json.dumps(report.to_dict())
     assert "1000.0" not in blob
-    assert report.cases[0].failure == "malformed_result"
+    assert report.cases[0].failure == "frame_parse_failure"
 
 
 def test_input_id_cache_cannot_reuse_a_later_call(tmp_path: Path) -> None:
@@ -693,7 +735,7 @@ def test_trailing_stdout_after_a_value_line_fails(tmp_path: Path) -> None:
     )
     report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
     assert report.passed is False
-    assert report.cases[0].failure == "malformed_result"
+    assert report.cases[0].failure == "protocol_mismatch"
 
 
 def test_repeated_honest_calls_have_no_eof_flake(tmp_path: Path) -> None:

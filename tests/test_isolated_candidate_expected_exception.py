@@ -28,7 +28,8 @@ def test_exception_wire_payload_is_typed_and_nonce_bound():
     )
     assert failure is None
     assert value == CandidateException("ValueError")
-    _value, failure = isolated._parse_result(
+    value, failure = isolated._parse_result(
         b'VARE_RESULT other-nonce {"exception":"ValueError"}', "test-nonce",
     )
-    assert failure == "malformed_result"
+    assert value is None
+    assert failure == "protocol_mismatch"

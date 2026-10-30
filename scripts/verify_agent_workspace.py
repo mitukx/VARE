@@ -85,12 +85,16 @@ def verify_workspace(workspace: Path, task: dict[str, Any], agent: dict[str, Any
         except ValueError as exc:
             raise WorkspaceMismatch("Git diff could not be verified from the pinned base") from exc
     actual_diff = actual_diff_bytes.decode("utf-8").strip()
-    _expect(recorded_diff == actual_diff, "Git workspace diff does not match agent record")
-    _expect(grade.get("candidate_diff_sha256") == hashlib.sha256(actual_diff.encode()).hexdigest(),
+    _expect(
+        recorded_diff.removesuffix("\n") == actual_diff,
+        "Git workspace diff does not match agent record",
+    )
+    recorded_diff_sha256 = hashlib.sha256(recorded_diff.encode()).hexdigest()
+    _expect(grade.get("candidate_diff_sha256") == recorded_diff_sha256,
             "grader did not hash verified Git diff")
     return {
         "schema_version": 1, "workspace_revision": expected_rev,
         "verified_source_sha256": after, "verified_base_sha256": before,
-        "verified_diff_sha256": hashlib.sha256(actual_diff.encode()).hexdigest(),
+        "verified_diff_sha256": recorded_diff_sha256,
         "workspace_verification": "read-only source/Git consistency (not external attestation)",
     }

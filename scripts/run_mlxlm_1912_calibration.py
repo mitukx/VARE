@@ -28,11 +28,11 @@ from vare.mlxlm_1912_repo_task import (  # noqa: E402
     grade_workspace,
     sha256_file,
     verify_baseline,
-    verify_protocol_v4,
+    verify_protocol_v5,
 )
 from vare.isolated_candidate import FunctionCall, grade_calls  # noqa: E402
 
-PROTOCOL = ROOT / "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json"
+PROTOCOL = ROOT / "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v5.json"
 LOCKED = [
     "src/vare/mlxlm_1912_repo_task.py",
     "src/vare/isolated_candidate.py",
@@ -49,13 +49,13 @@ def sha256(path: Path) -> str:
 
 
 def verify_protocol() -> dict[str, Any]:
-    protocol = verify_protocol_v4()
+    protocol = verify_protocol_v5()
     actual = {name: sha256(ROOT / name) for name in LOCKED}
     if protocol.get("implementation_sha256") != actual:
         raise RuntimeError("protocol implementation hash lock is absent or mismatched")
     locked_inputs = set(LOCKED) | {
-        "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json",
-        "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v5.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v5.lock.json",
         "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md",
     }
     flags = subprocess.run(

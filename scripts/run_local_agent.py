@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import difflib
 import hashlib
 import json
 import os
@@ -24,11 +25,18 @@ from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submis
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
 MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
+DEFAULT_READ_LINES = 180
+MAX_READ_LINES = 200
+MAX_TOOL_RESULT_BYTES = 12_000
+MAX_TOOL_RESULT_TOKENS = 2_048
+MAX_SEARCH_MATCHES = 80
+MAX_SEARCH_SNIPPET_CHARS = 500
 TOOLS = [
-    {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace.', 'parameters': {'type': 'object', 'properties': {}, 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file. Provide its repository-relative path; a workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in the allowed task source files.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query'], 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a small unified diff to existing task source files. Keep the patch minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'list_files', 'description': 'List exact source paths available in this task workspace. Results are paginated; use next_offset as offset to continue.', 'parameters': {'type': 'object', 'properties': {'offset': {'type': 'integer', 'minimum': 0}}, 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns at most 180 lines. Pass inclusive start_line/end_line to inspect an exact range; a completed explicit range has no next_cursor even when later file lines exist. Follow next_cursor only when the returned page was truncated by a line or response limit. The result includes the resolved path and full-file SHA-256.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in allowed task source files. Returns at most 80 matches in a hard 12,000-byte and 2,048-token response; use offset from next_offset to continue.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}}, 'required': ['query'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a complete unified diff, not replacement source code. The patch must start with --- a/<exact allowed path> and +++ b/<exact allowed path>, then include @@ hunk headers and -old/+new lines. Keep it minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'replace_text', 'description': 'Safely replace one exact source snippet in one allowlisted file. Copy old_text exactly from read_file and provide the full new_text. It applies only when old_text occurs exactly once; ambiguous or missing context is rejected. Use this for one focused change; use apply_patch for multi-hunk edits.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'old_text': {'type': 'string'}, 'new_text': {'type': 'string'}}, 'required': ['path', 'old_text', 'new_text'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'finish', 'description': 'Finish the attempt when you believe the task is complete. The evaluator will judge the workspace.', 'parameters': {'type': 'object', 'properties': {'summary': {'type': 'string'}}, 'required': ['summary'], 'additionalProperties': False}}},
 ]
@@ -63,7 +71,10 @@ def tools_for(edit_format: str, *, public_tests: bool = False) -> list[dict[str,
     if edit_format == 'unified_diff':
         tools = list(TOOLS)
     else:
-        tools = [WRITE_FILE_TOOL if item['function']['name'] == 'apply_patch' else item for item in TOOLS]
+        tools = [
+            WRITE_FILE_TOOL if item['function']['name'] == 'apply_patch' else item
+            for item in TOOLS if item['function']['name'] != 'replace_text'
+        ]
     if public_tests:
         tools.insert(-1, PUBLIC_TEST_TOOL)
     return tools
@@ -72,10 +83,7 @@ def tools_for(edit_format: str, *, public_tests: bool = False) -> list[dict[str,
 def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[str, Any]],
                   tools: list[dict[str, Any]], *, limit: int, args: argparse.Namespace) -> tuple[str, int, int]:
     """Generate one bounded assistant response using a locally loaded backend."""
-    prompt = tokenizer.apply_chat_template(
-        messages, tools=tools, tokenize=False, add_generation_prompt=True,
-        enable_thinking=False,
-    )
+    prompt = render_chat_prompt(tokenizer, messages, tools)
     prompt_tokens = len(tokenizer.encode(prompt, add_special_tokens=False))
     if prompt_tokens >= args.max_context_tokens:
         raise ValueError('context_budget_exhausted')
@@ -106,6 +114,34 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
         )
     new_ids = output[0][encoded['input_ids'].shape[1]:]
     return tokenizer.decode(new_ids, skip_special_tokens=False), int(new_ids.shape[0]), prompt_tokens
+
+
+def render_chat_prompt(tokenizer: Any, messages: list[dict[str, Any]],
+                       tools: list[dict[str, Any]]) -> str:
+    """Render the complete tool history with the model tokenizer's native template."""
+    return tokenizer.apply_chat_template(
+        messages, tools=tools, tokenize=False, add_generation_prompt=True,
+        enable_thinking=False,
+    )
+
+
+def append_tool_interaction(
+    messages: list[dict[str, Any]], calls_and_results: list[tuple[str, dict[str, Any], Any]],
+) -> None:
+    """Append paired assistant tool calls and matching tool-result messages."""
+    first_call = len(messages)
+    messages.append({'role': 'assistant', 'tool_calls': [
+        {
+            'id': f'call_{first_call}_{index}', 'type': 'function',
+            'function': {'name': name, 'arguments': arguments},
+        }
+        for index, (name, arguments, _result) in enumerate(calls_and_results)
+    ]})
+    for index, (name, _arguments, result) in enumerate(calls_and_results):
+        messages.append({
+            'role': 'tool', 'name': name, 'tool_call_id': f'call_{first_call}_{index}',
+            'content': json.dumps(result, ensure_ascii=False),
+        })
 
 
 def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> dict[str, Any]:
@@ -149,7 +185,15 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
         reason = parsed.reason if parsed.reason != 'no_edit' else (
             'malformed_diff' if edit_format == 'unified_diff' else 'malformed_file'
         )
-        return {'applied': False, 'format_parse_failure': reason}
+        result = {'applied': False, 'format_parse_failure': reason}
+        if edit_format == 'unified_diff' and reason == 'malformed_diff':
+            path = sorted(allowed)[0] if allowed else '<allowed path>'
+            result['error'] = (
+                'The patch was not a unified diff. Send a complete diff, not replacement code, '
+                'with these exact headers and hunk form (replace the example lines with exact source context): '
+                f'--- a/{path}\n+++ b/{path}\n@@ -10,1 +10,1 @@\n-old line\n+new line'
+            )
+        return result
     applied = apply_parsed_edit(workspace, parsed, allowed)
     if not applied.applied:
         return {
@@ -159,6 +203,43 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
             'paths': list(applied.paths),
         }
     return {'applied': True, 'paths': list(applied.paths), 'format_parse_failure': None}
+
+
+def attempt_exact_text_replacement(
+    workspace: Path, path: str, old_text: str, new_text: str, allowed: set[str],
+    *, max_snippet_chars: int = 6_000,
+) -> dict[str, Any]:
+    """Apply an exact, unique snippet replacement through the normal diff guard."""
+    resolved = resolve_allowed_path(path, allowed)
+    if resolved is None:
+        return {'applied': False, 'error': 'path is not an exact allowlisted source file'}
+    if not isinstance(old_text, str) or not isinstance(new_text, str):
+        return {'applied': False, 'error': 'old_text and new_text must be strings'}
+    if not old_text:
+        return {'applied': False, 'error': 'old_text must not be empty'}
+    if len(old_text) > max_snippet_chars or len(new_text) > max_snippet_chars:
+        return {'applied': False, 'error': f'snippets exceed the {max_snippet_chars}-character limit'}
+    try:
+        original = read_regular_source(workspace, resolved).decode('utf-8')
+    except (OSError, UnicodeDecodeError, ValueError) as exc:
+        return {'applied': False, 'error': f'could not read allowlisted source: {type(exc).__name__}'}
+    count = original.count(old_text)
+    if count != 1:
+        return {
+            'applied': False,
+            'error': 'old_text must match exactly once; narrow the source context and retry',
+            'match_count': count,
+        }
+    updated = original.replace(old_text, new_text, 1)
+    patch = ''.join(difflib.unified_diff(
+        original.splitlines(keepends=True), updated.splitlines(keepends=True),
+        fromfile=f'a/{resolved}', tofile=f'b/{resolved}', n=3,
+    ))
+    if not patch:
+        return {'applied': False, 'error': 'replacement does not change the source'}
+    result = attempt_configured_edit(workspace, patch, 'unified_diff', allowed)
+    result['edit_mode'] = 'exact_text_replacement'
+    return result
 
 
 def sha256(path: Path) -> str:
@@ -215,7 +296,9 @@ def candidate_source_diff(
             "--binary", "--", *ordered, index_file=index_file,
             max_output_bytes=2 * 1024 * 1024,
         )
-    diff = diff_bytes.decode('utf-8').strip()
+    diff = diff_bytes.decode('utf-8')
+    if diff and not diff.endswith('\n'):
+        diff += '\n'
     if len(diff.encode('utf-8')) > 2 * 1024 * 1024:
         raise ValueError('candidate diff exceeds the evidence parser limit')
     return diff
@@ -226,6 +309,289 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     normalized = raw_path.replace('\\', '/').lstrip('./')
     matches = [path for path in allowed if normalized == path or normalized.endswith('/' + path)]
     return matches[0] if len(matches) == 1 else None
+
+
+def _tool_result_fits(result: Any, tokenizer: Any | None, *,
+                      max_bytes: int, max_tokens: int) -> bool:
+    serialized = json.dumps(result, ensure_ascii=False, separators=(',', ':'))
+    if len(serialized.encode('utf-8')) > max_bytes:
+        return False
+    return tokenizer is None or len(tokenizer.encode(
+        serialized, add_special_tokens=False,
+    )) <= max_tokens
+
+
+def bounded_source_page(
+    text: str, *, start_line: int = 1, end_line: int | None = None,
+    char_offset: int = 0, source_identity: dict[str, Any] | None = None,
+    tokenizer: Any | None = None, max_output_bytes: int = MAX_TOOL_RESULT_BYTES,
+    max_output_tokens: int = MAX_TOOL_RESULT_TOKENS,
+) -> dict[str, Any]:
+    """Return an inclusive source page under hard serialized-byte/token limits.
+
+    A very long individual line may be returned as a character slice. Its
+    ``next_cursor`` points to the exact source line and character offset so
+    the agent can continue without losing line identity.
+    """
+    if isinstance(start_line, bool) or not isinstance(start_line, int) or start_line < 1:
+        raise ValueError('start_line must be a positive integer')
+    if end_line is not None and (
+        isinstance(end_line, bool) or not isinstance(end_line, int) or end_line < 1
+    ):
+        raise ValueError('end_line must be a positive integer')
+    if end_line is not None and end_line < start_line:
+        raise ValueError('end_line must be greater than or equal to start_line')
+    if isinstance(char_offset, bool) or not isinstance(char_offset, int) or char_offset < 0:
+        raise ValueError('char_offset must be a non-negative integer')
+    if (type(max_output_bytes) is not int or max_output_bytes <= 0
+            or type(max_output_tokens) is not int or max_output_tokens <= 0):
+        raise ValueError('tool response budgets must be positive integers')
+
+    lines = text.splitlines(keepends=True)
+    total_lines = len(lines)
+    if start_line > max(total_lines, 1):
+        raise ValueError(f'start_line exceeds the source length ({total_lines} lines)')
+    if total_lines == 0 and char_offset != 0:
+        raise ValueError('char_offset exceeds the source length (0 characters)')
+    if total_lines and char_offset > len(lines[start_line - 1]):
+        raise ValueError('char_offset exceeds the selected source line')
+    source_range_end = min(end_line, total_lines) if end_line is not None else total_lines
+    page_limit = MAX_READ_LINES if end_line is not None else DEFAULT_READ_LINES
+    returned_end = min(source_range_end, start_line + page_limit - 1)
+    identity = dict(source_identity or {})
+    identity.setdefault('source_sha256', hashlib.sha256(text.encode('utf-8')).hexdigest())
+
+    def next_after(line_number: int) -> dict[str, int] | None:
+        if line_number < source_range_end:
+            return {'start_line': line_number + 1, 'char_offset': 0}
+        return None
+
+    def make_result(content: str, last_line: int,
+                    cursor: dict[str, int] | None) -> dict[str, Any]:
+        return {
+            **identity,
+            'content': content,
+            'start_line': start_line,
+            'end_line': last_line,
+            'total_lines': total_lines,
+            'has_more': cursor is not None,
+            'next_cursor': cursor,
+        }
+
+    empty_cursor = ({'start_line': start_line, 'char_offset': char_offset}
+                    if start_line <= returned_end else None)
+    result = make_result('', start_line - 1, empty_cursor)
+    if not _tool_result_fits(
+        result, tokenizer, max_bytes=max_output_bytes, max_tokens=max_output_tokens,
+    ):
+        raise ValueError('source identity metadata exceeds the tool response budget')
+
+    content = ''
+    last_line = start_line - 1
+    for line_number in range(start_line, returned_end + 1):
+        offset = char_offset if line_number == start_line else 0
+        piece = lines[line_number - 1][offset:]
+        cursor = next_after(line_number)
+        candidate = make_result(content + piece, line_number, cursor)
+        if _tool_result_fits(
+            candidate, tokenizer, max_bytes=max_output_bytes, max_tokens=max_output_tokens,
+        ):
+            content += piece
+            last_line = line_number
+            continue
+
+        low, high = 0, len(piece)
+        best = 0
+        while low <= high:
+            middle = (low + high) // 2
+            partial_cursor = {'start_line': line_number, 'char_offset': offset + middle}
+            partial = make_result(content + piece[:middle], line_number, partial_cursor)
+            if _tool_result_fits(
+                partial, tokenizer, max_bytes=max_output_bytes,
+                max_tokens=max_output_tokens,
+            ):
+                best = middle
+                low = middle + 1
+            else:
+                high = middle - 1
+        if best:
+            content += piece[:best]
+            last_line = line_number
+            return make_result(
+                content, last_line,
+                {'start_line': line_number, 'char_offset': offset + best},
+            )
+        if content:
+            return make_result(content, last_line, {'start_line': line_number, 'char_offset': offset})
+        raise ValueError('tool response budget is too small to return source content')
+
+    cursor = next_after(last_line) if last_line >= start_line else None
+    result = make_result(content, last_line, cursor)
+    if not _tool_result_fits(
+        result, tokenizer, max_bytes=max_output_bytes, max_tokens=max_output_tokens,
+    ):
+        raise AssertionError('bounded source page exceeded its response budget')
+    return result
+
+
+def bounded_search_results(
+    matches: list[dict[str, Any]], *, offset: int = 0, tokenizer: Any | None = None,
+    max_matches: int = MAX_SEARCH_MATCHES, max_output_bytes: int = MAX_TOOL_RESULT_BYTES,
+    max_output_tokens: int = MAX_TOOL_RESULT_TOKENS,
+) -> dict[str, Any]:
+    """Return stable search matches with pagination and hard response budgets."""
+    if isinstance(offset, bool) or not isinstance(offset, int) or offset < 0:
+        raise ValueError('offset must be a non-negative integer')
+    if type(max_matches) is not int or max_matches <= 0:
+        raise ValueError('max_matches must be a positive integer')
+    selected = matches[offset:offset + max_matches]
+    result: dict[str, Any] = {
+        'matches': [], 'offset': offset, 'has_more': offset + len(selected) < len(matches),
+        'next_offset': offset if not selected else offset + len(selected),
+    }
+    for index, original in enumerate(selected):
+        item = dict(original)
+        full_text = str(item.get('text', ''))
+        item['text'] = full_text[:MAX_SEARCH_SNIPPET_CHARS]
+        item['text_truncated'] = len(full_text) > len(item['text'])
+        candidate_matches = [*result['matches'], item]
+        next_offset = offset + len(candidate_matches)
+        candidate = {
+            **result,
+            'matches': candidate_matches,
+            'has_more': next_offset < len(matches),
+            'next_offset': next_offset if next_offset < len(matches) else None,
+        }
+        if _tool_result_fits(
+            candidate, tokenizer, max_bytes=max_output_bytes, max_tokens=max_output_tokens,
+        ):
+            result = candidate
+            continue
+
+        low, high = 0, len(item['text'])
+        best = -1
+        while low <= high:
+            middle = (low + high) // 2
+            shortened = {**item, 'text': item['text'][:middle], 'text_truncated': True}
+            shortened_result = {
+                **result,
+                'matches': [*result['matches'], shortened],
+                'has_more': True,
+                'next_offset': offset + len(result['matches']) + 1,
+            }
+            if _tool_result_fits(
+                shortened_result, tokenizer, max_bytes=max_output_bytes,
+                max_tokens=max_output_tokens,
+            ):
+                best = middle
+                low = middle + 1
+            else:
+                high = middle - 1
+        if best >= 0:
+            shortened = {**item, 'text': item['text'][:best], 'text_truncated': True}
+            result = {
+                **result,
+                'matches': [*result['matches'], shortened],
+                'has_more': True,
+                'next_offset': offset + len(result['matches']) + 1,
+            }
+        else:
+            result = {
+                **result, 'has_more': True,
+                'next_offset': offset + len(result['matches']),
+            }
+        return result
+    if result['next_offset'] == offset + len(matches[offset:]):
+        result['next_offset'] = None
+    if not _tool_result_fits(
+        result, tokenizer, max_bytes=max_output_bytes, max_tokens=max_output_tokens,
+    ):
+        raise AssertionError('bounded search result exceeded its response budget')
+    return result
+
+
+def bounded_list_page(
+    items: list[str], *, offset: int = 0, tokenizer: Any | None = None,
+    max_items: int = 100, max_output_bytes: int = MAX_TOOL_RESULT_BYTES,
+    max_output_tokens: int = MAX_TOOL_RESULT_TOKENS,
+) -> dict[str, Any]:
+    """Return a paginated path list under the same hard tool-response limits."""
+    if isinstance(offset, bool) or not isinstance(offset, int) or offset < 0:
+        raise ValueError('offset must be a non-negative integer')
+    if type(max_items) is not int or max_items <= 0:
+        raise ValueError('max_items must be a positive integer')
+    selected = items[offset:offset + max_items]
+    result: dict[str, Any] = {
+        'files': [], 'offset': offset, 'has_more': offset < len(items),
+        'next_offset': offset if not selected else offset + len(selected),
+    }
+    for item in selected:
+        next_items = [*result['files'], item]
+        next_offset = offset + len(next_items)
+        candidate = {
+            **result, 'files': next_items,
+            'has_more': next_offset < len(items),
+            'next_offset': next_offset if next_offset < len(items) else None,
+        }
+        if not _tool_result_fits(
+            candidate, tokenizer, max_bytes=max_output_bytes, max_tokens=max_output_tokens,
+        ):
+            if result['files']:
+                return {
+                    **result, 'has_more': True,
+                    'next_offset': offset + len(result['files']),
+                }
+            raise ValueError('tool response budget is too small to return a source path')
+        result = candidate
+    if not selected or result['next_offset'] == len(items):
+        result['next_offset'] = None
+    if not _tool_result_fits(
+        result, tokenizer, max_bytes=max_output_bytes, max_tokens=max_output_tokens,
+    ):
+        raise AssertionError('bounded path list exceeded its response budget')
+    return result
+
+
+def bounded_tool_result(result: Any, tokenizer: Any) -> Any:
+    """Apply a final hard cap to non-source tool outputs before adding history."""
+    if _tool_result_fits(
+        result, tokenizer, max_bytes=MAX_TOOL_RESULT_BYTES,
+        max_tokens=MAX_TOOL_RESULT_TOKENS,
+    ):
+        return result
+    serialized = json.dumps(result, ensure_ascii=False, separators=(',', ':'))
+    digest = hashlib.sha256(serialized.encode('utf-8')).hexdigest()
+    clipped: Any = result
+    if isinstance(result, dict):
+        clipped = dict(result)
+        for field in ('stdout', 'stderr', 'error', 'summary', 'text', 'content'):
+            value = clipped.get(field)
+            if isinstance(value, str):
+                clipped[field] = value[:2_000]
+                clipped[f'{field}_truncated'] = len(value) > 2_000
+        for field, value in tuple(clipped.items()):
+            if isinstance(value, list) and len(value) > 20:
+                clipped[field] = value[:20]
+                clipped[f'{field}_truncated'] = True
+    clipped_with_metadata = {
+        **clipped, 'response_truncated': True, 'original_result_sha256': digest,
+    } if isinstance(clipped, dict) else clipped
+    if _tool_result_fits(
+        clipped_with_metadata, tokenizer, max_bytes=MAX_TOOL_RESULT_BYTES,
+        max_tokens=MAX_TOOL_RESULT_TOKENS,
+    ):
+        return clipped_with_metadata
+    fallback = {
+        'error': 'tool result exceeded the response budget; use a narrower lookup',
+        'response_truncated': True,
+        'original_result_sha256': digest,
+    }
+    if not _tool_result_fits(
+        fallback, tokenizer, max_bytes=MAX_TOOL_RESULT_BYTES,
+        max_tokens=MAX_TOOL_RESULT_TOKENS,
+    ):
+        raise ValueError('tool tokenizer cannot encode the bounded error response')
+    return fallback
 
 
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
@@ -383,13 +749,18 @@ def main() -> int:
         )
     else:
         edit_sentence = (
-            'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
-            'The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. '
+            'Read the source path named in the user instruction, then use tools to inspect and edit. For one focused change, prefer replace_text: copy an exact old_text snippet from the source and provide its full new_text. It succeeds only when old_text matches exactly once. Use apply_patch for multi-hunk changes; never rewrite a whole file. '
+            'The apply_patch patch argument must be a complete unified diff, not replacement code. Use exact headers and hunk syntax, with no Markdown fence: '
+            '--- a/<exact allowed path> newline +++ b/<same exact path> newline @@ -10,1 +10,1 @@ newline -old line newline +new line. '
+            'Replace example lines with exact source context; do not send only the replacement function body. '
         )
     system = (
         'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
         + edit_sentence
         + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then read the exact source path named in the task. '
+        + f'read_file and search_text results have hard {MAX_TOOL_RESULT_BYTES}-byte and {MAX_TOOL_RESULT_TOKENS}-token limits. '
+        + 'read_file returns at most 180 lines by default and 200 lines per call; follow next_cursor.start_line and next_cursor.char_offset exactly, including when a source line is unusually long. '
+        + 'The full-file SHA-256 and resolved path identify the source used for each page. Search first, then read only the matching line range and nearby context. '
         + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
         + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
         + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
@@ -507,25 +878,34 @@ def main() -> int:
                 parsed_calls.append((match, name, arguments))
             except Exception as exc:
                 entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': match.group(1)})
-        if parsed_calls:
-            messages.append({'role': 'assistant', 'tool_calls': [
-                {'type': 'function', 'function': {'name': name, 'arguments': arguments}}
-                for _, name, arguments in parsed_calls
-            ]})
-        else:
+        if not parsed_calls:
             messages.append({'role': 'assistant', 'content': raw})
+        calls_and_results: list[tuple[str, dict[str, Any], Any]] = []
         for match, name, arguments in parsed_calls:
             try:
                 if name == 'list_files':
-                    result: Any = sorted(allowed)
+                    result: Any = bounded_list_page(
+                        sorted(allowed), offset=arguments.get('offset', 0), tokenizer=tokenizer,
+                    )
                 elif name == 'read_file':
                     raw_path = arguments.get('path', '')
                     path = resolve_allowed_path(raw_path, allowed)
                     if path is None:
-                        result = {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
+                        result = {'error': 'path is not allowed; use list_files to retrieve exact allowed paths'}
                     else:
-                        result = {'resolved_path': path,
-                                  'content': (workspace / path).read_text(encoding='utf-8')}
+                        source = read_regular_source(workspace, path)
+                        text = source.decode('utf-8')
+                        result = bounded_source_page(
+                            text,
+                            start_line=arguments.get('start_line', 1),
+                            end_line=arguments.get('end_line'),
+                            char_offset=arguments.get('char_offset', 0),
+                            source_identity={
+                                'resolved_path': path,
+                                'source_sha256': hashlib.sha256(source).hexdigest(),
+                            },
+                            tokenizer=tokenizer,
+                        )
                 elif name == 'search_text':
                     query = arguments.get('query', '')
                     if not query:
@@ -535,11 +915,29 @@ def main() -> int:
                         for path in sorted(allowed):
                             for line_no, line in enumerate((workspace / path).read_text(encoding='utf-8').splitlines(), 1):
                                 if query in line:
-                                    matches.append({'path': path, 'line': line_no, 'text': line[:500]})
-                        result = matches[:80]
+                                    matches.append({'path': path, 'line': line_no, 'text': line})
+                        result = bounded_search_results(
+                            matches, offset=arguments.get('offset', 0), tokenizer=tokenizer,
+                        )
                 elif name == 'apply_patch':
                     result = attempt_configured_edit(
                         workspace, str(arguments.get('patch', '')), args.edit_format, editable,
+                    )
+                    note_edit(result)
+                    if result.get('applied') is True:
+                        public_test_result = refresh_public_tests_after_edit(
+                            result, workspace, args.public_test_image, public_test_hash,
+                        )
+                        if public_test_result is not None:
+                            entry['automatic_public_test'] = public_test_result
+                            result = {**result, 'automatic_public_test': public_test_result}
+                elif name == 'replace_text':
+                    result = attempt_exact_text_replacement(
+                        workspace,
+                        arguments.get('path', ''),
+                        arguments.get('old_text', ''),
+                        arguments.get('new_text', ''),
+                        editable,
                     )
                     note_edit(result)
                     if result.get('applied') is True:
@@ -599,13 +997,21 @@ def main() -> int:
                         final_summary = str(arguments.get('summary', ''))
                         result = {'finished': True}
                         stop_reason = 'agent_finished'
+                result = bounded_tool_result(result, tokenizer)
                 entry['tool_calls'].append({'name': name, 'arguments': arguments, 'result': result})
-                messages.append({'role': 'tool', 'name': name, 'content': json.dumps(result, ensure_ascii=False)})
+                calls_and_results.append((name, arguments, result))
                 if name == 'finish':
                     break
             except Exception as exc:
-                entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': match.group(1)})
-                messages.append({'role': 'tool', 'name': 'invalid_tool_call', 'content': json.dumps({'error': str(exc)})})
+                result = bounded_tool_result(
+                    {'error': f'{type(exc).__name__}: {exc}'}, tokenizer,
+                )
+                entry['tool_calls'].append({
+                    'name': name, 'arguments': arguments, 'result': result,
+                })
+                calls_and_results.append((name, arguments, result))
+        if calls_and_results:
+            append_tool_interaction(messages, calls_and_results)
         transcript.append(entry)
         if stop_reason == 'agent_finished':
             break
