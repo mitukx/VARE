@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -77,6 +77,29 @@ def test_patch_input_and_candidate_workspace_symlinks_fail_closed(
         apply_candidate_patch(root, patch_link, tmp_path / "fresh")
     with pytest.raises(RepositoryTaskError, match="already exists"):
         apply_candidate_patch(root, patch, workspace)
+
+
+def test_grade_workspace_rejects_symlinked_parent_before_grader_call(
+    tmp_path: Path, monkeypatch
+):
+    workspace = tmp_path / "workspace"
+    external = tmp_path / "external"
+    workspace.mkdir()
+    external.mkdir()
+    (external / "server.py").write_text("external source\n", encoding="utf-8")
+    (workspace / "mlx_lm").symlink_to(external, target_is_directory=True)
+    grade_calls = []
+
+    def unexpected_grade_call(*_args, **_kwargs):
+        grade_calls.append(True)
+        raise AssertionError("symlinked workspace reached the grader")
+
+    monkeypatch.setattr(repo_task, "grade_calls", unexpected_grade_call)
+    with pytest.raises(RepositoryTaskError, match="symlink"):
+        repo_task.grade_workspace(
+            workspace, image="python@sha256:" + "0" * 64
+        )
+    assert grade_calls == []
 
 
 def test_pinned_source_target_symlink_fails_closed(tmp_path: Path, monkeypatch):
@@ -219,6 +242,7 @@ def _red_team_report() -> dict:
         "environment_probe",
         "network_probe",
         "subprocess_write_probe",
+        "workspace_parent_symlink_probe",
     }
     attempts = {
         name: {
@@ -229,8 +253,12 @@ def _red_team_report() -> dict:
         for name in repo_task.RED_TEAM_PROBES
     }
     attempts["subprocess_write_probe"]["host_workspace_write"] = False
+    attempts["workspace_parent_symlink_probe"].update(
+        workspace_parent_symlink_rejected=True,
+        grade_call_attempted=False,
+    )
     return {
-        "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v1",
+        "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v2",
         "source_checkout": repo_task.BASELINE_COMMIT,
         "image": "python@sha256:example",
         "network": "none",
@@ -250,7 +278,7 @@ def test_red_team_evidence_requires_complete_consistent_suite_and_pinned_bytes(
         image="python@sha256:example",
         expected_sha256=hashlib.sha256(raw).hexdigest(),
     )
-    assert verified["probe_count"] == 8
+    assert verified["probe_count"] == 9
 
     for mutate, match in [
         (lambda report: report["attempts"].pop("timeout"), "required suite"),
@@ -272,12 +300,32 @@ def test_red_team_evidence_requires_complete_consistent_suite_and_pinned_bytes(
             ),
             "escaped",
         ),
+        (
+            lambda report: report["attempts"][
+                "workspace_parent_symlink_probe"
+            ].update(grade_call_attempted=True),
+            "rejected before grading",
+        ),
     ]:
         report = _red_team_report()
         mutate(report)
         path.write_text(json.dumps(report), encoding="utf-8")
         with pytest.raises(RepositoryTaskError, match=match):
             repo_task.verify_red_team_evidence(path, image="python@sha256:example")
+
+
+def test_historical_red_team_v1_evidence_remains_verifiable(tmp_path: Path):
+    report = _red_team_report()
+    report["experiment_id"] = "mlsys-repository-task-mlxlm-1904-red-team-v1"
+    report["attempts"].pop("workspace_parent_symlink_probe")
+    path = tmp_path / "red-team-v1.json"
+    path.write_text(json.dumps(report), encoding="utf-8")
+
+    verified = repo_task.verify_red_team_evidence(
+        path, image="python@sha256:example"
+    )
+
+    assert verified["probe_count"] == 8
 
 
 def test_red_team_evidence_missing_malformed_or_hash_tampered_fails_closed(

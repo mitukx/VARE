@@ -19,7 +19,7 @@
     "highest_priority_next_task"
   ],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {"const": 2},
     "updated_at": {"type": "string", "format": "date-time"},
     "milestone_id": {"type": "string", "minLength": 1},
     "last_completed_step": {"type": "string", "minLength": 1},
@@ -39,6 +39,8 @@
       "required": [
         "repository",
         "last_verified_main_sha",
+        "last_integrated_pr_url",
+        "last_integrated_pr_merge_sha",
         "active_branch",
         "verified_pr_head_sha_before_checkpoint_changes",
         "active_pr_url",
@@ -47,10 +49,16 @@
       "properties": {
         "repository": {"type": "string", "minLength": 1},
         "last_verified_main_sha": {"$ref": "#/$defs/gitCommit"},
+        "last_integrated_pr_url": {"type": "string", "format": "uri"},
+        "last_integrated_pr_merge_sha": {"$ref": "#/$defs/gitCommit"},
         "active_branch": {"type": "string", "minLength": 1},
-        "verified_pr_head_sha_before_checkpoint_changes": {"$ref": "#/$defs/gitCommit"},
-        "active_pr_url": {"type": "string", "format": "uri"},
-        "active_pr_state": {"enum": ["open", "merged", "closed"]}
+        "verified_pr_head_sha_before_checkpoint_changes": {
+          "anyOf": [{"$ref": "#/$defs/gitCommit"}, {"type": "null"}]
+        },
+        "active_pr_url": {
+          "anyOf": [{"type": "string", "format": "uri"}, {"type": "null"}]
+        },
+        "active_pr_state": {"enum": ["none", "open", "merged", "closed"]}
       }
     },
     "frozen_protocols": {

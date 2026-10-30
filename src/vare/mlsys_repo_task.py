@@ -10,12 +10,14 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-from pathlib import Path, PurePosixPath
 import re
 import shutil
+import stat
 import subprocess
 import tempfile
-from typing import Any, Sequence
+from collections.abc import Sequence
+from pathlib import Path, PurePosixPath
+from typing import Any
 
 from .container_isolation import DockerIsolationRunner
 from .isolated_candidate import FunctionCall, grade_calls
@@ -44,7 +46,7 @@ class RepositoryTaskError(ValueError):
     """Task identity, checkout, or candidate patch failed closed."""
 
 
-RED_TEAM_PROBES = frozenset(
+RED_TEAM_PROBES_V1 = frozenset(
     {
         "grader_path_probe",
         "git_history_probe",
@@ -55,6 +57,9 @@ RED_TEAM_PROBES = frozenset(
         "timeout",
         "memory_exhaustion",
     }
+)
+RED_TEAM_PROBES = RED_TEAM_PROBES_V1 | frozenset(
+    {"workspace_parent_symlink_probe"}
 )
 LOCKED_IMPLEMENTATION_FILES = frozenset(
     {
@@ -72,6 +77,7 @@ LOCKED_IMPLEMENTATION_FILES = frozenset(
 CALIBRATION_INPUT_FILES = LOCKED_IMPLEMENTATION_FILES | frozenset(
     {
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v10.json",
+        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json",
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/task.md",
     }
 )
@@ -83,6 +89,58 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _read_regular_file_beneath(
+    root: Path,
+    relative_path: str,
+    *,
+    label: str,
+) -> bytes:
+    """Read one regular file without following symlinks in any path component."""
+    relative = PurePosixPath(relative_path)
+    if (
+        root.is_symlink()
+        or not root.is_dir()
+        or relative.is_absolute()
+        or not relative.parts
+        or ".." in relative.parts
+        or "." in relative.parts
+    ):
+        raise RepositoryTaskError(f"{label} is unavailable or has an unsafe path")
+    if (
+        not hasattr(os, "O_NOFOLLOW")
+        or not hasattr(os, "O_DIRECTORY")
+        or os.open not in os.supports_dir_fd
+    ):
+        raise RepositoryTaskError("platform does not support symlink-safe file reads")
+
+    directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    file_flags = os.O_RDONLY | os.O_NOFOLLOW
+    directory_fd = -1
+    try:
+        directory_fd = os.open(root.resolve(strict=True), directory_flags)
+        for component in relative.parts[:-1]:
+            child_fd = os.open(component, directory_flags, dir_fd=directory_fd)
+            os.close(directory_fd)
+            directory_fd = child_fd
+        file_fd = os.open(relative.parts[-1], file_flags, dir_fd=directory_fd)
+        try:
+            if not stat.S_ISREG(os.fstat(file_fd).st_mode):
+                raise RepositoryTaskError(f"{label} is not a regular file")
+            with os.fdopen(file_fd, "rb") as stream:
+                file_fd = -1
+                return stream.read()
+        finally:
+            if file_fd >= 0:
+                os.close(file_fd)
+    except OSError as exc:
+        raise RepositoryTaskError(
+            f"{label} is unavailable or traverses a symlink"
+        ) from exc
+    finally:
+        if directory_fd >= 0:
+            os.close(directory_fd)
 
 
 def verify_red_team_evidence(
@@ -108,13 +166,20 @@ def verify_red_team_evidence(
         raise RepositoryTaskError("red-team evidence root must be an object")
     attempts = report.get("attempts") if isinstance(report, dict) else None
     decision = report.get("decision") if isinstance(report, dict) else None
+    experiment_id = report.get("experiment_id")
+    if experiment_id == "mlsys-repository-task-mlxlm-1904-red-team-v1":
+        expected_probes = RED_TEAM_PROBES_V1
+    elif experiment_id == "mlsys-repository-task-mlxlm-1904-red-team-v2":
+        expected_probes = RED_TEAM_PROBES
+    else:
+        expected_probes = frozenset()
     if (
-        report.get("experiment_id") != "mlsys-repository-task-mlxlm-1904-red-team-v1"
-        or report.get("source_checkout") != BASELINE_COMMIT
+        report.get("source_checkout") != BASELINE_COMMIT
         or report.get("image") != image
         or report.get("network") != "none"
         or not isinstance(attempts, dict)
-        or set(attempts) != RED_TEAM_PROBES
+        or not expected_probes
+        or set(attempts) != expected_probes
         or not isinstance(decision, dict)
         or decision.get("all_attacks_checked") is not True
     ):
@@ -128,6 +193,7 @@ def verify_red_team_evidence(
             "environment_probe",
             "network_probe",
             "subprocess_write_probe",
+            "workspace_parent_symlink_probe",
         }
         if (
             attempt.get("audit_check_passed") is not True
@@ -139,6 +205,15 @@ def verify_red_team_evidence(
             )
     if attempts["subprocess_write_probe"].get("host_workspace_write") is not False:
         raise RepositoryTaskError("red-team subprocess escaped into the host workspace")
+    if experiment_id == "mlsys-repository-task-mlxlm-1904-red-team-v2":
+        symlink_attempt = attempts["workspace_parent_symlink_probe"]
+        if (
+            symlink_attempt.get("workspace_parent_symlink_rejected") is not True
+            or symlink_attempt.get("grade_call_attempted") is not False
+        ):
+            raise RepositoryTaskError(
+                "workspace parent symlink was not rejected before grading"
+            )
     return {
         "sha256": digest,
         "probe_count": len(attempts),
@@ -335,14 +410,14 @@ def verify_baseline(source_root: Path) -> None:
         raise RepositoryTaskError("source root is not a readable Git checkout") from exc
     if head != BASELINE_COMMIT or status:
         raise RepositoryTaskError("source checkout is not the clean pinned baseline")
-    source = root / TARGET_PATH
-    if source.is_symlink() or not source.is_file():
-        raise RepositoryTaskError("pinned target source is unavailable or a symlink")
     if any(line[:1] in {"h", "S"} for line in index_flags):
         raise RepositoryTaskError(
             "target has assume-unchanged or skip-worktree index flags"
         )
-    if sha256_file(source) != BASELINE_SERVER_SHA256:
+    source_bytes = _read_regular_file_beneath(
+        root, TARGET_PATH, label="pinned target source"
+    )
+    if hashlib.sha256(source_bytes).hexdigest() != BASELINE_SERVER_SHA256:
         raise RepositoryTaskError(
             "pinned target source SHA-256 does not match the baseline"
         )
@@ -577,19 +652,17 @@ def grade_workspace(
     memory_mb: int = 512,
 ) -> dict[str, Any]:
     """Run the independent tests with only the candidate source mounted."""
-    target = workspace / TARGET_PATH
-    if (
-        workspace.is_symlink()
-        or not workspace.is_dir()
-        or target.is_symlink()
-        or not target.is_file()
-    ):
+    if workspace.is_symlink() or not workspace.is_dir():
         raise RepositoryTaskError("candidate workspace is incomplete or unsafe")
+    source_bytes = _read_regular_file_beneath(
+        workspace, TARGET_PATH, label="candidate target source"
+    )
+    source_sha256 = hashlib.sha256(source_bytes).hexdigest()
     with tempfile.TemporaryDirectory(prefix="vare-mlxlm-1904-grade-") as folder:
         isolated_subject = Path(folder)
         package = isolated_subject / "mlx_lm"
         package.mkdir()
-        shutil.copyfile(target, package / "server.py")
+        (package / "server.py").write_bytes(source_bytes)
         add_trusted_adapter(isolated_subject)
         os.chmod(isolated_subject, 0o755)
         os.chmod(package, 0o755)
@@ -611,7 +684,7 @@ def grade_workspace(
         "cases": [case.to_dict() for case in report.cases],
         "grader_source_sha256": sha256_file(Path(__file__).resolve()),
         "grader_adapter_sha256": sha256_file(GRADER_ADAPTER),
-        "candidate_source_sha256": sha256_file(target),
+        "candidate_source_sha256": source_sha256,
     }
 
 

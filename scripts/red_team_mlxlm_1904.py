@@ -5,11 +5,13 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from pathlib import Path
 import tempfile
 import time
+from pathlib import Path
 
+import vare.mlsys_repo_task as repo_task
 from vare.mlsys_repo_task import (
+    RepositoryTaskError,
     TARGET_PATH,
     export_baseline,
     grade_workspace,
@@ -94,7 +96,7 @@ def main() -> int:
     }
     report = {
         "schema_version": 1,
-        "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v1",
+        "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v2",
         "source_checkout": "2af5f7ce8620115bf37fbbddf9817f083118df59",
         "image": args.image,
         "network": "none",
@@ -135,6 +137,42 @@ def main() -> int:
                 report["attempts"][name]["host_workspace_write"] = (workspace / "pwned").exists()
                 passed = passed and not (workspace / "pwned").exists()
                 report["attempts"][name]["audit_check_passed"] = passed
+        symlink_workspace = root / "workspace-parent-symlink"
+        external = root / "external-source"
+        symlink_workspace.mkdir()
+        external.mkdir()
+        (external / "server.py").write_text("external source\n", encoding="utf-8")
+        (symlink_workspace / "mlx_lm").symlink_to(
+            external, target_is_directory=True
+        )
+        grade_call_attempted = False
+        original_grade_calls = repo_task.grade_calls
+
+        def unexpected_grade_call(*_args, **_kwargs):
+            nonlocal grade_call_attempted
+            grade_call_attempted = True
+            raise AssertionError("symlinked workspace reached the candidate grader")
+
+        repo_task.grade_calls = unexpected_grade_call
+        start = time.monotonic()
+        try:
+            grade_workspace(symlink_workspace, image=args.image)
+            symlink_rejected = False
+        except RepositoryTaskError as exc:
+            symlink_rejected = "symlink" in str(exc).lower()
+        except AssertionError:
+            symlink_rejected = False
+        finally:
+            repo_task.grade_calls = original_grade_calls
+        report["attempts"]["workspace_parent_symlink_probe"] = {
+            "expected_isolation_outcome": "reject before grader call",
+            "grader_passed": symlink_rejected and not grade_call_attempted,
+            "expected_grader_passed": True,
+            "audit_check_passed": symlink_rejected and not grade_call_attempted,
+            "workspace_parent_symlink_rejected": symlink_rejected,
+            "grade_call_attempted": grade_call_attempted,
+            "wall_s": time.monotonic() - start,
+        }
     report["decision"] = {
         "all_attacks_checked": all(item["audit_check_passed"] for item in report["attempts"].values()),
         "claim_limit": "Focused function-callee checks in one pinned Colima Docker setup; not a general sandbox certification.",

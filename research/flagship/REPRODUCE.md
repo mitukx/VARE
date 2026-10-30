@@ -1,54 +1,82 @@
 # Reproduction and resumption
 
-Run commands from the VARE repository root. Model inference, training, and grader-calibration experiments are intentionally not launched by these commands.
+Run commands from the VARE repository root. The current local work is limited to task-grader integrity and exposure reconciliation. No model inference, SFT, GRPO, or held-out evaluation is authorized by this checkpoint.
 
-## Test the current implementation
-
-Run the three files affected by the PR #150 CI regression:
+## Test current implementation
 
 ```bash
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest \
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q \
   tests/test_development_repository_repair_campaign_v1.py \
   tests/test_development_repository_repair_campaign_v2.py \
-  tests/test_isolated_candidate_expected_exception.py -q
+  tests/test_isolated_candidate_expected_exception.py
+
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q \
+  tests/test_mlsys_repo_task.py \
+  tests/test_mlsys_deep_qualification_exposure.py
+
+ruff check \
+  src/vare/mlsys_repo_task.py \
+  tests/test_mlsys_repo_task.py \
+  scripts/run_mlxlm_1904_calibration.py \
+  scripts/red_team_mlxlm_1904.py \
+  scripts/audit_mlsys_deep_qualification_exposure_v1.py \
+  tests/test_mlsys_deep_qualification_exposure.py
+
+python -m py_compile \
+  src/vare/mlsys_repo_task.py \
+  scripts/run_mlxlm_1904_calibration.py \
+  scripts/red_team_mlxlm_1904.py \
+  scripts/audit_mlsys_deep_qualification_exposure_v1.py
+git diff --check
 ```
 
-The full CI test job uses:
+## Reconcile prior task exposure
+
+The auditor verifies both pinned input hashes, maps task IDs to source PR and family, checks per-stage attempt totals, and refuses to overwrite its output.
 
 ```bash
-python -m pytest \
-  --ignore=tests/test_math500_grader_v1.py \
-  --ignore=tests/test_math500_grader_v2.py
+PYTHONPATH=src python scripts/audit_mlsys_deep_qualification_exposure_v1.py \
+  --stage3-ledger ../../outputs/VARE-stage3-2026-10-31/task-exposure-ledger.json \
+  --output work/exposure-audit-copy.json
+
+shasum -a 256 results/mlsys-task-deep-qualification-v1-exposure-append-v1.json
 ```
 
-The two ignored Math500 files run in their own workflow jobs. For a local run that needs Docker, select a running Docker context, for example `DOCKER_CONTEXT=colima` on the machine used for the Stage 3 calibration. GitHub Actions provides its own Linux Docker daemon.
+Do not relaunch #45852, #1912, or #1971 as fresh Development tasks. This audit is retrospective and does not reallocate them to Train or Held-out.
 
-## Reproduce and inspect the current CI diagnostic
+## Reproduce the Train-only #1904 grader calibration
 
-The pre-fix PR head `86abbd4df86dcebc539143de3f2f84b1207fff16` failed the same three assertions on all three Python versions. The logged runs were `41105309069` and `41105317116`.
+Requires a clean VARE commit containing protocol v11, Colima with the pinned image already cached, and a clean `mlx-lm` checkout containing both source revisions. The run script refuses to execute from a dirty VARE worktree, overwrites no evidence directory, and is restricted to the frozen Train task. It authorizes no model rollout.
 
 ```bash
-gh run view 41105317116 --repo mitukx/VARE --log-failed
-gh run view 41105309069 --repo mitukx/VARE --log-failed
+git -C ../mlx-lm-source cat-file -e \
+  2af5f7ce8620115bf37fbbddf9817f083118df59^{commit}
+git -C ../mlx-lm-source worktree add --detach \
+  "$PWD/work/mlx-lm-baseline-1904" \
+  2af5f7ce8620115bf37fbbddf9817f083118df59
+
+mkdir -p work/colima-tmp
+TMPDIR="$PWD/work/colima-tmp" PYTHONPATH=src DOCKER_CONTEXT=colima \
+  python scripts/run_mlxlm_1904_calibration.py \
+  --source-root work/mlx-lm-baseline-1904 \
+  --output results/mlsys-repo-eval-v1/run-17/calibration.json
+
+shasum -a 256 \
+  results/mlsys-repo-eval-v1/run-17/calibration.json \
+  results/mlsys-repo-eval-v1/run-17/calibration.red-team.json
 ```
 
-The new PR head must be checked again; these historical run IDs are not evidence that the correction passed CI.
+The pinned implementation and runtime checks are in `benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json`. The acceptance gate requires baseline failure, known-fix success with exact fixed-source identity, source-swap rejection, all nine red-team controls, a clean implementation worktree at launch, and rejection of the symlinked-parent workspace before any grader call.
 
-## Inspect and verify retained Stage 3 evidence
+## Full CI and PR state
 
-The immutable Stage 3 report, exposure ledger, and evidence index are stored outside this repository at `../../outputs/VARE-stage3-2026-10-31/` in the local project workspace. The report records 8 model attempts, 0 independently verified repairs, no fresh families used, no GRPO update, and the untouched held-out PR #1979. Do not rerun those consumed task/model pairs or modify the retained evidence.
+PR #150 is integrated at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`. Its exact-head CI and companion recovery/CPU workflows are recorded in `state.json`. For any new PR, push the branch, inspect all required GitHub Actions, read failures, review the complete diff and unresolved review threads, then merge only if checks and repository rules permit. Verify the merge SHA on remote `main`.
 
-```bash
-cd ../../outputs/VARE-stage3-2026-10-31
-tail -n +2 evidence-sha256.txt | shasum -a 256 -c -
-```
+## Model, receipt, and resume status
 
-The indexed Stage 3 run identifiers, report digest, exposure-ledger digest, and protocol locks are recorded in `research/flagship/state.json`.
+- The prior Qwen3-4B authored-task cohort has one verified success in two tasks; it produced no policy-update checkpoint and establishes no RL or generalization gain.
+- The deep-qualification Development split has zero fresh tasks after the append-only exposure correction. No model checkpoint or optimizer state for that source-task cohort exists.
+- The Stage 3 candidate receipt remains at `../../outputs/VARE-stage3-2026-10-31/capability-diagnostic-exact-replace-v4/grader-receipts/stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token.terminal-lf-regrade.json`; it is `wrong_output` on 0/14 correctness cases.
+- No resumable model or optimizer run exists. Do not relaunch the consumed task/model pairs.
 
-## Resume, checkpoint, and receipt status
-
-- **Resume:** No resumable coding-agent or optimizer run exists for the Stage 3 cohort. Its attempts are complete, tasks are already exposed, and they must not be relaunched as fresh work.
-- **Model checkpoint:** No task-success coding-policy checkpoint or GRPO checkpoint was produced. Checkpoint verification is therefore NOT APPLICABLE for this cohort; do not promote an unrelated adapter as coding capability evidence.
-- **Final grading receipt:** Inspect `../../outputs/VARE-stage3-2026-10-31/capability-diagnostic-exact-replace-v4/grader-receipts/stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token.terminal-lf-regrade.json`. The independent grader transport succeeded and all 14 correctness cases were `wrong_output`; this is a retained failure, not a passing receipt.
-
-The immediate resumable task is the PR #150 integration step in `STATUS.md`: commit/push the regression correction, inspect the new CI matrix and reviews, merge only when permitted, and verify the resulting SHA on remote `main`.
+The highest-priority next work after the bounded grader calibration is a full family-overlap audit of the 24-entry manual candidate queue, followed by source qualification of a new Development cohort that does not consume any Held-out task.

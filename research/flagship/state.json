@@ -1,20 +1,22 @@
 {
-  "schema_version": 1,
-  "updated_at": "2026-10-31T06:17:00+09:00",
-  "milestone_id": "p0-pr150-ci-integration",
-  "last_completed_step": "Reproduced the three PR #150 failures and updated test expectations; all three affected test files pass on Python 3.11, 3.12, and 3.13.",
+  "schema_version": 2,
+  "updated_at": "2026-10-31T06:45:01+09:00",
+  "milestone_id": "p1-repo-task-isolation-and-exposure-reconciliation",
+  "last_completed_step": "Verified PR #150 merge cb5c9d91ce269014b4166644248aa2b71a5c3dae on remote main. Reconciled the frozen deep-qualification Development split against the retained Stage 2/3 ledger: all 3 allocated tasks had prior model attempts. Reproduced a symlinked-parent workspace escape in the #1904 Train-task grader, implemented a no-follow snapshot fix, and added regression coverage; bounded run-17 calibration is pending.",
   "go_no_go": {
-    "integration": "GO_PENDING_REMOTE_CI",
-    "coding_capability": "NO_GO",
+    "integration": "GO",
+    "coding_capability": "GO",
     "rl_update": "NO_GO"
   },
   "git_refs": {
     "repository": "mitukx/VARE",
-    "last_verified_main_sha": "b1e5882cbf89a8f925bf6e5f0a2f288f2d4c8a02",
-    "active_branch": "codex/bounded-agent-file-read-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "86abbd4df86dcebc539143de3f2f84b1207fff16",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/150",
-    "active_pr_state": "open"
+    "last_verified_main_sha": "cb5c9d91ce269014b4166644248aa2b71a5c3dae",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/150",
+    "last_integrated_pr_merge_sha": "cb5c9d91ce269014b4166644248aa2b71a5c3dae",
+    "active_branch": "codex/mlsys-qualification-gates",
+    "verified_pr_head_sha_before_checkpoint_changes": null,
+    "active_pr_url": null,
+    "active_pr_state": "none"
   },
   "frozen_protocols": [
     {
@@ -28,6 +30,18 @@
       "path": "protocols/development_repository_repair_campaign_v2.json",
       "sha256": "64cfb42524cfbb1e04fa243dd1141d9490bbe2cbe5c9573ba7b6b01a145254a1",
       "status": "hash_bound; inference_authorized=false"
+    },
+    {
+      "protocol_id": "mlsys-task-deep-qualification-v1",
+      "path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+      "sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+      "status": "frozen source split preserved; appended exposure correction marks all 3 Development tasks previously exposed"
+    },
+    {
+      "protocol_id": "mlsys-repository-task-mlxlm-1904-v11",
+      "path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json",
+      "sha256": "d7e5680faf5c7b15f32d7e432ee62ce8ddcdf6b835b27cc964988ce6294c2b77",
+      "status": "locked_before_run17; Train-task calibration only; no model inference authorized"
     }
   ],
   "task_exposure_ledger": {
@@ -39,11 +53,16 @@
   "run_ids": [
     "41105309069",
     "41105317116",
-    "qwen3_4b_instruct_2507_4bit__transformers-45852-4d-mask",
+    "41129971394",
+    "41129977929",
+    "41129977978",
+    "41129977995",
     "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1912-top-p-min-token",
     "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1971-mimo-value-scale",
     "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1912-top-p-min-token",
     "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1971-mimo-value-scale",
+    "mlsys_deep_qualification_exposure_audit_v1",
+    "qwen3_4b_instruct_2507_4bit__transformers-45852-4d-mask",
     "stage3_qwen3_4b_controller_v2__mlxlm-1912-top-p-min-token",
     "stage3_qwen3_4b_controller_v3__mlxlm-1912-top-p-min-token",
     "stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token"
@@ -58,11 +77,18 @@
       "path": "../../outputs/VARE-stage3-2026-10-31/evidence-sha256.txt",
       "sha256": "8266b3a048616ef1f629da23998b083433cbf58a06552f370383bb18ecd7e124",
       "status": "2,194 listed file hashes matched"
+    },
+    {
+      "path": "results/mlsys-task-deep-qualification-v1-exposure-append-v1.json",
+      "sha256": "230148078352299683c9729acef82f38d0c550be4d6902e465db2b0d06604947",
+      "status": "verified: 3/3 Development tasks already exposed; 0 available for fresh use"
     }
   ],
   "unresolved_blockers": [
-    "The corrected PR head is not pushed yet; full Python matrix CI is pending.",
-    "No fresh task/model/update pairing has cleared the independent task-success and resource gates."
+    "The frozen deep-qualification Development allocation is exhausted for fresh evaluation: #45852, #1912, and #1971 have prior model attempts.",
+    "A replacement Development pool must be drawn from the remaining candidate queue after a full Stage 2/3 family-overlap audit; held-out tasks must stay untouched.",
+    "No RL policy update, coding-agent training, or held-out evaluation has been run.",
+    "PR #149 remains open without recorded review; its head is based on the pre-#150 main and it is not integrated."
   ],
-  "highest_priority_next_task": "Commit and push the PR #150 regression-test correction, inspect the new full CI matrix and review state, then merge only when required checks and repository rules permit; verify the merged SHA on remote main."
+  "highest_priority_next_task": "Commit the validated protocol-v11 symlink-boundary fix, then run the bounded Train-only #1904 baseline/known-fix calibration and nine-probe red-team suite as run 17. After that integration, audit the 24-entry manual candidate queue for family overlap before selecting a replacement Development cohort."
 }
