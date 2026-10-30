@@ -1,0 +1,12 @@
+{
+  "protocol_id": "mlsys-task-model-attempt-mlxlm-1904-v1",
+  "protocol_sha256": "7bdef7ee8210dfbd25b3ca811d8bb7c1450b97e4c6015e39d653879aee51ad3d",
+  "event": "infrastructure_launch_failure_before_inference",
+  "model_snapshot_loaded": true,
+  "prompt_rendered": false,
+  "generation_call_started": false,
+  "generated_tokens": 0,
+  "model_attempt_consumed": false,
+  "cause": "candidate workspace was a linked Git worktree with a .git pointer file; pinned workspace runtime requires a real .git directory",
+  "recovery": "replace candidate worktree with a detached local clone at the same immutable baseline commit; do not change prompt, task, model, decoding, or budget"
+}

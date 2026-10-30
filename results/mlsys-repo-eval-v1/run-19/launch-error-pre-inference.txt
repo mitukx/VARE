@@ -1,0 +1,14 @@
+The one-attempt runner's first launch loaded the pinned model snapshot, then aborted before prompt rendering or token generation because the candidate path was a linked Git worktree with a .git pointer file, while pinned_workspace_git requires a real .git directory.
+
+Traceback (most recent call last):
+  File "scripts/run_local_agent.py", line 777, in main
+    workspace_revision = run_git(workspace, 'rev-parse', 'HEAD')
+  File "scripts/run_local_agent.py", line 266, in run_git
+    return pinned_git(root, *args).decode("utf-8").strip()
+  File "scripts/pinned_workspace_git.py", line 56, in pinned_git
+    root, git_dir = _workspace_paths(root)
+  File "scripts/pinned_workspace_git.py", line 26, in _workspace_paths
+    raise PinnedWorkspaceError("workspace must own a real .git directory")
+pinned_workspace_git.PinnedWorkspaceError: workspace must own a real .git directory
+
+No prompt was rendered or passed to the model; no generation call ran; generated tokens: 0. No attempt record was written. This infrastructure launch failure did not consume the one authorized inference attempt.

@@ -1,6 +1,6 @@
 # Reproduction and resumption
 
-Run commands from the VARE repository root. The current local work is limited to task-grader integrity and exposure reconciliation. No model inference, SFT, GRPO, or held-out evaluation is authorized by this checkpoint.
+Run commands from the VARE repository root. The current checkpoint includes a frozen, one-attempt Train-only model trajectory on MLX-LM #1904. That attempt is consumed; do not rerun it. No model update, SFT, GRPO, Development evaluation, or Held-out evaluation was authorized or executed.
 
 ## Test current implementation
 
@@ -91,13 +91,38 @@ The 25-test focused suite passed locally on Python 3.11, 3.12, and 3.13. The v12
 
 ## Full CI and PR state
 
-PR #150 is integrated at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`. Its exact-head CI and companion recovery/CPU workflows are recorded in `state.json`. For any new PR, push the branch, inspect all required GitHub Actions, read failures, review the complete diff and unresolved review threads, then merge only if checks and repository rules permit. Verify the merge SHA on remote `main`.
+PR #151 is integrated at `818fd8c802277ad360ee9b5250d0315cfb8dad81`; PR #150 is in its history at `cb5c9d91ce269014b4166644248aa2b71a5c3dae`. PR #151 exact-head Python 3.11/3.12/3.13, lint, typecheck, CPU evidence, and E2E recovery checks passed. See `state.json` for the verified merge and Actions records. The current audit/experiment branch still requires its own exact-head PR checks before integration.
+
+## Run 19 — one Train-only model trajectory
+
+Protocol `protocols/mlsys_task_model_attempt_mlxlm_1904_v1.json` was committed before inference. It pins one greedy Qwen3-4B-Instruct-2507-4bit MLX attempt on the existing Train task `mlxlm-1904-tool-arguments`, base `2af5f7ce8620115bf37fbbddf9817f083118df59`, one allowed file, 2,048 total generated tokens, 12 turns, 300 seconds, and one independent v12 grader call. The exact model snapshot, candidate prompt/spec, controller, and grader hashes are recorded in the protocol and run manifest.
+
+The run completed in 31.679 seconds using 302 generated tokens over five tool turns. The independent grader passed `dict_arguments` and `json_string_control` (2/2); no grader feedback was returned to the agent. Evidence is retained in `results/mlsys-repo-eval-v1/run-19/`. A first infrastructure launch loaded weights but failed before prompt rendering or token generation because a linked worktree had a `.git` pointer file. That launch error is preserved separately and did not consume the single inference attempt. The successful attempt is consumed; do not rerun it or use grader feedback for a second attempt.
+
+Verify the immutable run bundle and cumulative checksum index:
+
+```bash
+(cd results/mlsys-repo-eval-v1/run-19 && shasum -a 256 -c SHA256SUMS)
+shasum -a 256 -c results/mlsys-repo-eval-v1/SHA256SUMS
+python - <<'PY'
+import json
+from pathlib import Path
+attempt = json.loads(Path('results/mlsys-repo-eval-v1/run-19/agent-attempt-1.json').read_text())
+grade = json.loads(Path('results/mlsys-repo-eval-v1/run-19/independent-grade.json').read_text())
+assert attempt['new_tokens'] == 302 and attempt['stop_reason'] == 'agent_finished'
+assert grade['grader_call_count'] == 1 and grade['grader']['passed'] is True
+assert [case['passed'] for case in grade['grader']['cases']] == [True, True]
+PY
+```
+
+This is one independently graded task from Train. It is not Development/generalization evidence, a policy update, SFT, GRPO, or RL. The public task's pretraining exposure is unknown. The grader covers the selected function contract, not the full upstream HTTP/model-serving test. The appended exposure event is in `run-19/exposure-append.json`; the prior Stage 2/3 ledgers and frozen queue audit remain unchanged.
 
 ## Model, receipt, and resume status
 
-- The prior Qwen3-4B authored-task cohort has one verified success in two tasks; it produced no policy-update checkpoint and establishes no RL or generalization gain.
-- The deep-qualification Development split has zero fresh tasks after the append-only exposure correction. No model checkpoint or optimizer state for that source-task cohort exists.
+- The prior Qwen3-4B authored-task cohort has one verified success in two tasks; it produced no policy-update checkpoint.
+- Run 19 adds one narrow Train-task pass (2/2 cases). Its transcript, edit, independent receipt, failed pre-inference launch, model snapshot hashes, and resource telemetry are retained.
+- The queue audit finds zero fresh Development candidates; the historical Held-out allocation remains untouched.
 - The Stage 3 candidate receipt remains at `../../outputs/VARE-stage3-2026-10-31/capability-diagnostic-exact-replace-v4/grader-receipts/stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token.terminal-lf-regrade.json`; it is `wrong_output` on 0/14 correctness cases.
 - No resumable model or optimizer run exists. Do not relaunch the consumed task/model pairs.
 
-After this checkpoint is integrated, the highest-priority research work is a full family-overlap audit of the 24-entry manual candidate queue, followed by source qualification of a new Development cohort that does not consume any Held-out task.
+Next, integrate the audit and run-19 evidence by focused PR. Then prospectively source-qualify a diverse Development cohort without opening Held-out files or tests.
