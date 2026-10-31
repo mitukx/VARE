@@ -315,15 +315,15 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
     "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "91c2e1a3532c75e7c39d673a56435d70aa4e98cf"
+    "verified_pr_head_sha_before_checkpoint_changes": "8c29522fa4f48dbc0922256df75fba43adc6cef3"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
     "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Push the final wording correction and checksum update, then verify exact-head CI and review state on PR #162. Keep #64830 unassigned; any Development attempt requires a separate prospective protocol and resource preflight.",
-  "last_completed_step": "Completed the hash-bound #64830 source-level qualification under pushed Addendum 4. Baseline attempt-002 failed both frozen post-override assertions; wrong-mutant attempt-002 failed the same two assertions; upstream-fixed attempt-002 passed both. Every arm matched its frozen source/test/Python/profile/command hashes and exact attempt-002 write root; default-deny/network-deny profiles held, with no timeout, RSS breach, skip, or unrelated error. The bundle-wide SHA256SUMS verifies all receipts. Exposure ledger now records source/test exposure to the research agent but no model exposure/inference/training/Held-Out use. Status is QUALIFIED_SOURCE_LEVEL only and UNASSIGNED; no capability or RL result is claimed.",
+  "highest_priority_next_task": "Commit and push this durable checkpoint, verify exact-head CI on the resulting PR #162 head, and mark it ready for review only if those checks pass. Keep #64830 unassigned; any Development attempt requires a separate prospective protocol, overlap check, resource preflight, and exposure append before inference.",
+  "last_completed_step": "Completed the hash-bound #64830 source-level qualification under pushed Addendum 4. Baseline attempt-002 failed both frozen post-override assertions; wrong-mutant attempt-002 failed the same two assertions; upstream-fixed attempt-002 passed both. Every arm matched its frozen source/test/Python/profile/command hashes and exact attempt-002 write root; default-deny/network-deny profiles held, with no timeout, RSS breach, skip, or unrelated error. The bundle-wide SHA256SUMS verifies all receipts. Exposure ledger records source/test exposure to the research agent but no model exposure/inference/training/Held-Out use. On exact PR #162 head 8c29522fa4f48dbc0922256df75fba43adc6cef3, both duplicate CI runs passed Python 3.11/3.12/3.13, lint, typecheck, blob budget, Math500 grader, seeded-summary CPU, RVL inference CPU, and calibrated CPU tasks. Status is QUALIFIED_SOURCE_LEVEL only and UNASSIGNED; no capability or RL result is claimed.",
   "milestone_id": "p15-fresh-vllm-64830-source-qualification",
   "result_hash_references": [
     {
@@ -1514,9 +1514,8 @@
     "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Launch preflight failed the estimated working-set-plus-headroom gate by 879,464,921 bytes; model weights were not loaded. Do not retry this frozen protocol.",
     "PR #160 exact head 71aa74ab6a8f6f1625505b68f7f332c49fabff93 has passing exact-head CI and CPU evidence; GitHub reports merge state BLOCKED and normal review/branch-protection requirements remain.",
     "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 has passing exact-head CI and CPU evidence but remains a draft; no review is recorded.",
-    "PR #162 is open as a draft at head a1ecc14a384931c3af9f642b33aef1ea60a0549b; exact-head CI is running and will rerun after the mutant evidence checkpoint.",
     "vLLM #64830 is QUALIFIED_SOURCE_LEVEL for the two frozen method-level cases only and remains UNASSIGNED. The excluded custom-speculator behavior and whole upstream PR are not qualified; public pretraining exposure remains UNKNOWN. Any Development assignment needs a separate prospective protocol, overlap check, resource preflight, and exposure append before model inference.",
-    "PR #162 is open as a draft at head bd565d12193728c971d68f778b110ac3e98ca392, stacked on draft PR #161; exact-head CI is running and will rerun after the final qualification evidence checkpoint."
+    "PR #162 is open as a draft at verified pre-checkpoint head 8c29522fa4f48dbc0922256df75fba43adc6cef3, stacked on draft PR #161; all exact-head checks passed and no review is recorded. The state checkpoint advances the branch, so the resulting head still needs CI before PR #162 is marked ready."
   ],
-  "updated_at": "2026-10-31T05:56:36Z"
+  "updated_at": "2026-10-31T06:05:45Z"
 }

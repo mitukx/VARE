@@ -6,7 +6,7 @@
 - PR #150 is confirmed merged with its exact-head CI, CPU-evidence, and E2E checks passing.
 - PR #160 is open at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`. Its Python 3.11/3.12/3.13 CI, lint, typecheck, seeded-summary, RVL inference, Math500 grader, and CPU-evidence checks pass. GitHub reports merge state BLOCKED; normal review and branch protection remain.
 - PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`, stacked on #160. Its exact-head CI and CPU evidence pass. No review is recorded.
-- Active branch: `codex/freshdev-qualification-vllm64830-oct31`; draft PR #162 is open at `91c2e1a3532c75e7c39d673a56435d70aa4e98cf`, based on PR #161. CI is running after the complete qualification checkpoint.
+- Active branch: `codex/freshdev-qualification-vllm64830-oct31`; draft PR #162 is open at `8c29522fa4f48dbc0922256df75fba43adc6cef3`, based on draft PR #161. GitHub reported merge state CLEAN, with no reviews recorded.
 - Milestone: `p15-fresh-vllm-64830-source-qualification`.
 
 ## Completed in this checkpoint
@@ -20,6 +20,7 @@
 - Completed the frozen three-arm comparison: baseline failed both intended post-override assertions; the wrong mutant was rejected by both; upstream-fixed passed both. All arms collected successfully, had zero skips/errors, no timeout or RSS breach, and matched frozen inputs/commands/profiles. Full receipts and bundle checksums are under `results/mlsys-fresh-vllm-64830-source-qualification-v1/`.
 - Appended source/test exposure to the research-agent ledger. There was no model exposure or inference, training, Held-Out access, paid compute, or API use.
 - The modified custom-speculator behavior remains excluded because its full registration and VllmConfig validation fixtures are outside the overlay.
+- Both duplicate exact-head CI runs on `8c29522fa4f48dbc0922256df75fba43adc6cef3` passed: Python 3.11/3.12/3.13, lint, typecheck, blob budget, Math500 grader, seeded-summary CPU, RVL inference CPU, and calibrated CPU tasks. This state-only checkpoint will advance the PR head and needs fresh exact-head CI before PR #162 is marked ready.
 
 ## Capability and research status
 
@@ -28,4 +29,4 @@
 
 ## Immediate next action
 
-Push the final report wording/checksum correction, then verify exact-head CI and review state on PR #162. Keep #64830 unassigned; any Development attempt needs its own prospective frozen assignment and resource preflight.
+Commit and push this durable CI checkpoint, verify the resulting exact-head CI, then mark PR #162 ready for review if it passes. Keep #64830 unassigned; any Development attempt needs a separate prospective protocol, overlap check, resource preflight, and exposure append before model inference.
