@@ -1,0 +1,73 @@
+{
+  "schema": "vare.protocol/long_horizon_fixed_controller/draft",
+  "protocol_id": "long_horizon_fixed_controller_m7_draft",
+  "status": "DRAFT_UNFROZEN",
+  "frozen": null,
+  "notice": "Draft for review. Not frozen, not hash-locked, and not a basis for any claim. Every field may change before freezing. No held-out task, hidden test, or grader configuration has been opened while drafting it.",
+  "question": "With the controller held fixed, does a policy-learning arm change trusted multi-step task success relative to the base policy on the same tasks and seeds, and how much of any outcome is attributable to the controller rather than the policy?",
+  "harness": {
+    "entry_point": "scripts/long_horizon_eval.py",
+    "store": "src/vare/trajectory_store.py (append-only hash-chained events; one store per (arm, controller); audit before every metric)",
+    "tool_surface": "scripts/run_local_agent.py helpers (list_files, read_file, search_text, apply_patch, replace_text, run_public_tests, check_syntax, finish)",
+    "resume": "fresh workspace per claim; committed applied edits replayed and hash-checked; uncommitted work discarded; enrollment metadata (controller digest, policy checkpoint, task digest) must match on resume"
+  },
+  "arms": {
+    "base": {"policy": "frozen base model (identity as in protocols/coding_policy_learning_mlx_4b_v1.json model block)", "required": true},
+    "rft": {"policy": "rft_self LoRA adapter produced under protocols/coding_policy_learning_mlx_4b_v1.json", "required": true, "condition": "only if that adapter exists with its own committed evidence"},
+    "grpo": {"policy": "GRPO LoRA adapter", "required": false, "condition": "only if a GRPO adapter exists under its own frozen protocol; otherwise the arm is omitted, not substituted"},
+    "verifier_aware": {"policy": "not planned", "required": false, "condition": "include only with a written justification and a separate pre-registered comparison; never pooled with the arms above"}
+  },
+  "controller": {
+    "primary": "full",
+    "presets": {
+      "full": {"max_turns": 16, "max_new_tokens_per_turn": 512, "max_total_new_tokens": 4096, "max_calls_per_turn": 4, "wall_seconds": 1800, "temperature": 0.0, "top_p": 1.0, "reveal_target": true, "normalize_tool_calls": true, "max_no_tool_retries": 2, "recover_bare_edits": true, "auto_public_tests_after_edit": true, "finish_gate": true},
+      "minimal": {"same budgets as full": true, "normalize_tool_calls": false, "max_no_tool_retries": 0, "recover_bare_edits": false, "auto_public_tests_after_edit": false, "finish_gate": false}
+    },
+    "digest_rule": "ControllerConfig.sha256() is recorded at enrollment; policy comparisons are refused across controller digests",
+    "open_items": ["confirm reveal_target=true is the intended primary setting; a reveal_target=false preset would measure navigation without a hint"]
+  },
+  "tasks": {
+    "smoke": "configs/learning_pipeline_v1/train.manifest.jsonl only (Train split; harness refuses non-Train rows and test-file read scope)",
+    "held_out": "TO BE DEFINED: a repository-disjoint set selected and hash-frozen before any held-out access. It is not opened, listed, or sampled while this document is a draft.",
+    "never": ["held-out tasks, hidden tests, or grader configurations before freezing", "tasks from repositories used for training any arm"]
+  },
+  "budgets": {
+    "seeds_per_task": "TBD (proposal: 3)",
+    "tasks": "TBD after a Train smoke measures per-episode wall-clock on the target machine",
+    "per_episode": "controller budgets above; episodes that exhaust a budget are recorded with their stop reason and count as not successful"
+  },
+  "grading": {
+    "primary_grader": "isolated trusted repository grader (schema learning_pipeline_repo_env_grade_v2, isolation mode required, attested, hmac_frames_v1 verdict channel)",
+    "fail_closed": "ungraded, untrusted, legacy-native, errored, or unchanged-source episodes are never successes and stay in the denominator",
+    "public_tests": "a tool signal only; never an outcome"
+  },
+  "metrics": {
+    "primary": "final_success: trusted grader pass, per (task, seed), denominator = all enrolled episodes",
+    "secondary": ["completion_rate (store-terminal episodes / enrolled)", "navigation.correct (target file read before first applied edit; edits only in target files)", "tool_call_validity", "edits.application_rate", "public_tests.finished_while_failing", "recovery.rate (failed action later followed by a successful action of the same category)", "stop_reasons", "controller_assists counts"],
+    "cost": ["generated_tokens", "prompt_tokens", "tool_invocations", "generation_seconds", "tool_seconds", "step_seconds", "grading_seconds", "resumed episodes"]
+  },
+  "statistics": {
+    "unit": "paired (task, seed) episodes between two arms under the same controller digest",
+    "primary_test": "repository-clustered paired bootstrap of the success-rate difference (vare.eval_stats.paired_bootstrap_interval on per-repository mean differences; 95%)",
+    "supporting": "exact McNemar on task-level majority outcomes (vare.eval_stats.mcnemar_exact)",
+    "multiplicity": "TBD; proposal: rft-vs-base primary, others exploratory",
+    "minimum_reporting": "all arms, all episodes, including budget-exhausted and ungraded ones"
+  },
+  "ablations": {
+    "policy": "base vs each learned arm, controller fixed at the primary preset",
+    "controller": "same arm under full vs minimal; reported as controller attribution, never as a policy effect"
+  },
+  "will_not_claim": [
+    "any result from the synthetic smoke fixture or the scripted stub policy",
+    "any capability change from Train-split runs",
+    "a policy effect from a comparison that crosses controller digests",
+    "generalization beyond the frozen held-out repositories",
+    "success from public tests, model self-report, or an ungraded episode"
+  ],
+  "before_freezing": [
+    "fix held-out task set and hash it",
+    "fix seeds, task count, and multiplicity rule",
+    "record source digests of scripts/long_horizon_eval.py, scripts/run_local_agent.py, src/vare/trajectory_store.py, and the grader runner",
+    "run a Train smoke on the target machine and record budget feasibility"
+  ]
+}
