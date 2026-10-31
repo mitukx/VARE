@@ -1,0 +1,48 @@
+{
+  "assigned_at_utc": "2026-10-31T10:40:54.159164+00:00",
+  "authorization": {
+    "14B_train_fixture_tool_diagnostic_required_before_development_prompt": true,
+    "grader_feedback_to_model": false,
+    "heldout_access": false,
+    "launch_preflight_required": true,
+    "one_independent_grade_after_attempt_record_is_durable": true,
+    "one_local_model_attempt_after_protocol_commit_and_push": true,
+    "paid_compute_or_api": false,
+    "retry_after_generation_begins": false,
+    "training": false
+  },
+  "cohort_status": "SINGLE_TASK_DIAGNOSTIC_ONLY; family-level independence not established",
+  "created_for_protocol": "mlsys-fresh-vllm-64830-agent-attempt-v5-qwen3-4b-corrected-sandbox-fallback",
+  "event_id": "vllm-64830-development-assignment-after-memory-recovery-v2",
+  "event_type": "prospective_development_assignment",
+  "model": {
+    "exposure_before_assignment": "NOT_EXPOSED_TO_DEVELOPMENT_PROMPT; prior 14B protocol stopped before model load and the current controller fixture is a separate Train task",
+    "public_pretraining_exposure": "UNKNOWN",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477"
+  },
+  "model_hidden_inputs": [
+    "candidate patch",
+    "trusted test overlay",
+    "grader command/output",
+    "source-qualification arm logs",
+    "exposure and overlap metadata"
+  ],
+  "model_visible_inputs": [
+    "task/TASK.md",
+    "vllm/config/vllm.py",
+    "controller-generated tool schemas and allowed-path boundary"
+  ],
+  "previous_route_model_loaded": false,
+  "previous_route_prompt_delivered": false,
+  "repository": "vllm-project/vllm",
+  "researcher_source_and_test_exposure": true,
+  "route_after_v4_no_go": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "route_selection_record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/runtime/route-selection-after-v4-no-go-001.json",
+  "route_selection_record_sha256": "a4b595c5c3da37e1e77c6953f65f597dd02768079c80a365f00b301c7f96dbdb",
+  "schema_version": 1,
+  "source_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+  "split": "Development",
+  "task_family": "vllm_v1_model_runner_unsupported_feature_guards",
+  "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+}
