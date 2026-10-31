@@ -408,3 +408,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Accept the v2 baseline negative-control gate and authorize the one v2 wrong-mutant run. The candidate remains unqualified and unassigned.
 - **Falsification criteria:** Any hash/input mismatch; absent config case; error/skip; assertion differs from `load_attribute.assert_not_called`; or nonzero unexpected source changes.
 - **Follow-up:** Run the wrong-mutant once and require both named config subTests to fail at the intended assertion without errors/skips before running upstream-fixed.
+
+
+## 2026-10-31 — V2 wrong-mutant is rejected in both config cases
+
+- **Hypothesis:** The frozen one-loop mutant remains incorrect because `_load_backend_class` still iterates the lazy `VIDEO_PROCESSOR_MAPPING.values()` and resolves unrelated classes.
+- **Evidence:** V2 wrong-mutant attempt 001 used the case-aware runner. Both `video_preprocessor_config.json` and `preprocessor_config.json` failed `load_attribute.assert_not_called` after 47 mapping loads each. One test method ran with two subTest failures, zero errors, and zero skips. Receipt SHA-256 `76e78ba63938bfc21013868504960df91a9a01fc7fc2d2093b8078ead3be5d4a`; log SHA-256 `5db740dacb7d9406da01e860fae420cf977125504473bfecaeb7f3d472a53f0c`.
+- **Alternative explanations:** A source mutation mismatch or unrelated failure could falsely reject the mutant. The mutant source hash and full-tree digest match the v2 input manifest, and both named cases fail at the frozen assertion.
+- **Decision:** Accept the wrong-mutant negative control and authorize the single upstream-fixed arm. The candidate remains unqualified and unassigned until fixed-source passes both cases.
+- **Falsification criteria:** Input/source hash mismatch; missing named case; any error/skip; or either case not failing specifically at the target assertion.
+- **Follow-up:** Run upstream-fixed once under identical image, test, resources, and isolation; require both named subTests to pass with no errors or skips.

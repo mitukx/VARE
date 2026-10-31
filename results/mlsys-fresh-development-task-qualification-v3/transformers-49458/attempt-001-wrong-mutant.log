@@ -1,0 +1,128 @@
+test_video_processor_loading_does_not_resolve_other_models (vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models)
+Image and video processors resolve class names for the requested backend without accessing the lazy mapping. ... 
+  test_video_processor_loading_does_not_resolve_other_models (vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models) (filename='video_preprocessor_config.json')
+Image and video processors resolve class names for the requested backend without accessing the lazy mapping. ... FAIL
+  test_video_processor_loading_does_not_resolve_other_models (vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models) (filename='preprocessor_config.json')
+Image and video processors resolve class names for the requested backend without accessing the lazy mapping. ... FAIL
+
+======================================================================
+FAIL: test_video_processor_loading_does_not_resolve_other_models (vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models) (filename='video_preprocessor_config.json')
+Image and video processors resolve class names for the requested backend without accessing the lazy mapping.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/trusted/test_video_processing_auto.py", line 155, in test_video_processor_loading_does_not_resolve_other_models
+    load_attribute.assert_not_called()
+  File "/usr/local/lib/python3.12/unittest/mock.py", line 910, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected '_load_attr_from_module' to not have been called. Called 47 times.
+Calls: [call('cohere_compass', {'torchvision': 'CohereCompassVideoProcessor'}),
+ call('cosmos3_edge', {'torchvision': 'Cosmos3EdgeVideoProcessor'}),
+ call('embedding_gemma2', {'torchvision': 'EmbeddingGemma2VideoProcessor'}),
+ call('ernie4_5_vl_moe', {'torchvision': 'Ernie4_5_VLMoeVideoProcessor'}),
+ call('gemma4', {'torchvision': 'Gemma4VideoProcessor'}),
+ call('gemma4_unified', {'torchvision': 'Gemma4UnifiedVideoProcessor'}),
+ call('glm46v', {'torchvision': 'Glm46VVideoProcessor'}),
+ call('glm4v', {'torchvision': 'Glm4vVideoProcessor'}),
+ call('glm5_next', {'torchvision': 'Glm5NextVideoProcessor'}),
+ call('glmga', {'torchvision': 'GlmgaVideoProcessor'}),
+ call('instructblipvideo', {'torchvision': 'InstructBlipVideoVideoProcessor'}),
+ call('internvl', {'torchvision': 'InternVLVideoProcessor'}),
+ call('kimi_k25', {'torchvision': 'Kimi_K25VideoProcessor'}),
+ call('llava_next_video', {'torchvision': 'LlavaNextVideoVideoProcessor'}),
+ call('llava_onevision', {'torchvision': 'LlavaOnevisionVideoProcessor'}),
+ call('minicpmv4_6', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),
+ call('minimax_m3_vl', {'torchvision': 'MiniMaxM3VLVideoProcessor'}),
+ call('molmo2', {'torchvision': 'Molmo2VideoProcessor'}),
+ call('muse_glimmer', {'torchvision': 'MuseGlimmerVideoProcessor'}),
+ call('nemotron_h_omni', {'torchvision': 'NemotronH_Omni_Reasoning_V3VideoProcessor'}),
+ call('pe_video', {'torchvision': 'PeVideoVideoProcessor'}),
+ call('perception_lm', {'torchvision': 'PerceptionLMVideoProcessor'}),
+ call('qwen2_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('qwen3_vl', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('sam2_video', {'torchvision': 'Sam2VideoVideoProcessor'}),
+ call('smolvlm', {'torchvision': 'SmolVLMVideoProcessor'}),
+ call('timesformer', {'torchvision': 'TimesformerVideoProcessor'}),
+ call('video_llama_3', {'torchvision': 'VideoLlama3VideoProcessor'}),
+ call('video_llava', {'torchvision': 'VideoLlavaVideoProcessor'}),
+ call('videomae', {'torchvision': 'VideoMAEVideoProcessor'}),
+ call('videomt', {'torchvision': 'VideomtVideoProcessor'}),
+ call('vivit', {'torchvision': 'VivitVideoProcessor'}),
+ call('vjepa2', {'torchvision': 'VJEPA2VideoProcessor'}),
+ call('cosmos3_omni', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('exaone4_5', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('hyperclovax_vision_v2', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('instructblip', {'torchvision': 'InstructBlipVideoVideoProcessor'}),
+ call('minicpmv4_7', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),
+ call('pe_audio_video', {'torchvision': 'PeVideoVideoProcessor'}),
+ call('qwen2_5_omni', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('qwen2_5_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('qwen3_5', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('qwen3_5_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('qwen3_omni_moe', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('qwen3_vl_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('qwen4_exp', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('videoprism', {'torchvision': 'LlavaOnevisionVideoProcessor'})].
+
+======================================================================
+FAIL: test_video_processor_loading_does_not_resolve_other_models (vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models) (filename='preprocessor_config.json')
+Image and video processors resolve class names for the requested backend without accessing the lazy mapping.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/trusted/test_video_processing_auto.py", line 155, in test_video_processor_loading_does_not_resolve_other_models
+    load_attribute.assert_not_called()
+  File "/usr/local/lib/python3.12/unittest/mock.py", line 910, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected '_load_attr_from_module' to not have been called. Called 47 times.
+Calls: [call('cohere_compass', {'torchvision': 'CohereCompassVideoProcessor'}),
+ call('cosmos3_edge', {'torchvision': 'Cosmos3EdgeVideoProcessor'}),
+ call('embedding_gemma2', {'torchvision': 'EmbeddingGemma2VideoProcessor'}),
+ call('ernie4_5_vl_moe', {'torchvision': 'Ernie4_5_VLMoeVideoProcessor'}),
+ call('gemma4', {'torchvision': 'Gemma4VideoProcessor'}),
+ call('gemma4_unified', {'torchvision': 'Gemma4UnifiedVideoProcessor'}),
+ call('glm46v', {'torchvision': 'Glm46VVideoProcessor'}),
+ call('glm4v', {'torchvision': 'Glm4vVideoProcessor'}),
+ call('glm5_next', {'torchvision': 'Glm5NextVideoProcessor'}),
+ call('glmga', {'torchvision': 'GlmgaVideoProcessor'}),
+ call('instructblipvideo', {'torchvision': 'InstructBlipVideoVideoProcessor'}),
+ call('internvl', {'torchvision': 'InternVLVideoProcessor'}),
+ call('kimi_k25', {'torchvision': 'Kimi_K25VideoProcessor'}),
+ call('llava_next_video', {'torchvision': 'LlavaNextVideoVideoProcessor'}),
+ call('llava_onevision', {'torchvision': 'LlavaOnevisionVideoProcessor'}),
+ call('minicpmv4_6', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),
+ call('minimax_m3_vl', {'torchvision': 'MiniMaxM3VLVideoProcessor'}),
+ call('molmo2', {'torchvision': 'Molmo2VideoProcessor'}),
+ call('muse_glimmer', {'torchvision': 'MuseGlimmerVideoProcessor'}),
+ call('nemotron_h_omni', {'torchvision': 'NemotronH_Omni_Reasoning_V3VideoProcessor'}),
+ call('pe_video', {'torchvision': 'PeVideoVideoProcessor'}),
+ call('perception_lm', {'torchvision': 'PerceptionLMVideoProcessor'}),
+ call('qwen2_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('qwen3_vl', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('sam2_video', {'torchvision': 'Sam2VideoVideoProcessor'}),
+ call('smolvlm', {'torchvision': 'SmolVLMVideoProcessor'}),
+ call('timesformer', {'torchvision': 'TimesformerVideoProcessor'}),
+ call('video_llama_3', {'torchvision': 'VideoLlama3VideoProcessor'}),
+ call('video_llava', {'torchvision': 'VideoLlavaVideoProcessor'}),
+ call('videomae', {'torchvision': 'VideoMAEVideoProcessor'}),
+ call('videomt', {'torchvision': 'VideomtVideoProcessor'}),
+ call('vivit', {'torchvision': 'VivitVideoProcessor'}),
+ call('vjepa2', {'torchvision': 'VJEPA2VideoProcessor'}),
+ call('cosmos3_omni', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('exaone4_5', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('hyperclovax_vision_v2', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('instructblip', {'torchvision': 'InstructBlipVideoVideoProcessor'}),
+ call('minicpmv4_7', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),
+ call('pe_audio_video', {'torchvision': 'PeVideoVideoProcessor'}),
+ call('qwen2_5_omni', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('qwen2_5_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('qwen3_5', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('qwen3_5_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('qwen3_omni_moe', {'torchvision': 'Qwen2VLVideoProcessor'}),
+ call('qwen3_vl_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('qwen4_exp', {'torchvision': 'Qwen3VLVideoProcessor'}),
+ call('videoprism', {'torchvision': 'LlavaOnevisionVideoProcessor'})].
+
+----------------------------------------------------------------------
+Ran 1 test in 0.179s
+
+FAILED (failures=2)
+VARE_CASE_RUNNER_RESULT={"error_count": 0, "failure_count": 2, "skip_count": 0, "subtests": [{"exception_type": "AssertionError", "id": "vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models (filename='video_preprocessor_config.json')", "message": "Expected '_load_attr_from_module' to not have been called. Called 47 times.\nCalls: [call('cohere_compass', {'torchvision': 'CohereCompassVideoProcessor'}),\n call('cosmos3_edge', {'torchvision': 'Cosmos3EdgeVideoProcessor'}),\n call('embedding_gemma2', {'torchvision': 'EmbeddingGemma2VideoProcessor'}),\n call('ernie4_5_vl_moe', {'torchvision': 'Ernie4_5_VLMoeVideoProcessor'}),\n call('gemma4', {'torchvision': 'Gemma4VideoProcessor'}),\n call('gemma4_unified', {'torchvision': 'Gemma4UnifiedVideoProcessor'}),\n call('glm46v', {'torchvision': 'Glm46VVideoProcessor'}),\n call('glm4v', {'torchvision': 'Glm4vVideoProcessor'}),\n call('glm5_next', {'torchvision': 'Glm5NextVideoProcessor'}),\n call('glmga', {'torchvision': 'GlmgaVideoProcessor'}),\n call('instructblipvideo', {'torchvision': 'InstructBlipVideoVideoProcessor'}),\n call('internvl', {'torchvision': 'InternVLVideoProcessor'}),\n call('kimi_k25', {'torchvision': 'Kimi_K25VideoProcessor'}),\n call('llava_next_video', {'torchvision': 'LlavaNextVideoVideoProcessor'}),\n call('llava_onevision', {'torchvision': 'LlavaOnevisionVideoProcessor'}),\n call('minicpmv4_6', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),\n call('minimax_m3_vl', {'torchvision': 'MiniMaxM3VLVideoProcessor'}),\n call('molmo2', {'torchvision': 'Molmo2VideoProcessor'}),\n call('muse_glimmer', {'torchvision': 'MuseGlimmerVideoProcessor'}),\n call('nemotron_h_omni', {'torchvision': 'NemotronH_Omni_Reasoning_V3VideoProcessor'}),\n call('pe_video', {'torchvision': 'PeVideoVideoProcessor'}),\n call('perception_lm', {'torchvision': 'PerceptionLMVideoProcessor'}),\n call('qwen2_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('qwen3_vl', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('sam2_video', {'torchvision': 'Sam2VideoVideoProcessor'}),\n call('smolvlm', {'torchvision': 'SmolVLMVideoProcessor'}),\n call('timesformer', {'torchvision': 'TimesformerVideoProcessor'}),\n call('video_llama_3', {'torchvision': 'VideoLlama3VideoProcessor'}),\n call('video_llava', {'torchvision': 'VideoLlavaVideoProcessor'}),\n call('videomae', {'torchvision': 'VideoMAEVideoProcessor'}),\n call('videomt', {'torchvision': 'VideomtVideoProcessor'}),\n call('vivit', {'torchvision': 'VivitVideoProcessor'}),\n call('vjepa2', {'torchvision': 'VJEPA2VideoProcessor'}),\n call('cosmos3_omni', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('exaone4_5', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('hyperclovax_vision_v2', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('instructblip', {'torchvision': 'InstructBlipVideoVideoProcessor'}),\n call('minicpmv4_7', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),\n call('pe_audio_video', {'torchvision': 'PeVideoVideoProcessor'}),\n call('qwen2_5_omni', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('qwen2_5_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('qwen3_5', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('qwen3_5_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('qwen3_omni_moe', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('qwen3_vl_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('qwen4_exp', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('videoprism', {'torchvision': 'LlavaOnevisionVideoProcessor'})].", "outcome": "failed", "parameters": {"filename": "video_preprocessor_config.json"}}, {"exception_type": "AssertionError", "id": "vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models (filename='preprocessor_config.json')", "message": "Expected '_load_attr_from_module' to not have been called. Called 47 times.\nCalls: [call('cohere_compass', {'torchvision': 'CohereCompassVideoProcessor'}),\n call('cosmos3_edge', {'torchvision': 'Cosmos3EdgeVideoProcessor'}),\n call('embedding_gemma2', {'torchvision': 'EmbeddingGemma2VideoProcessor'}),\n call('ernie4_5_vl_moe', {'torchvision': 'Ernie4_5_VLMoeVideoProcessor'}),\n call('gemma4', {'torchvision': 'Gemma4VideoProcessor'}),\n call('gemma4_unified', {'torchvision': 'Gemma4UnifiedVideoProcessor'}),\n call('glm46v', {'torchvision': 'Glm46VVideoProcessor'}),\n call('glm4v', {'torchvision': 'Glm4vVideoProcessor'}),\n call('glm5_next', {'torchvision': 'Glm5NextVideoProcessor'}),\n call('glmga', {'torchvision': 'GlmgaVideoProcessor'}),\n call('instructblipvideo', {'torchvision': 'InstructBlipVideoVideoProcessor'}),\n call('internvl', {'torchvision': 'InternVLVideoProcessor'}),\n call('kimi_k25', {'torchvision': 'Kimi_K25VideoProcessor'}),\n call('llava_next_video', {'torchvision': 'LlavaNextVideoVideoProcessor'}),\n call('llava_onevision', {'torchvision': 'LlavaOnevisionVideoProcessor'}),\n call('minicpmv4_6', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),\n call('minimax_m3_vl', {'torchvision': 'MiniMaxM3VLVideoProcessor'}),\n call('molmo2', {'torchvision': 'Molmo2VideoProcessor'}),\n call('muse_glimmer', {'torchvision': 'MuseGlimmerVideoProcessor'}),\n call('nemotron_h_omni', {'torchvision': 'NemotronH_Omni_Reasoning_V3VideoProcessor'}),\n call('pe_video', {'torchvision': 'PeVideoVideoProcessor'}),\n call('perception_lm', {'torchvision': 'PerceptionLMVideoProcessor'}),\n call('qwen2_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('qwen3_vl', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('sam2_video', {'torchvision': 'Sam2VideoVideoProcessor'}),\n call('smolvlm', {'torchvision': 'SmolVLMVideoProcessor'}),\n call('timesformer', {'torchvision': 'TimesformerVideoProcessor'}),\n call('video_llama_3', {'torchvision': 'VideoLlama3VideoProcessor'}),\n call('video_llava', {'torchvision': 'VideoLlavaVideoProcessor'}),\n call('videomae', {'torchvision': 'VideoMAEVideoProcessor'}),\n call('videomt', {'torchvision': 'VideomtVideoProcessor'}),\n call('vivit', {'torchvision': 'VivitVideoProcessor'}),\n call('vjepa2', {'torchvision': 'VJEPA2VideoProcessor'}),\n call('cosmos3_omni', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('exaone4_5', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('hyperclovax_vision_v2', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('instructblip', {'torchvision': 'InstructBlipVideoVideoProcessor'}),\n call('minicpmv4_7', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),\n call('pe_audio_video', {'torchvision': 'PeVideoVideoProcessor'}),\n call('qwen2_5_omni', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('qwen2_5_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('qwen3_5', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('qwen3_5_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('qwen3_omni_moe', {'torchvision': 'Qwen2VLVideoProcessor'}),\n call('qwen3_vl_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('qwen4_exp', {'torchvision': 'Qwen3VLVideoProcessor'}),\n call('videoprism', {'torchvision': 'LlavaOnevisionVideoProcessor'})].", "outcome": "failed", "parameters": {"filename": "preprocessor_config.json"}}], "test_file": "/trusted/test_video_processing_auto.py", "test_id": "AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models", "tests_run": 1, "was_successful": false}

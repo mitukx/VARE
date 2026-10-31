@@ -46,5 +46,28 @@
       }
     ]
   },
-  "v2_candidate_test_execution_started": true
+  "v2_candidate_test_execution_started": true,
+  "v2_wrong_mutant": {
+    "gate": "EXPECTED_WRONG_MUTANT_REJECTION_BOTH_NAMED_SUBTESTS",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.log",
+    "log_sha256": "5db740dacb7d9406da01e860fae420cf977125504473bfecaeb7f3d472a53f0c",
+    "receipt_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.json",
+    "receipt_sha256": "76e78ba63938bfc21013868504960df91a9a01fc7fc2d2093b8078ead3be5d4a",
+    "subtests": [
+      {
+        "assertion": "load_attribute.assert_not_called",
+        "exception_type": "AssertionError",
+        "filename": "video_preprocessor_config.json",
+        "mapping_load_calls": 47,
+        "outcome": "failed"
+      },
+      {
+        "assertion": "load_attribute.assert_not_called",
+        "exception_type": "AssertionError",
+        "filename": "preprocessor_config.json",
+        "mapping_load_calls": 47,
+        "outcome": "failed"
+      }
+    ]
+  }
 }

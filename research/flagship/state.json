@@ -211,7 +211,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "f4444f8b93d59845215ac6ad11e571f4c59f2e47",
+    "verified_pr_head_sha_before_checkpoint_changes": "c22e707d40c2003b3b54f6cbd3968d14c274b129",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
@@ -220,9 +220,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Commit and push v2 baseline receipt/log, then execute v2 wrong-mutant once. Require both named subTests to fail at the target assertion with no errors/skips before authorizing fixed.",
-  "last_completed_step": "V2 baseline attempt 001 ran once with the case-aware stdlib unittest runner under the frozen image/limits. Both named config subTests reached load_attribute.assert_not_called and failed with AssertionError: 47 mapping loads for video_preprocessor_config.json and 141 for preprocessor_config.json; 2 failures, 0 errors, 0 skips. Baseline gate is met; v2 wrong-mutant is next.",
-  "milestone_id": "p8-transformers-49458-v2-baseline-gate-met",
+  "highest_priority_next_task": "Commit and push the v2 wrong-mutant receipt/log, then execute upstream-fixed once. Require both named subTests to pass with no errors/skips.",
+  "last_completed_step": "V2 wrong-mutant attempt 001 ran once after the v2 baseline gate. Both named subTests failed at load_attribute.assert_not_called after 47 eager mapping loads each; 2 failures, 0 errors, 0 skips. Wrong-mutant gate is met; upstream-fixed is the sole remaining v2 arm.",
+  "milestone_id": "p8-transformers-49458-v2-wrong-mutant-gate-met",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -908,6 +908,21 @@
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
       "sha256": "0f846ba334e45e495645a446821b1397e2f78a2e99ee696a2799b5d5798ade5e",
       "status": "v2 frozen inputs and baseline outcome"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.log",
+      "sha256": "5db740dacb7d9406da01e860fae420cf977125504473bfecaeb7f3d472a53f0c",
+      "status": "v2 wrong-mutant raw log; both named subTests failed at the target assertion, no errors/skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.json",
+      "sha256": "76e78ba63938bfc21013868504960df91a9a01fc7fc2d2093b8078ead3be5d4a",
+      "status": "v2 wrong-mutant receipt; both named target assertions failed; upstream-fixed may run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
+      "sha256": "a2177d7fedd6bb2cfef58bec94097d9f98c6845fc72967be372675c00b92c150",
+      "status": "v2 frozen inputs plus baseline and wrong-mutant outcomes"
     }
   ],
   "run_ids": [
@@ -957,7 +972,7 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED; v2 baseline passed its negative-control gate, while wrong-mutant and fixed controls remain pending."
+    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED pending the single upstream-fixed v2 arm; no inference is authorized."
   ],
-  "updated_at": "2026-10-31T01:55:14Z"
+  "updated_at": "2026-10-31T01:55:47Z"
 }

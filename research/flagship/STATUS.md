@@ -34,7 +34,7 @@ The controller now removes only oldest complete assistant tool-call rounds at th
 
 ## Immediate next action
 
-V2 baseline attempt 001 failed both named config subTests at `load_attribute.assert_not_called` (47 calls for the video config, 141 for the legacy image config; 2 failures, 0 errors/skips). Its log and receipt are recorded; the baseline gate is met. Run the v2 wrong-mutant next. The candidate remains unassigned and no inference has run.
+V2 baseline attempt 001 failed both named config subTests at `load_attribute.assert_not_called` (47 calls for the video config, 141 for the legacy image config; 2 failures, 0 errors/skips). Its log and receipt are recorded; the baseline gate is met. V2 wrong-mutant attempt 001 also failed both named config subTests at the same assertion (47 mapping loads each; 2 failures, 0 errors/skips). Both negative-control gates are met; run the single upstream-fixed arm next. The candidate remains unassigned and no inference has run.
 
 
 ## v1 qualification diagnostic
