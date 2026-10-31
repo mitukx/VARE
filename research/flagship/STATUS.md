@@ -1,5 +1,25 @@
 # VARE Flagship Mission Status
 
+Updated 2026-10-31 10:53 UTC. Qwen3-4B diagnostic-001 is closed after a pre-generation sandbox failure. A new 14B V4 protocol and corrected Train diagnostic-003 are frozen but have not run.
+
+## Current execution checkpoint
+
+- PR #150 and PRs #160–#163 are merged. PR #164 is a draft; prior head `ab95c4a87dad44ec0e4b855b8ed7978c7909a7ba` had 19/19 checks green. The protocol commit needs fresh exact-head CI.
+- At 10:53 UTC, the host sample showed 15,115,829,248 bytes available (14.07 GiB), memory-pressure free 82%, swap 1,697,581,629 bytes used / 1,523,643,842 bytes free, and disk free 21,387,288,576 bytes. No VARE inference process was found. Colima was already stopped; Docker API was unavailable. No process was stopped in this audit.
+- Top RSS entries were a Chrome renderer (3.21 GiB), Codex renderer (1.21 GiB), and Chrome main process (0.97 GiB). These are user applications; RSS includes shared memory and is not an additive reclaim estimate. They were left running.
+- V4 conditionally selects Qwen2.5-Coder-14B only after a fresh post-CI no-load preflight verifies all frozen inputs and resource gates. The current estimate leaves 2,242,932,263 bytes (2.09 GiB) beyond estimated working set plus explicit headroom, only 95,448,615 bytes above the additional 2 GiB operator gate. This observation is not a preflight authorization.
+- Corrected Train diagnostic-003 and model, diagnostic, and grader-worker isolation probes are frozen/passed. A causal no-model probe showed that a single `/dev/null` write allowance resolves the pinned-Git failure while hidden tests, private Codex data, network, the Development workspace during Train, and grader scratch remain denied.
+- No V4 inference, Development prompt, candidate edit, independent grade, training, or RL update has occurred. Next: push the frozen artifacts, wait for exact-head CI, then run the fresh no-load preflight. Proceed to the one Train diagnostic and one Development attempt only if their gates pass.
+
+## Memory recovery checkpoint
+
+| Snapshot | Available | Pressure free | Swap | Action |
+|---|---:|---:|---:|---|
+| Before prior Colima shutdown (09:22 UTC) | ~12.30 GiB | 74% | ~1.75 GiB used | Idle Colima was gracefully stopped in the earlier turn; its container and volume were preserved. |
+| Current audit (10:53 UTC) | 14.07 GiB | 82% | 1.58 GiB used / 1.42 GiB free | Colima already down; no VARE workers or Docker grader; no process stopped in this audit. |
+
+The observed available-memory difference is about 1.77 GiB, but it cannot be attributed entirely to Colima. The local independent grader runs without Docker and will run after the model process exits.
+
 Updated 2026-10-31 10:20 UTC. The long-run research mission remains active; the current Qwen3-4B diagnostic sequence is closed after one pre-generation controller failure.
 
 ## GitHub checkpoint

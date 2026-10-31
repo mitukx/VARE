@@ -1,0 +1,41 @@
+{
+  "actions_this_sweep": [],
+  "already_stopped_and_verified": "Colima was gracefully stopped during the prior safe cleanup; it remains down and docker ps cannot connect. No containers or volumes were deleted.",
+  "estimated_memory_reclaimed_this_sweep_bytes": 0,
+  "interpretation": "Available memory increased between the prior 10:08 UTC preflight and this current measurement, but no VARE-owned process was terminated in this sweep; the difference is not attributed to cleanup. RSS totals are not treated as reclaimable memory.",
+  "memory_after_this_sweep": {
+    "available_memory_bytes": 15511945216,
+    "disk_free_bytes": 21399003136,
+    "memory_pressure_free_percent": 82,
+    "source": "same measurement; no eligible VARE-owned process was stopped during this sweep",
+    "swap_used_bytes": 1697581629
+  },
+  "memory_before_this_sweep": {
+    "available_memory_bytes": 15511945216,
+    "disk_free_bytes": 21399003136,
+    "memory_pressure_free_percent": 82,
+    "source": "initial host resource capture for the current request",
+    "swap_used_bytes": 1697581629
+  },
+  "observed_prior_to_current_sweep": {
+    "available_memory_bytes": 13184598016,
+    "available_memory_gib": 12.27911376953125,
+    "memory_pressure_free_percent": 78,
+    "record": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/attempt-001/launch-preflight-after-cleanup-001.json",
+    "swap_used_bytes": 1697581629
+  },
+  "physical_memory_bytes": 34359738368,
+  "process_audit": {
+    "candidate_vare_owned_processes_found": 0,
+    "model_inference_processes_found": 0,
+    "top_process_rss_is_not_reclaimable_memory_estimate": true,
+    "unrelated_or_active_apps_not_terminated": [
+      "Google Chrome and renderer processes",
+      "Codex desktop and current Codex CLI",
+      "system services",
+      "tiktok-downloader watcher.py (not VARE-owned)"
+    ]
+  },
+  "recorded_at_utc": "2026-10-31T10:46:29.186336+00:00",
+  "schema_version": 1
+}
