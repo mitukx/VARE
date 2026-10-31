@@ -35,15 +35,36 @@
       "model_or_agent_inference": false,
       "recorded_at_utc": "2026-10-31T05:35:20Z",
       "training": false
+    },
+    {
+      "arms": {
+        "baseline": "attempt-002: two intended post-override assertion failures",
+        "upstream_fixed": "attempt-002: both cases passed",
+        "wrong_mutant": "attempt-002: two intended post-override assertion failures"
+      },
+      "candidate_test_execution": true,
+      "event_type": "source_level_qualification_execution",
+      "heldout_access": false,
+      "model_exposure": false,
+      "model_or_agent_inference": false,
+      "paid_compute_or_api": false,
+      "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1-addendum-4-output-profile-binding",
+      "protocol_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-4-output-profile-binding.json",
+      "protocol_sha256": "dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396",
+      "recorded_at_utc": "2026-10-31T05:54:48Z",
+      "source_and_test_exposure_to_agent": true,
+      "split_assignment": "UNASSIGNED",
+      "status": "QUALIFIED_SOURCE_LEVEL only for the two scoped method-level cases after final isolation/hash audit; no capability or pretraining-independence claim",
+      "training": false
     }
   ],
   "heldout_access": false,
   "model_exposure": false,
-  "next_event": "Execute baseline only after execution addendum 2 is pushed; stop unless both exact cases fail at their intended post-override assertions.",
+  "next_event": "If considering Development use, perform a separate prospective assignment and resource preflight, append it before any model attempt, and use a fresh model-visible context; this source qualification itself authorizes no inference, training, Held-Out access, or split assignment.",
   "paid_compute_or_api": false,
   "public_pretraining_exposure": "UNKNOWN",
-  "qualification_status": "UNQUALIFIED_PENDING_FROZEN_SOURCE_TEST_GATES",
-  "recorded_at_utc": "2026-10-31T05:35:20Z",
+  "qualification_status": "QUALIFIED_SOURCE_LEVEL",
+  "recorded_at_utc": "2026-10-31T05:54:48Z",
   "schema_version": 1,
   "split_assignment": "UNASSIGNED",
   "training": false
