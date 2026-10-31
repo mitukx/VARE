@@ -1,0 +1,27 @@
+{
+  "attempt_id": "vllm-64575-source-qualification-baseline-attempt-002",
+  "protocol_addendum_2_sha256": "e0b6636997a28131ecade4e7452cbe40a449bd55d4a41cdf525ecb3653cb6ac3",
+  "protocol_addendum_3_sha256": "6119febc5ab669dcc1642246cd3fd24172d064e3f3d5af6c7c7f39334e282cb2",
+  "runner_sha256": "cd67ac0624f1bcd65edddbb135c669a89fa9d80a7a4d1dd7fcce95be09a736a3",
+  "baseline_source_sha256": "d59e35292a3eaeddea0da3aa71caafe7862214d41ad1d549b78f9ae56218c9c0",
+  "test_overlay_sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8",
+  "profile_sha256": "b5abc4c336099e3f9ba9ba5dac06b0cdc3b88ffb623fe6f3f1c3749bf8624623",
+  "pytest_cases": 5,
+  "failed": 2,
+  "passed": 3,
+  "errors": 0,
+  "skipped": 0,
+  "expected_failure_cases": [
+    "web_search_20250305: expected unsupported-type message absent from the sole ValidationError message because baseline reports missing input_schema",
+    "bash_20250124: expected unsupported-type message absent from the sole ValidationError message because baseline reports missing input_schema"
+  ],
+  "unexpected_failures": 0,
+  "resource_or_isolation_violation": false,
+  "attempt_json_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/baseline-attempt-002/attempt.json",
+  "attempt_json_sha256": "f5d8b5a2e2fbaf69829084837a5d6e75f8ace59ecc8108f704c27ba229812a0d",
+  "pytest_log_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/baseline-attempt-002/pytest.log",
+  "pytest_log_sha256": "2f5adab443b11556ef02ba7f68078ceee6c01b6116b668405897ea7b3b6f487c",
+  "gate": "BASELINE_NEGATIVE_CONTROL_PASSED",
+  "interpretation": "The pinned pre-merge source is detected by both frozen regression cases at the exact intended error-message assertion. This is task/evaluator calibration only; no model capability or repair is established.",
+  "next_authorized_step": "Invoke wrong-mutant attempt 001 exactly once under addenda 2 and 3."
+}
