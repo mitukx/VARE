@@ -15,6 +15,8 @@ The 12 admitted repositories are `cool-RR/PySnooper`, `alecthomas/voluptuous`, `
 
 The gzip-compressed report contains the per-repository outcomes, each successfully built environment's installed distribution inventory, and task identifiers, counts, and hashes. It does not contain problem statements, patches, pytest node names, or raw test output. The four environment-install failures are `conan-io/conan`, `iterative/dvc`, `facebookresearch/fvcore`, and `rsalmei/alive-progress`; their sanitized diagnostics are in the report. Decompress `build_check_report.json.gz` before using it with the freeze script.
 
+A separate post-run diagnostic rechecked one `python-dotenv` candidate under the same Seatbelt runner. Both the bug and reference grades returned pytest exit 4, with all 121 requested IDs unreported; the captured output matched the safe category `missing_module`. This diagnostic is not part of the 903-task totals. Raw stdout, task IDs, and test names were not retained. It indicates an import/collection problem for that example; the main report's reason code does not identify a root cause.
+
 ## Reproduction record
 
 The run started at `2026-10-31T22:51:31Z` and finished at `2026-10-31T23:37:01Z`. It used the fixed Run-002 seed and criteria, 8 tasks per repository, no per-repository attempt cap, `--min-free-gib 4`, and `--prune`.
