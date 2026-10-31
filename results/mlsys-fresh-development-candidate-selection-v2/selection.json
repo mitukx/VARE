@@ -1,0 +1,79 @@
+{
+  "development_split_assignment_performed": false,
+  "eligible_candidate_count_after_exclusions": 1,
+  "eligible_candidate_count_before_exclusions": 2,
+  "excluded_identities": [
+    {
+      "number": 64675,
+      "reason": "Selected by v1 and blocked by v1 metadata-only overlap review; no reuse or substitution under v1.",
+      "repository": "vllm-project/vllm"
+    }
+  ],
+  "frozen_inputs": {
+    "protocols/mlsys_fresh_development_candidate_discovery_v4.json": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+    "protocols/mlsys_fresh_development_candidate_selection_v1.json": "19254086ccd3093ed5a85518f4d49088fa9323b171e8ed190e0dd13f5d37ae10",
+    "protocols/mlsys_fresh_development_candidate_selection_v1_addendum_1.json": "5b0f968fa609bbb971ef3e504697ddc15b92cf0d362109090e1d194bf43453b1",
+    "protocols/mlsys_fresh_development_candidate_selection_v1_addendum_2.json": "5e5459b10018a3c0ca7227560f4138ad160c33bc9bc826e628c671bdce6e9b15",
+    "protocols/mlsys_fresh_development_task_family_overlap_v3.json": "a0e52e43c08228057e397023027a53be214f6889955cef80eefb93ab083ada42",
+    "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json": "8c2fd7e519723e27f8b2b5274d03c340d32c5e552191869ddc23f63f46bd0370",
+    "results/mlsys-fresh-development-candidate-discovery-v4/evidence-manifest.json": "39d4ad0957aba7a9360fb5f60cc81bb74788cfe858ce5fac473e98158d91b853",
+    "results/mlsys-fresh-development-candidate-discovery-v4/screen.json": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "results/mlsys-fresh-development-candidate-selection-v1/evidence-manifest.json": "7dcc5cc4f0f82ccd5c4eb5eb9d61154ecf0b20d8aec511c250b49b971f30aa88",
+    "results/mlsys-fresh-development-candidate-selection-v1/selection.json": "2ba539e52536e37ef47cd3df41171ab6ce1a5368c07ecee0022835e3e1e4cc3d",
+    "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-evidence-manifest.json": "5b2c1959cc6825d7c561493efc14115757215c22034af14746ee69d5a5c15017",
+    "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-report.md": "848dffdbdba04b00390763a8772bc5a0b8f4cd45141bc421a7318456d9547377",
+    "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-review-v1.json": "6a2f6bcff7bf58a2d02d0a1f83c23e43fd3f2a5449d683dbbfc495de97df9bb0",
+    "scripts/select_mlsys_fresh_development_candidate_v1.py": "f54f8a07e258c176a2e36e6cb89f8e44014c989ae9834d3a0ec989f2694fb1b8",
+    "scripts/select_mlsys_fresh_development_candidate_v2.py": "11eac94e61f236ea65a330ec64025602f3372e3c532b5a66a3481a1cc98e6a09",
+    "tests/test_select_mlsys_fresh_development_candidate_v2.py": "3d4e24351c3bc5246e96aa1c86d8839d083935d8284a847470e61f6a4b064578"
+  },
+  "heldout_access_authorized": false,
+  "model_or_agent_inference_authorized": false,
+  "protocol_addendum_1_sha256": "bc185d74541c2b6ed6c72cbf5e92bb56155dd7a9a2db708f4bf729e1a2bf1298",
+  "protocol_addendum_2_sha256": "e489d47309971ff3ec4725ca326b7de8eb17cd36bd830980cecfc71fe0a6bb7a",
+  "protocol_sha256": "e728ebc6dd5fddf930b3d11bab093eab1b601fb3fa596cfbbb55e001dae28359",
+  "schema_version": 1,
+  "selected_candidate": {
+    "additions": 74,
+    "base_ref_sha_at_capture": "67d677bdef939cb95b433dfcd43a4eca234aa29b",
+    "changed_file_count": 4,
+    "changed_paths": [
+      "docs/serving/integrations/claude_code.md",
+      "tests/entrypoints/anthropic/test_anthropic_messages_conversion.py",
+      "tests/entrypoints/anthropic/test_messages.py",
+      "vllm/entrypoints/anthropic/protocol.py"
+    ],
+    "changed_paths_complete": true,
+    "coarse_screen": "provisional_for_manual_review",
+    "created_at": "2026-10-29T20:58:17Z",
+    "deletions": 0,
+    "head_sha": "46c6391a443952a40c8942abad407bd1587125b0",
+    "is_draft": false,
+    "merge_base_sha": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "merge_commit_sha": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+    "merged_at": "2026-10-31T01:44:48Z",
+    "number": 64575,
+    "qualification_status": "UNQUALIFIED",
+    "repository": "vllm-project/vllm",
+    "screen_reasons": [],
+    "selection_rank_sha256": "96cc4cd83e8dd31282fcedd7288f36c34a8d677563383c35a88430d80801f463",
+    "split_assignment": "UNASSIGNED",
+    "state": "MERGED",
+    "task_family_overlap": "NOT_ASSESSED",
+    "test_paths": [
+      "tests/entrypoints/anthropic/test_anthropic_messages_conversion.py",
+      "tests/entrypoints/anthropic/test_messages.py"
+    ],
+    "title": "[Frontend] Reject Anthropic-defined tools by type in /v1/messages",
+    "updated_at": "2026-10-31T01:44:48Z",
+    "url": "https://github.com/vllm-project/vllm/pull/64575"
+  },
+  "selected_count": 1,
+  "selection_id": "mlsys-fresh-development-candidate-selection-v2",
+  "selection_rule": "Select the minimum v1 SHA-256 rank from the frozen eligible metadata rows after the frozen prior-selection and overlap exclusions.",
+  "selector_sha256": "fdcd9e7e7013af4c072d91bb0bde3905d77d96e102bdcade90880213430e859b",
+  "source_or_test_content_accessed": false,
+  "source_screen_sha256": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+  "task_qualification_performed": false,
+  "training_authorized": false
+}
