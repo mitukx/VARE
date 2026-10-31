@@ -1,0 +1,72 @@
+{
+  "classification": "controller/sandbox integration failure; not a model capability result, coding attempt, grade, Development result, or RL result",
+  "decision": {
+    "continue_to_development": false,
+    "policy_update_or_rl_training": false,
+    "protocol_modified": false,
+    "reason": "The frozen diagnostic requires a completed controller tool/edit interaction and one successful controller diagnostic; it explicitly prohibits retry after controller failure.",
+    "retry_performed": false
+  },
+  "execution": {
+    "agent_attempt_json": "not created; execution stopped before the attempt record is written",
+    "candidate_record_created": false,
+    "development_attempts": 0,
+    "development_preflight_run": false,
+    "diagnostic_runs": 1,
+    "failure": "pinned Git command failed during workspace revision validation; sandbox denied opening /dev/null for reading and writing",
+    "failure_evidence": {
+      "agent_log": "attempt-001/agent-attempt.log",
+      "execution_order": "scripts/run_local_agent.py loads the MLX model before workspace revision validation and begins generation only after that validation",
+      "pinned_git_setting": "-c core.attributesFile=/dev/null",
+      "stderr_reproduction": "fatal: could not open '/dev/null' for reading and writing: Operation not permitted"
+    },
+    "generated_tokens": 0,
+    "independent_grader_runs": 0,
+    "model_generation_started": false,
+    "model_loaded": true,
+    "native_tool_calls": 0,
+    "prompt_delivered_to_model": false,
+    "source_edits_applied": 0,
+    "status": "FAILED_BEFORE_FIRST_GENERATION",
+    "workspace_revision_check_passed": false
+  },
+  "preflight": {
+    "all_frozen_inputs_and_model_snapshot_hashes_verified": true,
+    "all_resource_gates_passed": true,
+    "available_memory_bytes": 14414675968,
+    "memory_pressure_free_percent": 80,
+    "model_loaded_by_preflight": false,
+    "path": "attempt-001/controller-diagnostic-preflight.json",
+    "status": "PASSED",
+    "swap_used_bytes": 1697581629
+  },
+  "protocol": {
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/protocol.json",
+    "sha256": "0577b46272d18a101009c0bbe033ccfdda6c00f440b199c2c9005cc4b2810955"
+  },
+  "record_id": "qwen3-4b-controller-train-diagnostic-attempt-001",
+  "recorded_at_utc": "2026-10-31T10:20:42Z",
+  "resource_observation": {
+    "direct_child_os_max_rss_bytes": 2627239936,
+    "elapsed_seconds": 3.149,
+    "limit_reason": null,
+    "memory_pressure_free_percent_after_exit": 80,
+    "mission_processes_remaining_after_exit": false,
+    "post_attempt_host_snapshot": {
+      "available_memory_bytes": 15091695616,
+      "disk_free_bytes": 21392887808,
+      "free_bytes": 1523643842,
+      "host": "macOS-27.0.1-arm64-arm-64bit",
+      "memory_pressure_free_percent": 81,
+      "physical_memory_bytes": 34359738368,
+      "timestamp_utc": "2026-10-31T10:20:42.593518+00:00",
+      "total_bytes": 3221225472,
+      "used_bytes": 1697581629
+    },
+    "process_tree_rss_limit_bytes": 8589934592,
+    "sampled_process_tree_rss_max_bytes": 2586984448,
+    "started_at_utc": "2026-10-31T10:19:03.550134+00:00",
+    "swap_used_bytes_after_exit": 1697581629
+  },
+  "schema_version": 1
+}
