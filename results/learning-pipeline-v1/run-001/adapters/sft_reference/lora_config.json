@@ -1,0 +1,26 @@
+{
+  "model": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "train": true,
+  "data": "/Users/user/lisa1-push/artifacts/learning_pipeline_v1/run-001/data/sft_reference",
+  "fine_tune_type": "lora",
+  "optimizer": "adam",
+  "mask_prompt": true,
+  "num_layers": 8,
+  "batch_size": 1,
+  "grad_accumulation_steps": 1,
+  "iters": 100,
+  "val_batches": 4,
+  "learning_rate": 5e-05,
+  "steps_per_report": 10,
+  "steps_per_eval": 50,
+  "save_every": 25,
+  "adapter_path": "/Users/user/lisa1-push/artifacts/learning_pipeline_v1/run-001/adapters/sft_reference",
+  "max_seq_length": 3072,
+  "grad_checkpoint": true,
+  "seed": 0,
+  "lora_parameters": {
+    "rank": 8,
+    "scale": 20.0,
+    "dropout": 0.0
+  }
+}

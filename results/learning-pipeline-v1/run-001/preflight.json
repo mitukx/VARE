@@ -1,0 +1,65 @@
+{
+  "cache_growth_bytes": 236395188,
+  "dataset_bytes": 220645767,
+  "dataset_seconds": 47.9,
+  "free_disk_start_gib": 16.1,
+  "grade_seconds": 0.61,
+  "memory_end": {
+    "available": 13753270272,
+    "machine": "arm64",
+    "model": "MacBookPro18,3",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "swap_used": 2914118533,
+    "total": 34359738368
+  },
+  "memory_start": {
+    "available": 13785923584,
+    "machine": "arm64",
+    "model": "MacBookPro18,3",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "swap_used": 1680804413,
+    "total": 34359738368
+  },
+  "mode": "real",
+  "model_bytes": 724,
+  "model_download_or_resolve_seconds": 0.5,
+  "probe_calibration": {
+    "baseline_fails_f2p": true,
+    "qualified": true,
+    "reference_passes": true
+  },
+  "probe_generation": {
+    "completion_tokens": 233,
+    "finish": "stop",
+    "peak_memory_gib": 2.79,
+    "prompt_tokens": 596,
+    "seconds": 6.507
+  },
+  "probe_task": "Suor__funcy.207a7810.func_basic__jtj6rhfx",
+  "projection": {
+    "assumptions": "sampled outputs run to max_tokens; every training iteration as slow as the padded preflight probe; +120 s load per arm",
+    "free_disk_after_run_gib": 15.44,
+    "free_disk_now_gib": 15.85,
+    "measured_training_throughput": true,
+    "projected_additional_disk_gib": 0.4,
+    "seconds": {
+      "calibrate": 149,
+      "evaluate_three_arms": 2513,
+      "rollouts": 2963,
+      "setup_repos": 46,
+      "train_two_arms": 2460
+    },
+    "total_seconds": 8131
+  },
+  "repo_setup_bytes": 15749421,
+  "repo_setup_seconds": 5.8,
+  "synthetic": false,
+  "train_smoke": {
+    "iters": 3,
+    "peak_memory_gb": 6.025218162,
+    "seconds": 54.0,
+    "seconds_per_iteration": 11.099,
+    "target_tokens_per_second": 12.704075448964229,
+    "trained_tokens": 423
+  }
+}
