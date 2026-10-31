@@ -1,0 +1,38 @@
+{
+  "events": [
+    {
+      "counted_as_model_attempt": false,
+      "details": "The narrower exploratory Seatbelt profile did not produce smoke output. The retained stdout/stderr files are both empty; exact failure cause and exit status were not preserved. No model weights were involved in this smoke command.",
+      "id": "metal-smoke-initial-exploratory-profile",
+      "status": "FAILED_BEFORE_OUTPUT",
+      "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke.stdout",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "metal-smoke-002",
+      "sandbox_profile_sha256": "2ceac3eab33bb5cafdff8fd0c7e40c5bb6793b90162249f2c6f2e9c9632c8b40",
+      "status": "PASSED",
+      "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke-002.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke-002.stdout",
+      "stdout_sha256": "6688948350149d55ee2b93e3b5c91706b4626a7ef69f7e02316096820f175f72",
+      "weights_loaded": false
+    },
+    {
+      "hidden_inputs_denied_by_final_profile": true,
+      "id": "metal-smoke-003",
+      "sandbox_profile_sha256": "35c69da25f8685d4d80afa59f95776f40db35157ee94186a34e62b405fc7397b",
+      "status": "PASSED",
+      "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke-003.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke-003.stdout",
+      "stdout_sha256": "6688948350149d55ee2b93e3b5c91706b4626a7ef69f7e02316096820f175f72",
+      "weights_loaded": false
+    }
+  ],
+  "model_inference_started": false,
+  "model_weights_loaded": false,
+  "schema_version": 1
+}

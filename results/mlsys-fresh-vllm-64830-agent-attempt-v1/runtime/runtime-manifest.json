@@ -1,0 +1,76 @@
+{
+  "candidate_method_worker_copy": {
+    "matches_repository_worker": true,
+    "path": "/private/tmp/vare-vllm-64830-development-attempt-001/method-worker.py",
+    "sha256": "bd3686219eab12f3599533b9dfc88a3f7eb4d2b843a6cfaabd70b3745689670a"
+  },
+  "metal_smoke": {
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/model-agent.sb",
+      "/usr/bin/env",
+      "HF_HUB_OFFLINE=1",
+      "TRANSFORMERS_OFFLINE=1",
+      "PYTHONNOUSERSITE=1",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "HOME=/private/tmp/vare-vllm-64830-development-attempt-001/home",
+      "TMPDIR=/private/tmp/vare-vllm-64830-development-attempt-001/tmp",
+      "/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python",
+      "-B",
+      "-c",
+      "import mlx.core as mx; import mlx_lm, transformers, tokenizers; x = mx.array([1, 2, 3]); print({\"device\": str(mx.default_device()), \"result\": (x + x).tolist(), \"mlx\": mx.__version__, \"mlx_lm\": mlx_lm.__version__, \"transformers\": transformers.__version__, \"tokenizers\": tokenizers.__version__})"
+    ],
+    "sandbox_profile_sha256": "35c69da25f8685d4d80afa59f95776f40db35157ee94186a34e62b405fc7397b",
+    "status": "PASSED",
+    "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke-003.stderr",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke-003.stdout",
+    "stdout_sha256": "6688948350149d55ee2b93e3b5c91706b4626a7ef69f7e02316096820f175f72",
+    "weights_loaded": false
+  },
+  "metal_smoke_history": {
+    "events": 3,
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/smoke-history.json",
+    "sha256": "641f7c9e2134e7c7cd9cece107514154bfd7572b89d73291696e99b3d805ee10"
+  },
+  "model_config_summary": {
+    "architectures": [
+      "Qwen2ForCausalLM"
+    ],
+    "hidden_size": 5120,
+    "max_position_embeddings": 32768,
+    "model_type": "qwen2",
+    "num_attention_heads": 40,
+    "num_hidden_layers": 48,
+    "num_key_value_heads": 8
+  },
+  "model_sandbox_isolation_probe": {
+    "inference_started": false,
+    "model_loaded": false,
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/model-sandbox-isolation-probe.json",
+    "sha256": "b057d56cdf6e70fe09e4c51be47d12a9d9cd5b3b2568dab2df0595f35fd8aab3",
+    "status": "PASSED"
+  },
+  "model_sandbox_profile": {
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/model-agent.sb",
+    "sha256": "35c69da25f8685d4d80afa59f95776f40db35157ee94186a34e62b405fc7397b"
+  },
+  "model_weights_loaded": false,
+  "offline": true,
+  "packages": {
+    "mlx": "0.32.4",
+    "mlx-lm": "0.32.2",
+    "pytest": null,
+    "tokenizers": "0.23.3",
+    "transformers": "5.22.1"
+  },
+  "python_executable": "/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python",
+  "python_version": "3.12.12",
+  "runtime_file_manifest": {
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json",
+    "sha256": "7e6b84ab45115bf2893a2dbe76e4e891a6ea1fc8dc594ced46822725d6b03ba4"
+  },
+  "runtime_path": "/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv",
+  "schema_version": 1
+}

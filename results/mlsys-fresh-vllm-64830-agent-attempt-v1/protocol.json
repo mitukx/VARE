@@ -1,0 +1,360 @@
+{
+  "agent_attempt": {
+    "agent_output_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/agent-attempt.json",
+    "backend": "mlx",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/run_bounded_local_agent_attempt.py",
+      "--wall-seconds",
+      "600",
+      "--max-process-tree-rss-bytes",
+      "12884901888",
+      "--log",
+      "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/agent-attempt.log",
+      "--record",
+      "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/bounded-attempt.json",
+      "--",
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/model-agent.sb",
+      "/usr/bin/env",
+      "HF_HUB_OFFLINE=1",
+      "TRANSFORMERS_OFFLINE=1",
+      "PYTHONNOUSERSITE=1",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONHASHSEED=0",
+      "HOME=/private/tmp/vare-vllm-64830-development-attempt-001/home",
+      "TMPDIR=/private/tmp/vare-vllm-64830-development-attempt-001/tmp",
+      "/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python",
+      "-B",
+      "scripts/run_local_agent.py",
+      "--workspace",
+      "/private/tmp/vare-vllm-64830-development-attempt-001/workspace",
+      "--model-path",
+      "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+      "--model-repository",
+      "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+      "--backend",
+      "mlx",
+      "--task-root",
+      "/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/task",
+      "--output",
+      "/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/agent-attempt.json",
+      "--instruction",
+      "Implement the requested code change in the one allowed production file.",
+      "--seed",
+      "64830",
+      "--max-turns",
+      "12",
+      "--max-no-tool-retries",
+      "1",
+      "--max-new-tokens-per-turn",
+      "512",
+      "--incomplete-tool-retry-tokens",
+      "1024",
+      "--max-total-new-tokens",
+      "2048",
+      "--max-context-tokens",
+      "4096",
+      "--wall-seconds",
+      "600",
+      "--temperature",
+      "0.0",
+      "--top-p",
+      "0.0",
+      "--top-k",
+      "0",
+      "--no-do-sample",
+      "--edit-format",
+      "unified_diff"
+    ],
+    "do_sample": false,
+    "edit_format": "unified_diff",
+    "incomplete_tool_retry_tokens": 1024,
+    "instruction": "Implement the requested code change in the one allowed production file.",
+    "max_context_tokens": 4096,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_total_new_tokens": 2048,
+    "max_turns": 12,
+    "outer_log_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/agent-attempt.log",
+    "outer_record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/bounded-attempt.json",
+    "public_test_tool": false,
+    "seed": 64830,
+    "wall_seconds": 600
+  },
+  "artifact_inventory_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol-artifact-inventory.json",
+  "assignment": {
+    "attempts_authorized": 1,
+    "baseline_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+    "family_level_independence": "NOT_ESTABLISHED; same-repository broad configuration adjacency is possible",
+    "model_exposure_before_attempt": false,
+    "model_public_pretraining_exposure": "UNKNOWN",
+    "prospective_assignment_record": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/exposure-assignment.json",
+      "sha256": "2216ed24547f1c58034c01fa30c3cd388f09654630c88c40a39ab3746c42cc46"
+    },
+    "source_test_researcher_exposure": true,
+    "split": "Development",
+    "workspace_path": "/private/tmp/vare-vllm-64830-development-attempt-001/workspace"
+  },
+  "created_at_utc": "2026-10-31T06:47:16.053342+00:00",
+  "frozen_inputs": {
+    "agent_runner": {
+      "path": "scripts/run_local_agent.py",
+      "sha256": "9ac2b9af00b1802663f88b600dc1293ccd892451e18bbea0cab77efc227ab19a"
+    },
+    "assignment": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/exposure-assignment.json",
+      "sha256": "2216ed24547f1c58034c01fa30c3cd388f09654630c88c40a39ab3746c42cc46"
+    },
+    "baseline_source": {
+      "path": "vllm/config/vllm.py",
+      "repository": "https://github.com/vllm-project/vllm.git",
+      "revision": "17550580e932f15e772185847382d3ae4211f5ec",
+      "sha256": "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738"
+    },
+    "bounded_attempt_runner": {
+      "path": "scripts/run_bounded_local_agent_attempt.py",
+      "sha256": "e2255e0aadc506f759e801cb4d3d4d3b19e547b68fce0620e92caf7471a28c42"
+    },
+    "candidate_method_worker": {
+      "path": "scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py",
+      "sha256": "bd3686219eab12f3599533b9dfc88a3f7eb4d2b843a6cfaabd70b3745689670a"
+    },
+    "edit_formatter": {
+      "path": "src/vare/agent_edit_format.py",
+      "sha256": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4"
+    },
+    "grader_calibration": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/grader-calibration.json",
+      "sha256": "8857e07256eae5721c08c6895602e1217882c90d95ca041a38d162cae2fa2d20"
+    },
+    "independent_grader": {
+      "path": "scripts/run_mlsys_vllm_64830_agent_grader_v1.py",
+      "sha256": "246f17b449e38682cd5e16e35de87538190bccec6c08895a11d6d6c1cc5aa0e3"
+    },
+    "local_harness_checks": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/local-harness-checks-001/checks.json",
+      "sha256": "a8d3674138790ab6ccc252b376d53dd0079c743b701cd6711e8fced95847f3a4"
+    },
+    "metal_sandbox_smoke": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/metal-sandbox-smoke.json",
+      "sha256": "695cdfc7f98b8555616702e98272361b4797292f013cb8d530dabaa30c8deccf"
+    },
+    "method_sandbox_profile": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/candidate-method-worker.sb",
+      "sha256": "9539fbec90497ad89b3fd3c0995f6d684a45766b7342d0d5ad7958492a710151"
+    },
+    "model_file_manifest": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/model-file-manifest.json",
+      "sha256": "7089cb874bf7a08c21b32322b9c6a6dd850b8be966268a35c08622112b4da23b"
+    },
+    "model_sandbox_isolation_probe": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/model-sandbox-isolation-probe.json",
+      "sha256": "b057d56cdf6e70fe09e4c51be47d12a9d9cd5b3b2568dab2df0595f35fd8aab3"
+    },
+    "model_sandbox_profile": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/model-agent.sb",
+      "sha256": "35c69da25f8685d4d80afa59f95776f40db35157ee94186a34e62b405fc7397b"
+    },
+    "overlap_review": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/overlap-review.json",
+      "sha256": "232a5aa79c2bef1d7fec638a44365d899ae6e59034535910146db67c3861a999"
+    },
+    "pinned_workspace_git": {
+      "path": "scripts/pinned_workspace_git.py",
+      "sha256": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b"
+    },
+    "pre_protocol_snapshot": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/pre-protocol-resource-snapshot.json",
+      "sha256": "644828a39d8492598c3099b9a24429e3b9309e25e349a581ffd1896c6b418f45"
+    },
+    "preflight_runner": {
+      "path": "scripts/preflight_local_model_attempt.py",
+      "sha256": "3262079d44ad8517b46337ed9f6a4af1792c1dc44f70d49b3bd3e3303fa1a5c3"
+    },
+    "pytest_configuration": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/pytest.ini",
+      "sha256": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4"
+    },
+    "runtime_file_manifest": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json",
+      "sha256": "7e6b84ab45115bf2893a2dbe76e4e891a6ea1fc8dc594ced46822725d6b03ba4"
+    },
+    "runtime_manifest": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-manifest.json",
+      "sha256": "cfe46f76baa1792671a631c1545616c9d9f238fcd6ea62736cd49e402579af4d"
+    },
+    "smoke_history": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/smoke-history.json",
+      "sha256": "641f7c9e2134e7c7cd9cece107514154bfd7572b89d73291696e99b3d805ee10"
+    },
+    "task": {
+      "task_json_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/task/task.json",
+      "task_json_sha256": "52ffcf7e7280320223a0329b1595bf11f63af302be5bd02f0fa80611575f7b62",
+      "task_prompt_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/task/TASK.md",
+      "task_prompt_sha256": "9c48dc637a854400f2afc1b209c81a93371f87ea01822b5749f7df6e2b02eb14"
+    },
+    "task_contract": {
+      "path": "src/vare/agent_task_contract.py",
+      "sha256": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd"
+    },
+    "test_overlay": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py",
+      "sha256": "c397c9407f3294460ce939fab3c43835da75844ec0e274e2b9dfc8f44832c28e"
+    }
+  },
+  "independent_grader": {
+    "command": [
+      "/usr/bin/env",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/run_mlsys_vllm_64830_agent_grader_v1.py",
+      "--workspace",
+      "/private/tmp/vare-vllm-64830-development-attempt-001/workspace",
+      "--baseline-revision",
+      "17550580e932f15e772185847382d3ae4211f5ec",
+      "--baseline-source-sha256",
+      "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738",
+      "--source-relative-path",
+      "vllm/config/vllm.py",
+      "--test-file",
+      "/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py",
+      "--test-file-sha256",
+      "c397c9407f3294460ce939fab3c43835da75844ec0e274e2b9dfc8f44832c28e",
+      "--pytest-config",
+      "/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/pytest.ini",
+      "--pytest-config-sha256",
+      "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+      "--method-worker",
+      "/private/tmp/vare-vllm-64830-development-attempt-001/method-worker.py",
+      "--method-worker-sha256",
+      "bd3686219eab12f3599533b9dfc88a3f7eb4d2b843a6cfaabd70b3745689670a",
+      "--method-profile",
+      "/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/candidate-method-worker.sb",
+      "--method-profile-sha256",
+      "9539fbec90497ad89b3fd3c0995f6d684a45766b7342d0d5ad7958492a710151",
+      "--python",
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "--output-dir",
+      "/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/independent-grade-v1",
+      "--timeout-seconds",
+      "120"
+    ],
+    "failure_rule": "all failed cases match the frozen HiSparse/watermarking target assertion diffs; worker/runtime errors are GRADER_ERROR",
+    "feedback_to_model": false,
+    "grade_only_after_attempt_record_committed_and_pushed": true,
+    "max_calls": 1,
+    "pass_rule": "exactly two passes with no failures/errors/skips and valid isolation/hash checks",
+    "pytest_config": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/pytest.ini",
+    "script": "scripts/run_mlsys_vllm_64830_agent_grader_v1.py",
+    "test_overlay": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py",
+    "timeout_seconds": 120,
+    "worker": "scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py",
+    "worker_profile": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/candidate-method-worker.sb"
+  },
+  "interpretation": {
+    "multi_family_independence": "not established",
+    "no_success": "does not prove all coding-agent capability absent; records a bounded no-go on this pairing",
+    "single_success": "one isolated Development repair feasibility signal only; no generalization, RL gain, or algorithmic novelty claim"
+  },
+  "model": {
+    "backend": "MLX 0.32.4 / mlx-lm 0.32.2 on Apple Silicon Metal",
+    "max_context_tokens": 4096,
+    "max_new_tokens_total": 2048,
+    "max_process_tree_rss_bytes": 12884901888,
+    "max_turns": 12,
+    "max_wall_seconds": 600,
+    "model_hidden_inputs": [
+      "candidate patch before generation",
+      "trusted test overlay",
+      "grader command/output",
+      "source qualification arm logs",
+      "exposure assignment metadata"
+    ],
+    "model_visible_inputs": [
+      "task/TASK.md",
+      "vllm/config/vllm.py",
+      "controller-generated tool schemas and allowed-path boundary"
+    ],
+    "network": "denied; Hugging Face and Transformers offline modes enabled",
+    "python": "3.12.12",
+    "quantization": "4-bit checkpoint as published by mlx-community",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "sampling": "greedy; do_sample=false; MLX sampler temperature=0, top_p=0, top_k=0",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "tokenizers": "0.23.3",
+    "transformers": "5.22.1"
+  },
+  "preflight_command": [
+    "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+    "scripts/preflight_local_model_attempt.py",
+    "--protocol",
+    "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json",
+    "--output",
+    "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/launch-preflight.json",
+    "--repo-root",
+    "."
+  ],
+  "prohibited": {
+    "additional_agent_attempts": true,
+    "grader_feedback_to_model": true,
+    "heldout_access": true,
+    "paid_compute_or_api": true,
+    "retry_after_generation_begins": true,
+    "training_or_policy_update": true
+  },
+  "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v1",
+  "research_parent_commit": "a1bc5dc255e38ad1741f58399504fdaf357eae1a",
+  "research_repository": "https://github.com/mitukx/VARE",
+  "resource_policy": {
+    "gates": {
+      "maximum_process_tree_rss_bytes": 12884901888,
+      "maximum_swap_used_bytes": 2684354560,
+      "minimum_available_memory_bytes": 12884901888,
+      "minimum_disk_free_bytes": 10737418240,
+      "minimum_memory_pressure_free_percent": 60,
+      "minimum_weight_kv_reserve_headroom_bytes": 1073741824
+    },
+    "on_failure": "Record NOT RUN/NO_GO, do not load weights and do not retry under this protocol.",
+    "pre_protocol_snapshot": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/pre-protocol-resource-snapshot.json",
+      "sha256": "644828a39d8492598c3099b9a24429e3b9309e25e349a581ffd1896c6b418f45"
+    },
+    "runtime_activation_reserve_bytes": 2684354560
+  },
+  "schema_version": 1,
+  "source_qualification": {
+    "git_revision": "a1bc5dc255e38ad1741f58399504fdaf357eae1a",
+    "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/qualification.json",
+    "public_pretraining_exposure": "UNKNOWN",
+    "qualification_scope": "source-level method checks only; whole upstream PR and custom-speculator behavior excluded",
+    "qualified_scope": [
+      "HiSparse",
+      "watermarking"
+    ],
+    "sha256": "62536b74d4982a073caaf9ed4a3d68f89c1f9b539bdb7669da912a15cbfc958f",
+    "source_exposure_record_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
+    "source_exposure_record_sha256": "e966664a97f80bc5e90c57f5d94140415fdcf17301f0e17c120ee7a49cab857f",
+    "task_family": "vllm_v1_model_runner_unsupported_feature_guards",
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+  },
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE; launch requires pushed commit and passing launch preflight",
+  "task": {
+    "agent_public_test_tool_enabled": false,
+    "allowed_source_paths": [
+      "vllm/config/vllm.py"
+    ],
+    "grade_after_attempt_record_is_durable": true,
+    "independent_grade_cases": [
+      "HiSparse",
+      "watermarking"
+    ],
+    "repository": "vllm-project/vllm",
+    "split": "Development",
+    "task_family": "vllm_v1_model_runner_unsupported_feature_guards",
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+  }
+}

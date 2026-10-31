@@ -1,32 +1,29 @@
 # VARE Flagship Mission Status
 
-## Current checkpoint
+## Current GitHub checkpoint
 
-- Last verified `origin/main`: `416f35c465712898e8e5764a8e43193ef86e7afb`; PR #159 is integrated.
-- PR #150 is confirmed merged with its exact-head CI, CPU-evidence, and E2E checks passing.
-- PR #160 is open at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`. Its Python 3.11/3.12/3.13 CI, lint, typecheck, seeded-summary, RVL inference, Math500 grader, and CPU-evidence checks pass. GitHub reports merge state BLOCKED; normal review and branch protection remain.
-- PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`, stacked on #160. Its exact-head CI and CPU evidence pass. No review is recorded.
-- Active branch: `codex/freshdev-qualification-vllm64830-oct31`; draft PR #162 is open at `8c29522fa4f48dbc0922256df75fba43adc6cef3`, based on draft PR #161. GitHub reported merge state CLEAN, with no reviews recorded.
-- Milestone: `p15-fresh-vllm-64830-source-qualification`.
+- Repository: `https://github.com/mitukx/VARE`.
+- Latest fetched `origin/main`: `416f35c465712898e8e5764a8e43193ef86e7afb`; PR #159 is integrated.
+- PR #160 is open at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`; its exact-head CI and CPU evidence pass, while GitHub reports merge state `BLOCKED` and no review is recorded.
+- PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`; its exact-head checks pass, and no review is recorded.
+- PR #162 is open and ready for review at `a1bc5dc255e38ad1741f58399504fdaf357eae1a`, based on `codex/freshdev-selection-v3-oct31`. All required exact-head checks pass: Python 3.11/3.12/3.13, lint, typecheck, blob budget, Math500 grader, seeded-summary CPU, RVL inference CPU, and calibrated CPU. No reviews are recorded.
+- Current local work branch: `codex/vllm64830-development-attempt-v1`, currently based on PR #162 head `a1bc5dc255e38ad1741f58399504fdaf357eae1a`. A separate child PR is being prepared so PR #162 remains unchanged.
 
 ## Completed in this checkpoint
 
-- Corrected `_check_artifact_hashes` so `frozen_inputs.task` is validated before generic artifact filtering. Missing task entries, paths, hashes, files, or content mismatches now fail closed.
-- Corrected bounded-attempt cleanup to send `SIGKILL` to surviving process-group members even if the group leader already exited.
-- Added regressions for changed/deleted task JSON and prompt files, malformed manifests, and a SIGTERM-ignoring child. Ruff and `py_compile` passed; the focused suite passed **19/19**. Result record: `results/pr160-review-fixes-v1/run-001.json`.
-- Verified the exact #64830 source identity and expected changed paths. Metadata-only review found no direct identity/family overlap at moderate confidence; public pretraining exposure remains unknown.
-- Preserved baseline attempt-001 as a setup failure before collection because Seatbelt denied pytest's `/dev/null` logging write. It is not counted as a behavioral result. Addendum 3 was superseded before invocation after its output roots failed to match its profiles.
-- Pushed Addendum 4 and three corrected profiles at `5d2064a7`. Each arm's sole write root matched its attempt-002 output; profiles retained default-deny/network-deny rules.
-- Completed the frozen three-arm comparison: baseline failed both intended post-override assertions; the wrong mutant was rejected by both; upstream-fixed passed both. All arms collected successfully, had zero skips/errors, no timeout or RSS breach, and matched frozen inputs/commands/profiles. Full receipts and bundle checksums are under `results/mlsys-fresh-vllm-64830-source-qualification-v1/`.
-- Appended source/test exposure to the research-agent ledger. There was no model exposure or inference, training, Held-Out access, paid compute, or API use.
-- The modified custom-speculator behavior remains excluded because its full registration and VllmConfig validation fixtures are outside the overlay.
-- Both duplicate exact-head CI runs on `8c29522fa4f48dbc0922256df75fba43adc6cef3` passed: Python 3.11/3.12/3.13, lint, typecheck, blob budget, Math500 grader, seeded-summary CPU, RVL inference CPU, and calibrated CPU tasks. This state-only checkpoint will advance the PR head and needs fresh exact-head CI before PR #162 is marked ready.
+- Implemented the vLLM #64830 Development agent grader and isolated method worker. The grader requires exact baseline/source/test/worker/profile hashes, enforces a one-file allowlist, and separates candidate execution from trusted pytest.
+- Calibrated the independent grader on the baseline (target failure), upstream fixed method (pass), and wrong mutant (target failure). Focused local checks pass **7/7**; Ruff and `py_compile` pass. A partial repair is classified as `TARGET_GATE_FAILED`, while worker/runtime errors remain grader errors.
+- Tightened the model Seatbelt profile to deny network access, prior qualification/calibration receipts, hidden tests, and user prompt attachments. The isolation probe confirms the task prompt, allowed source, and model tokenizer remain readable while denied inputs return `PermissionError`.
+- The MLX/Metal smoke passes with MLX 0.32.4 and mlx-lm 0.32.2. No model weights were loaded.
+- Froze one Development assignment protocol at SHA-256 `9d7a89f8491bdb3096f302ee1349bdcbd0eef6b68abe3967d637cdd76494ae49`. All 24 declared local frozen inputs pass static hash checks; the protocol records the exact preflight, attempt, and grader commands. Launch preflight has **not** run yet.
+- The vLLM candidate workspace remains clean at baseline `17550580e932f15e772185847382d3ae4211f5ec` with source SHA-256 `e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738`.
 
 ## Capability and research status
 
-- PR #64830 is **QUALIFIED_SOURCE_LEVEL** only for the HiSparse and watermarking method-level cases. It remains **UNASSIGNED**. This does not establish agent repair, Coding RL improvement, whole-PR qualification, or pretraining independence.
-- Coding capability and RL update remain **NO-GO**. No model inference, training, or Held-Out access occurred.
+- #64830 is source-qualified only for the two method-level cases, then prospectively assigned for **one** local Development attempt. Public pretraining exposure is **UNKNOWN**; same-repository broad configuration adjacency is possible; family-level independence is not established.
+- Model inference is **NOT RUN**. The model profile's Metal smoke did not load weights. No repair, grader result, training, policy update, Held-Out access, paid compute, or API use occurred.
+- Coding capability remains **NO-GO** until a real model-generated edit passes the independent grader. RL remains **NO-GO** until there is a verified positive outcome and a defensible training signal.
 
 ## Immediate next action
 
-Commit and push this durable CI checkpoint, verify the resulting exact-head CI, then mark PR #162 ready for review if it passes. Keep #64830 unassigned; any Development attempt needs a separate prospective protocol, overlap check, resource preflight, and exposure append before model inference.
+Create and push the focused child branch and draft PR against PR #162's head branch. Wait for exact-head CI. Then run the frozen launch preflight. If it fails, preserve a `NOT RUN` receipt and stop without loading weights. If it passes, append the prospective assignment event, push the receipt, and invoke the single frozen model attempt. Commit and push the attempt record and nonempty diff before the one independent grade.

@@ -1,0 +1,29 @@
+{
+  "approved_read_paths": [
+    "results/mlsys-fresh-vllm-64830-agent-attempt-v1/task/TASK.md",
+    "/private/tmp/vare-vllm-64830-development-attempt-001/workspace/vllm/config/vllm.py",
+    "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477/tokenizer.json"
+  ],
+  "denied_read_paths": [
+    "results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py",
+    "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/upstream-fixed/grade.json",
+    "/Users/user/.codex/attachments/7b43c6ec-09cb-4b51-8f59-40fc8f7be11d/Pasted text.txt"
+  ],
+  "inference_started": false,
+  "model_loaded": false,
+  "network_denied": true,
+  "probe_stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/sandbox-isolation-probe-001.stderr",
+  "probe_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "probe_stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/sandbox-isolation-probe-001.stdout",
+  "probe_stdout_sha256": "2bfa88e51609eea4573882978998b69a495e90c07f807ccfd5b41bee98d6f8d4",
+  "sandbox_profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/model-agent.sb",
+  "sandbox_profile_sha256": "35c69da25f8685d4d80afa59f95776f40db35157ee94186a34e62b405fc7397b",
+  "schema_version": 1,
+  "status": "PASSED",
+  "superseded_probe": {
+    "inference_started": false,
+    "model_loaded": false,
+    "observed_error": "FileNotFoundError for results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json; that path is tracked in Git but absent from this sparse checkout.",
+    "status": "INVALID_FIXTURE_PATH"
+  }
+}
