@@ -63,5 +63,24 @@
     "No task was reattempted or newly exposed.",
     "No independent repair, policy improvement, SFT, or RL result was produced."
   ],
-  "future_gate": "Any future use requires a separate frozen protocol on a distinct, prospectively authorized task; this record does not authorize inference."
+  "future_gate": "Any future use requires a separate frozen protocol on a distinct, prospectively authorized task; this record does not authorize inference.",
+  "remote_integration": {
+    "pull_request_url": "https://github.com/mitukx/VARE/pull/156",
+    "head_sha": "318f46ed1f68b16c0bff27b81527f6faf10f9f66",
+    "base_sha": "cf8bd808bbb1b03c996e8f2bb8f91779bec713db",
+    "merge_commit_sha": "358932bd66e4e78157e5a46307ac182bc68a5c5b",
+    "merged_at": "2026-10-31T02:55:27Z",
+    "required_checks": {
+      "blob-budget": "passed",
+      "lint": "passed",
+      "math500-grader": "passed",
+      "rvl-inference-cpu": "passed",
+      "seeded-summary-cpu": "passed",
+      "test (3.11)": "passed",
+      "test (3.12)": "passed",
+      "test (3.13)": "passed",
+      "typecheck": "passed"
+    },
+    "calibrated-cpu-tasks": "passed"
+  }
 }

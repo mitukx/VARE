@@ -213,22 +213,22 @@
   ],
   "git_refs": {
     "repository": "mitukx/VARE",
-    "last_verified_main_sha": "cf8bd808bbb1b03c996e8f2bb8f91779bec713db",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/155",
-    "last_integrated_pr_merge_sha": "cf8bd808bbb1b03c996e8f2bb8f91779bec713db",
-    "active_branch": "codex/bounded-incomplete-tool-retry-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "b6d0ea2274baf1cd9a753a35252b094ae172d69a",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/156",
-    "active_pr_state": "open"
+    "last_verified_main_sha": "358932bd66e4e78157e5a46307ac182bc68a5c5b",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/156",
+    "last_integrated_pr_merge_sha": "358932bd66e4e78157e5a46307ac182bc68a5c5b",
+    "active_branch": "codex/record-retry-budget-integration",
+    "verified_pr_head_sha_before_checkpoint_changes": null,
+    "active_pr_url": null,
+    "active_pr_state": "none"
   },
   "go_no_go": {
-    "integration": "GO_PENDING_REMOTE_CI",
+    "integration": "GO",
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Verify every exact-head required check for PR #156, inspect failures and review threads, and integrate under normal branch protection when safe. Preserve coding-capability, SFT/RL, and Held-Out NO-GO decisions. Do not retry Transformers #49458 or run inference without a separate authorized task and frozen protocol.",
-  "last_completed_step": "Merged PR #155 at cf8bd808 after every required exact-head check passed; implemented and locally validated the opt-in incomplete-tool retry budget, protocol forwarding, and fail-closed evidence binding. The focused suite passed 77 tests. Pushed b6d0ea2274baf1cd9a753a35252b094ae172d69a and opened PR #156; no model inference or grader call occurred.",
-  "milestone_id": "p11-incomplete-tool-retry-budget-controller-change",
+  "highest_priority_next_task": "Verify current main and re-read AGENTS.md. Inspect the latest frozen base-gate evidence and task inventory. Prefer a technically independent reproduction or a concrete source-level RL trainer defect with a reproducer; do not repeat base-only model screens without a materially distinct feasibility basis. Keep inference, SFT/RL, and Held-Out gated on a distinct authorized task and frozen protocol.",
+  "last_completed_step": "PR #156 was merged at 358932bd66e4e78157e5a46307ac182bc68a5c5b after all nine required checks and calibrated-cpu-tasks passed on head 318f46ed1f68b16c0bff27b81527f6faf10f9f66. The retry-cap controller remains untested on a model; no inference or grader call occurred.",
+  "milestone_id": "p11-incomplete-tool-retry-budget-controller-change-integrated",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -1041,18 +1041,23 @@
       "status": "exact-head Python 3.13 CI wording failure and targeted local correction record"
     },
     {
+      "path": "research/flagship/DECISIONS.md",
+      "sha256": "1ce94ea80f020144bea92e3a22462546e99580867b568df42b1ca569e1f038a3",
+      "status": "append-only controller budget decision"
+    },
+    {
       "path": "results/agent-incomplete-tool-retry-budget-v1/controller-change.json",
-      "sha256": "0790b48c1051c759696293fe742f06e8078a7af827360641f8fbd9feac980df6",
-      "status": "hash-bound controller change record; no inference authorized"
+      "sha256": "d0b03cdfed1c9eaf9123b060b4ce8bf131480fa27ae15dbebb41adeddbefc0e1",
+      "status": "controller change and exact-head CI record; no inference authorized"
     },
     {
       "path": "results/agent-incomplete-tool-retry-budget-v1/report.md",
-      "sha256": "ddaf3d228e33d7599f9896261300d0ae92b23e79e32744ec3ea1f03cb7e5ff1b",
-      "status": "failure-driven controller change report; 77 focused tests and lint passed; no model inference"
+      "sha256": "cdf61ff709957206aad6ea58fbd8df4b9919eae93639dfaa7a11deec59f9f341",
+      "status": "failure-driven controller report with local and remote CI outcomes; no model inference"
     },
     {
       "path": "results/agent-incomplete-tool-retry-budget-v1/SHA256SUMS",
-      "sha256": "2d298d40b988d0745cfb343b2d09d6bceb00352a9aad8b82948514f2dc9dc357",
+      "sha256": "e994109d567d96a560dce4f1a135875e419b136a73e84a01575c01f7d7e18e6a",
       "status": "integrity index for controller change record and report"
     },
     {
@@ -1082,18 +1087,13 @@
     },
     {
       "path": "research/flagship/STATUS.md",
-      "sha256": "460f989b3f43741155dbc6acaf44c7e7542fa7db95db698aeda16ca6bd344beb",
-      "status": "checkpoint updated through merged PR #155 and current local controller work"
-    },
-    {
-      "path": "research/flagship/DECISIONS.md",
-      "sha256": "1ce94ea80f020144bea92e3a22462546e99580867b568df42b1ca569e1f038a3",
-      "status": "append-only controller budget decision"
+      "sha256": "21196278e269c612b4f582be0b94c008ba36662bebd7478269f1a66b7c339182",
+      "status": "current checkpoint after PR #156 merge"
     },
     {
       "path": "research/flagship/REPRODUCE.md",
-      "sha256": "092ef58f141d7c1d69dcef792d00cac4ae3a052aff8d19e138aab59f5802eff7",
-      "status": "reproduction instructions for retry budget checks"
+      "sha256": "eebe80b8dd378d6b3471b7c31ed508b339b9ed31adb476c746dbc4fceedfd1a5",
+      "status": "reproduction and remote integration instructions for the retry-budget change"
     }
   ],
   "run_ids": [
@@ -1147,5 +1147,5 @@
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown."
   ],
-  "updated_at": "2026-10-31T02:47:05Z"
+  "updated_at": "2026-10-31T02:56:39Z"
 }
