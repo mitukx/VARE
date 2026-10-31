@@ -6,7 +6,8 @@
 - Last verified `origin/main`: `719fbe368816d81addb29a1ba2c451fa7f1bf631` (2026-10-31), integrating PR #154.
 - Last integrated PR: [#154 — Compact stale tool history before context exhaustion](https://github.com/mitukx/VARE/pull/154), merge commit `719fbe368816d81addb29a1ba2c451fa7f1bf631`.
 - PR #154 exact-head CI and CPU evidence passed; the sole review thread was resolved before merge.
-- Work branch: `codex/fresh-development-family-overlap-v1`; the metadata review PR has not yet been opened.
+- Work branch: `codex/fresh-development-family-overlap-v1`.
+- Active PR: [#155 — Review overlap for a fresh Development candidate](https://github.com/mitukx/VARE/pull/155), open against main; exact-head CI is being checked.
 
 ## Prior capability evidence
 

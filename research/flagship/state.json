@@ -194,16 +194,16 @@
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
     "verified_pr_head_sha_before_checkpoint_changes": "2956dd18e711324bb3b7dc6a2d275013c8c2baf3",
-    "active_pr_url": null,
-    "active_pr_state": "none"
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
+    "active_pr_state": "open"
   },
   "go_no_go": {
     "integration": "GO_PENDING_REMOTE_CI",
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Freeze a source-qualification protocol for Transformers #49458, then inspect its pinned issue/source/test inputs and establish baseline failure, known-fix success, wrong-mutant rejection, isolation, and valid grader receipts. Keep it unassigned and do not run model inference until qualification passes and a separate one-attempt protocol is frozen.",
-  "last_completed_step": "Merged PR #154 at 719fbe368816d81addb29a1ba2c451fa7f1bf631 after exact-head required CI, CPU evidence, and resolved review. Froze and executed metadata-only overlap review for Transformers #49458 against eight Development/Train rows; no source/test, split assignment, or inference. Proceed to source qualification only.",
+  "highest_priority_next_task": "Resolve exact-head required CI and review on PR #155, merge when branch protection permits, then freeze a source-qualification protocol and qualify Transformers #49458. Keep the candidate unassigned and do not run inference until qualification passes and a separate one-attempt protocol is frozen.",
+  "last_completed_step": "Merged PR #154 at 719fbe368816d81addb29a1ba2c451fa7f1bf631 after exact-head required CI, CPU evidence, and resolved review. Froze and executed metadata-only overlap review for Transformers #49458 against eight Development/Train rows; no source/test, split assignment, or inference. Proceed to source qualification only. Opened PR #155 for the frozen metadata-only review and its state/reproduction records.",
   "milestone_id": "p7-fresh-development-family-overlap-v2-review-complete",
   "result_hash_references": [
     {
@@ -713,8 +713,8 @@
     },
     {
       "path": "research/flagship/STATUS.md",
-      "sha256": "29c9b1b96f874c1f3747d3bba841ab03a1b1fa9af127ef66d6bce6430c4ee489",
-      "status": "authoritative checkpoint after PR #154 integration and metadata overlap review"
+      "sha256": "d142131223f0cfd7b2f2fb492c862882af053774085647d1fdb50dfa130974f9",
+      "status": "authoritative checkpoint after PR #154 integration and PR #155 opening"
     },
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/SHA256SUMS",
@@ -871,5 +871,5 @@
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "Transformers #49458 has no prior Development/Train family overlap found, but remains unqualified and unassigned pending source qualification."
   ],
-  "updated_at": "2026-10-31T01:33:44Z"
+  "updated_at": "2026-10-31T01:34:12Z"
 }
