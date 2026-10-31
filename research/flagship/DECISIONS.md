@@ -684,3 +684,48 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Record `sampled_process_tree_rss_max_bytes` and `os_wait4_child_max_rss_bytes` separately, enforce the configured threshold against either signal, and label the aggregate descendant-peak limitation. Keep process-group cleanup after normal leader exit. Do not claim a complete concurrent aggregate high-water mark or retrofit a past model result that never ran.
 - **Falsification criteria:** The regression misses the short-lived child's `wait4` high-water; an over-limit direct-child high-water is recorded as within-limit; or surviving descendants remain after process-group cleanup.
 - **Follow-up:** Push the shared-runner correction and tests with PR #160, verify the full focused suites and exact-head CI. Any future bounded attempt must use the new output fields and retain its runner hash in the frozen protocol.
+
+## 2026-10-31 — Integrate the PR #160–#163 stack
+
+- **Evidence:** PRs #160, #161, #162, and #163 are merged. `main` is `da15797ca6345f73eba8249c9059db3b1a9de41e`, the merge of #163, and all 9 required contexts passed before each merge. PRs #140, #144, #145, #150, and #159 were already merged.
+- **Decision:** Set `go_no_go.integration` to `GO`. Drop the blockers that described the stack as in progress. PR #164 (`codex/qwen3-vllm64830-dev-v2`) is the active draft.
+
+## 2026-10-31 — vLLM #64830 14B V3 NO_GO and 4B route selection
+
+- **Evidence:** The V3 Qwen2.5-Coder-14B launch preflight (`results/mlsys-fresh-vllm-64830-agent-attempt-v3/attempt-001/launch-preflight-after-cleanup-001.json`) returned **NO_GO**. The frozen bounded-runner and preflight-runner hashes were stale. 12.28 GiB was available against an estimate plus explicit headroom of about 11.99 GiB. The model was not loaded and the prompt was not delivered.
+- **Decision:** Close V3 without retry. Use the frozen Qwen3-4B V2 route (`route-selection-after-memory-recovery-001.json`), which passed its no-load launch preflights.
+
+## 2026-10-31 — Qwen3-4B diagnostic-001 failed before first generation
+
+- **Evidence:** The single Train #1904 controller diagnostic loaded the weights. Its sandbox then denied `/dev/null` to the pinned `git -c core.attributesFile=/dev/null` revision check, and the run exited after 3.149 s with `FAILED_BEFORE_FIRST_GENERATION`. It produced 0 tokens, 0 tool calls, 0 edits, and 0 grades.
+- **Decision:** This is a controller/sandbox integration failure, not a capability result. Diagnostic-001 and V2 are closed; do not retry diagnostic-001. Diagnostic-002 (14B) was never run.
+
+## 2026-10-31 — 14B V4 NO_GO on the additional margin gate
+
+- **Evidence:** The V4 no-load preflight after exact-head CI on `053b25fe` passed the hash checks and base gates. The overall route is **NO_GO**: after the estimate and explicit headroom, 785,428,007 bytes remained, which is 1,362,055,641 bytes short of the extra 2 GiB margin.
+- **Decision:** Do not load the 14B model. Diagnostic-003 is superseded and was never run. Select the Qwen3-4B V5 fallback under a new protocol.
+
+## 2026-10-31 — Qwen3-4B diagnostic-004 and diagnostic-005 failed before model load
+
+- **Evidence:** The V5 preflight passed at 13.56 GiB. Diagnostic-004 failed with `ImportError: cannot import name load from mlx_lm` inside the sandbox after 0.539 s (`SANDBOX_RUNTIME_IMPORT_FAILURE`). V6 used a dereferenced runtime copy, and its preflight passed at 15,852,896,256 bytes. Diagnostic-005 then failed with `FAILED_BEFORE_MODEL_LOAD` after 1.565 s, because the snapshot weight file resolves through symlinks to a shared Hugging Face blob outside the allowlist. Neither run loaded weights or produced tokens, tool calls, edits, or grades.
+- **Decision:** Close diagnostic-004, V5, and diagnostic-005 without retry. Keep V6, whose one Development attempt is still unused.
+
+## 2026-10-31 — Retry route: diagnostic-006 (frozen, not run)
+
+- **Evidence:** Diagnostic-006 allows read access only to the exact canonical weight and tokenizer blobs. Its no-model probe read one byte from each and confirmed the hidden grader directory is denied. Exact-head CI on PR #164 head `77b8a9b7` passed 19/19.
+- **Decision (plan, not yet executed):** Run diagnostic-006 once, and only after a fresh V6 preflight passes. Continue to the single Development attempt only if diagnostic-006 loads the model, parses a native tool call, and applies a nonempty permitted Train edit, and a further fresh V6 preflight also passes. Stop on failure.
+
+## 2026-10-31 — Reconcile flagship state files
+
+- **Finding:** `STATUS.md` held several concatenated, contradictory status blocks. `state.json` had these gaps:
+  - It did not index the v2/v3/v5/v6 protocols, diagnostics 001/002/004/005/006, or their receipts.
+  - It had dropped the v1 NO_GO blocker.
+  - It used `active_pr_state: "open_draft"`, which the schema does not allow.
+  - It had eight result hash references that do not verify against the current tree.
+  - The exposure ledger had no events for the v2–v6 assignments.
+- **Decision:** Collapse `STATUS.md` into one block, and make the following changes:
+  - Index every protocol and receipt with a status, and restore the v1 NO_GO as a historical blocker.
+  - Label the six mutable-file hashes as historical snapshots, each with the commit where it verifies (DECISIONS/REPRODUCE @ `8db1aa78`, STATUS @ `416f35c4`, preflight script and test @ `a7a2509c`, qualification arm runner @ `ba25adfe`). Label the two `../../outputs/` references as external to the repository. No hash is rewritten.
+  - Document that `development_repository_repair_campaign_v1.json` is hashed as canonical JSON (`sort_keys=True`, `separators=(",", ":")`). The file itself is unchanged.
+  - Append five ledger events, each backed by a committed `exposure-assignment.json`, and bind the new ledger hash with errata supplement 002. Prior events are unchanged.
+- **Limit:** The ledger events were recorded retrospectively from committed files. They add no new execution evidence. The v5 assignment file's mismatched `event_id` and model repository are recorded but not edited.

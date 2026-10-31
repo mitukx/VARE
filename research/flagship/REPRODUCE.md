@@ -740,3 +740,58 @@ The five old arms all completed in about 0.53 seconds, while the runner sampled 
 The corrected runner now records `sampled_process_tree_rss_max_bytes` and `os_wait4_child_max_rss_bytes` separately, reaps the direct child with `wait4`, and cleans up descendants after the leader exits. `wait4` covers the direct waited child; the runner still does not claim a complete concurrent aggregate high-water mark for all descendants. The regression test is `tests/test_mlsys_vllm_64575_qualification_tools.py::test_wait4_records_short_lived_child_rss_high_water`.
 
 The shared one-shot attempt wrapper, `scripts/run_bounded_local_agent_attempt.py`, now records the same two RSS signals and applies the memory threshold to both. Its regression is `tests/test_run_bounded_local_agent_attempt.py::test_run_limited_catches_short_lived_child_rss_high_water`. No completed model attempt used this wrapper in the current branch; this forward-looking correction does not change the #64575 or #64830 source-arm errata.
+
+## vLLM #64830 — v2–v6 routes and controller diagnostics (verification only)
+
+Run these commands from the repository root. They verify committed bytes only. They do not load a model, run a preflight, or grade anything.
+
+```bash
+# Per-directory manifests (relative paths)
+for d in results/mlsys-fresh-vllm-64830-agent-attempt-v2 \
+         results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-00{1,2,3,4} \
+         results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/attempt-001 \
+         results/mlsys-fresh-vllm-64830-agent-attempt-v{3,4,5} \
+         results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001 \
+         results/mlsys-fresh-vllm-64830-agent-attempt-v5/attempt-001; do
+  (cd "$d" && shasum -a 256 -c SHA256SUMS) || echo "FAILED: $d"
+done
+# Manifests that use repository-root paths
+for m in results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/SHA256SUMS \
+         results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/attempt-001/SHA256SUMS \
+         results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/SHA256SUMS \
+         results/mlsys-fresh-vllm-64830-agent-attempt-v6/SHA256SUMS; do
+  shasum -a 256 -c "$m"
+done
+# Protocol sidecars
+for s in results/mlsys-fresh-vllm-64830-agent-attempt-v{2,3,4,5,6}/protocol.sha256 \
+         results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-00{1,2,3,4,5,6}/protocol.sha256; do
+  (cd "$(dirname "$s")" && shasum -a 256 -c protocol.sha256)
+done
+# Current exposure ledger (v1 + v2–v6 append) and its errata manifest
+(cd results/mlsys-fresh-vllm-64830-source-qualification-v1 && shasum -a 256 -c exposure-record.json.sha256)
+(cd results/mlsys-fresh-vllm-64830-source-qualification-v1/errata && shasum -a 256 -c SHA256SUMS)
+```
+
+Recorded outcomes:
+
+| Route | Outcome | Receipt |
+|---|---|---|
+| V3 14B | NO_GO | `attempt-v3/attempt-001/launch-preflight-after-cleanup-001.json` |
+| V4 14B | NO_GO (additional-margin gate) | `attempt-v4/attempt-001/operator-route-decision-after-preflight-001.json` |
+| Diagnostic-001 | `FAILED_BEFORE_FIRST_GENERATION` | `attempt-v2/engineering-diagnostic-001/attempt-001/diagnostic-result.json` |
+| Diagnostic-004 | `SANDBOX_RUNTIME_IMPORT_FAILURE` | `attempt-v2/engineering-diagnostic-004/attempt-001/diagnostic-result.json` |
+| Diagnostic-005 | `FAILED_BEFORE_MODEL_LOAD` | `attempt-v2/engineering-diagnostic-005/attempt-001/diagnostic-result.json` |
+
+Diagnostics 002, 003, and 006 have not been run. Do not rerun any consumed protocol.
+
+### Hash conventions in `research/flagship/state.json`
+
+- Most entries hash the raw file bytes (`shasum -a 256 <path>`).
+- `protocols/development_repository_repair_campaign_v1.json` is hashed as canonical JSON:
+
+  ```bash
+  python -c "import hashlib,json;print(hashlib.sha256(json.dumps(json.load(open('protocols/development_repository_repair_campaign_v1.json')),sort_keys=True,separators=(',',':')).encode()).hexdigest())"
+  ```
+
+- Entries labelled `HISTORICAL SNAPSHOT @ <commit>` refer to mutable files. Verify them with `git show <commit>:<path> | shasum -a 256`.
+- Entries labelled `EXTERNAL` point outside the repository and cannot be checked from a clone.

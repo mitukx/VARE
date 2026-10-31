@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "supplement_id": "vllm-64830-current-exposure-ledger-supplement-002",
+  "recorded_at_utc": "2026-10-31T12:10:00Z",
+  "previous_snapshot": {
+    "commit": "77b8a9b717c1a2f607d65f61babe8d40090d9b6a",
+    "exposure_record_sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed",
+    "exposure_sidecar_sha256": "9d3b472aa441f7f248462b3a50961ac6e60b51668eea3f10dc2272e5c97d8fa0",
+    "errata_manifest_sha256": "69046e5fdadd71a2ac7f6bc0516af44673477c596dc3aae077f6187c7337fb2f",
+    "event_count": 4
+  },
+  "current_exposure_ledger": {
+    "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
+    "sha256": "6dbf295ff60e42e2f9d162be2546f195841856db63f55493ce47c52ddf736309",
+    "sidecar_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json.sha256",
+    "sidecar_sha256": "0aac16053a7a792e6221cc49fe2d052536cd6d843677b232941256b06cc391c3",
+    "event_count": 9,
+    "appended_event_ids": [
+      "vllm-64830-qwen3-4b-assignment-v2-ledger-append-001",
+      "vllm-64830-14b-assignment-v3-ledger-append-001",
+      "vllm-64830-14b-assignment-v4-ledger-append-001",
+      "vllm-64830-qwen3-4b-assignment-v5-ledger-append-001",
+      "vllm-64830-qwen3-4b-assignment-v6-ledger-append-001"
+    ]
+  },
+  "manifest_interpretation": "The root SHA256SUMS still authenticates the pre-append snapshot at 18f829b4 (supplement-001). The errata SHA256SUMS now verifies the current ledger, its sidecar, and supplements 001 and 002; its previous bytes remain in Git at the previous_snapshot commit.",
+  "preservation": "All prior events are byte-identical in content and order; only events were appended and the latest-event pointer fields (event_id, recorded_at_utc, next_event) were advanced, as in the PR #163 append."
+}

@@ -1,73 +1,50 @@
-Updated 2026-10-31 11:49 UTC. PR #164 head 45df90fc4e002fc076a820d9cf65fc23fb7a5f23 passed all 19 reported exact-head checks. Diagnostic-005 has now been run once and failed while opening the model weight file before model load, generation, tool calls, edits, or grading. Its immutable receipt and raw evidence are recorded. A separate diagnostic-006 protocol is frozen locally with a narrow allowlist for the exact canonical weight and tokenizer blob targets; it needs a new exact-head CI run and fresh resource preflight before its one authorized attempt.
+# VARE Flagship Mission Status
 
-## Current memory and execution checkpoint
+Updated 2026-10-31 12:10 UTC. This is a state-only reconciliation of the files in `research/flagship/` against GitHub and the committed receipts. No experiment, model load, preflight, or grade was run for this update. Earlier status blocks are preserved in Git history; the dated decisions are in `DECISIONS.md`.
 
-| Snapshot | Available | Pressure free | Swap used / free |
-|---|---:|---:|---:|
-| V5 pre-diagnostic preflight, 11:20 UTC | 13.56 GiB | 82% | 1.57 / 1.42 GiB |
-| V6 preflight before D5, 11:43 UTC | 14.77 GiB | 81% | 1.57 / 1.43 GiB |
-| D5 launch, 11:45 UTC | 13.93 GiB | 83% | 1.57 / 1.43 GiB |
-| D5 after exit, 11:45 UTC | 13.91 GiB | 83% | 1.57 / 1.43 GiB |
-
-Chrome and Codex renderer processes remain the largest user-owned RSS consumers (about 3.1 GiB and 1.1 GiB at the latest process audit). RSS includes shared pages and is not a reclaim estimate. No VARE/MLX inference process or redundant mission-owned worker was found. Colima had already been gracefully stopped with its container and persistent volume preserved; Docker is unavailable and not required for the local method-worker grader. No process was stopped in this turn; current-turn reclaim is zero. Chrome, Codex, Grok, and system processes remain running.
-
-- Qwen2.5-Coder-14B V4 remains NO_GO: its extra 2 GiB operator margin failed by 1,362,055,641 bytes. No weights or prompt were delivered.
-- Qwen3-4B V6 fresh preflight passed: available 15,852,896,256 bytes, pressure free 81%, swap used 1,689,193,021 bytes, disk free 21,456,027,648 bytes; all frozen hashes and base gates passed. At D5 dispatch, the additional 2 GiB operator-margin gate also passed.
-- Diagnostic-005 obeyed its one-attempt protocol but could not load model weights. mlx.core.load failed opening model.safetensors; the snapshot and model-specific blob entries are symlinks to a canonical shared hub/blobs path outside D5's sandbox allowlist. The host-side model hash was valid. This is a sandbox path-resolution failure, not a model capability result. The model was not loaded, the task prompt was not delivered to it, and there were zero generations, native tool calls, edits, or grades. D5 is closed; do not retry it.
-- Diagnostic-006 is a new, separately frozen one-attempt protocol. Its pre-registration sandbox probe read one byte from each of the exact canonical model and tokenizer blobs and confirmed the hidden grader directory remains denied. D6 is not authorized to run until its exact-head CI and a fresh V6 preflight pass. If D6 succeeds with a native tool call and nonempty permitted Train edit, run a fresh immediate V6 Development preflight before delivering the single prospective Development task.
-- Across this turn: model-generated coding attempts 0, candidate edits 0, independent grader successes 0. D5 was one controller/model-load invocation, but generated no tokens. No coding-RL training or policy update occurred. The earlier Qwen3 Train #1904 2/2 grade remains an exposed Train result, not Development generalization.
-
-Next: commit the D5 failure receipt and D6 frozen protocol/sandbox probe on PR #164; wait for all exact-head CI checks; run a fresh V6 preflight; then run D6 once only if its frozen gates pass.
-
-Updated 2026-10-31 11:05 UTC. PR #164 commit `053b25fef91cdc0a47a56233fec193531c5811aa` passed all exact-head checks. The 14B V4 no-load preflight failed its additional 2 GiB margin; no model weights or task prompt were loaded. A new Qwen3-4B fallback protocol and corrected Train diagnostic are frozen locally and need a new exact-head CI run before their preflight.
-
-## Current execution checkpoint
-
-- PR #150 and PRs #160–#163 are merged. PR #164 remains a draft. The checked head `053b25fe` passed all 19 reported checks, including calibrated CPU evidence; the next commit needs fresh exact-head CI.
-- V4 no-load preflight at 2026-10-31 11:02:44 UTC verified all frozen inputs and all five base gates. Available memory was 13,658,324,992 bytes (12.72 GiB), pressure free 81%, swap 1,697,581,629 bytes used / 1,523,643,842 bytes free, disk 21,370,015,744 bytes. The 14B estimate plus explicit headroom left 785,428,007 bytes (0.73 GiB), 1,362,055,641 bytes short of its additional 2 GiB gate. Overall route: **NO_GO**; weights loaded 0, prompt delivered 0, candidate edits 0, grades 0.
-- Selected fallback: Qwen3-4B-Instruct-2507-4bit under new V5 protocol and Train diagnostic-004. Its frozen model snapshot is the prior cached 4B model; estimated weights + 4,096-token KV + 3 GiB runtime reserve + 1 GiB explicit headroom total 7,161,969,489 bytes. At the V4 preflight snapshot, the estimate leaves 6,496,355,503 bytes (6.05 GiB) beyond that combined requirement, but the V5 fresh preflight has not run.
-- V5/diagnostic-004 no-model isolation probes pass after a parent-directory traversal correction. The initial failures are preserved as setup evidence; the final profiles permit the exact pinned Git call and narrow source edit while denying hidden tests, Codex-private data, grader scratch/scripts, and network. Train source write probe preserved the original hash.
-- The exposed Train #1904 fixture is only a one-shot controller diagnostic; it will not be graded or treated as Development generalization. The V5 Development prompt remains undelivered. No coding-RL training, policy update, or Held-Out access occurred.
-- Next: commit/push V4 NO_GO receipt, V5, and diagnostic-004; wait for exact-head CI; run the fresh V5 no-load preflight with the additional 2 GiB margin. Only if it passes, run the one Train diagnostic; after valid native tool/edit success and another passing preflight, run one Development attempt and grade its committed candidate once.
-
-## Memory recovery checkpoint
-
-| Snapshot | Available | Pressure free | Swap | Action |
-|---|---:|---:|---:|---|
-| Before prior Colima shutdown (09:22 UTC) | ~12.30 GiB | 74% | ~1.75 GiB used | Idle Colima was gracefully stopped in an earlier turn; container and volume preserved. |
-| Host audit (10:53 UTC) | 14.07 GiB | 82% | 1.58 GiB used / 1.42 GiB free | Colima already down; no VARE worker; no process stopped in this audit. |
-| V4 preflight (11:02 UTC) | 12.72 GiB | 81% | 1.58 GiB used / 1.42 GiB free | No weights loaded; the 14B extra-margin gate failed. |
-
-The observed change from the pre-Colima baseline is not fully attributable to Colima. Chrome and Codex had the largest user-owned RSS entries at 10:53 (about 3.21 GiB and 1.21 GiB); shared RSS is not an additive reclaim estimate, so neither app was stopped. No idle VARE model worker was found. Docker/Colima is unnecessary for the local method-worker grader, which runs after model shutdown.
-
-Updated 2026-10-31 10:20 UTC. The long-run research mission remains active; the current Qwen3-4B diagnostic sequence is closed after one pre-generation controller failure.
-
-## GitHub checkpoint
+## GitHub checkpoint (verified 2026-10-31 12:00 UTC)
 
 - Repository: `https://github.com/mitukx/VARE`.
-- `main` is `da15797ca6345f73eba8249c9059db3b1a9de41e`.
-- PRs #160, #161, #162, and #163 are merged.
-- PR #164 is a draft against `main`. Its pre-receipt head `0e2317f4ff63bc6813951d6c7641b643c3ded2dc` passed all 19 exact-head checks. The diagnostic outcome and raw evidence are now appended in this PR; the new commit requires fresh exact-head CI before the PR is reviewable.
+- `main` is `da15797ca6345f73eba8249c9059db3b1a9de41e`, the merge of PR #163.
+- PRs #140, #144, #145, #150, #159, #160, #161, #162, and #163 are merged.
+- PR #164 (`codex/qwen3-vllm64830-dev-v2` → `main`) is the active **draft**. At this checkpoint its head is `77b8a9b717c1a2f607d65f61babe8d40090d9b6a`.
+- Exact-head CI on `77b8a9b7`: 19/19 check runs succeeded. These are the 9 required contexts (blob-budget, lint, math500-grader, rvl-inference-cpu, seeded-summary-cpu, test 3.11/3.12/3.13, typecheck), each run on both push and pull_request, plus calibrated-cpu-tasks. The last run finished at 11:58:27 UTC. The earlier heads `053b25fe` and `45df90fc` also passed 19/19.
+- This reconciliation is stacked on PR #164 and changes only state files plus an append to the exposure ledger.
 
-## Memory recovery and experiment route
+## vLLM #64830 outcomes (one Development task; verified from committed receipts)
 
-- Before cleanup (2026-10-31 09:22 UTC), the host snapshot showed about 12.30 GiB available, 74% memory-pressure free, and 1.75 GiB swap in use. The process list was led by Chrome and Codex; these user applications were left running.
-- Gracefully stopped idle Colima. Its only container, `vare-goal1-registry`, was idle (0% CPU, about 9.5 MiB container RSS, no active client connections, last reads about 17 hours earlier). The container and persistent volume were preserved. No other user or system process was terminated. The observed post-stop available-memory estimate rose to about 13.80 GiB, but that change cannot be attributed entirely to Colima.
-- The frozen 14B route is **NO_GO**. The model snapshot and individual resource checks passed, but the complete preflight rejected stale frozen hashes for the bounded runner and preflight runner. At the measured 12.28 GiB available, its 11.99 GiB estimate left only 0.29 GiB margin. It was not loaded and its Development prompt was not delivered. Do not retry that protocol.
-- The frozen Qwen3-4B protocol preflight passed with all five resource gates and all frozen input/model hashes verified. The diagnostic-specific preflight had 14,414,675,968 bytes (13.43 GiB) available, 80% memory-pressure free, and 1,697,581,629 bytes (1.58 GiB) swap in use. Its 6.67 GiB estimated working set and headroom left 6.75 GiB measured margin.
-- After the one diagnostic process exited, the host snapshot showed 15,091,695,616 bytes (14.05 GiB) available, 81% memory-pressure free, and the same 1,697,581,629 bytes (1.58 GiB) swap. No experiment process remained.
+| Protocol / diagnostic | Model | Outcome | Weights loaded | Development prompt | Retry |
+|---|---|---|---|---|---|
+| v1 | Qwen2.5-Coder-14B | Launch preflight **NO_GO** at 07:05 UTC (11,035,787,264 bytes available, below 12 GiB) | no | no | closed |
+| v2 | Qwen3-4B | Launch preflights PASSED (14.34 GiB at 09:48 UTC, 13.00 GiB at 10:08 UTC); diagnostic-001 preflight PASSED (13.43 GiB); consumed by diagnostic-001; Development attempt NOT RUN | — | no | closed |
+| diagnostic-001 (Train #1904) | Qwen3-4B | **FAILED_BEFORE_FIRST_GENERATION**: the sandbox denied `/dev/null` for the pinned Git revision check; exited after 3.149 s | yes | no | **must not be retried** |
+| diagnostic-002 | 14B | Frozen, never run | no | no | superseded |
+| v3 | Qwen2.5-Coder-14B | Preflight **NO_GO**: stale frozen bounded-runner and preflight-runner hashes (12.28 GiB available, about 0.29 GiB margin) | no | no | closed |
+| diagnostic-003 | 14B | Frozen, never run | no | no | superseded by the V4 NO_GO |
+| v4 | Qwen2.5-Coder-14B | Preflight script PASSED, but the overall route is **NO_GO**: the extra 2 GiB margin fell short by 1,362,055,641 bytes | no | no | closed |
+| v5 | Qwen3-4B | Preflight PASSED (13.56 GiB) | — | no | closed |
+| diagnostic-004 (Train) | Qwen3-4B | **SANDBOX_RUNTIME_IMPORT_FAILURE**: `mlx_lm.load` could not be imported inside the sandbox; exited after 0.539 s | no | no | closed |
+| v6 | Qwen3-4B | Preflight before diagnostic-005 PASSED (15,852,896,256 bytes available); the one assigned Development attempt is unused | — | no | active |
+| diagnostic-005 (Train) | Qwen3-4B | **FAILED_BEFORE_MODEL_LOAD**: a symlinked Hugging Face blob was outside the sandbox allowlist; exited after 1.565 s | no | no | closed |
+| diagnostic-006 (Train) | Qwen3-4B | Frozen at `77b8a9b7`. A no-model probe read one byte from each canonical blob and confirmed the hidden grader directory is denied. **NOT RUN** | no | no | one attempt only |
 
-## Qwen3-4B controller diagnostic outcome
+Totals across all routes: 0 Development prompts delivered, 0 generated tokens, 0 native tool calls, 0 source edits, 0 independent grades. There was no training, no policy update, and no Held-Out access. The earlier Qwen3-4B Train #1904 repair (2/2 grader cases) is still only an exposed Train result; it is not evidence of Development generalization. Fresh Development repair success remains zero.
 
-- Frozen protocol: `results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/protocol.json`; the protocol was not changed.
-- The model weights loaded successfully. Before the first generation, the runner checked the pinned fixture workspace revision. Its sandbox denied the pinned Git invocation's attempt to open `/dev/null` for `core.attributesFile`, so the runner exited after 3.149 seconds with `pinned Git command failed`.
-- The bounded runner recorded 2,586,984,448 bytes sampled process-tree peak RSS and 2,627,239,936 bytes direct-child OS high-water, below its 8 GiB limit. Memory-pressure free remained 80% immediately after exit and swap did not increase.
-- No generation or prompt delivery occurred; there were zero generated tokens, tool calls, source edits, candidate records, grader runs, or Development attempts. The failure is a sandbox/controller integration failure, not a coding-capability result.
-- The frozen stop rule permits one diagnostic and requires it to complete the tool/edit interaction before Development. This was the one diagnostic run, so no retry or Development preflight was made. Preserve this failure; do not claim a model-generated attempt, grade, Development result, generalization, policy update, or RL improvement.
-- The full receipt, preflight, bounded-run record, and raw log are in `results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/attempt-001/`.
+The resource snapshots recorded by PR #164 around diagnostic-005 (11:43–11:45 UTC) were 13.9–14.8 GiB available, 81–83% memory-pressure free, and about 1.57 GiB swap used. No process was stopped.
 
-## Research status
+## State reconciliation in this update
 
-- Qwen3-4B still has the prior independently graded Train #1904 repair: one nonempty edit, five tool turns, 302 generated tokens, 31.679 seconds, and 2/2 independent grader cases. That is a narrow Train result.
-- Fresh Development success remains zero. No policy update, RL training, paid compute/API use, or Held-Out access occurred.
-- The local run established that the model can load under the current 4B memory budget, but it did not validate a native tool interaction. The current sequence is closed at the recorded sandbox failure. Any later work must begin from a new, explicitly frozen protocol and preserve the existing NO_GO/failure records.
+- `state.json` now indexes, with status, every v2–v6 protocol, diagnostics 001–006, and their preflight and outcome receipts.
+- The v1 NO_GO is restored as a historical blocker.
+- Eight result hash references that no longer match the current tree are labelled. Six are historical snapshots, each tagged with the commit where its hash verifies; two point to external files outside the repository. No hash was changed.
+- The canonical-JSON hash convention used for `development_repository_repair_campaign_v1.json` is documented.
+- `git_refs.active_pr_state` now uses the schema value `open`.
+- The exposure ledger has five appended events, one per v2–v6 assignment file, backed by `exposure-assignment.json` and the receipts. Supplement 002 and the errata manifest bind the new ledger hash.
+
+## Known inconsistency (kept, not rewritten)
+
+- `results/mlsys-fresh-vllm-64830-agent-attempt-v5/exposure-assignment.json` reuses the v4 `event_id` and lists the 14B model repository, although its `created_for_protocol` and `route_after_v4_no_go` fields name the Qwen3-4B V5 route. The file is unchanged; the ledger event records the discrepancy.
+
+## Next action (plan, as stated by PR #164 at `77b8a9b7`)
+
+Diagnostic-006 may run only after this head's exact-head CI and a fresh V6 resource preflight pass. The exact-head CI has now passed; the fresh V6 preflight has not been recorded. If diagnostic-006 loads the model, parses a native tool call, and applies a nonempty permitted Train edit, a fresh immediate V6 preflight may authorize the one assigned Development attempt. Stop on failure; there is no retry under diagnostic-006.
