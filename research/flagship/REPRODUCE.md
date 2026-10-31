@@ -1,5 +1,28 @@
 # Reproduction and resumption
 
+## Current checkpoint — vLLM #64575 source-level task qualification
+
+As of 2026-10-31, vLLM PR #64575 is **QUALIFIED_SOURCE_LEVEL** on the five frozen request-model cases only. The pinned baseline failed both type-specific error-message assertions while all three controls passed; corrected wrong-mutant v2 failed the one intended message assertion while four controls passed; upstream-fixed emitted five passing case indicators and exited 0. The first baseline invocation failed during pytest logging setup before collection, and wrong-mutant v1 did not meet its mutation precondition. Both failed attempts are retained and hash-bound; neither is treated as candidate-task failure evidence.
+
+The exact inputs, corrected Git-parent interpretation, environments, arm outcomes, and limitations are recorded in `protocols/mlsys_fresh_vllm_64575_source_qualification_v1.json`, its four append-only addenda, and `results/mlsys-fresh-vllm-64575-source-qualification-v1/`. Verify all 30 result files from the repository root:
+
+```bash
+shasum -a 256 -c results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS
+```
+
+The source qualification runner's own tests and lint can be rechecked without invoking the candidate tests:
+
+```bash
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q \
+  tests/test_mlsys_vllm_64575_qualification_tools.py
+ruff check \
+  scripts/prepare_mlsys_vllm_64575_qualification_overlay.py \
+  scripts/run_mlsys_vllm_64575_qualification_arm.py \
+  tests/test_mlsys_vllm_64575_qualification_tools.py
+```
+
+All baseline, wrong-mutant, and fixed arm invocations for this qualification are consumed. Do not rerun them or change their evidence. The historical task is **UNASSIGNED**; no model inference, training, or Held-Out evaluation occurred, and public pretraining exposure is unknown. Any model attempt needs a separate prospective exposure-ledger event and frozen protocol.
+
 Run commands from the VARE repository root. The evidence includes the prior one-attempt Train-only MLX-LM #1904 trajectory and the two one-attempt fresh Development coding-agent attempts on Transformers #49418 and Ray #66694. All three attempt slots are consumed; do not rerun them. No model update, SFT, GRPO/RL, or Held-out evaluation was authorized or executed.
 
 ## Test current implementation

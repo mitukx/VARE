@@ -1,0 +1,27 @@
+{
+  "attempt_id": "vllm-64575-source-qualification-upstream-fixed-attempt-001",
+  "protocol_addendum_4_sha256": "4d29a72156bccb32b90dd91ee8862d4a18a017504b1c393c10dbf1e230b9c037",
+  "runner_sha256": "cd67ac0624f1bcd65edddbb135c669a89fa9d80a7a4d1dd7fcce95be09a736a3",
+  "fixed_source_sha256": "cb83d99789f5d543a90c5487ac974821e7f3af9a77df9ceceadad8ba1f7b5560",
+  "test_overlay_sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8",
+  "profile_sha256": "7dbab4bd65f05b0719d3881fe728a6d7295a0547cb127337c09278e8bf57c73f",
+  "pytest_cases_from_frozen_overlay": 5,
+  "passing_case_indicators": 5,
+  "pytest_exit_code": 0,
+  "errors": 0,
+  "skipped": 0,
+  "resource_or_isolation_violation": false,
+  "attempt_json_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/upstream-fixed-attempt-001/attempt.json",
+  "attempt_json_sha256": "fdd0f6e6e8d2fcb74d3bbbc7032b2a0524b802924383319e8c2acedc81882b9d",
+  "pytest_log_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/upstream-fixed-attempt-001/pytest.log",
+  "pytest_log_sha256": "4d2df7a96ce4a667da3ccf295f2d16c728a65ed0e861a3baa919f7bb469b02b5",
+  "gate": "UPSTREAM_FIXED_PASSED",
+  "qualification": "QUALIFIED_SOURCE_LEVEL",
+  "interpretation": "The exact five frozen request-model cases all emitted passing indicators and pytest exited 0 on the source of vLLM PR #64575's merge commit after the pinned baseline failures and corrected wrong-mutant rejection. The upstream server/client integration test was excluded. This is source-level task/evaluator evidence only.",
+  "not_established": [
+    "No model or agent attempted the task.",
+    "No Development split assignment was made.",
+    "No independent model repair, capability gain, SFT/RL improvement, or algorithmic advantage was measured.",
+    "Public pretraining exposure is unknown."
+  ]
+}

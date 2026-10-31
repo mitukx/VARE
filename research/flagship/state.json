@@ -221,15 +221,45 @@
       "path": "protocols/rvl_grpo_training_generation_task_binding_v1_run1_erratum.json",
       "sha256": "80659e5ced4ccdeff413b40dda87e2ea940761ca73053f1b5e239638da4c0331",
       "status": "append-only instrumentation correction; task cases and acceptance criteria unchanged"
+    },
+    {
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1",
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1.json",
+      "sha256": "c4f482f037e725980c7e46027bad60f7a98d825a8e1b453fb8f05b6e24353da7",
+      "status": "frozen and pushed before candidate source/test access; source qualification only; no split assignment or inference"
+    },
+    {
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-1",
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_1.json",
+      "sha256": "5d7016f6edf17621c008d77d728f4879b1ec80e341aa4ca40c1f5c20439714b6",
+      "status": "corrected merge-parent semantics and froze exact test inputs, runner, profiles, limits, and expected arms before candidate tests"
+    },
+    {
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-2",
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_2.json",
+      "sha256": "e0b6636997a28131ecade4e7452cbe40a449bd55d4a41cdf525ecb3653cb6ac3",
+      "status": "preserved pytest /dev/null setup failure and authorized one corrected baseline retry before its execution"
+    },
+    {
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-3",
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_3.json",
+      "sha256": "6119febc5ab669dcc1642246cd3fd24172d064e3f3d5af6c7c7f39334e282cb2",
+      "status": "corrected expected baseline/mutant assertion location before the baseline retry; arm inputs and gates otherwise unchanged"
+    },
+    {
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-4",
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_4.json",
+      "sha256": "4d29a72156bccb32b90dd91ee8862d4a18a017504b1c393c10dbf1e230b9c037",
+      "status": "froze corrected type-policy mutant v2 after mutant v1 failed its precondition; fixed arm conditional on v2 gate"
     }
   ],
   "git_refs": {
     "repository": "mitukx/VARE",
-    "last_verified_main_sha": "8db1aa78cd13f231d436641280428fccf9121281",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/158",
-    "last_integrated_pr_merge_sha": "8db1aa78cd13f231d436641280428fccf9121281",
-    "active_branch": "codex/rvl-task-identity-integrated-checkpoint",
-    "verified_pr_head_sha_before_checkpoint_changes": "29f8561bfcd44c78bc75b8f5bdf5a5f7923cb8bd",
+    "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
+    "last_integrated_pr_merge_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
+    "active_branch": "codex/fresh-task-inventory-oct31",
+    "verified_pr_head_sha_before_checkpoint_changes": "493e34339df458fe0fd0e99a7c8d9e1eed78c788",
     "active_pr_url": null,
     "active_pr_state": "none"
   },
@@ -238,9 +268,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Refresh the fresh-task inventory against current main and identify a technically independent Development candidate from current upstream repositories. Freeze metadata/exposure review before opening source or tests; then qualify baseline failure, known-fix pass, wrong-mutant rejection, and isolation before any new model protocol. Keep inference, SFT/RL, and Held-Out gated until those prerequisites pass.",
-  "last_completed_step": "PR #158 merged at 2026-10-31T03:22:04Z as 8db1aa78cd13f231d436641280428fccf9121281 from exact head 29f8561bfcd44c78bc75b8f5bdf5a5f7923cb8bd. All exact-head required CI and supplemental CPU/optimizer checks passed; reviewThreads unresolved=0. The unconditional RVL generation/task binding is integrated. Local adapter suite: 79 passed; Ruff and py_compile passed. No model inference or training.",
-  "milestone_id": "p12-rvl-grpo-training-generation-task-identity-integrated",
+  "highest_priority_next_task": "Run a read-only local model/runtime and host-resource preflight for the newly source-qualified vLLM #64575 family. If a cached model and pinned runtime meet the frozen memory/swap/disk gates, append a prospective Development exposure event, freeze one bounded attempt and independent grader protocol, push it, then execute once. If no cached model/runtime satisfies the gates, record a concrete NO-GO and continue non-inference work; do not use paid compute.",
+  "last_completed_step": "VARE main 416f35c465712898e8e5764a8e43193ef86e7afb is PR #159 merged with successful exact-head checks. On branch codex/fresh-task-inventory-oct31, vLLM #64575 was source-qualified under five frozen request-model cases: baseline attempt 002 had 2 intended message-assertion failures and 3 passing controls; corrected wrong-mutant v2 attempt 002 had 1 intended message-assertion failure and 4 passing controls; upstream-fixed attempt 001 had 5 passing case indicators and exit 0. Baseline attempt 001 failed at pytest logging initialization before collection; wrong-mutant v1 did not meet its frozen mutation precondition. All failures are retained. Qualification is source-level only; split remains UNASSIGNED, no model inference/training/Held-Out use occurred, and public pretraining exposure is UNKNOWN. Evidence SHA256SUMS covers 30 files.",
+  "milestone_id": "p13-vllm-64575-source-qualified",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -1131,6 +1161,46 @@
       "path": "results/rvl-grpo-training-generation-task-binding-v1/run-001.json",
       "sha256": "8fb9386109bd57355c163683eb8f70ff06b86b2f96dd9a4c113c895b8f61f638",
       "status": "two baseline reproductions and 79 passing candidate tests; no model or real optimizer"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/qualification-report.json",
+      "sha256": "25076567165285b0bb89fa8341eb56dfb305b369317cee637e9180c096f4df11",
+      "status": "QUALIFIED_SOURCE_LEVEL only; no model attempt or split assignment"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS",
+      "sha256": "7d999d51daf233c2ab84677c35fa0b988019c7160777f2a313a2da2e0b7e60bf",
+      "status": "30-file integrity index for all source qualification inputs and raw outcomes"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/exposure-record.json",
+      "sha256": "e4cc070288db479ff31c922df4a299391b7055dd15776f466eeb663796fd3723",
+      "status": "append-only candidate exposure event; no model exposure; task unassigned"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/baseline-attempt-001/classification.json",
+      "sha256": "e3faeb5dc33cd0ebd6ceee0ecaea4a9f5159d37b486b4052ecc61ac5660596ec",
+      "status": "pytest setup failure before collection; arm attempt consumed and retained"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/baseline-attempt-002/gate.json",
+      "sha256": "3889a6ae5d4f7aa6c8cef66a271aae25cdd03595b0640b69d2d4244b9c65fec9",
+      "status": "baseline negative-control gate passed: 2 intended failures, 3 controls"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/wrong-mutant-attempt-001/classification.json",
+      "sha256": "94d67769315160d2f8011625f78709e3e792ae9b2514d9882733f90b736e28c2",
+      "status": "wrong-mutant v1 did not meet the mutation precondition; retained, not counted as a gate"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/wrong-mutant-attempt-002/gate.json",
+      "sha256": "7815b8ab9a74893c45e0cde467197ce331794f1aceccff048a6e0be376f8b1ff",
+      "status": "corrected wrong-mutant v2 gate passed: 1 intended failure, 4 controls"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/upstream-fixed-attempt-001/gate.json",
+      "sha256": "b024d3ddb190ed0a281524fa5829b5a9a7c39a45fe1291a0472dd7fed175156d",
+      "status": "upstream-fixed source passed all five frozen cases"
     }
   ],
   "run_ids": [
@@ -1167,7 +1237,12 @@
     "freshdev-agent-transformers-49418-attempt-001",
     "freshdev-agent-ray-66694-attempt-001",
     "freshdev-agent-transformers-49458-attempt-001",
-    "rvl-grpo-training-generation-task-binding-v1-run-001"
+    "rvl-grpo-training-generation-task-binding-v1-run-001",
+    "vllm-64575-source-baseline-attempt-001",
+    "vllm-64575-source-baseline-attempt-002",
+    "vllm-64575-source-wrong-mutant-v1-attempt-001",
+    "vllm-64575-source-wrong-mutant-v2-attempt-002",
+    "vllm-64575-source-upstream-fixed-attempt-001"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -1183,7 +1258,8 @@
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
-    "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown."
+    "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
+    "vLLM #64575 is source-qualified but remains UNASSIGNED; no local model attempt has run. Pretraining exposure is UNKNOWN, and any attempt requires resource preflight plus a separate frozen prompt, exposure, and independent-grader protocol."
   ],
-  "updated_at": "2026-10-31T03:22:33Z"
+  "updated_at": "2026-10-31T04:21:33Z"
 }

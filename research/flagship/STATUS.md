@@ -2,19 +2,25 @@
 
 ## Current checkpoint
 
-- Milestone: p12-rvl-grpo-training-generation-task-identity-integrated.
-- Last verified `origin/main`: `8db1aa78cd13f231d436641280428fccf9121281`, merge of PR #158 at 2026-10-31T03:22:04Z. PR #158 head was `29f8561bfcd44c78bc75b8f5bdf5a5f7923cb8bd`.
-- PR #158 adds unconditional RVL `prompt_id` and exact-prompt binding to `Experience.attempt.task` before trainer input construction.
-- Exact-head CI passed, including Python 3.11/3.12/3.13, lint, typecheck, blob budget, CPU evidence, RVL inference, calibrated tasks, and actual optimizer/recovery. No unresolved review threads remained.
-- Local validation: 79 tests passed across 11 RVL-focused files; Ruff, `py_compile`, protocol hashes, and result hashes passed.
+- Milestone: `p13-vllm-64575-source-qualified`.
+- Last verified `origin/main`: `416f35c465712898e8e5764a8e43193ef86e7afb`, PR #159 merged at 2026-10-31T03:30:28Z. PR #159 head `493e34339df458fe0fd0e99a7c8d9e1eed78c788`; its exact-head CI checks passed.
+- Active work branch: `codex/fresh-task-inventory-oct31`, based on that main and carrying the fresh-task discovery/selection, overlap review, and vLLM source-qualification evidence. A review PR will be opened after this checkpoint is committed.
+- Active PR: none yet.
+
+## Completed in this checkpoint
+
+- Reverified PR #150 is merged (2026-10-30) and refreshed remote state; the historical #150 CI issue is no longer open.
+- Selected `vllm-project/vllm#64575` prospectively using frozen metadata selection and a metadata-only prior-family overlap review.
+- Froze source qualification before source/tests. Corrected the baseline source identity to the merge commit's direct first parent (`8777b4c…`); the true merge-base of the captured PR base and head is `67d677b…`.
+- Qualified five isolated request-model cases with the expected baseline failures, corrected wrong-mutant rejection, and fixed-source pass. Raw attempts, the two harness/mutant-design failures, source/test/profile hashes, and decisions are retained under `results/mlsys-fresh-vllm-64575-source-qualification-v1/`.
 
 ## Evidence and limits
 
-- A frozen regression reproduced two malformed ungrouped Experience cases reaching the fake trainer on the prior main. The clean-base reproduction and logs are hash-bound in `results/rvl-grpo-training-generation-task-binding-v1/`.
-- This is E0 VARE adapter integrity evidence; no historical incidence, real optimizer effect, learning, task success, or capability improvement is established.
-- Coding capability remains NO-GO. SFT/RL update remains NO-GO. Held-Out remains untouched. Public pretraining exposure remains unknown. The current frozen task inventory has zero fresh Development candidates.
-- No active implementation PR for this checkpoint is open.
+- Result: `QUALIFIED_SOURCE_LEVEL` only. Baseline attempt 002: 2 intended error-message failures and 3 passing controls. Wrong-mutant v2 attempt 002: 1 intended error-message failure and 4 passing controls. Upstream-fixed attempt 001: 5 passing case indicators, exit 0. All arms were CPU-only, network-denied, and below 4 GiB RSS.
+- Baseline attempt 001 failed pytest logging setup before collection because Seatbelt denied a `/dev/null` write; its log is retained. Wrong-mutant v1 did not meet its mutation precondition; its log is retained. Neither is counted as a gate.
+- The upstream server/client integration test was excluded. Full vLLM coverage is not established.
+- Task remains `UNASSIGNED`; no model or agent saw the task; no inference, SFT/RL, or Held-Out evaluation occurred. Public pretraining exposure remains unknown. Coding capability and RL update remain NO-GO.
 
 ## Immediate next action
 
-Refresh the fresh-task inventory against current main and identify a technically independent Development candidate from current upstream repositories. Freeze metadata/exposure review before opening source or tests; then qualify baseline failure, known-fix pass, wrong-mutant rejection, and isolation before any new model protocol. Keep inference, SFT/RL, and Held-Out gated until those prerequisites pass.
+Read-only preflight local model snapshots, pinned runtime, memory pressure, swap, and disk for a single bounded attempt on this distinct source-qualified family. If an available local model/runtime clears the prior resource gates, freeze a new Development assignment, exposure event, model attempt, and independent grading protocol before one inference. Otherwise record NO-GO and continue non-inference engineering.
