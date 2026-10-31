@@ -1,0 +1,33 @@
+{
+  "code_sha256": {
+    "run002_freeze_heldout.py": "a2a917688da006b06b8a91206f023e87c5a407fda12eda17391ee26d8099d8fa",
+    "run002_heldout_common.py": "3329f5e1cffc3a78c51cd5701dacc9f8fd5195a97543559ebbef0350fef4cded"
+  },
+  "criteria_sha256": "7ed490f8945f9ad395d3f5752540aa5e5148aca6cd99c6d541e3f6ba8e8f3cab",
+  "design": {
+    "candidate_repos": 35,
+    "floor_repos": 26,
+    "floor_tasks": 208,
+    "max_repos": 32,
+    "qualifying_repos": 12,
+    "tasks_per_repo": 8
+  },
+  "frozen": false,
+  "inputs": {
+    "allowlist_extension_criteria.md": "7ed490f8945f9ad395d3f5752540aa5e5148aca6cd99c6d541e3f6ba8e8f3cab",
+    "content_filter_counts.json": "fde38c27149dec40367dcbaa14e5da2d28fe270b92592e2b6ace77b57ba1fb3c",
+    "content_filter_counts.md": "8de1e0ae4b3c5c6dff171a6bbdcb571dd11ea1c9fb77ad511fbc69569c27ad35",
+    "exposure_ledger_ids.txt": "3ad576efcbf38d43673dd42854f887ed66794a44416f63d2c55d26cc5494f480",
+    "heldout_pool_passer_ids.json": "641e6cc366f8408e136d29557a2a8b7a44b7db517eba017546429970c3a7774e"
+  },
+  "refusal": "12 repos qualify with 8 tasks; floor is 26 x 8",
+  "report_sha256": "b36570ce4e3cc53e3d53eee7623b90b5bf85ccc250d75157e0de87ba9d72c32f",
+  "schema": "vare.run002.heldout_freeze.v1",
+  "seed": "vare-run002-heldout-pool-v1",
+  "status_counts": {
+    "admitted": 12,
+    "env_failed": 4,
+    "insufficient_valid_tasks": 19
+  },
+  "synthetic": false
+}

@@ -119,3 +119,28 @@ From `probe.json` and `tests/test_learning_pipeline_isolated_grading.py` (29 tes
 * Probes check the configured sandbox, not the kernel, the VM or the container runtime.
 * Run-time and memory overhead of a container per candidate are not measured. The v1 trusted grade
   median is 0.74 s per candidate.
+
+## 6. Run-002 R7 macOS Seatbelt result (2026-11-01)
+
+The Run-002 R7 attempt is recorded separately in
+[`results/run002-r7-macos-seatbelt-20261101/`](../results/run002-r7-macos-seatbelt-20261101/).
+It uses `scripts/run002_macos_sandbox.py` around the frozen v1 `RepoEnv`; the v1 source hash is
+unchanged. The checker completed all 35 candidates on macOS with 12 repositories admitted, 19 with
+insufficient valid tasks, and 4 environment-install failures. The attempt covered 903 tasks: 103
+passed reference validation, 769 returned `reference_tests_missing`, and 31 returned
+`reference_fails`. The held-out freezer returned its refusal code because 12 admitted repositories
+are below the fixed 26 x 8 floor. No manifest or downstream learning run resulted.
+
+The R7 install process allows outbound network access only during package installation and writes
+within the repository, venv, and task-local sandbox root. Grading denies network access. It keeps the
+host `.git` directory outside the test workspace, installs a stub with only the pinned commit/config,
+and denies test writes to `.git`. In addition, the host's Git calls set `core.hooksPath=/dev/null`;
+the install sandbox also denies writes to `.git`. A macOS integration test used a malicious
+`post-checkout` hook and attempted Git-metadata writes; the hook did not fire and the writes were
+denied. Exact environment data and the installed package inventories are retained in the R7 report.
+
+This R7 result demonstrates that the configured Seatbelt boundary was exercised for those builds
+and grades; it is not a general proof of macOS sandbox strength. Repository tests execute in a
+Python process that can read the repository and tests and write elsewhere in the disposable clone.
+It does not add an out-of-process verdict channel. The same-interpreter verdict-forgery finding in
+the trusted-grader audit remains a blocker for model capability claims and confirmatory grading.

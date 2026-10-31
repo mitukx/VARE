@@ -37,6 +37,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run002_heldout_common as common  # noqa: E402
+from run002_macos_sandbox import MacosSeatbeltRepoEnv, R7_EXTRA_TEST_DEPS  # noqa: E402
 from vare.learning_pipeline import curriculum, edit_format, sources  # noqa: E402
 from vare.learning_pipeline.repo_env import GRADER_PYTEST, RepoEnv  # noqa: E402
 
@@ -51,6 +52,7 @@ PROTOCOL_V1 = common.ROOT / "protocols" / "coding_policy_learning_mlx_4b_v1.json
 FINAL = {"admitted", "insufficient_valid_tasks", "attempt_cap_reached", "env_failed", "size_exceeded",
          "payload_error"}
 CODE_FILES = ["scripts/run002_build_check.py", "scripts/run002_heldout_common.py",
+              "scripts/run002_macos_sandbox.py",
               "src/vare/learning_pipeline/repo_env.py", "src/vare/learning_pipeline/curriculum.py",
               "src/vare/learning_pipeline/edit_format.py"]
 
@@ -93,6 +95,7 @@ def environment(python_exe: str) -> dict[str, Any]:
         "venv_python": _tool_version([python_exe, "--version"]),
         "git": _tool_version(["git", "--version"]), "cpu_count": os.cpu_count(),
         "grader_pytest": GRADER_PYTEST,
+        "isolation_backend": "macos-seatbelt-v1" if platform.system() == "Darwin" else "unisolated-smoke",
     }
 
 
@@ -109,6 +112,13 @@ class Checker:
         self.python = a.python or sys.executable
         self.rows: dict[str, dict[str, Any]] | None = None
         self.selected: list[common.Candidate] = []
+
+    def repo_cache(self, cand: common.Candidate) -> Path:
+        return self.cache / "envs" / cand.upstream.replace("/", "__")
+
+    @property
+    def isolation_backend(self) -> str:
+        return "macos-seatbelt-v1" if platform.system() == "Darwin" else "unisolated-smoke"
 
     # -------------------------------------------------------------- report
     def load_report(self, inputs: dict[str, str], settings: dict[str, Any]) -> dict[str, Any]:
@@ -142,7 +152,7 @@ class Checker:
             "env": None, "tasks": [], "validated": []})
         if rec["status"] in FINAL:
             return
-        env = RepoEnv(cand.mirror, cand.upstream, cand.commit, self.cache)
+        env = RepoEnv(cand.mirror, cand.upstream, cand.commit, self.repo_cache(cand))
         if not (rec["env"] or {}).get("ok") or not env.python.exists():
             rec["env"] = self.materialize(env)
             self.save(rep)
@@ -175,8 +185,7 @@ class Checker:
         env.reset()
         self.save(rep)
         if a.prune:
-            shutil.rmtree(env.venv, ignore_errors=True)
-            shutil.rmtree(env.path, ignore_errors=True)
+            shutil.rmtree(env.cache, ignore_errors=True)
 
     def materialize(self, env: RepoEnv) -> dict[str, Any]:
         # A venv without a recorded successful build may be a torn install: rebuild it so the
@@ -185,7 +194,16 @@ class Checker:
         t0 = time.time()
         out: dict[str, Any] = {"ok": False, "started": now()}
         try:
-            env.materialize(python_exe=self.python)
+            if platform.system() == "Darwin":
+                with MacosSeatbeltRepoEnv(env) as isolation:
+                    env.materialize(python_exe=self.python)
+                    distributions = isolation.installed_distributions()
+                out["install_sandbox_profile_sha256"] = (
+                    isolation.install_profile_sha256 or isolation.profile_sha256("install"))
+                out["installed_distributions"] = distributions
+                out["installed_distributions_sha256"] = common.sha256_json(distributions)
+            else:
+                env.materialize(python_exe=self.python)
         except subprocess.TimeoutExpired as exc:
             step = "install" if "pip" in " ".join(map(str, exc.cmd)) else "git"
             out.update(status="env_failed", reason=f"{step}_timeout")
@@ -193,7 +211,8 @@ class Checker:
             msg = str(exc)
             reason = next((code for key, code in (("clone failed", "clone_failed"), ("HEAD", "head_mismatch"),
                                                   ("venv failed", "venv_failed"),
-                                                  ("install failed", "install_failed")) if key in msg),
+                                                  ("install failed", "install_failed"),
+                                                  ("macOS sandbox unavailable", "sandbox_unavailable")) if key in msg),
                           "materialize_error")
             out.update(status="env_failed", reason=reason, error_tail=sanitize(msg, self.cache, self.dataset_cache))
         else:
@@ -207,6 +226,18 @@ class Checker:
             elif out["clone_kib"] is not None and out["clone_kib"] * 1024 > CLONE_LIMIT_BYTES:
                 out.update(ok=False, status="size_exceeded", reason="clone_too_large")
         return out
+
+    def grade(self, env: RepoEnv, **kwargs: Any) -> dict[str, Any]:
+        if platform.system() != "Darwin":
+            return env.grade(**kwargs)
+        with MacosSeatbeltRepoEnv(env) as isolation:
+            result = env.grade(**kwargs)
+        result["grader_sandbox_profile_sha256"] = (
+            isolation.grader_profile_sha256 or isolation.profile_sha256("grader"))
+        result["test_git_metadata_visible"] = False
+        result["test_git_metadata_mode"] = "sanitized_commit_stub"
+        result["grader_repository_writable"] = True
+        return result
 
     def validate(self, env: RepoEnv, iid: str, row: dict[str, Any] | None, cand: common.Candidate,
                  cfg: dict[str, Any]) -> dict[str, Any]:
@@ -238,8 +269,8 @@ class Checker:
             res["reason"] = why
             return res
         timeout = self.a.grade_timeout
-        base = env.grade(bug_patch=row["patch"], target_file=target, candidate_text=None,
-                         fail_to_pass=f2p, pass_to_pass=p2p, timeout=timeout)
+        base = self.grade(env, bug_patch=row["patch"], target_file=target, candidate_text=None,
+                          fail_to_pass=f2p, pass_to_pass=p2p, timeout=timeout)
         res["baseline"] = summarize(base)
         res["baseline_p2p_green"] = base.get("p2p_passed") == base.get("p2p_total") and "p2p_total" in base
         if base["reason"] == "bug_patch_apply_error":
@@ -253,8 +284,8 @@ class Checker:
             return res
         env.reset()
         original = env.read(target)
-        ref = env.grade(bug_patch=row["patch"], target_file=target, candidate_text=original,
-                        fail_to_pass=f2p, pass_to_pass=p2p, timeout=timeout)
+        ref = self.grade(env, bug_patch=row["patch"], target_file=target, candidate_text=original,
+                         fail_to_pass=f2p, pass_to_pass=p2p, timeout=timeout)
         res["reference"] = summarize(ref)
         if ref["passed"]:
             res.update(valid=True, reason="valid")
@@ -287,9 +318,16 @@ class Checker:
         settings = {"tasks_per_repo": a.tasks_per_repo, "min_passers": a.min_passers,
                     "grade_timeout_s": a.grade_timeout, "install_timeout_s": INSTALL_TIMEOUT_S,
                     "venv_limit_kib": VENV_LIMIT_KIB, "clone_limit_bytes": CLONE_LIMIT_BYTES,
-                    "max_attempts_per_repo": a.max_attempts_per_repo}
+                    "max_attempts_per_repo": a.max_attempts_per_repo,
+                    "isolation_backend": self.isolation_backend,
+                    "run002_extra_test_deps": {k: list(v) for k, v in R7_EXTRA_TEST_DEPS.items()}}
         if a.dry_run:
             return self.dry_run(cands, settings)
+        if platform.system() == "Darwin":
+            if not Path("/usr/bin/sandbox-exec").is_file():
+                raise InputError("macOS sandbox-exec is unavailable; refusing native repository execution")
+            if Path(self.python).resolve() != Path(sys.executable).resolve():
+                raise InputError("macOS R7 must use the interpreter running this checker")
         rep = self.load_report(inputs, settings)
         rep["runs"].append({"started": now(), "environment": environment(self.python),
                             "code_sha256": {f: common.sha256_file(common.ROOT / f) for f in CODE_FILES},
@@ -323,9 +361,10 @@ class Checker:
               f"settings {json.dumps(settings, sort_keys=True)}")
         print(f"dataset shards cached: {have}/{len(sources.SWE_SMITH_PY.shards)}; interpreter "
               f"{platform.python_version()} on {platform.system()} (R7 host: {platform.system() == 'Darwin'})")
+        print(f"untrusted-code isolation: {self.isolation_backend}")
         prior = json.loads(self.report_path.read_text())["repos"] if self.report_path.exists() else {}
         for i, c in enumerate(cands, 1):
-            env = RepoEnv(c.mirror, c.upstream, c.commit, self.cache)
+            env = RepoEnv(c.mirror, c.upstream, c.commit, self.repo_cache(c))
             st = prior.get(c.upstream, {}).get("status", "-")
             print(f"{i:2d} {c.upstream:34s} grp={c.group} {c.license:12s} passers={len(c.passers):3d} "
                   f"clone={'y' if env.path.exists() else 'n'} venv={'y' if env.python.exists() else 'n'} "
@@ -336,7 +375,8 @@ class Checker:
 def summarize(g: dict[str, Any]) -> dict[str, Any]:
     """Grade summary without test names, stdout or patch-apply detail."""
     keys = ("passed", "reason", "f2p_passed", "f2p_total", "p2p_passed", "p2p_total", "pytest_exit",
-            "stdout_sha256", "seconds", "pytest_seconds")
+            "stdout_sha256", "seconds", "pytest_seconds", "grader_sandbox_profile_sha256",
+            "test_git_metadata_visible", "test_git_metadata_mode", "grader_repository_writable")
     out = {k: g[k] for k in keys if k in g}
     out["missing_count"] = len(g.get("missing") or [])
     return out
