@@ -1,4 +1,13 @@
-from scripts.select_mlsys_fresh_development_candidate_v2 import exclude_identities
+from scripts.select_mlsys_fresh_development_candidate_v2 import (
+    exclude_identities,
+    frozen_screen_path,
+)
+
+
+def test_frozen_screen_path_uses_bound_source_scan_location() -> None:
+    protocol = {"source_scan": {"screen_path": "results/frozen-screen.json"}}
+
+    assert frozen_screen_path(protocol) == "results/frozen-screen.json"
 
 
 def test_exclude_identities_preserves_order_and_other_candidates() -> None:

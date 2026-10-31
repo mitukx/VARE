@@ -11,6 +11,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v2.json"
+ADDENDUM_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v2_addendum_1.json"
 V1_SELECTOR_PATH = ROOT / "scripts/select_mlsys_fresh_development_candidate_v1.py"
 V1_PROTOCOL_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v1.json"
 V1_ADDENDUM_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v1_addendum_1.json"
@@ -47,10 +48,27 @@ def frozen_input_hashes(protocol: dict[str, Any]) -> dict[str, str]:
     return protocol["frozen_inputs"]
 
 
+def frozen_screen_path(protocol: dict[str, Any]) -> str:
+    return protocol["source_scan"]["screen_path"]
+
+
 def verify_inputs(protocol: dict[str, Any]) -> None:
+    addendum = json.loads(ADDENDUM_PATH.read_text(encoding="utf-8"))
+    protocol_hash = sha256_file(PROTOCOL_PATH)
+    if addendum.get("protocol_id") != "mlsys-fresh-development-candidate-selection-v2-addendum-1":
+        raise ValueError("unexpected v2 preselection addendum")
+    if addendum.get("parent_protocol_sha256") != protocol_hash:
+        raise ValueError("v2 addendum parent protocol hash mismatch")
+    corrections = addendum["corrected_input_hashes"]
     for relative_path, expected_hash in frozen_input_hashes(protocol).items():
         path = ROOT / relative_path
-        if not path.is_file() or sha256_file(path) != expected_hash:
+        corrected = corrections.get(relative_path)
+        if corrected is not None and corrected.get("original_sha256") != expected_hash:
+            raise ValueError(f"v2 addendum does not match original input: {relative_path}")
+        required_hash = (
+            corrected["corrected_sha256"] if corrected is not None else expected_hash
+        )
+        if not path.is_file() or sha256_file(path) != required_hash:
             raise ValueError(f"frozen v2 selection input differs: {relative_path}")
     v1_protocol = json.loads(V1_PROTOCOL_PATH.read_text(encoding="utf-8"))
     v1_manifest_path = ROOT / "results/mlsys-fresh-development-candidate-selection-v1/evidence-manifest.json"
@@ -76,7 +94,7 @@ def run(output_dir: Path) -> dict[str, Any]:
     if protocol.get("protocol_id") != "mlsys-fresh-development-candidate-selection-v2":
         raise ValueError("unexpected v2 selection protocol")
     verify_inputs(protocol)
-    screen_path = ROOT / protocol["screen_path"]
+    screen_path = ROOT / frozen_screen_path(protocol)
     screen_bytes = screen_path.read_bytes()
     screen = json.loads(screen_bytes.decode("utf-8"))
     v1_protocol = json.loads(V1_PROTOCOL_PATH.read_text(encoding="utf-8"))
@@ -95,6 +113,7 @@ def run(output_dir: Path) -> dict[str, Any]:
         "schema_version": 1,
         "selection_id": protocol["protocol_id"],
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
+        "protocol_addendum_sha256": sha256_file(ADDENDUM_PATH),
         "selector_sha256": sha256_file(Path(__file__)),
         "source_screen_sha256": sha256_bytes(screen_bytes),
         "frozen_inputs": frozen_input_hashes(protocol),
@@ -117,6 +136,7 @@ def run(output_dir: Path) -> dict[str, Any]:
     manifest = {
         "schema_version": 1,
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
+        "protocol_addendum_sha256": sha256_file(ADDENDUM_PATH),
         "selector_sha256": sha256_file(Path(__file__)),
         "files": {
             "selection.json": {
