@@ -426,3 +426,65 @@ def test_checkpoint_roundtrip_is_bit_identical(tmp_path):
     f.write_bytes(bytes(raw))
     with pytest.raises(ValueError, match="hash mismatch"):
         G.load_checkpoint(tmp_path / "ck", _lora_qwen3(), optim.Adam(learning_rate=1e-2))
+
+
+# ---------------------------------------------------------------- C1 Option A: exact-ratio sampling
+@pytest.mark.parametrize("kwargs", [
+    {"temperature": 0.7, "top_p": 0.95},
+    {"temperature": 0.7, "top_p": 0.999999},
+    {"temperature": 0.7, "top_p": 0.0},
+    {"temperature": 0.7, "top_p": 1.0, "top_k": 50},
+    {"temperature": 0.7, "top_p": 1.0, "min_p": 0.05},
+    {"temperature": 0.0, "top_p": 1.0},
+    {"temperature": math.nan, "top_p": 1.0},
+    {"temperature": 0.7, "top_p": True},
+])
+def test_exact_ratio_objective_rejects_truncated_or_greedy_sampling(kwargs):
+    with pytest.raises(G.TruncatedSamplingError):
+        G.check_exact_ratio_sampling(**kwargs)
+
+
+def test_exact_ratio_objective_accepts_untruncated_temperature_sampling():
+    assert G.EXACT_RATIO_TOP_P == 1.0
+    G.check_exact_ratio_sampling(temperature=0.7, top_p=1.0)
+    G.check_exact_ratio_sampling(temperature=1, top_p=1, top_k=0, min_p=0)
+
+
+def _load_vertical_slice():
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / "scripts/grpo_vertical_slice.py"
+    spec = importlib.util.spec_from_file_location("grpo_vertical_slice_under_test", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_vertical_slice_refuses_top_p_below_one_with_exact_ratio_objective(tmp_path):
+    vs = _load_vertical_slice()
+    args = vs.parse(["--run-dir", str(tmp_path / "run"), "--cache", str(tmp_path / "cache")])
+    assert args.top_p == 1.0  # default is the untruncated distribution
+    with pytest.raises(G.TruncatedSamplingError):
+        vs.Slice(vs.parse(["--run-dir", str(tmp_path / "run"), "--cache", str(tmp_path / "cache"),
+                           "--top-p", "0.95"]))
+    assert not (tmp_path / "run").exists()  # refused before creating the run
+    with pytest.raises(G.TruncatedSamplingError):  # refused before touching a model
+        vs.generate(None, None, [], seed=0, temperature=0.7, top_p=0.95, max_tokens=1)
+
+
+@pytest.mark.skipif(not HAS_MLX, reason="mlx/mlx_lm not installed")
+def test_top_p_one_sampler_draws_from_untruncated_temperature_softmax():
+    # The mlx_lm sampler at top_p=1.0 applies no filter: it is categorical over
+    # logprobs / T, i.e. softmax(logits / T), which token_logprobs models.
+    import mlx.core as mx
+    from mlx_lm.sample_utils import make_sampler
+
+    logits = mx.array([[2.0, 0.5, -1.0, -3.0, 0.0, -0.25]])
+    logprobs = logits - mx.logsumexp(logits, axis=-1, keepdims=True)
+    t = 0.7
+    sampler = make_sampler(temp=t, top_p=1.0, min_p=0.0, top_k=0)
+    for seed in range(20):
+        mx.random.seed(seed)
+        got = int(sampler(logprobs).item())
+        mx.random.seed(seed)
+        want = int(mx.random.categorical(logprobs * (1 / t)).item())
+        assert got == want

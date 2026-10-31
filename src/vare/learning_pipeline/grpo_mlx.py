@@ -25,6 +25,13 @@ rollout groups:
   gradient. Behavior log-probs come from the same traced (differentiated)
   computation as the update, so ``rho == 1`` holds numerically, not only in
   exact arithmetic; ``max_abs_log_ratio`` is reported per step. Stale samples raise ``StalePolicyError`` instead of being reused.
+* Sampling decision (Option A, exact ratio): the behavior distribution must be
+  the untruncated temperature softmax ``softmax(logits / T)`` with ``T > 0``,
+  ``top_p == 1`` (no top-k / min-p), because that is the distribution the
+  log-probabilities above model. A top-p-truncated sampler renormalizes over
+  the nucleus, so ``logp_behavior`` would be wrong and ``rho`` would no longer
+  be the exact on-policy ratio. ``check_exact_ratio_sampling`` enforces this;
+  runs sampled with ``top_p < 1`` are approximate-ratio evidence only.
 * Gradients are accumulated one sample at a time; because each microbatch loss
   is divided by the step-wide token count, the accumulated gradient equals the
   full-batch gradient.
@@ -56,6 +63,39 @@ class StalePolicyError(ValueError):
 
 class GroupError(ValueError):
     """Samples cannot form valid GRPO groups."""
+
+
+class TruncatedSamplingError(ValueError):
+    """Sampling settings whose behavior distribution the exact-ratio objective does not model."""
+
+
+# The exact-ratio objective models behavior log-probs as log_softmax(logits / T)
+# over the full vocabulary, so sampling must not truncate the distribution.
+EXACT_RATIO_TOP_P = 1.0
+
+
+def check_exact_ratio_sampling(*, temperature: float, top_p: float, top_k: int = 0, min_p: float = 0.0) -> None:
+    """Raise unless sampling draws from the untruncated ``softmax(logits / temperature)``.
+
+    Option A of the sampling-consistency decision: with ``top_p == 1`` (and no
+    top-k or min-p filtering) the sampler's distribution is exactly the one
+    ``token_logprobs(..., temperature=T)`` computes, so the clipped-surrogate
+    ratio is the exact on-policy ratio. Any truncation would silently mix a
+    truncated behavior policy with an untruncated probability model.
+    """
+    for name, value in (("temperature", temperature), ("top_p", top_p), ("min_p", min_p)):
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+            raise TruncatedSamplingError(f"{name} must be a finite number")
+    if temperature <= 0:
+        raise TruncatedSamplingError("exact-ratio GRPO needs stochastic sampling (temperature > 0); "
+                                     "greedy decoding is not the modeled softmax distribution")
+    if top_p != EXACT_RATIO_TOP_P:
+        raise TruncatedSamplingError(f"exact-ratio GRPO requires top_p == 1.0 (untruncated); got top_p={top_p!r}. "
+                                     "Truncated sampling would make behavior log-probs and ratios approximate")
+    if isinstance(top_k, bool) or not isinstance(top_k, int) or top_k != 0:
+        raise TruncatedSamplingError(f"exact-ratio GRPO requires top_k == 0 (no truncation); got top_k={top_k!r}")
+    if min_p != 0:
+        raise TruncatedSamplingError(f"exact-ratio GRPO requires min_p == 0 (no truncation); got min_p={min_p!r}")
 
 
 @dataclass(frozen=True)

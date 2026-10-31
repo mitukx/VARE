@@ -88,13 +88,15 @@ def grad_checkpointing(layer):
 
 
 def generate(model, tokenizer, messages, *, seed, temperature, top_p, max_tokens):
+    # Exact-ratio objective: sample from the untruncated softmax(logits / T) only.
+    grpo_mlx.check_exact_ratio_sampling(temperature=temperature, top_p=top_p)
     import mlx.core as mx
     from mlx_lm import stream_generate
     from mlx_lm.sample_utils import make_sampler
 
     prompt = tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True)
     mx.random.seed(seed)
-    sampler = make_sampler(temp=temperature, top_p=top_p if temperature > 0 else 0.0)
+    sampler = make_sampler(temp=temperature, top_p=top_p, min_p=0.0, top_k=0)
     toks, sampler_lp, text, finish = [], [], "", "length"
     t0 = time.time()
     for r in stream_generate(model, tokenizer, prompt, max_tokens=max_tokens, sampler=sampler):
@@ -110,6 +112,7 @@ def generate(model, tokenizer, messages, *, seed, temperature, top_p, max_tokens
 class Slice:
     def __init__(self, a):
         self.a = a
+        grpo_mlx.check_exact_ratio_sampling(temperature=a.temperature, top_p=a.top_p)
         self.run = Path(a.run_dir).expanduser()
         self.run.mkdir(parents=True, exist_ok=True)
         self.cache = Path(a.cache).expanduser()
@@ -174,14 +177,13 @@ class Slice:
     # ------------------------------------------------------------- sampling
     def sample_groups(self, model, tok, tasks, *, step, stage):
         ck = self.ckpt_id(model, step)
-        roll = self.b["rollouts"]
         out = []
         for t in tasks:
             msgs = build_messages(t, t["_buggy"])
             for k in range(self.a.group_size):
                 seed = int(hashlib.sha256(f"{self.a.seed}:{stage}:{step}:{t['instance_id']}:{k}".encode())
                            .hexdigest()[:8], 16)
-                g = generate(model, tok, msgs, seed=seed, temperature=self.a.temperature, top_p=roll["top_p"],
+                g = generate(model, tok, msgs, seed=seed, temperature=self.a.temperature, top_p=self.a.top_p,
                              max_tokens=self.b["inference"]["max_tokens"])
                 env = self.env(t)
                 t0 = time.time()
@@ -195,7 +197,7 @@ class Slice:
                     "stage": stage, "step": step, "group_id": f"{ck}|{t['instance_id']}",
                     "behavior_checkpoint_id": ck, "instance_id": t["instance_id"], "task_group": t["upstream_repo"],
                     "split": t["split"], "sample_index": k, "seed": seed, "temperature": self.a.temperature,
-                    "top_p": roll["top_p"], "prompt_version": PROMPT_VERSION, "prompt_tokens": len(g["prompt_ids"]),
+                    "top_p": self.a.top_p, "prompt_version": PROMPT_VERSION, "prompt_tokens": len(g["prompt_ids"]),
                     "completion_tokens": len(g["completion_ids"]), "finish": g["finish"],
                     "output_sha256": rec["output_sha256"], "reward": rec["reward"], "outcome": rec["outcome"],
                     "verifier": VERIFIER, "cheap_passed": rec["verifiers"]["cheap_f2p_v1"]["passed"],
@@ -233,6 +235,9 @@ class Slice:
                 "grpo_config": self.cfg.to_dict(), "lora": {k: self.b["training"][k] for k in
                                                             ("num_layers", "lora_rank", "lora_scale")},
                 "optimizer": {"name": "Adam", "learning_rate": a.lr}, "prompt_version": PROMPT_VERSION,
+                "sampling": {"temperature": a.temperature, "top_p": a.top_p, "top_k": 0, "min_p": 0.0,
+                             "distribution": "untruncated softmax(logits / temperature)",
+                             "ratio": "exact (behavior and current log-probs under the sampled distribution)"},
                 "platform": platform.platform(), "machine": platform.machine(), "mlx": mx.__version__,
                 "heldout_manifest_loaded": False}
         jdump(self.run / "run_meta.json", meta)
@@ -378,6 +383,8 @@ def parse(argv=None):
     p.add_argument("--lr", type=float, default=1e-5)
     p.add_argument("--clip", type=float, default=0.2)
     p.add_argument("--temperature", type=float, default=0.7)
+    p.add_argument("--top-p", type=float, default=grpo_mlx.EXACT_RATIO_TOP_P,
+                   help="must be 1.0: the exact-ratio objective models the untruncated softmax(logits / T)")
     p.add_argument("--seed", type=int, default=0)
     return p.parse_args(argv)
 
