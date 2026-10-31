@@ -1,0 +1,40 @@
+{
+  "agent_result_written": false,
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate_source_changed": false,
+  "chat_template_rendered": false,
+  "classification": "INFRASTRUCTURE_PRE_INFERENCE",
+  "evidence_log_path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.log",
+  "evidence_log_sha256": "3690c62494a5cf40219197603723a94347cc934b1474df1697e5d5090136bf42",
+  "failed_stage": "workspace_revision_validation",
+  "failure": "PinnedWorkspaceError: workspace must own a real .git directory",
+  "generate_turn_called": false,
+  "generated_tokens": 0,
+  "independent_grader_calls": 0,
+  "initial_messages_constructed": true,
+  "interpretation": "Model weights and tokenizer loaded, then the controller failed before chat-template rendering, prompt tokenization, or model forward/generation. This was a workspace setup failure, not a policy outcome. No tokens were generated; the single authorized inference slot remains unspent. No retry after generation is permitted.",
+  "launch_id": "freshdev-agent-transformers-49418-pre-inference-launch-001",
+  "model_attempt_slot_consumed": false,
+  "model_load_returned": true,
+  "observed_at_utc_minute_precision": "2026-10-31T00:33Z",
+  "peak_process_or_metal_memory_bytes": "NOT_RECORDED",
+  "protocol": "protocols/mlsys_fresh_development_agent_capability_v1.json",
+  "protocol_sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d",
+  "resource_after": {
+    "disk_free_gib_approx": 11.0,
+    "memory_pressure_free_percent": 64,
+    "swap_used_mb_approx": 1858.94
+  },
+  "resource_before": {
+    "disk_free_gib_approx": 11.2,
+    "memory_pressure_free_percent": 66,
+    "swap_used_mb_approx": 1858.94
+  },
+  "runner_command": "The exact task command is in research/flagship/REPRODUCE.md under Prospective Development model diagnostic v1; it used the Transformers task root and original worktree path.",
+  "runner_exit_code": 1,
+  "schema_version": 1,
+  "task_id": "transformers-49418-quantized-cache-residual-flush",
+  "tokenizer_prompt_encoding_called": false,
+  "workspace_git_metadata": "Git worktree .git pointer file; rejected by pinned workspace guard",
+  "workspace_path": "work/agent-workspaces/transformers-49418"
+}

@@ -1,0 +1,318 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+______ CacheTest.test_quantized_layer_chunked_updates_0_empty_at_capacity ______
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_0_empty_at_capacity>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:243: in test_quantized_layer_chunked_updates
+    layer._dequantize(layer._quantized_keys).shape[-2], sequence_length - expected_residual_length
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+source/transformers/cache_utils.py:882: in _dequantize
+    return qtensor.dequantize()
+           ^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:68: in dequantize
+    return QBitsDequantizer.apply(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/autograd/function.py:581: in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:31: in forward
+    data = t._data.unpack()
+           ^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/packed.py:101: in unpack
+    unpacked_data = torch.ops.quanto.unpack(self._data, self._bits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/_ops.py:1255: in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/__init__.py:36: in unpack_cpp
+    return ext.lib.unpack(t, bits)
+           ^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/extension.py:43: in lib
+    os.makedirs(self.build_directory, exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+mode = 511, exist_ok = True
+
+>   ???
+E   OSError: [Errno 30] Read-only file system: '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+
+<frozen os>:225: OSError
+_____ CacheTest.test_quantized_layer_chunked_updates_1_empty_over_capacity _____
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_1_empty_over_capacity>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:243: in test_quantized_layer_chunked_updates
+    layer._dequantize(layer._quantized_keys).shape[-2], sequence_length - expected_residual_length
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+source/transformers/cache_utils.py:882: in _dequantize
+    return qtensor.dequantize()
+           ^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:68: in dequantize
+    return QBitsDequantizer.apply(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/autograd/function.py:581: in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:31: in forward
+    data = t._data.unpack()
+           ^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/packed.py:101: in unpack
+    unpacked_data = torch.ops.quanto.unpack(self._data, self._bits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/_ops.py:1255: in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/__init__.py:36: in unpack_cpp
+    return ext.lib.unpack(t, bits)
+           ^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/extension.py:43: in lib
+    os.makedirs(self.build_directory, exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+mode = 511, exist_ok = True
+
+>   ???
+E   OSError: [Errno 30] Read-only file system: '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+
+<frozen os>:225: OSError
+____ CacheTest.test_quantized_layer_chunked_updates_2_nonempty_at_capacity _____
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_2_nonempty_at_capacity>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:243: in test_quantized_layer_chunked_updates
+    layer._dequantize(layer._quantized_keys).shape[-2], sequence_length - expected_residual_length
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+source/transformers/cache_utils.py:882: in _dequantize
+    return qtensor.dequantize()
+           ^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:68: in dequantize
+    return QBitsDequantizer.apply(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/autograd/function.py:581: in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:31: in forward
+    data = t._data.unpack()
+           ^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/packed.py:101: in unpack
+    unpacked_data = torch.ops.quanto.unpack(self._data, self._bits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/_ops.py:1255: in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/__init__.py:36: in unpack_cpp
+    return ext.lib.unpack(t, bits)
+           ^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/extension.py:43: in lib
+    os.makedirs(self.build_directory, exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+mode = 511, exist_ok = True
+
+>   ???
+E   OSError: [Errno 30] Read-only file system: '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+
+<frozen os>:225: OSError
+___ CacheTest.test_quantized_layer_chunked_updates_3_nonempty_over_capacity ____
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_3_nonempty_over_capacity>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:243: in test_quantized_layer_chunked_updates
+    layer._dequantize(layer._quantized_keys).shape[-2], sequence_length - expected_residual_length
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+source/transformers/cache_utils.py:882: in _dequantize
+    return qtensor.dequantize()
+           ^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:68: in dequantize
+    return QBitsDequantizer.apply(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/autograd/function.py:581: in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:31: in forward
+    data = t._data.unpack()
+           ^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/packed.py:101: in unpack
+    unpacked_data = torch.ops.quanto.unpack(self._data, self._bits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/_ops.py:1255: in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/__init__.py:36: in unpack_cpp
+    return ext.lib.unpack(t, bits)
+           ^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/extension.py:43: in lib
+    os.makedirs(self.build_directory, exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+mode = 511, exist_ok = True
+
+>   ???
+E   OSError: [Errno 30] Read-only file system: '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+
+<frozen os>:225: OSError
+_______ CacheTest.test_quantized_layer_chunked_updates_4_below_capacity ________
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_4_below_capacity>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:243: in test_quantized_layer_chunked_updates
+    layer._dequantize(layer._quantized_keys).shape[-2], sequence_length - expected_residual_length
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+source/transformers/cache_utils.py:882: in _dequantize
+    return qtensor.dequantize()
+           ^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:68: in dequantize
+    return QBitsDequantizer.apply(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/autograd/function.py:581: in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:31: in forward
+    data = t._data.unpack()
+           ^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/packed.py:101: in unpack
+    unpacked_data = torch.ops.quanto.unpack(self._data, self._bits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/_ops.py:1255: in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/__init__.py:36: in unpack_cpp
+    return ext.lib.unpack(t, bits)
+           ^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/extension.py:43: in lib
+    os.makedirs(self.build_directory, exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+mode = 511, exist_ok = True
+
+>   ???
+E   OSError: [Errno 30] Read-only file system: '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+
+<frozen os>:225: OSError
+________ CacheTest.test_quantized_layer_chunked_updates_5_single_token _________
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_5_single_token>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:243: in test_quantized_layer_chunked_updates
+    layer._dequantize(layer._quantized_keys).shape[-2], sequence_length - expected_residual_length
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+source/transformers/cache_utils.py:882: in _dequantize
+    return qtensor.dequantize()
+           ^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:68: in dequantize
+    return QBitsDequantizer.apply(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/autograd/function.py:581: in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/qbits.py:31: in forward
+    data = t._data.unpack()
+           ^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/tensor/packed.py:101: in unpack
+    unpacked_data = torch.ops.quanto.unpack(self._data, self._bits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/torch/_ops.py:1255: in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/__init__.py:36: in unpack_cpp
+    return ext.lib.unpack(t, bits)
+           ^^^^^^^
+usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/extension.py:43: in lib
+    os.makedirs(self.build_directory, exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+mode = 511, exist_ok = True
+
+>   ???
+E   OSError: [Errno 30] Read-only file system: '/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build'
+
+<frozen os>:225: OSError
+=============================== warnings summary ===============================
+source/transformers/testing_utils.py:436
+  /source/transformers/testing_utils.py:436: PytestUnknownMarkWarning: Unknown pytest.mark.slow - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    test_case = pytest.mark.slow(test_case)
+
+trusted/test_cache_utils.py:1044
+  /trusted/test_cache_utils.py:1044: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1090
+  /trusted/test_cache_utils.py:1090: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1132
+  /trusted/test_cache_utils.py:1132: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1228
+  /trusted/test_cache_utils.py:1228: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1305
+  /trusted/test_cache_utils.py:1305: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token
+6 failed, 6 warnings in 7.68s

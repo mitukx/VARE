@@ -1,0 +1,130 @@
+{
+  "common_security_and_resources": {
+    "bytecode_writes": false,
+    "capabilities": "drop all",
+    "cpu_cores": 2,
+    "memory": "2500m",
+    "memory_swap": "2500m",
+    "network": "none",
+    "no_new_privileges": true,
+    "pids_limit": 256,
+    "pytest_disable_plugin_autoload": true,
+    "read_only_root": true,
+    "shm": "64m",
+    "source_and_test_mounts": "read-only",
+    "tmpfs": "/tmp:rw,noexec,nosuid,nodev,size=256m,mode=1777",
+    "user": "65534:65534"
+  },
+  "fixed_command_shape": "docker --context colima run --rm --network=none --read-only --memory=2500m --memory-swap=2500m --cpus=2 --pids-limit=256 --cap-drop=ALL --security-opt=no-new-privileges:true --shm-size=64m --tmpfs /tmp:rw,noexec,nosuid,nodev,size=256m,mode=1777 [arm-specific read-only source mounts] --volume <repo>/results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py:/trusted/test_ray_66694.py:ro --user=65534:65534 --env PYTHONDONTWRITEBYTECODE=1 --env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 --entrypoint=python3 <image-id-64-hex> -m pytest -q -p no:cacheprovider <four frozen selectors>",
+  "frozen_on_utc": "2026-10-31T00:05:44Z",
+  "held_out_access": false,
+  "host": {
+    "docker_context": "colima",
+    "docker_server": "29.5.2",
+    "host_architecture": "aarch64",
+    "host_cpus": 4,
+    "host_memory_bytes": 3221225472
+  },
+  "model_or_agent_inference_authorized": false,
+  "optimizer_update": false,
+  "paid_compute_or_api": false,
+  "parent_addenda": [
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2.json",
+      "sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2-erratum.json",
+      "sha256": "b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-4-runtime-build-retry.json",
+      "sha256": "8a161b0a157b970722ce00fded9031e06ba3d91791e2c876ca057343feb75429"
+    }
+  ],
+  "preflight": {
+    "authorized_once_before_tests": true,
+    "command": "python3 -c \"import ray; from ray.data._internal.stats import DatasetStats, OperatorStatsSummary; from ray.data.block import BlockExecStats, BlockStats; print(ray.__version__)\"",
+    "image_id_must_match": "sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b",
+    "network": "none",
+    "preflight_failure_policy": "Stop before tests and freeze a new correction addendum before any retry.",
+    "result_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-import-preflight.log"
+  },
+  "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-5-runtime-freeze-and-test-authorization",
+  "runtime": {
+    "architecture": "arm64",
+    "base_image": "python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "dependency_versions_from_build_log": [
+      "ray 3.0.0.dev0",
+      "pytest 8.3.5",
+      "numpy 2.5.4",
+      "pyarrow 26.0.0",
+      "pandas 3.1.0",
+      "protobuf 7.36.2"
+    ],
+    "dockerfile_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime-v2",
+    "dockerfile_sha256": "9da37a8fb8c60e513e895437bced793250284d650ed5634ed298bdda80bc5c3b",
+    "image_id": "sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b",
+    "os": "linux",
+    "pytest": "8.3.5",
+    "ray_wheel_sha256": "73bfbeed219e33c6521e750c3eeac921fcaaded8eace2698fe29c254e6590946",
+    "ray_wheel_url": "https://s3-us-west-2.amazonaws.com/ray-wheels/master/5808b33e30092d7761d545f8ce059b14c4cf0098/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl",
+    "successful_build_log_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-build-attempt-003.log",
+    "successful_build_log_sha256": "924a33ce4e367222598143ab3d71e648fc5f143b904b4d17cfa8367c215892b2",
+    "tag": "vare/fresh-qualification-ray-66694-runtime:0.1"
+  },
+  "schema_version": 1,
+  "split_assignment": false,
+  "status": "FROZEN_BEFORE_RUNTIME_PREFLIGHT_AND_TESTS",
+  "task_key": "ray-project/ray#66694",
+  "test_inputs": {
+    "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py",
+    "same_test_overlay_all_arms": true,
+    "selectors": [
+      "test_ray_66694.py::test_dataset_throughput_calculation",
+      "test_ray_66694.py::test_operator_throughput_calculation",
+      "test_ray_66694.py::test_operator_wall_time_multi_node",
+      "test_ray_66694.py::test_block_exec_stats_builder_records_unix_anchor"
+    ],
+    "sha256": "945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c",
+    "source_overlay_hashes_by_arm": {
+      "baseline": {
+        "block.py": "38d638a9036b02a53666c3d23f65086c0887322d30a526968cc98bb567cb8110",
+        "stats.py": "03bc1d1af986be18982626dbb8bed64c84330c9304c4e3fe421e1e9f17b3967d"
+      },
+      "fixed": {
+        "block.py": "234c43ab15deaba0fbb3df2071bf90b02e16f1d6137f1b35742062b3b962a5fe",
+        "stats.py": "e5422f9ad38412bdd83c3c03138ac6dbec7f803fb2939d116f8a5d5d7f6a4589"
+      },
+      "wrong_mutant": {
+        "block.py": "234c43ab15deaba0fbb3df2071bf90b02e16f1d6137f1b35742062b3b962a5fe",
+        "stats.py": "6aca43adc748f8b3e22f2bc4f38b749534f8b8c225b89f49ab70fd5979bd74fe"
+      }
+    },
+    "upstream_test_patch_sha256": "425ba97673e9f90a681a0f30e95b148acd983118893a0012a65d0a326da5b8ae",
+    "wrong_mutant_patch_sha256": "ddbd0679b8b5e6bb0356fd9befd5273ba8d1a9d58b1466eac5e8f90b30b00040"
+  },
+  "test_order_and_gates": [
+    {
+      "arm": "baseline",
+      "attempts": 1,
+      "must_observe": "At least one targeted AssertionError in test_operator_wall_time_multi_node or test_block_exec_stats_builder_records_unix_anchor; zero collection/setup/environment errors; 4 selected cases and zero skips.",
+      "result_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-baseline.log",
+      "run_first": true
+    },
+    {
+      "arm": "wrong_mutant",
+      "attempts": 1,
+      "must_observe": "Targeted AssertionError in test_operator_wall_time_multi_node; all four selected cases collected; no setup/environment error; zero skips.",
+      "result_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-wrong-mutant.log",
+      "run_only_if": "baseline gate met"
+    },
+    {
+      "arm": "fixed",
+      "attempts": 1,
+      "must_observe": "All four selected cases pass; zero skips; no unexpected deselections.",
+      "result_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-fixed.log",
+      "run_only_if": "baseline and wrong-mutant gates met"
+    }
+  ]
+}

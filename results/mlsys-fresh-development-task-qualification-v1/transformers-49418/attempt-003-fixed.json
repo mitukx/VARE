@@ -1,0 +1,31 @@
+{
+  "arm": "exact fixed source with frozen test-only delta",
+  "attempt_id": "freshdev-qualification-transformers-49418-attempt-003-fixed",
+  "exit_code": 0,
+  "failed_cases": 0,
+  "host_command_wall_seconds": 26.322,
+  "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.log",
+  "log_sha256": "a9b443f97a35933935592b869840c0523167d25ef4039ca1e72656a2ae47b5f6",
+  "observed_at_utc": "2026-10-30T23:46:42Z",
+  "passed_cases": 6,
+  "protocol": "mlsys-fresh-development-task-qualification-v1-addendum-5",
+  "pytest_reported_seconds": 25.27,
+  "qualification_effect": "Together with the valid attempt-004 baseline negative control (4 expected assertion failures, 2 passes), all six fixed cases pass with zero skips. Transformers #49418 is QUALIFIED_SOURCE_LEVEL for prospective task-pool consideration; this does not assign a Development split or authorize model inference.",
+  "regression_assertions_executed": true,
+  "runtime_image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+  "schema_version": 1,
+  "selected_cases": 6,
+  "skipped_cases": 0,
+  "source_test_hashes_verified": true,
+  "status": "PASSED_FIXED_ARM",
+  "test_delta_sha256": "b602463ba73fbc3fb21fe3660f463b966ef139bd6316ad8dbbb49ab4009228ab",
+  "test_node_ids": [
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token"
+  ],
+  "xfailed_cases": 0
+}

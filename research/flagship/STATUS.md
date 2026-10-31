@@ -1,44 +1,32 @@
-# VARE research and engineering checkpoint
+# VARE Flagship Mission Status
 
-**Updated:** 2026-10-31 (JST)
+## Current checkpoint
 
-**Milestone:** P2 — first independently graded base-model trajectory on the frozen Train split
+- Milestone: `p5-fresh-development-agent-diagnostic-complete`.
+- Last verified origin/main: `ce097a5d2c695d4fa7a2e2119c3e25bc3a460578` (2026-10-31).
+- Work branch: `codex/fresh-dev-candidate-discovery-v1`.
+- Active PR: [#153 — Qualify a fresh three-task MLSys regression cohort](https://github.com/mitukx/VARE/pull/153), open against main. The diagnostic results are being added to this PR; CI and review must be checked at the new head.
+- PR #150 is merged. PR #152 is the last integrated change at the current main SHA. PR #149 remains open and unrelated.
 
-**Decision:** PR #151 is merged on `main` at `818fd8c802277ad360ee9b5250d0315cfb8dad81`. The 24-entry queue audit found no fresh Development candidates. One preregistered Qwen3-4B attempt on the already assigned Train task MLX-LM #1904 passed its two-case independent grader. This is a narrow Train-task trajectory, not Development generalization or model-learning evidence. No Held-out task or test was opened.
+## Task selection and exposure
 
-## GitHub state
+The source-qualified prospective cohort was Transformers #49418, MLX #4778, and Ray #66694; TRL #7668 remains excluded because its baseline failed before the frozen assertion gate. The metadata-only Development/Train review found no prior family overlap for Transformers #49418 or Ray #66694 and possible broad gradient/autodiff relatedness between MLX #4778 and Train #4662. Only Transformers and Ray were allocated. Their one allowed Development attempts are now consumed. MLX remains unassigned. Public pretraining exposure is **UNKNOWN**; no Held-Out task was opened or used.
 
-- Last verified remote `main`: `818fd8c802277ad360ee9b5250d0315cfb8dad81`.
-- Last integration: [PR #151 — Harden repository-task source staging against symlinked parents](https://github.com/mitukx/VARE/pull/151), merged at the SHA above. Exact-head Python 3.11/3.12/3.13, lint, typecheck, CPU evidence, and E2E recovery checks passed.
-- Current branch: `codex/mlsys-candidate-exposure-audit-v1`, based on `main`.
-- Active PR: [#152 — Audit candidate exposure and record a bounded Train-task model pass](https://github.com/mitukx/VARE/pull/152), open against `main`. Exact-head checks are running.
-- PR #149 remains open on a pre-#150 base with no recorded review; it is unrelated to this checkpoint.
+## Executed model diagnostic
 
-## Work completed
+- Model: `mlx-community/Qwen3-4B-Instruct-2507-4bit`, revision `50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b`; local offline Apple Metal, greedy, 4,096 context cap, 2,048 generated-token cap.
+- Transformers #49418: 126 generated tokens, 4 tool turns, `context_budget_exhausted`, no edit, empty diff; independent pinned grade: 4/6 failed (all four boundary targets), 2/6 controls passed, 0 skips.
+- Ray #66694: 399 generated tokens, 5 tool turns, `context_budget_exhausted`, no edit, empty diff; independent pinned grade: 2/4 failed (both target cases), 2/4 controls passed, 0 skips.
+- Each model attempt and each independent grade ran once. No grader feedback was returned. Both tasks yielded zero independently verified repairs.
+- The earlier Transformers workspace-guard launch remains a separately recorded pre-inference infrastructure failure with zero generated tokens and did not consume the attempt slot.
+- Raw traces, candidate outputs, grader logs/receipts, resource telemetry, exposure append, and report are retained under `results/mlsys-fresh-development-agent-diagnostic-v1/` and hash-indexed in its `SHA256SUMS`.
 
-- Audited all 24 entries of the frozen manual qualification queue against the retained qualification and Stage 2/3 exposure records. The output verifies 1,120 Stage 2 and 2,194 Stage 3 evidence-file hashes.
-- Queue disposition: 2 previously model-exposed Development tasks, 8 historical Held-out tasks still reserved, 3 Train tasks, 11 excluded/collapsed candidates, and **0 fresh Development-eligible tasks**. The frozen queue and historical splits were not changed. The raw survey screen is absent from this checkout, so changed-path and merge-SHA metadata could not be independently revalidated; pretraining exposure also remains unknown.
-- Froze protocol v1 before inference for one deterministic local Qwen3-4B attempt on Train task `mlxlm-1904-tool-arguments`; the exact 4-bit snapshot and source/runtime/grader inputs are hash-bound.
-- Run 19 passed the independent v12 grader: structured object arguments and the JSON-string control both passed (2/2). The agent used 302 generated tokens, five tool turns, and 31.679 seconds on Apple Metal. The grader was called once and returned no feedback to the agent.
-- Recorded a pre-inference launch failure caused by the runner requiring a real `.git` directory; no prompt was rendered and no tokens were generated in that launch. The workspace was corrected at the same pinned source SHA before the one authorized inference.
-- Appended the new Train exposure without modifying prior Stage 2/3 ledgers or the earlier queue audit.
+## Decision
 
-## Validation and experiment state
+- Coding capability feasibility: **NO-GO** under the frozen rule (0/2 independently verified repairs).
+- RL update: **NO-GO**. No successful trajectory or nondegenerate verified reward signal exists; no SFT, optimizer update, GRPO/RL, or Held-Out run occurred.
+- Scientific claim limit: this falsifies the frozen one-shot Qwen3-4B configuration on these two families. It does not establish general model incapability, pretraining independence, generalization, or algorithmic novelty.
 
-- Run-19 evidence bundle checksum verification: passed.
-- Independent grader: **PASSED, 2/2 cases** (`dict_arguments`, `json_string_control`).
-- Model policy update, SFT, GRPO, RL comparison, Development generalization, and Held-out evaluation: **NOT RUN**.
-- Coding-capability milestone: **NO-GO** until a prospective Development cohort exists and is evaluated independently. RL update: **NO-GO**.
-- No paid compute, paid API, or external inference was used. Apple Metal inference was local.
+## Next executable task
 
-## Immediate next action
-
-Inspect exact-head required checks and review on PR #152, fix any actionable issues, and integrate only after repository requirements are met. Then prospectively qualify a new, non-overlapping Development cohort without opening any Held-out files or tests.
-
-## External blockers
-
-- The audited 24-entry manual queue contains no task currently assigned and qualified as fresh Development.
-- The raw survey screen artifact was not present, limiting retrospective revalidation of its source changed-path and merge-SHA metadata.
-- Public-task pretraining exposure is unknown; the single Train-task pass cannot establish generalization.
-- No real policy update or independent post-update task-success comparison has been executed.
-- PR #149 is an unrelated legacy open PR based on a pre-#150 integration point.
+Implement and unit-test one justified context-efficiency controller change based on the shared context-exhaustion failure. Then select and qualify a new Development family, complete its family-overlap review, and freeze a new one-attempt protocol before any further inference. Do not rerun Transformers #49418 or Ray #66694. Do not allocate MLX #4778 until its possible Train-family overlap is resolved or explicitly risk-handled in a frozen protocol.

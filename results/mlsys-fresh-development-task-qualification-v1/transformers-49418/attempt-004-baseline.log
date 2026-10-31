@@ -1,0 +1,94 @@
+FFFF..                                                                   [100%]
+=================================== FAILURES ===================================
+______ CacheTest.test_quantized_layer_chunked_updates_0_empty_at_capacity ______
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_0_empty_at_capacity>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:240: in test_quantized_layer_chunked_updates
+    self.assertEqual(layer.keys.numel(), expected_residual_length * 2 * 16)
+E   AssertionError: 128 != 0
+_____ CacheTest.test_quantized_layer_chunked_updates_1_empty_over_capacity _____
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_1_empty_over_capacity>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:240: in test_quantized_layer_chunked_updates
+    self.assertEqual(layer.keys.numel(), expected_residual_length * 2 * 16)
+E   AssertionError: 256 != 0
+____ CacheTest.test_quantized_layer_chunked_updates_2_nonempty_at_capacity _____
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_2_nonempty_at_capacity>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:240: in test_quantized_layer_chunked_updates
+    self.assertEqual(layer.keys.numel(), expected_residual_length * 2 * 16)
+E   AssertionError: 128 != 0
+___ CacheTest.test_quantized_layer_chunked_updates_3_nonempty_over_capacity ____
+
+a = (<test_cache_utils.CacheTest testMethod=test_quantized_layer_chunked_updates_3_nonempty_over_capacity>,)
+kw = {}
+
+    @wraps(func)
+    def standalone_func(*a, **kw):
+>       return func(*(a + p.args), **p.kwargs, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+usr/local/lib/python3.12/site-packages/parameterized/parameterized.py:620: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trusted/test_cache_utils.py:240: in test_quantized_layer_chunked_updates
+    self.assertEqual(layer.keys.numel(), expected_residual_length * 2 * 16)
+E   AssertionError: 160 != 0
+=============================== warnings summary ===============================
+source/transformers/testing_utils.py:436
+  /source/transformers/testing_utils.py:436: PytestUnknownMarkWarning: Unknown pytest.mark.slow - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    test_case = pytest.mark.slow(test_case)
+
+trusted/test_cache_utils.py:1044
+  /trusted/test_cache_utils.py:1044: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1090
+  /trusted/test_cache_utils.py:1090: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1132
+  /trusted/test_cache_utils.py:1132: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1228
+  /trusted/test_cache_utils.py:1228: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+trusted/test_cache_utils.py:1305
+  /trusted/test_cache_utils.py:1305: PytestUnknownMarkWarning: Unknown pytest.mark.torch_export_test - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.torch_export_test
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity
+FAILED trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity
+4 failed, 2 passed, 6 warnings in 26.01s

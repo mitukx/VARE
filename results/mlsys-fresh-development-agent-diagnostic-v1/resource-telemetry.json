@@ -1,0 +1,82 @@
+{
+  "attempt_process_metrics": {
+    "ray-66694": {
+      "device": "apple_metal",
+      "elapsed_seconds": 45.606,
+      "generated_tokens": 399,
+      "max_rss_bytes": 2625110016,
+      "metrics_source": "results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/agent-attempt-001.json",
+      "mlx_active_memory_bytes": 2264693768,
+      "mlx_lm": "0.32.2",
+      "mlx_peak_memory_bytes": 3630135224,
+      "python": "3.12.12",
+      "seed": 66694,
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain"
+    },
+    "transformers-49418": {
+      "device": "apple_metal",
+      "elapsed_seconds": 25.124,
+      "generated_tokens": 126,
+      "max_rss_bytes": 2619064320,
+      "metrics_source": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/agent-attempt-001.json",
+      "mlx_active_memory_bytes": 2264693768,
+      "mlx_lm": "0.32.2",
+      "mlx_peak_memory_bytes": 3419302480,
+      "python": "3.12.12",
+      "seed": 49418,
+      "task_id": "transformers-49418-quantized-cache-residual-flush"
+    }
+  },
+  "host_memory_bytes": 34359738368,
+  "host_platform": "macOS-27.0.1-arm64-arm-64bit",
+  "limitations": [
+    "The pre-inference launch failure record did not capture peak per-process or Metal memory.",
+    "MLX reports active and peak Metal allocation; these are not a GPU utilization or total-device-memory measurement.",
+    "The model runtime reported MLX version as unknown in the attempt artifacts; the separately frozen environment lock and import preflight record MLX 0.32.4."
+  ],
+  "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "post_run_host_snapshot": {
+    "commands": [
+      "memory_pressure",
+      "sysctl vm.swapusage",
+      "df -h ."
+    ],
+    "free_disk_gib_approx": 11.0,
+    "memory_pressure_free_percent": 67,
+    "observed_at_utc": "2026-10-31T00:42:02Z",
+    "swap_used_mib": 1858.94
+  },
+  "pre_inference_gates": [
+    {
+      "free_disk_gib_approx": 11.0,
+      "gate_thresholds": {
+        "free_disk_gib_min": 5,
+        "memory_pressure_free_percent_min": 50,
+        "swap_used_gib_max": 4
+      },
+      "measured_before_model_load": true,
+      "memory_pressure_free_percent": 65,
+      "record_origin": "captured immediately before the single model attempt",
+      "status": "PASSED",
+      "swap_used_mib": 1858.94,
+      "task_id": "transformers-49418-quantized-cache-residual-flush"
+    },
+    {
+      "free_disk_gib_approx": 11.0,
+      "gate_thresholds": {
+        "free_disk_gib_min": 5,
+        "memory_pressure_free_percent_min": 50,
+        "swap_used_gib_max": 4
+      },
+      "measured_before_model_load": true,
+      "memory_pressure_free_percent": 68,
+      "record_origin": "raw memory_pressure, sysctl vm.swapusage, and df -h output captured immediately before the single model attempt",
+      "status": "PASSED",
+      "swap_used_mib": 1858.94,
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain"
+    }
+  ],
+  "protocol_id": "mlsys-fresh-development-agent-capability-v1",
+  "schema_version": 1
+}

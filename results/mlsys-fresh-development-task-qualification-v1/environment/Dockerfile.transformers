@@ -1,0 +1,4 @@
+FROM vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97
+USER 0:0
+RUN python -m pip install --disable-pip-version-check --no-cache-dir --no-deps optimum-quanto==0.2.7
+USER 65534:65534

@@ -1,0 +1,76 @@
+{
+  "derived_test_suite_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py",
+  "derived_test_suite_sha256": "945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c",
+  "execution": {
+    "arms": [
+      "baseline",
+      "wrong_mutant",
+      "fixed"
+    ],
+    "attempts_per_arm": 1,
+    "expected_selected_cases_per_arm": 4,
+    "if_runtime_or_arm_is_inconclusive": "Preserve logs and stop; any retry requires a new frozen addendum before the retry. No task substitution or gate relaxation.",
+    "require_baseline_target_assertion_failure": true,
+    "require_fixed_all_pass": true,
+    "require_wrong_mutant_target_assertion_failure": true,
+    "require_zero_skips": true,
+    "resources": {
+      "cpu_cores": 2,
+      "memory_bytes": 2621440000,
+      "memory_swap_bytes": 2621440000,
+      "pids": 256,
+      "shm_bytes": 67108864,
+      "tmpfs_tmp_bytes": 268435456
+    },
+    "security": [
+      "network=none",
+      "read-only root",
+      "uid 65534",
+      "drop all capabilities",
+      "no-new-privileges",
+      "only read-only source/test bind mounts"
+    ]
+  },
+  "frozen_on_utc": "2026-10-31T00:00:01Z",
+  "held_out_access": false,
+  "input_manifest_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/input-manifest.json",
+  "input_manifest_sha256": "5bde92ba748a8014a18730c1e9273db27ac9b1ad387013e16803d2e5416a8172",
+  "model_or_agent_inference_authorized": false,
+  "paid_compute_or_api": false,
+  "parent_addendum_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-1.json",
+  "parent_addendum_sha256": "9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9",
+  "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-2",
+  "runtime_build": {
+    "architecture": "linux/arm64",
+    "base_image": "python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "install_extras": [
+      "ray[data]"
+    ],
+    "network_during_build": true,
+    "network_during_test": false,
+    "pytest": "8.3.5",
+    "ray_wheel_commit": "5808b33e30092d7761d545f8ce059b14c4cf0098",
+    "ray_wheel_url": "https://s3-us-west-2.amazonaws.com/ray-wheels/master/5808b33e30092d7761d545f8ce059b14c4cf0098/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl",
+    "test_execution_authorized_before_runtime_image_digest_freeze": false
+  },
+  "schema_version": 1,
+  "selectors": [
+    "test_ray_66694.py::test_dataset_throughput_calculation",
+    "test_ray_66694.py::test_operator_throughput_calculation",
+    "test_ray_66694.py::test_operator_wall_time_multi_node",
+    "test_ray_66694.py::test_block_exec_stats_builder_records_unix_anchor"
+  ],
+  "source_hash_manifest": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/input-manifest.json",
+  "split_assignment": false,
+  "status": "FROZEN_BEFORE_RUNTIME_BUILD_AND_TEST_EXECUTION",
+  "task_key": "ray-project/ray#66694",
+  "test_suite_derivation": "Preserves the four changed/new upstream test functions and their correctness assertions. Removes the unused Ray-cluster fixtures and dynamically supplies start_unix_time_s to the frozen dataclass so the same test inputs reach the targeted assertions on pre-fix and fixed BlockExecStats APIs; the builder test uses getattr so absence is an assertion failure rather than a setup exception.",
+  "upstream_diff_content_sha256": "425ba97673e9f90a681a0f30e95b148acd983118893a0012a65d0a326da5b8ae",
+  "upstream_diff_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/upstream.patch.gz",
+  "upstream_diff_sha256": "b73d872dbd27d1e7ebc719e1ccd0966e2b490089d8a92e038929fdc0835503fb",
+  "wrong_mutant": {
+    "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/wrong-mutant.patch",
+    "sha256": "ddbd0679b8b5e6bb0356fd9befd5273ba8d1a9d58b1466eac5e8f90b30b00040",
+    "single_change": "In stats.py, compute the end using start_unix_time_s + end_time_s rather than start_unix_time_s + wall_time_s. This deliberately mixes the worker-local monotonic clock epoch with the shared Unix epoch. The multi-node-span assertion must reject it."
+  }
+}

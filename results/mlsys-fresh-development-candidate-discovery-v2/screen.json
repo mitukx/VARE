@@ -1,0 +1,40 @@
+{
+  "candidate_count": 0,
+  "candidate_pool_sha256": "1e5c37f4dae30f7e75323001afa3fb94b527f36bc1314eab3f43c7dc78e27b2f",
+  "candidates": [],
+  "excluded_count": 0,
+  "model_or_agent_inference_authorized": false,
+  "model_training_cutoff_proxy": "2025-08-09",
+  "protocol_sha256": "87850264f2abb83b31345776b68811449bde6ab0a671a2c2795972d106ccd764",
+  "provisional_count": 0,
+  "qualification_authorized": false,
+  "rule": {
+    "exclude_exact_prior_candidate_or_exposure_identity": true,
+    "maximum_changed_files": 8,
+    "maximum_changed_lines": 250,
+    "meaning": "metadata-only triage; not task qualification, split assignment, or proof of pretraining freshness",
+    "merged_date_window": [
+      "2026-10-01",
+      "2026-10-30"
+    ],
+    "specialized_title_markers": [
+      "gpu",
+      "metal",
+      "cuda",
+      "fsdp",
+      "distributed",
+      "expert parallel",
+      "neuron",
+      "architecture",
+      "support ",
+      "add ",
+      "integration test",
+      "preemption"
+    ],
+    "strictly_after_model_training_cutoff_proxy": "2025-08-09",
+    "test_path_in_changed_file_metadata_required": true
+  },
+  "schema_version": 1,
+  "screen_id": "mlsys-fresh-development-metadata-screen-v2",
+  "training_authorized": false
+}

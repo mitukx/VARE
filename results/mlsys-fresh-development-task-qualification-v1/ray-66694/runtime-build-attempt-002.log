@@ -1,0 +1,18 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  78.18MB
+Step 1/8 : FROM python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 AS build
+ ---> 34386ef0cb08
+Step 2/8 : ENV PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_NO_CACHE_DIR=1
+ ---> Running in 1c74afb64c9b
+ ---> Removed intermediate container 1c74afb64c9b
+ ---> 07020c04cab5
+Step 3/8 : COPY ray-wheel.whl /tmp/ray-wheel.whl
+ ---> cd4beaac7322
+Step 4/8 : RUN echo "73bfbeed219e33c6521e750c3eeac921fcaaded8eace2698fe29c254e6590946  /tmp/ray-wheel.whl" | sha256sum -c -     && python3 -m pip install --no-cache-dir --prefix=/install        "pytest==8.3.5"        "ray[data] @ file:///tmp/ray-wheel.whl"
+ ---> Running in e69007556406
+/tmp/ray-wheel.whl: OK
+[91mERROR: ray-wheel.whl is not a valid wheel filename.
+[0mThe command '/bin/sh -c echo "73bfbeed219e33c6521e750c3eeac921fcaaded8eace2698fe29c254e6590946  /tmp/ray-wheel.whl" | sha256sum -c -     && python3 -m pip install --no-cache-dir --prefix=/install        "pytest==8.3.5"        "ray[data] @ file:///tmp/ray-wheel.whl"' returned a non-zero code: 1

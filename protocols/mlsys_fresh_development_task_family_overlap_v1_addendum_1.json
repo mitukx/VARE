@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-task-family-overlap-v1-addendum-1",
+  "created_at_utc": "2026-10-31T00:16:09Z",
+  "parent_protocol_path": "protocols/mlsys_fresh_development_task_family_overlap_v1.json",
+  "parent_protocol_sha256": "6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d",
+  "reason": "The parent protocol binds candidate qualification and changed-path inputs but needs the original selected-task metadata mapping for upstream PR identity and issue title.",
+  "additional_frozen_inputs": [
+    {
+      "path": "protocols/mlsys_fresh_development_task_qualification_v1.json",
+      "sha256": "3ea5a8f18832295ca07e9584e47fe04a63554a74d95133efc8d2db3a1e261828"
+    },
+    {
+      "path": "results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json",
+      "sha256": "810fb823781f3bc44a0272db230cc3d65b43751c415e53229c81104a6183baad"
+    }
+  ],
+  "change_scope": "Metadata identity mapping only for the three already-qualified candidates. Adds no task, changes no overlap criteria, decision gate, authorization, or held-out boundary. No historical task-family comparison has started.",
+  "authorization": "Same METADATA_ONLY_OVERLAP_REVIEW authorization as the parent protocol; no split assignment, test execution, Held-Out access, or target-model inference."
+}

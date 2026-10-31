@@ -1,0 +1,89 @@
+{
+  "allowed_changed_paths": [
+    "python/ray/data/_internal/stats.py",
+    "python/ray/data/block.py",
+    "python/ray/data/tests/conftest.py",
+    "python/ray/data/tests/test_stats.py"
+  ],
+  "base_commit": "8374f91cad9e89050368fdbb34ee78f042d73902",
+  "derived_test_suite": {
+    "derivation": "Compatibility-adapted focused replay of the four changed/new upstream test functions; test assertions retained, helper dynamically supplies the new metadata field so baseline reaches target assertions.",
+    "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py",
+    "sha256": "945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c",
+    "size_bytes": 2499
+  },
+  "file_hashes": {
+    "python/ray/data/_internal/stats.py": {
+      "base": {
+        "git_blob_sha1": "d5ae36d30959f553ac0dd43ead42a00cce77bec2",
+        "sha256": "03bc1d1af986be18982626dbb8bed64c84330c9304c4e3fe421e1e9f17b3967d",
+        "size_bytes": 93945
+      },
+      "fixed": {
+        "git_blob_sha1": "7bae403197f7b01ca063aef876599c104f213320",
+        "sha256": "e5422f9ad38412bdd83c3c03138ac6dbec7f803fb2939d116f8a5d5d7f6a4589",
+        "size_bytes": 94010
+      }
+    },
+    "python/ray/data/block.py": {
+      "base": {
+        "git_blob_sha1": "a14c37fc148d8286761103e02c5e979d2e39b9eb",
+        "sha256": "38d638a9036b02a53666c3d23f65086c0887322d30a526968cc98bb567cb8110",
+        "size_bytes": 35636
+      },
+      "fixed": {
+        "git_blob_sha1": "aa5c6a3fccc4687d111d1780198e994bfdff5014",
+        "sha256": "234c43ab15deaba0fbb3df2071bf90b02e16f1d6137f1b35742062b3b962a5fe",
+        "size_bytes": 36406
+      }
+    },
+    "python/ray/data/tests/conftest.py": {
+      "base": {
+        "git_blob_sha1": "26eb1d37b0f7a70c6f2ac5ab61ee4b74a6289b20",
+        "sha256": "3825ce2bfeec88fc14fbea82f496e3d8798617b0d4292732ff23061456b16eb0",
+        "size_bytes": 28964
+      },
+      "fixed": {
+        "git_blob_sha1": "646a5a6f4d6fed619ac148fc7dc0a6f2ce8db44c",
+        "sha256": "23c4a9d6d9adfe7f8452109b0a0934a9b2de593388cfe48c30c13dc79fe98645",
+        "size_bytes": 29059
+      }
+    },
+    "python/ray/data/tests/test_stats.py": {
+      "base": {
+        "git_blob_sha1": "991dfc4851d015713f89059b26466df00d5bc248",
+        "sha256": "cae3795654761213bd854a9598495454b8a74331bc4a984ae640ba4abc150d8d",
+        "size_bytes": 136493
+      },
+      "fixed": {
+        "git_blob_sha1": "68e2b50469d911de3d9190cd5c435a94950c6694",
+        "sha256": "045de1dccde9872f403f5c9294f35bc56aad863b1dca15bf77305a510955b3f7",
+        "size_bytes": 137395
+      }
+    }
+  },
+  "fixed_commit": "5808b33e30092d7761d545f8ce059b14c4cf0098",
+  "pr_head_commit": "4ec20f4047ecd405bd744d95f6c07a0b275d6677",
+  "schema_version": 1,
+  "selectors": [
+    "test_ray_66694.py::test_dataset_throughput_calculation",
+    "test_ray_66694.py::test_operator_throughput_calculation",
+    "test_ray_66694.py::test_operator_wall_time_multi_node",
+    "test_ray_66694.py::test_block_exec_stats_builder_records_unix_anchor"
+  ],
+  "source_inspection_scope": "Only the four changed paths at the pinned base/head/merge commits were reviewed. No test executed during this review.",
+  "task_key": "ray-project/ray#66694",
+  "upstream_patch": {
+    "compression": "gzip with deterministic mtime=0",
+    "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/upstream.patch.gz",
+    "sha256": "b73d872dbd27d1e7ebc719e1ccd0966e2b490089d8a92e038929fdc0835503fb",
+    "size_bytes": 2581,
+    "uncompressed_sha256": "425ba97673e9f90a681a0f30e95b148acd983118893a0012a65d0a326da5b8ae",
+    "uncompressed_size_bytes": 8682
+  },
+  "wrong_mutant": {
+    "mutation": "Replace wall_time_s with the worker-local monotonic end_time_s when computing the Unix end; this intentionally mixes clock epochs and should be rejected by the multi-node span assertion.",
+    "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/wrong-mutant.patch",
+    "sha256": "ddbd0679b8b5e6bb0356fd9befd5273ba8d1a9d58b1466eac5e8f90b30b00040"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "case_labels": [
+    "empty_at_capacity",
+    "empty_over_capacity",
+    "nonempty_at_capacity",
+    "nonempty_over_capacity",
+    "below_capacity",
+    "single_token"
+  ],
+  "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token",
+  "container_policy": "All isolation, environment, workspace-mount, resource, and offline-cache settings remain exactly as specified in addenda 1 and 2.",
+  "exact_test_node_ids": [
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token"
+  ],
+  "execution_order": [
+    "Run all six baseline nodes in one invocation. Count as the baseline negative control only when the targeted correctness assertions execute and at least one fails for the residual-boundary behavior.",
+    "If baseline assertions execute and fail as required, run the same six selectors against the exact fixed source.",
+    "Preserve both earlier zero-case attempts as environment/selector failures; they do not qualify or disqualify the task."
+  ],
+  "expected_cases": 6,
+  "frozen_at_utc": "2026-10-30T23:32:31Z",
+  "parameterized_version": "0.9.0",
+  "parent_addendum_path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-2.json",
+  "parent_addendum_sha256": "9f8f4ce84dbbfcaf9bd9093aa71d00c69034764d5616f1d6946133512746458a",
+  "prior_attempt": {
+    "attempt_id": "freshdev-qualification-transformers-49418-attempt-002-baseline",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-baseline.log",
+    "log_sha256": "7e9651e0f8f421bee2de0f4dca30976008d3fc4622fc416a45f43ce0d1e981e5",
+    "pytest_cases_selected": 0,
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-baseline.json",
+    "record_sha256": "30c19c9faffdd6de5d3f4a9b8354ecf099b4835647e8247c4361a6a02b0854a0",
+    "regression_assertions_executed": false,
+    "status": "INCONCLUSIVE_SELECTOR_MISMATCH"
+  },
+  "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-3",
+  "protocol_status": "frozen_before_transformers_49418_baseline_retry_with_parameterized_nodes",
+  "qualification_rule": "The task qualifies only when all six fixed-source nodes pass with zero skips, the baseline has at least one targeted correctness assertion failure, all frozen source/test hashes match, and execution remains within the frozen limits.",
+  "runtime_image_id": "sha256:72844693faee9d2b814cd7c0fc59fc1f8b968bcb1933121e9efb008705d5a457",
+  "schema_version": 1,
+  "scope": "Supersedes only the Transformers #49418 pytest node selector inherited from addendum 1/2. Task, commits, test file and delta hashes, corrected runtime, network isolation, resource limits, and acceptance rule are unchanged.",
+  "task_id": "transformers-49418-quantized-cache-residual-flush",
+  "test_file_sha256": "5088fd067cbc9d99e49b5edbb7a5d13431621922c6c651135b8f16a218f80bea",
+  "test_only_delta_sha256": "b602463ba73fbc3fb21fe3660f463b966ef139bd6316ad8dbbb49ab4009228ab"
+}

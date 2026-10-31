@@ -1,0 +1,32 @@
+..FF                                                                     [100%]
+=================================== FAILURES ===================================
+______________________ test_operator_wall_time_multi_node ______________________
+
+    def test_operator_wall_time_multi_node():
+        blocks = [
+            _mock_block_stats(10800.0, 10810.0, node_id="A", unix_start=1000.0, task_idx=0),
+            _mock_block_stats(120.0, 130.0, node_id="B", unix_start=1002.0, task_idx=0),
+        ]
+        summary = OperatorStatsSummary.from_block_metadata(
+            operator_name="MockOperator", block_stats=blocks, is_sub_operator=False
+        )
+>       assert summary.time_total_s == 12.0
+E       AssertionError: assert 10690.0 == 12.0
+E        +  where 10690.0 = OperatorStatsSummary(\n   operator_name='MockOperator',\n   is_suboperator=False,\n   time_total_s=10690.0s,\n   block_exe...0s'},\n   output_size_bytes=None,\n   node_count={'min': '1000ms', 'max': '1000ms', 'mean': '1000.0ms', 'count': '2s'},\n).time_total_s
+
+trusted/test_ray_66694.py:57: AssertionError
+______________ test_block_exec_stats_builder_records_unix_anchor _______________
+
+    def test_block_exec_stats_builder_records_unix_anchor():
+        before = time.time()
+        stats = BlockExecStats.builder().build(node_id="node")
+        after = time.time()
+        anchor = getattr(stats, "start_unix_time_s", None)
+>       assert anchor is not None
+E       assert None is not None
+
+trusted/test_ray_66694.py:68: AssertionError
+=========================== short test summary info ============================
+FAILED trusted/test_ray_66694.py::test_operator_wall_time_multi_node - Assert...
+FAILED trusted/test_ray_66694.py::test_block_exec_stats_builder_records_unix_anchor
+2 failed, 2 passed in 0.79s

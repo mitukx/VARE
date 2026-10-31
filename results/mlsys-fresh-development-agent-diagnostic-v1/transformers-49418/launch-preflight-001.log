@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "scripts/run_local_agent.py", line 1070, in <module>
+    raise SystemExit(main())
+  File "scripts/run_local_agent.py", line 777, in main
+    workspace_revision = run_git(workspace, 'rev-parse', 'HEAD')
+  File "scripts/run_local_agent.py", line 266, in run_git
+    return pinned_git(root, *args).decode("utf-8").strip()
+  File "scripts/pinned_workspace_git.py", line 56, in pinned_git
+    root, git_dir = _workspace_paths(root)
+  File "scripts/pinned_workspace_git.py", line 26, in _workspace_paths
+    raise PinnedWorkspaceError("workspace must own a real .git directory")
+pinned_workspace_git.PinnedWorkspaceError: workspace must own a real .git directory

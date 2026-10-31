@@ -1,0 +1,84 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ TestUnwrapModelForGeneration.test_restores_gradient_checkpointing_kwargs[True] _
+
+self = <test_model_utils.TestUnwrapModelForGeneration object at 0xf6c2c28d37d0>
+use_reentrant = True
+
+    @pytest.mark.parametrize("use_reentrant", [True, False])
+    def test_restores_gradient_checkpointing_kwargs(self, use_reentrant):
+        model = AutoModelForCausalLM.from_pretrained("trl-internal-testing/tiny-Qwen2ForCausalLM-2.5").to(torch_device)
+        model.train()  # checkpointing only runs in training mode
+        model.gradient_checkpointing_enable({"use_reentrant": use_reentrant})
+>       with unwrap_model_for_generation(
+            model, Accelerator(), gradient_checkpointing_kwargs={"use_reentrant": use_reentrant}
+        ):
+
+/trusted/test_model_utils.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.12/contextlib.py:301: in helper
+    return _GeneratorContextManager(func, args, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <contextlib._GeneratorContextManager object at 0xf6c2c2a39670>
+func = <function unwrap_model_for_generation at 0xf6c2c296f100>
+args = (Qwen2ForCausalLM(
+  (model): Qwen2Model(
+    (embed_tokens): Embedding(152064, 8)
+    (layers): ModuleList(
+      (0-...inear(in_features=8, out_features=152064, bias=False)
+), <accelerate.accelerator.Accelerator object at 0xf6c2c64364e0>)
+kwds = {'gradient_checkpointing_kwargs': {'use_reentrant': True}}
+
+    def __init__(self, func, args, kwds):
+>       self.gen = func(*args, **kwds)
+                   ^^^^^^^^^^^^^^^^^^^
+E       TypeError: unwrap_model_for_generation() got an unexpected keyword argument 'gradient_checkpointing_kwargs'
+
+/usr/local/lib/python3.12/contextlib.py:105: TypeError
+----------------------------- Captured stderr call -----------------------------
+Loading weights:   0%|          | 0/27 [00:00<?, ?it/s]Loading weights: 100%|██████████| 27/27 [00:00<00:00, 10743.40it/s]
+_ TestUnwrapModelForGeneration.test_restores_gradient_checkpointing_kwargs[False] _
+
+self = <test_model_utils.TestUnwrapModelForGeneration object at 0xf6c2c28d3890>
+use_reentrant = False
+
+    @pytest.mark.parametrize("use_reentrant", [True, False])
+    def test_restores_gradient_checkpointing_kwargs(self, use_reentrant):
+        model = AutoModelForCausalLM.from_pretrained("trl-internal-testing/tiny-Qwen2ForCausalLM-2.5").to(torch_device)
+        model.train()  # checkpointing only runs in training mode
+        model.gradient_checkpointing_enable({"use_reentrant": use_reentrant})
+>       with unwrap_model_for_generation(
+            model, Accelerator(), gradient_checkpointing_kwargs={"use_reentrant": use_reentrant}
+        ):
+
+/trusted/test_model_utils.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.12/contextlib.py:301: in helper
+    return _GeneratorContextManager(func, args, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <contextlib._GeneratorContextManager object at 0xf6c2c427ebd0>
+func = <function unwrap_model_for_generation at 0xf6c2c296f100>
+args = (Qwen2ForCausalLM(
+  (model): Qwen2Model(
+    (embed_tokens): Embedding(152064, 8)
+    (layers): ModuleList(
+      (0-...inear(in_features=8, out_features=152064, bias=False)
+), <accelerate.accelerator.Accelerator object at 0xf6c2c51fca40>)
+kwds = {'gradient_checkpointing_kwargs': {'use_reentrant': False}}
+
+    def __init__(self, func, args, kwds):
+>       self.gen = func(*args, **kwds)
+                   ^^^^^^^^^^^^^^^^^^^
+E       TypeError: unwrap_model_for_generation() got an unexpected keyword argument 'gradient_checkpointing_kwargs'
+
+/usr/local/lib/python3.12/contextlib.py:105: TypeError
+----------------------------- Captured stderr call -----------------------------
+Loading weights:   0%|          | 0/27 [00:00<?, ?it/s]Loading weights: 100%|██████████| 27/27 [00:00<00:00, 20824.97it/s]
+=========================== short test summary info ============================
+FAILED ../trusted/test_model_utils.py::TestUnwrapModelForGeneration::test_restores_gradient_checkpointing_kwargs[True]
+FAILED ../trusted/test_model_utils.py::TestUnwrapModelForGeneration::test_restores_gradient_checkpointing_kwargs[False]
+2 failed in 3.82s

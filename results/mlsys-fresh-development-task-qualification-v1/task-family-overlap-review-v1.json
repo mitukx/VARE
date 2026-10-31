@@ -1,0 +1,299 @@
+{
+  "schema_version": 1,
+  "review_id": "mlsys-fresh-development-task-family-overlap-v1",
+  "reviewed_at_utc": "2026-10-31T00:20:57Z",
+  "protocol": {
+    "path": "protocols/mlsys_fresh_development_task_family_overlap_v1.json",
+    "sha256": "6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d",
+    "addenda": [
+      {
+        "path": "protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_1.json",
+        "sha256": "5d7a44df1cf27bbef1030c2c51dde1f89fe71361949a71d6404d379c22a8f0f2"
+      },
+      {
+        "path": "protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_2.json",
+        "sha256": "283296307bdacf3ebedbcd56274542ba1d5630644c2817b6166cf94d19b1efb5"
+      }
+    ]
+  },
+  "input_hash_verification": "PASSED_ALL_FROZEN_INPUTS",
+  "scope": {
+    "historical_splits_compared": [
+      "Development",
+      "Train"
+    ],
+    "heldout_access": "NONE",
+    "target_model_or_agent_inference": "NONE",
+    "tests_run_during_review": false,
+    "pretraining_exposure": "UNKNOWN"
+  },
+  "historical_development_and_train_inventory": [
+    {
+      "task_id": "transformers-45852-4d-mask",
+      "task_family": "4d_masked_batch_collation",
+      "repository": "huggingface/transformers",
+      "source_pr": "https://github.com/huggingface/transformers/pull/45852",
+      "split": "development",
+      "grader_path": "tests/trainer/test_data_collator.py",
+      "grader_selector": "4d_attention_mask",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "model_exposure": {
+        "classification": "confirmed_prior_model_exposure",
+        "attempt_count": 1,
+        "stage2_attempt_count": 1,
+        "stage3_attempt_count": 0
+      },
+      "frozen_survey_changed_file_count": 2
+    },
+    {
+      "task_id": "mlx-4662-padding-input-gradient",
+      "task_family": "convolution_input_gradient_shape",
+      "repository": "ml-explore/mlx",
+      "source_pr": "https://github.com/ml-explore/mlx/pull/4662",
+      "split": "train",
+      "grader_path": "python/tests/test_conv.py",
+      "grader_selector": "padding_input_grad",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "model_exposure": {
+        "classification": "not_model_exposed_per_frozen_catalog",
+        "attempt_count": 0
+      },
+      "frozen_survey_changed_file_count": 2
+    },
+    {
+      "task_id": "mlxlm-1795-moe-routing-gradient",
+      "task_family": "moe_router_gradient_indices",
+      "repository": "ml-explore/mlx-lm",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1795",
+      "split": "train",
+      "grader_path": "tests/test_tuner_trainer.py",
+      "grader_selector": "granitemoe_backward or granitemoehybrid_backward or lfm2_moe_backward",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "model_exposure": {
+        "classification": "not_model_exposed_per_frozen_catalog",
+        "attempt_count": 0
+      },
+      "frozen_survey_changed_file_count": 4
+    },
+    {
+      "task_id": "mlxlm-1904-tool-arguments",
+      "task_family": "tool_call_dict_arguments",
+      "repository": "ml-explore/mlx-lm",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1904",
+      "split": "train",
+      "grader_path": "tests/test_server.py",
+      "grader_selector": "dict_tool_arguments",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "model_exposure": {
+        "classification": "confirmed_prior_agent_inference",
+        "attempt_count": 1,
+        "run_id": "mlsys-repo-eval-v1-run-19",
+        "independent_grade": "2/2"
+      },
+      "frozen_survey_changed_file_count": 2
+    },
+    {
+      "task_id": "mlxlm-1912-top-p-min-token",
+      "task_family": "top_p_retains_most_likely_token",
+      "repository": "ml-explore/mlx-lm",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1912",
+      "split": "development",
+      "grader_path": "tests/test_sample_utils.py",
+      "grader_selector": "tiny_thresholds",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "model_exposure": {
+        "classification": "confirmed_prior_model_exposure",
+        "attempt_count": 5,
+        "stage2_attempt_count": 2,
+        "stage3_attempt_count": 3
+      },
+      "frozen_survey_changed_file_count": 2
+    },
+    {
+      "task_id": "mlxlm-1971-mimo-value-scale",
+      "task_family": "mimo_attention_value_scale",
+      "repository": "ml-explore/mlx-lm",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1971",
+      "split": "development",
+      "grader_path": "tests/test_models.py",
+      "grader_selector": "mimo_v2_flash_attention_value_scale",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "model_exposure": {
+        "classification": "confirmed_prior_model_exposure",
+        "attempt_count": 2,
+        "stage2_attempt_count": 2,
+        "stage3_attempt_count": 0
+      }
+    }
+  ],
+  "historical_inventory_count": 6,
+  "prior_model_exposure_summary": {
+    "development_tasks": {
+      "transformers-45852-4d-mask": 1,
+      "mlxlm-1912-top-p-min-token": 5,
+      "mlxlm-1971-mimo-value-scale": 2
+    },
+    "train_tasks": {
+      "mlxlm-1904-tool-arguments": {
+        "attempts": 1,
+        "run_id": "mlsys-repo-eval-v1-run-19",
+        "grade": "2/2"
+      },
+      "mlx-4662-padding-input-gradient": 0,
+      "mlxlm-1795-moe-routing-gradient": 0
+    },
+    "training_updates": "NONE_RECORDED"
+  },
+  "candidate_assessments": [
+    {
+      "task_id": "transformers-49418-quantized-cache-residual-flush",
+      "repository": "huggingface/transformers",
+      "upstream_pull_request": 49418,
+      "title": "Fix QuantizedCache residual flushing for multi-token updates",
+      "task_family": "quantized_cache_residual_update_boundary",
+      "candidate_changed_paths": [
+        "src/transformers/cache_utils.py",
+        "tests/utils/test_cache_utils.py"
+      ],
+      "prior_comparisons": [
+        {
+          "task_id": "transformers-45852-4d-mask",
+          "split": "Development",
+          "task_family": "4d_masked_batch_collation",
+          "same_repository": true,
+          "same_upstream_identity": false,
+          "historical_grader_path": "tests/trainer/test_data_collator.py",
+          "result": "DISTINCT_FAMILY_METADATA"
+        }
+      ],
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "confidence": "MODERATE",
+      "rationale": "The same-repository prior Development task is the 4D attention-mask collator family. This candidate is quantized-cache residual flushing and changes cache_utils.py plus cache utility tests. Family labels and grader path differ. Historical source patch paths are absent from the bound exposure records, so path-level non-overlap is not asserted."
+    },
+    {
+      "task_id": "mlx-4778-complex-power-vjp-conjugation",
+      "repository": "ml-explore/mlx",
+      "upstream_pull_request": 4778,
+      "title": "Fix complex power VJP conjugation",
+      "task_family": "complex_power_vector_jacobian_conjugation",
+      "candidate_changed_paths": [
+        "mlx/primitives.cpp",
+        "python/tests/test_autograd.py"
+      ],
+      "prior_comparisons": [
+        {
+          "task_id": "mlx-4662-padding-input-gradient",
+          "split": "Train",
+          "task_family": "convolution_input_gradient_shape",
+          "same_repository": true,
+          "same_upstream_identity": false,
+          "historical_grader_path": "python/tests/test_conv.py",
+          "result": "POSSIBLE_BROAD_AUTODIFF_RELATEDNESS"
+        },
+        {
+          "task_id": "mlxlm-1795-moe-routing-gradient",
+          "split": "Train",
+          "task_family": "moe_router_gradient_indices",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "historical_grader_path": "tests/test_tuner_trainer.py",
+          "result": "DISTINCT_COMPONENT_BROAD_GRADIENT_RELATEDNESS"
+        },
+        {
+          "task_id": "mlxlm-1904-tool-arguments",
+          "split": "Train",
+          "task_family": "tool_call_dict_arguments",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "historical_grader_path": "tests/test_server.py",
+          "result": "DISTINCT_FAMILY_METADATA"
+        },
+        {
+          "task_id": "mlxlm-1912-top-p-min-token",
+          "split": "Development",
+          "task_family": "top_p_retains_most_likely_token",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "historical_grader_path": "tests/test_sample_utils.py",
+          "result": "DISTINCT_FAMILY_METADATA"
+        },
+        {
+          "task_id": "mlxlm-1971-mimo-value-scale",
+          "split": "Development",
+          "task_family": "mimo_attention_value_scale",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "historical_grader_path": "tests/test_models.py",
+          "result": "DISTINCT_FAMILY_METADATA"
+        }
+      ],
+      "classification": "POSSIBLE_FAMILY_OVERLAP",
+      "confidence": "LOW_TO_MODERATE",
+      "rationale": "There is no exact task identity or family-label match. The candidate is a core MLX complex-power VJP/autograd correction; Train contains convolution input-gradient shape (#4662) in the same repository and MoE router gradient indices (#1795) in mlx-lm. These are different operator contracts, but the frozen metadata is insufficient to rule out broader gradient/autodiff family relatedness. Historical patch paths are unavailable. Keep unassigned pending replacement or an explicit risk protocol."
+    },
+    {
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain",
+      "repository": "ray-project/ray",
+      "upstream_pull_request": 66694,
+      "title": "[Data] Fix operator wall time on multi-node clusters",
+      "task_family": "operator_wall_time_multi_node_clock_domain",
+      "candidate_changed_paths": [
+        "python/ray/data/_internal/stats.py",
+        "python/ray/data/block.py",
+        "python/ray/data/tests/conftest.py",
+        "python/ray/data/tests/test_stats.py"
+      ],
+      "prior_comparisons": [],
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "confidence": "MODERATE_TO_HIGH",
+      "rationale": "No prior Development or Train task in the frozen six-task inventory is from ray-project/ray, and no prior family label concerns distributed operator wall-time aggregation or cross-node clock-domain measurement. Historical patch paths are unavailable, but no same-repository comparison candidate exists."
+    }
+  ],
+  "decision": {
+    "direct_identity_overlaps": 0,
+    "same_family_matches": 0,
+    "possible_family_overlaps": [
+      "mlx-4778-complex-power-vjp-conjugation vs Train mlx-4662-padding-input-gradient; broad gradient/autodiff relatedness cannot be ruled out"
+    ],
+    "supports_prospective_development_protocol_for": [
+      "transformers-49418-quantized-cache-residual-flush",
+      "ray-66694-operator-wall-time-multi-node-clock-domain"
+    ],
+    "hold_unassigned_pending_replacement_or_explicit_risk_protocol": [
+      "mlx-4778-complex-power-vjp-conjugation"
+    ],
+    "split_assignments_made": false,
+    "model_inference_authorized": false,
+    "overall_cohort_disjointness": "NOT_ESTABLISHED_FOR_ALL_THREE; two candidates have no prior family overlap found, one has possible broad overlap"
+  },
+  "limitations": [
+    "Historical family metadata and grader selectors are available; complete prior patch changed-path lists are not in the bound exposure ledger, so path-level non-overlap is not asserted.",
+    "Public pretraining exposure remains UNKNOWN for every candidate.",
+    "NO_PRIOR_FAMILY_OVERLAP_FOUND applies only to recorded VARE Development/Train task inventory; it is not a pretraining-independence claim.",
+    "No source-level qualification outcome is changed by this review."
+  ]
+}

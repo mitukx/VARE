@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-task-family-overlap-v1-addendum-2",
+  "created_at_utc": "2026-10-31T00:17:25Z",
+  "parent_protocol_path": "protocols/mlsys_fresh_development_task_family_overlap_v1.json",
+  "parent_protocol_sha256": "6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d",
+  "prior_addendum_path": "protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_1.json",
+  "prior_addendum_sha256": "5d7a44df1cf27bbef1030c2c51dde1f89fe71361949a71d6404d379c22a8f0f2",
+  "reason": "The frozen Development exposure append cites the original Stage 2/3 exposure ledger and frozen qualification catalog as its provenance. Bind both directly to complete the metadata-only comparison.",
+  "additional_frozen_inputs": [
+    {
+      "path": "../../outputs/VARE-stage3-2026-10-31/task-exposure-ledger.json",
+      "sha256": "a2da858454745c86ef7e5162d47552bb659943e03a47442cd03c0e9dff77693a"
+    },
+    {
+      "path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+      "sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+    }
+  ],
+  "change_scope": "Adds two historical provenance/qualification metadata inputs only. The candidate set, overlap criteria, filtering rules, Held-Out exclusion, and authorization are unchanged. No candidate-level overlap classification or allocation decision has been made.",
+  "authorization": "Same METADATA_ONLY_OVERLAP_REVIEW authorization as the parent protocol; filter to Development/Train rows before semantic comparison. Do not inspect Held-Out task identifiers or contents. No split assignment, test execution, or target-model inference."
+}

@@ -1,0 +1,31 @@
+{
+  "corrected_artifacts": {
+    "input_manifest_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/input-manifest.json",
+    "input_manifest_sha256": "1631baa877ac8e3f0f260ebf6ebfd9e3ce4ea9328c556cf4be31b5dcdd29279a",
+    "test_suite_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py",
+    "test_suite_sha256": "945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c",
+    "upstream_diff_archive_sha256": "b73d872dbd27d1e7ebc719e1ccd0966e2b490089d8a92e038929fdc0835503fb",
+    "upstream_diff_decompressed_sha256": "425ba97673e9f90a681a0f30e95b148acd983118893a0012a65d0a326da5b8ae",
+    "upstream_diff_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/upstream.patch.gz",
+    "wrong_mutant_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/wrong-mutant.patch",
+    "wrong_mutant_sha256": "ddbd0679b8b5e6bb0356fd9befd5273ba8d1a9d58b1466eac5e8f90b30b00040"
+  },
+  "correction_reason": "The frozen Addendum 2 referred to a pre-archive input-manifest hash. Before any test execution, the exact upstream diff was stored as deterministic gzip to preserve its original trailing whitespace without making git diff --check fail. This changed the manifest artifact representation only.",
+  "frozen_on_utc": "2026-10-31T00:02:07Z",
+  "parent_addendum_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2.json",
+  "parent_addendum_sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918",
+  "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-2-erratum",
+  "schema_version": 1,
+  "status": "FROZEN_PRETEST_ARTIFACT_INTEGRITY_CORRECTION",
+  "task_key": "ray-project/ray#66694",
+  "test_execution_authorized": false,
+  "unchanged_protocol_terms": [
+    "source and test file hashes",
+    "four selectors",
+    "one wrong-mutant diff and expected target assertion",
+    "baseline-first assertion gate",
+    "fixed all-pass zero-skip gate",
+    "offline CPU-only resource/security limits",
+    "no fallback, assignment, model/agent inference, optimizer update, paid compute, or Held-out access"
+  ]
+}

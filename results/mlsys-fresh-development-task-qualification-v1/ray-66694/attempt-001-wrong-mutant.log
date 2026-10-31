@@ -1,0 +1,35 @@
+F.F.                                                                     [100%]
+=================================== FAILURES ===================================
+_____________________ test_dataset_throughput_calculation ______________________
+
+    def test_dataset_throughput_calculation():
+        blocks_stats = [
+            _mock_block_stats(0.0, 2.0),
+            _mock_block_stats(0.5, 2.5),
+            _mock_block_stats(1.0, 3.0),
+        ]
+        summary = DatasetStats(metadata={"Map": blocks_stats}, parent=None).to_summary()
+>       assert summary.num_rows_per_s == 100
+E       assert 75.0 == 100
+E        +  where 75.0 = DatasetStatsSummary(\n   dataset_uuid=unknown_uuid,\n   base_name=None,\n   number=0,\n   extra_metrics={},\n   operators_s...,\n   ),\n   global_bytes_spilled=0.0MB,\n   global_bytes_restored=0.0MB,\n   dataset_bytes_spilled=0.0MB,\n   parents=[],\n).num_rows_per_s
+
+trusted/test_ray_66694.py:34: AssertionError
+______________________ test_operator_wall_time_multi_node ______________________
+
+    def test_operator_wall_time_multi_node():
+        blocks = [
+            _mock_block_stats(10800.0, 10810.0, node_id="A", unix_start=1000.0, task_idx=0),
+            _mock_block_stats(120.0, 130.0, node_id="B", unix_start=1002.0, task_idx=0),
+        ]
+        summary = OperatorStatsSummary.from_block_metadata(
+            operator_name="MockOperator", block_stats=blocks, is_sub_operator=False
+        )
+>       assert summary.time_total_s == 12.0
+E       AssertionError: assert 10810.0 == 12.0
+E        +  where 10810.0 = OperatorStatsSummary(\n   operator_name='MockOperator',\n   is_suboperator=False,\n   time_total_s=10810.0s,\n   block_exe...0s'},\n   output_size_bytes=None,\n   node_count={'min': '1000ms', 'max': '1000ms', 'mean': '1000.0ms', 'count': '2s'},\n).time_total_s
+
+trusted/test_ray_66694.py:57: AssertionError
+=========================== short test summary info ============================
+FAILED trusted/test_ray_66694.py::test_dataset_throughput_calculation - asser...
+FAILED trusted/test_ray_66694.py::test_operator_wall_time_multi_node - Assert...
+2 failed, 2 passed in 0.73s

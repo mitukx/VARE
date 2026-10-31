@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-task-family-overlap-v1",
+  "frozen_at_utc": "2026-10-31T00:15:33Z",
+  "purpose": "Assess prior Development/Train task-family overlap for the three source-qualified prospective candidates before any split assignment or target-model inference.",
+  "candidate_task_ids": [
+    "transformers-49418-quantized-cache-residual-flush",
+    "mlx-4778-complex-power-vjp-conjugation",
+    "ray-66694-operator-wall-time-multi-node-clock-domain"
+  ],
+  "frozen_inputs": [
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/replacement-selection.json",
+      "sha256": "716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/source-test-input-manifest.json",
+      "sha256": "d29cfbffc94e3f66711094f7ce72cefb0bb0580cc10b6a5a016d98c67fa60633"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/qualification.json",
+      "sha256": "75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/qualification.json",
+      "sha256": "29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/qualification.json",
+      "sha256": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d"
+    },
+    {
+      "path": "results/mlsys-task-deep-qualification-v1-exposure-append-v1.json",
+      "sha256": "230148078352299683c9729acef82f38d0c550be4d6902e465db2b0d06604947"
+    },
+    {
+      "path": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+      "sha256": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7"
+    },
+    {
+      "path": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
+      "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884"
+    }
+  ],
+  "comparison_scope": {
+    "prior_splits": [
+      "Development",
+      "Train"
+    ],
+    "heldout": "Exclude Held-out rows from semantic comparison; do not inspect Held-out issue bodies, source, tests, patches, or grader artifacts. Do not emit Held-Out task identifiers or fields.",
+    "candidate_material": [
+      "qualification summaries",
+      "task/PR identity",
+      "issue family metadata",
+      "changed paths from frozen input manifest"
+    ],
+    "historical_material": [
+      "exposure ledgers and manual exposure audit metadata only; filter out Held-out rows before comparing"
+    ]
+  },
+  "decision_rules": [
+    {
+      "label": "DIRECT_IDENTITY_OVERLAP",
+      "rule": "Same repository and upstream PR/task identity as a previously exposed Development or Train task."
+    },
+    {
+      "label": "SAME_TASK_FAMILY",
+      "rule": "Metadata documents the same underlying defect or behavioral contract in the same component; changed-path overlap corroborates but does not alone establish family identity."
+    },
+    {
+      "label": "POSSIBLE_FAMILY_OVERLAP",
+      "rule": "Metadata suggests a shared subsystem or contract, but evidence is insufficient to conclude the same defect family."
+    },
+    {
+      "label": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rule": "No direct identity or same-family match is found among available Development/Train exposure metadata; this does not establish pretraining independence."
+    },
+    {
+      "label": "INDETERMINATE",
+      "rule": "Available exposure metadata is incomplete or lacks enough issue/path detail to apply the preceding criteria."
+    }
+  ],
+  "report_requirements": [
+    "one row per candidate",
+    "cite only frozen input paths and hashes",
+    "record repository, upstream PR identity, issue family, changed paths, prior match category, rationale, and confidence",
+    "state whether metadata supports a prospective Development allocation decision"
+  ],
+  "prohibited_actions": [
+    "model or agent inference",
+    "split assignment",
+    "Held-Out inspection or access",
+    "test execution",
+    "changing any historical exposure ledger",
+    "claiming absence of public pretraining exposure"
+  ],
+  "authorization": "METADATA_ONLY_OVERLAP_REVIEW; no task assignment or inference authorized"
+}

@@ -1,93 +1,204 @@
 {
-  "schema_version": 2,
-  "updated_at": "2026-10-31T07:27:39+09:00",
-  "milestone_id": "p2-train-only-model-trajectory-after-exposure-audit",
-  "last_completed_step": "Verified PR #151 merge 818fd8c802277ad360ee9b5250d0315cfb8dad81; audited the 24-entry candidate queue and found zero fresh Development tasks; froze protocol v1 before one Qwen3-4B inference on Train task #1904; run 19 passed both independent v12 grader cases (one attempt, 302 tokens, no policy update, no Held-out access).",
-  "go_no_go": {
-    "integration": "GO_PENDING_REMOTE_CI",
-    "coding_capability": "NO_GO",
-    "rl_update": "NO_GO"
-  },
-  "git_refs": {
-    "repository": "mitukx/VARE",
-    "last_verified_main_sha": "818fd8c802277ad360ee9b5250d0315cfb8dad81",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/151",
-    "last_integrated_pr_merge_sha": "818fd8c802277ad360ee9b5250d0315cfb8dad81",
-    "active_branch": "codex/mlsys-candidate-exposure-audit-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "55a31a732101eb88c1515bada322f5b1c93bbcfc",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/152",
-    "active_pr_state": "open"
-  },
   "frozen_protocols": [
     {
-      "protocol_id": "development-repository-repair-campaign-v1",
       "path": "protocols/development_repository_repair_campaign_v1.json",
+      "protocol_id": "development-repository-repair-campaign-v1",
       "sha256": "9239406621a3ac68a6977cf341e4debd35278735a91783626ff764c87210c354",
       "status": "frozen_before_inference; inference_authorized=false"
     },
     {
-      "protocol_id": "development-repository-repair-campaign-v2",
       "path": "protocols/development_repository_repair_campaign_v2.json",
+      "protocol_id": "development-repository-repair-campaign-v2",
       "sha256": "64cfb42524cfbb1e04fa243dd1141d9490bbe2cbe5c9573ba7b6b01a145254a1",
       "status": "hash_bound; inference_authorized=false"
     },
     {
-      "protocol_id": "mlsys-task-deep-qualification-v1",
       "path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+      "protocol_id": "mlsys-task-deep-qualification-v1",
       "sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
       "status": "frozen source split preserved; appended exposure correction marks all 3 Development tasks previously exposed"
     },
     {
-      "protocol_id": "mlsys-repository-task-mlxlm-1904-v11",
       "path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v11.json",
+      "protocol_id": "mlsys-repository-task-mlxlm-1904-v11",
       "sha256": "d7e5680faf5c7b15f32d7e432ee62ce8ddcdf6b835b27cc964988ce6294c2b77",
       "status": "locked_before_run17; run17 PASSED Train-task calibration and 9/9 red-team probes; no model inference authorized"
     },
     {
-      "protocol_id": "mlsys-repository-task-mlxlm-1904-v12",
       "path": "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v12.json",
+      "protocol_id": "mlsys-repository-task-mlxlm-1904-v12",
       "sha256": "36c5932ab46e00573535f1d6826396cc24cc5021703566f49b9169cad45460c4",
       "status": "locked_before_run18; run18 PASSED Train-only calibration and 10/10 probes; FIFO rejected before grader call; no model inference authorized"
     },
     {
-      "protocol_id": "mlsys-candidate-queue-exposure-audit-v1",
       "path": "protocols/mlsys_candidate_queue_exposure_audit_v1.json",
+      "protocol_id": "mlsys-candidate-queue-exposure-audit-v1",
       "sha256": "d8f3307f3564a4fed5781795e642565a757a22d18d1ec86985a57a62896c818f",
       "status": "frozen against merged main 818fd8c; retrospective output reports 0 fresh Development tasks; no model inference"
     },
     {
-      "protocol_id": "mlsys-task-model-attempt-mlxlm-1904-v1",
       "path": "protocols/mlsys_task_model_attempt_mlxlm_1904_v1.json",
+      "protocol_id": "mlsys-task-model-attempt-mlxlm-1904-v1",
       "sha256": "7bdef7ee8210dfbd25b3ca811d8bb7c1450b97e4c6015e39d653879aee51ad3d",
       "status": "frozen before inference; one Qwen3-4B base-model attempt on Train; run 19 PASSED 2/2 independent grader cases; no update or Held-out use"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_candidate_discovery_v1.json",
+      "protocol_id": "mlsys-fresh-development-candidate-discovery-v1",
+      "sha256": "8b6f52e32f81672ccd7395997fb589aca84a81903be511ef95e481b00bc8789f",
+      "status": "frozen; v1 GraphQL query defect retained"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_candidate_discovery_v2.json",
+      "protocol_id": "mlsys-fresh-development-candidate-discovery-v2",
+      "sha256": "87850264f2abb83b31345776b68811449bde6ab0a671a2c2795972d106ccd764",
+      "status": "frozen; same-window query stopped at API result cap, no candidate rows accepted"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_candidate_discovery_v3.json",
+      "protocol_id": "mlsys-fresh-development-candidate-discovery-v3",
+      "sha256": "bcab038708c533e9f8af4068db4e347f4c6a8f76fde1c221434d2eb6da41c276",
+      "status": "frozen; weekly-partition raw metadata pool complete, original state filter defect retained"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_candidate_screen_v4.json",
+      "protocol_id": "mlsys-fresh-development-candidate-screen-v4",
+      "sha256": "45e75d3f616892514d22416c27163221b6d5eccdaed66dad691b8a33e1c737ff",
+      "status": "frozen; corrected GraphQL MERGED state filter, 1,278 metadata-review rows, all unqualified/unassigned"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_candidate_metadata_sample_v1.json",
+      "protocol_id": "mlsys-fresh-development-candidate-metadata-sample-v1",
+      "sha256": "2bf791ea9d99184298a1be38f4d0f584b45ac509fe79b5e801f5749c8ee42c20",
+      "status": "frozen before deterministic metadata sample; 71 rows across six repositories"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_qualification_v1.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1",
+      "sha256": "3ea5a8f18832295ca07e9584e47fe04a63554a74d95133efc8d2db3a1e261828",
+      "status": "frozen before source/test review; selects three tasks, no Development assignment or model inference"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-1.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-1",
+      "sha256": "18010e86e1838a77d8b4f091434c3a9ec1195b6486d8e2dba0d04d7bbea704b6",
+      "status": "frozen; original runtime retained; Transformers runtime superseded only by addendum 2"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-2.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-2",
+      "sha256": "9f8f4ce84dbbfcaf9bd9093aa71d00c69034764d5616f1d6946133512746458a",
+      "status": "frozen before retry; corrects Transformers dependencies; exact pytest nodes superseded by addendum 3"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-3.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-3",
+      "sha256": "ca36eb3796dd49589316f5ac4ff47e19fe21003f5d8e9449f3930499d6deb08e",
+      "status": "frozen before retry; records six exact parameterized Transformers nodes"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-4.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-4",
+      "sha256": "6be83fbf944ee60467ed87d30e5eebeb2f8ce4af8096235908a160e17d8b2598",
+      "status": "frozen before retry; corrects only the Transformers Quanto writable build-cache runtime and serial compilation"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-5.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-5",
+      "sha256": "e16c19fb20ea09e4a559b6e3d8353dd6ebef046c3d0cf9ed7b8744847104ec86",
+      "status": "frozen before fixed retry; corrects only selector command transcription; exact six selectors unchanged"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_replacement_selection_v1.json",
+      "protocol_id": "mlsys-fresh-development-task-replacement-selection-v1",
+      "sha256": "db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b",
+      "status": "frozen before selecting a replacement or opening any unselected source/test inputs; metadata-only deterministic selection"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-1.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-1",
+      "sha256": "9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9",
+      "status": "frozen before Ray PR #66694 source/test review; no test execution authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-2",
+      "sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918",
+      "status": "frozen test selectors, adapted tests, source hashes, and wrong mutant before runtime build; test execution awaits image-digest addendum"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2-erratum.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-2-erratum",
+      "sha256": "b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684",
+      "status": "pretest artifact-integrity correction only; test gates unchanged; test execution not authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-3-runtime-build-retry.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-3-runtime-build-retry",
+      "sha256": "07cfef610b9140684f2f50b6bc3e34f3a3fb643882ad98a14904e10edcdb3cec",
+      "status": "frozen one CLI-only runtime build retry; no tests authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-4-runtime-build-retry.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-4-runtime-build-retry",
+      "sha256": "8a161b0a157b970722ce00fded9031e06ba3d91791e2c876ca057343feb75429",
+      "status": "frozen one filename-only runtime-build retry; no tests authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-5-runtime-freeze.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-5-runtime-freeze-and-test-authorization",
+      "sha256": "ca77f6954d42d8d2bc46c55c19b879a2e60133fe3f797b0609c26e5be6857ab3",
+      "status": "runtime image/wheel/build log bound; import preflight and ordered baseline-mutant-fixed tests authorized under exact limits"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1.json",
+      "protocol_id": "mlsys-fresh-development-task-family-overlap-v1",
+      "sha256": "6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d",
+      "status": "frozen before reviewing historical Development/Train exposure metadata; metadata-only; no split assignment, Held-Out access, or inference authorized"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_1.json",
+      "protocol_id": "mlsys-fresh-development-task-family-overlap-v1-addendum-1",
+      "sha256": "5d7a44df1cf27bbef1030c2c51dde1f89fe71361949a71d6404d379c22a8f0f2",
+      "status": "pre-review metadata identity addendum; criteria and no-Held-Out boundary unchanged"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_2.json",
+      "protocol_id": "mlsys-fresh-development-task-family-overlap-v1-addendum-2",
+      "sha256": "283296307bdacf3ebedbcd56274542ba1d5630644c2817b6166cf94d19b1efb5",
+      "status": "pre-completion provenance addendum; directly binds Stage 2/3 exposure ledger and qualification catalog; no allocation decision"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_agent_capability_v1.json",
+      "protocol_id": "mlsys-fresh-development-agent-capability-v1",
+      "sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d",
+      "status": "frozen before inference; one offline greedy Qwen3-4B attempt and one independent grade completed for each of two Development tasks; both yielded empty diffs"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/protocol-addendum-1.json",
+      "protocol_id": "mlsys-fresh-development-agent-capability-v1-addendum-1",
+      "sha256": "e36b7b7cfeefd831ed174e25500022ef62f01baa06a11b034ae1118375a83e23",
+      "status": "frozen before generation; records zero-token launch correction; both replacement-workspace task attempts subsequently completed once"
     }
   ],
-  "task_exposure_ledger": {
-    "path": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
-    "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
-    "fresh_stage3_families_used": 0,
-    "historical_heldout_1979_touched": false
+  "git_refs": {
+    "active_branch": "codex/fresh-dev-candidate-discovery-v1",
+    "active_pr_state": "open",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/153",
+    "last_integrated_pr_merge_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/152",
+    "last_verified_main_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
+    "repository": "mitukx/VARE",
+    "verified_pr_head_sha_before_checkpoint_changes": "b3ba5fa1ec886292e662804800868e96cf9e1903"
   },
-  "run_ids": [
-    "41105309069",
-    "41105317116",
-    "41129971394",
-    "41129977929",
-    "41129977978",
-    "41129977995",
-    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1912-top-p-min-token",
-    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1971-mimo-value-scale",
-    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1912-top-p-min-token",
-    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1971-mimo-value-scale",
-    "mlsys_deep_qualification_exposure_audit_v1",
-    "mlsys-repo-eval-v1-run-17",
-    "mlsys-repo-eval-v1-run-18",
-    "qwen3_4b_instruct_2507_4bit__transformers-45852-4d-mask",
-    "stage3_qwen3_4b_controller_v2__mlxlm-1912-top-p-min-token",
-    "stage3_qwen3_4b_controller_v3__mlxlm-1912-top-p-min-token",
-    "stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token",
-    "mlsys-repo-eval-v1-run-19"
-  ],
+  "go_no_go": {
+    "coding_capability": "NO_GO",
+    "integration": "GO_PENDING_REMOTE_CI",
+    "rl_update": "NO_GO"
+  },
+  "highest_priority_next_task": "Implement and unit-test one context-efficiency controller change justified by the two context-budget failures. Then source-qualify a new Development task family, complete its metadata overlap review, freeze one attempt and independent grader protocol, and run no inference until those gates pass. Never rerun Transformers #49418 or Ray #66694.",
+  "last_completed_step": "Executed exactly one greedy offline Qwen3-4B attempt and one pinned independent grade on each frozen fresh Development task. Both attempts stopped on context_budget_exhausted without edits; all grade cases reproduced the frozen target/control outcomes. Recorded raw traces, grades, resource telemetry, exposure append, report, and checksums.",
+  "milestone_id": "p5-fresh-development-agent-diagnostic-complete",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -158,15 +269,546 @@
       "path": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
       "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
       "status": "append-only one-task Train exposure; prior Stage 2/3 ledgers unchanged"
+    },
+    {
+      "path": "results/mlsys-fresh-development-candidate-discovery-v3/candidate-pool.json.gz",
+      "sha256": "3e53e3c07c151bf94185aa8898a36bf1a65d620b9cacdc78a4ab7f6d9592986c",
+      "status": "verified raw metadata pool; compressed with deterministic gzip"
+    },
+    {
+      "path": "results/mlsys-fresh-development-candidate-screen-v4/screen.json.gz",
+      "sha256": "8ad0cc6318991af9c6c19ed355c84400cce54817616adb7c2812733a0b038abd",
+      "status": "verified corrected screen output; 3,305 candidates, 1,278 review rows"
+    },
+    {
+      "path": "results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json",
+      "sha256": "810fb823781f3bc44a0272db230cc3d65b43751c415e53229c81104a6183baad",
+      "status": "verified deterministic 71-row metadata sample"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/source-test-input-manifest.json",
+      "sha256": "d29cfbffc94e3f66711094f7ce72cefb0bb0580cc10b6a5a016d98c67fa60633",
+      "status": "verified base/fixed/test input hashes for all selected tasks"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-model-fixture-manifest.json",
+      "sha256": "6a7647352ff558c8c2d07275257254b59c96ccd6bcbd9e0e3217ea79022516ce",
+      "status": "verified public test-fixture revision and file hashes; not committed as weights"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-1.json",
+      "sha256": "18010e86e1838a77d8b4f091434c3a9ec1195b6486d8e2dba0d04d7bbea704b6",
+      "status": "frozen before selected task regression tests"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-2.json",
+      "sha256": "9f8f4ce84dbbfcaf9bd9093aa71d00c69034764d5616f1d6946133512746458a",
+      "status": "frozen runtime correction before rerun"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-001-baseline.json",
+      "sha256": "9498df99fd2cf1b6d9ffdb971b1ff82f58925ba787a90ae6aaab8cb94ee77e67",
+      "status": "preserved environment collection failure; no test cases executed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/baseline.log",
+      "sha256": "3567b92059651c3a3a9eeee1b6bd59d96b51c6c561fb46c9bd14629907085439",
+      "status": "raw first-attempt log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v2",
+      "sha256": "c08ba83252edeabd650c8c5aa2417b92e51e55d63f052a6c09fec2f0a1e6de5c",
+      "status": "pinned dependency correction build file"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/build-transformers-v2.log",
+      "sha256": "1e29ce6a6db29f315ab74ad31e52c066ef3b4cc1339bc86da40b9c7ee370e2df",
+      "status": "pinned dependency correction image build log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-3.json",
+      "sha256": "ca36eb3796dd49589316f5ac4ff47e19fe21003f5d8e9449f3930499d6deb08e",
+      "status": "frozen exact six-node selector before retry"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-baseline.json",
+      "sha256": "30c19c9faffdd6de5d3f4a9b8354ecf099b4835647e8247c4361a6a02b0854a0",
+      "status": "preserved selector miss; zero cases selected"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-baseline.log",
+      "sha256": "7e9651e0f8f421bee2de0f4dca30976008d3fc4622fc416a45f43ce0d1e981e5",
+      "status": "raw second-attempt log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-baseline.json",
+      "sha256": "4c64b37814bac28b10b9fabc351947a13f88d1ca432135f55605395485ee6098",
+      "status": "attempt 003 retained as inconclusive environment failure; six nodes selected, zero targeted assertions executed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-baseline.log",
+      "sha256": "21244c9ddb946c9c81d667a0a1e1a1f7b0f7fa5799d1c6093f2c81b18b87a327",
+      "status": "raw attempt 003 baseline log; all six errors originate from the read-only Quanto extension build path"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-4.json",
+      "sha256": "6be83fbf944ee60467ed87d30e5eebeb2f8ce4af8096235908a160e17d8b2598",
+      "status": "frozen before retry; adds one writable Quanto build-cache tmpfs and MAX_JOBS=1"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v3",
+      "sha256": "c62eaf32a8d172559a70417f1d4bd4dd4f7c3751e583d78c33bfca983cdcb4ad",
+      "status": "reproducible runtime v3 Dockerfile based on pinned runtime v2 image"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/build-transformers-v3.log",
+      "sha256": "c38cb0c878b4e66aafdfbd4c65669cc4eef7eba7a9f74b945b7fa1702505b740",
+      "status": "runtime v3 image build succeeded"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/quanto-extension-preflight.json",
+      "sha256": "3a575f31694b539cabbd120e039090e51d545b877c785b9fb60a63f6d2ffbeb1",
+      "status": "runtime-only CPU extension preflight passed; no regression test"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/quanto-extension-preflight.log",
+      "sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
+      "status": "raw successful Quanto extension compilation and load output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-004-baseline.json",
+      "sha256": "c8cb78266f0e865740b5928625b705e3c734e137f43ef4a631a993465f9a9ec2",
+      "status": "valid baseline negative control; 4/6 expected assertion failures and 2/6 passes"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-004-baseline.log",
+      "sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
+      "status": "raw exact-selector baseline output under runtime v3"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-001-fixed.json",
+      "sha256": "2f3cd089cd873ca061f7ce9eec87fa139240933a60db96ea2b87a647041664b4",
+      "status": "fixed-arm invocation rejected at selector parsing; zero cases executed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-001-fixed.log",
+      "sha256": "c1f49b746f561ebdb700c34d7a47f79059e1af72a213f57914defae066eacfa4",
+      "status": "raw fixed invocation selector error; no test case output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-5.json",
+      "sha256": "e16c19fb20ea09e4a559b6e3d8353dd6ebef046c3d0cf9ed7b8744847104ec86",
+      "status": "frozen before corrected fixed invocation; no selectors or test inputs changed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-fixed.json",
+      "sha256": "1b209cee03b18f174b99c341bf618d604c87b2c807f4951937052569913ddd84",
+      "status": "fixed-arm launcher error; zero pytest cases"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-002-fixed.log",
+      "sha256": "2bc702fb3ae1856b21fe1635349a718ebbcd9d59d13da292ed1ff44728cf5270",
+      "status": "raw launcher output; pytest did not start"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.json",
+      "sha256": "3b08c0fcc444a2b0858016512784a8d00b0e4294efcb6b4b0c6af72f3511a140",
+      "status": "fixed source passed 6/6 exact regression cases with zero skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.log",
+      "sha256": "a9b443f97a35933935592b869840c0523167d25ef4039ca1e72656a2ae47b5f6",
+      "status": "raw fixed-arm output under pinned offline runtime v3"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/qualification.json",
+      "sha256": "75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e",
+      "status": "paired baseline/fixed source-level task qualification; not a Development assignment"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-baseline.json",
+      "sha256": "5d090e644f69d72a64fb1dadf22c690cc0489a45db233b83bc5c2b8f34619ed8",
+      "status": "baseline target TypeError before assertion; gate not met"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-baseline.log",
+      "sha256": "8b2b9ae7ed93c687d43fdad5e435afc3fc25f872fef9c881f9e6cc9c0dceeab6",
+      "status": "raw TRL baseline output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-fixed.json",
+      "sha256": "798d5bc36f186cda97e6901b9919cf88984bf3b778a40c56476ae80a5ab11ceb",
+      "status": "fixed 2/2 passed; permitted tiny fixture checks only"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-fixed.log",
+      "sha256": "2b1de2f830d76664f66cfe4e0a619a803504508f18fb395c3ece000468f23876",
+      "status": "raw TRL fixed output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/qualification.json",
+      "sha256": "f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c",
+      "status": "paired evidence retained; not qualified under frozen baseline assertion gate"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-baseline.log",
+      "sha256": "9ec836d04a5faa52fda14496d3b4053e06327db851a69853d5f522529c524c6d",
+      "status": "raw CPU baseline test output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed.log",
+      "sha256": "99a24796443a1d07f66a424f8116a06a2079063af758e7d3c87801c191ad2ecd",
+      "status": "raw CPU fixed test output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed-launch-error.txt",
+      "sha256": "f41b8f3fbd1fb3d64c7a9961766c1dca674624454b3f06d26df3f9c7416b9032",
+      "status": "stale image-tag invocation; Docker never started a test container"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-baseline.json",
+      "sha256": "f89813e8ddceb67039f00f7ca2dbd78b6105f80aaafbb0e292531677ab79c278",
+      "status": "baseline target VJP assertion failure"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed.json",
+      "sha256": "1f075d67591f197747d467b010962660d98ba7fd09cc1243634cc9f7e3cef5e8",
+      "status": "fixed CPU source passed one exact regression case"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/qualification.json",
+      "sha256": "29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee",
+      "status": "paired MLX task source-level qualification; not Development assignment"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
+      "sha256": "015e253035db04c10ed014ec110fce58e2271c7a03086d1a8eec8fa0115675d9",
+      "status": "updated aggregate environment and task-attempt record; replacement cohort 3/3 qualified"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_replacement_selection_v1.json",
+      "sha256": "db6e5b7ece581d0f51733e2536f91b1ff0ad4a6737bcb10206cc563e74ccf94b",
+      "status": "frozen metadata-only replacement selection protocol"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/replacement-selection.json",
+      "sha256": "716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95",
+      "status": "metadata-only replacement selection; Ray PR #66694 selected rank 1/12; no source/test opened"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-1.json",
+      "sha256": "9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9",
+      "status": "frozen source-review and qualification boundary for Ray PR #66694"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/input-manifest.json",
+      "sha256": "1631baa877ac8e3f0f260ebf6ebfd9e3ce4ea9328c556cf4be31b5dcdd29279a",
+      "status": "Ray #66694 exact base/fix source hashes and test/mutant input identities"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/upstream.patch.gz",
+      "sha256": "b73d872dbd27d1e7ebc719e1ccd0966e2b490089d8a92e038929fdc0835503fb",
+      "status": "gzip-compressed exact four-path upstream diff; decompressed SHA-256 425ba97673e9f90a681a0f30e95b148acd983118893a0012a65d0a326da5b8ae"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py",
+      "sha256": "945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c",
+      "status": "frozen compatibility-adapted four-case qualification suite"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/wrong-mutant.patch",
+      "sha256": "ddbd0679b8b5e6bb0356fd9befd5273ba8d1a9d58b1466eac5e8f90b30b00040",
+      "status": "frozen one-change wrong-clock mutant"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2.json",
+      "sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918",
+      "status": "frozen before runtime image build; test execution remains unauthorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2-erratum.json",
+      "sha256": "b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684",
+      "status": "corrects Addendum 2 manifest/archive hash pointer before any tests"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-build-attempt-001.log",
+      "sha256": "0a0033a83aaf69fddd35047b16a66734164121ebedf2ca91c57fe16fee286518",
+      "status": "Docker CLI rejected unsupported --progress option; no build or test started"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime",
+      "sha256": "6e91e77be8881ec212185107298439b793134801633a094fd103f4adfd9e1d25",
+      "status": "pinned Ray exact-commit runtime Dockerfile"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-3-runtime-build-retry.json",
+      "sha256": "07cfef610b9140684f2f50b6bc3e34f3a3fb643882ad98a14904e10edcdb3cec",
+      "status": "frozen runtime-build retry authorization; no test execution"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-build-attempt-002.log",
+      "sha256": "69ddf6562d322269f08b6b656c3b3e50a4d71b02d131a6e1a76493a357fc0569",
+      "status": "runtime build failed because scratch wheel basename was invalid; no tests ran"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime-v2",
+      "sha256": "9da37a8fb8c60e513e895437bced793250284d650ed5634ed298bdda80bc5c3b",
+      "status": "canonical-wheel runtime Dockerfile for exact Ray merge commit"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-4-runtime-build-retry.json",
+      "sha256": "8a161b0a157b970722ce00fded9031e06ba3d91791e2c876ca057343feb75429",
+      "status": "frozen runtime build retry; test execution remains unauthorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime-v2",
+      "sha256": "9da37a8fb8c60e513e895437bced793250284d650ed5634ed298bdda80bc5c3b",
+      "status": "canonical-wheel runtime Dockerfile for exact Ray merge commit"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-build-attempt-003.log",
+      "sha256": "924a33ce4e367222598143ab3d71e648fc5f143b904b4d17cfa8367c215892b2",
+      "status": "successful arm64 runtime build; image id sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-5-runtime-freeze.json",
+      "sha256": "ca77f6954d42d8d2bc46c55c19b879a2e60133fe3f797b0609c26e5be6857ab3",
+      "status": "frozen runtime identity and test execution authorization"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-import-preflight.log",
+      "sha256": "8522622295fbe227fbc37bf194e4954f9ad257b5dc8da46d34940a547304ba0c",
+      "status": "exact-image import preflight passed before baseline; Ray 3.0.0.dev0"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-baseline.log",
+      "sha256": "df53b377085b47e9703562635d6fe7c7b64c0ad2631a97a5be95ccb4b8ac5d22",
+      "status": "four exact baseline selectors; two targeted assertion failures, two passes, zero skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-baseline.json",
+      "sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f",
+      "status": "baseline negative control met the frozen assertion gate; wrong mutant may run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-wrong-mutant.log",
+      "sha256": "5bbcadd23de887e2daee7d3f2458431ca4d88ea6c2696f6baabfb16c7ad9c57d",
+      "status": "wrong mutant rejected by target multi-node assertion; another throughput case also failed; zero skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-wrong-mutant.json",
+      "sha256": "5ba305e5cc1643cdaf55c9275182734d2bf335d8309eb67a063a779a1df2ace8",
+      "status": "frozen mutant gate met; fixed arm may run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-fixed.json",
+      "sha256": "673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab",
+      "status": "fixed source passed 4/4 exact selectors, zero skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-fixed.log",
+      "sha256": "20b00d9cc4a3409a3582614799f69f2a82d46a590612cb448479055fd731933d",
+      "status": "raw fixed-arm output; all four frozen selectors passed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/commands.json",
+      "sha256": "39a3895faadf9b51c7a3b70d7149c62571a969aea48b7e44268b8c16d8b922fc",
+      "status": "exact argv for build, preflight, baseline, wrong-mutant, and fixed arms; arms consumed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/qualification.json",
+      "sha256": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d",
+      "status": "QUALIFIED_SOURCE_LEVEL; claim limited to CPU source-level regression behavior"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/SHA256SUMS",
+      "sha256": "f96bef417d75ffa921502a2227da35b7808bd87e23af237ad348783b371b8510",
+      "status": "per-task integrity index for all Ray #66694 source-level qualification artifacts"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1.json",
+      "sha256": "6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d",
+      "status": "frozen metadata-only overlap review protocol; no assignment or inference authorized"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_1.json",
+      "sha256": "5d7a44df1cf27bbef1030c2c51dde1f89fe71361949a71d6404d379c22a8f0f2",
+      "status": "pre-review metadata identity addendum to overlap review protocol"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_2.json",
+      "sha256": "283296307bdacf3ebedbcd56274542ba1d5630644c2817b6166cf94d19b1efb5",
+      "status": "supplemental frozen provenance inputs for metadata-only family overlap review"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json",
+      "sha256": "bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5",
+      "status": "frozen metadata-only task-family overlap review; two candidates supported for prospective protocol, MLX held pending possible Train-family relatedness"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_agent_capability_v1.json",
+      "sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d",
+      "status": "frozen protocol; executed once on each allocated fresh Development family; both candidates received one independent grade"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/transformers-49418/task.json",
+      "sha256": "650630b337caf9acaf1586bf288f9d4b61dae5767c3b657ba4a0b8203cef95e3",
+      "status": "frozen agent task input"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/transformers-49418/TASK.md",
+      "sha256": "1b17b5d661f7997e7f08e52d807376499ee9c7d7fdbbb64c2948f2067ee1c558",
+      "status": "frozen agent task prompt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/ray-66694/task.json",
+      "sha256": "a492aebfcfec599ddebf8196078fb9081cf5ce8889a3f3b26fba3b2ba1675b89",
+      "status": "frozen agent task input"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/ray-66694/TASK.md",
+      "sha256": "9bb77216f3e6816b21c4d604c14e3383bfd264d743619ae984d0c11dbb6a31e5",
+      "status": "frozen agent task prompt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/requirements.lock",
+      "sha256": "fa9bcf897f07a9cda150e613f81e2f9bd5c51c7d629930d9c9f4e14f330c3085",
+      "status": "hashed isolated MLX-LM runtime dependencies"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/import-preflight.log",
+      "sha256": "47db4906aaf60c4bca99af937e125b93d3a08a8dce1d86ccdf87756f33c0a4c0",
+      "status": "MLX/Metal import-only preflight passed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/model-file-manifest.json",
+      "sha256": "20022d56b6c963d2af5dc0c17ae5f240a277e2f1532417a5db7c1b0cfedfb5b7",
+      "status": "13 model files hash-verified against run-19 protocol"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/protocol-addendum-1.json",
+      "sha256": "e36b7b7cfeefd831ed174e25500022ef62f01baa06a11b034ae1118375a83e23",
+      "status": "frozen pre-generation workspace correction; preserves the zero-token launch failure and binds replacement workspaces"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.json",
+      "sha256": "072471e81bf7f1de1683af034c0792c8800fed4aa0c59287d68109c190ad9daf",
+      "status": "pre-inference workspace guard failure; zero generated tokens and no attempt slot consumed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.log",
+      "sha256": "3690c62494a5cf40219197603723a94347cc934b1474df1697e5d5090136bf42",
+      "status": "raw pre-inference workspace guard traceback"
+    },
+    {
+      "path": "research/flagship/REPRODUCE.md",
+      "sha256": "ed704c826a5776432f5fa9f1daac14e89b5d7c3b22634cc9f780bf5369d88ed7",
+      "status": "execution and verification instructions for the diagnostic"
+    },
+    {
+      "path": "research/flagship/STATUS.md",
+      "sha256": "9997cd2426f13e801fae58d5509767877b1ad82f5a143ac96571ec3c79261514",
+      "status": "authoritative human-readable mission status after the diagnostic"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/SHA256SUMS",
+      "sha256": "b982d2ff629ca4c5c8f1ce57218f899bbbd85f0c7ff47e6578b47edf2afbe374",
+      "status": "hash index for diagnostic raw evidence and task artifacts"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+      "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700",
+      "status": "append-only two-task fresh Development model exposure record; no Held-Out use"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/agent-attempt-001.json",
+      "sha256": "dcbdd5702200280648bb0e6a27c7fc8855b53ffccc83362defb5b8b4813376f8",
+      "status": "single fresh Development model attempt; 399 tokens; empty diff; context budget exhausted"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/independent-grade.json",
+      "sha256": "f1fe98d0d424811fc14f6b8b32c57f0ea3fc5eba152d655e92126b8c544ceb3b",
+      "status": "single pinned independent grade; 2 failed, 2 passed, 0 skipped; no feedback"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/independent-grade.log",
+      "sha256": "336cdfab141dca349d9420133c7c0865d92d098fd360b81a643f72a3f832f6de",
+      "status": "raw pinned Ray candidate-grade output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/report.md",
+      "sha256": "e2742971dd41ebcf270ad8d046138de7210c86130abe338649ee68b143c29c38",
+      "status": "diagnostic result, scientific interpretation, limitations, and next experiment"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/resource-telemetry.json",
+      "sha256": "37cfbccbafeb75fd05153dc98d7ddff4bb7725d45eef90c0ffadac976195b565",
+      "status": "per-attempt host gates and model process memory records"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/agent-attempt-001.json",
+      "sha256": "1e217c7eb45655047bfa9406c7e8bc9159fe02a650d4e90f41b0cc79648e6894",
+      "status": "single fresh Development model attempt; 126 tokens; empty diff; context budget exhausted"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/independent-grade.json",
+      "sha256": "05dc4eb1cfe95f2b7e35549ff984532f5a48d33ec0741d03b4759aebbb0f3272",
+      "status": "single pinned independent grade; 4 failed, 2 passed, 0 skipped; no feedback"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/independent-grade.log",
+      "sha256": "14b829c11a5935e49f0fe6e36c71bf811b6263875536da8122887b857fde2ae0",
+      "status": "raw pinned Transformers candidate-grade output"
     }
   ],
-  "unresolved_blockers": [
-    "The audited 24-entry manual queue contains zero tasks currently assigned and qualified as fresh Development; held-out tasks remain reserved.",
-    "The raw survey screen artifact is missing from the checkout, so original changed-path and merge-SHA metadata could not be independently revalidated.",
-    "Run 19 is one Train-task result on a public upstream task; pretraining exposure is unknown and the pass does not establish Development generalization.",
-    "No real model policy update, SFT, GRPO, RL comparison, or independent post-update task-success evaluation has been run.",
-    "PR #149 remains open on an obsolete pre-#150 base without recorded review; unrelated to this checkpoint.",
-    "PR #152 exact-head required checks and review are pending before integration."
+  "run_ids": [
+    "41105309069",
+    "41105317116",
+    "41129971394",
+    "41129977929",
+    "41129977978",
+    "41129977995",
+    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1912-top-p-min-token",
+    "corrective__qwen25_coder_7b_instruct_4bit__mlxlm-1971-mimo-value-scale",
+    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1912-top-p-min-token",
+    "corrective__qwen3_4b_instruct_2507_4bit__mlxlm-1971-mimo-value-scale",
+    "mlsys_deep_qualification_exposure_audit_v1",
+    "mlsys-repo-eval-v1-run-17",
+    "mlsys-repo-eval-v1-run-18",
+    "qwen3_4b_instruct_2507_4bit__transformers-45852-4d-mask",
+    "stage3_qwen3_4b_controller_v2__mlxlm-1912-top-p-min-token",
+    "stage3_qwen3_4b_controller_v3__mlxlm-1912-top-p-min-token",
+    "stage3_qwen3_4b_exact_replace_v4__mlxlm-1912-top-p-min-token",
+    "mlsys-repo-eval-v1-run-19",
+    "freshdev-qualification-transformers-49418-attempt-003-baseline",
+    "freshdev-qualification-transformers-49418-attempt-004-baseline",
+    "freshdev-qualification-transformers-49418-attempt-001-fixed",
+    "freshdev-qualification-transformers-49418-attempt-002-fixed",
+    "freshdev-qualification-transformers-49418-attempt-003-fixed",
+    "freshdev-qualification-trl-7668-attempt-001-baseline",
+    "freshdev-qualification-trl-7668-attempt-001-fixed",
+    "freshdev-qualification-mlx-4778-attempt-001-baseline",
+    "freshdev-qualification-mlx-4778-attempt-001-fixed",
+    "freshdev-qualification-ray-66694-attempt-001-baseline",
+    "freshdev-qualification-ray-66694-attempt-001-wrong-mutant",
+    "freshdev-qualification-ray-66694-attempt-001-fixed",
+    "freshdev-agent-transformers-49418-attempt-001",
+    "freshdev-agent-ray-66694-attempt-001"
   ],
-  "highest_priority_next_task": "Inspect exact-head required checks and review on PR #152; resolve actionable findings, verify all required checks on the final PR head, and integrate when repository rules permit. Then prospectively qualify a diverse fresh Development cohort without opening Held-out files or tests."
+  "schema_version": 2,
+  "task_exposure_ledger": {
+    "fresh_stage3_families_used": 0,
+    "historical_heldout_1979_touched": false,
+    "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+    "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700"
+  },
+  "unresolved_blockers": [
+    "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
+    "The two authorized Qwen3-4B Development attempts produced no edits and exhausted the 4096-token context; coding capability feasibility is NO-GO under the frozen rule.",
+    "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
+    "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
+    "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
+    "PR #153 must pass required CI at its newest pushed head and receive required review before integration."
+  ],
+  "updated_at": "2026-10-31T00:45:00Z"
 }

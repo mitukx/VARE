@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-task-qualification-v1",
+  "protocol_status": "frozen_before_source_or_test_content_access; no_task_qualified",
+  "frozen_at_utc": "2026-10-30T23:02:18Z",
+  "source_main_commit": "ce097a5d2c695d4fa7a2e2119e3c25bc3a460578",
+  "purpose": "Deeply qualify a small, repository-diverse set of new post-cutoff-proxy public fixes after the existing VARE candidate queue was exhausted.",
+  "sample_protocol_path": "protocols/mlsys_fresh_development_candidate_metadata_sample_v1.json",
+  "sample_protocol_sha256": "2bf791ea9d99184298a1be38f4d0f584b45ac509fe79b5e801f5749c8ee42c20",
+  "sample_output_path": "results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json",
+  "sample_output_sha256": "810fb823781f3bc44a0272db230cc3d65b43751c415e53229c81104a6183baad",
+  "prior_exposure_audit_path": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+  "prior_exposure_audit_sha256": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+  "prior_qualification_catalog_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+  "model_training_cutoff_proxy": "2025-08-09",
+  "candidate_tasks": [
+    {
+      "repository": "huggingface/transformers",
+      "pull_request": 49418,
+      "task_id": "transformers-49418-quantized-cache-residual-flush",
+      "title": "Fix QuantizedCache residual flushing for multi-token updates",
+      "url": "https://github.com/huggingface/transformers/pull/49418",
+      "merged_at": "2026-10-08T14:35:06Z",
+      "merge_base_sha": "bd3f926f52b55a0a59e812376e7624ca9d471ac2",
+      "head_sha": "3d0d518d8171ab991e9bccd0e590257831929af3",
+      "merge_commit_sha": "1734d8d9d6a4c5331ba87dd4a1a36d3a3cb25ac1",
+      "expected_changed_paths": [
+        "src/transformers/cache_utils.py",
+        "tests/utils/test_cache_utils.py"
+      ],
+      "proposed_family": "quantized_cache_residual_update_boundary"
+    },
+    {
+      "repository": "huggingface/trl",
+      "pull_request": 7668,
+      "task_id": "trl-7668-gradient-checkpointing-kwargs-restore",
+      "title": "Restore the gradient checkpointing kwargs after generation",
+      "url": "https://github.com/huggingface/trl/pull/7668",
+      "merged_at": "2026-10-14T15:25:57Z",
+      "merge_base_sha": "89246ca14ec3c26735276f6f75c4d3dbf66bd40f",
+      "head_sha": "d84b09700cce669b2e0d0040f2d8396bf89d33f0",
+      "merge_commit_sha": "989960ab989c3491dea585bb39d6144900b52852",
+      "expected_changed_paths": [
+        "tests/test_model_utils.py",
+        "trl/experimental/gkd/gkd_trainer.py",
+        "trl/experimental/gold/gold_trainer.py",
+        "trl/models/utils.py",
+        "trl/trainer/callbacks.py",
+        "trl/trainer/distillation_trainer.py",
+        "trl/trainer/grpo_trainer.py",
+        "trl/trainer/rloo_trainer.py"
+      ],
+      "proposed_family": "gradient_checkpointing_context_restore_after_generation"
+    },
+    {
+      "repository": "ml-explore/mlx",
+      "pull_request": 4778,
+      "task_id": "mlx-4778-complex-power-vjp-conjugation",
+      "title": "Fix complex power VJP conjugation",
+      "url": "https://github.com/ml-explore/mlx/pull/4778",
+      "merged_at": "2026-10-29T11:22:48Z",
+      "merge_base_sha": "9e2e8e233187ca3ca9f3d150652f7f462741c85f",
+      "head_sha": "82e336961d6eac609ee00e4c11e2287795816678",
+      "merge_commit_sha": "a21f892a6e8e83afb117cef1d1ceae3e82f48c32",
+      "expected_changed_paths": [
+        "mlx/primitives.cpp",
+        "python/tests/test_autograd.py"
+      ],
+      "proposed_family": "complex_power_vector_jacobian_conjugation"
+    }
+  ],
+  "hypothesis": "These three sampled, distinct public bug-fix families may have small, objective regression tests that can be reproduced on the local CPU-capable environment and used as separate Development tasks without reusing the historical VARE candidate identities.",
+  "qualification_gates": [
+    "Revalidate each PR identity, source SHAs, changed paths, and merge-base relationship against GitHub metadata without reading PR bodies or comments.",
+    "Verify every changed file's license obligations and inspect the source/test diff only after this protocol is frozen.",
+    "Record exact test selectors and hashes in an immutable qualification addendum before executing any task test; if no precise new regression test exists, mark the task unqualified.",
+    "For each task, apply only the upstream test delta to the frozen merge base, then run the pinned regression against the baseline source and against the exact merged fix in separate workspaces.",
+    "A candidate qualifies only if the baseline fails the targeted regression, the exact fixed source passes it, source hashes match, and a malformed or targeted wrong patch fails the independent grader.",
+    "Keep candidate code and trusted grader assets in separate process/container mounts; disable network during candidate/test execution and preserve resource limits.",
+    "Verify no exact prior Stage 2/3/VARE task identity or family overlap; public pretraining exposure remains unknown even with a post-proxy merge date."
+  ],
+  "environment_and_budget": {
+    "execution_host": "local Apple Silicon workstation; no external GPU worker",
+    "accelerator_use": "not authorized; qualification must run on CPU or be marked unsupported",
+    "maximum_test_wall_seconds_per_task": 600,
+    "maximum_resident_memory_bytes_per_task": 8589934592,
+    "maximum_concurrent_task_runs": 1,
+    "maximum_paid_compute_or_api_spend_usd": 0,
+    "model_inference_or_training": false,
+    "full_repository_test_suites": false
+  },
+  "primary_output": "Per-task pass/fail/unsupported qualification records and raw hashes; a cohort is eligible for later prospective Development assignment only if at least three distinct tasks pass all gates.",
+  "stop_rules": [
+    "Stop a task at 600 seconds, at the 8 GiB process limit, if it needs accelerator execution, if network remains necessary during test execution, or if the grader boundary cannot be independently validated.",
+    "Do not substitute a different task after reading or running the selected task's test; any replacement requires a new frozen protocol.",
+    "Do not open or execute any historical Held-out task, test, or evaluator.",
+    "Do not expose any candidate prompt or source patch to a model or agent in this qualification protocol.",
+    "Preserve every baseline failure, fix pass, test failure, environment failure, or unsupported result; do not upgrade partial evidence to qualification."
+  ],
+  "authorization": {
+    "selected_task_source_and_test_access": true,
+    "task_qualification_only": true,
+    "development_split_assignment": false,
+    "model_or_agent_inference": false,
+    "training": false,
+    "heldout_access": false
+  },
+  "limitations": [
+    "The three candidates were chosen using only a deterministic metadata sample, not source-level test results.",
+    "Passing source-level calibration does not demonstrate coding-agent success or model capability.",
+    "Qualification may fail if upstream test requirements are accelerator-specific, external-network-dependent, or too broad for the isolated CPU budget."
+  ],
+  "output_path": "results/mlsys-fresh-development-task-qualification-v1/"
+}

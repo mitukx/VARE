@@ -1,0 +1,118 @@
+{
+  "frozen_on_utc": "2026-10-30T23:54:36Z",
+  "inputs": {
+    "required_candidate_count": 71,
+    "sample_id": "mlsys-fresh-development-candidate-metadata-sample-v1",
+    "sample_path": "results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json",
+    "sample_sha256": "810fb823781f3bc44a0272db230cc3d65b43751c415e53229c81104a6183baad",
+    "source_test_content_access_permitted_during_selection": false
+  },
+  "post_selection_boundary": {
+    "baseline_first": true,
+    "held_out_access": false,
+    "model_or_agent_inference": false,
+    "optimizer_update": false,
+    "paid_compute_or_api": false,
+    "prior_task_outcomes_or_exposure_ledger_may_be_rewritten": false,
+    "run_fixed_arm_only_if_the_frozen_baseline_gate_is_met": true,
+    "source_level_qualification_requires_a_separate_frozen_run_addendum": true,
+    "split_assignment": false
+  },
+  "protocol_id": "mlsys-fresh-development-task-replacement-selection-v1",
+  "purpose": "Select exactly one replacement for TRL #7668 from the already frozen metadata review sample because its frozen baseline assertion gate was not met.",
+  "schema_version": 1,
+  "selection_rule": {
+    "eligibility": [
+      {
+        "field": "state",
+        "operator": "equals",
+        "value": "MERGED"
+      },
+      {
+        "field": "qualification_status",
+        "operator": "equals",
+        "value": "UNQUALIFIED"
+      },
+      {
+        "field": "split_assignment",
+        "operator": "equals",
+        "value": "UNASSIGNED"
+      },
+      {
+        "field": "changed_paths_complete",
+        "operator": "equals",
+        "value": true
+      },
+      {
+        "field": "base_ref_sha_at_capture, head_sha, merge_commit_sha",
+        "operator": "each is a 40-character lowercase hexadecimal commit id"
+      },
+      {
+        "field": "changed_paths",
+        "operator": "nonempty and includes at least one production path"
+      },
+      {
+        "field": "test_paths",
+        "operator": "nonempty"
+      },
+      {
+        "field": "changed_file_count",
+        "operator": "less_than_or_equal",
+        "value": 5
+      },
+      {
+        "field": "additions + deletions",
+        "operator": "less_than_or_equal",
+        "value": 200
+      },
+      {
+        "field": "repository owner",
+        "operator": "not_in",
+        "value": [
+          "huggingface",
+          "ml-explore"
+        ]
+      },
+      {
+        "field": "task key",
+        "operator": "not_in",
+        "value": [
+          "huggingface/transformers#49418",
+          "huggingface/trl#7668",
+          "ml-explore/mlx#4778"
+        ]
+      },
+      {
+        "field": "changed_paths and test_paths",
+        "operator": "no case-insensitive substring from list",
+        "value": [
+          "cuda",
+          "rocm",
+          "metal",
+          "gpu",
+          "kernel",
+          "flash_attn",
+          "triton"
+        ]
+      }
+    ],
+    "excluded_repository_owners_of_current_source_qualified_tasks": [
+      "huggingface",
+      "ml-explore"
+    ],
+    "excluded_task_keys": [
+      "huggingface/transformers#49418",
+      "huggingface/trl#7668",
+      "ml-explore/mlx#4778"
+    ],
+    "ordering": [
+      "sample_rank_sha256 ascending",
+      "repository ascending",
+      "number ascending"
+    ],
+    "selection": "Select the first eligible row only. Do not substitute a lower-ranked row if the selected task later proves infeasible or fails qualification.",
+    "test_path_definition": "A path is a test path when it starts with tests/ or test/, or contains /tests/ or /test/. A production path is any changed path not matching that definition.",
+    "unit": "one metadata row representing one merged upstream pull request",
+    "unselected_source_test_files_may_be_opened": false
+  }
+}

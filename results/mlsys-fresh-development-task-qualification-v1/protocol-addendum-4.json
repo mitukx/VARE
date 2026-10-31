@@ -1,0 +1,108 @@
+{
+  "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token",
+  "container_policy": {
+    "accelerator": "disabled",
+    "additional_environment": {
+      "HOME": "/tmp",
+      "MAX_JOBS": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/tmp"
+    },
+    "additional_tmpfs_mount": "--tmpfs /usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build:rw,exec,nosuid,nodev,size=256m,mode=1777",
+    "aggregate_baseline_and_fixed_wall_seconds": 600,
+    "docker_flags_unchanged": [
+      "--network=none",
+      "--read-only",
+      "--memory=2500m",
+      "--memory-swap=2500m",
+      "--cpus=2",
+      "--pids-limit=256",
+      "--cap-drop=ALL",
+      "--security-opt=no-new-privileges:true",
+      "--tmpfs /tmp:rw,noexec,nosuid,nodev,size=256m,mode=1777",
+      "--entrypoint=python3"
+    ],
+    "inherits_addenda_1_and_2": true,
+    "max_concurrent_task_runs": 1,
+    "no_network_during_test": true,
+    "only_writable_mounts": [
+      "/tmp",
+      "/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build"
+    ],
+    "paid_compute_or_api_spend_usd": 0,
+    "source_and_test_mounts_remain_read_only": true
+  },
+  "exact_test_node_ids": [
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity",
+    "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token"
+  ],
+  "execution_order": [
+    "Preserve attempt 003 as an inconclusive environment failure; it does not qualify or disqualify the task.",
+    "Run all six frozen baseline nodes once in one invocation with the runtime v3 image and exact tmpfs/serial-build settings. Count the negative control only if the residual-boundary correctness assertion executes and fails.",
+    "Only if the targeted baseline assertion failure is observed, run the same six node IDs once against the exact fixed source. Do not run the fixed arm after an environment, collection, selector, skip, or unrelated failure."
+  ],
+  "expected_cases": 6,
+  "extension_preflight": {
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/environment/quanto-extension-preflight.log",
+    "log_sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/environment/quanto-extension-preflight.json",
+    "record_sha256": "3a575f31694b539cabbd120e039090e51d545b877c785b9fb60a63f6d2ffbeb1",
+    "result": "The exact Extension loader built and loaded quanto_cpp.so on CPU inside the added build-cache tmpfs; no task/test source or tests were used."
+  },
+  "frozen_at_utc": "2026-10-30T23:40:26Z",
+  "nonclaims": [
+    "Attempt 003 is not a task baseline failure.",
+    "This runtime preflight is not a regression result or model/agent capability result.",
+    "No Development assignment, model/agent inference, policy update, SFT, RL, or Held-out access is authorized."
+  ],
+  "parent_addendum_path": "results/mlsys-fresh-development-task-qualification-v1/protocol-addendum-3.json",
+  "parent_addendum_sha256": "ca36eb3796dd49589316f5ac4ff47e19fe21003f5d8e9449f3930499d6deb08e",
+  "prior_attempt": {
+    "attempt_id": "freshdev-qualification-transformers-49418-attempt-003-baseline",
+    "failure": "Quanto attempted to create its lazy C++ extension build directory inside the read-only image root; no targeted residual-boundary assertion ran.",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-baseline.log",
+    "log_sha256": "21244c9ddb946c9c81d667a0a1e1a1f7b0f7fa5799d1c6093f2c81b18b87a327",
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-baseline.json",
+    "record_sha256": "4c64b37814bac28b10b9fabc351947a13f88d1ca432135f55605395485ee6098",
+    "regression_assertions_executed": false,
+    "selected_cases": 6,
+    "status": "INCONCLUSIVE_ENVIRONMENT_FAILURE"
+  },
+  "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-4",
+  "protocol_status": "frozen_before_transformers_49418_baseline_retry_after_attempt_003",
+  "qualification_rule": "The task qualifies only if all six fixed-source nodes pass with zero skips, the baseline has at least one targeted residual-boundary correctness assertion failure, all frozen source/test hashes match, and both arms remain within the frozen limits.",
+  "runtime": {
+    "added_system_packages": {
+      "build-essential": "12.9",
+      "g++": "4:12.2.0-3",
+      "gcc": "4:12.2.0-3",
+      "ninja-build": "1.11.1-2~deb12u1"
+    },
+    "base_image_id": "sha256:72844693faee9d2b814cd7c0fc59fc1f8b968bcb1933121e9efb008705d5a457",
+    "build_log_path": "results/mlsys-fresh-development-task-qualification-v1/environment/build-transformers-v3.log",
+    "build_log_sha256": "c38cb0c878b4e66aafdfbd4c65669cc4eef7eba7a9f74b945b7fa1702505b740",
+    "dockerfile_path": "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v3",
+    "dockerfile_sha256": "c62eaf32a8d172559a70417f1d4bd4dd4f7c3751e583d78c33bfca983cdcb4ad",
+    "extension": "optimum-quanto==0.2.7 quanto_cpp CPU extension; lazy-compiled from the pinned image package sources during each task container run",
+    "image": "vare/fresh-qualification-transformers:0.3",
+    "image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+    "max_jobs": 1
+  },
+  "schema_version": 1,
+  "scope": "Supersedes only the Transformers #49418 runtime/container cache-write details from addenda 1-3. It adds compiler/Ninja packages, serializes the extension build, and permits a single executable tmpfs mount at Quanto\u2019s exact cpp/build cache path. Task/source/test hashes, six node IDs, baseline-first order, test command, 600-second aggregate baseline/fixed limit, no-network policy, read-only root/source/test mounts, and all other resource/security controls remain unchanged. TRL and MLX remain governed by addendum 1.",
+  "source_file_sha256": {
+    "base": {
+      "src/transformers/cache_utils.py": "abdcb0ae88aa5b924ef7d76879db680e9af8f3ec1dafbba7ce446ecb521a944b"
+    },
+    "fixed": {
+      "src/transformers/cache_utils.py": "2bef552bc39e8a4dc7ddfcf25740e6a4a7c4b836d92f5e56629a8ebfcd9cb246"
+    }
+  },
+  "task_id": "transformers-49418-quantized-cache-residual-flush",
+  "test_file_sha256": "5088fd067cbc9d99e49b5edbb7a5d13431621922c6c651135b8f16a218f80bea",
+  "test_only_delta_sha256": "b602463ba73fbc3fb21fe3660f463b966ef139bd6316ad8dbbb49ab4009228ab"
+}

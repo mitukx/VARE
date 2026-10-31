@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "compression": "gzip -n -9; decompresses byte-for-byte to the JSON files described by evidence-manifest.json",
+  "evidence_manifest_sha256": "fa4192ad1e758b736e085a9736970502604c83bee7ec2860df4bde60c579c294",
+  "files": {
+    "candidate-pool.json": {
+      "raw_bytes": 4080945,
+      "raw_sha256": "f007f399326ec89c95a9ecf3ca355784e64f314cf472d73bf20c92d8b9a6eec2",
+      "compressed_path": "candidate-pool.json.gz",
+      "compressed_bytes": 738845,
+      "compressed_sha256": "3e53e3c07c151bf94185aa8898a36bf1a65d620b9cacdc78a4ab7f6d9592986c"
+    },
+    "screen.json": {
+      "raw_bytes": 5543960,
+      "raw_sha256": "aa90499b6d3e03a5877aa2cf382142b8bc7b265ba4dd27bcff1ce55cd93d764b",
+      "compressed_path": "screen.json.gz",
+      "compressed_bytes": 786725,
+      "compressed_sha256": "6aa5bd525063bc9d280dbbfda7241ce7a613f6fbc96504712f526d6273322be0"
+    }
+  }
+}

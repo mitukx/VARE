@@ -1,0 +1,495 @@
+{
+  "container_host": {
+    "architecture": "aarch64",
+    "context": "Colima",
+    "filesystem_free_bytes_at_build": 16106127360,
+    "vm_memory_bytes": 3040342016
+  },
+  "log_hashes": {
+    "environment/Dockerfile.mlx": {
+      "sha256": "193093c353d2ecb700b97f783bdf97cd3a0ceceabdf55d430ea93f7fb40f3653",
+      "size_bytes": 777
+    },
+    "environment/Dockerfile.transformers": {
+      "sha256": "c8d43fb1df7437768d1382eb12e1563163c38517981d1bd36dc2d4a72dfcda92",
+      "size_bytes": 231
+    },
+    "environment/Dockerfile.transformers-v2": {
+      "sha256": "c08ba83252edeabd650c8c5aa2417b92e51e55d63f052a6c09fec2f0a1e6de5c",
+      "size_bytes": 440
+    },
+    "environment/Dockerfile.transformers-v3": {
+      "sha256": "c62eaf32a8d172559a70417f1d4bd4dd4f7c3751e583d78c33bfca983cdcb4ad",
+      "size_bytes": 282
+    },
+    "environment/build-mlx-baseline-incremental.log": {
+      "sha256": "d518da2f05e6186ab706b4cb5922222d1ab59d604b7a39e2f21ae110a9ef857c",
+      "size_bytes": 605
+    },
+    "environment/build-mlx-fixed.log": {
+      "sha256": "182d13661b0d9a482493a9d2e5dea9dbad84e9cf0738e39f6dd7f424d3ead866",
+      "size_bytes": 38263
+    },
+    "environment/build-transformers-v2.log": {
+      "sha256": "1e29ce6a6db29f315ab74ad31e52c066ef3b4cc1339bc86da40b9c7ee370e2df",
+      "size_bytes": 2856
+    },
+    "environment/build-transformers-v3-attempt-001.log": {
+      "sha256": "195c8ccb99c1b50794443b589c00b9d43a7e5299acbc8e548d997289d437de5b",
+      "size_bytes": 322
+    },
+    "environment/build-transformers-v3.log": {
+      "sha256": "c38cb0c878b4e66aafdfbd4c65669cc4eef7eba7a9f74b945b7fa1702505b740",
+      "size_bytes": 20449
+    },
+    "environment/build-transformers.log": {
+      "sha256": "0cf9c6fc4e724f903fec017f7cfd8c371c573e82cbfbb62b596ddc17144df2db",
+      "size_bytes": 1565
+    },
+    "environment/quanto-extension-preflight-attempt-001.log": {
+      "sha256": "c3ef0cab9b8a1beab35ee35e6fd03e3aff054534cc84e8a3639b18f08d7eaf12",
+      "size_bytes": 1566
+    },
+    "environment/quanto-extension-preflight-attempt-002.log": {
+      "sha256": "db5da35cbce15f2df03f1d54dd768b9fea80254e48829dc2a4fca9dd12dcec6b",
+      "size_bytes": 1247
+    },
+    "environment/quanto-extension-preflight-attempt-003.log": {
+      "sha256": "db5da35cbce15f2df03f1d54dd768b9fea80254e48829dc2a4fca9dd12dcec6b",
+      "size_bytes": 1247
+    },
+    "environment/quanto-extension-preflight.log": {
+      "sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
+      "size_bytes": 275
+    },
+    "mlx-4778/attempt-001-baseline.json": {
+      "sha256": "f89813e8ddceb67039f00f7ca2dbd78b6105f80aaafbb0e292531677ab79c278",
+      "size_bytes": 1647
+    },
+    "mlx-4778/attempt-001-baseline.log": {
+      "sha256": "9ec836d04a5faa52fda14496d3b4053e06327db851a69853d5f522529c524c6d",
+      "size_bytes": 1274
+    },
+    "mlx-4778/attempt-001-fixed-launch-error.txt": {
+      "sha256": "f41b8f3fbd1fb3d64c7a9961766c1dca674624454b3f06d26df3f9c7416b9032",
+      "size_bytes": 402
+    },
+    "mlx-4778/attempt-001-fixed.json": {
+      "sha256": "1f075d67591f197747d467b010962660d98ba7fd09cc1243634cc9f7e3cef5e8",
+      "size_bytes": 1458
+    },
+    "mlx-4778/attempt-001-fixed.log": {
+      "sha256": "99a24796443a1d07f66a424f8116a06a2079063af758e7d3c87801c191ad2ecd",
+      "size_bytes": 98
+    },
+    "mlx-4778/qualification.json": {
+      "sha256": "29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee",
+      "size_bytes": 2160
+    },
+    "transformers-49418/attempt-001-fixed.log": {
+      "sha256": "c1f49b746f561ebdb700c34d7a47f79059e1af72a213f57914defae066eacfa4",
+      "size_bytes": 2223
+    },
+    "transformers-49418/attempt-002-fixed.log": {
+      "sha256": "2bc702fb3ae1856b21fe1635349a718ebbcd9d59d13da292ed1ff44728cf5270",
+      "size_bytes": 74
+    },
+    "transformers-49418/attempt-003-fixed.json": {
+      "sha256": "3b08c0fcc444a2b0858016512784a8d00b0e4294efcb6b4b0c6af72f3511a140",
+      "size_bytes": 1973
+    },
+    "transformers-49418/attempt-003-fixed.log": {
+      "sha256": "a9b443f97a35933935592b869840c0523167d25ef4039ca1e72656a2ae47b5f6",
+      "size_bytes": 2142
+    },
+    "transformers-49418/attempt-004-baseline.log": {
+      "sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
+      "size_bytes": 5506
+    },
+    "transformers-49418/qualification.json": {
+      "sha256": "75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e",
+      "size_bytes": 2387
+    },
+    "trl-7668/attempt-001-baseline.json": {
+      "sha256": "5d090e644f69d72a64fb1dadf22c690cc0489a45db233b83bc5c2b8f34619ed8",
+      "size_bytes": 1830
+    },
+    "trl-7668/attempt-001-baseline.log": {
+      "sha256": "8b2b9ae7ed93c687d43fdad5e435afc3fc25f872fef9c881f9e6cc9c0dceeab6",
+      "size_bytes": 4628
+    },
+    "trl-7668/attempt-001-fixed.json": {
+      "sha256": "798d5bc36f186cda97e6901b9919cf88984bf3b778a40c56476ae80a5ab11ceb",
+      "size_bytes": 1457
+    },
+    "trl-7668/attempt-001-fixed.log": {
+      "sha256": "2b1de2f830d76664f66cfe4e0a619a803504508f18fb395c3ece000468f23876",
+      "size_bytes": 98
+    },
+    "trl-7668/qualification.json": {
+      "sha256": "f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c",
+      "size_bytes": 2443
+    },
+    "ray-66694/attempt-001-fixed.json": "673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab",
+    "ray-66694/attempt-001-fixed.log": "20b00d9cc4a3409a3582614799f69f2a82d46a590612cb448479055fd731933d",
+    "ray-66694/commands.json": "39a3895faadf9b51c7a3b70d7149c62571a969aea48b7e44268b8c16d8b922fc",
+    "ray-66694/qualification.json": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d"
+  },
+  "mlx_runtime": {
+    "base_image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "baseline_build": "Copied exact base-commit mlx/primitives.cpp over fixed source in a disposable container, built a wheel offline using existing CMake object cache, installed it, and committed a distinct image. Wheel SHA-256 792e7d69bbcb48c9dffbf4b38c3b4ddb4663dc076ca1ec4b1781f702650c7323; wheel size 5831311 bytes.",
+    "baseline_image_id": "sha256:a40645c2c07d2d0719e3b28a4f9df9e211f9c8f0624f7cd47b69a4988ec8da1f",
+    "build_failures_before_success": [
+      {
+        "attempt": 1,
+        "error": "Cannot import setuptools.build_meta",
+        "resolution": "install setuptools==84.2.1"
+      },
+      {
+        "attempt": 2,
+        "error": "could not find git for clone of fmt-populate",
+        "resolution": "install git"
+      },
+      {
+        "attempt": 3,
+        "error": "LAPACK_INCLUDE_DIRS-NOTFOUND because lapacke.h was absent",
+        "resolution": "install liblapacke-dev"
+      }
+    ],
+    "cpu_build": "MLX_BUILD_METAL=OFF; MLX_BUILD_CPU=ON; CMAKE_BUILD_PARALLEL_LEVEL=1; no accelerator",
+    "dockerfile": "environment/Dockerfile.mlx",
+    "fixed_image_id": "sha256:d52bf4f4fcad8fafd9284057c342d21910e727e74ea939c652ac13301860ac0c",
+    "packages": {
+      "build-essential": "12.9",
+      "cmake": "3.25.1-1",
+      "g++": "4:12.2.0-3",
+      "gcc": "4:12.2.0-3",
+      "git": "1:2.39.5-0+deb12u3",
+      "liblapack-dev": "3.11.0-2",
+      "liblapacke-dev": "3.11.0-2",
+      "libopenblas-dev": "0.3.21+ds-4",
+      "ninja-build": "1.11.1-2~deb12u1",
+      "pkg-config": "1.8.1-1",
+      "setuptools": "84.2.1"
+    },
+    "source_package_version": "0.32.5"
+  },
+  "observed_task_baseline_failures": [
+    {
+      "classification": "target implementation raises TypeError for new frozen keyword in both parameter cases; no assertion executed",
+      "record": "trl-7668/attempt-001-baseline.json",
+      "record_sha256": "5d090e644f69d72a64fb1dadf22c690cc0489a45db233b83bc5c2b8f34619ed8",
+      "task_id": "trl-7668-gradient-checkpointing-kwargs-restore"
+    },
+    {
+      "classification": "target wall-time and shared Unix-anchor assertions failed on baseline; throughput controls passed",
+      "record": "ray-66694/attempt-001-baseline.json",
+      "record_sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f",
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain"
+    }
+  ],
+  "preserved_runner_errors": [
+    {
+      "classification": "wrong local fixed-image tag; Docker refused to start container; zero cases; corrected with pinned existing image",
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed-launch-error.txt",
+      "sha256": "f41b8f3fbd1fb3d64c7a9961766c1dca674624454b3f06d26df3f9c7416b9032"
+    }
+  ],
+  "preserved_task_test_failures": [
+    {
+      "classification": "environment collection failure; zero cases collected",
+      "record": "transformers-49418/attempt-001-baseline.json",
+      "sha256": "9498df99fd2cf1b6d9ffdb971b1ff82f58925ba787a90ae6aaab8cb94ee77e67"
+    },
+    {
+      "classification": "selector mismatch; zero test cases selected",
+      "record": "transformers-49418/attempt-002-baseline.json",
+      "sha256": "30c19c9faffdd6de5d3f4a9b8354ecf099b4835647e8247c4361a6a02b0854a0"
+    },
+    {
+      "classification": "six parameterized cases selected; all hit the read-only Quanto lazy C++ build-cache error before the targeted correctness assertion; inconclusive environment failure",
+      "log": "transformers-49418/attempt-003-baseline.log",
+      "log_sha256": "21244c9ddb946c9c81d667a0a1e1a1f7b0f7fa5799d1c6093f2c81b18b87a327",
+      "record": "transformers-49418/attempt-003-baseline.json",
+      "record_sha256": "4c64b37814bac28b10b9fabc351947a13f88d1ca432135f55605395485ee6098"
+    },
+    {
+      "classification": "fixed-arm selector transcription error; zero cases executed, no fixed outcome observed",
+      "log": "transformers-49418/attempt-001-fixed.log",
+      "log_sha256": "c1f49b746f561ebdb700c34d7a47f79059e1af72a213f57914defae066eacfa4",
+      "record": "transformers-49418/attempt-001-fixed.json",
+      "record_sha256": "2f3cd089cd873ca061f7ce9eec87fa139240933a60db96ea2b87a647041664b4"
+    },
+    {
+      "classification": "container launched but pytest did not start; Python treated the duplicate entrypoint token as script path; zero cases",
+      "log": "transformers-49418/attempt-002-fixed.log",
+      "log_sha256": "2bc702fb3ae1856b21fe1635349a718ebbcd9d59d13da292ed1ff44728cf5270",
+      "record": "transformers-49418/attempt-002-fixed.json",
+      "record_sha256": "1b209cee03b18f174b99c341bf618d604c87b2c807f4951937052569913ddd84"
+    }
+  ],
+  "pretest_checks": [
+    "Imports and package versions only; no selected regression selector was executed.",
+    "Fixture snapshot downloaded at exact revision; refs/main points to that commit for offline test loading.",
+    "All selected task test/source files remain unmodified and have frozen hashes."
+  ],
+  "quanto_extension_preflight": {
+    "container_settings": [
+      "network=none",
+      "read-only root",
+      "uid=65534:65534",
+      "memory=2500m",
+      "swap-inclusive=2500m",
+      "cpus=2",
+      "pids=256",
+      "MAX_JOBS=1",
+      "/tmp tmpfs rw,noexec",
+      "Quanto cpp/build tmpfs rw,exec,nosuid,nodev,size=256m,mode=1777"
+    ],
+    "extension_loader": "/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/extension.py",
+    "extension_source": "/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/{unpack.cpp,pybind_module.cpp}",
+    "image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+    "log_path": "environment/quanto-extension-preflight.log",
+    "log_sha256": "1868d0e8b7bfa67b1686cfb541178dfd9bde0b83e5426eee42a21ed633a2abe2",
+    "result": "PASSED_RUNTIME_PREPARATION_ONLY",
+    "result_detail": "The exact optimum-quanto Extension loader compiled and loaded quanto_cpp.so from the writable tmpfs cache. No regression test or task source/test mount was used."
+  },
+  "runtime_entrypoint_override": "python3 for all task test containers, because the baseline MLX image was committed from a disposable builder container with shell entrypoint metadata.",
+  "runtime_preparation_diagnostics": [
+    {
+      "classification": "standalone Quanto package import smoke used the installed Transformers wheel without the pinned repository source overlay and hit its tokenizers metadata constraint; no regression or task source was tested",
+      "log": "environment/quanto-extension-preflight-attempt-001.log",
+      "log_sha256": "c3ef0cab9b8a1beab35ee35e6fd03e3aff054534cc84e8a3639b18f08d7eaf12"
+    },
+    {
+      "classification": "default parallel Ninja compilation exceeded the 2500 MiB container memory limit and cc1plus was killed; MAX_JOBS=1 was selected. Transient raw output was replaced during file naming; the exact observed terminal diagnostic is summarized here.",
+      "raw_log_preserved": false,
+      "terminal_diagnostic": "c++: fatal error: Killed signal terminated program cc1plus; ninja: build stopped: subcommand failed."
+    },
+    {
+      "classification": "single-job compilation reached shared-object loading, then failed because Docker tmpfs defaults to noexec",
+      "log": "environment/quanto-extension-preflight-attempt-002.log",
+      "log_sha256": "db5da35cbce15f2df03f1d54dd768b9fea80254e48829dc2a4fca9dd12dcec6b"
+    },
+    {
+      "classification": "repeat tmpfs noexec mount reproduced the failed shared-object mapping",
+      "log": "environment/quanto-extension-preflight-attempt-003.log",
+      "log_sha256": "db5da35cbce15f2df03f1d54dd768b9fea80254e48829dc2a4fca9dd12dcec6b"
+    }
+  ],
+  "schema_version": 1,
+  "state": "Replacement cohort Transformers #49418, MLX #4778, and Ray #66694 is QUALIFIED_SOURCE_LEVEL (3/3). TRL #7668 remains NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE and is excluded. All four qualification records report NOT_ASSIGNED and no target model/agent prompt exposure. Pretraining exposure remains unknown; no model inference, SFT, policy update, RL, or Held-out evaluation ran.",
+  "task_qualification_results": [
+    {
+      "development_assignment": "NOT_ASSIGNED",
+      "model_exposure": false,
+      "qualification_record": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/qualification.json",
+      "qualification_record_sha256": "75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e",
+      "status": "QUALIFIED_SOURCE_LEVEL",
+      "task_id": "transformers-49418-quantized-cache-residual-flush"
+    },
+    {
+      "development_assignment": "NOT_ASSIGNED",
+      "model_prompt_exposure": false,
+      "qualification_record": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/qualification.json",
+      "qualification_record_sha256": "f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c",
+      "status": "NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE",
+      "task_id": "trl-7668-gradient-checkpointing-kwargs-restore"
+    },
+    {
+      "development_assignment": "NOT_ASSIGNED",
+      "model_exposure": false,
+      "qualification_record": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/qualification.json",
+      "qualification_record_sha256": "29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee",
+      "status": "QUALIFIED_SOURCE_LEVEL",
+      "task_id": "mlx-4778-complex-power-vjp-conjugation"
+    },
+    {
+      "development_assignment": "NOT_ASSIGNED",
+      "model_exposure": false,
+      "pretraining_exposure": "UNKNOWN",
+      "qualification_record": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/qualification.json",
+      "qualification_record_sha256": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d",
+      "status": "QUALIFIED_SOURCE_LEVEL",
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain"
+    }
+  ],
+  "transformers_runtime": {
+    "base_image": "vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+    "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.1 --file Dockerfile .",
+    "dockerfile": "environment/Dockerfile.transformers",
+    "final_image_id": "sha256:a5cb6acc290c620cda548f033b413a690e58c6c2179d638b68687dbed7c80f90",
+    "packages": {
+      "accelerate": "1.12.0",
+      "optimum-quanto": "0.2.7",
+      "parameterized": "0.9.0",
+      "pytest": "8.4.2",
+      "torch": "2.9.1",
+      "transformers": "4.57.3"
+    },
+    "preparation_failures": [
+      {
+        "attempt": 1,
+        "outcome": "failed before task test",
+        "reason": "base image ran as uid 65534 with HOME=/nonexistent; pip could not install optimum-quanto into /nonexistent/.local",
+        "resolution": "install dependency as root during image construction; run tests as uid 65534"
+      }
+    ]
+  },
+  "transformers_runtime_v2": {
+    "base_image": "vare/fresh-qualification-transformers:0.1@sha256:a5cb6acc290c620cda548f033b413a690e58c6c2179d638b68687dbed7c80f90",
+    "dockerfile": "environment/Dockerfile.transformers-v2",
+    "dockerfile_sha256": "c08ba83252edeabd650c8c5aa2417b92e51e55d63f052a6c09fec2f0a1e6de5c",
+    "image_id": "sha256:72844693faee9d2b814cd7c0fc59fc1f8b968bcb1933121e9efb008705d5a457",
+    "packages": {
+      "accelerate": "1.12.0",
+      "huggingface-hub": "1.31.0",
+      "optimum-quanto": "0.2.7",
+      "parameterized": "0.9.0",
+      "pytest": "8.4.2",
+      "safetensors": "0.8.0",
+      "tokenizers": "0.23.3",
+      "torch": "2.9.1",
+      "transformers": "4.57.3"
+    },
+    "pretest_import_check": "Passed: ResolvedRevision import and tokenizers 0.23.3 under --network=none; no selected regression test executed."
+  },
+  "transformers_runtime_v3": {
+    "added_packages": {
+      "build-essential": "12.9",
+      "g++": "4:12.2.0-3",
+      "gcc": "4:12.2.0-3",
+      "ninja-build": "1.11.1-2~deb12u1"
+    },
+    "architecture": "linux/arm64",
+    "base_image": "vare/fresh-qualification-transformers:0.2@sha256:72844693faee9d2b814cd7c0fc59fc1f8b968bcb1933121e9efb008705d5a457",
+    "build_attempt_001_log": "environment/build-transformers-v3-attempt-001.log",
+    "build_attempt_001_log_sha256": "195c8ccb99c1b50794443b589c00b9d43a7e5299acbc8e548d997289d437de5b",
+    "build_command": "docker --context colima build --pull=false --memory=2500m --memory-swap=2500m --tag vare/fresh-qualification-transformers:0.3 --file results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v3 .",
+    "build_log": "environment/build-transformers-v3.log",
+    "build_log_sha256": "c38cb0c878b4e66aafdfbd4c65669cc4eef7eba7a9f74b945b7fa1702505b740",
+    "dockerfile": "environment/Dockerfile.transformers-v3",
+    "dockerfile_sha256": "c62eaf32a8d172559a70417f1d4bd4dd4f7c3751e583d78c33bfca983cdcb4ad",
+    "final_image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+    "purpose": "Provide the C++ compiler and Ninja required by optimum-quanto 0.2.7 lazy CPU extension loading. Compilation occurs only in an explicit 256 MiB tmpfs cache mount during isolated task execution; no task test is run during image build."
+  },
+  "trl_runtime": {
+    "fixture_revision": "ce8d0bf270b28c8fab026ced69fe8aa14b0f0eda",
+    "image": "vare-sprint-vii-trl-grader:v2",
+    "image_id": "sha256:d5b0300b60c61881ea30834a45bbe0e99bf3ee74482ad4d766d46e777a277077",
+    "packages": {
+      "accelerate": "1.12.0",
+      "pytest": "8.4.2",
+      "torch": "2.9.1",
+      "transformers": "5.21.0"
+    }
+  },
+  "valid_task_attempts": [
+    {
+      "classification": "valid expected baseline negative control: 4/6 target assertions failed, 2/6 passed",
+      "log": "transformers-49418/attempt-004-baseline.log",
+      "log_sha256": "38b5dbc70762ccdb86813380d4a1ff3f87ec3594873b493ce39de3459883f44d",
+      "record": "transformers-49418/attempt-004-baseline.json",
+      "record_sha256": "c8cb78266f0e865740b5928625b705e3c734e137f43ef4a631a993465f9a9ec2"
+    },
+    {
+      "classification": "fixed arm PASSED 6/6 with zero skips; input hashes verified",
+      "log": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.log",
+      "log_sha256": "a9b443f97a35933935592b869840c0523167d25ef4039ca1e72656a2ae47b5f6",
+      "record": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/attempt-003-fixed.json",
+      "record_sha256": "3b08c0fcc444a2b0858016512784a8d00b0e4294efcb6b4b0c6af72f3511a140"
+    },
+    {
+      "classification": "baseline task code error in both cases; assertion-based gate not met",
+      "log": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-baseline.log",
+      "log_sha256": "8b2b9ae7ed93c687d43fdad5e435afc3fc25f872fef9c881f9e6cc9c0dceeab6",
+      "record": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-baseline.json",
+      "record_sha256": "5d090e644f69d72a64fb1dadf22c690cc0489a45db233b83bc5c2b8f34619ed8"
+    },
+    {
+      "classification": "fixed arm passed 2/2 permitted cases; paired task remains unqualified under frozen assertion rule",
+      "log": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-fixed.log",
+      "log_sha256": "2b1de2f830d76664f66cfe4e0a619a803504508f18fb395c3ece000468f23876",
+      "record": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/attempt-001-fixed.json",
+      "record_sha256": "798d5bc36f186cda97e6901b9919cf88984bf3b778a40c56476ae80a5ab11ceb"
+    },
+    {
+      "classification": "expected target VJP baseline assertion failure",
+      "log": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-baseline.log",
+      "log_sha256": "9ec836d04a5faa52fda14496d3b4053e06327db851a69853d5f522529c524c6d",
+      "record": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-baseline.json",
+      "record_sha256": "f89813e8ddceb67039f00f7ca2dbd78b6105f80aaafbb0e292531677ab79c278"
+    },
+    {
+      "classification": "fixed target passes 1/1 with zero skips",
+      "log": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed.log",
+      "log_sha256": "99a24796443a1d07f66a424f8116a06a2079063af758e7d3c87801c191ad2ecd",
+      "record": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed.json",
+      "record_sha256": "1f075d67591f197747d467b010962660d98ba7fd09cc1243634cc9f7e3cef5e8"
+    },
+    {
+      "classification": "valid baseline negative control: two target assertions failed, two throughput controls passed, zero skips",
+      "log": "ray-66694/attempt-001-baseline.log",
+      "log_sha256": "df53b377085b47e9703562635d6fe7c7b64c0ad2631a97a5be95ccb4b8ac5d22",
+      "record": "ray-66694/attempt-001-baseline.json",
+      "record_sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f"
+    },
+    {
+      "classification": "wrong mutant rejected by target multi-node assertion; dataset throughput collateral failure recorded; zero skips",
+      "log": "ray-66694/attempt-001-wrong-mutant.log",
+      "log_sha256": "5bbcadd23de887e2daee7d3f2458431ca4d88ea6c2696f6baabfb16c7ad9c57d",
+      "record": "ray-66694/attempt-001-wrong-mutant.json",
+      "record_sha256": "5ba305e5cc1643cdaf55c9275182734d2bf335d8309eb67a063a779a1df2ace8"
+    },
+    {
+      "classification": "fixed source PASSED 4/4 with zero skips on the same exact image, selectors, test overlay, and isolation limits",
+      "log": "ray-66694/attempt-001-fixed.log",
+      "log_sha256": "20b00d9cc4a3409a3582614799f69f2a82d46a590612cb448479055fd731933d",
+      "record": "ray-66694/attempt-001-fixed.json",
+      "record_sha256": "673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab"
+    }
+  ],
+  "ray_runtime": {
+    "base_commit": "8374f91cad9e89050368fdbb34ee78f042d73902",
+    "pr_head_commit": "4ec20f4047ecd405bd744d95f6c07a0b275d6677",
+    "fixed_commit": "5808b33e30092d7761d545f8ce059b14c4cf0098",
+    "image_id": "sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b",
+    "architecture": "linux/arm64",
+    "network": "disabled during import preflight and tests",
+    "build_attempts": {
+      "001": "failed: docker CLI rejected --progress option",
+      "002": "failed: wheel scratch filename was not canonical",
+      "003": "passed"
+    },
+    "preflight": {
+      "result": "PASSED",
+      "log": "ray-66694/runtime-import-preflight.log",
+      "sha256": "8522622295fbe227fbc37bf194e4954f9ad257b5dc8da46d34940a547304ba0c"
+    },
+    "task_qualification": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/qualification.json",
+    "task_qualification_sha256": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d",
+    "attempts": [
+      {
+        "arm": "baseline",
+        "result": "2 failed target assertions, 2 passed, 0 skipped",
+        "record": "ray-66694/attempt-001-baseline.json",
+        "record_sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f"
+      },
+      {
+        "arm": "wrong-mutant",
+        "result": "target multi-node assertion failed; dataset throughput collateral failure; 2 passed, 0 skipped",
+        "record": "ray-66694/attempt-001-wrong-mutant.json",
+        "record_sha256": "5ba305e5cc1643cdaf55c9275182734d2bf335d8309eb67a063a779a1df2ace8"
+      },
+      {
+        "arm": "fixed",
+        "result": "4 passed, 0 failed, 0 skipped",
+        "record": "ray-66694/attempt-001-fixed.json",
+        "record_sha256": "673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab"
+      }
+    ],
+    "command_record": "ray-66694/commands.json",
+    "command_record_sha256": "39a3895faadf9b51c7a3b70d7149c62571a969aea48b7e44268b8c16d8b922fc",
+    "replay_boundary": "All three one-attempt arms are consumed. Do not rerun without a new frozen protocol."
+  }
+}

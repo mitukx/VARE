@@ -1,0 +1,5 @@
+FROM vare/fresh-qualification-transformers:0.1@sha256:a5cb6acc290c620cda548f033b413a690e58c6c2179d638b68687dbed7c80f90
+USER 0:0
+RUN python -m pip install --disable-pip-version-check --no-cache-dir --no-deps huggingface-hub==1.31.0 tokenizers==0.23.3
+RUN python -c "import importlib.metadata as m; from huggingface_hub import ResolvedRevision; import tokenizers; print(m.version('huggingface-hub'), tokenizers.__version__)"
+USER 65534:65534

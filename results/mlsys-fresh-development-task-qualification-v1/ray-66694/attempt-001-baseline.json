@@ -1,0 +1,43 @@
+{
+  "accelerator": "disabled",
+  "arm": "baseline source overlay at frozen merge-base revision",
+  "attempt_id": "freshdev-qualification-ray-66694-attempt-001-baseline",
+  "device": "cpu",
+  "exit_code": 1,
+  "failed_cases": 2,
+  "log_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-baseline.log",
+  "log_sha256": "df53b377085b47e9703562635d6fe7c7b64c0ad2631a97a5be95ccb4b8ac5d22",
+  "network": "disabled",
+  "observed_at_utc": "2026-10-31T00:06:39Z",
+  "other_cases": [
+    "test_dataset_throughput_calculation passed",
+    "test_operator_throughput_calculation passed"
+  ],
+  "passed_cases": 2,
+  "preflight_log_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-import-preflight.log",
+  "preflight_log_sha256": "8522622295fbe227fbc37bf194e4954f9ad257b5dc8da46d34940a547304ba0c",
+  "protocol_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-5-runtime-freeze.json",
+  "protocol_sha256": "ca77f6954d42d8d2bc46c55c19b879a2e60133fe3f797b0609c26e5be6857ab3",
+  "pytest_reported_seconds": 0.68,
+  "qualification_effect": "Valid expected baseline negative control; authorizes the frozen wrong-mutant arm only. Fixed arm remains gated on mutant rejection.",
+  "runtime_image_id": "sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b",
+  "schema_version": 1,
+  "selected_cases": 4,
+  "selectors": [
+    "test_dataset_throughput_calculation",
+    "test_operator_throughput_calculation",
+    "test_operator_wall_time_multi_node",
+    "test_block_exec_stats_builder_records_unix_anchor"
+  ],
+  "skipped_cases": 0,
+  "source_hashes": {
+    "block.py": "38d638a9036b02a53666c3d23f65086c0887322d30a526968cc98bb567cb8110",
+    "stats.py": "03bc1d1af986be18982626dbb8bed64c84330c9304c4e3fe421e1e9f17b3967d"
+  },
+  "target_assertions_executed_and_failed": [
+    "test_operator_wall_time_multi_node: expected time_total_s 12.0, observed 10690.0",
+    "test_block_exec_stats_builder_records_unix_anchor: expected start_unix_time_s to be present, observed None"
+  ],
+  "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain",
+  "test_sha256": "945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c"
+}

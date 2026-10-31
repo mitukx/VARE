@@ -1,0 +1,8 @@
+FROM vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1
+USER 0:0
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential cmake ninja-build pkg-config libopenblas-dev liblapack-dev liblapacke-dev git && rm -rf /var/lib/apt/lists/*
+RUN python -m pip install --disable-pip-version-check --no-cache-dir setuptools==84.2.1
+COPY source /src
+WORKDIR /src
+RUN PYPI_RELEASE=1 CMAKE_ARGS="-DMLX_BUILD_METAL=OFF -DMLX_BUILD_CPU=ON -DMLX_BUILD_TESTS=OFF -DMLX_BUILD_EXAMPLES=OFF -DMLX_BUILD_BENCHMARKS=OFF -DMLX_BUILD_GGUF=OFF -DMLX_BUILD_SAFETENSORS=OFF" CMAKE_BUILD_PARALLEL_LEVEL=1 python -m pip install --disable-pip-version-check --no-cache-dir --no-deps --no-build-isolation --force-reinstall .
+USER 65534:65534

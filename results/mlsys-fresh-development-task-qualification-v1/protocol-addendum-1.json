@@ -1,0 +1,335 @@
+{
+  "acceptance_rule": {
+    "baseline": "At least one targeted assertion fails on the exact base source with the test-only upstream delta; classify environment/import/skip failures separately and do not count them as expected failure.",
+    "fixed": "Every expected parameter case passes on exact fixed source, with zero skip/xfail and verified source/test hashes.",
+    "qualification": "A task qualifies only if all above conditions hold and both arms complete under the frozen container/network/resource limits.",
+    "wrong_patch": "The baseline source is the predeclared negative-control wrong patch; it must fail the targeted assertion. No further mutant or post-result patch may be introduced."
+  },
+  "container_policy": {
+    "architecture": "linux/aarch64",
+    "container_context": "Colima",
+    "docker_flags": [
+      "--network=none",
+      "--read-only",
+      "--memory=2500m",
+      "--memory-swap=2500m",
+      "--cpus=2",
+      "--pids-limit=256",
+      "--cap-drop=ALL",
+      "--security-opt=no-new-privileges:true",
+      "--tmpfs /tmp:rw,noexec,nosuid,nodev,size=256m,mode=1777",
+      "--entrypoint=python3"
+    ],
+    "maximum_concurrent_task_runs": 1,
+    "maximum_vm_memory_bytes": 3040342016,
+    "network_allowed_only_for_environment_setup_and_fixture_download": true,
+    "no_gpu_or_metal": true,
+    "no_network_during_test": true,
+    "paid_compute_or_api_spend_usd": 0,
+    "read_only_container_root": true,
+    "read_only_source_and_test_mounts": true
+  },
+  "frozen_at_utc": "2026-10-30T23:25:26Z",
+  "nonclaims": [
+    "No Coding Agent success or Development generalization is established by source-level qualification.",
+    "No model capability, policy learning, RL, SFT, algorithmic novelty, or held-out result is established.",
+    "Public pretraining exposure remains unknown."
+  ],
+  "parent_protocol_path": "protocols/mlsys_fresh_development_task_qualification_v1.json",
+  "parent_protocol_sha256": "3ea5a8f18832295ca07e9584e47fe04a63554a74d95133efc8d2db3a1e261828",
+  "parent_scope_clarification": {
+    "bounded_cases": 2,
+    "interpretation": "The parent prohibition continues to forbid candidate prompts, agent/policy inference, model generation, optimizer updates, SFT, GRPO, RL, and any model capability experiment. For this one regression-only TRL selector, the addendum explicitly authorizes only loading the pinned tiny fixture and executing the upstream test\u2019s forward, loss, and autograd assertions for its two parameter cases. This is a software unit-test operation, not a coding-agent/model outcome or training result.",
+    "model_generation": false,
+    "optimizer_steps": false,
+    "parent_clause": "model_inference_or_training=false",
+    "policy_updates": false
+  },
+  "protocol_id": "mlsys-fresh-development-task-qualification-v1-addendum-1",
+  "protocol_status": "frozen_before_any_selected_task_regression_test",
+  "reproduction": {
+    "environment_build_files": [
+      "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers",
+      "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.mlx"
+    ],
+    "result_root": "results/mlsys-fresh-development-task-qualification-v1/",
+    "source_staging": "Create separate baseline and fixed contexts from the frozen commits. Put the regression test file from the fixed commit in both contexts; keep all source and test mounts read-only.",
+    "test_command": "For each task, run only the exact selector above once on baseline, then once on fixed; invoke python3 as the container entrypoint; no full repository suite and no concurrent task execution."
+  },
+  "schema_version": 1,
+  "source_test_input_manifest_path": "results/mlsys-fresh-development-task-qualification-v1/source-test-input-manifest.json",
+  "source_test_input_manifest_sha256": "d29cfbffc94e3f66711094f7ce72cefb0bb0580cc10b6a5a016d98c67fa60633",
+  "task_scope": "qualification only; no Development split assignment or model/agent exposure",
+  "tasks": [
+    {
+      "base_commit": "bd3f926f52b55a0a59e812376e7624ca9d471ac2",
+      "base_commit_is_ancestor_of_fixed_commit": true,
+      "case_labels": [
+        "empty_at_capacity",
+        "empty_over_capacity",
+        "nonempty_at_capacity",
+        "nonempty_over_capacity",
+        "below_capacity",
+        "single_token"
+      ],
+      "changed_source_paths": [
+        "src/transformers/cache_utils.py"
+      ],
+      "execution": {
+        "accelerator": "disabled",
+        "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates",
+        "cpu_limit": 2,
+        "entrypoint": "python3",
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "",
+          "HF_HUB_OFFLINE": "1",
+          "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONPATH": "/source",
+          "TOKENIZERS_PARALLELISM": "false",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "max_aggregate_wall_seconds_for_baseline_and_fixed": 600,
+        "memory_limit_bytes": 2684354560,
+        "memory_plus_swap_limit_bytes": 2684354560,
+        "mounts": {
+          "baseline_source": "work/mlsys-fresh-dev-qualification-v1/transformers-context/base/src -> /source:ro",
+          "fixed_source": "work/mlsys-fresh-dev-qualification-v1/transformers-context/fixed/src -> /source:ro",
+          "trusted_test": "work/mlsys-fresh-dev-qualification-v1/transformers-context/trusted-tests/tests/utils/test_cache_utils.py -> /trusted/test_cache_utils.py:ro"
+        },
+        "network": "none",
+        "pids_limit": 256,
+        "root_filesystem": "read-only",
+        "runtime_user": "65534:65534"
+      },
+      "expected_parameter_cases": 6,
+      "fixed_merge_commit": "1734d8d9d6a4c5331ba87dd4a1a36d3a3cb25ac1",
+      "pull_request": 49418,
+      "repository": "huggingface/transformers",
+      "runtime": {
+        "base_image": "vare/hf-coding-dev-arm64:2@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+        "build_file": "environment/Dockerfile.transformers",
+        "build_file_sha256": "c8d43fb1df7437768d1382eb12e1563163c38517981d1bd36dc2d4a72dfcda92",
+        "cpu_only": true,
+        "entrypoint_override": "python3",
+        "image_id": "sha256:a5cb6acc290c620cda548f033b413a690e58c6c2179d638b68687dbed7c80f90",
+        "packages": {
+          "accelerate": "1.12.0",
+          "optimum-quanto": "0.2.7",
+          "parameterized": "0.9.0",
+          "pytest": "8.4.2",
+          "torch": "2.9.1",
+          "transformers": "4.57.3"
+        }
+      },
+      "source_file_sha256": {
+        "base": {
+          "src/transformers/cache_utils.py": "abdcb0ae88aa5b924ef7d76879db680e9af8f3ec1dafbba7ce446ecb521a944b"
+        },
+        "fixed": {
+          "src/transformers/cache_utils.py": "2bef552bc39e8a4dc7ddfcf25740e6a4a7c4b836d92f5e56629a8ebfcd9cb246"
+        }
+      },
+      "task_id": "transformers-49418-quantized-cache-residual-flush",
+      "test_file_sha256": "5088fd067cbc9d99e49b5edbb7a5d13431621922c6c651135b8f16a218f80bea",
+      "test_only_delta_sha256": "b602463ba73fbc3fb21fe3660f463b966ef139bd6316ad8dbbb49ab4009228ab",
+      "test_path": "tests/utils/test_cache_utils.py",
+      "test_selector": "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates",
+      "workspace_policy": {
+        "baseline_source": "exact base commit; apply only the fixed-commit test file delta",
+        "fixed_source": "exact fixed merge commit",
+        "source_input_mount": "read-only",
+        "test_input_mount": "read-only",
+        "wrong_patch_negative_control": "baseline source with the same frozen test delta"
+      }
+    },
+    {
+      "base_commit": "89246ca14ec3c26735276f6f75c4d3dbf66bd40f",
+      "base_commit_is_ancestor_of_fixed_commit": true,
+      "case_labels": [
+        "use_reentrant=true",
+        "use_reentrant=false"
+      ],
+      "changed_source_paths": [
+        "trl/experimental/gkd/gkd_trainer.py",
+        "trl/experimental/gold/gold_trainer.py",
+        "trl/models/utils.py",
+        "trl/trainer/callbacks.py",
+        "trl/trainer/distillation_trainer.py",
+        "trl/trainer/grpo_trainer.py",
+        "trl/trainer/rloo_trainer.py"
+      ],
+      "execution": {
+        "accelerator": "disabled",
+        "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_model_utils.py::TestUnwrapModelForGeneration::test_restores_gradient_checkpointing_kwargs",
+        "cpu_limit": 2,
+        "entrypoint": "python3",
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "",
+          "HF_DATASETS_OFFLINE": "1",
+          "HF_HOME": "/hf-home",
+          "HF_HUB_OFFLINE": "1",
+          "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONPATH": "/upstream",
+          "TOKENIZERS_PARALLELISM": "false",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "max_aggregate_wall_seconds_for_baseline_and_fixed": 600,
+        "memory_limit_bytes": 2684354560,
+        "memory_plus_swap_limit_bytes": 2684354560,
+        "mounts": {
+          "baseline_source": "work/mlsys-fresh-dev-qualification-v1/trl-context/base -> /upstream:ro",
+          "fixed_source": "work/mlsys-fresh-dev-qualification-v1/trl-context/fixed -> /upstream:ro",
+          "fixture": "work/mlsys-fresh-dev-qualification-v1/hf-home -> /hf-home:ro",
+          "trusted_test": "work/mlsys-fresh-dev-qualification-v1/trl-context/trusted-tests/tests/test_model_utils.py -> /trusted/test_model_utils.py:ro"
+        },
+        "network": "none",
+        "pids_limit": 256,
+        "root_filesystem": "read-only",
+        "runtime_user": "65534:65534"
+      },
+      "expected_parameter_cases": 2,
+      "fixed_merge_commit": "989960ab989c3491dea585bb39d6144900b52852",
+      "pull_request": 7668,
+      "repository": "huggingface/trl",
+      "runtime": {
+        "base_image": "vare-sprint-vii-trl-grader:v2",
+        "cpu_only": true,
+        "entrypoint_override": "python3",
+        "image_id": "sha256:d5b0300b60c61881ea30834a45bbe0e99bf3ee74482ad4d766d46e777a277077",
+        "packages": {
+          "accelerate": "1.12.0",
+          "pytest": "8.4.2",
+          "torch": "2.9.1",
+          "transformers": "5.21.0"
+        }
+      },
+      "source_file_sha256": {
+        "base": {
+          "trl/experimental/gkd/gkd_trainer.py": "30e5f088663e1109e9be197f6332d26d9f3eefc959f5f11f19aa64767f28fdc7",
+          "trl/experimental/gold/gold_trainer.py": "af11ebf7cd06307d1a9f320de6e6ad2235c6e589f130f14279aeb0c115bbb868",
+          "trl/models/utils.py": "e6521a677a4c0b676aad986acc50745fbb4536c0f5aa8ec441117e87ff1757b1",
+          "trl/trainer/callbacks.py": "7ccab20ea6e33beb920b7da4391a3cbf36b84aa8a827f5f1868b9b167f8be280",
+          "trl/trainer/distillation_trainer.py": "407f118d7af7034973565367d3a35e9bd457787291fc60c396b7605bc6aa9e16",
+          "trl/trainer/grpo_trainer.py": "d3d46e3e64ef0e230725b8ea7e6a86a0265fc423123de4f8200f760651f3cad1",
+          "trl/trainer/rloo_trainer.py": "58ff4858be93dcfdddf11399a1426353843f8dc1349d80b0de7b232f1313ca54"
+        },
+        "fixed": {
+          "trl/experimental/gkd/gkd_trainer.py": "0f4e9f47a2c722fbd925ea006ba3172448ef4d15679883df3400569b49c254cd",
+          "trl/experimental/gold/gold_trainer.py": "c52eaad66183bf45f853a63d786e700e1326cf0dd7fc5f7be8c464021255de5e",
+          "trl/models/utils.py": "072ac504584f40270ba140805065896b006d684325bc11da841827587b53d203",
+          "trl/trainer/callbacks.py": "20ae5bbfeca32ad124fac96b5be230ec88bfd8da84f2b5c90ab87db9ebf0af3e",
+          "trl/trainer/distillation_trainer.py": "c5ea123d910c799200c240377f6a0f4b7de0485183e19b170b1df7b5ff9df4b9",
+          "trl/trainer/grpo_trainer.py": "6a3895887d984ded6d0ccfa3e29d2ba031294bba098004241f970a8b2a612d98",
+          "trl/trainer/rloo_trainer.py": "8c371896e35bb5c26587559436d83e1f088e933134cd9fa8d482a94af4b3cc1b"
+        }
+      },
+      "task_id": "trl-7668-gradient-checkpointing-kwargs-restore",
+      "test_file_sha256": "914e282895a5c75cd2cf1471963d2573a78a4d218989ced2626b8a3e8633eb67",
+      "test_only_delta_sha256": "69a03d4a90802d37a1acde8d71341db89f4f10da87246b06b37ab98a970f8270",
+      "test_path": "tests/test_model_utils.py",
+      "test_selector": "/trusted/test_model_utils.py::TestUnwrapModelForGeneration::test_restores_gradient_checkpointing_kwargs",
+      "workspace_policy": {
+        "baseline_source": "exact base commit; apply only the fixed-commit test file delta",
+        "fixed_source": "exact fixed merge commit",
+        "source_input_mount": "read-only",
+        "test_input_mount": "read-only",
+        "wrong_patch_negative_control": "baseline source with the same frozen test delta"
+      }
+    },
+    {
+      "base_commit": "9e2e8e233187ca3ca9f3d150652f7f462741c85f",
+      "base_commit_is_ancestor_of_fixed_commit": true,
+      "case_labels": [
+        "single complex-valued forward/VJP/JVP case"
+      ],
+      "changed_source_paths": [
+        "mlx/primitives.cpp"
+      ],
+      "execution": {
+        "accelerator": "disabled",
+        "command": "python3 -m pytest -q -p no:cacheprovider /trusted/test_autograd.py::TestAutograd::test_complex_power_vjps",
+        "cpu_limit": 2,
+        "entrypoint": "python3",
+        "environment": {
+          "CUDA_VISIBLE_DEVICES": "",
+          "DEVICE": "cpu",
+          "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONPATH": "/trusted"
+        },
+        "max_aggregate_wall_seconds_for_baseline_and_fixed": 600,
+        "memory_limit_bytes": 2684354560,
+        "memory_plus_swap_limit_bytes": 2684354560,
+        "mounts": {
+          "source": "exact compiled source is baked into baseline/fixed pinned images",
+          "trusted_test_directory": "work/mlsys-fresh-dev-qualification-v1/runtime-mlx/tests/python/tests -> /trusted:ro"
+        },
+        "network": "none",
+        "pids_limit": 256,
+        "root_filesystem": "read-only",
+        "runtime_user": "65534:65534"
+      },
+      "expected_parameter_cases": 1,
+      "fixed_merge_commit": "a21f892a6e8e83afb117cef1d1ceae3e82f48c32",
+      "pull_request": 4778,
+      "repository": "ml-explore/mlx",
+      "runtime": {
+        "base_image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+        "build_file": "environment/Dockerfile.mlx",
+        "build_file_sha256": "193093c353d2ecb700b97f783bdf97cd3a0ceceabdf55d430ea93f7fb40f3653",
+        "cpu_only": true,
+        "entrypoint_override": "python3",
+        "images": {
+          "baseline": "sha256:a40645c2c07d2d0719e3b28a4f9df9e211f9c8f0624f7cd47b69a4988ec8da1f",
+          "fixed": "sha256:d52bf4f4fcad8fafd9284057c342d21910e727e74ea939c652ac13301860ac0c"
+        },
+        "metal": false,
+        "packages": {
+          "cmake": "3.25.1",
+          "g++": "12.2.0",
+          "gcc": "12.2.0",
+          "git": "2.39.5-0+deb12u3",
+          "liblapack-dev": "3.11.0-2",
+          "liblapacke-dev": "3.11.0-2",
+          "libopenblas-dev": "0.3.21+ds-4",
+          "mlx": "0.32.5",
+          "ninja": "1.11.1-2~deb12u1",
+          "pip": "25.0.1",
+          "python": "3.12.15",
+          "setuptools": "84.2.1"
+        }
+      },
+      "source_file_sha256": {
+        "base": {
+          "mlx/primitives.cpp": "031cfd345857d363618f6c5790f71d308d9dc12d5cc64dfe2ff8ff8a03dd5b63"
+        },
+        "fixed": {
+          "mlx/primitives.cpp": "9e5d225fbb0b1f0447311751946ed44f5f08a210c7b5beda56ef9bf76a369033"
+        }
+      },
+      "task_id": "mlx-4778-complex-power-vjp-conjugation",
+      "test_file_sha256": "71974890117042087d22d78da3d4c90eaa313c5fcc719646091f228f57a709e0",
+      "test_only_delta_sha256": "061d91c64d63625c56215fa787bcc0c1d114227f1a641554868785f5780c92d8",
+      "test_path": "python/tests/test_autograd.py",
+      "test_selector": "/trusted/test_autograd.py::TestAutograd::test_complex_power_vjps",
+      "workspace_policy": {
+        "baseline_source": "exact base commit; apply only the fixed-commit test file delta",
+        "fixed_source": "exact fixed merge commit",
+        "source_input_mount": "read-only",
+        "test_input_mount": "read-only",
+        "wrong_patch_negative_control": "baseline source with the same frozen test delta"
+      }
+    }
+  ],
+  "trl_model_fixture": {
+    "manifest_path": "results/mlsys-fresh-development-task-qualification-v1/trl-model-fixture-manifest.json",
+    "manifest_sha256": "6a7647352ff558c8c2d07275257254b59c96ccd6bcbd9e0e3217ea79022516ce",
+    "model_execution_exception": "Only the two selected upstream unit-test cases may perform one tiny forward/loss/autograd check each. No generation, optimizer step, candidate prompt, agent inference, policy inference, model training, or RL update is authorized.",
+    "offline_cache_layout": "HF_HOME/hub/models--trl-internal-testing--tiny-Qwen2ForCausalLM-2.5 with refs/main set to pinned revision",
+    "repository": "trl-internal-testing/tiny-Qwen2ForCausalLM-2.5",
+    "revision": "ce8d0bf270b28c8fab026ced69fe8aa14b0f0eda",
+    "total_bytes": 20754544
+  }
+}
