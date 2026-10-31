@@ -434,3 +434,6 @@ docker --context colima image inspect vare/fresh-qualification-transformers:0.3 
 ```
 
 Verify each generated source-tree digest against `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json` before execution. Execute the exact per-arm command by substituting its source directory, trusted directory, runner directory, and result log into the v2 `container_template`. Capture stdout and stderr together. Enforce the 600-second ceiling with a monotonic host timer; check at least once per minute and stop the container on expiry. Write one JSON receipt per arm with exact argv, protocol/runner/source/test/image hashes, start/end UTC, elapsed seconds, exit code, timeout flag, named subtest outcomes, and gate classification. Do not retry.
+
+
+V2 baseline attempt 001 is recorded in `results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.json` (SHA-256 ef5c864eb1bc119a11600bd2fce2b24cc7481bb30f68072cf1073f29b6dc11cc); raw output is `results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.log` (SHA-256 ecee4766d4c918e36abc71175e1be09748eb263978c1b1ed53dcde5f8bc43566). Both named config subTests failed at the target assertion: 47 calls for the video config and 141 for the legacy-image config, with no errors or skips. The v2 wrong-mutant gate is now open.

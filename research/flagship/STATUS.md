@@ -34,7 +34,7 @@ The controller now removes only oldest complete assistant tool-call rounds at th
 
 ## Immediate next action
 
-Fresh v2 source trees now match all pinned tree and target-file hashes, and the v2 input manifest is saved at SHA-256 `f5c61913ab2f992e65cfa85f7938b74e74ad597d4d7bf0184d6ddde2665c0bd5`. Commit and push this pre-run manifest, then execute the v2 baseline once with the case-aware runner. Keep the candidate unassigned and do not run model inference.
+V2 baseline attempt 001 failed both named config subTests at `load_attribute.assert_not_called` (47 calls for the video config, 141 for the legacy image config; 2 failures, 0 errors/skips). Its log and receipt are recorded; the baseline gate is met. Run the v2 wrong-mutant next. The candidate remains unassigned and no inference has run.
 
 
 ## v1 qualification diagnostic

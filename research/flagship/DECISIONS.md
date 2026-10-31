@@ -398,3 +398,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Freeze `protocols/mlsys_transformers_49458_source_qualification_v2.json` at SHA-256 `f62f163be8984323c0d237b82fbaef3cf075a80e5bb49d23fd0fd8328141ee9b`. Reuse the exact upstream test bytes and source trees, changing only the runner to emit per-subTest records. Run fresh baseline → wrong-mutant → upstream-fixed arms, one invocation each; require both named cases to meet each arm's gate. Keep the candidate unassigned and prohibit model inference.
 - **Falsification criteria:** Any frozen input mismatch; missing subtest record; baseline or wrong-mutant not rejected by the exact assertion in both cases; fixed arm has any failure/skip; or resource/isolation mismatch.
 - **Follow-up:** Commit and push v2 before its first candidate test, then execute the three bounded arms and preserve full receipts. Public pretraining exposure remains unknown; source qualification alone does not authorize a model run.
+
+
+## 2026-10-31 — V2 baseline fails the pinned lazy-resolution assertion in both config cases
+
+- **Hypothesis:** The unmodified merge-base implementation eagerly loads unrelated processor mappings for both explicit video and legacy image configuration paths.
+- **Evidence:** V2 baseline attempt 001 used the case-aware runner and reported `video_preprocessor_config.json` and `preprocessor_config.json` separately. Both reached `load_attribute.assert_not_called` and failed with `AssertionError`: 47 `_load_attr_from_module` calls for the video case and 141 for the legacy-image case. The method ran once, with two subTest failures, zero errors, and zero skips. Receipt SHA-256 `ef5c864eb1bc119a11600bd2fce2b24cc7481bb30f68072cf1073f29b6dc11cc`; log SHA-256 `ecee4766d4c918e36abc71175e1be09748eb263978c1b1ed53dcde5f8bc43566`.
+- **Alternative explanations:** A collection/import error could look like an expected negative control, or only one config path could fail while aggregate output hides the other. The runner emitted both named cases and both exact assertion failures.
+- **Decision:** Accept the v2 baseline negative-control gate and authorize the one v2 wrong-mutant run. The candidate remains unqualified and unassigned.
+- **Falsification criteria:** Any hash/input mismatch; absent config case; error/skip; assertion differs from `load_attribute.assert_not_called`; or nonzero unexpected source changes.
+- **Follow-up:** Run the wrong-mutant once and require both named config subTests to fail at the intended assertion without errors/skips before running upstream-fixed.

@@ -23,5 +23,28 @@
   "protocol_path": "protocols/mlsys_transformers_49458_source_qualification_v2.json",
   "protocol_sha256": "f62f163be8984323c0d237b82fbaef3cf075a80e5bb49d23fd0fd8328141ee9b",
   "trusted_test_sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3",
-  "v2_candidate_test_execution_started": false
+  "v2_baseline": {
+    "gate": "EXPECTED_BASELINE_ASSERTION_FAILURE_BOTH_NAMED_SUBTESTS",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.log",
+    "log_sha256": "ecee4766d4c918e36abc71175e1be09748eb263978c1b1ed53dcde5f8bc43566",
+    "receipt_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.json",
+    "receipt_sha256": "ef5c864eb1bc119a11600bd2fce2b24cc7481bb30f68072cf1073f29b6dc11cc",
+    "subtests": [
+      {
+        "assertion": "load_attribute.assert_not_called",
+        "exception_type": "AssertionError",
+        "filename": "video_preprocessor_config.json",
+        "mapping_load_calls": 47,
+        "outcome": "failed"
+      },
+      {
+        "assertion": "load_attribute.assert_not_called",
+        "exception_type": "AssertionError",
+        "filename": "preprocessor_config.json",
+        "mapping_load_calls": 141,
+        "outcome": "failed"
+      }
+    ]
+  },
+  "v2_candidate_test_execution_started": true
 }
