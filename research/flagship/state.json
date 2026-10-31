@@ -304,7 +304,7 @@
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-4-output-profile-binding.json",
       "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1-addendum-4-output-profile-binding",
       "sha256": "dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396",
-      "status": "frozen after Addendum 3 profile-path audit and before any corrected candidate test; binds exact attempt-002 write roots and commands; must be pushed before execution"
+      "status": "pushed at 5d2064a; exact baseline attempt-002 gate passed; authorizes one wrong-mutant attempt-002; upstream-fixed remains conditionally gated"
     }
   ],
   "git_refs": {
@@ -315,15 +315,15 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
     "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "ba25adfe015272455c4baac959cd6de927a54dd5"
+    "verified_pr_head_sha_before_checkpoint_changes": "5d2064a70c697fee3684c6586c50a2329cb8e86d"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
     "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Commit and push the three corrected attempt-002 Seatbelt profiles and execution addendum 4. Verify the exact remote PR head and addendum hash, then run only the stored baseline attempt-002 once; proceed conditionally to mutant and fixed, stopping on any gate failure.",
-  "last_completed_step": "Pushed the pytest internal-log correction, runner regression, and baseline attempt-001 setup-failure receipt in commit ba25adfe. A pre-execution audit found Addendum 3\u2019s attempt-002 output paths did not match its inherited Seatbelt write roots (attempt-001); Addendum 3 was not invoked. Created Addendum 4 with three new profiles whose only write roots match their arm-specific attempt-002 outputs and whose network/default-deny rules are preserved. Local checks verified every profile and command hash, exact runner reconstruction, and unused output roots. Addendum 4 must be pushed before the corrected baseline. No candidate assertion, inference, training, split assignment, or Held-Out access occurred.",
+  "highest_priority_next_task": "Run the stored wrong-mutant attempt-002 argv from pushed Addendum 4 exactly once. Continue to upstream-fixed only if both cases fail at the same post-override assertion with no unrelated failures, skips, resource breach, or isolation issue.",
+  "last_completed_step": "Pushed Addendum 4 and matching per-arm attempt-002 Seatbelt profiles at PR #162 head 5d2064a70c697fee3684c6586c50a2329cb8e86d. Remote Addendum 4 hash matched. Baseline attempt-002 ran once with exact frozen inputs and command; both HiSparse and watermarking cases failed at the intended post-override assertion (line 73), with successful collection, zero skips/errors, no timeout/RSS breach, and profile-bound writes/network denial. The machine classification and checksums are saved. The wrong-mutant arm is now conditionally authorized; upstream-fixed still depends on its result. No model, training, split assignment, or Held-Out access occurred.",
   "milestone_id": "p15-fresh-vllm-64830-source-qualification",
   "result_hash_references": [
     {
@@ -1375,6 +1375,26 @@
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/sandbox/upstream-fixed-attempt-002.sb",
       "sha256": "1cb52eb5c3a73051b26b56b8895f470990c0aa35b75f5984d2957644ba7fd60f",
       "status": "default-deny/network-deny profile; only writable subtree is its matching attempt-002 output"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-002/attempt.json",
+      "sha256": "0992a933e64e27d499d92505ea961417c75aab8915e49df8dc0d734e5bb132d8",
+      "status": "two intended post-override assertion failures; no timeout/resource breach"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-002/pytest.log",
+      "sha256": "ff64d47636c162410629fe67a8f485cf1ae922384d49cdd40d1d71de4cedaa64",
+      "status": "both intended parameter cases failed at line 73; 0 errors/skips"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-002/classification.json",
+      "sha256": "3756c15f40d7d7b27d5caed4eb4849f954fa46417eeb57c9ec58602941ed4b77",
+      "status": "baseline behavioral gate passed; wrong-mutant authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-002/SHA256SUMS",
+      "sha256": "ed457ac135ab9fbf4efce62d931783668282beb77df9e5428dc2cfb5647ba186",
+      "status": "all baseline invocation, runner, log, internal log, and classification hashes match"
     }
   ],
   "run_ids": [
@@ -1426,7 +1446,8 @@
     "41172352616",
     "vllm-64830-source-baseline-attempt-001-setup-failure",
     "vllm-64830-qualification-runner-tooling-001",
-    "vllm-64830-addendum3-profile-binding-audit-preexec"
+    "vllm-64830-addendum3-profile-binding-audit-preexec",
+    "vllm-64830-source-baseline-attempt-002"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -1447,8 +1468,8 @@
     "vLLM #64830 remains UNQUALIFIED and UNASSIGNED. Its frozen source test overlay is intentionally scoped to HiSparse and watermarking; modified custom-speculator behavior is excluded from this qualification claim.",
     "PR #160 exact head 71aa74ab6a8f6f1625505b68f7f332c49fabff93 has passing exact-head CI and CPU evidence; GitHub reports merge state BLOCKED and normal review/branch-protection requirements remain.",
     "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 has passing exact-head CI and CPU evidence but remains a draft; no review is recorded.",
-    "vLLM #64830 remains UNQUALIFIED / UNASSIGNED. Baseline attempt-001 stopped before collection due /dev/null logging setup. Addendum 3 was pushed but never invoked because its Seatbelt write roots did not match attempt-002. Addendum 4 corrects and binds each output/profile pair and must be pushed before the only authorized attempt-002 baseline.",
-    "PR #162 is open as a draft at head ba25adfe015272455c4baac959cd6de927a54dd5; current exact-head CI follows the pushed runner correction. The profile-binding checkpoint will trigger another CI run."
+    "vLLM #64830 remains UNQUALIFIED / UNASSIGNED. Baseline attempt-002 passed the exact source-level behavioral gate. The wrong-mutant arm is authorized but not run; upstream-fixed is gated on mutant rejection. No split assignment, inference, training, or Held-Out use is authorized.",
+    "PR #162 is open as a draft at head 5d2064a70c697fee3684c6586c50a2329cb8e86d; CI is running on this head and will rerun after the baseline evidence checkpoint."
   ],
-  "updated_at": "2026-10-31T05:50:24Z"
+  "updated_at": "2026-10-31T05:51:53Z"
 }
