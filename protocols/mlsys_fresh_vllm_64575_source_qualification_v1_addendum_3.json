@@ -1,0 +1,74 @@
+{
+  "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-3",
+  "schema_version": 1,
+  "frozen_at_utc": "2026-10-31T04:13:35Z",
+  "status": "frozen before the corrected baseline retry; supersedes only the incorrectly described expected assertion locations in prior addenda",
+  "parent_addendum": {
+    "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_2.json",
+    "sha256": "e0b6636997a28131ecade4e7452cbe40a449bd55d4a41cdf525ecb3653cb6ac3"
+  },
+  "correction_scope": "Source-based correction to the expected negative-control failure site. It does not change test input bytes, source revisions, mutant bytes, runner, profile, arm order, budgets, invocation count, or authorization.",
+  "source_evidence": {
+    "baseline_model": "AnthropicTool requires name and input_schema and has no type validator. The two unsupported-type fixtures omit input_schema, so Pydantic raises ValidationError for the missing field; the pytest.raises assertion is satisfied and the subsequent expected unsupported-type message assertion is the intended baseline failure.",
+    "wrong_mutant_model": "The mutant permits web_search_20250305 through the type guard, but the fixture still omits required input_schema. It therefore raises a missing-field ValidationError, and the same expected unsupported-type message assertion detects that the type-specific rejection did not run. bash_20250124 remains rejected by the validator.",
+    "fixed_model": "The before-validator rejects both unsupported types before required-field validation, and its ValueError message contains the frozen expected '<type> is not supported' substring."
+  },
+  "supersedes_expected_outcome_wording": {
+    "paths": [
+      "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_1.json",
+      "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_2.json"
+    ],
+    "incorrect_wording": "DID NOT RAISE",
+    "correct_failure_assertion": "assert f\"{tool['type']!r} is not supported\" in errors[0]['msg']",
+    "baseline_expected": {
+      "cases": 5,
+      "failures": 2,
+      "failure_cases": [
+        "web_search_20250305: expected unsupported-type message absent from the sole ValidationError message because baseline reports missing input_schema",
+        "bash_20250124: expected unsupported-type message absent from the sole ValidationError message because baseline reports missing input_schema"
+      ],
+      "passes": 3,
+      "errors": 0,
+      "skips": 0,
+      "unrelated_failures": 0
+    },
+    "wrong_mutant_expected": {
+      "cases": 5,
+      "failures": 1,
+      "failure_case": "web_search_20250305: expected unsupported-type message absent from the sole ValidationError message because mutant continues to required input_schema validation",
+      "passes": 4,
+      "errors": 0,
+      "skips": 0,
+      "unrelated_failures": 0
+    },
+    "upstream_fixed_expected": {
+      "cases": 5,
+      "failures": 0,
+      "passes": 5,
+      "errors": 0,
+      "skips": 0,
+      "unrelated_failures": 0
+    }
+  },
+  "retry_authorization": {
+    "candidate_tests_executed_since_addendum_2": false,
+    "baseline_attempt_001_remains_consumed_and_preserved": true,
+    "next_baseline_invocation": "attempt 002 only, exactly as specified in addendum 2",
+    "wrong_mutant_invocation": "attempt 001 only, conditional on baseline attempt 002 matching the corrected baseline gate",
+    "upstream_fixed_invocation": "attempt 001 only, conditional on the wrong-mutant matching its corrected gate",
+    "runner_sha256": "cd67ac0624f1bcd65edddbb135c669a89fa9d80a7a4d1dd7fcce95be09a736a3",
+    "test_overlay_sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8",
+    "seatbelt_profile_hashes_unchanged": true,
+    "limits_unchanged": true,
+    "authorization": {
+      "baseline_attempt_002": true,
+      "wrong_mutant_after_baseline_gate": true,
+      "upstream_fixed_after_mutant_gate": true,
+      "inference": false,
+      "training": false,
+      "Development_assignment": false,
+      "Held_Out_access": false,
+      "paid_compute_or_api": false
+    }
+  }
+}
