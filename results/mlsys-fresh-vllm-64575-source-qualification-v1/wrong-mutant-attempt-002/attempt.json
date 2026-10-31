@@ -1,0 +1,28 @@
+{
+  "arm": "wrong-mutant",
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/wrong-mutant.sb",
+    "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "log_file=/private/tmp/vare-vllm-64575-qualification/writable/wrong-mutant/attempt-002/pytest-internal.log",
+    "--basetemp",
+    "/private/tmp/vare-vllm-64575-qualification/writable/wrong-mutant/attempt-002/pytest-tmp",
+    "/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py"
+  ],
+  "elapsed_seconds": 0.53,
+  "exit_code": 1,
+  "peak_process_tree_rss_bytes": 3915776,
+  "pytest_log_sha256": "87c9309c8ac16a32f8ce6d7ea386970e04885c7a2d782b266f063d7c0a8b6be6",
+  "rss_limit_exceeded": false,
+  "sandbox_profile_sha256": "43d2021c2c1de0372275d50c10687cf3b57de680580a5cbe3b23619a70e00774",
+  "source_file_sha256": "56f375df352e854e548d1e65042c21b501142210e1f48e12abcd8c88cfa75ddd",
+  "test_file_sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8",
+  "timed_out": false
+}
