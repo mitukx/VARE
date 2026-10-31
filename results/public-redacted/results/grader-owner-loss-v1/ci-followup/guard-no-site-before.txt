@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "<SESSION_ROOT>/work/vare-slice/src/vare/_grader_guard.py", line 8, in <module>
+    import signal
+  File "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/signal.py", line 3, in <module>
+    from enum import IntEnum as _IntEnum
+  File "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/enum.py", line 3, in <module>
+    from types import MappingProxyType, DynamicClassAttribute
+  File "<SESSION_ROOT>/work/vare-slice/src/vare/types.py", line 4, in <module>
+    from dataclasses import dataclass, field
+  File "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/dataclasses.py", line 1, in <module>
+    import re
+  File "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/re/__init__.py", line 126, in <module>
+    import functools
+  File "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/functools.py", line 22, in <module>
+    from types import GenericAlias
+ImportError: cannot import name 'GenericAlias' from partially initialized module 'types' (most likely due to a circular import) (<SESSION_ROOT>/work/vare-slice/src/vare/types.py)

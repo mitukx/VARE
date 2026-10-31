@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="16" time="0.281" timestamp="2026-10-15T14:25:43.005620+09:00" hostname="UK-2.local"><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[port]" time="0.005"><failure message="AssertionError: audit accepted dispatch-denied URL: 'https://example.org:12345/resource'&#10;assert ('pass' == 'pass'&#10;  &#10;    pass) is False">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_recorded_url_is_rechecked0')
+url = 'https://example.org:12345/resource', expected = False
+
+    @pytest.mark.parametrize("url,expected", [
+        ("https://example.org:12345/resource", False),
+        ("https://example.org:invalid/resource", False),
+        ("https://example.org./resource", False),
+        ("https://example.org/resource#fragment", False),
+        ("https://example.org/space here", False),
+        ("https://example.org/\tresource", False),
+        (" https://example.org/resource", False),
+        ("https://example.org/resource", True),
+        ("https://example.org:443/resource", True),
+        ("http://example.org:80/resource", True),
+        ("https://EXAMPLE.ORG/resource", True),
+        ("https://other.invalid/resource", False),
+    ], ids=["port", "invalid-port", "trailing-dot", "fragment", "space", "tab", "leading-space",
+            "https", "https-443", "http-80", "uppercase", "other-host"])
+    def test_recorded_url_is_rechecked_against_dispatch_policy(tmp_path, url, expected):
+        path = tmp_path / "trace.jsonl"
+        rec = recorder(path)
+        rec.record(TrajectoryEvent("request", "network_request", "agent", "allow", target=url))
+        rec.close(expected_event_count=1)
+        observed = audit(path)
+        assert egress_host_allowed(url, POLICY.allowed_egress_hosts) is expected
+&gt;       assert (observed.status == "pass") is expected, f"audit accepted dispatch-denied URL: {url!r}"
+E       AssertionError: audit accepted dispatch-denied URL: 'https://example.org:12345/resource'
+E       assert ('pass' == 'pass'
+E         
+E           pass) is False
+
+tests/test_trajectory_capture_boundary.py:64: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[invalid-port]" time="0.002"><failure message="AssertionError: audit accepted dispatch-denied URL: 'https://example.org:invalid/resource'&#10;assert ('pass' == 'pass'&#10;  &#10;    pass) is False">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_recorded_url_is_rechecked1')
+url = 'https://example.org:invalid/resource', expected = False
+
+    @pytest.mark.parametrize("url,expected", [
+        ("https://example.org:12345/resource", False),
+        ("https://example.org:invalid/resource", False),
+        ("https://example.org./resource", False),
+        ("https://example.org/resource#fragment", False),
+        ("https://example.org/space here", False),
+        ("https://example.org/\tresource", False),
+        (" https://example.org/resource", False),
+        ("https://example.org/resource", True),
+        ("https://example.org:443/resource", True),
+        ("http://example.org:80/resource", True),
+        ("https://EXAMPLE.ORG/resource", True),
+        ("https://other.invalid/resource", False),
+    ], ids=["port", "invalid-port", "trailing-dot", "fragment", "space", "tab", "leading-space",
+            "https", "https-443", "http-80", "uppercase", "other-host"])
+    def test_recorded_url_is_rechecked_against_dispatch_policy(tmp_path, url, expected):
+        path = tmp_path / "trace.jsonl"
+        rec = recorder(path)
+        rec.record(TrajectoryEvent("request", "network_request", "agent", "allow", target=url))
+        rec.close(expected_event_count=1)
+        observed = audit(path)
+        assert egress_host_allowed(url, POLICY.allowed_egress_hosts) is expected
+&gt;       assert (observed.status == "pass") is expected, f"audit accepted dispatch-denied URL: {url!r}"
+E       AssertionError: audit accepted dispatch-denied URL: 'https://example.org:invalid/resource'
+E       assert ('pass' == 'pass'
+E         
+E           pass) is False
+
+tests/test_trajectory_capture_boundary.py:64: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[trailing-dot]" time="0.002"><failure message="AssertionError: audit accepted dispatch-denied URL: 'https://example.org./resource'&#10;assert ('pass' == 'pass'&#10;  &#10;    pass) is False">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_recorded_url_is_rechecked2')
+url = 'https://example.org./resource', expected = False
+
+    @pytest.mark.parametrize("url,expected", [
+        ("https://example.org:12345/resource", False),
+        ("https://example.org:invalid/resource", False),
+        ("https://example.org./resource", False),
+        ("https://example.org/resource#fragment", False),
+        ("https://example.org/space here", False),
+        ("https://example.org/\tresource", False),
+        (" https://example.org/resource", False),
+        ("https://example.org/resource", True),
+        ("https://example.org:443/resource", True),
+        ("http://example.org:80/resource", True),
+        ("https://EXAMPLE.ORG/resource", True),
+        ("https://other.invalid/resource", False),
+    ], ids=["port", "invalid-port", "trailing-dot", "fragment", "space", "tab", "leading-space",
+            "https", "https-443", "http-80", "uppercase", "other-host"])
+    def test_recorded_url_is_rechecked_against_dispatch_policy(tmp_path, url, expected):
+        path = tmp_path / "trace.jsonl"
+        rec = recorder(path)
+        rec.record(TrajectoryEvent("request", "network_request", "agent", "allow", target=url))
+        rec.close(expected_event_count=1)
+        observed = audit(path)
+        assert egress_host_allowed(url, POLICY.allowed_egress_hosts) is expected
+&gt;       assert (observed.status == "pass") is expected, f"audit accepted dispatch-denied URL: {url!r}"
+E       AssertionError: audit accepted dispatch-denied URL: 'https://example.org./resource'
+E       assert ('pass' == 'pass'
+E         
+E           pass) is False
+
+tests/test_trajectory_capture_boundary.py:64: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[fragment]" time="0.002"><failure message="AssertionError: audit accepted dispatch-denied URL: 'https://example.org/resource#fragment'&#10;assert ('pass' == 'pass'&#10;  &#10;    pass) is False">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_recorded_url_is_rechecked3')
+url = 'https://example.org/resource#fragment', expected = False
+
+    @pytest.mark.parametrize("url,expected", [
+        ("https://example.org:12345/resource", False),
+        ("https://example.org:invalid/resource", False),
+        ("https://example.org./resource", False),
+        ("https://example.org/resource#fragment", False),
+        ("https://example.org/space here", False),
+        ("https://example.org/\tresource", False),
+        (" https://example.org/resource", False),
+        ("https://example.org/resource", True),
+        ("https://example.org:443/resource", True),
+        ("http://example.org:80/resource", True),
+        ("https://EXAMPLE.ORG/resource", True),
+        ("https://other.invalid/resource", False),
+    ], ids=["port", "invalid-port", "trailing-dot", "fragment", "space", "tab", "leading-space",
+            "https", "https-443", "http-80", "uppercase", "other-host"])
+    def test_recorded_url_is_rechecked_against_dispatch_policy(tmp_path, url, expected):
+        path = tmp_path / "trace.jsonl"
+        rec = recorder(path)
+        rec.record(TrajectoryEvent("request", "network_request", "agent", "allow", target=url))
+        rec.close(expected_event_count=1)
+        observed = audit(path)
+        assert egress_host_allowed(url, POLICY.allowed_egress_hosts) is expected
+&gt;       assert (observed.status == "pass") is expected, f"audit accepted dispatch-denied URL: {url!r}"
+E       AssertionError: audit accepted dispatch-denied URL: 'https://example.org/resource#fragment'
+E       assert ('pass' == 'pass'
+E         
+E           pass) is False
+
+tests/test_trajectory_capture_boundary.py:64: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[space]" time="0.002"><failure message="AssertionError: audit accepted dispatch-denied URL: 'https://example.org/space here'&#10;assert ('pass' == 'pass'&#10;  &#10;    pass) is False">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_recorded_url_is_rechecked4')
+url = 'https://example.org/space here', expected = False
+
+    @pytest.mark.parametrize("url,expected", [
+        ("https://example.org:12345/resource", False),
+        ("https://example.org:invalid/resource", False),
+        ("https://example.org./resource", False),
+        ("https://example.org/resource#fragment", False),
+        ("https://example.org/space here", False),
+        ("https://example.org/\tresource", False),
+        (" https://example.org/resource", False),
+        ("https://example.org/resource", True),
+        ("https://example.org:443/resource", True),
+        ("http://example.org:80/resource", True),
+        ("https://EXAMPLE.ORG/resource", True),
+        ("https://other.invalid/resource", False),
+    ], ids=["port", "invalid-port", "trailing-dot", "fragment", "space", "tab", "leading-space",
+            "https", "https-443", "http-80", "uppercase", "other-host"])
+    def test_recorded_url_is_rechecked_against_dispatch_policy(tmp_path, url, expected):
+        path = tmp_path / "trace.jsonl"
+        rec = recorder(path)
+        rec.record(TrajectoryEvent("request", "network_request", "agent", "allow", target=url))
+        rec.close(expected_event_count=1)
+        observed = audit(path)
+        assert egress_host_allowed(url, POLICY.allowed_egress_hosts) is expected
+&gt;       assert (observed.status == "pass") is expected, f"audit accepted dispatch-denied URL: {url!r}"
+E       AssertionError: audit accepted dispatch-denied URL: 'https://example.org/space here'
+E       assert ('pass' == 'pass'
+E         
+E           pass) is False
+
+tests/test_trajectory_capture_boundary.py:64: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[tab]" time="0.001"><failure message="AssertionError: audit accepted dispatch-denied URL: 'https://example.org/\tresource'&#10;assert ('pass' == 'pass'&#10;  &#10;    pass) is False">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_recorded_url_is_rechecked5')
+url = 'https://example.org/\tresource', expected = False
+
+    @pytest.mark.parametrize("url,expected", [
+        ("https://example.org:12345/resource", False),
+        ("https://example.org:invalid/resource", False),
+        ("https://example.org./resource", False),
+        ("https://example.org/resource#fragment", False),
+        ("https://example.org/space here", False),
+        ("https://example.org/\tresource", False),
+        (" https://example.org/resource", False),
+        ("https://example.org/resource", True),
+        ("https://example.org:443/resource", True),
+        ("http://example.org:80/resource", True),
+        ("https://EXAMPLE.ORG/resource", True),
+        ("https://other.invalid/resource", False),
+    ], ids=["port", "invalid-port", "trailing-dot", "fragment", "space", "tab", "leading-space",
+            "https", "https-443", "http-80", "uppercase", "other-host"])
+    def test_recorded_url_is_rechecked_against_dispatch_policy(tmp_path, url, expected):
+        path = tmp_path / "trace.jsonl"
+        rec = recorder(path)
+        rec.record(TrajectoryEvent("request", "network_request", "agent", "allow", target=url))
+        rec.close(expected_event_count=1)
+        observed = audit(path)
+        assert egress_host_allowed(url, POLICY.allowed_egress_hosts) is expected
+&gt;       assert (observed.status == "pass") is expected, f"audit accepted dispatch-denied URL: {url!r}"
+E       AssertionError: audit accepted dispatch-denied URL: 'https://example.org/\tresource'
+E       assert ('pass' == 'pass'
+E         
+E           pass) is False
+
+tests/test_trajectory_capture_boundary.py:64: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[leading-space]" time="0.002"><failure message="AssertionError: audit accepted dispatch-denied URL: ' https://example.org/resource'&#10;assert ('pass' == 'pass'&#10;  &#10;    pass) is False">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_recorded_url_is_rechecked6')
+url = ' https://example.org/resource', expected = False
+
+    @pytest.mark.parametrize("url,expected", [
+        ("https://example.org:12345/resource", False),
+        ("https://example.org:invalid/resource", False),
+        ("https://example.org./resource", False),
+        ("https://example.org/resource#fragment", False),
+        ("https://example.org/space here", False),
+        ("https://example.org/\tresource", False),
+        (" https://example.org/resource", False),
+        ("https://example.org/resource", True),
+        ("https://example.org:443/resource", True),
+        ("http://example.org:80/resource", True),
+        ("https://EXAMPLE.ORG/resource", True),
+        ("https://other.invalid/resource", False),
+    ], ids=["port", "invalid-port", "trailing-dot", "fragment", "space", "tab", "leading-space",
+            "https", "https-443", "http-80", "uppercase", "other-host"])
+    def test_recorded_url_is_rechecked_against_dispatch_policy(tmp_path, url, expected):
+        path = tmp_path / "trace.jsonl"
+        rec = recorder(path)
+        rec.record(TrajectoryEvent("request", "network_request", "agent", "allow", target=url))
+        rec.close(expected_event_count=1)
+        observed = audit(path)
+        assert egress_host_allowed(url, POLICY.allowed_egress_hosts) is expected
+&gt;       assert (observed.status == "pass") is expected, f"audit accepted dispatch-denied URL: {url!r}"
+E       AssertionError: audit accepted dispatch-denied URL: ' https://example.org/resource'
+E       assert ('pass' == 'pass'
+E         
+E           pass) is False
+
+tests/test_trajectory_capture_boundary.py:64: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[https]" time="0.002" /><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[https-443]" time="0.001" /><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[http-80]" time="0.001" /><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[uppercase]" time="0.001" /><testcase classname="tests.test_trajectory_capture_boundary" name="test_recorded_url_is_rechecked_against_dispatch_policy[other-host]" time="0.002" /><testcase classname="tests.test_trajectory_capture_boundary" name="test_dispatcher_cannot_close_while_owned_call_is_pending[completion]" time="0.002"><failure message="AssertionError: dispatcher sealed a trace while its call was pending&#10;assert False">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_dispatcher_cannot_close_w0')
+cancel = False
+
+    @pytest.mark.parametrize("cancel", [False, True], ids=["completion", "cancellation"])
+    def test_dispatcher_cannot_close_while_owned_call_is_pending(tmp_path, cancel):
+        path = tmp_path / "trace.jsonl"
+        dispatcher = AuditedDispatcher(recorder=recorder(path), policy=POLICY)
+    
+        async def run():
+            started, release = asyncio.Event(), asyncio.Event()
+    
+            async def call():
+                started.set()
+                await release.wait()
+    
+            pending = asyncio.create_task(dispatcher.execute("command", call))
+            await started.wait()
+            refused = False
+            try:
+                dispatcher.close(expected_event_count=1)
+            except RuntimeError:
+                refused = True
+            finally:
+                if cancel:
+                    pending.cancel()
+                else:
+                    release.set()
+                outcomes = await asyncio.gather(pending, return_exceptions=True)
+            assert refused, "dispatcher sealed a trace while its call was pending"
+            if cancel:
+                assert isinstance(outcomes[0], asyncio.CancelledError)
+            else:
+                assert outcomes == [None]
+            dispatcher.close(expected_event_count=2)
+            assert audit(path).status == "pass"
+    
+&gt;       asyncio.run(run())
+
+tests/test_trajectory_capture_boundary.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        started, release = asyncio.Event(), asyncio.Event()
+    
+        async def call():
+            started.set()
+            await release.wait()
+    
+        pending = asyncio.create_task(dispatcher.execute("command", call))
+        await started.wait()
+        refused = False
+        try:
+            dispatcher.close(expected_event_count=1)
+        except RuntimeError:
+            refused = True
+        finally:
+            if cancel:
+                pending.cancel()
+            else:
+                release.set()
+            outcomes = await asyncio.gather(pending, return_exceptions=True)
+&gt;       assert refused, "dispatcher sealed a trace while its call was pending"
+E       AssertionError: dispatcher sealed a trace while its call was pending
+E       assert False
+
+tests/test_trajectory_capture_boundary.py:92: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_dispatcher_cannot_close_while_owned_call_is_pending[cancellation]" time="0.002"><failure message="AssertionError: dispatcher sealed a trace while its call was pending&#10;assert False">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_dispatcher_cannot_close_w1')
+cancel = True
+
+    @pytest.mark.parametrize("cancel", [False, True], ids=["completion", "cancellation"])
+    def test_dispatcher_cannot_close_while_owned_call_is_pending(tmp_path, cancel):
+        path = tmp_path / "trace.jsonl"
+        dispatcher = AuditedDispatcher(recorder=recorder(path), policy=POLICY)
+    
+        async def run():
+            started, release = asyncio.Event(), asyncio.Event()
+    
+            async def call():
+                started.set()
+                await release.wait()
+    
+            pending = asyncio.create_task(dispatcher.execute("command", call))
+            await started.wait()
+            refused = False
+            try:
+                dispatcher.close(expected_event_count=1)
+            except RuntimeError:
+                refused = True
+            finally:
+                if cancel:
+                    pending.cancel()
+                else:
+                    release.set()
+                outcomes = await asyncio.gather(pending, return_exceptions=True)
+            assert refused, "dispatcher sealed a trace while its call was pending"
+            if cancel:
+                assert isinstance(outcomes[0], asyncio.CancelledError)
+            else:
+                assert outcomes == [None]
+            dispatcher.close(expected_event_count=2)
+            assert audit(path).status == "pass"
+    
+&gt;       asyncio.run(run())
+
+tests/test_trajectory_capture_boundary.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        started, release = asyncio.Event(), asyncio.Event()
+    
+        async def call():
+            started.set()
+            await release.wait()
+    
+        pending = asyncio.create_task(dispatcher.execute("command", call))
+        await started.wait()
+        refused = False
+        try:
+            dispatcher.close(expected_event_count=1)
+        except RuntimeError:
+            refused = True
+        finally:
+            if cancel:
+                pending.cancel()
+            else:
+                release.set()
+            outcomes = await asyncio.gather(pending, return_exceptions=True)
+&gt;       assert refused, "dispatcher sealed a trace while its call was pending"
+E       AssertionError: dispatcher sealed a trace while its call was pending
+E       assert False
+
+tests/test_trajectory_capture_boundary.py:92: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_result_capture_failure_fences_close_and_later_dispatch" time="0.002"><failure message="AssertionError: dispatcher certified a trace after losing a tool result&#10;assert not True">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_result_capture_failure_fe0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x1025c8fe0&gt;
+
+    def test_result_capture_failure_fences_close_and_later_dispatch(tmp_path, monkeypatch):
+        path = tmp_path / "trace.jsonl"
+        rec = recorder(path)
+        dispatcher = AuditedDispatcher(recorder=rec, policy=POLICY)
+        original = rec.record
+        effects = []
+    
+        def fail_result(event):
+            if event.kind == "tool_result":
+                raise OSError("injected result journal failure")
+            original(event)
+    
+        async def call():
+            effects.append("first")
+    
+        monkeypatch.setattr(rec, "record", fail_result)
+        with pytest.raises(OSError, match="journal failure"):
+            asyncio.run(dispatcher.execute("command", call))
+        monkeypatch.setattr(rec, "record", original)
+        closed = False
+        try:
+            dispatcher.close(expected_event_count=1)
+            closed = True
+        except RuntimeError:
+            pass
+&gt;       assert not closed, "dispatcher certified a trace after losing a tool result"
+E       AssertionError: dispatcher certified a trace after losing a tool result
+E       assert not True
+
+tests/test_trajectory_capture_boundary.py:128: AssertionError</failure></testcase><testcase classname="tests.test_trajectory_capture_boundary" name="test_real_command_completion_precedes_signed_promotion_evidence" time="0.031"><failure message="AssertionError: unfinished command yielded a promotable closed trace&#10;assert (not True)">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-209/test_real_command_completion_p0')
+
+    def test_real_command_completion_precedes_signed_promotion_evidence(tmp_path):
+        path = tmp_path / "candidate.jsonl"
+        dispatcher = AuditedDispatcher(recorder=recorder(path), policy=POLICY)
+        release, marker = tmp_path / "release", tmp_path / "result"
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000",
+                                  protocol_sha256="a" * 64, evaluator_sha256="b" * 64, run_id=RUN)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=POLICY.sha256), trust_root=trust)
+        old_path = tmp_path / "incumbent.jsonl"
+        old = recorder(old_path, "incumbent")
+        old.close(expected_event_count=0)
+        old_report = trust.attest(EvaluationReport("incumbent", .5, n=1,
+            metadata={"trajectory_safety": audit(old_path, "incumbent").to_metadata()}))
+        program = """
+    import sys,time
+    from pathlib import Path
+    release, result = map(Path,sys.argv[1:])
+    deadline=time.monotonic()+3
+    while not release.exists():
+        if time.monotonic()&gt;deadline: raise TimeoutError('parent did not release command')
+        time.sleep(.005)
+    result.write_text('independently checked command result')
+    """
+    
+        async def run():
+            started = asyncio.Event()
+    
+            async def command():
+                proc = await asyncio.create_subprocess_exec(sys.executable, "-c", program,
+                                                           str(release), str(marker))
+                started.set()
+                try:
+                    await asyncio.wait_for(proc.wait(), timeout=4)
+                    if proc.returncode:
+                        raise RuntimeError("command failed")
+                finally:
+                    if proc.returncode is None:
+                        proc.kill()
+                        await proc.wait()
+    
+            running = asyncio.create_task(dispatcher.execute("command", command))
+            await started.wait()
+            early_closed = False
+            try:
+                dispatcher.close(expected_event_count=1)
+                early_closed = True
+            except RuntimeError:
+                pass
+            try:
+                early_audit = audit(path)
+                early_pass = early_audit.status == "pass"
+            except TrajectoryEvidenceError:
+                early_pass = False
+            release.write_text("continue")
+            outcome = (await asyncio.gather(running, return_exceptions=True))[0]
+            # Independent task correctness reads actual child output, not its exit
+            # status or self-reported success. No model/learner metric is involved.
+            assert marker.read_text() == "independently checked command result"
+            if not early_closed:
+                dispatcher.close(expected_event_count=2)
+            final_audit = audit(path)
+            report = trust.attest(EvaluationReport("candidate", 1.0, n=1,
+                metadata={"trajectory_safety": final_audit.to_metadata()}))
+            final_decision = gate.decide(old_report, report)
+            save_evidence("command-promotion", {
+                "early_closed": early_closed, "early_audit_passed": early_pass,
+                "command_result_verified": True,
+                "command_wrapper_error": type(outcome).__name__ if isinstance(outcome, BaseException) else None,
+                "final_audit": final_audit.to_metadata(),
+                "candidate_report": {"policy_id": report.policy_id, "primary": report.primary,
+                                     "metadata": report.metadata},
+                "final_promotion_accepted": final_decision.accepted,
+                "scope": "real child process with scripted scores; no model capability evidence",
+            })
+            assert not early_closed and not early_pass, "unfinished command yielded a promotable closed trace"
+            assert outcome is None and final_decision.accepted
+    
+&gt;       asyncio.run(run())
+
+tests/test_trajectory_capture_boundary.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        started = asyncio.Event()
+    
+        async def command():
+            proc = await asyncio.create_subprocess_exec(sys.executable, "-c", program,
+                                                       str(release), str(marker))
+            started.set()
+            try:
+                await asyncio.wait_for(proc.wait(), timeout=4)
+                if proc.returncode:
+                    raise RuntimeError("command failed")
+            finally:
+                if proc.returncode is None:
+                    proc.kill()
+                    await proc.wait()
+    
+        running = asyncio.create_task(dispatcher.execute("command", command))
+        await started.wait()
+        early_closed = False
+        try:
+            dispatcher.close(expected_event_count=1)
+            early_closed = True
+        except RuntimeError:
+            pass
+        try:
+            early_audit = audit(path)
+            early_pass = early_audit.status == "pass"
+        except TrajectoryEvidenceError:
+            early_pass = False
+        release.write_text("continue")
+        outcome = (await asyncio.gather(running, return_exceptions=True))[0]
+        # Independent task correctness reads actual child output, not its exit
+        # status or self-reported success. No model/learner metric is involved.
+        assert marker.read_text() == "independently checked command result"
+        if not early_closed:
+            dispatcher.close(expected_event_count=2)
+        final_audit = audit(path)
+        report = trust.attest(EvaluationReport("candidate", 1.0, n=1,
+            metadata={"trajectory_safety": final_audit.to_metadata()}))
+        final_decision = gate.decide(old_report, report)
+        save_evidence("command-promotion", {
+            "early_closed": early_closed, "early_audit_passed": early_pass,
+            "command_result_verified": True,
+            "command_wrapper_error": type(outcome).__name__ if isinstance(outcome, BaseException) else None,
+            "final_audit": final_audit.to_metadata(),
+            "candidate_report": {"policy_id": report.policy_id, "primary": report.primary,
+                                 "metadata": report.metadata},
+            "final_promotion_accepted": final_decision.accepted,
+            "scope": "real child process with scripted scores; no model capability evidence",
+        })
+&gt;       assert not early_closed and not early_pass, "unfinished command yielded a promotable closed trace"
+E       AssertionError: unfinished command yielded a promotable closed trace
+E       assert (not True)
+
+tests/test_trajectory_capture_boundary.py:210: AssertionError</failure></testcase></testsuite></testsuites>

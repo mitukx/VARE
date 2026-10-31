@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64575-agent-attempt-v1/sandbox/model-agent.sb",
+    "/usr/bin/env",
+    "HF_HUB_OFFLINE=1",
+    "TRANSFORMERS_OFFLINE=1",
+    "PYTHONNOUSERSITE=1",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "HOME=<TMP>/vare-vllm-64575-agent-attempt-001/home",
+    "TMPDIR=<TMP>/vare-vllm-64575-agent-attempt-001/tmp",
+    "work/mlx-qwen3-agent-runtime/venv/bin/python",
+    "-c",
+    "import mlx.core as mx; x = mx.array([1, 2, 3]); print(mx.default_device()); print((x + x).tolist())"
+  ],
+  "exit_code": 0,
+  "model_loaded": false,
+  "model_weights_read": false,
+  "network_denied_by_profile": true,
+  "profile_path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/sandbox/model-agent.sb",
+  "profile_sha256": "749bd6bd44fd693827ef8fb138bf6fe898423e3f2a8b3f5ef30bfb35da468869",
+  "purpose": "Verify Seatbelt permits local MLX Metal device access while retaining network denial and isolated write roots.",
+  "status": "PASSED",
+  "stderr": "",
+  "stdout": "Device(gpu, 0)\n[2, 4, 6]\n"
+}

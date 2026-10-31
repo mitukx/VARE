@@ -1,0 +1,78 @@
+VARE_REVIEW_STAGE=baseline-failing-test
+VARE_REVIEW_SOURCE_REVISION=a85900829d86bcd45b7db0310725f28d3152289b
+VARE_REVIEW_BASE_TREE=89a2a08842cad1e064a9e8b1355ec28ab3e01795
+VARE_REVIEW_CANDIDATE_TREE=1a6661764365ef38b07a0177711b8fac2d67b44d
+VARE_REVIEW_DIFF_SHA256=6db1717e6aebdc69a35b659e128c123450c49530611afe47202cd7ca6ae88f0e
+VARE_REVIEW_TEST_SHA256=9d97e8d64e946dc63d57196c90f6fda6368149b9dbbae6634c2bf81e15567b2e
+VARE_REVIEW_PROTOCOL_SHA256=2b33336750941594a96ddb8f86d5f3d61c5441ef89d15bda5becba8ba1fae40e
+VARE_REVIEW_RUNNER_SHA256=8d6038fd7fa66ac6890d472bedcae08c92ff1d24d5eb2d7a96df2634febee0e2
+VARE_REVIEW_TEST_PATCH_SHA256=6db1717e6aebdc69a35b659e128c123450c49530611afe47202cd7ca6ae88f0e
+VARE_REVIEW_CORRECTION_PATCH_SHA256=not-applied
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_resume_cursor_does_not_count_replayed_suffix[AsyncGRPOTrainer-AsyncRolloutWorker-groups_trained] _
+
+trainer_cls = <class 'trl.experimental.async_grpo.async_grpo_trainer.AsyncGRPOTrainer'>
+worker_cls = <class 'trl.experimental.async_grpo.async_rollout_worker.AsyncRolloutWorker'>
+count_key = 'groups_trained'
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-633/test_resume_cursor_does_not_co0')
+
+    @pytest.mark.parametrize(
+        ("trainer_cls", "worker_cls", "count_key"),
+        [
+            (AsyncGRPOTrainer, GRPORolloutWorker, "groups_trained"),
+            (AsyncDistillationTrainer, DistillationRolloutWorker, "prompts_trained"),
+        ],
+    )
+    def test_resume_cursor_does_not_count_replayed_suffix(trainer_cls, worker_cls, count_key, tmp_path):
+        state = _save_checkpoint(
+            trainer_cls,
+            worker_cls,
+            str(tmp_path),
+            trained={0, 1, 3, 4, 5},
+            dropped=set(),
+            before_resume=0,
+            dataset_start_index=0,
+        )
+        assert state["prompt_index"] == 2
+>       assert state[count_key] == 2
+E       assert 5 == 2
+
+tests/experimental/test_async_stale_resume.py:268: AssertionError
+_ test_resume_cursor_does_not_count_replayed_suffix[AsyncDistillationTrainer-AsyncRolloutWorker-prompts_trained] _
+
+trainer_cls = <class 'trl.experimental.async_distillation.async_distillation_trainer.AsyncDistillationTrainer'>
+worker_cls = <class 'trl.experimental.async_distillation.async_rollout_worker.AsyncRolloutWorker'>
+count_key = 'prompts_trained'
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-633/test_resume_cursor_does_not_co1')
+
+    @pytest.mark.parametrize(
+        ("trainer_cls", "worker_cls", "count_key"),
+        [
+            (AsyncGRPOTrainer, GRPORolloutWorker, "groups_trained"),
+            (AsyncDistillationTrainer, DistillationRolloutWorker, "prompts_trained"),
+        ],
+    )
+    def test_resume_cursor_does_not_count_replayed_suffix(trainer_cls, worker_cls, count_key, tmp_path):
+        state = _save_checkpoint(
+            trainer_cls,
+            worker_cls,
+            str(tmp_path),
+            trained={0, 1, 3, 4, 5},
+            dropped=set(),
+            before_resume=0,
+            dataset_start_index=0,
+        )
+        assert state["prompt_index"] == 2
+>       assert state[count_key] == 2
+E       assert 5 == 2
+
+tests/experimental/test_async_stale_resume.py:268: AssertionError
+=========================== short test summary info ============================
+FAILED tests/experimental/test_async_stale_resume.py::test_resume_cursor_does_not_count_replayed_suffix[AsyncGRPOTrainer-AsyncRolloutWorker-groups_trained]
+FAILED tests/experimental/test_async_stale_resume.py::test_resume_cursor_does_not_count_replayed_suffix[AsyncDistillationTrainer-AsyncRolloutWorker-prompts_trained]
+2 failed, 9 deselected in 2.90s
+VARE_REVIEW_EXIT_CODE=1
+VARE_REVIEW_TIMED_OUT=false
+VARE_REVIEW_SOURCE_VALID=true
+VARE_REVIEW_SOURCE_STABLE=true

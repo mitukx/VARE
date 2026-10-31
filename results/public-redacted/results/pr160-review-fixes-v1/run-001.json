@@ -1,0 +1,27 @@
+{
+  "fix_commit": "71aa74ab6a8f6f1625505b68f7f332c49fabff93",
+  "local_validation": {
+    "coverage": [
+      "valid task manifest verifies both task files",
+      "modified or missing task JSON and task prompt are rejected",
+      "missing task manifest or hash is rejected",
+      "SIGTERM-ignoring child is killed after its process-group leader exits"
+    ],
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "py_compile_command": "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python -m py_compile scripts/preflight_local_model_attempt.py scripts/run_bounded_local_agent_attempt.py tests/test_preflight_local_model_attempt.py tests/test_run_bounded_local_agent_attempt.py",
+    "py_compile_result": "exit 0",
+    "pytest": "8.4.2",
+    "pytest_command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 <HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python -m pytest -o addopts='' -q tests/test_preflight_local_model_attempt.py tests/test_run_bounded_local_agent_attempt.py",
+    "pytest_result": "19 passed in 1.77s",
+    "python": "3.12.12",
+    "ruff_command": "ruff check scripts/preflight_local_model_attempt.py scripts/run_bounded_local_agent_attempt.py tests/test_preflight_local_model_attempt.py tests/test_run_bounded_local_agent_attempt.py",
+    "ruff_result": "All checks passed",
+    "status": "PASSED"
+  },
+  "pr_url": "https://github.com/mitukx/VARE/pull/160",
+  "record_id": "pr160-review-fixes-run-001",
+  "remote_ci_at_record_time": "PENDING for exact PR head 71aa74ab6a8f6f1625505b68f7f332c49fabff93",
+  "review_status": "Code fixes pushed; review findings remain subject to re-review; no review response posted.",
+  "reviewed_head_before_fix": "7b517b0c15805bf1d600cfd02c96df937be130fb",
+  "schema_version": 1
+}

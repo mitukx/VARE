@@ -1,0 +1,24 @@
+{
+  "source_revision": "a470fd059ebbe70f1b74132ce693c6c94f9dedaf",
+  "source_files": {
+    "scripts/benchmark_trajectory_runtime.py": "463e00a74c754520df4128e74523d01c2d9793c260f7e3a034bbe62f24b61100",
+    "src/vare/trajectory_store.py": "4b5b1e632f86e9c4ff24b0ece36930e2d49b130ad1a527e77b46349e73e05c81",
+    "src/vare/trajectory_workers.py": "8b0cbd4693af3de3fbb0a894363c83961250c41e57743365249318d038427bde",
+    "src/vare/trajectory_admission.py": "d2f90300359adb4945f5778ba330cd2bab79a7a29ea7708eea939a286cef2ab9",
+    "src/vare/durable.py": "3fe7d2e449dd9156083c83c1f55effb6f1409aef3e109c573e6dcec240b549b9",
+    "src/vare/runner.py": "5aaaf6ce099dbc262c7c622336d77828b90fa73af9e436664f24c391ad7aa391",
+    "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca"
+  },
+  "python": "3.11.15 (main, Mar  3 2026, 00:52:57) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "condition": {
+    "output": "<SESSION_ROOT>/work/VARE/../trajectory-v2-stage-b/sync-75011",
+    "trajectories": 10000,
+    "seed": 75011,
+    "workers": 8,
+    "mode": "sync",
+    "sigkill": true
+  },
+  "protocol_sha256": "bec97cf700145dc6f2cc024053666ad6bda0e2f1ebf69675d8f13964364810d7"
+}

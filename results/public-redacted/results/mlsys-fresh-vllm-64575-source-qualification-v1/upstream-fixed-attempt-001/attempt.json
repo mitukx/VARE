@@ -1,0 +1,28 @@
+{
+  "arm": "upstream-fixed",
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/upstream-fixed.sb",
+    "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "log_file=<TMP>/vare-vllm-64575-qualification/writable/upstream-fixed/attempt-001/pytest-internal.log",
+    "--basetemp",
+    "<TMP>/vare-vllm-64575-qualification/writable/upstream-fixed/attempt-001/pytest-tmp",
+    "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py"
+  ],
+  "elapsed_seconds": 0.53,
+  "exit_code": 0,
+  "peak_process_tree_rss_bytes": 3915776,
+  "pytest_log_sha256": "4d2df7a96ce4a667da3ccf295f2d16c728a65ed0e861a3baa919f7bb469b02b5",
+  "rss_limit_exceeded": false,
+  "sandbox_profile_sha256": "7dbab4bd65f05b0719d3881fe728a6d7295a0547cb127337c09278e8bf57c73f",
+  "source_file_sha256": "cb83d99789f5d543a90c5487ac974821e7f3af9a77df9ceceadad8ba1f7b5560",
+  "test_file_sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8",
+  "timed_out": false
+}

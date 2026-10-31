@@ -1,0 +1,7 @@
+(version 1)
+(deny default)
+(allow file-read*)
+(allow process*)
+(allow sysctl-read)
+(allow file-write* (subpath "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/upstream-fixed-attempt-002"))
+(deny network*)

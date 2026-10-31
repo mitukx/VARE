@@ -1,0 +1,54 @@
+{
+  "audit_implementation_revision": "148a429673c52da08834b9c6a9b9b60ea1913299",
+  "runtime": {
+    "python": "3.12.12",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "replay_executable": "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python3.12",
+    "pytest": "8.4.2",
+    "ruff": "0.15.12"
+  },
+  "commands": {
+    "replay": "python3.12 scripts/reproduce_format_comparison_record_v1.py --output <fresh-output>",
+    "full_suite": "PATH=\"<quality-venv>/bin:$PATH\" PYTHONPATH=\"$PWD/src\" PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3.12 -m pytest -v -p no:cacheprovider --junitxml=<output>/full-suite.xml"
+  },
+  "source_sha256": {
+    "scripts/reproduce_format_comparison_record_v1.py": "458c89545368a53adc037b68d2d0d0322f6f569c93ec4d18028cc7b4c33f79e0",
+    "tests/test_format_comparison_record_audit_v1.py": "ff6b472a7cdff0b524b1261e7dc0dfb791ab275bcf3c25e2bcaa5dfed22248a6",
+    "src/vare/format_vs_correctness_v2.py": "fca8d5174747c1f3c1a8207d179dde83e9ee7b84ccb7767ddd5a33ae2fb96c15",
+    "src/vare/format_vs_correctness_seeded_summary_v3.py": "8b353e2f6acb927d9c973cc624e55a5ce894c5569aec2e03da7927eb10304326",
+    "protocols/format_vs_correctness_comparison_v2.json": "8214a9c784035f47b20d9e44fc6bbbd3cef45f821d86d6eb2f69936cc25eb6b4",
+    "protocols/format_vs_correctness_seeded_summary_v3.json": "4729ad5294f896f4d6e30fef1535fd28006a7b194b7080d6fe659915f060cc1f"
+  },
+  "files_sha256": {
+    "ai-review/audit-environment.json": "11dfd10d7a3be1cd09238811c77a4451e8b2a1872e7a7eda16566d75dd47bcac",
+    "ai-review/audit.json": "a95e9783d74069fe4cd908916f806a2a7375631e30d62153d1ad2e3f6eba914d",
+    "ai-review/audit.stdout.json": "a95e9783d74069fe4cd908916f806a2a7375631e30d62153d1ad2e3f6eba914d",
+    "ai-review/audit_duplicate_rollouts.py": "2738b05eaa09c7f612a867a2da82f6b3ecd01eb302d02fc9f06f537d76794d1b",
+    "ai-review/audit_existing_record.py": "e4232363ae4b35a04092ab591f0dbb71dbedb42b3832d4f15f68aa4bc1194f78",
+    "ai-review/checkpoint-manifest.json": "f3ff14159cf19a62c20fa3d26bc9e31dbedfcbf8a4a23821ca0e0763b7fc9815",
+    "ai-review/duplicate-rollouts.json": "322ed0eef09f5a3cd808c3417ae790a5123a6d4d6c154f7a0f6cd258c951a91a",
+    "ai-review/input-manifest.json": "29acd79bd730bea58dc1ee8a8ee3607efddf122125294a2b4807b8930d6d6085",
+    "ai-review/portable-script-review.md": "3af7953d6023f0455912b5fb29df8bab5cca703cdabbdb9c4a9a46208027b542",
+    "ai-review/portable_parser_corrected.json": "d468712e80e40cfb267d6affb94cdd323493b6861fce430b5710f460072e46a3",
+    "ai-review/portable_parser_corrected.py": "ae1e811b7083ec8b30b254a93742a7b8136396f3c6b3591b325a5a74a3b4a633",
+    "ai-review/review.md": "3c80efc4f79396b81fc58dccba93f211c5b48ea9938cb1f14b101fe6ae52abbf",
+    "checkpoint-manifest.json": "a35fbfd9f8dd038122c9aca57bc5c7671f0f5c681288f559543b18178d4b69ce",
+    "format-zero-adapters/20261016.safetensors": "8c87cfc4962cce0b18c43a2135b37f24b830aaf8a5d00cec3d34b3cb92a343f8",
+    "format-zero-adapters/20261017.safetensors": "486f9aeaa7d1d4f9d4f9666edf3607a648538ca69812f7734f7ef2596fb2afd5",
+    "format-zero-adapters/20261018.safetensors": "58d6aa44385831eaa3675c45ef6b2bf98ff44a8e89b5c6931fced2d15b200da6",
+    "format-zero-adapters/20261019.safetensors": "54572e13b3329a2ea37636640141cec7c72ffb4ba6aae7a8890b79454e7cdfeb",
+    "format-zero-adapters/20261020.safetensors": "48b6def2c4df620af9b433b754506aa1671afc3a0d8840cc11791d8739c5adba",
+    "format-zero-optimizers.tar.gz": "8828a3f3429f0cb5e0ee21fc17bf03d13711904605753dc1a8d5ab9ff587d62c",
+    "full-suite.log": "be8a16f3c789945a8efc7122fa7db3cb3a5b5124b73102d7680331f5c235b2a1",
+    "full-suite.xml": "852d2cdd8bf70f200c061ca60ab43bb5f545e203c816a9c9e23cf7266ecb1444",
+    "independent-parser-proposal-failure.log": "a43236ba501b3e95b02958d5195590ea7827624a45c9fbe53c65ebf14ca9bfff",
+    "original-environment.json": "44359b7dc3db5b7584cd4b25df3087750471aeb0585c094cc9ab093310d2a64e",
+    "original-summary.json": "22e14bad4f10c08bdc2de9a537e0c30e5484d811ccf615269bbb09c44b82b6de",
+    "progress.jsonl.gz": "9c11bace8613e4af61f9439e17cd780742f71c2596b9f2f2a2b29c3a54c8d0f6",
+    "record-manifest.json": "f99fdcce8ca025e6cd25f45a39a94cbd8a8ec15008665980cb528c88d4e6807f",
+    "replay/audit.json": "eee0b4a56777f3076ef2cb70e6f761a7a2064ca57b4d4a875df3ec104c772df5",
+    "replay/summary.seeded-v3.json": "9b463666239a42c57d086624b87159c672d344cf3ff19edfd8cf345713e0138b",
+    "replay.log": "98fe76df0d2e51f48fb3354e1f7071e32919951e5eeeb46d9e9c29a25f70dd41",
+    "ruff.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  }
+}

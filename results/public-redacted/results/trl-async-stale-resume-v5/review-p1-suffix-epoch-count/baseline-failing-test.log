@@ -1,0 +1,64 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_resume_cursor_does_not_count_replayed_suffix[AsyncGRPOTrainer-AsyncRolloutWorker-groups_trained] _
+
+trainer_cls = <class 'trl.experimental.async_grpo.async_grpo_trainer.AsyncGRPOTrainer'>
+worker_cls = <class 'trl.experimental.async_grpo.async_rollout_worker.AsyncRolloutWorker'>
+count_key = 'groups_trained'
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-536/test_resume_cursor_does_not_co0')
+
+    @pytest.mark.parametrize(
+        ("trainer_cls", "worker_cls", "count_key"),
+        [
+            (AsyncGRPOTrainer, GRPORolloutWorker, "groups_trained"),
+            (AsyncDistillationTrainer, DistillationRolloutWorker, "prompts_trained"),
+        ],
+    )
+    def test_resume_cursor_does_not_count_replayed_suffix(trainer_cls, worker_cls, count_key, tmp_path):
+        state = _save_checkpoint(
+            trainer_cls,
+            worker_cls,
+            str(tmp_path),
+            trained={0, 1, 3, 4, 5},
+            dropped=set(),
+            before_resume=0,
+            dataset_start_index=0,
+        )
+        assert state["prompt_index"] == 2
+>       assert state[count_key] == 2
+E       assert 5 == 2
+
+tests/experimental/test_async_stale_resume.py:268: AssertionError
+_ test_resume_cursor_does_not_count_replayed_suffix[AsyncDistillationTrainer-AsyncRolloutWorker-prompts_trained] _
+
+trainer_cls = <class 'trl.experimental.async_distillation.async_distillation_trainer.AsyncDistillationTrainer'>
+worker_cls = <class 'trl.experimental.async_distillation.async_rollout_worker.AsyncRolloutWorker'>
+count_key = 'prompts_trained'
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-536/test_resume_cursor_does_not_co1')
+
+    @pytest.mark.parametrize(
+        ("trainer_cls", "worker_cls", "count_key"),
+        [
+            (AsyncGRPOTrainer, GRPORolloutWorker, "groups_trained"),
+            (AsyncDistillationTrainer, DistillationRolloutWorker, "prompts_trained"),
+        ],
+    )
+    def test_resume_cursor_does_not_count_replayed_suffix(trainer_cls, worker_cls, count_key, tmp_path):
+        state = _save_checkpoint(
+            trainer_cls,
+            worker_cls,
+            str(tmp_path),
+            trained={0, 1, 3, 4, 5},
+            dropped=set(),
+            before_resume=0,
+            dataset_start_index=0,
+        )
+        assert state["prompt_index"] == 2
+>       assert state[count_key] == 2
+E       assert 5 == 2
+
+tests/experimental/test_async_stale_resume.py:268: AssertionError
+=========================== short test summary info ============================
+FAILED tests/experimental/test_async_stale_resume.py::test_resume_cursor_does_not_count_replayed_suffix[AsyncGRPOTrainer-AsyncRolloutWorker-groups_trained]
+FAILED tests/experimental/test_async_stale_resume.py::test_resume_cursor_does_not_count_replayed_suffix[AsyncDistillationTrainer-AsyncRolloutWorker-prompts_trained]
+2 failed, 9 deselected in 2.10s

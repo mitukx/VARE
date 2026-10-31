@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+_______________ ERROR collecting tests/test_seeded_summary_v3.py _______________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE/tests/test_seeded_summary_v3.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_seeded_summary_v3.py:12: in <module>
+    from reproducers.seeded_summary_fixture_v1 import synthetic_grid
+E   ModuleNotFoundError: No module named 'reproducers'
+=========================== short test summary info ============================
+ERROR tests/test_seeded_summary_v3.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 2.18s

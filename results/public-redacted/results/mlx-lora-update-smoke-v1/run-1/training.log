@@ -1,0 +1,30 @@
+Loading pretrained model
+Loading datasets
+Warning: Validation set not found or empty. Training will proceed without validation.
+Training
+╭─ [1mmlx_lm.lora[0m ────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│    model                                                                                                             │
+│  [1m<SESSION_ROOT>/work/VARE-stage/results/mlx-lora-updat[0m  │
+│  [1me-smoke-v1/run-1/model-4bit[0m                                                                                         │
+│    type            [1mlora · 2 layers · rank 8[0m                                                                          │
+│    dataset                                                                                                           │
+│  [1m<SESSION_ROOT>/work/VARE-stage/benchmarks/dev_sft_upd[0m  │
+│  [1mate_smoke_v1[0m                                                                                                        │
+│    optimizer       [1madam · lr 1.0e-05[0m                                                                                 │
+│    batch · iters   [1m1 · 10[0m                                                                                            │
+│    max seq         [1m1,024[0m                                                                                             │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+Trainable parameters: 0.074% (0.367M/494.033M)
+  [1miter   train_loss     tok/s     tokens[0m
+     1    [1m1.281 ▼[0m    [1m   25[0m      0.2k
+     2    [1m1.257 ▼[0m    [1m  296[0m      0.4k
+     3    [1m1.206 ▼[0m    [1m  395[0m      0.6k
+     4    [1m1.152 ▼[0m    [1m  396[0m      0.8k
+     5    [1m1.097 ▼[0m    [1m  380[0m      1.0k
+     6    [1m1.039 ▼[0m    [1m  355[0m      1.2k
+     7    [1m0.982 ▼[0m    [1m  375[0m      1.4k
+     8    [1m0.921 ▼[0m    [1m  387[0m      1.6k
+     9    [1m0.866 ▼[0m    [1m  351[0m      1.8k
+    10    [1m0.807 ▼[0m    [1m  410[0m      1.9k
+  [1msave[0m  0000010_adapters.safetensors
+[1mtrain[0m ██████████████████████████████ [1m100%[0m · [1m   10[0m/10

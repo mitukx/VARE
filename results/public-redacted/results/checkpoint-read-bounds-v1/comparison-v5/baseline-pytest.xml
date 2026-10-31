@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="15" time="8.563" timestamp="2026-10-15T11:27:28.282843+09:00" hostname="UK-2.local"><testcase classname="tests.test_checkpoint_read_bounds" name="test_fifo_is_rejected_without_waiting_for_writer[register]" time="2.010"><failure message="Failed: checkpoint register blocked on FIFO: ready">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_0')
+operation = 'register'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")
+    @pytest.mark.parametrize("operation", ["register", "digest", "read"])
+    def test_fifo_is_rejected_without_waiting_for_writer(tmp_path, operation):
+        store, source, obj = registered(tmp_path)
+        target = source if operation == "register" else obj
+        target.unlink()
+        os.mkfifo(target)
+        code = """
+    import sys
+    from vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError
+    store = TrustedCheckpointStore(sys.argv[1])
+    print('ready', flush=True)
+    try:
+        if sys.argv[2] == 'register':
+            store.register_file('p1', sys.argv[3])
+        elif sys.argv[2] == 'digest':
+            store.digest('p0')
+        else:
+            store.read_verified('p0')
+    except CheckpointIntegrityError:
+        print('rejected', flush=True)
+    else:
+        raise AssertionError('FIFO was accepted')
+    """
+        # External timeout bounds the broken baseline too; no FIFO writer exists.
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(store.root), operation, str(source)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            cwd=tmp_path,
+        )
+        try:
+&gt;           stdout, stderr = proc.communicate(timeout=2)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_checkpoint_read_bounds.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['<SESSION_ROOT>...&gt;
+endtime = 137412.0552515, orig_timeout = 2, stdout_seq = [b'ready\n', b'']
+stderr_seq = [b''], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['<SESSION_ROOT>/work/vare-slice/.venv/bin/python', '-c', "\nimport sys\nfrom vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError\nstore = TrustedCheckpointStore(sys.argv[1])\nprint('ready', flush=True)\ntry:\n    if sys.argv[2] == 'register':\n        store.register_file('p1', sys.argv[3])\n    elif sys.argv[2] == 'digest':\n        store.digest('p0')\n    else:\n        store.read_verified('p0')\nexcept CheckpointIntegrityError:\n    print('rejected', flush=True)\nelse:\n    raise AssertionError('FIFO was accepted')\n", '<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_0/store', 'register', '<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_0/source']' timed out after 2 seconds
+
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/subprocess.py:1253: TimeoutExpired
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_0')
+operation = 'register'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")
+    @pytest.mark.parametrize("operation", ["register", "digest", "read"])
+    def test_fifo_is_rejected_without_waiting_for_writer(tmp_path, operation):
+        store, source, obj = registered(tmp_path)
+        target = source if operation == "register" else obj
+        target.unlink()
+        os.mkfifo(target)
+        code = """
+    import sys
+    from vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError
+    store = TrustedCheckpointStore(sys.argv[1])
+    print('ready', flush=True)
+    try:
+        if sys.argv[2] == 'register':
+            store.register_file('p1', sys.argv[3])
+        elif sys.argv[2] == 'digest':
+            store.digest('p0')
+        else:
+            store.read_verified('p0')
+    except CheckpointIntegrityError:
+        print('rejected', flush=True)
+    else:
+        raise AssertionError('FIFO was accepted')
+    """
+        # External timeout bounds the broken baseline too; no FIFO writer exists.
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(store.root), operation, str(source)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            cwd=tmp_path,
+        )
+        try:
+            stdout, stderr = proc.communicate(timeout=2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            stdout, stderr = proc.communicate()
+&gt;           pytest.fail(f"checkpoint {operation} blocked on FIFO: {stdout} {stderr}")
+E           Failed: checkpoint register blocked on FIFO: ready
+
+tests/test_checkpoint_read_bounds.py:57: Failed</failure></testcase><testcase classname="tests.test_checkpoint_read_bounds" name="test_fifo_is_rejected_without_waiting_for_writer[digest]" time="2.008"><failure message="Failed: checkpoint digest blocked on FIFO: ready">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_1')
+operation = 'digest'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")
+    @pytest.mark.parametrize("operation", ["register", "digest", "read"])
+    def test_fifo_is_rejected_without_waiting_for_writer(tmp_path, operation):
+        store, source, obj = registered(tmp_path)
+        target = source if operation == "register" else obj
+        target.unlink()
+        os.mkfifo(target)
+        code = """
+    import sys
+    from vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError
+    store = TrustedCheckpointStore(sys.argv[1])
+    print('ready', flush=True)
+    try:
+        if sys.argv[2] == 'register':
+            store.register_file('p1', sys.argv[3])
+        elif sys.argv[2] == 'digest':
+            store.digest('p0')
+        else:
+            store.read_verified('p0')
+    except CheckpointIntegrityError:
+        print('rejected', flush=True)
+    else:
+        raise AssertionError('FIFO was accepted')
+    """
+        # External timeout bounds the broken baseline too; no FIFO writer exists.
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(store.root), operation, str(source)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            cwd=tmp_path,
+        )
+        try:
+&gt;           stdout, stderr = proc.communicate(timeout=2)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_checkpoint_read_bounds.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['<SESSION_ROOT>...&gt;
+endtime = 137414.116871833, orig_timeout = 2, stdout_seq = [b'ready\n', b'']
+stderr_seq = [b''], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['<SESSION_ROOT>/work/vare-slice/.venv/bin/python', '-c', "\nimport sys\nfrom vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError\nstore = TrustedCheckpointStore(sys.argv[1])\nprint('ready', flush=True)\ntry:\n    if sys.argv[2] == 'register':\n        store.register_file('p1', sys.argv[3])\n    elif sys.argv[2] == 'digest':\n        store.digest('p0')\n    else:\n        store.read_verified('p0')\nexcept CheckpointIntegrityError:\n    print('rejected', flush=True)\nelse:\n    raise AssertionError('FIFO was accepted')\n", '<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_1/store', 'digest', '<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_1/source']' timed out after 2 seconds
+
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/subprocess.py:1253: TimeoutExpired
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_1')
+operation = 'digest'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")
+    @pytest.mark.parametrize("operation", ["register", "digest", "read"])
+    def test_fifo_is_rejected_without_waiting_for_writer(tmp_path, operation):
+        store, source, obj = registered(tmp_path)
+        target = source if operation == "register" else obj
+        target.unlink()
+        os.mkfifo(target)
+        code = """
+    import sys
+    from vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError
+    store = TrustedCheckpointStore(sys.argv[1])
+    print('ready', flush=True)
+    try:
+        if sys.argv[2] == 'register':
+            store.register_file('p1', sys.argv[3])
+        elif sys.argv[2] == 'digest':
+            store.digest('p0')
+        else:
+            store.read_verified('p0')
+    except CheckpointIntegrityError:
+        print('rejected', flush=True)
+    else:
+        raise AssertionError('FIFO was accepted')
+    """
+        # External timeout bounds the broken baseline too; no FIFO writer exists.
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(store.root), operation, str(source)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            cwd=tmp_path,
+        )
+        try:
+            stdout, stderr = proc.communicate(timeout=2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            stdout, stderr = proc.communicate()
+&gt;           pytest.fail(f"checkpoint {operation} blocked on FIFO: {stdout} {stderr}")
+E           Failed: checkpoint digest blocked on FIFO: ready
+
+tests/test_checkpoint_read_bounds.py:57: Failed</failure></testcase><testcase classname="tests.test_checkpoint_read_bounds" name="test_fifo_is_rejected_without_waiting_for_writer[read]" time="2.009"><failure message="Failed: checkpoint read blocked on FIFO: ready">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_2')
+operation = 'read'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")
+    @pytest.mark.parametrize("operation", ["register", "digest", "read"])
+    def test_fifo_is_rejected_without_waiting_for_writer(tmp_path, operation):
+        store, source, obj = registered(tmp_path)
+        target = source if operation == "register" else obj
+        target.unlink()
+        os.mkfifo(target)
+        code = """
+    import sys
+    from vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError
+    store = TrustedCheckpointStore(sys.argv[1])
+    print('ready', flush=True)
+    try:
+        if sys.argv[2] == 'register':
+            store.register_file('p1', sys.argv[3])
+        elif sys.argv[2] == 'digest':
+            store.digest('p0')
+        else:
+            store.read_verified('p0')
+    except CheckpointIntegrityError:
+        print('rejected', flush=True)
+    else:
+        raise AssertionError('FIFO was accepted')
+    """
+        # External timeout bounds the broken baseline too; no FIFO writer exists.
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(store.root), operation, str(source)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            cwd=tmp_path,
+        )
+        try:
+&gt;           stdout, stderr = proc.communicate(timeout=2)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_checkpoint_read_bounds.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['<SESSION_ROOT>...&gt;
+endtime = 137416.159468458, orig_timeout = 2, stdout_seq = [b'ready\n', b'']
+stderr_seq = [b''], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['<SESSION_ROOT>/work/vare-slice/.venv/bin/python', '-c', "\nimport sys\nfrom vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError\nstore = TrustedCheckpointStore(sys.argv[1])\nprint('ready', flush=True)\ntry:\n    if sys.argv[2] == 'register':\n        store.register_file('p1', sys.argv[3])\n    elif sys.argv[2] == 'digest':\n        store.digest('p0')\n    else:\n        store.read_verified('p0')\nexcept CheckpointIntegrityError:\n    print('rejected', flush=True)\nelse:\n    raise AssertionError('FIFO was accepted')\n", '<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_2/store', 'read', '<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_2/source']' timed out after 2 seconds
+
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/subprocess.py:1253: TimeoutExpired
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_fifo_is_rejected_without_2')
+operation = 'read'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")
+    @pytest.mark.parametrize("operation", ["register", "digest", "read"])
+    def test_fifo_is_rejected_without_waiting_for_writer(tmp_path, operation):
+        store, source, obj = registered(tmp_path)
+        target = source if operation == "register" else obj
+        target.unlink()
+        os.mkfifo(target)
+        code = """
+    import sys
+    from vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError
+    store = TrustedCheckpointStore(sys.argv[1])
+    print('ready', flush=True)
+    try:
+        if sys.argv[2] == 'register':
+            store.register_file('p1', sys.argv[3])
+        elif sys.argv[2] == 'digest':
+            store.digest('p0')
+        else:
+            store.read_verified('p0')
+    except CheckpointIntegrityError:
+        print('rejected', flush=True)
+    else:
+        raise AssertionError('FIFO was accepted')
+    """
+        # External timeout bounds the broken baseline too; no FIFO writer exists.
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(store.root), operation, str(source)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            cwd=tmp_path,
+        )
+        try:
+            stdout, stderr = proc.communicate(timeout=2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            stdout, stderr = proc.communicate()
+&gt;           pytest.fail(f"checkpoint {operation} blocked on FIFO: {stdout} {stderr}")
+E           Failed: checkpoint read blocked on FIFO: ready
+
+tests/test_checkpoint_read_bounds.py:57: Failed</failure></testcase><testcase classname="tests.test_checkpoint_read_bounds" name="test_registered_size_caps_in_memory_read_after_replacement" time="0.018"><failure message="AssertionError: small checkpoint read allocated 67114970 bytes&#10;assert 67114970 &lt; (512 * 1024)">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_registered_size_caps_in_m0')
+
+    def test_registered_size_caps_in_memory_read_after_replacement(tmp_path):
+        store, _, obj = registered(tmp_path)
+        # An actual 32 MiB regular file replaces the small registered object.
+        with obj.open("wb") as out:
+            block = b"x" * 1024**2
+            for _ in range(32):
+                out.write(block)
+        tracemalloc.start()
+        try:
+            with pytest.raises(CheckpointIntegrityError):
+                store.read_verified("p0", max_read_bytes=64)
+            _, peak = tracemalloc.get_traced_memory()
+        finally:
+            tracemalloc.stop()
+&gt;       assert peak &lt; 512 * 1024, f"small checkpoint read allocated {peak} bytes"
+E       AssertionError: small checkpoint read allocated 67114970 bytes
+E       assert 67114970 &lt; (512 * 1024)
+
+tests/test_checkpoint_read_bounds.py:76: AssertionError</failure></testcase><testcase classname="tests.test_checkpoint_read_bounds" name="test_growth_after_descriptor_stat_is_bounded[digest]" time="0.010"><failure message="AssertionError: growing checkpoint read allocated 2106255 bytes&#10;assert 2106255 &lt; (512 * 1024)">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_growth_after_descriptor_s0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x1045574d0&gt;
+operation = 'digest'
+
+    @pytest.mark.parametrize("operation", ["digest", "read"])
+    def test_growth_after_descriptor_stat_is_bounded(tmp_path, monkeypatch, operation):
+        store, _, obj = registered(tmp_path)
+        real_fstat = os.fstat
+        payload = b"x" * (8 * 1024**2)
+        fired = False
+    
+        def grow_after_stat(fd):
+            nonlocal fired
+            info = real_fstat(fd)
+            if not fired and info.st_ino == obj.stat().st_ino:
+                fired = True
+                with obj.open("ab") as out:
+                    out.write(payload)
+            return info
+    
+        monkeypatch.setattr(os, "fstat", grow_after_stat)
+        tracemalloc.start()
+        try:
+            with pytest.raises(CheckpointIntegrityError):
+                store.digest("p0") if operation == "digest" else store.read_verified("p0", max_read_bytes=64)
+            _, peak = tracemalloc.get_traced_memory()
+        finally:
+            tracemalloc.stop()
+        assert fired, "fault did not touch the checkpoint descriptor"
+&gt;       assert peak &lt; 512 * 1024, f"growing checkpoint read allocated {peak} bytes"
+E       AssertionError: growing checkpoint read allocated 2106255 bytes
+E       assert 2106255 &lt; (512 * 1024)
+
+tests/test_checkpoint_read_bounds.py:104: AssertionError</failure></testcase><testcase classname="tests.test_checkpoint_read_bounds" name="test_growth_after_descriptor_stat_is_bounded[read]" time="0.007"><failure message="AssertionError: growing checkpoint read allocated 16780999 bytes&#10;assert 16780999 &lt; (512 * 1024)">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_growth_after_descriptor_s1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x104556b70&gt;
+operation = 'read'
+
+    @pytest.mark.parametrize("operation", ["digest", "read"])
+    def test_growth_after_descriptor_stat_is_bounded(tmp_path, monkeypatch, operation):
+        store, _, obj = registered(tmp_path)
+        real_fstat = os.fstat
+        payload = b"x" * (8 * 1024**2)
+        fired = False
+    
+        def grow_after_stat(fd):
+            nonlocal fired
+            info = real_fstat(fd)
+            if not fired and info.st_ino == obj.stat().st_ino:
+                fired = True
+                with obj.open("ab") as out:
+                    out.write(payload)
+            return info
+    
+        monkeypatch.setattr(os, "fstat", grow_after_stat)
+        tracemalloc.start()
+        try:
+            with pytest.raises(CheckpointIntegrityError):
+                store.digest("p0") if operation == "digest" else store.read_verified("p0", max_read_bytes=64)
+            _, peak = tracemalloc.get_traced_memory()
+        finally:
+            tracemalloc.stop()
+        assert fired, "fault did not touch the checkpoint descriptor"
+&gt;       assert peak &lt; 512 * 1024, f"growing checkpoint read allocated {peak} bytes"
+E       AssertionError: growing checkpoint read allocated 16780999 bytes
+E       assert 16780999 &lt; (512 * 1024)
+
+tests/test_checkpoint_read_bounds.py:104: AssertionError</failure></testcase><testcase classname="tests.test_checkpoint_read_bounds" name="test_exact_bound_and_empty_checkpoint_controls[empty]" time="0.003" /><testcase classname="tests.test_checkpoint_read_bounds" name="test_exact_bound_and_empty_checkpoint_controls[one-byte]" time="0.003" /><testcase classname="tests.test_checkpoint_read_bounds" name="test_exact_bound_and_empty_checkpoint_controls[one-mib]" time="0.005" /><testcase classname="tests.test_checkpoint_read_bounds" name="test_existing_corruption_checks_remain_fail_closed[truncate]" time="0.003" /><testcase classname="tests.test_checkpoint_read_bounds" name="test_existing_corruption_checks_remain_fail_closed[same_size]" time="0.003" /><testcase classname="tests.test_checkpoint_read_bounds" name="test_existing_corruption_checks_remain_fail_closed[symlink]" time="0.003" /><testcase classname="tests.test_checkpoint_read_bounds" name="test_existing_corruption_checks_remain_fail_closed[missing]" time="0.003" /><testcase classname="tests.test_checkpoint_io_recovery" name="test_worker_fault_rolls_back_then_verified_restore_promotes[fifo]" time="2.098"><failure message="AssertionError: checkpoint IO relied on evaluator watchdog&#10;assert not True&#10; +  where True = any(&lt;generator object test_worker_fault_rolls_back_then_verified_restore_promotes.&lt;locals&gt;.&lt;genexpr&gt; at 0x104dde8e0&gt;)">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-198/test_worker_fault_rolls_back_t0')
+fault = 'fifo'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX IO recovery experiment")
+    @pytest.mark.parametrize("fault", ["fifo", "oversized"])
+    def test_worker_fault_rolls_back_then_verified_restore_promotes(tmp_path, fault):
+        store, digests, snapshots, heldout, key_file, initial_trust = _setup(tmp_path)
+        # Fresh integration-only inputs, disjoint from optimization. This frozen
+        # linear classifier is a protocol control, never model capability evidence.
+        heldout.write_text(json.dumps({"schema_version": 1, "tasks": [
+            {"id": f"checkpoint-io-{i}", "x": x, "label": int(x &gt;= 0.5), "family": "io-control"}
+            for i, x in enumerate([-7, -0.25, 0.1, 0.75, 4, 11])
+        ]}, sort_keys=True))
+        trust = replace(initial_trust, evaluation_set_sha256=hashlib.sha256(heldout.read_bytes()).hexdigest())
+        worker_outcomes = []
+    
+        class Hooks(FileBackedHooks):
+            async def evaluate(self, policy_id):
+                argv = [
+                    sys.executable, "-m", "vare.trusted_evaluation",
+                    "--checkpoint-store", str(store.root), "--policy-id", policy_id,
+                    "--heldout-set", str(heldout), "--heldout-sha256", trust.evaluation_set_sha256,
+                    "--key-file", str(key_file), "--protocol-sha256", trust.protocol_sha256,
+                    "--run-id", trust.run_id, "--promotion-nonce", trust.promotion_nonce,
+                ]
+                started = time.perf_counter()
+                worker = asyncio.create_task(asyncio.to_thread(
+                    subprocess.run, argv, capture_output=True, text=True, timeout=2, cwd=tmp_path,
+                ))
+                cancellation = None
+                # Cancelling to_thread alone abandons a live subprocess. Own its
+                # bounded completion even if a sibling evaluator fails first.
+                while not worker.done():
+                    try:
+                        await asyncio.shield(worker)
+                    except asyncio.CancelledError as exc:
+                        cancellation = exc
+                    except Exception:
+                        break
+                try:
+                    result = worker.result()
+                except subprocess.TimeoutExpired:
+                    worker_outcomes.append({"policy_id": policy_id, "timeout": True})
+                    raise RuntimeError("checkpoint evaluator exceeded external watchdog") from None
+                worker_outcomes.append({"policy_id": policy_id, "timeout": False,
+                                        "wall_s": time.perf_counter() - started,
+                                        "returncode": result.returncode,
+                                        "stdout": result.stdout, "stderr": result.stderr})
+                if cancellation is not None:
+                    raise cancellation
+                if result.returncode:
+                    raise RuntimeError("checkpoint evaluator rejected input")
+                report = EvaluationReport(**json.loads(result.stdout))
+                assert trust.verifies(report)
+                assert trust.checkpoint_digest(report) == digests[policy_id]
+                return report
+    
+            async def discard(self, candidate_id):
+                assert candidate_id == "p1"
+                self.discarded.append(candidate_id)
+                self.active = "p0"
+    
+        hooks = Hooks({})
+        hooks.discarded = []
+        journal = PromotionJournal(tmp_path / "journal.sqlite", initial_policy_id="p0",
+                                   initial_checkpoint_sha256=digests["p0"])
+        loop = CapabilityLoop(
+            hooks=hooks, verifier=AcceptVerifier(), evidence_trust_root=trust,
+            promotion_journal=journal, checkpoint_hasher=store.digest,
+            config=EngineConfig(replay_batch_size=1,
+                                promotion=PromotionConfig(min_eval_examples=6, min_primary_gain=0.01)),
+        )
+        obj = store.objects / digests["p1"]
+        obj.unlink()
+        if fault == "fifo":
+            os.mkfifo(obj)
+        else:
+            with obj.open("wb") as out:
+                out.truncate(512 * 1024)
+        task = Task("checkpoint-io-development", "exercise file-backed candidate recovery")
+    
+        async def scenario():
+            with pytest.raises(RuntimeError, match="checkpoint evaluator"):
+                await loop.run_round([task], round_index=0)
+            failed_status = journal.status()
+            assert hooks.active == "p0" and hooks.discarded == ["p1"]
+            assert hooks.promotions == [] and failed_status["round_owner_id"] is None
+            assert failed_status["pending_tx_id"] is None
+            journal.assert_clean(policy_id="p0", checkpoint_sha256=store.digest("p0"))
+            # Trusted operator restores the exact original bytes after the failed
+            # workers have exited. Registration re-verifies the immutable binding.
+            obj.unlink()
+            assert store.register_file("p1", snapshots["p1"]) == digests["p1"]
+            result = await loop.run_round([task], round_index=1)
+            assert result.decision.accepted and result.promoted_id == "p1"
+            assert hooks.promotions == ["p1"]
+            reopened = PromotionJournal(journal.path, initial_policy_id="p0",
+                                        initial_checkpoint_sha256=digests["p0"])
+            reopened.assert_clean(policy_id="p1", checkpoint_sha256=store.digest("p1"))
+            assert reopened.status()["round_owner_id"] is None
+            evidence_dir = os.environ.get("VARE_CHECKPOINT_IO_EVIDENCE_DIR")
+            if evidence_dir:
+                output = Path(evidence_dir)
+                output.mkdir(parents=True, exist_ok=True)
+                (output / f"recovery-{fault}.json").write_text(json.dumps({
+                    "fault": fault, "failed_round_status": failed_status,
+                    "reopened_status": reopened.status(), "round_result": asdict(result),
+                    "worker_outcomes": worker_outcomes,
+                    "heldout_sha256": trust.evaluation_set_sha256, "checkpoint_sha256": digests,
+                    "scope": "linear-classifier protocol control; no training or model-capability result",
+                }, indent=2) + "\n")
+    
+        asyncio.run(scenario())
+        # The watchdog makes the baseline recoverable too, but masks an IO hang.
+        # Require the store itself to reject the FIFO, independently of that guard.
+&gt;       assert not any(row["timeout"] for row in worker_outcomes), "checkpoint IO relied on evaluator watchdog"
+E       AssertionError: checkpoint IO relied on evaluator watchdog
+E       assert not True
+E        +  where True = any(&lt;generator object test_worker_fault_rolls_back_then_verified_restore_promotes.&lt;locals&gt;.&lt;genexpr&gt; at 0x104dde8e0&gt;)
+
+tests/test_checkpoint_io_recovery.py:135: AssertionError</failure></testcase><testcase classname="tests.test_checkpoint_io_recovery" name="test_worker_fault_rolls_back_then_verified_restore_promotes[oversized]" time="0.154" /></testsuite></testsuites>

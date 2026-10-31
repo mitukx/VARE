@@ -1,0 +1,528 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.6.0
+rootdir: <SESSION_ROOT>/VARE
+configfile: pyproject.toml
+collected 7 items
+
+tests/test_candidate_discard_recovery.py FFFFFFF                         [100%]
+
+=================================== FAILURES ===================================
+_ test_discard_is_terminal_before_cancellation_or_prior_error_escapes[False-reject] _
+
+phase = 'reject', discard_fails = False
+
+    @pytest.mark.parametrize("phase", ["reject", "ledger"])
+    @pytest.mark.parametrize("discard_fails", [False, True])
+    def test_discard_is_terminal_before_cancellation_or_prior_error_escapes(phase, discard_fails):
+        async def case():
+            hooks = Hooks(phase)
+            failure = OSError("restore failed")
+            hooks.discard_error = failure if discard_fails else None
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            waiting = None
+            try:
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                waiting = asyncio.create_task(loop.run_round([Task("t2", "prompt")], round_index=1))
+                for _ in range(3):
+                    task.cancel()
+                    await asyncio.sleep(0)
+                assert not task.done(), "caller cancellation abandoned candidate discard"
+                assert loop._round_lock.locked()
+                assert "p1" in hooks.states
+                assert not waiting.done()
+                assert hooks.calls.count("rollout") == 1
+                waiting.cancel()
+                await asyncio.gather(waiting, return_exceptions=True)
+                hooks.discard_release.set()
+                if discard_fails:
+                    with pytest.raises(RuntimeError, match="policy state is unknown") as caught:
+                        await task
+                    assert caught.value.__cause__ is failure
+                    assert "p1" in hooks.states
+                elif phase == "ledger":
+                    with pytest.raises(OSError) as caught:
+                        await task
+                    assert caught.value is hooks.original_error
+                    assert hooks.states == {"p0"}
+                else:
+                    with pytest.raises(asyncio.CancelledError):
+                        await task
+                    assert hooks.states == {"p0"}
+                assert not loop._round_lock.locked()
+            finally:
+                hooks.discard_release.set()
+                if waiting is not None:
+                    waiting.cancel()
+                await asyncio.gather(task, *([waiting] if waiting else []), return_exceptions=True)
+    
+>       asyncio.run(case())
+
+tests/test_candidate_discard_recovery.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        hooks = Hooks(phase)
+        failure = OSError("restore failed")
+        hooks.discard_error = failure if discard_fails else None
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        waiting = None
+        try:
+            await asyncio.wait_for(hooks.discard_started.wait(), 2)
+            waiting = asyncio.create_task(loop.run_round([Task("t2", "prompt")], round_index=1))
+            for _ in range(3):
+                task.cancel()
+                await asyncio.sleep(0)
+>           assert not task.done(), "caller cancellation abandoned candidate discard"
+E           AssertionError: caller cancellation abandoned candidate discard
+E           assert not True
+E            +  where True = <built-in method done of _asyncio.Task object at 0x7f578fd77ac0>()
+E            +    where <built-in method done of _asyncio.Task object at 0x7f578fd77ac0> = <Task cancelled name='Task-2' coro=<CapabilityLoop.run_round() done, defined at /tmp/vare-discard-ylwfim4k/src/vare/engine.py:128>>.done
+
+tests/test_candidate_discard_recovery.py:91: AssertionError
+_ test_discard_is_terminal_before_cancellation_or_prior_error_escapes[False-ledger] _
+
+phase = 'ledger', discard_fails = False
+
+    @pytest.mark.parametrize("phase", ["reject", "ledger"])
+    @pytest.mark.parametrize("discard_fails", [False, True])
+    def test_discard_is_terminal_before_cancellation_or_prior_error_escapes(phase, discard_fails):
+        async def case():
+            hooks = Hooks(phase)
+            failure = OSError("restore failed")
+            hooks.discard_error = failure if discard_fails else None
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            waiting = None
+            try:
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                waiting = asyncio.create_task(loop.run_round([Task("t2", "prompt")], round_index=1))
+                for _ in range(3):
+                    task.cancel()
+                    await asyncio.sleep(0)
+                assert not task.done(), "caller cancellation abandoned candidate discard"
+                assert loop._round_lock.locked()
+                assert "p1" in hooks.states
+                assert not waiting.done()
+                assert hooks.calls.count("rollout") == 1
+                waiting.cancel()
+                await asyncio.gather(waiting, return_exceptions=True)
+                hooks.discard_release.set()
+                if discard_fails:
+                    with pytest.raises(RuntimeError, match="policy state is unknown") as caught:
+                        await task
+                    assert caught.value.__cause__ is failure
+                    assert "p1" in hooks.states
+                elif phase == "ledger":
+                    with pytest.raises(OSError) as caught:
+                        await task
+                    assert caught.value is hooks.original_error
+                    assert hooks.states == {"p0"}
+                else:
+                    with pytest.raises(asyncio.CancelledError):
+                        await task
+                    assert hooks.states == {"p0"}
+                assert not loop._round_lock.locked()
+            finally:
+                hooks.discard_release.set()
+                if waiting is not None:
+                    waiting.cancel()
+                await asyncio.gather(task, *([waiting] if waiting else []), return_exceptions=True)
+    
+>       asyncio.run(case())
+
+tests/test_candidate_discard_recovery.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        hooks = Hooks(phase)
+        failure = OSError("restore failed")
+        hooks.discard_error = failure if discard_fails else None
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        waiting = None
+        try:
+            await asyncio.wait_for(hooks.discard_started.wait(), 2)
+            waiting = asyncio.create_task(loop.run_round([Task("t2", "prompt")], round_index=1))
+            for _ in range(3):
+                task.cancel()
+                await asyncio.sleep(0)
+>           assert not task.done(), "caller cancellation abandoned candidate discard"
+E           AssertionError: caller cancellation abandoned candidate discard
+E           assert not True
+E            +  where True = <built-in method done of _asyncio.Task object at 0x7f578fbcc340>()
+E            +    where <built-in method done of _asyncio.Task object at 0x7f578fbcc340> = <Task cancelled name='Task-12' coro=<CapabilityLoop.run_round() done, defined at /tmp/vare-discard-ylwfim4k/src/vare/engine.py:128>>.done
+
+tests/test_candidate_discard_recovery.py:91: AssertionError
+_ test_discard_is_terminal_before_cancellation_or_prior_error_escapes[True-reject] _
+
+phase = 'reject', discard_fails = True
+
+    @pytest.mark.parametrize("phase", ["reject", "ledger"])
+    @pytest.mark.parametrize("discard_fails", [False, True])
+    def test_discard_is_terminal_before_cancellation_or_prior_error_escapes(phase, discard_fails):
+        async def case():
+            hooks = Hooks(phase)
+            failure = OSError("restore failed")
+            hooks.discard_error = failure if discard_fails else None
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            waiting = None
+            try:
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                waiting = asyncio.create_task(loop.run_round([Task("t2", "prompt")], round_index=1))
+                for _ in range(3):
+                    task.cancel()
+                    await asyncio.sleep(0)
+                assert not task.done(), "caller cancellation abandoned candidate discard"
+                assert loop._round_lock.locked()
+                assert "p1" in hooks.states
+                assert not waiting.done()
+                assert hooks.calls.count("rollout") == 1
+                waiting.cancel()
+                await asyncio.gather(waiting, return_exceptions=True)
+                hooks.discard_release.set()
+                if discard_fails:
+                    with pytest.raises(RuntimeError, match="policy state is unknown") as caught:
+                        await task
+                    assert caught.value.__cause__ is failure
+                    assert "p1" in hooks.states
+                elif phase == "ledger":
+                    with pytest.raises(OSError) as caught:
+                        await task
+                    assert caught.value is hooks.original_error
+                    assert hooks.states == {"p0"}
+                else:
+                    with pytest.raises(asyncio.CancelledError):
+                        await task
+                    assert hooks.states == {"p0"}
+                assert not loop._round_lock.locked()
+            finally:
+                hooks.discard_release.set()
+                if waiting is not None:
+                    waiting.cancel()
+                await asyncio.gather(task, *([waiting] if waiting else []), return_exceptions=True)
+    
+>       asyncio.run(case())
+
+tests/test_candidate_discard_recovery.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        hooks = Hooks(phase)
+        failure = OSError("restore failed")
+        hooks.discard_error = failure if discard_fails else None
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        waiting = None
+        try:
+            await asyncio.wait_for(hooks.discard_started.wait(), 2)
+            waiting = asyncio.create_task(loop.run_round([Task("t2", "prompt")], round_index=1))
+            for _ in range(3):
+                task.cancel()
+                await asyncio.sleep(0)
+>           assert not task.done(), "caller cancellation abandoned candidate discard"
+E           AssertionError: caller cancellation abandoned candidate discard
+E           assert not True
+E            +  where True = <built-in method done of _asyncio.Task object at 0x7f578fbcd300>()
+E            +    where <built-in method done of _asyncio.Task object at 0x7f578fbcd300> = <Task cancelled name='Task-22' coro=<CapabilityLoop.run_round() done, defined at /tmp/vare-discard-ylwfim4k/src/vare/engine.py:128>>.done
+
+tests/test_candidate_discard_recovery.py:91: AssertionError
+_ test_discard_is_terminal_before_cancellation_or_prior_error_escapes[True-ledger] _
+
+phase = 'ledger', discard_fails = True
+
+    @pytest.mark.parametrize("phase", ["reject", "ledger"])
+    @pytest.mark.parametrize("discard_fails", [False, True])
+    def test_discard_is_terminal_before_cancellation_or_prior_error_escapes(phase, discard_fails):
+        async def case():
+            hooks = Hooks(phase)
+            failure = OSError("restore failed")
+            hooks.discard_error = failure if discard_fails else None
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            waiting = None
+            try:
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                waiting = asyncio.create_task(loop.run_round([Task("t2", "prompt")], round_index=1))
+                for _ in range(3):
+                    task.cancel()
+                    await asyncio.sleep(0)
+                assert not task.done(), "caller cancellation abandoned candidate discard"
+                assert loop._round_lock.locked()
+                assert "p1" in hooks.states
+                assert not waiting.done()
+                assert hooks.calls.count("rollout") == 1
+                waiting.cancel()
+                await asyncio.gather(waiting, return_exceptions=True)
+                hooks.discard_release.set()
+                if discard_fails:
+                    with pytest.raises(RuntimeError, match="policy state is unknown") as caught:
+                        await task
+                    assert caught.value.__cause__ is failure
+                    assert "p1" in hooks.states
+                elif phase == "ledger":
+                    with pytest.raises(OSError) as caught:
+                        await task
+                    assert caught.value is hooks.original_error
+                    assert hooks.states == {"p0"}
+                else:
+                    with pytest.raises(asyncio.CancelledError):
+                        await task
+                    assert hooks.states == {"p0"}
+                assert not loop._round_lock.locked()
+            finally:
+                hooks.discard_release.set()
+                if waiting is not None:
+                    waiting.cancel()
+                await asyncio.gather(task, *([waiting] if waiting else []), return_exceptions=True)
+    
+>       asyncio.run(case())
+
+tests/test_candidate_discard_recovery.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        hooks = Hooks(phase)
+        failure = OSError("restore failed")
+        hooks.discard_error = failure if discard_fails else None
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        waiting = None
+        try:
+            await asyncio.wait_for(hooks.discard_started.wait(), 2)
+            waiting = asyncio.create_task(loop.run_round([Task("t2", "prompt")], round_index=1))
+            for _ in range(3):
+                task.cancel()
+                await asyncio.sleep(0)
+>           assert not task.done(), "caller cancellation abandoned candidate discard"
+E           AssertionError: caller cancellation abandoned candidate discard
+E           assert not True
+E            +  where True = <built-in method done of _asyncio.Task object at 0x7f578fbcde40>()
+E            +    where <built-in method done of _asyncio.Task object at 0x7f578fbcde40> = <Task cancelled name='Task-32' coro=<CapabilityLoop.run_round() done, defined at /tmp/vare-discard-ylwfim4k/src/vare/engine.py:128>>.done
+
+tests/test_candidate_discard_recovery.py:91: AssertionError
+________ test_failed_discard_blocks_later_round_before_any_hook[reject] ________
+
+phase = 'reject'
+
+    @pytest.mark.parametrize("phase", ["reject", "evaluation-error", "ledger"])
+    def test_failed_discard_blocks_later_round_before_any_hook(phase):
+        async def case():
+            hooks = Hooks(phase)
+            hooks.discard_error = OSError("restore failed")
+            hooks.discard_release.set()
+            loop = make_loop(hooks)
+            with pytest.raises((OSError, RuntimeError)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            calls = list(hooks.calls)
+            step = loop.step
+            # A transiently cleared backend error is not independent evidence that
+            # the incumbent's possibly partial restoration is now correct.
+            hooks.discard_error = None
+            with pytest.raises(RuntimeError, match="candidate recovery required"):
+                await loop.run_round([Task("t2", "prompt")], round_index=1)
+            assert hooks.calls == calls
+            assert loop.step == step
+            assert not loop._round_lock.locked()
+    
+>       asyncio.run(case())
+
+tests/test_candidate_discard_recovery.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        hooks = Hooks(phase)
+        hooks.discard_error = OSError("restore failed")
+        hooks.discard_release.set()
+        loop = make_loop(hooks)
+        with pytest.raises((OSError, RuntimeError)):
+            await loop.run_round([Task("t", "prompt")], round_index=0)
+        calls = list(hooks.calls)
+        step = loop.step
+        # A transiently cleared backend error is not independent evidence that
+        # the incumbent's possibly partial restoration is now correct.
+        hooks.discard_error = None
+>       with pytest.raises(RuntimeError, match="candidate recovery required"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'RuntimeError'>
+
+tests/test_candidate_discard_recovery.py:137: Failed
+___ test_failed_discard_blocks_later_round_before_any_hook[evaluation-error] ___
+
+phase = 'evaluation-error'
+
+    @pytest.mark.parametrize("phase", ["reject", "evaluation-error", "ledger"])
+    def test_failed_discard_blocks_later_round_before_any_hook(phase):
+        async def case():
+            hooks = Hooks(phase)
+            hooks.discard_error = OSError("restore failed")
+            hooks.discard_release.set()
+            loop = make_loop(hooks)
+            with pytest.raises((OSError, RuntimeError)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            calls = list(hooks.calls)
+            step = loop.step
+            # A transiently cleared backend error is not independent evidence that
+            # the incumbent's possibly partial restoration is now correct.
+            hooks.discard_error = None
+            with pytest.raises(RuntimeError, match="candidate recovery required"):
+                await loop.run_round([Task("t2", "prompt")], round_index=1)
+            assert hooks.calls == calls
+            assert loop.step == step
+            assert not loop._round_lock.locked()
+    
+>       asyncio.run(case())
+
+tests/test_candidate_discard_recovery.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_candidate_discard_recovery.py:138: in case
+    await loop.run_round([Task("t2", "prompt")], round_index=1)
+/tmp/vare-discard-ylwfim4k/src/vare/engine.py:131: in run_round
+    return await self._run_round(tasks, round_index=round_index, rollout_count=rollout_count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/vare-discard-ylwfim4k/src/vare/engine.py:369: in _run_round
+    incumbent_eval, candidate_eval = await asyncio.shield(evaluation_group)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_candidate_discard_recovery.Hooks object at 0x7f578fb6e8a0>
+policy_id = 'p1'
+
+    async def evaluate(self, policy_id):
+        self.calls.append("evaluate-" + policy_id)
+        if self.phase == "evaluation-error" and policy_id == "p1":
+>           raise ValueError("evaluation unavailable")
+E           ValueError: evaluation unavailable
+
+tests/test_candidate_discard_recovery.py:44: ValueError
+________ test_failed_discard_blocks_later_round_before_any_hook[ledger] ________
+
+phase = 'ledger'
+
+    @pytest.mark.parametrize("phase", ["reject", "evaluation-error", "ledger"])
+    def test_failed_discard_blocks_later_round_before_any_hook(phase):
+        async def case():
+            hooks = Hooks(phase)
+            hooks.discard_error = OSError("restore failed")
+            hooks.discard_release.set()
+            loop = make_loop(hooks)
+            with pytest.raises((OSError, RuntimeError)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            calls = list(hooks.calls)
+            step = loop.step
+            # A transiently cleared backend error is not independent evidence that
+            # the incumbent's possibly partial restoration is now correct.
+            hooks.discard_error = None
+            with pytest.raises(RuntimeError, match="candidate recovery required"):
+                await loop.run_round([Task("t2", "prompt")], round_index=1)
+            assert hooks.calls == calls
+            assert loop.step == step
+            assert not loop._round_lock.locked()
+    
+>       asyncio.run(case())
+
+tests/test_candidate_discard_recovery.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_candidate_discard_recovery.py:138: in case
+    await loop.run_round([Task("t2", "prompt")], round_index=1)
+/tmp/vare-discard-ylwfim4k/src/vare/engine.py:131: in run_round
+    return await self._run_round(tasks, round_index=round_index, rollout_count=rollout_count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/vare-discard-ylwfim4k/src/vare/engine.py:480: in _run_round
+    self.decision_ledger.append(
+tests/test_candidate_discard_recovery.py:65: in append
+    raise hooks.original_error
+/tmp/vare-discard-ylwfim4k/src/vare/engine.py:480: in _run_round
+    self.decision_ledger.append(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_candidate_discard_recovery.make_loop.<locals>.Ledger object at 0x7f578febfe60>
+name = 'promotion_intent'
+payload = {'candidate_id': 'p1', 'incumbent_id': 'p0', 'primary_gain': 1.0, 'round_index': 0}
+
+    def append(self, name, payload):
+        if name == "promotion_intent":
+>           raise hooks.original_error
+E           OSError: ledger unavailable
+
+tests/test_candidate_discard_recovery.py:65: OSError
+- generated xml file: <SESSION_ROOT>/VARE/results/candidate-discard-recovery-v1/run-1/baseline-pytest.xml -
+=========================== short test summary info ============================
+FAILED tests/test_candidate_discard_recovery.py::test_discard_is_terminal_before_cancellation_or_prior_error_escapes[False-reject]
+FAILED tests/test_candidate_discard_recovery.py::test_discard_is_terminal_before_cancellation_or_prior_error_escapes[False-ledger]
+FAILED tests/test_candidate_discard_recovery.py::test_discard_is_terminal_before_cancellation_or_prior_error_escapes[True-reject]
+FAILED tests/test_candidate_discard_recovery.py::test_discard_is_terminal_before_cancellation_or_prior_error_escapes[True-ledger]
+FAILED tests/test_candidate_discard_recovery.py::test_failed_discard_blocks_later_round_before_any_hook[reject]
+FAILED tests/test_candidate_discard_recovery.py::test_failed_discard_blocks_later_round_before_any_hook[evaluation-error]
+FAILED tests/test_candidate_discard_recovery.py::test_failed_discard_blocks_later_round_before_any_hook[ledger]
+============================== 7 failed in 0.39s ===============================
