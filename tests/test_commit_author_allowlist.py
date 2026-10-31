@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from vare.commit_authors import list_commit_identities, parse_allowlist, violations
+from scripts.check_commit_authors import list_commit_identities, parse_allowlist, violations
 
 REPO = Path(__file__).resolve().parents[1]
 
