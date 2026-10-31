@@ -525,3 +525,10 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Treat the previous failure as not reproduced, not as a diagnosed or fixed defect. Keep the added assertion detail for a future recurrence. Do not claim this test result establishes model capability or learning.
 - **Falsification criteria:** Any recurrence on a later exact head requires collecting per-command stdout/stderr and return codes, reproducing under a correctly selected Docker daemon, then fixing the evidenced cause.
 - **Follow-up:** Re-run the full workflow on the durable status checkpoint, then await normal PR review. PR #160 has no review submissions or threads and remains draft.
+
+
+## 2026-10-31 — Record the green status-checkpoint head
+
+- **Evidence:** PR #160 head `2927c05fbe7adcc9f5c03bca3c539fe25b929919` passed CI run 2037 across all nine jobs, including Python 3.11, 3.12, and 3.13; CPU-evidence run 744 also passed. The preceding code head `a7a2509` passed run 2035 and CPU-evidence run 743. No review submissions or review threads exist on PR #160.
+- **Decision:** Preserve the green exact-head results and keep the PR draft pending normal review. The historical Python 3.13 warmup-cosine failure remains unexplained because it was not reproduced; do not attribute the pass to a fix. The local vLLM model attempt remains NO-GO / NOT RUN under its failed resource preflight.
+- **Follow-up:** Continue after review feedback. Do not merge without required reviews and branch protection. Any future model inference needs a distinct fresh task and a new resource-feasible frozen protocol.
