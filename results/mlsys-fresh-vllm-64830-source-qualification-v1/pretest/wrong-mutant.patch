@@ -1,0 +1,9 @@
+--- vllm/config/vllm.py@fixed
++++ vllm/config/vllm.py@wrong-mutant
+@@ -4,6 +3,0 @@
+-
+-        if self.attention_config.hisparse_config is not None:
+-            unsupported.append("HiSparse")
+-
+-        if self.watermark_config is not None:
+-            unsupported.append("watermarking")

@@ -257,26 +257,62 @@
       "protocol_id": "mlsys-fresh-vllm-64575-agent-attempt-v1",
       "sha256": "18f66455cf111708fde170e784cd0a9a07316eacd9db1d5b5b0baf4fa74d8268",
       "status": "frozen before inference; launch preflight failed the working-set-plus-headroom gate; model NOT RUN and not loaded"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_candidate_selection_v3.json",
+      "protocol_id": "mlsys-fresh-development-candidate-selection-v3",
+      "sha256": "7b0e88d37ed11380bf7d590dfb4484fc63535aa985d72dfb2fe1086c28183148",
+      "status": "frozen; deterministic metadata-only selection of vLLM #64830"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v5.json",
+      "protocol_id": "mlsys-fresh-development-task-family-overlap-v5",
+      "sha256": "b35ade831d91f3a404bc5e5e2d72766ff2ce91ae7764764a6fc696c33ab79c36",
+      "status": "frozen; split-filtered metadata-only overlap review"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v5_addendum_1.json",
+      "protocol_id": "mlsys-fresh-development-task-family-overlap-v5-addendum-1",
+      "sha256": "fb3cb7206ec544296e9313705d9d687b4b340f75bc1b8ed79e84ce76c68cee0f",
+      "status": "frozen correction; deduplicated metadata inventory only, no Held-Out identity access"
+    },
+    {
+      "path": "protocols/mlsys_fresh_vllm_64830_source_qualification_v1.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1",
+      "sha256": "6901a8146568354acb4089ae0b82745142a05c49ebdba96f709707221c8eb091",
+      "status": "frozen and pushed before source/test access; source-level qualification only"
+    },
+    {
+      "path": "protocols/mlsys_fresh_vllm_64830_source_qualification_v1_addendum_1.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1-addendum-1",
+      "sha256": "1054459b210ca825dad5d89485972071b14f3a2fd084fae6a0ed098ecff9253d",
+      "status": "frozen and pushed before source/test access; clarifies exact Git ancestry"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-2-execution.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1-addendum-2-execution",
+      "sha256": "96fbf7a9c05373eab6dae43f5ce057f6f686e3766eab3aaae8e360d38da0a856",
+      "status": "frozen before candidate test execution; exact two cases, overlay, runner, arms, profiles, runtime, commands, and limits"
     }
   ],
   "git_refs": {
-    "active_branch": "codex/fresh-task-inventory-oct31",
-    "active_pr_state": "open",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/160",
+    "active_branch": "codex/freshdev-qualification-vllm64830-oct31",
+    "active_pr_state": "none",
+    "active_pr_url": null,
     "last_integrated_pr_merge_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
     "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "2927c05fbe7adcc9f5c03bca3c539fe25b929919"
+    "verified_pr_head_sha_before_checkpoint_changes": null
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
     "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Keep PR #160 draft pending normal review; inspect any new review feedback and merge only when required reviews and branch protection are satisfied. Keep the vLLM #64575 attempt NOT RUN under the failed resource-gated protocol. For continued model work, select a distinct fresh task and freeze a separately resource-feasible protocol before any inference.",
-  "last_completed_step": "Fetched current GitHub state: origin/main is 416f35c465712898e8e5764a8e43193ef86e7afb; PR #150 remains merged with successful exact-head checks. PR #160 head 2927c05fbe7adcc9f5c03bca3c539fe25b929919 passed CI run 2037 (all nine jobs, including Python 3.11, 3.12, and 3.13) and CPU-evidence run 744. Its prior code head a7a2509c4ddc2434053cc23d7a59508cb5b3304d also passed all checks. The earlier b12d4913 warmup_cosine failure remains unexplained and was not reproduced; no fix is attributed. The latest branch changes after a7a2509 are mission-state documentation and evidence only. PR #160 is open, draft, and has no review submissions or inline review threads. vLLM #64575 remains source-qualified only. The prospective Qwen2.5-Coder-14B Development attempt remains NOT RUN: hashes verified, launch preflight failed working-set plus headroom (11,993,432,064 bytes available vs 12,872,896,985 bytes required), and weights were not loaded. Protocol SHA-256 18f66455cf111708fde170e784cd0a9a07316eacd9db1d5b5b0baf4fa74d8268; assignment SHA-256 74592200276818ab6778113057041bf9c6aa8c64f5bdee0aca366b5a7ccd445c; launch receipt SHA-256 d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e.",
-  "milestone_id": "p14-vllm-64575-agent-attempt-no-go-resource-gate",
+  "highest_priority_next_task": "Push the frozen #64830 source-test execution addendum, then run the baseline arm exactly once. Proceed to the wrong-mutant arm only if both selected cases fail at the post-override assertion; proceed to upstream-fixed only if that mutant gate also passes. Keep #64830 UNQUALIFIED and UNASSIGNED until all three arms and isolation checks pass; no inference or training is authorized.",
+  "last_completed_step": "Verified origin/main at 416f35c465712898e8e5764a8e43193ef86e7afb. PR #160 review fixes were committed and pushed as 71aa74ab6a8f6f1625505b68f7f332c49fabff93: the preflight now rejects missing/mismatched task JSON and prompt hashes, and bounded process-group cleanup kills SIGTERM-ignoring descendants after the leader exits. Its targeted local suite passed 19 tests; exact-head CI is running. PR #161 branch ade8a0ac3dfe609e67698638faf6eb826101dbc5 now merges the PR #160 fix and has CI running. The #64830 metadata selection and overlap review remain frozen; exact source identity and path gates matched; source/test access occurred only after the pushed source protocol and ancestry addendum. The two-case overlay and execution addendum SHA-256 96fbf7a9c05373eab6dae43f5ce057f6f686e3766eab3aaae8e360d38da0a856 are prepared, but no #64830 candidate test has executed, no split assignment exists, and no model, training, or Held-Out access occurred.",
+  "milestone_id": "p15-fresh-vllm-64830-source-qualification",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -639,11 +675,6 @@
       "status": "frozen runtime build retry; test execution remains unauthorized"
     },
     {
-      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime-v2",
-      "sha256": "9da37a8fb8c60e513e895437bced793250284d650ed5634ed298bdda80bc5c3b",
-      "status": "canonical-wheel runtime Dockerfile for exact Ray merge commit"
-    },
-    {
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-build-attempt-003.log",
       "sha256": "924a33ce4e367222598143ab3d71e648fc5f143b904b4d17cfa8367c215892b2",
       "status": "successful arm64 runtime build; image id sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b"
@@ -875,8 +906,8 @@
     },
     {
       "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
-      "sha256": "2f0b884306f2a76786acf6c1ed5ef6c2d6b7fb4941d328d3b89643daa71c231f",
-      "status": "pinned input and source-tree identities; records initial inconclusive collection attempt"
+      "sha256": "d51ded43b37e639382ada61e5c9c1b1b901b35adcee92a23bcd5a3ef25c1e1e3",
+      "status": "pinned task inputs and baseline/wrong-mutant outcomes; no fixed-source run"
     },
     {
       "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
@@ -894,11 +925,6 @@
       "status": "corrected baseline raw pytest log; target assertion failed after 47 mapping loads"
     },
     {
-      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
-      "sha256": "87f9af3961f75d2fe466b6b70a0a45b9a5a55d00cc31bc1f56346ab53f3c1608",
-      "status": "pinned source-tree/test/image identities plus both initial collection failure and corrected baseline receipt"
-    },
-    {
       "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.json",
       "sha256": "e6809ac56412ac25e5d74a8947a4539fdec34287be709a5ef1861c27e6c2d6ae",
       "status": "wrong-mutant target assertion rejected; aggregate pytest output does not attribute the subTest filename; v1 fixed gate unmet"
@@ -909,19 +935,14 @@
       "status": "wrong-mutant raw pytest log; intended assertion failed after 47 mapping loads; legacy-case attribution unavailable"
     },
     {
-      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
-      "sha256": "d51ded43b37e639382ada61e5c9c1b1b901b35adcee92a23bcd5a3ef25c1e1e3",
-      "status": "pinned task inputs and baseline/wrong-mutant outcomes; no fixed-source run"
-    },
-    {
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/case_runner.py",
       "sha256": "2ec495123c435fd08a8717a993170edce909f81403eb8dd45074154830c6eff7",
       "status": "case-aware unittest runner; generic smoke confirmed both subTest parameters/outcomes are reported; no candidate test was run in the smoke"
     },
     {
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
-      "sha256": "f5c61913ab2f992e65cfa85f7938b74e74ad597d4d7bf0184d6ddde2665c0bd5",
-      "status": "fresh v2 tree/test/runner/image identities; all three full tree digests match v1 frozen source inputs; v2 tests not started"
+      "sha256": "741c4907b9eb929204cf1235f106cdecbb5685a7d01b0efc3a1dab6352898b51",
+      "status": "v2 frozen inputs and all three ordered arm outcomes"
     },
     {
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.log",
@@ -934,11 +955,6 @@
       "status": "v2 baseline receipt; both named target assertions failed; wrong-mutant may run"
     },
     {
-      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
-      "sha256": "0f846ba334e45e495645a446821b1397e2f78a2e99ee696a2799b5d5798ade5e",
-      "status": "v2 frozen inputs and baseline outcome"
-    },
-    {
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.log",
       "sha256": "5db740dacb7d9406da01e860fae420cf977125504473bfecaeb7f3d472a53f0c",
       "status": "v2 wrong-mutant raw log; both named subTests failed at the target assertion, no errors/skips"
@@ -947,11 +963,6 @@
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.json",
       "sha256": "76e78ba63938bfc21013868504960df91a9a01fc7fc2d2093b8078ead3be5d4a",
       "status": "v2 wrong-mutant receipt; both named target assertions failed; upstream-fixed may run"
-    },
-    {
-      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
-      "sha256": "a2177d7fedd6bb2cfef58bec94097d9f98c6845fc72967be372675c00b92c150",
-      "status": "v2 frozen inputs plus baseline and wrong-mutant outcomes"
     },
     {
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-upstream-fixed.json",
@@ -977,11 +988,6 @@
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/SHA256SUMS",
       "sha256": "9721e3b844b148cfa8ba57d577810468f94a7f8393a1f28dbf37577f107d2ca0",
       "status": "integrity index for v2 source qualification artifacts"
-    },
-    {
-      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
-      "sha256": "741c4907b9eb929204cf1235f106cdecbb5685a7d01b0efc3a1dab6352898b51",
-      "status": "v2 frozen inputs and all three ordered arm outcomes"
     },
     {
       "path": "protocols/mlsys_transformers_49458_agent_attempt_v1.json",
@@ -1247,6 +1253,56 @@
       "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/SHA256SUMS",
       "sha256": "44da13d2d296b91697d00ad3ddf58032583f1550fd37ee7e9d1b6d858a0b6ec4",
       "status": "all 12 frozen protocol, task, runtime, sandbox, assignment, and launch-preflight files matched"
+    },
+    {
+      "path": "results/mlsys-fresh-development-candidate-selection-v3/selection.json",
+      "sha256": "34dd94a43ea5b8224149fa7edf5351889e77de87bc3c81f04a6c3ac73e6f5735",
+      "status": "selected vLLM #64830 deterministically from frozen metadata-only pool; unqualified/unassigned"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-family-overlap-v5-correction-001/review.json",
+      "sha256": "ca3c3c459aea260e2b1737f0ab034c2033bf0e3e19b4a397ae9abc32e6b98986",
+      "status": "metadata-only review found no direct identity/family overlap at moderate confidence"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-family-overlap-v5-correction-001/review-evidence-manifest.json",
+      "sha256": "9150688a366ee662d641e25c15484c9e776db1f6c69d83e517fca1127ed2ca70",
+      "status": "hash manifest for corrected split-filtered overlap review"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
+      "sha256": "902d1cb18d6f33b7764e1051629eadb968b3e4c145739cc83cec35e6c41d7a1a",
+      "status": "append-only source/test review exposure record; no model exposure, inference, split assignment, training, or Held-Out access"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-2-execution.json",
+      "sha256": "96fbf7a9c05373eab6dae43f5ce057f6f686e3766eab3aaae8e360d38da0a856",
+      "status": "execution addendum frozen before candidate tests; not yet executed"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/overlay-manifest.json",
+      "sha256": "59427d459a48b7e5ef9537d1d70ecaad655bd2b7fb1e3e1bc3a2b7fd7273ae9d",
+      "status": "hashes of exact extracted method sources, unchanged upstream regression, test overlay, and mutant"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/wrong-mutant.patch",
+      "sha256": "90d070423534ec53b9c8e513b64fb35bca8da2b66ad3f513632d44844fdc630f",
+      "status": "wrong mutant removes only newly added HiSparse and watermarking checks"
+    },
+    {
+      "path": "results/pr160-review-fixes-v1/run-001.json",
+      "sha256": "ec3b63bf46807507c060920eb99a87246e3ed7051957b41c7c8bf4a8f8e77f74",
+      "status": "19 targeted local tests passed for PR #160 review fixes; exact-head remote CI pending"
+    },
+    {
+      "path": "scripts/prepare_mlsys_vllm_64830_qualification_overlay.py",
+      "sha256": "e88017b71136438c029a73f8ebfb789bd132950bab304a0240491705dd639ccb",
+      "status": "prepares exact upstream regression overlay and method arms without executing candidate tests"
+    },
+    {
+      "path": "scripts/run_mlsys_vllm_64830_qualification_arm.py",
+      "sha256": "86e303b74b760b518246c5f1c03b4fe104983d443e1025055ab2f531f69e19f7",
+      "status": "one-shot, hash-checking, network-denied bounded source qualification runner"
     }
   ],
   "run_ids": [
@@ -1288,14 +1344,21 @@
     "vllm-64575-source-baseline-attempt-002",
     "vllm-64575-source-wrong-mutant-v1-attempt-001",
     "vllm-64575-source-wrong-mutant-v2-attempt-002",
-    "vllm-64575-source-upstream-fixed-attempt-001"
+    "vllm-64575-source-upstream-fixed-attempt-001",
+    "pr160-review-fixes-local-run-001",
+    "41170961602",
+    "41170958171",
+    "41170961475",
+    "41172352535",
+    "41172336313",
+    "41172352616"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
     "fresh_stage3_families_used": 3,
     "historical_heldout_1979_touched": false,
-    "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/exposure-assignment.json",
-    "sha256": "74592200276818ab6778113057041bf9c6aa8c64f5bdee0aca366b5a7ccd445c"
+    "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
+    "sha256": "902d1cb18d6f33b7764e1051629eadb968b3e4c145739cc83cec35e6c41d7a1a"
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
@@ -1306,8 +1369,11 @@
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
     "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Launch preflight failed the estimated working-set-plus-headroom gate by 879,464,921 bytes; model weights were not loaded. Do not retry this frozen protocol.",
-    "PR #160 exact head a7a2509c4ddc2434053cc23d7a59508cb5b3304d is green, but there are no review submissions or review threads; merge must wait for normal review and branch protection.",
-    "PR #160 exact head 2927c05fbe7adcc9f5c03bca3c539fe25b929919 has green CI and CPU evidence but no review submissions or review threads; merge must wait for normal review and branch protection."
+    "PR #160 exact head 71aa74ab6a8f6f1625505b68f7f332c49fabff93 contains fixes for both automated review findings; exact-head CI is running and normal review/branch-protection requirements remain outstanding.",
+    "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 is a draft stacked on PR #160 and has CI rerunning after merging the #160 review fix; no reviews or reviewer requests are recorded.",
+    "PR #162 has not yet been opened; the #64830 qualification branch checkpoint must be pushed before candidate test execution.",
+    "vLLM #64830 remains UNQUALIFIED and UNASSIGNED. Its frozen source test overlay is intentionally scoped to HiSparse and watermarking; modified custom-speculator behavior is excluded from this qualification claim.",
+    "The #64830 baseline, wrong-mutant, and upstream-fixed test arms have not run. The execution addendum must be present on the pushed branch before the baseline invocation."
   ],
-  "updated_at": "2026-10-31T05:02:17Z"
+  "updated_at": "2026-10-31T05:42:51Z"
 }

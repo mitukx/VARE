@@ -647,3 +647,31 @@ Frozen protocol: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/protocol.json`
 The exact model-attempt argv and independent grader argv are stored in the frozen protocol under `commands`. The attempt command is one-shot, network-denied, and process-tree RSS/time limited. The model workspace contains only the baseline `vllm/entrypoints/anthropic/protocol.py`; the five-case trusted overlay is not exposed to the model. The grader runs once after the agent receipt is durable and never returns feedback to the model.
 
 Pre-protocol resource snapshot: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/pre-protocol-resource-snapshot.json`. Launch receipt: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json` (SHA-256 `d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e`). Frozen inputs and every model snapshot hash matched, but the working-set-plus-headroom check failed: 11,993,432,064 bytes available versus 12,872,896,985 bytes required. Status: **NO-GO / NOT RUN**; the model was not loaded. Do not retry this frozen protocol.
+
+
+## PR #160 review-fix regression tests
+
+At commit `71aa74ab6a8f6f1625505b68f7f332c49fabff93`, local validation used Python 3.12.12 / pytest 8.4.2:
+
+```bash
+ruff check scripts/preflight_local_model_attempt.py scripts/run_bounded_local_agent_attempt.py tests/test_preflight_local_model_attempt.py tests/test_run_bounded_local_agent_attempt.py
+/opt/homebrew/Caskroom/miniforge/base/bin/python -m py_compile scripts/preflight_local_model_attempt.py scripts/run_bounded_local_agent_attempt.py tests/test_preflight_local_model_attempt.py tests/test_run_bounded_local_agent_attempt.py
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /opt/homebrew/Caskroom/miniforge/base/bin/python -m pytest -o addopts='' -q tests/test_preflight_local_model_attempt.py tests/test_run_bounded_local_agent_attempt.py
+```
+
+Recorded result: 19 passed, Ruff clean, `py_compile` exit 0. Remote exact-head CI was still running when this checkpoint was written. Details: `results/pr160-review-fixes-v1/run-001.json`.
+
+## Fresh vLLM #64830 scoped source qualification
+
+Protocol: `protocols/mlsys_fresh_vllm_64830_source_qualification_v1.json`; ancestry correction: `protocols/mlsys_fresh_vllm_64830_source_qualification_v1_addendum_1.json`. Before any candidate test, execution addendum `results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-2-execution.json` must be present on the pushed branch. Its exact runner argument arrays, per-arm source/test/profile hashes, runtime, expected outcomes, and resource limits are authoritative.
+
+Overlay preparation (source checkout used for the frozen commits):
+
+```bash
+/opt/homebrew/Caskroom/miniforge/base/bin/python scripts/prepare_mlsys_vllm_64830_qualification_overlay.py \
+  --source-repository /private/tmp/vare-vllm-64830-source \
+  --protocol protocols/mlsys_fresh_vllm_64830_source_qualification_v1.json \
+  --output-dir results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest
+```
+
+This command refuses to overwrite the evidence directory. It prepares the unchanged upstream test function, minimal support stubs, exact baseline/fixed method extracts, and one hash-bound wrong mutant; it does not execute candidate tests. To execute the qualification, run each arm's `runner_argv` from the execution addendum **in order** and stop on any failure. Each arm is one-shot; do not retry.

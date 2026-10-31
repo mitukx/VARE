@@ -1,0 +1,50 @@
+{
+  "append_only": true,
+  "candidate": {
+    "family_hypothesis": "V1 model-runner configuration handling for V2-only unsupported features",
+    "overlap_review_path": "results/mlsys-fresh-development-task-family-overlap-v5-correction-001/review.json",
+    "overlap_review_status": "NO_DIRECT_IDENTITY_OR_FAMILY_OVERLAP_FOUND; moderate confidence",
+    "pull_request": 64830,
+    "repository": "vllm-project/vllm",
+    "selection_path": "results/mlsys-fresh-development-candidate-selection-v3/selection.json",
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+  },
+  "event_id": "mlsys-fresh-vllm-64830-source-review-001",
+  "events": [
+    {
+      "event_type": "metadata_selection_and_overlap_review",
+      "heldout_access": false,
+      "model_or_agent_inference": false,
+      "status": "completed before source access; frozen metadata only"
+    },
+    {
+      "accessed_paths": [
+        "vllm/config/vllm.py",
+        "tests/test_config.py",
+        "tests/v1/spec_decode/test_custom_speculator.py"
+      ],
+      "accessed_revisions": {
+        "baseline": "17550580e932f15e772185847382d3ae4211f5ec",
+        "fixed_integrated": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+        "pr_head": "9800451ab0e78104971592315e5b26546c5e9993"
+      },
+      "authorization": "protocols/mlsys_fresh_vllm_64830_source_qualification_v1.json and addendum 1 were committed and pushed before access",
+      "candidate_test_execution": false,
+      "event_type": "public_source_and_test_review",
+      "heldout_access": false,
+      "model_or_agent_inference": false,
+      "recorded_at_utc": "2026-10-31T05:35:20Z",
+      "training": false
+    }
+  ],
+  "heldout_access": false,
+  "model_exposure": false,
+  "next_event": "Execute baseline only after execution addendum 2 is pushed; stop unless both exact cases fail at their intended post-override assertions.",
+  "paid_compute_or_api": false,
+  "public_pretraining_exposure": "UNKNOWN",
+  "qualification_status": "UNQUALIFIED_PENDING_FROZEN_SOURCE_TEST_GATES",
+  "recorded_at_utc": "2026-10-31T05:35:20Z",
+  "schema_version": 1,
+  "split_assignment": "UNASSIGNED",
+  "training": false
+}
