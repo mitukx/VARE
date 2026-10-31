@@ -166,8 +166,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Run the frozen read-only import preflight. If it passes, execute the four selectors once baseline-first, then wrong mutant, then fixed only when the prior negative-control gates are met. Preserve logs and attempt records.",
-  "last_completed_step": "Built the Ray #66694 runtime from the exact merge-commit arm64 wheel. Image ID is sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b. Addendum 5 binds its inputs and authorizes one import preflight followed by the ordered source-level arms; no regression test has run yet.",
+  "highest_priority_next_task": "Run the frozen one-change wrong-clock mutant on the same four selectors and runtime. If the target assertion rejects it, run the fixed arm once; otherwise stop with Ray unqualified.",
+  "last_completed_step": "Ray #66694 baseline source arm passed the negative-control gate: four selectors ran, two target assertions failed and two throughput controls passed, with zero skips. The image preflight passed. No fixed source has run.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -544,6 +544,21 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-5-runtime-freeze.json",
       "sha256": "ca77f6954d42d8d2bc46c55c19b879a2e60133fe3f797b0609c26e5be6857ab3",
       "status": "frozen runtime identity and test execution authorization"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-import-preflight.log",
+      "sha256": "8522622295fbe227fbc37bf194e4954f9ad257b5dc8da46d34940a547304ba0c",
+      "status": "exact-image import preflight passed before baseline; Ray 3.0.0.dev0"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-baseline.log",
+      "sha256": "df53b377085b47e9703562635d6fe7c7b64c0ad2631a97a5be95ccb4b8ac5d22",
+      "status": "four exact baseline selectors; two targeted assertion failures, two passes, zero skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-baseline.json",
+      "sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f",
+      "status": "baseline negative control met the frozen assertion gate; wrong mutant may run"
     }
   ],
   "run_ids": [
@@ -573,7 +588,8 @@
     "freshdev-qualification-trl-7668-attempt-001-baseline",
     "freshdev-qualification-trl-7668-attempt-001-fixed",
     "freshdev-qualification-mlx-4778-attempt-001-baseline",
-    "freshdev-qualification-mlx-4778-attempt-001-fixed"
+    "freshdev-qualification-mlx-4778-attempt-001-fixed",
+    "freshdev-qualification-ray-66694-attempt-001-baseline"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -588,5 +604,5 @@
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T09:05:44+09:00"
+  "updated_at": "2026-10-31T09:06:39+09:00"
 }

@@ -233,3 +233,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Permit one import-only preflight, then exactly one baseline attempt; run the wrong mutant and fixed arm only if their frozen gates permit. Do not retry any arm or change test inputs without a new addendum.
 - **Falsification criteria:** Image or mount hash mismatch; preflight failure; target assertion absent on baseline/mutant; any fixed failure/skip; or network/resource boundary violation.
 - **Follow-up:** Verify image ID and mount hashes, run preflight, and proceed sequentially.
+
+
+## 2026-10-31 — Ray #66694 baseline negative control passes
+
+- **Hypothesis:** The pre-PR implementation mishandles cross-node timing because the worker-local monotonic clocks have different origins and no shared Unix anchor.
+- **Evidence:** Baseline attempt (SHA-256 `4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f`) ran all four frozen selectors on image `sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b`. The two throughput controls passed; the multi-node span assertion observed 10690.0 instead of 12.0, and the builder-anchor assertion observed None. Zero skips; no collection/setup error.
+- **Alternative explanations:** A mismatch in source overlay or test harness could produce a false negative. All mount/test hashes matched before execution, and the import preflight passed on the same image.
+- **Decision:** Count the baseline as a valid target negative control and permit the frozen wrong-mutant arm. Do not run fixed unless the mutant is also rejected.
+- **Falsification criteria:** Baseline hashes or selector set differ, targeted assertions did not execute, or a case was skipped.
+- **Follow-up:** Run the predeclared mixed-clock mutant on the same selectors and runtime.
