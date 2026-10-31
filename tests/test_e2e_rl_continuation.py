@@ -1,4 +1,6 @@
 """Actual CPU weight-sync and full learner SIGKILL/restart falsifiers."""
+import ast
+import hashlib
 import os
 import csv
 from pathlib import Path
@@ -81,7 +83,7 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     root,_=campaign
     manifest=auditor.read(root/"manifest.json")
     runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
-    assert len(runtime_sources)==77
+    assert set(manifest["sources"])==auditor.EXPECTED_SOURCES
     assert runtime_sources <= set(manifest["sources"])
     assert runtime_sources <= set(manifest["source_sha256"])
     assert runtime_sources <= auditor.EXPECTED_SOURCES
@@ -446,6 +448,126 @@ def test_new_source_inventory_requires_a_locally_verifiable_commit():
               "sources":{name:"0"*64 for name in auditor.EXPECTED_SOURCES}}
     with pytest.raises(ValueError,match="base commit is unavailable"):
         auditor.validate_source_inventory(manifest,auditor.EXPECTED_SOURCES,True)
+
+
+def head_commit():
+    return bench.subprocess.check_output(["git","rev-parse","HEAD"],cwd=bench.ROOT,text=True).strip()
+
+
+def committed_manifest(source_names):
+    commit=head_commit()
+    return {"base_commit":commit,"sources":auditor.source_hashes_from_commit(commit,source_names)}
+
+
+def benchmark_snapshot_names():
+    # Mirrors the source list the continuation benchmark snapshots into its manifest.
+    fixed=[Path(bench.__file__),Path(bench.base.__file__),bench.PROTOCOL,
+           bench.ROOT/"requirements/e2e-rl-real-model-v1.txt",
+           bench.ROOT/"scripts/audit_e2e_rl_continuation.py",bench.ROOT/"tests/test_e2e_rl_continuation.py"]
+    return {str(Path(path).resolve().relative_to(bench.ROOT))
+            for path in [*fixed,*(bench.ROOT/"src/vare").rglob("*.py")]}
+
+
+def test_historical_source_inventory_versions_stay_frozen():
+    def digest(names):
+        return hashlib.sha256("\n".join(sorted(names)).encode()).hexdigest()
+    frozen={
+        "v1-pinned":(15,"53363d17b5f7d641b8a2c0cb1b4ce023a60ced9286e32fa296bfcb95eb50c074"),
+        "v2":(73,"298da9a3b31b9f91825d99d34608bf233521cab6338e4f74d868fb6783815ce6"),
+        "v3":(83,"7c6a454ce817c4cc4874825bff032cb6589604af4767732efd4b77bd052f0a00"),
+    }
+    for version,(count,expected) in frozen.items():
+        names=auditor.SOURCE_INVENTORIES[version]
+        assert (len(names),digest(names))==(count,expected),version
+    assert set(auditor.PINNED_LOCKED_SOURCE_SHA256)==auditor.SOURCE_INVENTORIES["v1-pinned"]
+    assert len(set(auditor.SOURCE_INVENTORIES.values()))==len(auditor.SOURCE_INVENTORIES)
+    assert auditor.EXPECTED_SOURCES==auditor.SOURCE_INVENTORIES[auditor.CURRENT_SOURCE_INVENTORY]
+    # Inventories that predate exact recovery endpoints keep the interval check.
+    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4"}
+
+
+def test_v4_inventory_adds_only_reachable_learning_pipeline_modules():
+    package=bench.ROOT/"src/vare/learning_pipeline"
+    modules={path.stem for path in package.glob("*.py")}
+    prefix="vare.learning_pipeline"
+
+    def references(path):
+        found=set()
+        for node in ast.walk(ast.parse(path.read_text())):
+            if isinstance(node,ast.ImportFrom):
+                module=node.module or ""
+                if node.level==1:
+                    rest=module
+                elif node.level==0 and (module==prefix or module.startswith(prefix+".")):
+                    rest=module[len(prefix):].lstrip(".")
+                else:
+                    continue
+                found.update([rest.split(".")[0]] if rest else [alias.name for alias in node.names])
+            elif (isinstance(node,ast.Constant) and isinstance(node.value,str) and
+                  node.value.startswith(prefix+".")):
+                # Subprocess entry points such as ``python -m vare.learning_pipeline.lora_worker``.
+                found.add(node.value[len(prefix)+1:].split(".")[0])
+        return found & modules
+
+    added=auditor.INVENTORY_V4_SOURCES-auditor.INVENTORY_V3_SOURCES
+    assert added==auditor.LEARNING_PIPELINE_SOURCES
+    assert added=={f"src/vare/learning_pipeline/{name}.py" for name in modules}
+    protocol=json.loads((bench.ROOT/"protocols/coding_policy_learning_mlx_4b_v1.json").read_text())
+    assert added=={name for name in protocol["frozen"]["code"] if name.startswith("src/vare/learning_pipeline/")}
+    reached,pending={"__init__"},list(references(bench.ROOT/"scripts/learning_pipeline_v1.py"))
+    while pending:
+        name=pending.pop()
+        if name not in reached:
+            reached.add(name)
+            pending.extend(references(package/f"{name}.py"))
+    assert reached==modules
+
+
+def test_current_benchmark_snapshot_is_the_current_inventory_version():
+    names=benchmark_snapshot_names()
+    assert names==auditor.EXPECTED_SOURCES
+    assert auditor.source_inventory_version(names)==auditor.CURRENT_SOURCE_INVENTORY
+
+
+def test_v3_and_v4_source_inventories_are_accepted_by_version():
+    for version in ("v3","v4"):
+        names=auditor.SOURCE_INVENTORIES[version]
+        assert auditor.source_inventory_version(set(names))==version
+        auditor.validate_source_inventory(committed_manifest(names),set(names),True)
+
+
+def test_unexpected_extra_source_is_rejected():
+    manifest=committed_manifest(auditor.EXPECTED_SOURCES)
+    manifest["sources"]["src/vare/learning_pipeline/unvetted.py"]="0"*64
+    with pytest.raises(ValueError,match="pinned source inventory differs"):
+        auditor.validate_source_inventory(manifest,set(manifest["sources"]),True)
+
+
+def test_missing_current_source_is_rejected():
+    manifest=committed_manifest(auditor.EXPECTED_SOURCES)
+    del manifest["sources"]["src/vare/learning_pipeline/grpo.py"]
+    with pytest.raises(ValueError,match="pinned source inventory differs"):
+        auditor.validate_source_inventory(manifest,set(manifest["sources"]),True)
+
+
+def test_modified_current_source_digest_is_rejected():
+    manifest=committed_manifest(auditor.EXPECTED_SOURCES)
+    manifest["sources"]["src/vare/learning_pipeline/pipeline.py"]="0"*64
+    with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
+        auditor.validate_source_inventory(manifest,set(manifest["sources"]),True)
+
+
+def test_substituted_current_source_is_rejected():
+    manifest=committed_manifest(auditor.EXPECTED_SOURCES)
+    renamed=dict(manifest["sources"])
+    renamed["src/vare/learning_pipeline/grpo_v2.py"]=renamed.pop("src/vare/learning_pipeline/grpo.py")
+    with pytest.raises(ValueError,match="pinned source inventory differs"):
+        auditor.validate_source_inventory({**manifest,"sources":renamed},set(renamed),True)
+    swapped=dict(manifest["sources"])
+    first,second="src/vare/learning_pipeline/scoring.py","src/vare/learning_pipeline/training.py"
+    swapped[first],swapped[second]=swapped[second],swapped[first]
+    with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
+        auditor.validate_source_inventory({**manifest,"sources":swapped},set(swapped),True)
 
 
 def test_missing_final_durable_cursor_is_rejected(audit_records,tmp_path):
