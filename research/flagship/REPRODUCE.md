@@ -295,3 +295,46 @@ PY
 ```
 
 `report.md` summarizes the diagnostic and limitations. `exposure-append.json` records the two Development exposures; `resource-telemetry.json` contains pre-run gates and process metrics. Their hashes are included in `SHA256SUMS` and `research/flagship/state.json`.
+
+## Replay the context-compaction controller on saved attempts
+
+This is a tokenizer-only reconstruction of the already-consumed Transformers #49418 and Ray #66694 transcripts. It checks every recorded per-turn prompt length before applying compaction. It does not load model weights, generate tokens, grade candidates, or modify the original run records. Never rerun either task.
+
+From the repository root, with the pinned local tokenizer snapshot available:
+
+```bash
+set -euo pipefail
+mkdir -p work
+INPUT_DIR="$(mktemp -d work/context-compaction-inputs.XXXXXX)"
+REPLAY_DIR="$(mktemp -d work/context-compaction-replay-rerun.XXXXXX)"
+git show origin/main:results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/agent-attempt-001.json \
+  > "$INPUT_DIR/transformers-agent-attempt-001.json"
+git show origin/main:results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/agent-attempt-001.json \
+  > "$INPUT_DIR/ray-agent-attempt-001.json"
+MODEL_PATH=/path/to/Qwen3-4B-Instruct-2507-4bit-snapshot
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONPATH=src python3 -m scripts.replay_agent_context_compaction \
+  --attempt "$INPUT_DIR/transformers-agent-attempt-001.json" \
+  --model-path "$MODEL_PATH" \
+  --output "$REPLAY_DIR/transformers-49418.json"
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONPATH=src python3 -m scripts.replay_agent_context_compaction \
+  --attempt "$INPUT_DIR/ray-agent-attempt-001.json" \
+  --model-path "$MODEL_PATH" \
+  --output "$REPLAY_DIR/ray-66694.json"
+REPLAY_DIR="$REPLAY_DIR" python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+
+rerun = Path(os.environ['REPLAY_DIR'])
+evidence = Path('results/agent-context-compaction-replay-v1')
+for name in ('transformers-49418.json', 'ray-66694.json'):
+    actual = json.loads((rerun / name).read_text())
+    expected = json.loads((evidence / name).read_text())
+    assert actual == expected, name
+    assert actual['model_generations'] == actual['grader_calls'] == 0
+print('reconstructed prompt records match retained replay evidence')
+PY
+(cd results/agent-context-compaction-replay-v1 && shasum -a 256 -c SHA256SUMS)
+```
+
+The expected result is exact agreement between reconstructed and recorded token counts on every historical turn, followed by `context_fits: true` at 2,765 tokens for Transformers and 2,795 for Ray under the 4,096-token cap. This replay is not a model capability result; the agent may still fail to use the retained context productively.

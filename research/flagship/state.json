@@ -182,23 +182,23 @@
     }
   ],
   "git_refs": {
-    "active_branch": "codex/fresh-dev-candidate-discovery-v1",
-    "active_pr_state": "open",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/153",
-    "last_integrated_pr_merge_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/152",
-    "last_verified_main_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "b3ba5fa1ec886292e662804800868e96cf9e1903"
+    "last_verified_main_sha": "5259a721e263baf47a52d4519c7cee949443df12",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/153",
+    "last_integrated_pr_merge_sha": "5259a721e263baf47a52d4519c7cee949443df12",
+    "active_branch": "codex/agent-context-compaction-v1",
+    "verified_pr_head_sha_before_checkpoint_changes": "f272c2268d57c11bfc0f7261f9bcfc73c99e710c",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/154",
+    "active_pr_state": "open"
   },
   "go_no_go": {
-    "coding_capability": "NO_GO",
     "integration": "GO_PENDING_REMOTE_CI",
+    "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Implement and unit-test one context-efficiency controller change justified by the two context-budget failures. Then source-qualify a new Development task family, complete its metadata overlap review, freeze one attempt and independent grader protocol, and run no inference until those gates pass. Never rerun Transformers #49418 or Ray #66694.",
-  "last_completed_step": "Executed exactly one greedy offline Qwen3-4B attempt and one pinned independent grade on each frozen fresh Development task. Both attempts stopped on context_budget_exhausted without edits; all grade cases reproduced the frozen target/control outcomes. Recorded raw traces, grades, resource telemetry, exposure append, report, and checksums.",
-  "milestone_id": "p5-fresh-development-agent-diagnostic-complete",
+  "highest_priority_next_task": "Review and resolve CI on PR #154 at its final pushed head, merge when required checks and review requirements are satisfied, verify remote main, then source-qualify a new Development family before any further inference.",
+  "last_completed_step": "Merged PR #153 at 5259a721e263baf47a52d4519c7cee949443df12. Implemented and locally tested fail-closed context compaction plus a tokenizer-only replay that exactly reconstructs all recorded prompts from the two consumed Development attempts; both histories compact below 4096 tokens. No new model generation, grade, task exposure, or policy update occurred.",
+  "milestone_id": "p6-context-compaction-pr-154-open",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -702,13 +702,13 @@
     },
     {
       "path": "research/flagship/REPRODUCE.md",
-      "sha256": "ed704c826a5776432f5fa9f1daac14e89b5d7c3b22634cc9f780bf5369d88ed7",
-      "status": "execution and verification instructions for the diagnostic"
+      "sha256": "f92cd499c7c55117019530117c816080fceac39ef039a7cf34a6213c0c5b9265",
+      "status": "diagnostic and offline context-compaction replay reproduction commands"
     },
     {
       "path": "research/flagship/STATUS.md",
-      "sha256": "9997cd2426f13e801fae58d5509767877b1ad82f5a143ac96571ec3c79261514",
-      "status": "authoritative human-readable mission status after the diagnostic"
+      "sha256": "852298efe74065a1c69f1b555176680a6b0db69c6837de3f8ff594b1c9333b78",
+      "status": "authoritative current checkpoint after PR #153 integration and context-compaction replay"
     },
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/SHA256SUMS",
@@ -759,6 +759,46 @@
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/independent-grade.log",
       "sha256": "14b829c11a5935e49f0fe6e36c71bf811b6263875536da8122887b857fde2ae0",
       "status": "raw pinned Transformers candidate-grade output"
+    },
+    {
+      "path": "research/flagship/DECISIONS.md",
+      "sha256": "bc82a2e4a700df604a88389d152873484b0db4c1265def018b17fd6608d5d4ba",
+      "status": "append-only controller decision and closest-prior-work comparison"
+    },
+    {
+      "path": "scripts/run_local_agent.py",
+      "sha256": "4d1ebc3d6bb6b861c83e669cbff9244ec22e183cc60e6bd97d9e4c764686328d",
+      "status": "context-compaction controller implementation; not model capability evidence"
+    },
+    {
+      "path": "scripts/replay_agent_context_compaction.py",
+      "sha256": "c36d6ac0141068072ab9c4bda71ec41c18e3e355fd245c8476110186d213ffd5",
+      "status": "tokenizer-only saved-transcript replay tool"
+    },
+    {
+      "path": "tests/test_run_local_agent_tool_format.py",
+      "sha256": "e6faeb5ae82facb82c45f48249df627cc3f737cb7204d0f2715e1aeb5bcbd7e9",
+      "status": "focused compaction and replay tests"
+    },
+    {
+      "path": "results/agent-context-compaction-replay-v1/README.md",
+      "sha256": "7fb609d0307085bc1bfd934fc3718d4ebdb50bc7c6aff3418ccce853f6c99840",
+      "status": "retrospective replay methods and claim limits"
+    },
+    {
+      "path": "results/agent-context-compaction-replay-v1/transformers-49418.json",
+      "sha256": "f747e1c4bc60f279b949ccd8f58933884aeff825ace8e8b03b116b87eb24d41f",
+      "status": "Transformers frozen transcript compaction replay; zero generations and grades"
+    },
+    {
+      "path": "results/agent-context-compaction-replay-v1/ray-66694.json",
+      "sha256": "7420db318f4e2fc0ba2a13de19fcc74e73d993140c79b6b7f8921396fab71b2a",
+      "status": "Ray frozen transcript compaction replay; zero generations and grades"
+    },
+    {
+      "path": "results/agent-context-compaction-replay-v1/SHA256SUMS",
+      "sha256": "fdf4cdf1675b533ced11aeba0859d8e676844c4fac965c476f49ee31e470b469",
+      "status": "integrity index for context-compaction replay artifacts"
     }
   ],
   "run_ids": [
@@ -804,11 +844,11 @@
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
-    "The two authorized Qwen3-4B Development attempts produced no edits and exhausted the 4096-token context; coding capability feasibility is NO-GO under the frozen rule.",
+    "The two authorized Qwen3-4B Development attempts produced no edits and exhausted the 4096-token context; coding capability feasibility remains NO-GO under the frozen rule.",
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "PR #153 must pass required CI at its newest pushed head and receive required review before integration."
+    "PR #154 required exact-head CI is running; review and merge readiness remain to be verified."
   ],
-  "updated_at": "2026-10-31T00:45:00Z"
+  "updated_at": "2026-10-31T01:20:57Z"
 }

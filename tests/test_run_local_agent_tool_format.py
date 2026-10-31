@@ -9,6 +9,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 
 from record_coding_agent_baseline import parse_diff
+from replay_agent_context_compaction import reconstruct_attempt_messages
 from verify_agent_workspace import verify_workspace
 from scripts.run_local_agent import (
     MAX_TOOL_RESULT_BYTES,
@@ -20,6 +21,7 @@ from scripts.run_local_agent import (
     bounded_search_results,
     bounded_source_page,
     bounded_tool_result,
+    compact_tool_context,
     normalize_tool_call_format,
     render_chat_prompt,
     refresh_public_tests_after_edit,
@@ -359,6 +361,9 @@ class _CharacterTokenizer:
     def encode(self, text, add_special_tokens=False):
         return list(text)
 
+    def apply_chat_template(self, messages, **kwargs):
+        return json.dumps(messages, sort_keys=True)
+
 
 def test_bounded_source_page_enforces_token_budget_and_continues_long_line():
     tokenizer = _CharacterTokenizer()
@@ -443,6 +448,136 @@ def test_tool_result_final_cap_and_native_template_keep_multiturn_continuity():
     assert recording.messages[1]['tool_calls'][0]['id'] == recording.messages[2]['tool_call_id']
     assert recording.messages[1]['tool_calls'][1]['id'] == recording.messages[3]['tool_call_id']
     assert recording.kwargs['tools'] == tools_for('unified_diff')
+
+
+def test_context_compaction_preserves_task_and_latest_complete_tool_round():
+    tokenizer = _CharacterTokenizer()
+    messages = [
+        {'role': 'system', 'content': 'system instructions'},
+        {'role': 'user', 'content': 'solve task'},
+    ]
+    append_tool_interaction(messages, [
+        ('read_file', {'path': 'src/module.py'}, {'content': 'old source detail ' * 100}),
+    ])
+    append_tool_interaction(messages, [
+        ('search_text', {'query': 'target'}, {'matches': ['latest source result']}),
+    ])
+    original_transcript = json.loads(json.dumps(messages))
+    before_tokens = len(tokenizer.encode(render_chat_prompt(tokenizer, messages, [])))
+
+    event = compact_tool_context(
+        messages, tokenizer, [], max_context_tokens=before_tokens - 200,
+    )
+
+    assert event is not None
+    assert event['context_fits'] is True
+    assert event['prompt_tokens_after'] < event['prompt_tokens_before']
+    assert event['removed_rounds'] == [{'tool_names': ['read_file'], 'tool_result_count': 1}]
+    assert messages[:2] == original_transcript[:2]
+    assert any(message.get('content') == 'solve task' for message in messages[:2])
+    assert any(message.get('content') and 'Earlier tool interactions were removed' in message['content']
+               for message in messages)
+    assert messages[-2]['tool_calls'][0]['function']['name'] == 'search_text'
+    assert messages[-1]['content'] == '{"matches": ["latest source result"]}'
+    assert 'old source detail ' * 100 in original_transcript[3]['content']
+
+
+def test_context_compaction_keeps_the_only_tool_round_when_it_cannot_fit():
+    tokenizer = _CharacterTokenizer()
+    messages = [
+        {'role': 'system', 'content': 'system instructions'},
+        {'role': 'user', 'content': 'solve task'},
+    ]
+    append_tool_interaction(messages, [
+        ('read_file', {'path': 'src/module.py'}, {'content': 'latest source detail ' * 100}),
+    ])
+    original = json.loads(json.dumps(messages))
+    before_tokens = len(tokenizer.encode(render_chat_prompt(tokenizer, messages, [])))
+
+    event = compact_tool_context(
+        messages, tokenizer, [], max_context_tokens=before_tokens - 1,
+    )
+
+    assert event == {
+        'prompt_tokens_before': before_tokens,
+        'prompt_tokens_after': before_tokens,
+        'max_context_tokens': before_tokens - 1,
+        'removed_rounds': [],
+        'context_fits': False,
+    }
+    assert messages == original
+
+
+def test_context_compaction_stops_at_an_incomplete_multi_tool_round():
+    tokenizer = _CharacterTokenizer()
+    messages = [
+        {'role': 'system', 'content': 'system instructions'},
+        {'role': 'user', 'content': 'solve task'},
+    ]
+    append_tool_interaction(messages, [
+        ('read_file', {'path': 'src/module.py'}, {'content': 'first result'}),
+        ('search_text', {'query': 'target'}, {'matches': ['second result']}),
+    ])
+    messages.pop()
+    append_tool_interaction(messages, [
+        ('search_text', {'query': 'later'}, {'matches': ['later result']}),
+    ])
+    original = json.loads(json.dumps(messages))
+    before_tokens = len(tokenizer.encode(render_chat_prompt(tokenizer, messages, [])))
+
+    event = compact_tool_context(
+        messages, tokenizer, [], max_context_tokens=before_tokens - 1,
+    )
+
+    assert event is not None
+    assert event['removed_rounds'] == []
+    assert event['context_fits'] is False
+    assert messages == original
+
+
+def test_saved_attempt_replay_reconstructs_the_recorded_prompt():
+    tokenizer = _CharacterTokenizer()
+    tools = []
+    initial_messages = [
+        {
+            'role': 'system',
+            'content': 'Allowed source paths: src/module.py. First call list_files.',
+        },
+        {'role': 'user', 'content': 'solve task'},
+    ]
+    messages = json.loads(json.dumps(initial_messages))
+    append_tool_interaction(messages, [
+        ('read_file', {'path': 'src/module.py'}, {'content': 'source detail'}),
+    ])
+    recorded_prompt_tokens = len(tokenizer.encode(
+        render_chat_prompt(tokenizer, initial_messages, tools), add_special_tokens=False,
+    ))
+    attempt = {
+        'edit_attempted': False,
+        'edit_applied': False,
+        'initial_messages': initial_messages,
+        'budgets': {'max_new_tokens_per_turn': 256},
+        'no_tool_retries': 0,
+        'edit_format': 'unified_diff',
+        'transcript': [{
+            'turn': 1,
+            'prompt_tokens': recorded_prompt_tokens,
+            'tool_calls': [{
+                'name': 'read_file',
+                'arguments': {'path': 'src/module.py'},
+                'result': {'content': 'source detail'},
+            }],
+        }],
+    }
+
+    rebuilt, checks = reconstruct_attempt_messages(attempt, tokenizer, tools)
+
+    assert rebuilt == messages
+    assert checks == [{
+        'turn': 1,
+        'reconstructed_tokens': recorded_prompt_tokens,
+        'recorded_tokens': recorded_prompt_tokens,
+    }]
 
 
 def test_source_lookup_and_patch_application_fixture(tmp_path):

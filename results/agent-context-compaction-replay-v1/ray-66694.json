@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "analysis_type": "saved_transcript_context_compaction_replay",
+  "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain",
+  "attempt_sha256": "dcbdd5702200280648bb0e6a27c7fc8855b53ffccc83362defb5b8b4813376f8",
+  "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "tokenizer_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "max_context_tokens": 4096,
+  "prompt_checks": [
+    {
+      "turn": 1,
+      "reconstructed_tokens": 1372,
+      "recorded_tokens": 1372
+    },
+    {
+      "turn": 2,
+      "reconstructed_tokens": 1439,
+      "recorded_tokens": 1439
+    },
+    {
+      "turn": 3,
+      "reconstructed_tokens": 2754,
+      "recorded_tokens": 2754
+    },
+    {
+      "turn": 4,
+      "reconstructed_tokens": 3180,
+      "recorded_tokens": 3180
+    },
+    {
+      "turn": 5,
+      "reconstructed_tokens": 3806,
+      "recorded_tokens": 3806
+    }
+  ],
+  "prompt_tokens_before_compaction": 4140,
+  "compaction_event": {
+    "prompt_tokens_before": 4140,
+    "prompt_tokens_after": 2795,
+    "max_context_tokens": 4096,
+    "removed_rounds": [
+      {
+        "tool_names": [
+          "list_files"
+        ],
+        "tool_result_count": 1
+      },
+      {
+        "tool_names": [
+          "search_text"
+        ],
+        "tool_result_count": 1
+      }
+    ],
+    "context_fits": true
+  },
+  "prompt_tokens_after_compaction": 2795,
+  "model_generations": 0,
+  "grader_calls": 0,
+  "claim_limit": "Offline replay of saved messages only; no model capability or repair outcome is measured."
+}
