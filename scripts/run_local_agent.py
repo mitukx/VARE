@@ -31,6 +31,10 @@ MAX_TOOL_RESULT_BYTES = 12_000
 MAX_TOOL_RESULT_TOKENS = 2_048
 MAX_SEARCH_MATCHES = 80
 MAX_SEARCH_SNIPPET_CHARS = 500
+CONTEXT_COMPACTION_NOTE = (
+    'Earlier tool interactions were removed to fit the configured context window. '
+    'The source workspace retains its current state; reread files if needed and do not repeat edits.'
+)
 TOOLS = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List exact source paths available in this task workspace. Results are paginated; use next_offset as offset to continue.', 'parameters': {'type': 'object', 'properties': {'offset': {'type': 'integer', 'minimum': 0}}, 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns at most 180 lines. Pass inclusive start_line/end_line to inspect an exact range; a completed explicit range has no next_cursor even when later file lines exist. Follow next_cursor only when the returned page was truncated by a line or response limit. The result includes the resolved path and full-file SHA-256.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
@@ -123,6 +127,104 @@ def render_chat_prompt(tokenizer: Any, messages: list[dict[str, Any]],
         messages, tools=tools, tokenize=False, add_generation_prompt=True,
         enable_thinking=False,
     )
+
+
+def compact_tool_context(
+    messages: list[dict[str, Any]], tokenizer: Any, tools: list[dict[str, Any]], *,
+    max_context_tokens: int,
+) -> dict[str, Any] | None:
+    """Drop oldest complete tool rounds only when the rendered history exceeds its budget.
+
+    The initial system/task messages and the newest complete tool round are retained. The
+    full unabridged history remains in the run transcript; this only bounds model context.
+    """
+    initial_message_count = 2
+    if len(messages) <= initial_message_count:
+        return None
+
+    def prompt_token_count(current: list[dict[str, Any]]) -> int:
+        prompt = render_chat_prompt(tokenizer, current, tools)
+        return len(tokenizer.encode(prompt, add_special_tokens=False))
+
+    before_tokens = prompt_token_count(messages)
+    if before_tokens < max_context_tokens:
+        return None
+
+    compacted = [dict(message) for message in messages]
+    removed_rounds: list[dict[str, Any]] = []
+    note_present = any(
+        message.get('role') == 'user' and message.get('content') == CONTEXT_COMPACTION_NOTE
+        for message in compacted[initial_message_count:]
+    )
+
+    def complete_tool_rounds() -> list[tuple[int, int, list[str]]]:
+        rounds: list[tuple[int, int, list[str]]] = []
+        index = initial_message_count
+        while index < len(compacted):
+            message = compacted[index]
+            calls = message.get('tool_calls') if message.get('role') == 'assistant' else None
+            if not isinstance(calls, list) or not calls:
+                index += 1
+                continue
+            if not all(
+                isinstance(call, dict)
+                and isinstance(call.get('id'), str)
+                and call['id']
+                and isinstance(call.get('function'), dict)
+                and isinstance(call['function'].get('name'), str)
+                and call['function']['name']
+                for call in calls
+            ):
+                index += 1
+                continue
+            call_ids = [call['id'] for call in calls]
+            expected_ids = set(call_ids)
+            if len(expected_ids) != len(call_ids):
+                index += 1
+                continue
+            names = [call['function']['name'] for call in calls]
+            end = index + 1
+            observed_ids: list[str] = []
+            while end < len(compacted) and compacted[end].get('role') == 'tool':
+                call_id = compacted[end].get('tool_call_id')
+                if not isinstance(call_id, str):
+                    break
+                observed_ids.append(call_id)
+                end += 1
+            if (
+                expected_ids
+                and len(observed_ids) == len(expected_ids)
+                and set(observed_ids) == expected_ids
+            ):
+                rounds.append((index, end, names))
+                index = end
+            else:
+                index += 1
+        return rounds
+
+    after_tokens = before_tokens
+    while after_tokens >= max_context_tokens:
+        rounds = complete_tool_rounds()
+        # Keep the newest tool round intact so the model always has its latest observation.
+        if len(rounds) <= 1:
+            break
+        start, end, names = rounds[0]
+        del compacted[start:end]
+        removed_rounds.append({'tool_names': names, 'tool_result_count': end - start - 1})
+        if not note_present:
+            compacted.insert(start, {'role': 'user', 'content': CONTEXT_COMPACTION_NOTE})
+            note_present = True
+        after_tokens = prompt_token_count(compacted)
+
+    if removed_rounds:
+        messages[:] = compacted
+    return {
+        'prompt_tokens_before': before_tokens,
+        'prompt_tokens_after': after_tokens,
+        'max_context_tokens': max_context_tokens,
+        'removed_rounds': removed_rounds,
+        'context_fits': after_tokens < max_context_tokens,
+    }
 
 
 def append_tool_interaction(
@@ -789,6 +891,7 @@ def main() -> int:
     public_test_result = None
     format_parse_failure = None
     format_parse_failure_count = 0
+    context_compaction_events: list[dict[str, Any]] = []
     pattern = re.compile(r'<tool_call>\s*(\{.*?\})\s*</tool_call>', re.DOTALL)
 
     def note_edit(edit_result: dict[str, Any]) -> None:
@@ -811,6 +914,12 @@ def main() -> int:
             stop_reason = 'token_budget_exhausted'
             break
         limit = min(args.max_new_tokens_per_turn, remaining)
+        context_compaction = compact_tool_context(
+            messages, tokenizer, tools, max_context_tokens=args.max_context_tokens,
+        )
+        if context_compaction is not None:
+            context_compaction['turn'] = turn + 1
+            context_compaction_events.append(context_compaction)
         generation_start = time.perf_counter()
         try:
             raw, generated_tokens, prompt_tokens = generate_turn(
@@ -827,6 +936,8 @@ def main() -> int:
                                  'generated_tokens': generated_tokens,
                                  'prompt_tokens': prompt_tokens,
                                  'generation_seconds': round(generation_elapsed, 6)}
+        if context_compaction is not None:
+            entry['context_compaction'] = context_compaction
         parse_text, recovered_tool_format = normalize_tool_call_format(raw, tool_names)
         if recovered_tool_format:
             entry['tool_call_format_recovery'] = 'strict_qwen_json_normalization'
@@ -1052,6 +1163,7 @@ def main() -> int:
         'candidate_diff_sha256': hashlib.sha256(diff.encode()).hexdigest(),
         'source_hashes_before': before, 'source_hashes_after': after,
         'tool_turns': len(transcript), 'no_tool_retries': no_tool_retries, 'transcript': transcript,
+        'context_compaction_events': context_compaction_events,
         'offline_environment_required': True,
         'wall_budget_checked_between_generations': True,
         'claim_limit': 'One small cached model on one historical task; not frontier-agent performance or novel fix discovery.',

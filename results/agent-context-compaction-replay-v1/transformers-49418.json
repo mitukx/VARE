@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "analysis_type": "saved_transcript_context_compaction_replay",
+  "task_id": "transformers-49418-quantized-cache-residual-flush",
+  "attempt_sha256": "1e217c7eb45655047bfa9406c7e8bc9159fe02a650d4e90f41b0cc79648e6894",
+  "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "tokenizer_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "max_context_tokens": 4096,
+  "prompt_checks": [
+    {
+      "turn": 1,
+      "reconstructed_tokens": 1371,
+      "recorded_tokens": 1371
+    },
+    {
+      "turn": 2,
+      "reconstructed_tokens": 1429,
+      "recorded_tokens": 1429
+    },
+    {
+      "turn": 3,
+      "reconstructed_tokens": 1582,
+      "recorded_tokens": 1582
+    },
+    {
+      "turn": 4,
+      "reconstructed_tokens": 2939,
+      "recorded_tokens": 2939
+    }
+  ],
+  "prompt_tokens_before_compaction": 4296,
+  "compaction_event": {
+    "prompt_tokens_before": 4296,
+    "prompt_tokens_after": 2765,
+    "max_context_tokens": 4096,
+    "removed_rounds": [
+      {
+        "tool_names": [
+          "list_files"
+        ],
+        "tool_result_count": 1
+      },
+      {
+        "tool_names": [
+          "search_text"
+        ],
+        "tool_result_count": 1
+      },
+      {
+        "tool_names": [
+          "read_file"
+        ],
+        "tool_result_count": 1
+      }
+    ],
+    "context_fits": true
+  },
+  "prompt_tokens_after_compaction": 2765,
+  "model_generations": 0,
+  "grader_calls": 0,
+  "claim_limit": "Offline replay of saved messages only; no model capability or repair outcome is measured."
+}
