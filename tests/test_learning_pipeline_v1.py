@@ -92,7 +92,7 @@ def test_manifests_are_repo_disjoint_and_hash_only():
     train_p, held_p = CFG / "train.manifest.jsonl", CFG / "heldout.manifest.jsonl"
     if not train_p.exists():
         pytest.skip("manifests not built")
-    rows = {s: [json.loads(l) for l in p.read_text().splitlines() if l.strip()]
+    rows = {s: [json.loads(line) for line in p.read_text().splitlines() if line.strip()]
             for s, p in (("train", train_p), ("heldout", held_p))}
     assert {r["upstream_repo"] for r in rows["train"]}.isdisjoint({r["upstream_repo"] for r in rows["heldout"]})
     ids = [r["instance_id"] for s in rows.values() for r in s]
