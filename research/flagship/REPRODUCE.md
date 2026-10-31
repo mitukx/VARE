@@ -394,3 +394,6 @@ Run one corrected baseline invocation only. The original collection failure is n
 
 
 The first corrected baseline attempt is preserved at `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-002-baseline.log` with its machine-readable receipt `attempt-002-baseline.json`. It met the target baseline gate (47 mapping-resolution calls; one failed test, zero passes/skips). The video-config case failed first, so the legacy-image config case was not reached. The wrong-mutant arm is now authorized; it must be rejected by the same target assertion on the legacy-image case before the fixed arm can run.
+
+
+The v1 wrong-mutant log and receipt are preserved at `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.*`. The target assertion failed after 47 mapping lookups, but pytest did not expose the filename for the upstream method's `unittest.subTest` loop. Since v1 required legacy-case attribution, do not run its fixed arm. A new protocol must report subtest parameters explicitly and bind fresh arm outputs before further candidate tests.

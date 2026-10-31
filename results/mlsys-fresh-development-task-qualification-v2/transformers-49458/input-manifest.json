@@ -51,5 +51,16 @@
   "test_execution_started": true,
   "tree_digest_algorithm": "sha256 of newline-joined sorted kind<TAB>relative-path<TAB>content-sha256 rows, with a final newline; symlink payload is its link target",
   "trusted_test_path": "work/transformers-49458-source-qualification/trusted/test_video_processing_auto.py",
-  "trusted_test_sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3"
+  "trusted_test_sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3",
+  "wrong_mutant_attempt": {
+    "failed": 1,
+    "log_path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.log",
+    "log_sha256": "efc0512856814536762e88275a10a599204805443b221a9ee7e6129adf3459ae",
+    "outcome": "TARGET_ASSERTION_REJECTION_CASE_UNATTRIBUTED",
+    "passed": 0,
+    "receipt_path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.json",
+    "receipt_sha256": "e6809ac56412ac25e5d74a8947a4539fdec34287be709a5ef1861c27e6c2d6ae",
+    "selected": 1,
+    "skipped": 0
+  }
 }

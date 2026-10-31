@@ -378,3 +378,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Accept the intended baseline negative control and authorize the one wrong-mutant run. The candidate remains unqualified until mutant rejection and fixed-source pass.
 - **Falsification criteria:** Receipt/input hashes disagree, the assertion failure is not attributable to the 47 mapping loads, or source/test/image/resource boundaries differ from the frozen protocol plus addendum.
 - **Follow-up:** Run the single wrong-mutant arm; verify that the target assertion rejects the incomplete fix specifically on the legacy image-config subcase. Do not run upstream-fixed unless this gate is met.
+
+
+## 2026-10-31 — Preserve the wrong-mutant rejection but stop v1 on missing subcase attribution
+
+- **Hypothesis:** The one-loop wrong mutant is rejected by the pinned test because `_load_backend_class` still traverses the lazy class mapping.
+- **Evidence:** Wrong-mutant attempt 001 selected one aggregate pytest case and failed `load_attribute.assert_not_called` after 47 mapping loads (exit 1, zero passes/skips). The output omitted the `unittest.subTest` filename. Static source inspection shows `_load_backend_class` is called when `video_processor_class` is set and its unmodified `VIDEO_PROCESSOR_MAPPING.values()` loop can trigger the assertion on either configuration path. The receipt SHA-256 is `e6809ac56412ac25e5d74a8947a4539fdec34287be709a5ef1861c27e6c2d6ae`; raw log SHA-256 is `efc0512856814536762e88275a10a599204805443b221a9ee7e6129adf3459ae`.
+- **Alternative explanations:** Treat the assertion failure as proof that the legacy-image subcase ran; or claim that the test rejected the partial fix without identifying which subcase caused the failure. Neither is supported by the aggregate log.
+- **Decision:** Record the mutant as rejected by the target assertion, but classify the v1-required legacy-case attribution as **UNVERIFIED**. Do not run v1 upstream-fixed because its specified wrong-mutant gate was not demonstrated. Freeze a new case-reporting protocol before any additional candidate test.
+- **Falsification criteria:** A retained receipt/log that identifies the legacy case, or a case-separated replay showing the required path, would resolve the attribution gap; any source/test/image/limit mismatch invalidates the run.
+- **Follow-up:** Use the exact trusted test method with a runner that emits `subTest` parameter names, then execute a fresh baseline → wrong-mutant → fixed sequence under a newly frozen protocol. Do not run model inference or allocate the candidate.

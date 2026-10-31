@@ -205,7 +205,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "815e0e6571385d0bbe60e4d19de8bc2e6ee110a7",
+    "verified_pr_head_sha_before_checkpoint_changes": "53c9dd344e299165206a85ad03afb3b1239a8b12",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
@@ -214,9 +214,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Run the frozen wrong-mutant arm exactly once using the same image/test/limits/isolation and PYTHONPATH correction; proceed to upstream-fixed only if the target regression is rejected at the legacy image-config subcase.",
-  "last_completed_step": "After protocol addendum 1 was pushed, corrected baseline attempt 002 ran once with PYTHONPATH=/source/src:/source:/source/utils. The pinned test collected and failed at the intended load_attribute.assert_not_called assertion (47 eager mapping loads), exit 1, one selected case, zero passes/skips. The legacy-image subcase did not execute because the first loop case failed. Baseline gate is met; wrong-mutant is the next authorized arm.",
-  "milestone_id": "p8-transformers-49458-baseline-gate-met",
+  "highest_priority_next_task": "Freeze a v2 source-qualification protocol using the same pinned test method under a unittest runner that reports each subTest filename; then re-run the baseline, wrong-mutant, and fixed controls in order with distinct output files. Do not run inference or assign the candidate.",
+  "last_completed_step": "Wrong-mutant attempt 001 used the frozen corrected environment and failed the intended load_attribute.assert_not_called assertion after 47 mapping loads, exit 1, one selected, zero skipped. Pytest reported the unittest subTest loop as one aggregate case without a filename, so the v1-required legacy-image-case attribution is unverified. The upstream-fixed arm was not run. Preserve this result and freeze a more diagnostic runner protocol before any additional task tests.",
+  "milestone_id": "p8-v1-wrong-mutant-case-attribution-incomplete",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -862,6 +862,21 @@
       "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
       "sha256": "87f9af3961f75d2fe466b6b70a0a45b9a5a55d00cc31bc1f56346ab53f3c1608",
       "status": "pinned source-tree/test/image identities plus both initial collection failure and corrected baseline receipt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.json",
+      "sha256": "e6809ac56412ac25e5d74a8947a4539fdec34287be709a5ef1861c27e6c2d6ae",
+      "status": "wrong-mutant target assertion rejected; aggregate pytest output does not attribute the subTest filename; v1 fixed gate unmet"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.log",
+      "sha256": "efc0512856814536762e88275a10a599204805443b221a9ee7e6129adf3459ae",
+      "status": "wrong-mutant raw pytest log; intended assertion failed after 47 mapping loads; legacy-case attribution unavailable"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
+      "sha256": "d51ded43b37e639382ada61e5c9c1b1b901b35adcee92a23bcd5a3ef25c1e1e3",
+      "status": "pinned task inputs and baseline/wrong-mutant outcomes; no fixed-source run"
     }
   ],
   "run_ids": [
@@ -911,7 +926,7 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED pending wrong-mutant rejection and upstream-fixed pass; no inference is authorized."
+    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED; v1 wrong-mutant failed the target assertion but its required legacy-case attribution is unavailable, and no fixed arm ran. Freeze a case-reporting protocol before additional tests."
   ],
-  "updated_at": "2026-10-31T01:48:40Z"
+  "updated_at": "2026-10-31T01:50:45Z"
 }
