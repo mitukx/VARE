@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-task-family-overlap-v5-addendum-1",
+  "parent_protocol_id": "mlsys-fresh-development-task-family-overlap-v5",
+  "parent_protocol_sha256": "b35ade831d91f3a404bc5e5e2d72766ff2ce91ae7764764a6fc696c33ab79c36",
+  "created_at_utc": "2026-10-31T05:18:45Z",
+  "correction_reason": "The first inventory extraction was recorded with duplicate rows where two ledgers described the same task, and it did not normalize source_pr URLs or enrich same-repository prior paths from the already frozen candidate screen. Preserve that first output unchanged, but do not use it as the final family/path comparison.",
+  "initial_run": {
+    "metadata_inventory_path": "results/mlsys-fresh-development-task-family-overlap-v5/metadata-inventory.json",
+    "metadata_inventory_sha256": "61bc2378e7f9079ab08b2ce5fdcc4a2e2b710ee5ae68efc1a2a420a5cdac56ca",
+    "evidence_manifest_path": "results/mlsys-fresh-development-task-family-overlap-v5/evidence-manifest.json",
+    "evidence_manifest_sha256": "d8017b015625083bb0ab3832088a8f498927d48495d3d67bb41f5f3f23b4a428",
+    "inventory_script_sha256_recorded_by_manifest": "eea45ab5e40b9ce6e3cdffc2b5fda80049c721746c954f3e665bae83792912c8",
+    "disposition": "SUPERSEDED_INCOMPLETE_FOR_DEDUPLICATED_PATH_COMPARISON; no overlap classification was issued from this run. No Held-Out identity fields or assets were accessed."
+  },
+  "correction": {
+    "selector_or_candidate_change": false,
+    "selection_rule_changed": false,
+    "candidate_identity_changed": false,
+    "source_or_test_content_accessed": false,
+    "heldout_data_accessed": false,
+    "changes": [
+      "Normalize a source_pr URL to repository and pull-request number only after the row passes the Development/Train split filter.",
+      "Deduplicate by split, repository, pull-request number, and task identity/family, merging source references and nonempty metadata.",
+      "Enrich a prior task's title and changed paths only from the frozen v4 metadata screen already bound by the parent protocol.",
+      "Emit the corrected inventory to a new path; never overwrite the initial output."
+    ],
+    "script_path": "scripts/review_mlsys_fresh_development_task_family_overlap_v5.py",
+    "script_sha256": "3dc104958cdd94bffbeeedb1c09fc6b7161d298f193c8115ad7f0d81d54ec441",
+    "test_path": "tests/test_review_mlsys_fresh_development_task_family_overlap_v5.py",
+    "test_sha256": "e57410af742a0ff1e0c693f73e8f8cfe1f87e817bd5df0a8fc7b8196781bd283"
+  },
+  "output_path": "results/mlsys-fresh-development-task-family-overlap-v5-correction-001/",
+  "authorization": {
+    "corrected_metadata_extraction_and_path_comparison": true,
+    "pr_body_or_discussion_fetch": false,
+    "patch_source_test_or_grader_fetch": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "heldout_access": false,
+    "paid_compute_or_api": false
+  },
+  "stop_rules": [
+    "Verify parent protocol, initial outputs, selector/test hashes, and all original frozen inputs before rerunning the corrected metadata extraction.",
+    "Filter each mixed-split record on its split field before extracting any identity field; discard all rows not explicitly Development/dev or Train/train.",
+    "Never overwrite the initial inventory and do not emit any Held-Out identities, counts, or per-asset hashes.",
+    "Keep the selection candidate, selection hash, review criteria, and authorization unchanged."
+  ]
+}
