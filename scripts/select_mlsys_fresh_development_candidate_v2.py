@@ -12,6 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v2.json"
 ADDENDUM_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v2_addendum_1.json"
+ADDENDUM_2_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v2_addendum_2.json"
 V1_SELECTOR_PATH = ROOT / "scripts/select_mlsys_fresh_development_candidate_v1.py"
 V1_PROTOCOL_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v1.json"
 V1_ADDENDUM_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v1_addendum_1.json"
@@ -52,22 +53,40 @@ def frozen_screen_path(protocol: dict[str, Any]) -> str:
     return protocol["source_scan"]["screen_path"]
 
 
+def frozen_excluded_identities(protocol: dict[str, Any]) -> list[dict[str, Any]]:
+    return protocol["selection_rules"]["excluded_identities"]
+
+
 def verify_inputs(protocol: dict[str, Any]) -> None:
-    addendum = json.loads(ADDENDUM_PATH.read_text(encoding="utf-8"))
+    addenda = [
+        json.loads(ADDENDUM_PATH.read_text(encoding="utf-8")),
+        json.loads(ADDENDUM_2_PATH.read_text(encoding="utf-8")),
+    ]
     protocol_hash = sha256_file(PROTOCOL_PATH)
-    if addendum.get("protocol_id") != "mlsys-fresh-development-candidate-selection-v2-addendum-1":
-        raise ValueError("unexpected v2 preselection addendum")
-    if addendum.get("parent_protocol_sha256") != protocol_hash:
+    if addenda[0].get("protocol_id") != "mlsys-fresh-development-candidate-selection-v2-addendum-1":
+        raise ValueError("unexpected v2 preselection addendum 1")
+    if addenda[1].get("protocol_id") != "mlsys-fresh-development-candidate-selection-v2-addendum-2":
+        raise ValueError("unexpected v2 preselection addendum 2")
+    if any(addendum.get("parent_protocol_sha256") != protocol_hash for addendum in addenda):
         raise ValueError("v2 addendum parent protocol hash mismatch")
-    corrections = addendum["corrected_input_hashes"]
+    if addenda[1].get("parent_addendum_sha256") != sha256_file(ADDENDUM_PATH):
+        raise ValueError("v2 addendum chain hash mismatch")
+    correction_chain: dict[str, dict[str, str]] = {}
+    for addendum in addenda:
+        for relative_path, correction in addendum["corrected_input_hashes"].items():
+            prior = correction_chain.get(relative_path)
+            expected_original = (
+                prior["corrected_sha256"]
+                if prior is not None
+                else frozen_input_hashes(protocol)[relative_path]
+            )
+            if correction.get("original_sha256") != expected_original:
+                raise ValueError(f"v2 addendum correction chain mismatch: {relative_path}")
+            correction_chain[relative_path] = correction
     for relative_path, expected_hash in frozen_input_hashes(protocol).items():
         path = ROOT / relative_path
-        corrected = corrections.get(relative_path)
-        if corrected is not None and corrected.get("original_sha256") != expected_hash:
-            raise ValueError(f"v2 addendum does not match original input: {relative_path}")
-        required_hash = (
-            corrected["corrected_sha256"] if corrected is not None else expected_hash
-        )
+        correction = correction_chain.get(relative_path)
+        required_hash = correction["corrected_sha256"] if correction is not None else expected_hash
         if not path.is_file() or sha256_file(path) != required_hash:
             raise ValueError(f"frozen v2 selection input differs: {relative_path}")
     v1_protocol = json.loads(V1_PROTOCOL_PATH.read_text(encoding="utf-8"))
@@ -100,7 +119,7 @@ def run(output_dir: Path) -> dict[str, Any]:
     v1_protocol = json.loads(V1_PROTOCOL_PATH.read_text(encoding="utf-8"))
     v1_selector = load_v1_selector()
     eligible = v1_selector.eligible_rows(screen, v1_protocol)
-    excluded_rows = protocol["excluded_identities"]
+    excluded_rows = frozen_excluded_identities(protocol)
     excluded = {(row["repository"], row["number"]) for row in excluded_rows}
     remaining = exclude_identities(eligible, excluded)
     selected = remaining[0] if remaining else None
@@ -113,7 +132,8 @@ def run(output_dir: Path) -> dict[str, Any]:
         "schema_version": 1,
         "selection_id": protocol["protocol_id"],
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
-        "protocol_addendum_sha256": sha256_file(ADDENDUM_PATH),
+        "protocol_addendum_1_sha256": sha256_file(ADDENDUM_PATH),
+        "protocol_addendum_2_sha256": sha256_file(ADDENDUM_2_PATH),
         "selector_sha256": sha256_file(Path(__file__)),
         "source_screen_sha256": sha256_bytes(screen_bytes),
         "frozen_inputs": frozen_input_hashes(protocol),
@@ -136,7 +156,8 @@ def run(output_dir: Path) -> dict[str, Any]:
     manifest = {
         "schema_version": 1,
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
-        "protocol_addendum_sha256": sha256_file(ADDENDUM_PATH),
+        "protocol_addendum_1_sha256": sha256_file(ADDENDUM_PATH),
+        "protocol_addendum_2_sha256": sha256_file(ADDENDUM_2_PATH),
         "selector_sha256": sha256_file(Path(__file__)),
         "files": {
             "selection.json": {

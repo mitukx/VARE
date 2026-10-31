@@ -1,0 +1,52 @@
+{
+  "authorization": {
+    "agent_or_model_inference": false,
+    "development_split_assignment": false,
+    "heldout_access": false,
+    "metadata_only_selection_retry": true,
+    "source_or_test_content_fetch": false,
+    "task_family_overlap_review": false,
+    "task_qualification": false,
+    "training": false
+  },
+  "corrected_input_hashes": {
+    "scripts/select_mlsys_fresh_development_candidate_v2.py": {
+      "corrected_sha256": "fdcd9e7e7013af4c072d91bb0bde3905d77d96e102bdcade90880213430e859b",
+      "original_sha256": "208ba5629dc3c3e9627f4adeb94d5178f88317f79a1862370d2dc17705025d89",
+      "reason": "Read frozen exclusions from protocol.selection_rules.excluded_identities, the location defined by the v2 protocol."
+    },
+    "tests/test_select_mlsys_fresh_development_candidate_v2.py": {
+      "corrected_sha256": "a497d1ecdb94f72e4e2cdd48dd7863b4298bef822cda7a535e7fd3a869df434f",
+      "original_sha256": "daabd1b7aaa72695b95ae332bb1b8f4e867b1d7251333a84dbbc9390cd1379a1",
+      "reason": "Add a regression asserting that exclusion lookup follows the frozen protocol structure."
+    }
+  },
+  "corrected_selector_path": "scripts/select_mlsys_fresh_development_candidate_v2.py",
+  "corrected_selector_sha256": "fdcd9e7e7013af4c072d91bb0bde3905d77d96e102bdcade90880213430e859b",
+  "corrected_test_path": "tests/test_select_mlsys_fresh_development_candidate_v2.py",
+  "corrected_test_sha256": "a497d1ecdb94f72e4e2cdd48dd7863b4298bef822cda7a535e7fd3a869df434f",
+  "correction": "The selector reads exclusions from protocol.selection_rules.excluded_identities through a tested accessor. No eligibility, exclusion identity, rank, or no-substitution rule changes.",
+  "failed_selector_sha256": "208ba5629dc3c3e9627f4adeb94d5178f88317f79a1862370d2dc17705025d89",
+  "frozen_at_utc": "2026-10-31T03:53:28Z",
+  "parent_addendum_path": "protocols/mlsys_fresh_development_candidate_selection_v2_addendum_1.json",
+  "parent_addendum_sha256": "bc185d74541c2b6ed6c72cbf5e92bb56155dd7a9a2db708f4bf729e1a2bf1298",
+  "parent_protocol_path": "protocols/mlsys_fresh_development_candidate_selection_v2.json",
+  "parent_protocol_sha256": "e728ebc6dd5fddf930b3d11bab093eab1b601fb3fa596cfbbb55e001dae28359",
+  "preselection_failure": {
+    "model_or_agent_inference": false,
+    "observed": "The second v2 selector invocation validated inputs, parsed the frozen metadata screen and computed the v1 eligibility/rank ordering, then raised KeyError(\"excluded_identities\") because it looked at the protocol root while the frozen key is nested under selection_rules.",
+    "remote_query_performed": false,
+    "selection_output_created": false,
+    "source_or_test_content_accessed": false,
+    "v2_exclusion_applied": false
+  },
+  "protocol_id": "mlsys-fresh-development-candidate-selection-v2-addendum-2",
+  "schema_version": 1,
+  "status": "frozen-before-selection; exclusion-key-binding-correction-only",
+  "unchanged_selection_rules": [
+    "v1 frozen metadata eligibility and rank implementation",
+    "explicit exclusion of the v1 selected identity blocked by possible overlap",
+    "select exactly one minimum-ranked remaining candidate",
+    "no substitution if v2 candidate overlaps or fails qualification"
+  ]
+}
