@@ -1,0 +1,237 @@
+{
+  "context_dependent_drift": [
+    {
+      "delta": -9.011360168457031,
+      "instance_id": "gweis__isodate.17cb25eb.func_basic__kk2tycil",
+      "reward": 0.0,
+      "sample_index": 0,
+      "seq_logprob_after": -9.48569107055664,
+      "seq_logprob_before": -0.4743309020996094
+    },
+    {
+      "delta": 0.9863052368164062,
+      "instance_id": "gweis__isodate.17cb25eb.func_basic__kk2tycil",
+      "reward": 1.0,
+      "sample_index": 1,
+      "seq_logprob_after": -0.019786834716796875,
+      "seq_logprob_before": -1.0060920715332031
+    },
+    {
+      "delta": -9.011360168457031,
+      "instance_id": "gweis__isodate.17cb25eb.func_basic__kk2tycil",
+      "reward": 0.0,
+      "sample_index": 2,
+      "seq_logprob_after": -9.48569107055664,
+      "seq_logprob_before": -0.4743309020996094
+    },
+    {
+      "delta": -9.011360168457031,
+      "instance_id": "gweis__isodate.17cb25eb.func_basic__kk2tycil",
+      "reward": 0.0,
+      "sample_index": 3,
+      "seq_logprob_after": -9.48569107055664,
+      "seq_logprob_before": -0.4743309020996094
+    },
+    {
+      "delta": -0.20197296142578125,
+      "instance_id": "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc",
+      "reward": 1.0,
+      "sample_index": 0,
+      "seq_logprob_after": -0.5094718933105469,
+      "seq_logprob_before": -0.3074989318847656
+    },
+    {
+      "delta": -0.16080093383789062,
+      "instance_id": "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc",
+      "reward": 0.0,
+      "sample_index": 1,
+      "seq_logprob_after": -1.5622291564941406,
+      "seq_logprob_before": -1.40142822265625
+    },
+    {
+      "delta": -0.16080093383789062,
+      "instance_id": "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc",
+      "reward": 0.0,
+      "sample_index": 2,
+      "seq_logprob_after": -1.5622291564941406,
+      "seq_logprob_before": -1.40142822265625
+    },
+    {
+      "delta": -0.16080093383789062,
+      "instance_id": "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc",
+      "reward": 0.0,
+      "sample_index": 3,
+      "seq_logprob_after": -1.5622291564941406,
+      "seq_logprob_before": -1.40142822265625
+    },
+    {
+      "delta": 0.125885009765625,
+      "instance_id": "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58",
+      "reward": 1.0,
+      "sample_index": 0,
+      "seq_logprob_after": -1.3665695190429688,
+      "seq_logprob_before": -1.4924545288085938
+    },
+    {
+      "delta": -25.47800064086914,
+      "instance_id": "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58",
+      "reward": 0.0,
+      "sample_index": 1,
+      "seq_logprob_after": -89.40029907226562,
+      "seq_logprob_before": -63.922298431396484
+    },
+    {
+      "delta": 0.125885009765625,
+      "instance_id": "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58",
+      "reward": 1.0,
+      "sample_index": 2,
+      "seq_logprob_after": -1.3665695190429688,
+      "seq_logprob_before": -1.4924545288085938
+    },
+    {
+      "delta": -6.6609954833984375,
+      "instance_id": "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58",
+      "reward": 0.0,
+      "sample_index": 3,
+      "seq_logprob_after": -8.994434356689453,
+      "seq_logprob_before": -2.3334388732910156
+    }
+  ],
+  "evidence_level": "real RL parameter updates on Train tasks; not a capability measurement",
+  "final_telemetry": {
+    "available_gib": 16.58,
+    "memory_free_pct": "67%",
+    "mlx_active_gib": 2.15,
+    "mlx_peak_gib": 3.426,
+    "swap_used_gib": 12.256,
+    "thermal": "Note: No thermal warning level has been recorded Note: No performance warning level has been recorded",
+    "time": 1793460764.66
+  },
+  "group_size": 4,
+  "params_changed_every_applied_step": true,
+  "peak_mlx_gib_overall": 3.669,
+  "post_update_same_train_tasks": {
+    "note": "same Train tasks as the update; descriptive only",
+    "pass_per_task": {
+      "gweis__isodate.17cb25eb.func_basic__kk2tycil": 4.0,
+      "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc": 2.0
+    },
+    "pre_update_pass_per_task": {
+      "gweis__isodate.17cb25eb.func_basic__kk2tycil": 1.0,
+      "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc": 1.0
+    }
+  },
+  "reload": {
+    "checkpoint_step": 3,
+    "ok": true,
+    "seconds_incl_post_generation": 55.4
+  },
+  "schema": "vare.grpo_vertical_slice.summary/v1",
+  "step_metrics": [
+    {
+      "approx_kl": 0.0037147463642220034,
+      "clip_fraction": 0.005700712589073635,
+      "grad_norm_preclip": 0.8151525259017944,
+      "loss": 0.16891547851264477,
+      "n_groups": 16,
+      "n_informative_groups": 3,
+      "n_tokens": 2105,
+      "n_trained_samples": 12,
+      "params_changed": true,
+      "policy_step": 0,
+      "ratio_mean": 1.0000030445089816,
+      "seconds": {
+        "behavior_logprobs": 42.7,
+        "generate_and_grade": 0.0,
+        "total": 117.2,
+        "update": 66.8
+      },
+      "update_applied": true,
+      "update_peak_gib": 3.669,
+      "update_tokens_per_s": 31.5
+    },
+    {
+      "approx_kl": 0.006009263548291164,
+      "clip_fraction": 0.005398110661268556,
+      "grad_norm_preclip": 1.4423656463623047,
+      "loss": 0.45623495429754257,
+      "n_groups": 2,
+      "n_informative_groups": 2,
+      "n_tokens": 741,
+      "n_trained_samples": 8,
+      "params_changed": true,
+      "policy_step": 1,
+      "ratio_mean": 0.9991333018108579,
+      "seconds": {
+        "behavior_logprobs": 26.4,
+        "generate_and_grade": 57.7,
+        "total": 132.8,
+        "update": 41.1
+      },
+      "update_applied": true,
+      "update_peak_gib": 3.544,
+      "update_tokens_per_s": 18.0
+    },
+    {
+      "approx_kl": null,
+      "clip_fraction": null,
+      "grad_norm_preclip": null,
+      "loss": null,
+      "n_groups": 2,
+      "n_informative_groups": 0,
+      "n_tokens": 0,
+      "n_trained_samples": 0,
+      "params_changed": null,
+      "policy_step": 2,
+      "ratio_mean": null,
+      "seconds": {
+        "behavior_logprobs": 0.0,
+        "generate_and_grade": 58.1,
+        "total": 58.1,
+        "update": 0.0
+      },
+      "update_applied": false,
+      "update_peak_gib": 0.0,
+      "update_tokens_per_s": null
+    }
+  ],
+  "steps": 3,
+  "steps_applied": 2,
+  "survey": {
+    "all_one": 4,
+    "all_zero": 9,
+    "generations": 64,
+    "groups": 16,
+    "mean_reward": 0.3125,
+    "mean_within_group_variance": 0.0390625,
+    "mixed": 3,
+    "mixed_fraction": 0.1875,
+    "mixed_tasks": [
+      "gweis__isodate.17cb25eb.func_basic__kk2tycil",
+      "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc",
+      "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58"
+    ],
+    "per_task_pass": {
+      "gweis__isodate.17cb25eb.combine_file__1k8q4a9v": 0.0,
+      "gweis__isodate.17cb25eb.combine_file__hgd6petp": 0.0,
+      "gweis__isodate.17cb25eb.func_basic__3roqi4en": 0.0,
+      "gweis__isodate.17cb25eb.func_basic__g7cnu9hd": 0.0,
+      "gweis__isodate.17cb25eb.func_basic__kk2tycil": 1.0,
+      "gweis__isodate.17cb25eb.func_basic__xt3b27w3": 0.0,
+      "luozhouyang__python-string-similarity.115acaac.combine_file__cu1lt1by": 0.0,
+      "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58": 2.0,
+      "luozhouyang__python-string-similarity.115acaac.func_basic__0w9pdflo": 4.0,
+      "luozhouyang__python-string-similarity.115acaac.func_basic__1ouyfaee": 0.0,
+      "luozhouyang__python-string-similarity.115acaac.func_basic__kowr5xy4": 4.0,
+      "luozhouyang__python-string-similarity.115acaac.func_basic__mu1u39zx": 0.0,
+      "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc": 1.0,
+      "luozhouyang__python-string-similarity.115acaac.func_pm_class_rm_funcs__c79l98k5": 0.0,
+      "luozhouyang__python-string-similarity.115acaac.func_pm_ctrl_shuffle__jhaaq9av": 4.0,
+      "luozhouyang__python-string-similarity.115acaac.func_pm_ctrl_shuffle__llhbww8d": 4.0
+    },
+    "seconds": 710.4,
+    "wasted_generations": 52
+  },
+  "train_tasks": 16,
+  "wall_clock_s": 1125.3
+}

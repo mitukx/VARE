@@ -1,0 +1,107 @@
+{
+  "label": "exploratory / diagnostic; Train tasks only; descriptive post-hoc breakdown",
+  "mixed_fraction_by_condition_and_prior_class": {
+    "prior_g4": {
+      "prior_all_one": {
+        "fraction": 0.0,
+        "groups": 2,
+        "mixed": 0,
+        "wilson95": [
+          0.0,
+          0.6576
+        ]
+      },
+      "prior_all_zero": {
+        "fraction": 0.0,
+        "groups": 12,
+        "mixed": 0,
+        "wilson95": [
+          0.0,
+          0.2425
+        ]
+      },
+      "prior_mixed": {
+        "fraction": 0.7,
+        "groups": 10,
+        "mixed": 7,
+        "wilson95": [
+          0.3968,
+          0.8922
+        ]
+      }
+    },
+    "uniform_g4": {
+      "prior_all_one": {
+        "fraction": 0.25,
+        "groups": 4,
+        "mixed": 1,
+        "wilson95": [
+          0.0456,
+          0.6994
+        ]
+      },
+      "prior_all_zero": {
+        "fraction": 0.0,
+        "groups": 14,
+        "mixed": 0,
+        "wilson95": [
+          0.0,
+          0.2153
+        ]
+      },
+      "prior_mixed": {
+        "fraction": 0.8333,
+        "groups": 6,
+        "mixed": 5,
+        "wilson95": [
+          0.4365,
+          0.9699
+        ]
+      }
+    },
+    "uniform_g8": {
+      "prior_all_zero": {
+        "fraction": 0.0,
+        "groups": 7,
+        "mixed": 0,
+        "wilson95": [
+          0.0,
+          0.3543
+        ]
+      },
+      "prior_mixed": {
+        "fraction": 0.6,
+        "groups": 5,
+        "mixed": 3,
+        "wilson95": [
+          0.2307,
+          0.8824
+        ]
+      }
+    }
+  },
+  "prior_class_vs_pooled_study_outcome": {
+    "prior_all_one": {
+      "obs_all_one": 4,
+      "obs_mixed": 1
+    },
+    "prior_all_zero": {
+      "obs_all_zero": 21
+    },
+    "prior_mixed": {
+      "obs_all_one": 1,
+      "obs_all_zero": 1,
+      "obs_mixed": 8
+    }
+  },
+  "tasks_observed": 36,
+  "uniform_g8_split_into_two_g4_halves": {
+    "fraction": 0.2083,
+    "groups": 24,
+    "mixed": 5,
+    "wilson95": [
+      0.0924,
+      0.4047
+    ]
+  }
+}

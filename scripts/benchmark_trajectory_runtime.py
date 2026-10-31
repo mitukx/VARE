@@ -59,9 +59,16 @@ def build_step(index, state, total, ident, delay=0.):
 
 def killed_worker(path, pipe):
     store = TrajectoryStore(path)
-    lease = store.claim("execute", "sigkill-worker", lease_seconds=.1)
+    # The claim deadline is computed before the claim transaction's synchronous
+    # (fsync'd) commit, so a 0.1 s claim lease can expire before append_step on a
+    # runner with slow durable commits (reproduced by delaying fsync in this
+    # process). Claim with a generous lease so the first step is always persisted,
+    # then shorten the deadline to 0.1 s with a heartbeat so it still expires
+    # promptly after the parent's SIGKILL; the recovery path is unchanged.
+    lease = store.claim("execute", "sigkill-worker", lease_seconds=5)
     resumed = store.resume_state(lease.trajectory_id)
     store.append_step(lease, build_step(0, {}, resumed["spec"]["expected_steps"], lease.trajectory_id))
+    store.heartbeat(lease, lease_seconds=.1)
     pipe.send(asdict(lease))
     pipe.recv()
 

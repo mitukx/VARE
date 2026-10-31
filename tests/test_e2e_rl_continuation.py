@@ -475,6 +475,7 @@ def test_historical_source_inventory_versions_stay_frozen():
         "v1-pinned":(15,"53363d17b5f7d641b8a2c0cb1b4ce023a60ced9286e32fa296bfcb95eb50c074"),
         "v2":(73,"298da9a3b31b9f91825d99d34608bf233521cab6338e4f74d868fb6783815ce6"),
         "v3":(83,"7c6a454ce817c4cc4874825bff032cb6589604af4767732efd4b77bd052f0a00"),
+        "v4":(98,"123b90fd2e899493f4dff524be7ae56f88e0937f5f30f1208b13cf04fc484d95"),
     }
     for version,(count,expected) in frozen.items():
         names=auditor.SOURCE_INVENTORIES[version]
@@ -483,44 +484,65 @@ def test_historical_source_inventory_versions_stay_frozen():
     assert len(set(auditor.SOURCE_INVENTORIES.values()))==len(auditor.SOURCE_INVENTORIES)
     assert auditor.EXPECTED_SOURCES==auditor.SOURCE_INVENTORIES[auditor.CURRENT_SOURCE_INVENTORY]
     # Inventories that predate exact recovery endpoints keep the interval check.
-    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4"}
+    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4","v5"}
 
 
-def test_v4_inventory_adds_only_reachable_learning_pipeline_modules():
-    package=bench.ROOT/"src/vare/learning_pipeline"
-    modules={path.stem for path in package.glob("*.py")}
-    prefix="vare.learning_pipeline"
+LEARNING_PACKAGE=bench.ROOT/"src/vare/learning_pipeline"
+LEARNING_PREFIX="vare.learning_pipeline"
 
-    def references(path):
-        found=set()
-        for node in ast.walk(ast.parse(path.read_text())):
-            if isinstance(node,ast.ImportFrom):
-                module=node.module or ""
-                if node.level==1:
-                    rest=module
-                elif node.level==0 and (module==prefix or module.startswith(prefix+".")):
-                    rest=module[len(prefix):].lstrip(".")
-                else:
-                    continue
-                found.update([rest.split(".")[0]] if rest else [alias.name for alias in node.names])
-            elif (isinstance(node,ast.Constant) and isinstance(node.value,str) and
-                  node.value.startswith(prefix+".")):
-                # Subprocess entry points such as ``python -m vare.learning_pipeline.lora_worker``.
-                found.add(node.value[len(prefix)+1:].split(".")[0])
-        return found & modules
 
-    added=auditor.INVENTORY_V4_SOURCES-auditor.INVENTORY_V3_SOURCES
-    assert added==auditor.LEARNING_PIPELINE_SOURCES
-    assert added=={f"src/vare/learning_pipeline/{name}.py" for name in modules}
-    protocol=json.loads((bench.ROOT/"protocols/coding_policy_learning_mlx_4b_v1.json").read_text())
-    assert added=={name for name in protocol["frozen"]["code"] if name.startswith("src/vare/learning_pipeline/")}
-    reached,pending={"__init__"},list(references(bench.ROOT/"scripts/learning_pipeline_v1.py"))
+def learning_pipeline_references(path,modules):
+    found=set()
+    for node in ast.walk(ast.parse(path.read_text())):
+        if isinstance(node,ast.ImportFrom):
+            module=node.module or ""
+            if node.level==1:
+                rest=module
+            elif node.level==0 and (module==LEARNING_PREFIX or module.startswith(LEARNING_PREFIX+".")):
+                rest=module[len(LEARNING_PREFIX):].lstrip(".")
+            else:
+                continue
+            found.update([rest.split(".")[0]] if rest else [alias.name for alias in node.names])
+        elif (isinstance(node,ast.Constant) and isinstance(node.value,str) and
+              node.value.startswith(LEARNING_PREFIX+".")):
+            # Subprocess entry points such as ``python -m vare.learning_pipeline.lora_worker``.
+            found.add(node.value[len(LEARNING_PREFIX)+1:].split(".")[0])
+    return found & modules
+
+
+def reachable_learning_modules(entry_point,modules):
+    reached,pending={"__init__"},list(learning_pipeline_references(entry_point,modules))
     while pending:
         name=pending.pop()
         if name not in reached:
             reached.add(name)
-            pending.extend(references(package/f"{name}.py"))
-    assert reached==modules
+            pending.extend(learning_pipeline_references(LEARNING_PACKAGE/f"{name}.py",modules))
+    return reached
+
+
+def test_v4_inventory_adds_only_reachable_learning_pipeline_modules():
+    modules={path.stem for path in LEARNING_PACKAGE.glob("*.py")}
+    added=auditor.INVENTORY_V4_SOURCES-auditor.INVENTORY_V3_SOURCES
+    assert added==auditor.LEARNING_PIPELINE_SOURCES
+    protocol=json.loads((bench.ROOT/"protocols/coding_policy_learning_mlx_4b_v1.json").read_text())
+    assert added=={name for name in protocol["frozen"]["code"] if name.startswith("src/vare/learning_pipeline/")}
+    v4_modules={Path(name).stem for name in added}
+    assert v4_modules<=modules
+    assert reachable_learning_modules(bench.ROOT/"scripts/learning_pipeline_v1.py",modules)==v4_modules
+
+
+def test_v5_inventory_adds_only_the_reachable_grpo_trainer():
+    modules={path.stem for path in LEARNING_PACKAGE.glob("*.py")}
+    added=auditor.INVENTORY_V5_SOURCES-auditor.INVENTORY_V4_SOURCES
+    assert added==auditor.GRPO_TRAINER_SOURCES=={"src/vare/learning_pipeline/grpo_mlx.py"}
+    assert auditor.INVENTORY_V5_SOURCES>=auditor.INVENTORY_V4_SOURCES
+    # Every package module is in exactly one of the v4 or v5 additions.
+    assert (auditor.LEARNING_PIPELINE_SOURCES|added)=={f"src/vare/learning_pipeline/{name}.py" for name in modules}
+    # The trainer is not part of the frozen v1 protocol, and the v1 entry point does not reach it.
+    protocol=json.loads((bench.ROOT/"protocols/coding_policy_learning_mlx_4b_v1.json").read_text())
+    assert not added&set(protocol["frozen"]["code"])
+    assert "grpo_mlx" not in reachable_learning_modules(bench.ROOT/"scripts/learning_pipeline_v1.py",modules)
+    assert "grpo_mlx" in reachable_learning_modules(bench.ROOT/"scripts/grpo_vertical_slice.py",modules)
 
 
 def test_current_benchmark_snapshot_is_the_current_inventory_version():
@@ -529,8 +551,8 @@ def test_current_benchmark_snapshot_is_the_current_inventory_version():
     assert auditor.source_inventory_version(names)==auditor.CURRENT_SOURCE_INVENTORY
 
 
-def test_v3_and_v4_source_inventories_are_accepted_by_version():
-    for version in ("v3","v4"):
+def test_v3_to_v5_source_inventories_are_accepted_by_version():
+    for version in ("v3","v4","v5"):
         names=auditor.SOURCE_INVENTORIES[version]
         assert auditor.source_inventory_version(set(names))==version
         auditor.validate_source_inventory(committed_manifest(names),set(names),True)

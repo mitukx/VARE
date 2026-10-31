@@ -1,0 +1,55 @@
+{
+  "args": {
+    "clip": 0.2,
+    "group_size": 4,
+    "groups_per_step": 2,
+    "lr": 1e-05,
+    "seed": 20261104,
+    "steps": 3,
+    "task_offset": 0,
+    "tasks": 12,
+    "temperature": 0.7,
+    "top_p": 1.0
+  },
+  "evidence_level": "real RL parameter updates (Train only)",
+  "grpo_config": {
+    "clip_eps_high": 0.2,
+    "clip_eps_low": 0.2,
+    "group_size": 4,
+    "max_grad_norm": 1.0,
+    "max_policy_lag": 0,
+    "normalize_std": true,
+    "temperature": 0.7
+  },
+  "heldout_manifest_loaded": false,
+  "lora": {
+    "lora_rank": 8,
+    "lora_scale": 20.0,
+    "num_layers": 8
+  },
+  "machine": "arm64",
+  "mlx": "0.32.2",
+  "model": {
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "runtime": "mlx==0.32.2, mlx-lm==0.32.2 (requirements/mlsys-agent-mlx.lock.txt)",
+    "target_machine": "Apple M1 Pro, 32 GB unified memory, about 11 GiB free disk"
+  },
+  "optimizer": {
+    "learning_rate": 1e-05,
+    "name": "Adam"
+  },
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "prompt_version": "v1",
+  "sampling": {
+    "distribution": "untruncated softmax(logits / temperature)",
+    "min_p": 0.0,
+    "ratio": "exact (behavior and current log-probs under the sampled distribution)",
+    "temperature": 0.7,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "schema": "vare.grpo_vertical_slice.run/v1",
+  "task_list": "grpo_vertical_slice_smoke_v2.json",
+  "task_list_sha256": "609010224b46c7ed2cd8e1c6c736624d891dbc101736dda859a8cffe98615531"
+}

@@ -1,0 +1,635 @@
+{
+  "analysis": "descriptive only; small n; no significance claims. Regression to the mean is expected for prior_g4 because priors come from the same small samples used to rank.",
+  "base_protocol": {
+    "path": "protocols/coding_policy_learning_mlx_4b_v1.json",
+    "sha256": "b004df4e66e32d235ceaec011492842271a286bec3ffb126b6af8170de53bb77"
+  },
+  "conditions": {
+    "prior_g4": {
+      "group_size": 4,
+      "tasks": [
+        "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58",
+        "andialbrecht__sqlparse.e57923b3.func_basic__udemjzpx",
+        "Suor__funcy.207a7810.func_basic__yz32me5q",
+        "Suor__funcy.207a7810.func_basic__ej2dvaq5",
+        "andialbrecht__sqlparse.e57923b3.func_basic__5btoqors",
+        "Suor__funcy.207a7810.func_basic__395qum1a",
+        "Suor__funcy.207a7810.func_pm_remove_cond__13okbtff",
+        "gweis__isodate.17cb25eb.func_basic__kk2tycil",
+        "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc",
+        "andialbrecht__sqlparse.e57923b3.func_pm_ctrl_invert_if__7iwgl0ru",
+        "andialbrecht__sqlparse.e57923b3.lm_rewrite__pasuag9j",
+        "gweis__isodate.17cb25eb.func_pm_remove_cond__ga7rmrzt",
+        "gweis__isodate.17cb25eb.lm_rewrite__vsq15jdh",
+        "gweis__isodate.17cb25eb.func_basic__xt3b27w3",
+        "gweis__isodate.17cb25eb.func_pm_remove_assign__dlotiwhk",
+        "Suor__funcy.207a7810.func_basic__jtj6rhfx",
+        "luozhouyang__python-string-similarity.115acaac.func_basic__kowr5xy4",
+        "gweis__isodate.17cb25eb.func_basic__nauuyup8",
+        "andialbrecht__sqlparse.e57923b3.func_pm_remove_cond__zkz31yhm",
+        "Suor__funcy.207a7810.combine_file__vc6v1h0h",
+        "andialbrecht__sqlparse.e57923b3.func_basic__0p5g34u4",
+        "andialbrecht__sqlparse.e57923b3.func_basic__z9tph3bv",
+        "andialbrecht__sqlparse.e57923b3.func_basic__7p73klsa",
+        "Suor__funcy.207a7810.lm_rewrite__q5ajdnyg"
+      ]
+    },
+    "uniform_g4": {
+      "group_size": 4,
+      "tasks": [
+        "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58",
+        "Suor__funcy.207a7810.combine_file__vc6v1h0h",
+        "Suor__funcy.207a7810.func_basic__395qum1a",
+        "andialbrecht__sqlparse.e57923b3.func_pm_ctrl_shuffle__h2j5hn43",
+        "Suor__funcy.207a7810.combine_file__kgrqkjkr",
+        "gweis__isodate.17cb25eb.lm_rewrite__cq957cw0",
+        "Suor__funcy.207a7810.combine_file__kf50a2ph",
+        "luozhouyang__python-string-similarity.115acaac.func_basic__mu1u39zx",
+        "gweis__isodate.17cb25eb.func_basic__xt3b27w3",
+        "Suor__funcy.207a7810.func_pm_remove_cond__13okbtff",
+        "andialbrecht__sqlparse.e57923b3.func_basic__5btoqors",
+        "andialbrecht__sqlparse.e57923b3.func_basic__udemjzpx",
+        "Suor__funcy.207a7810.func_basic__djiq70u0",
+        "Suor__funcy.207a7810.func_basic__ej2dvaq5",
+        "andialbrecht__sqlparse.e57923b3.func_pm_remove_cond__zkz31yhm",
+        "gweis__isodate.17cb25eb.combine_file__hgd6petp",
+        "andialbrecht__sqlparse.e57923b3.lm_rewrite__pasuag9j",
+        "luozhouyang__python-string-similarity.115acaac.func_pm_ctrl_shuffle__jhaaq9av",
+        "gweis__isodate.17cb25eb.func_pm_remove_cond__ga7rmrzt",
+        "Suor__funcy.207a7810.combine_file__ek2i9idc",
+        "andialbrecht__sqlparse.e57923b3.func_basic__z9tph3bv",
+        "Suor__funcy.207a7810.combine_file__k1l4autn",
+        "gweis__isodate.17cb25eb.func_basic__lzw8sh9l",
+        "andialbrecht__sqlparse.e57923b3.func_pm_ctrl_shuffle__ailxh5n5"
+      ]
+    },
+    "uniform_g8": {
+      "group_size": 8,
+      "tasks": [
+        "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58",
+        "Suor__funcy.207a7810.combine_file__vc6v1h0h",
+        "Suor__funcy.207a7810.func_basic__395qum1a",
+        "andialbrecht__sqlparse.e57923b3.func_pm_ctrl_shuffle__h2j5hn43",
+        "Suor__funcy.207a7810.combine_file__kgrqkjkr",
+        "gweis__isodate.17cb25eb.lm_rewrite__cq957cw0",
+        "Suor__funcy.207a7810.combine_file__kf50a2ph",
+        "luozhouyang__python-string-similarity.115acaac.func_basic__mu1u39zx",
+        "gweis__isodate.17cb25eb.func_basic__xt3b27w3",
+        "Suor__funcy.207a7810.func_pm_remove_cond__13okbtff",
+        "andialbrecht__sqlparse.e57923b3.func_basic__5btoqors",
+        "andialbrecht__sqlparse.e57923b3.func_basic__udemjzpx"
+      ]
+    }
+  },
+  "decoding": {
+    "max_tokens": "base protocol budgets.inference.max_tokens",
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "label": "exploratory / diagnostic; Train tasks only; no held-out data; no capability claim",
+  "metrics": [
+    "mixed_group_fraction (Wilson 95% interval)",
+    "all_zero / all_one groups",
+    "wasted_generations (in zero-variance groups) and informative_generation_fraction",
+    "sec_per_rollout (generation + grading)",
+    "MLX peak, available memory, swap, memory_pressure, thermal"
+  ],
+  "policy": "base model, no adapter (identical to LoRA B = 0)",
+  "pool": {
+    "rule": "admitted Train tasks with a prior estimate",
+    "size": 56
+  },
+  "prior": {
+    "per_task": {
+      "Suor__funcy.207a7810.combine_file__ek2i9idc": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.combine_file__k1l4autn": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.combine_file__kf50a2ph": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.combine_file__kgrqkjkr": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.combine_file__pljdqiv1": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.combine_file__vc6v1h0h": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.combine_file__x41e9c6r": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.func_basic__395qum1a": {
+        "k": 1,
+        "n": 4,
+        "p_hat": 0.25,
+        "p_mixed_g4": 0.68254,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.func_basic__djiq70u0": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.func_basic__ej2dvaq5": {
+        "k": 1,
+        "n": 4,
+        "p_hat": 0.25,
+        "p_mixed_g4": 0.68254,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.func_basic__jtj6rhfx": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.func_basic__rjme0mk4": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.func_basic__ytdcveea": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.func_basic__yz32me5q": {
+        "k": 1,
+        "n": 4,
+        "p_hat": 0.25,
+        "p_mixed_g4": 0.68254,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.func_pm_remove_cond__13okbtff": {
+        "k": 3,
+        "n": 4,
+        "p_hat": 0.75,
+        "p_mixed_g4": 0.68254,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "Suor__funcy.207a7810.lm_rewrite__q5ajdnyg": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_basic__0p5g34u4": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_basic__5btoqors": {
+        "k": 1,
+        "n": 4,
+        "p_hat": 0.25,
+        "p_mixed_g4": 0.68254,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_basic__6ynwvf2x": {
+        "k": 4,
+        "n": 4,
+        "p_hat": 1.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_basic__7p73klsa": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_basic__jtrnlrsv": {
+        "k": 4,
+        "n": 4,
+        "p_hat": 1.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_basic__udemjzpx": {
+        "k": 2,
+        "n": 4,
+        "p_hat": 0.5,
+        "p_mixed_g4": 0.761905,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_basic__z9tph3bv": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_pm_ctrl_invert_if__7iwgl0ru": {
+        "k": 3,
+        "n": 4,
+        "p_hat": 0.75,
+        "p_mixed_g4": 0.68254,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_pm_ctrl_shuffle__ailxh5n5": {
+        "k": 4,
+        "n": 4,
+        "p_hat": 1.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_pm_ctrl_shuffle__h2j5hn43": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_pm_ctrl_shuffle__y5g83kgt": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_pm_remove_assign__42ykj2aj": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.func_pm_remove_cond__zkz31yhm": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.lm_rewrite__0qtktjte": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.lm_rewrite__p0blmeky": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "andialbrecht__sqlparse.e57923b3.lm_rewrite__pasuag9j": {
+        "k": 4,
+        "n": 4,
+        "p_hat": 1.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "gweis__isodate.17cb25eb.combine_file__0ughdbtx": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "gweis__isodate.17cb25eb.combine_file__1k8q4a9v": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "gweis__isodate.17cb25eb.combine_file__52lz2sm6": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "gweis__isodate.17cb25eb.combine_file__hgd6petp": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "gweis__isodate.17cb25eb.func_basic__3roqi4en": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "gweis__isodate.17cb25eb.func_basic__g7cnu9hd": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "gweis__isodate.17cb25eb.func_basic__kk2tycil": {
+        "k": 1,
+        "n": 4,
+        "p_hat": 0.25,
+        "p_mixed_g4": 0.68254,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "gweis__isodate.17cb25eb.func_basic__lzw8sh9l": {
+        "k": 4,
+        "n": 4,
+        "p_hat": 1.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "gweis__isodate.17cb25eb.func_basic__nauuyup8": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "gweis__isodate.17cb25eb.func_basic__xt3b27w3": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "gweis__isodate.17cb25eb.func_pm_remove_assign__dlotiwhk": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "gweis__isodate.17cb25eb.func_pm_remove_cond__ga7rmrzt": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "gweis__isodate.17cb25eb.lm_rewrite__cq957cw0": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "gweis__isodate.17cb25eb.lm_rewrite__vsq15jdh": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "run-001/rollouts"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.combine_file__cu1lt1by": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58": {
+        "k": 2,
+        "n": 4,
+        "p_hat": 0.5,
+        "p_mixed_g4": 0.761905,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.func_basic__0w9pdflo": {
+        "k": 4,
+        "n": 4,
+        "p_hat": 1.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.func_basic__1ouyfaee": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.func_basic__kowr5xy4": {
+        "k": 4,
+        "n": 4,
+        "p_hat": 1.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.func_basic__mu1u39zx": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc": {
+        "k": 1,
+        "n": 4,
+        "p_hat": 0.25,
+        "p_mixed_g4": 0.68254,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.func_pm_class_rm_funcs__c79l98k5": {
+        "k": 0,
+        "n": 4,
+        "p_hat": 0.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.func_pm_ctrl_shuffle__jhaaq9av": {
+        "k": 4,
+        "n": 4,
+        "p_hat": 1.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      },
+      "luozhouyang__python-string-similarity.115acaac.func_pm_ctrl_shuffle__llhbww8d": {
+        "k": 4,
+        "n": 4,
+        "p_hat": 1.0,
+        "p_mixed_g4": 0.436508,
+        "sources": [
+          "smoke-001/survey"
+        ]
+      }
+    },
+    "rule": "score = posterior-predictive P(mixed group of G=4) under Beta(1+k, 1+n-k); rank descending; ties by sha256(f'{seed}:{instance_id}')",
+    "sources": {
+      "run-001/rollouts": {
+        "file": "run-001 rollouts/graded.jsonl (not committed; contains completion text)",
+        "rows": 160,
+        "sha256": "cb18ed4af65a4f542008a49b6a42d8c8ee3b848cf0775ea292e47f63a9e121b3"
+      },
+      "smoke-001/survey": {
+        "file": "results/grpo-vertical-slice/smoke-001/samples.jsonl",
+        "sha256": "69e77ee2e5a64e5057a821bee0e50c8235744f1bd5a764fb295508eb6f6acf81"
+      }
+    }
+  },
+  "question": "Mixed-group fraction and wasted generations per rollout budget under three Train task/group-size samplers",
+  "rollout_budget_per_condition": 96,
+  "rollout_seed": "int(sha256(f'study-v1:{condition}:{instance_id}:{k}')[:8], 16)",
+  "schedule": "groups interleaved across conditions round-robin (uniform_g4, uniform_g8, prior_g4), each condition in its listed order",
+  "schema": "vare.grpo_group_informativeness.protocol/v1",
+  "seed": 20261101,
+  "stop_rules": {
+    "action": "stop before the next group; record the reason; report partial conditions as such",
+    "memory_free_pct_min": 15,
+    "swap_used_fraction_max": 0.97,
+    "wall_clock_s": 5100
+  },
+  "verifier": "trusted_full_v1 via scoring.score_candidate, timeout from base protocol"
+}

@@ -1,0 +1,65 @@
+{
+  "conditions": {
+    "prior_g4": {
+      "all_one_groups": 3,
+      "all_zero_groups": 14,
+      "complete": true,
+      "generations": 96,
+      "group_size": 4,
+      "groups_done": 24,
+      "groups_planned": 24,
+      "informative_generation_fraction": 0.2917,
+      "mean_reward": 0.2708,
+      "mixed_group_fraction": 0.2917,
+      "mixed_group_fraction_wilson95": [
+        0.1491,
+        0.4917
+      ],
+      "mixed_groups": 7,
+      "sec_per_rollout": 10.05,
+      "wasted_generations": 68
+    },
+    "uniform_g4": {
+      "all_one_groups": 4,
+      "all_zero_groups": 14,
+      "complete": true,
+      "generations": 96,
+      "group_size": 4,
+      "groups_done": 24,
+      "groups_planned": 24,
+      "informative_generation_fraction": 0.25,
+      "mean_reward": 0.3125,
+      "mixed_group_fraction": 0.25,
+      "mixed_group_fraction_wilson95": [
+        0.12,
+        0.449
+      ],
+      "mixed_groups": 6,
+      "sec_per_rollout": 14.84,
+      "wasted_generations": 72
+    },
+    "uniform_g8": {
+      "all_one_groups": 2,
+      "all_zero_groups": 7,
+      "complete": true,
+      "generations": 96,
+      "group_size": 8,
+      "groups_done": 12,
+      "groups_planned": 12,
+      "informative_generation_fraction": 0.25,
+      "mean_reward": 0.2708,
+      "mixed_group_fraction": 0.25,
+      "mixed_group_fraction_wilson95": [
+        0.0889,
+        0.5323
+      ],
+      "mixed_groups": 3,
+      "sec_per_rollout": 11.46,
+      "wasted_generations": 72
+    }
+  },
+  "label": "exploratory / diagnostic; Train tasks only; no held-out data; no capability claim",
+  "schema": "vare.grpo_group_informativeness.summary/v1",
+  "stopped": null,
+  "wall_clock_s": 3498.5
+}

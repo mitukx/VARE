@@ -215,17 +215,24 @@ LEARNING_PIPELINE_SOURCES = frozenset({
     "src/vare/learning_pipeline/training.py",
 })
 INVENTORY_V4_SOURCES = INVENTORY_V3_SOURCES | LEARNING_PIPELINE_SOURCES
+# v5 adds the MLX GRPO trainer. It is not hash-frozen by the v1 learning
+# protocol (v1 never ran GRPO) and is reached from scripts/grpo_vertical_slice.py.
+GRPO_TRAINER_SOURCES = frozenset({
+    "src/vare/learning_pipeline/grpo_mlx.py",
+})
+INVENTORY_V5_SOURCES = INVENTORY_V4_SOURCES | GRPO_TRAINER_SOURCES
 # Exact-match registry; a campaign is identified by its complete source set.
 SOURCE_INVENTORIES = {
     "v1-pinned": LEGACY_EXPECTED_SOURCES,
     "v2": PREVIOUS_EXPECTED_SOURCES,
     "v3": INVENTORY_V3_SOURCES,
     "v4": INVENTORY_V4_SOURCES,
+    "v5": INVENTORY_V5_SOURCES,
 }
-CURRENT_SOURCE_INVENTORY = "v4"
+CURRENT_SOURCE_INVENTORY = "v5"
 EXPECTED_SOURCES = SOURCE_INVENTORIES[CURRENT_SOURCE_INVENTORY]
 # Versions whose campaigns record the recovery endpoint at the resumed-round end.
-EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4"})
+EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5"})
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.
