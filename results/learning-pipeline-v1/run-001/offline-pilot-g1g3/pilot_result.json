@@ -1,0 +1,83 @@
+{
+ "summary": {
+  "prereg_sha256": "be5579fde3971c04da56cf9db033e95c381698f5c1f62e0e33c3953a8f10e887",
+  "input_sha256": "cb18ed4af65a4f542008a49b6a42d8c8ee3b848cf0775ea292e47f63a9e121b3",
+  "n_rollouts": 160,
+  "n_groups": 40,
+  "group_sizes": [
+   4
+  ],
+  "dropped_groups_lt2": 0,
+  "n_repos": 3,
+  "trusted_pass": 32,
+  "cheap_nat_pass": 32,
+  "nat_false_pos": 0,
+  "nat_false_neg": 0,
+  "nat_rho0": 0.0,
+  "nat_rho0_wilson95": [
+   0.0,
+   0.0291
+  ],
+  "nat_rho1": 0.0,
+  "nat_rho1_wilson95": [
+   0.0,
+   0.1072
+  ],
+  "cheap_direct_vs_derived_disagree": 0,
+  "reward_vs_trusted_tests_mismatch": 0,
+  "cheap_passed_vs_tests_mismatch": 0,
+  "informative_groups": 7,
+  "abort": true,
+  "kappa_trusted_median_s": 0.577,
+  "prereg_overridden": false
+ },
+ "settings": {},
+ "verdict": {
+  "G1": "inconclusive",
+  "G3": "inconclusive",
+  "reason": "informative groups below the pre-registered minimum"
+ },
+ "prereg": {
+  "version": "g1g3-offline-pilot-v2",
+  "supersedes": "g1g3-offline-pilot-v1 sha256 90dd5a9e05b15880d1a2744e9956e6569df795a329924723d8b985ec47069bdd",
+  "change_note": "primary metric changed from advantage MSE (minimised by shrinking advantages to 0; audit-only won on synthetic data) to linear-proxy gradient alignment cos(A_hat, A*); made before any real rollout log was opened",
+  "primary_metric": "E_seed[cos(A_hat, A*)] pooled over all rollouts; cos := 0 if A_hat == 0",
+  "secondary_metrics": [
+   "mse",
+   "mse_over_zero_baseline",
+   "sign_accuracy_nonzero_A*",
+   "rft_false_accept_rate"
+  ],
+  "budget_fraction": 0.1,
+  "pi_min": 0.05,
+  "syn_settings": [
+   [
+    0.1,
+    0.1
+   ],
+   [
+    0.3,
+    0.1
+   ],
+   [
+    0.1,
+    0.3
+   ]
+  ],
+  "n_seeds": 200,
+  "n_boot": 2000,
+  "ci": 0.95,
+  "min_informative_groups": 8,
+  "advantage": "(r - mean_g) / (std_g + 1e-8), population std, zero for constant groups",
+  "rft_max_per_task": 2,
+  "g1_supported": "dcos_G1 = cos(B4)-cos(B2): CI lower > 0 in all syn settings and in nat",
+  "g1_rejected": "dcos_G1 CI upper < 0 in syn (0.1, 0.1)",
+  "g1_weak_novelty": "cos(B4)-cos(B5) CI contains 0 in nat (reported as a flag only)",
+  "g3_supported": "rel = ((1-cos B6)-(1-cos B4))/(1-cos B4) <= -0.10 (point) with CI upper < 0 in >= 2 syn settings, mean false-accept(B6) <= false-accept(B4) + 0.02, and rel(B6_no_s) > rel(B6) (point; ablation shrinks the gain)",
+  "g3_rejected": "not supported and, in >= 2 syn settings, rel CI lower > -0.05 and CI upper >= 0",
+  "g3_rel_threshold": -0.1,
+  "g3_reject_margin": -0.05,
+  "m3_tolerance": 0.02,
+  "otherwise": "inconclusive"
+ }
+}
