@@ -21,7 +21,8 @@ if
   path has appeared (the regenerated mapping differs from the committed one);
 * a copy or the README table differs from its regenerated form;
 * a JSON / JSON Lines copy is invalid or is not the original structure with redacted strings;
-* a copy still contains a host path, or a file without a copy contains one and is not excluded.
+* a copy still contains a host path or a JUnit XML testsuite ``hostname`` value other than the
+  placeholder, or a file without a copy contains one and is not excluded.
 
 Usage:
   python scripts/redact_host_paths_public.py --write   # regenerate copies, MAPPING.json, README table
@@ -81,6 +82,31 @@ PLACEHOLDERS = {
     "<REPO_ROOT>": "repository checkout on a mounted data volume",
     "<DATA_CACHE>": "dataset cache directory on the data-preparation host",
 }
+
+# Machine hostname recorded by JUnit XML reporters on <testsuite>/<testsuites> elements. It is
+# host-specific metadata that is not needed to reproduce a result, so its value is replaced.
+HOSTNAME_PLACEHOLDER = "redacted-host"
+JUNIT_HOSTNAME = re.compile(r'(<testsuites?\b[^>]*?\shostname=)(["\'])((?:(?!\2)[^<>])*)\2')
+JUNIT_HOSTNAME_MEANING = "machine hostname in a JUnit XML testsuite element"
+
+
+def redact_junit_hostnames(text: str) -> tuple[str, int]:
+    """Replace JUnit XML ``hostname`` attribute values that are not already the placeholder."""
+    n = 0
+
+    def sub(m: re.Match[str]) -> str:
+        nonlocal n
+        if m.group(3) == HOSTNAME_PLACEHOLDER:
+            return m.group(0)
+        n += 1
+        return f"{m.group(1)}{m.group(2)}{HOSTNAME_PLACEHOLDER}{m.group(2)}"
+
+    return JUNIT_HOSTNAME.sub(sub, text), n
+
+
+def junit_hostname_hits(text: str) -> list[str]:
+    return sorted({m.group(3) for m in JUNIT_HOSTNAME.finditer(text) if m.group(3) != HOSTNAME_PLACEHOLDER})
+
 
 # Anything that looks like an absolute host path. The look-behind skips relative paths such as
 # ``task/workspace/public`` or ``../work/private/x``.
@@ -147,6 +173,9 @@ def redact_text(text: str) -> tuple[str, dict[str, int]]:
         text, n = re.subn(pattern, placeholder, text)
         if n:
             counts[placeholder] = counts.get(placeholder, 0) + n
+    text, n = redact_junit_hostnames(text)
+    if n:
+        counts[HOSTNAME_PLACEHOLDER] = n
     return text, counts
 
 
@@ -278,6 +307,8 @@ def build(root: Path = ROOT) -> tuple[dict[str, Any], dict[Path, bytes], list[st
                  "substitutions": [{"pattern": p, "placeholder": ph} for p, ph in RULES],
                  "placeholders": PLACEHOLDERS,
                  "verification_pattern": HOST_PATH.pattern,
+                 "junit_hostname": {"pattern": JUNIT_HOSTNAME.pattern, "value_group": 3,
+                                    "placeholder": HOSTNAME_PLACEHOLDER, "meaning": JUNIT_HOSTNAME_MEANING},
                  "non_host_forms": [{"pattern": p, "meaning": m} for p, m in NON_HOST]},
         "totals": {"copied_files": len(files),
                    "replacements": sum(sum(f["replacements"].values()) for f in files),
@@ -328,6 +359,9 @@ def _committed_text_hits(root: Path) -> list[str]:
         hits = host_path_hits(text)
         if hits:
             problems.append(f"{p.relative_to(root).as_posix()}: host path present: {hits}")
+        names = junit_hostname_hits(text)
+        if names:
+            problems.append(f"{p.relative_to(root).as_posix()}: JUnit hostname present: {len(names)} value(s)")
     return problems
 
 

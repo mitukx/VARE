@@ -209,3 +209,22 @@ def test_sibling_tree_files_are_not_copied_twice(tmp_path: Path) -> None:
 
 def test_committed_copies_verify() -> None:
     assert red.check(ROOT) == []
+
+
+def test_junit_hostname_attributes_are_replaced() -> None:
+    xml = ('<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests">'
+           '<testsuite name="pytest" errors="0" tests="1" hostname="build-box-07.example">'
+           f'<testcase classname="t" name="a" file="{SESSION}/t.py"/></testsuite>'
+           "<testsuite name='other' hostname='ci-node.internal'></testsuite></testsuites>")
+    out, counts = red.redact_text(xml)
+    assert "build-box-07.example" not in out and "ci-node.internal" not in out
+    assert 'hostname="redacted-host"' in out and "hostname='redacted-host'" in out
+    assert counts == {"<SESSION_ROOT>": 1, "redacted-host": 2}
+    assert red.redact_text(out) == (out, {})
+    assert red.junit_hostname_hits(xml) == ["build-box-07.example", "ci-node.internal"]
+    assert red.junit_hostname_hits(out) == []
+
+
+def test_hostname_outside_junit_testsuite_is_kept() -> None:
+    text = '<testcase name="x" hostname="kept"/> {"hostname": "kept"} hostname="kept"'
+    assert red.redact_text(text) == (text, {})

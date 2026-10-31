@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="15" time="8.709" timestamp="2026-10-15T11:20:13.282210+09:00" hostname="UK-2.local"><testcase classname="tests.test_checkpoint_read_bounds" name="test_fifo_is_rejected_without_waiting_for_writer[register]" time="2.014"><failure message="Failed: checkpoint register blocked on FIFO: ready">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-188/test_fifo_is_rejected_without_0')
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="15" time="8.709" timestamp="2026-10-15T11:20:13.282210+09:00" hostname="redacted-host"><testcase classname="tests.test_checkpoint_read_bounds" name="test_fifo_is_rejected_without_waiting_for_writer[register]" time="2.014"><failure message="Failed: checkpoint register blocked on FIFO: ready">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-188/test_fifo_is_rejected_without_0')
 operation = 'register'
 
     @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")

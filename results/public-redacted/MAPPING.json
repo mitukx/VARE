@@ -393,7 +393,7 @@
     {
       "path": "scripts/redact_host_paths_public.py",
       "reason": "redaction script or its test; the paths are patterns and synthetic fixtures",
-      "sha256": "c7afe97e295cae0417e7e1ff02de7bb3b6b0aa565eb14346b391dd059d38f0fc"
+      "sha256": "a628358520ef489de7ec2cbc5b9b208b542acfce3b55d0908d3a3e1b0afd537b"
     },
     {
       "path": "scripts/redact_learning_pipeline_v1_public.py",
@@ -443,7 +443,7 @@
     {
       "path": "tests/test_redact_host_paths_public.py",
       "reason": "redaction script or its test; the paths are patterns and synthetic fixtures",
-      "sha256": "98779b2b94a32ed8f1285a3a00e6e5d210c300d2ae7693f6a001fcc031b4c72f"
+      "sha256": "3222de90e37df8a538413b2a44434a22fc09b2f0e94d30d80e928620d7559b9f"
     },
     {
       "path": "tests/test_redact_learning_pipeline_v1_public.py",
@@ -666,12 +666,13 @@
       "original_bytes": 31122,
       "original_sha256": "c85e9c71c58e26b984d1845450a838b974f264fbea9374f36115eaf08244a13c",
       "redacted": "results/public-redacted/results/checkpoint-read-bounds-v1/comparison-v3/baseline-pytest.xml",
-      "redacted_bytes": 30120,
-      "redacted_sha256": "80f021ffb8e98ae04abb0a772167a20a56bc281353b7b35b5ca21c95beadff51",
+      "redacted_bytes": 30123,
+      "redacted_sha256": "8cb3fecc109e49ee158e512846622681dc8cd5625d1b419e74c1cee73104d113",
       "replacements": {
         "<HOMEBREW_PREFIX>": 9,
         "<SESSION_ROOT>": 6,
-        "<TMPDIR>": 16
+        "<TMPDIR>": 16,
+        "redacted-host": 1
       }
     },
     {
@@ -736,12 +737,13 @@
       "original_bytes": 31717,
       "original_sha256": "ac7d790fe8f259f831a362eee6cefcf0bc0f350205db69d31c9cbdc77a588f56",
       "redacted": "results/public-redacted/results/checkpoint-read-bounds-v1/comparison-v4/baseline-pytest.xml",
-      "redacted_bytes": 30715,
-      "redacted_sha256": "d2e0421fb08675cdc69583e039aa6e81dbd23d409d081793286e7a7da40bcc6e",
+      "redacted_bytes": 30718,
+      "redacted_sha256": "5aeb92d8cbf8b8359650b274d90f2103681cc7331def23c8257bab68a8249791",
       "replacements": {
         "<HOMEBREW_PREFIX>": 9,
         "<SESSION_ROOT>": 6,
-        "<TMPDIR>": 16
+        "<TMPDIR>": 16,
+        "redacted-host": 1
       }
     },
     {
@@ -806,12 +808,13 @@
       "original_bytes": 31715,
       "original_sha256": "f7f1049bda28eb2b0290abd60d4588e2cadbe98952961696a9f31274d4500f3d",
       "redacted": "results/public-redacted/results/checkpoint-read-bounds-v1/comparison-v5/baseline-pytest.xml",
-      "redacted_bytes": 30713,
-      "redacted_sha256": "7da22209d740feffa3415e6da8f23f820490f673f40048b1de1ddd45754cd8dd",
+      "redacted_bytes": 30716,
+      "redacted_sha256": "76c45fa450281eb90396de0fbfea5c8154f41a1deb7f843ead55745923027cd5",
       "replacements": {
         "<HOMEBREW_PREFIX>": 9,
         "<SESSION_ROOT>": 6,
-        "<TMPDIR>": 16
+        "<TMPDIR>": 16,
+        "redacted-host": 1
       }
     },
     {
@@ -874,10 +877,11 @@
       "original_bytes": 108900,
       "original_sha256": "0933e784b952dfae9d6641e0bccb5adb8d396d6e76df15fa693b04972bcefb27",
       "redacted": "results/public-redacted/results/checkpoint-read-bounds-v1/final-suite.xml",
-      "redacted_bytes": 107720,
-      "redacted_sha256": "cfd96080608de79bc72e4c637c87a0a5492113ee0079c0c878a75c477bc35c41",
+      "redacted_bytes": 107723,
+      "redacted_sha256": "332ef3128ec3fc3736535234d3f8c5186380811160e7d67dcbe5889001c14c2c",
       "replacements": {
-        "<SESSION_ROOT>": 20
+        "<SESSION_ROOT>": 20,
+        "redacted-host": 1
       }
     },
     {
@@ -908,11 +912,12 @@
       "original_bytes": 1346,
       "original_sha256": "3193a35b33a7192c4ae525439b2bae1bd606b2887c14f420000e1a73e58624c7",
       "redacted": "results/public-redacted/results/checkpoint-read-bounds-v1/full-suite.xml",
-      "redacted_bytes": 1232,
-      "redacted_sha256": "30cfc3af84b08daa6e392fd3ec0b17fc6b6f830d01af8ad1f007b491a7675918",
+      "redacted_bytes": 1235,
+      "redacted_sha256": "1dbb4028442e9ba72d9229ae788c61e7086228df6bc190967ce84b7792d6d931",
       "replacements": {
         "<HOMEBREW_PREFIX>": 1,
-        "<SESSION_ROOT>": 2
+        "<SESSION_ROOT>": 2,
+        "redacted-host": 1
       }
     },
     {
@@ -931,10 +936,11 @@
       "original_bytes": 108657,
       "original_sha256": "260b0ed66b37912c9b730e4d015b66185bbcb0c51d9032cb52a6ae9fd077f4b0",
       "redacted": "results/public-redacted/results/checkpoint-read-bounds-v1/integrated-complete-suite.xml",
-      "redacted_bytes": 107831,
-      "redacted_sha256": "7c325e3a8cd46b03f9b55b417d354742978aff560471b48f40b70b6face80907",
+      "redacted_bytes": 107834,
+      "redacted_sha256": "07dbc65f9f92daa3fbaa3a9c63e816497dffb8791bfaabea0e6543c51d0afe1a",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -955,12 +961,13 @@
       "original_bytes": 128046,
       "original_sha256": "867ff08aaff3dd9421a53d85595861ef55ed141c1de7b3d8823bcb992a0e157c",
       "redacted": "results/public-redacted/results/checkpoint-read-bounds-v1/integrated-final-suite.xml",
-      "redacted_bytes": 125606,
-      "redacted_sha256": "0ecbbb625b71fbee510033a941e83590af243dc79d9bc504c5fe21b28b0cb4ef",
+      "redacted_bytes": 125609,
+      "redacted_sha256": "475498bc790a4aa6f263ab5053e263853e3d8b601ac887f6dc073bec014fded0",
       "replacements": {
         "<HOMEBREW_PREFIX>": 6,
         "<SESSION_ROOT>": 32,
-        "<TMPDIR>": 12
+        "<TMPDIR>": 12,
+        "redacted-host": 1
       }
     },
     {
@@ -990,10 +997,11 @@
       "original_bytes": 105675,
       "original_sha256": "b56d64edd38ea7254fddf705ab0d075d4b701c5682dcf078ce392b18baa3f186",
       "redacted": "results/public-redacted/results/checkpoint-read-bounds-v1/suite-v3.xml",
-      "redacted_bytes": 104849,
-      "redacted_sha256": "5edbfaecc86eed91eb818aede378fa57816f6017a731ac365e5e4d25acbd0c6c",
+      "redacted_bytes": 104852,
+      "redacted_sha256": "e499e6e0e2dde5d0ca88b79d837c9098cbff80745fa81e5e4ef0d2320de7191a",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1092,10 +1100,11 @@
       "original_bytes": 19737,
       "original_sha256": "e15647b220e964aa69b28eeae5b25d8203e5d534d14c98daf1bd699a88bfcbb6",
       "redacted": "results/public-redacted/results/durable-runtime-source-v1/development-baseline/tests.xml",
-      "redacted_bytes": 19065,
-      "redacted_sha256": "9fc983cc98d0025c0697d3961e3595b1f8d75c133e8e1f382290c6f266db5063",
+      "redacted_bytes": 19068,
+      "redacted_sha256": "d75401e7481425423897248d2ad4a89bbf63044fef72be6a0e727577fb650b65",
       "replacements": {
-        "<TMPDIR>": 14
+        "<TMPDIR>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1114,10 +1123,11 @@
       "original_bytes": 129287,
       "original_sha256": "11bfddc08ce0e1d046de0fdb7d0363e6f05a2ac8c5e35186947275fe58b6efcf",
       "redacted": "results/public-redacted/results/durable-runtime-source-v1/final-tests.xml",
-      "redacted_bytes": 128461,
-      "redacted_sha256": "aa0e0c325e4d1acdfbc841a32d6abc33dccc09e8495c59c024f8f034199f0754",
+      "redacted_bytes": 128464,
+      "redacted_sha256": "facfb0067f618dccd8b735ce6e48b2b0a8686a8ac908ca400dcfe785261d929b",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1136,10 +1146,11 @@
       "original_bytes": 128520,
       "original_sha256": "c26e5322a046230bfd61bdbfee6b737aa96f41e74456ee1408ff0cb3a94090e6",
       "redacted": "results/public-redacted/results/durable-runtime-source-v1/full-tests.xml",
-      "redacted_bytes": 127694,
-      "redacted_sha256": "7765b9c226acad9538c1639a6beae775620c63b241e816839b88717b11f56cb3",
+      "redacted_bytes": 127697,
+      "redacted_sha256": "2dd3184cf98c37d745496fc63dc3a8107205fe3d68aae9bd8c9701b432ae6869",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1395,11 +1406,12 @@
       "original_bytes": 55102,
       "original_sha256": "bba7b2deb9fe8b6d578c8d3d21f4715feec3a42ccad82b0a2f2d69cbd8a5e5d4",
       "redacted": "results/public-redacted/results/engine-evaluation-lifecycle-v1/baseline-pytest.xml",
-      "redacted_bytes": 54884,
-      "redacted_sha256": "97e6b432a731b1066cfb31c0c1b16cc027996a334837c3225ac05a97b6264553",
+      "redacted_bytes": 54887,
+      "redacted_sha256": "ad8033ba5181ff67801cb0b667b502e8e1ceb9c074a5d88eee3ba565202e1083",
       "replacements": {
         "<HOMEBREW_PREFIX>": 48,
-        "<TMPDIR>": 14
+        "<TMPDIR>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1645,10 +1657,11 @@
       "original_bytes": 117819,
       "original_sha256": "e921717d1c4a4fcd61252690b2c941bb5ed36757864b8c08b174fb42d1ffbede",
       "redacted": "results/public-redacted/results/grader-owner-loss-v1/ci-followup/full-tests.xml",
-      "redacted_bytes": 116993,
-      "redacted_sha256": "a85846ac92c5255b5f6a049c26eead5ca4fcdace2362629618672e48b0ec7f09",
+      "redacted_bytes": 116996,
+      "redacted_sha256": "36cf1daecab21eb816d5e4403b2e12d57f676790525a0e4ec9441a1687921673",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1679,10 +1692,11 @@
       "original_bytes": 117336,
       "original_sha256": "c0b8811a0d0461f44d616c01a24bf637ec781de8cd52afc14a55c6bf8e70e000",
       "redacted": "results/public-redacted/results/grader-owner-loss-v1/complete-tests.xml",
-      "redacted_bytes": 116510,
-      "redacted_sha256": "5d377da183e9d6a5bb574824843151a0dc24e1dfbb748b65cc4db07daefd54d8",
+      "redacted_bytes": 116513,
+      "redacted_sha256": "30997e09d1c97b442d5704e3342a7692bf2a9f3d56579fea7ffc986834e1c1a7",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1702,10 +1716,11 @@
       "original_bytes": 7611,
       "original_sha256": "6a38c5c31b70bf4569a2d223e55a495842f5d3237162ffc999f7adf4c98b8a52",
       "redacted": "results/public-redacted/results/grader-owner-loss-v1/development-baseline/tests.xml",
-      "redacted_bytes": 7467,
-      "redacted_sha256": "71e435129c1bd9ec8297940e3fe957a59ce0b9e19e41c5e165171ad6308222d2",
+      "redacted_bytes": 7470,
+      "redacted_sha256": "3c7b7f3f34c878c39404f3f0a809b842faaa58f8760fd7fd08379d0a059f9f2a",
       "replacements": {
-        "<TMPDIR>": 3
+        "<TMPDIR>": 3,
+        "redacted-host": 1
       }
     },
     {
@@ -1769,10 +1784,11 @@
       "original_bytes": 117564,
       "original_sha256": "ac7b7985d253b07074d61d9ad92f786cbdbda141af858384bcd0507a0670db93",
       "redacted": "results/public-redacted/results/grader-owner-loss-v1/final-source-tests.xml",
-      "redacted_bytes": 116738,
-      "redacted_sha256": "1b5bf92bf56870144cd1f4f58f82eb3c3542e8ab392a0ce5c3787d2cbf358873",
+      "redacted_bytes": 116741,
+      "redacted_sha256": "930f73609a7cafbf832dd323fa57e6b35a4c122f296a53f0b4e7623448d74cd1",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1791,10 +1807,11 @@
       "original_bytes": 116924,
       "original_sha256": "12c68c0fc5f64fc96cc72112bad32849a7f8e19db005ffbca3be2d0fdfd5b282",
       "redacted": "results/public-redacted/results/grader-owner-loss-v1/final-tests.xml",
-      "redacted_bytes": 116098,
-      "redacted_sha256": "d341ffbbdb79cc44ae52ebcff82205d4a6070d2ccf6a90f36d66667b12cc933b",
+      "redacted_bytes": 116101,
+      "redacted_sha256": "6676e2e60792afda661c64dc5b2becaa959e35a90a59b44548d4752b04e7dc33",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1813,10 +1830,11 @@
       "original_bytes": 115101,
       "original_sha256": "6be5a0f48fda0218edd861df15f4e1325fda25d5fbef85119764d957cb29ab75",
       "redacted": "results/public-redacted/results/grader-owner-loss-v1/full-tests.xml",
-      "redacted_bytes": 114275,
-      "redacted_sha256": "b1cdf8be4a8dfe7cc9b7b86be227e25bc3345818afb07a33d8d9620393a669c6",
+      "redacted_bytes": 114278,
+      "redacted_sha256": "b0c1364633571f599bad906a444e5231aab5178e9d0406ae3fe24fdf890d8915",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -1846,10 +1864,11 @@
       "original_bytes": 117445,
       "original_sha256": "ee682f3c047d0d32d613630472c9e76e5d27032a86698e934b1f08f031e280e5",
       "redacted": "results/public-redacted/results/grader-owner-loss-v1/release-tests.xml",
-      "redacted_bytes": 116619,
-      "redacted_sha256": "68de9cdf434c6f5c8cfa56f2361f6f875101803c85a1a57ed8c68bdb9513bb8a",
+      "redacted_bytes": 116622,
+      "redacted_sha256": "2e09cbafd64cc598d4550c34839e32366c55c5cbb4594b706f16bc8888c35739",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -3328,11 +3347,12 @@
       "original_bytes": 35414,
       "original_sha256": "e7e7732e991868bb49dab958b3bb4b18d02cf4064615562da4f4829bb09f415e",
       "redacted": "results/public-redacted/results/rvl-inference-transaction-v1/alias_only-pytest.xml",
-      "redacted_bytes": 35166,
-      "redacted_sha256": "a1749d46c05c4eef806f7b56739e55bf50a6a0fa61070bda717ce9ca2306dd53",
+      "redacted_bytes": 35169,
+      "redacted_sha256": "5435d141fbc54fa26b39e56432ff1902f30019fe5fd647f64a32cbce71c573bd",
       "replacements": {
         "<HOMEBREW_PREFIX>": 18,
-        "<TMPDIR>": 8
+        "<TMPDIR>": 8,
+        "redacted-host": 1
       }
     },
     {
@@ -3353,11 +3373,12 @@
       "original_bytes": 38855,
       "original_sha256": "9e6d08b234f61363f730dc9824dd1feb08ff7b715341d8a0adb31f4d9e66b07b",
       "redacted": "results/public-redacted/results/rvl-inference-transaction-v1/baseline-pytest.xml",
-      "redacted_bytes": 38607,
-      "redacted_sha256": "74e245998b3edfd5db209696aabd58845dee5eeaed895c0d39575c8e7b27df1a",
+      "redacted_bytes": 38610,
+      "redacted_sha256": "fc13d372a44f569bd22a46300c2d9c2f95feb65f9d52fe658a2c90311be0e96e",
       "replacements": {
         "<HOMEBREW_PREFIX>": 18,
-        "<TMPDIR>": 8
+        "<TMPDIR>": 8,
+        "redacted-host": 1
       }
     },
     {
@@ -3402,11 +3423,12 @@
       "original_bytes": 35414,
       "original_sha256": "2a36bc3fba6f86dfdaeb80fa7dc3829255849a5522cac5c1dfc99d7856938bc7",
       "redacted": "results/public-redacted/results/rvl-inference-transaction-v1/integration-main-1e7fda8/alias_only-pytest.xml",
-      "redacted_bytes": 35166,
-      "redacted_sha256": "a2cb1208e845ae2872a09311cdc2528a938e6e41a748429a8c95dbd0b374474d",
+      "redacted_bytes": 35169,
+      "redacted_sha256": "a43c160f95addb631707652eb8fac2fdc33d923752e3fbb63a8c321e239331d8",
       "replacements": {
         "<HOMEBREW_PREFIX>": 18,
-        "<TMPDIR>": 8
+        "<TMPDIR>": 8,
+        "redacted-host": 1
       }
     },
     {
@@ -3427,11 +3449,12 @@
       "original_bytes": 38855,
       "original_sha256": "2d6b5dbd8e020fac7a7543e28826a58781bbbf8714ca03e9c8432198d87366c3",
       "redacted": "results/public-redacted/results/rvl-inference-transaction-v1/integration-main-1e7fda8/baseline-pytest.xml",
-      "redacted_bytes": 38607,
-      "redacted_sha256": "d1c827addc60810266f6b25dac13a0f321c39bb3c3978bc0ec7d2d2cb4cd7d5d",
+      "redacted_bytes": 38610,
+      "redacted_sha256": "98c48fae8de563bdf153f5e3102032bb628b0f4672d597d16bbd76d7a60a1819",
       "replacements": {
         "<HOMEBREW_PREFIX>": 18,
-        "<TMPDIR>": 8
+        "<TMPDIR>": 8,
+        "redacted-host": 1
       }
     },
     {
@@ -3475,11 +3498,12 @@
       "original_bytes": 35462,
       "original_sha256": "b92d6573184719caeaebbea23cac4811e094410959f32643d9d828efdb913084",
       "redacted": "results/public-redacted/results/rvl-inference-transaction-v1/integration-main-1e7fda8/integration_main-pytest.xml",
-      "redacted_bytes": 35214,
-      "redacted_sha256": "e3651bd78408467cd19aed72b7aee1a7a7d1c25b68bcaecc6e53bb47368819c6",
+      "redacted_bytes": 35217,
+      "redacted_sha256": "bdd6f6a67d3fbc2a476fe78bc2a6ef87dd32aa3313d20237f53e9a09699c6a09",
       "replacements": {
         "<HOMEBREW_PREFIX>": 18,
-        "<TMPDIR>": 8
+        "<TMPDIR>": 8,
+        "redacted-host": 1
       }
     },
     {
@@ -3487,11 +3511,12 @@
       "original_bytes": 35414,
       "original_sha256": "925050048ed5e281c256d699ef332bc46feff19cfdb6d1a8175ececedb52709c",
       "redacted": "results/public-redacted/results/rvl-inference-transaction-v1/pr58-freshness-compat/alias_only-pytest.xml",
-      "redacted_bytes": 35166,
-      "redacted_sha256": "b533ed697d3cc8acbce563a61cacce36f201a2dd3b5a52193295cdb993236f9d",
+      "redacted_bytes": 35169,
+      "redacted_sha256": "bccfd0753322b474cd91ad7f5cb1f2cb86048c76872bf569896d857f6c128a3a",
       "replacements": {
         "<HOMEBREW_PREFIX>": 18,
-        "<TMPDIR>": 8
+        "<TMPDIR>": 8,
+        "redacted-host": 1
       }
     },
     {
@@ -3499,11 +3524,12 @@
       "original_bytes": 38855,
       "original_sha256": "aa0ae493b5e1ae30b3ace781ab0a5f88b4a71e87ab7f448f8425a49a1431481d",
       "redacted": "results/public-redacted/results/rvl-inference-transaction-v1/pr58-freshness-compat/baseline-pytest.xml",
-      "redacted_bytes": 38607,
-      "redacted_sha256": "29dac858bd40c596ddb79ee2fcfac55e4d01ec0594bd3d7d76a21c7a0308fc6d",
+      "redacted_bytes": 38610,
+      "redacted_sha256": "c7a63186969f63275b75684a02ebc5a78596613d081dd3322ad653d32cea5f89",
       "replacements": {
         "<HOMEBREW_PREFIX>": 18,
-        "<TMPDIR>": 8
+        "<TMPDIR>": 8,
+        "redacted-host": 1
       }
     },
     {
@@ -3511,11 +3537,12 @@
       "original_bytes": 35462,
       "original_sha256": "a16c85232c862642195db07a3904826c3dddbd21d6ead4c0205335b3a1005dd8",
       "redacted": "results/public-redacted/results/rvl-inference-transaction-v1/pr58-freshness-compat/integration_main-pytest.xml",
-      "redacted_bytes": 35214,
-      "redacted_sha256": "4ae24be7a94cfeb7afe3d0ddb825006ede4cd3b0d48f7891c64c3769172b9b68",
+      "redacted_bytes": 35217,
+      "redacted_sha256": "0b8d358079f21cab18003e66713da0436142671e762c31af7ec466121754ed3a",
       "replacements": {
         "<HOMEBREW_PREFIX>": 18,
-        "<TMPDIR>": 8
+        "<TMPDIR>": 8,
+        "redacted-host": 1
       }
     },
     {
@@ -3752,10 +3779,11 @@
       "original_bytes": 6498,
       "original_sha256": "287cdd8bcc13dee7454305e123716d7fe4ce42145f4c67820f4959feca61ebae",
       "redacted": "results/public-redacted/results/seeded-summary-v3/cli-race-baseline.xml",
-      "redacted_bytes": 6402,
-      "redacted_sha256": "425ae5e7901237c767c25606953227d9bd083dcd351019423303f73106498a9f",
+      "redacted_bytes": 6405,
+      "redacted_sha256": "21d350e5012a8791de907a044406297ce03bd0d17bafdf46b70cee46ccbc2c96",
       "replacements": {
-        "<TMPDIR>": 2
+        "<TMPDIR>": 2,
+        "redacted-host": 1
       }
     },
     {
@@ -3993,11 +4021,12 @@
       "original_bytes": 62903,
       "original_sha256": "148738ea6116af4e5491e9b21f35f990db5cbcb104a3cc7771338bc1c6a28983",
       "redacted": "results/public-redacted/results/trajectory-capture-boundary-v1/auditor-review-baseline.xml",
-      "redacted_bytes": 60579,
-      "redacted_sha256": "d0c2441a793bdc320457c7c93901d535c74975aa37accc5ebf5d370ba8cf2caf",
+      "redacted_bytes": 60582,
+      "redacted_sha256": "276ed02a115743113bc4816f71b57e716c8a381a76fccfd1ee919a7475381b39",
       "replacements": {
         "<SESSION_ROOT>": 28,
-        "<TMPDIR>": 14
+        "<TMPDIR>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -4040,11 +4069,12 @@
       "original_bytes": 31962,
       "original_sha256": "d9d6f63c6e965f1ba44074f2adcd01fbf3647362b7845e17acd4134f3ee7f0a5",
       "redacted": "results/public-redacted/results/trajectory-capture-boundary-v1/comparison-v1/baseline-pytest.xml",
-      "redacted_bytes": 31470,
-      "redacted_sha256": "d3fcb306303abe80aa73878b50b754ffbc72843a2a58d92a2951521e7ce3937b",
+      "redacted_bytes": 31473,
+      "redacted_sha256": "ebbe4ac0317e0bc6b27c5eacb320d63a4fd0c45c18795f90c13c5b01d71ae756",
       "replacements": {
         "<HOMEBREW_PREFIX>": 9,
-        "<TMPDIR>": 11
+        "<TMPDIR>": 11,
+        "redacted-host": 1
       }
     },
     {
@@ -4076,11 +4106,12 @@
       "original_bytes": 32204,
       "original_sha256": "73c1847a29fa977fc9da495a53ab25b003e63741191c664c7ab736e752a3d8cb",
       "redacted": "results/public-redacted/results/trajectory-capture-boundary-v1/comparison-v2/baseline-pytest.xml",
-      "redacted_bytes": 31712,
-      "redacted_sha256": "a0651c420b0414c230eec13de990d4e8eb6b969107af12df608a3a7ecaecdb13",
+      "redacted_bytes": 31715,
+      "redacted_sha256": "019bb202597e26447152c1c9e07dd8c36b16054a5c2e625e7ccbd86248854834",
       "replacements": {
         "<HOMEBREW_PREFIX>": 9,
-        "<TMPDIR>": 11
+        "<TMPDIR>": 11,
+        "redacted-host": 1
       }
     },
     {
@@ -4112,11 +4143,12 @@
       "original_bytes": 31962,
       "original_sha256": "534c161da41b45d6dec2e9a2ce24a8a39f030480f7e1cbbdfe8bdd1e59eb17ab",
       "redacted": "results/public-redacted/results/trajectory-capture-boundary-v1/development-baseline/pytest.xml",
-      "redacted_bytes": 31470,
-      "redacted_sha256": "d0a347bbf62370dd017faef89d11fbec02746c093493e7db0b74fa37cded90e1",
+      "redacted_bytes": 31473,
+      "redacted_sha256": "e7028c60941d77527bad50cfd8d0f93b2152130581a2f8dae6687605182ddb9b",
       "replacements": {
         "<HOMEBREW_PREFIX>": 9,
-        "<TMPDIR>": 11
+        "<TMPDIR>": 11,
+        "redacted-host": 1
       }
     },
     {
@@ -4135,10 +4167,11 @@
       "original_bytes": 119583,
       "original_sha256": "609becca4325c7d2355a29a5c6be0a60886d193f97fba577912d8b15ef84372b",
       "redacted": "results/public-redacted/results/trajectory-capture-boundary-v1/final-suite.xml",
-      "redacted_bytes": 118757,
-      "redacted_sha256": "a145b5d33ecdf05c4f089e1888ad4ae53f17b2e2333d77cb939885880a276f10",
+      "redacted_bytes": 118760,
+      "redacted_sha256": "5b601d8c33b32d12df956832808c00d1b706c740bfd304daa27ef4c8e6905779",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -4157,10 +4190,11 @@
       "original_bytes": 117440,
       "original_sha256": "0c6589db4952217d13425b85c8458ea9345341d943ee96819b91382bce1eb13f",
       "redacted": "results/public-redacted/results/trajectory-capture-boundary-v1/full-suite.xml",
-      "redacted_bytes": 116614,
-      "redacted_sha256": "4b9498bdd4ff9223091d217e897324a965c856dced038730946ef75b38182144",
+      "redacted_bytes": 116617,
+      "redacted_sha256": "6f5cb188492b2466d0dae6c2efd2c93890eaceed16e08de584987a10bc44ed10",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -4190,10 +4224,11 @@
       "original_bytes": 119902,
       "original_sha256": "f6e83c463d671caa8d56b38f4eaaa2587e46a120d867c75e6df7e5a9bca2ee3a",
       "redacted": "results/public-redacted/results/trajectory-capture-boundary-v1/review-final-suite.xml",
-      "redacted_bytes": 119076,
-      "redacted_sha256": "8c424930bbcc7ba998aa38903e2f850ba3357dc18867bd1c0cbaa936c905f813",
+      "redacted_bytes": 119079,
+      "redacted_sha256": "e6caec83b353f20e78a8dfc03ed550146e4ee77e0f84743240b5fa01e2075d4a",
       "replacements": {
-        "<SESSION_ROOT>": 14
+        "<SESSION_ROOT>": 14,
+        "redacted-host": 1
       }
     },
     {
@@ -4225,11 +4260,12 @@
       "original_bytes": 32204,
       "original_sha256": "73c1847a29fa977fc9da495a53ab25b003e63741191c664c7ab736e752a3d8cb",
       "redacted": "results/public-redacted/results/trajectory-capture-boundary-v1/review-slice-counterexample/baseline-pytest.xml",
-      "redacted_bytes": 31712,
-      "redacted_sha256": "a0651c420b0414c230eec13de990d4e8eb6b969107af12df608a3a7ecaecdb13",
+      "redacted_bytes": 31715,
+      "redacted_sha256": "019bb202597e26447152c1c9e07dd8c36b16054a5c2e625e7ccbd86248854834",
       "replacements": {
         "<HOMEBREW_PREFIX>": 9,
-        "<TMPDIR>": 11
+        "<TMPDIR>": 11,
+        "redacted-host": 1
       }
     },
     {
@@ -5846,6 +5882,12 @@
     }
   ],
   "rule": {
+    "junit_hostname": {
+      "meaning": "machine hostname in a JUnit XML testsuite element",
+      "pattern": "(<testsuites?\\b[^>]*?\\shostname=)([\"\\'])((?:(?!\\2)[^<>])*)\\2",
+      "placeholder": "redacted-host",
+      "value_group": 3
+    },
     "non_host_forms": [
       {
         "meaning": "file at the evaluation-container mount point",
@@ -5939,6 +5981,6 @@
   "totals": {
     "copied_files": 471,
     "excluded_files": 92,
-    "replacements": 3289
+    "replacements": 3325
   }
 }
