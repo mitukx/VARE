@@ -273,3 +273,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Authorize metadata-only comparison for Transformers #49418, MLX #4778, and Ray #66694. No split assignment, model inference, test execution, or Held-Out access is authorized.
 - **Falsification criteria:** An input hash mismatch, use of Held-Out metadata in semantic comparison, or any source/test/prompt read outside the frozen scope invalidates the review.
 - **Follow-up:** Execute the frozen comparison, retain candidate-level rationale and limitations, then decide whether the cohort can be allocated prospectively to Development.
+
+
+## 2026-10-31 — Add candidate identity metadata to frozen overlap inputs
+
+- **Hypothesis:** The original selection protocol and deterministic review sample supply the upstream PR/title mapping needed to compare the qualified candidates with historical exposure metadata.
+- **Evidence:** The parent overlap protocol bound source/test summaries and exposure files but did not bind these two selection-metadata inputs. No historical exposure rows had been semantically reviewed.
+- **Alternative explanations:** The original selection metadata may still omit the precise family description; if so, mark the comparison indeterminate rather than infer from source/test contents.
+- **Decision:** Freeze addendum `protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_1.json` at SHA-256 `5d7a44df1cf27bbef1030c2c51dde1f89fe71361949a71d6404d379c22a8f0f2`. It adds two identity-only inputs; overlap rules, exclusions, and authorization remain unchanged.
+- **Falsification criteria:** Any parent or supplemental input hash mismatch or any use of held-out task content.
+- **Follow-up:** Verify both protocol layers and all input hashes, then conduct only the permitted Development/Train metadata comparison.
