@@ -1,5 +1,35 @@
 # Reproduction and resumption
 
+## Fresh Development candidate selection and family review
+
+Selection v3 reuses the frozen v4 metadata screen, excludes the two previously selected identities, and chooses by the recorded SHA-256 rank. It selected VLLM #64830 and did not access PR bodies, patches, source, tests, prompts, grader assets, or Held-Out data. The metadata family review remains separate from source qualification; #64830 is still unqualified and unassigned.
+
+Re-run the selector into a new empty output directory (the frozen result directory is immutable):
+
+```bash
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q \
+  tests/test_select_mlsys_fresh_development_candidate_v3.py
+ruff check \
+  scripts/select_mlsys_fresh_development_candidate_v3.py \
+  tests/test_select_mlsys_fresh_development_candidate_v3.py
+python scripts/select_mlsys_fresh_development_candidate_v3.py \
+  --output results/mlsys-fresh-development-candidate-selection-v3-reproduction-001
+```
+
+The metadata family review filters mixed-split records before extracting task identity. Its first extraction output is retained and marked superseded for path comparison; correction addendum 1 binds the deduplicated rerun. Reproduce into another new directory:
+
+```bash
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q \
+  tests/test_review_mlsys_fresh_development_task_family_overlap_v5.py
+ruff check \
+  scripts/review_mlsys_fresh_development_task_family_overlap_v5.py \
+  tests/test_review_mlsys_fresh_development_task_family_overlap_v5.py
+python scripts/review_mlsys_fresh_development_task_family_overlap_v5.py \
+  --output results/mlsys-fresh-development-task-family-overlap-v5-reproduction-001
+```
+
+The review result is metadata-only and moderate-confidence. Public pretraining exposure is **UNKNOWN**. Do not assign the candidate or run inference until a separate source qualification, exposure, and feasible-attempt protocol is frozen and passed.
+
 ## Current checkpoint — vLLM #64575 source-level task qualification
 
 As of 2026-10-31, vLLM PR #64575 is **QUALIFIED_SOURCE_LEVEL** on the five frozen request-model cases only. The pinned baseline failed both type-specific error-message assertions while all three controls passed; corrected wrong-mutant v2 failed the one intended message assertion while four controls passed; upstream-fixed emitted five passing case indicators and exited 0. The first baseline invocation failed during pytest logging setup before collection, and wrong-mutant v1 did not meet its mutation precondition. Both failed attempts are retained and hash-bound; neither is treated as candidate-task failure evidence.

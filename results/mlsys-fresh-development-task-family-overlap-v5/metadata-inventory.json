@@ -1,0 +1,227 @@
+{
+  "candidate": {
+    "additions": 43,
+    "changed_file_count": 3,
+    "changed_paths": [
+      "tests/test_config.py",
+      "tests/v1/spec_decode/test_custom_speculator.py",
+      "vllm/config/vllm.py"
+    ],
+    "deletions": 61,
+    "head_sha": "9800451ab0e78104971592315e5b26546c5e9993",
+    "merge_base_sha": "17550580e932f15e772185847382d3ae4211f5ec",
+    "merge_commit_sha": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+    "merged_at": "2026-10-31T01:25:51Z",
+    "number": 64830,
+    "repository": "vllm-project/vllm",
+    "test_paths": [
+      "tests/test_config.py",
+      "tests/v1/spec_decode/test_custom_speculator.py"
+    ],
+    "title": "[Config] Move V2-only checks into V1 model runner unsupported features",
+    "url": "https://github.com/vllm-project/vllm/pull/64830"
+  },
+  "direct_identity_overlap": false,
+  "heldout_assets_opened": false,
+  "heldout_identity_fields_extracted": false,
+  "inputs_sha256": {
+    "protocols/mlsys_fresh_development_candidate_selection_v3.json": "7b0e88d37ed11380bf7d590dfb4484fc63535aa985d72dfb2fe1086c28183148",
+    "research/flagship/state.json": "68446809c772dd787fea0a3d2e7da6787f3bb93d58e8b344302f17e3c3f034f0",
+    "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+    "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700",
+    "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72",
+    "results/mlsys-fresh-development-candidate-discovery-v4/screen.json": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "results/mlsys-fresh-development-candidate-selection-v3/evidence-manifest.json": "4e824b63b3be041c3a32fc93b630b39cd974ef16a7e427741e7480138e004896",
+    "results/mlsys-fresh-development-candidate-selection-v3/selection.json": "34dd94a43ea5b8224149fa7edf5351889e77de87bc3c81f04a6c3ac73e6f5735",
+    "results/mlsys-fresh-vllm-64575-agent-attempt-v1/exposure-assignment.json": "74592200276818ab6778113057041bf9c6aa8c64f5bdee0aca366b5a7ccd445c",
+    "results/mlsys-fresh-vllm-64575-source-qualification-v1/exposure-record.json": "e4cc070288db479ff31c922df4a299391b7055dd15776f466eeb663796fd3723",
+    "results/mlsys-repo-eval-v1/run-19/exposure-append.json": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
+    "results/mlsys-task-deep-qualification-v1-exposure-append-v1.json": "230148078352299683c9729acef82f38d0c550be4d6902e465db2b0d06604947"
+  },
+  "previous_development_and_train_records": [
+    {
+      "changed_files_in_frozen_survey": 2,
+      "changed_paths": null,
+      "exposure_classification": "no_matching_attempt_in_audited_stage2_stage3_ledgers",
+      "pull_request": 1904,
+      "repository": "ml-explore/mlx-lm",
+      "source": "candidate-manual-qualification-queue",
+      "split": "train",
+      "task_family": "tool_call_dict_arguments",
+      "task_id": "mlxlm-1904-tool-arguments",
+      "title": "Fix incorrect assumption when parsing tool_calls[].function.arguments"
+    },
+    {
+      "changed_files_in_frozen_survey": 2,
+      "changed_paths": null,
+      "exposure_classification": "confirmed_prior_model_exposure",
+      "pull_request": 1912,
+      "repository": "ml-explore/mlx-lm",
+      "source": "candidate-manual-qualification-queue",
+      "split": "development",
+      "task_family": "top_p_retains_most_likely_token",
+      "task_id": "mlxlm-1912-top-p-min-token",
+      "title": "Keep the most likely token when top_p is small enough to mask everything"
+    },
+    {
+      "changed_files_in_frozen_survey": 2,
+      "changed_paths": null,
+      "exposure_classification": "no_matching_attempt_in_audited_stage2_stage3_ledgers",
+      "pull_request": 4662,
+      "repository": "ml-explore/mlx",
+      "source": "candidate-manual-qualification-queue",
+      "split": "train",
+      "task_family": "convolution_input_gradient_shape",
+      "task_id": "mlx-4662-padding-input-gradient",
+      "title": "Fix conv input gradient shape with uneven or large padding"
+    },
+    {
+      "changed_files_in_frozen_survey": 2,
+      "changed_paths": null,
+      "exposure_classification": "confirmed_prior_model_exposure",
+      "pull_request": 45852,
+      "repository": "huggingface/transformers",
+      "source": "candidate-manual-qualification-queue",
+      "split": "development",
+      "task_family": "4d_masked_batch_collation",
+      "task_id": "transformers-45852-4d-mask",
+      "title": "Fix slow Trainer path with 4D attention mask"
+    },
+    {
+      "changed_files_in_frozen_survey": 4,
+      "changed_paths": null,
+      "exposure_classification": "no_matching_attempt_in_audited_stage2_stage3_ledgers",
+      "pull_request": 1795,
+      "repository": "ml-explore/mlx-lm",
+      "source": "candidate-manual-qualification-queue",
+      "split": "train",
+      "task_family": "moe_router_gradient_indices",
+      "task_id": "mlxlm-1795-moe-routing-gradient",
+      "title": "Stop gradients through MoE routing indices in granitemoe, granitemoehybrid, lfm2_moe"
+    },
+    {
+      "changed_files_in_frozen_survey": null,
+      "changed_paths": null,
+      "exposure_classification": null,
+      "pull_request": null,
+      "repository": null,
+      "source": "deep-qualification-split-dispositions",
+      "split": "development",
+      "task_family": "4d_masked_batch_collation",
+      "task_id": "transformers-45852-4d-mask",
+      "title": null
+    },
+    {
+      "changed_files_in_frozen_survey": null,
+      "changed_paths": null,
+      "exposure_classification": null,
+      "pull_request": null,
+      "repository": null,
+      "source": "deep-qualification-split-dispositions",
+      "split": "development",
+      "task_family": "top_p_retains_most_likely_token",
+      "task_id": "mlxlm-1912-top-p-min-token",
+      "title": null
+    },
+    {
+      "changed_files_in_frozen_survey": null,
+      "changed_paths": null,
+      "exposure_classification": null,
+      "pull_request": null,
+      "repository": null,
+      "source": "deep-qualification-split-dispositions",
+      "split": "development",
+      "task_family": "mimo_attention_value_scale",
+      "task_id": "mlxlm-1971-mimo-value-scale",
+      "title": null
+    },
+    {
+      "changed_files_in_frozen_survey": null,
+      "changed_paths": null,
+      "exposure_classification": null,
+      "pull_request": 49418,
+      "repository": "huggingface/transformers",
+      "source": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+      "split": "development",
+      "task_family": "quantized_cache_residual_update_boundary",
+      "task_id": "transformers-49418-quantized-cache-residual-flush",
+      "title": null
+    },
+    {
+      "changed_files_in_frozen_survey": null,
+      "changed_paths": null,
+      "exposure_classification": null,
+      "pull_request": 66694,
+      "repository": "ray-project/ray",
+      "source": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+      "split": "development",
+      "task_family": "operator_wall_time_multi_node_clock_domain",
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain",
+      "title": null
+    },
+    {
+      "changed_files_in_frozen_survey": null,
+      "changed_paths": null,
+      "exposure_classification": null,
+      "pull_request": 49458,
+      "repository": "huggingface/transformers",
+      "source": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+      "split": "development",
+      "task_family": "lazy_video_processor_registry_resolution",
+      "task_id": "transformers-49458-lazy-auto-video-processor",
+      "title": null
+    },
+    {
+      "changed_files_in_frozen_survey": null,
+      "changed_paths": null,
+      "exposure_classification": null,
+      "pull_request": 1904,
+      "repository": "ml-explore/mlx-lm",
+      "source": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
+      "split": "train",
+      "task_family": "tool_call_dict_arguments",
+      "task_id": "mlxlm-1904-tool-arguments",
+      "title": null
+    },
+    {
+      "changed_files_in_frozen_survey": null,
+      "changed_paths": null,
+      "exposure_classification": null,
+      "pull_request": 64575,
+      "repository": "vllm-project/vllm",
+      "source": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/exposure-assignment.json",
+      "split": "development",
+      "task_family": "anthropic_request_tool_type_error_precedence",
+      "task_id": "vllm-64575-anthropic-tool-type-validation",
+      "title": null
+    }
+  ],
+  "previous_same_repository_records": [
+    {
+      "changed_files_in_frozen_survey": null,
+      "changed_paths": null,
+      "exposure_classification": null,
+      "pull_request": 64575,
+      "repository": "vllm-project/vllm",
+      "source": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/exposure-assignment.json",
+      "split": "development",
+      "task_family": "anthropic_request_tool_type_error_precedence",
+      "task_id": "vllm-64575-anthropic-tool-type-validation",
+      "title": null
+    }
+  ],
+  "public_pretraining_exposure": "UNKNOWN",
+  "review_protocol_id": "mlsys-fresh-development-task-family-overlap-v5",
+  "review_protocol_sha256": "b35ade831d91f3a404bc5e5e2d72766ff2ce91ae7764764a6fc696c33ab79c36",
+  "same_repository_path_comparisons": [
+    {
+      "changed_path_overlap": [],
+      "pull_request": 64575,
+      "task_family": "anthropic_request_tool_type_error_precedence",
+      "task_id": "vllm-64575-anthropic-tool-type-validation"
+    }
+  ],
+  "schema_version": 1,
+  "selection_sha256": "34dd94a43ea5b8224149fa7edf5351889e77de87bc3c81f04a6c3ac73e6f5735",
+  "source_or_test_content_accessed": false
+}

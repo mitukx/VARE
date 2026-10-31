@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-task-family-overlap-v5",
+  "protocol_status": "frozen_before_formal_metadata_review",
+  "frozen_at_utc": "2026-10-31T05:17:06Z",
+  "purpose": "Assess only metadata-level Development/Train task-family overlap for the v3-selected fresh candidate vllm-project/vllm#64830. This is a new candidate after the prior selected identities; it is not a substitution or reuse of either prior selection.",
+  "hypothesis": "The selected VLLM configuration-runner change is a distinct task family from the hash-bound previously exposed Development and Train tasks, allowing independent source qualification to be considered if the metadata review finds no direct overlap.",
+  "frozen_inputs": {
+    "protocols/mlsys_fresh_development_candidate_selection_v3.json": "7b0e88d37ed11380bf7d590dfb4484fc63535aa985d72dfb2fe1086c28183148",
+    "results/mlsys-fresh-development-candidate-selection-v3/selection.json": "34dd94a43ea5b8224149fa7edf5351889e77de87bc3c81f04a6c3ac73e6f5735",
+    "results/mlsys-fresh-development-candidate-selection-v3/evidence-manifest.json": "4e824b63b3be041c3a32fc93b630b39cd974ef16a7e427741e7480138e004896",
+    "results/mlsys-fresh-development-candidate-discovery-v4/screen.json": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "research/flagship/state.json": "68446809c772dd787fea0a3d2e7da6787f3bb93d58e8b344302f17e3c3f034f0",
+    "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+    "results/mlsys-task-deep-qualification-v1-exposure-append-v1.json": "230148078352299683c9729acef82f38d0c550be4d6902e465db2b0d06604947",
+    "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700",
+    "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72",
+    "results/mlsys-repo-eval-v1/run-19/exposure-append.json": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884",
+    "results/mlsys-fresh-vllm-64575-agent-attempt-v1/exposure-assignment.json": "74592200276818ab6778113057041bf9c6aa8c64f5bdee0aca366b5a7ccd445c",
+    "results/mlsys-fresh-vllm-64575-source-qualification-v1/exposure-record.json": "e4cc070288db479ff31c922df4a299391b7055dd15776f466eeb663796fd3723"
+  },
+  "candidate": {
+    "repository": "vllm-project/vllm",
+    "pull_request": 64830,
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks",
+    "family_hypothesis": "Move V2-only unsupported-feature checks into the V1 model-runner configuration validation path.",
+    "metadata_source": "The v3 selection record and v4 frozen metadata screen only. Do not fetch PR body, discussion, patch, source, tests, prompt, or grader assets."
+  },
+  "review_scope": {
+    "compare_splits": ["Development", "Train"],
+    "metadata_fields": ["repository", "pull_request", "task_id", "task_family", "title", "changed_paths", "split"],
+    "decision_labels": [
+      "DIRECT_IDENTITY_OR_FAMILY_OVERLAP",
+      "POSSIBLE_FAMILY_OVERLAP",
+      "NO_DIRECT_IDENTITY_OR_FAMILY_OVERLAP_FOUND",
+      "INSUFFICIENT_METADATA"
+    ],
+    "criteria": [
+      "The same repository and pull-request number is a direct identity overlap.",
+      "The same named behavior, bug mechanism, or affected source/test family is direct family overlap.",
+      "A shared repository or broad engineering theme alone is not sufficient to declare family overlap.",
+      "Ambiguous metadata or missing exposure provenance must be classified as INSUFFICIENT_METADATA or POSSIBLE_FAMILY_OVERLAP, not as proven independence.",
+      "Public pretraining exposure remains UNKNOWN regardless of the metadata result."
+    ]
+  },
+  "heldout_handling": {
+    "authorization": "No Held-Out task or artifact may be inspected, identified, reported, or used.",
+    "filter_rule": "For any mixed-split record, inspect only the split field first; discard every row not explicitly marked Development/dev or Train/train before reading repository, PR, task ID, family, title, paths, or other identity metadata.",
+    "output_rule": "Do not emit Held-Out identities, titles, paths, family names, counts, or hashes of individual Held-Out assets."
+  },
+  "authorization": {
+    "metadata_only_family_overlap_review": true,
+    "pr_body_or_discussion_fetch": false,
+    "patch_source_test_or_grader_fetch": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "heldout_access": false,
+    "paid_compute_or_api": false
+  },
+  "output_path": "results/mlsys-fresh-development-task-family-overlap-v5/",
+  "stop_rules": [
+    "Verify every frozen input hash before formal review; stop on any mismatch.",
+    "Do not inspect or report Held-Out identities or assets; apply the split filter before reading identity fields.",
+    "Do not fetch PR body, discussion, patch, source, tests, task prompt, grader artifacts, or hidden test outputs.",
+    "If the candidate is overlapping or metadata is insufficient, preserve that outcome and do not substitute another candidate under this protocol.",
+    "A no-overlap metadata result authorizes only a later separately frozen source-qualification protocol; it does not authorize assignment or inference."
+  ],
+  "limitations": [
+    "Metadata cannot establish semantic independence as strongly as source-level task-family review.",
+    "Absence of a prior family match is not evidence of pretraining independence.",
+    "The selected candidate remains unqualified and unassigned after this review."
+  ]
+}

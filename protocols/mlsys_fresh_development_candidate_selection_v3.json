@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-selection-v3",
+  "protocol_status": "frozen_before_selection; metadata_only",
+  "frozen_at_utc": "2026-10-31T05:14:07Z",
+  "parent_branch_head": "7b517b0c15805bf1d600cfd02c96df937be130fb",
+  "purpose": "Continue the fresh Development search from the already frozen v4 metadata inventory after both candidates eligible under the narrow v1 selector have been consumed as selections: #64675 was overlap-blocked and #64575 was source-qualified but its assigned 14B attempt did not run at the resource gate. This protocol does not reuse either task.",
+  "hypothesis": "A deterministic rank over the remaining metadata rows that passed the v4 coarse screen can identify another candidate for a separate family-overlap review, source qualification, and feasibility decision without inspecting task content during selection.",
+  "selector_path": "scripts/select_mlsys_fresh_development_candidate_v3.py",
+  "selector_sha256": "3d82aa0a927b9b43c06e9765158d296b9f2d8cfc343cf30179841e5078900914",
+  "selector_test_path": "tests/test_select_mlsys_fresh_development_candidate_v3.py",
+  "selector_test_sha256": "10cc4df189d205788322f60307534616625dfdd8779b9ff453dd49bb748a6c09",
+  "frozen_inputs": {
+    "protocols/mlsys_fresh_development_candidate_discovery_v4.json": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+    "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json": "8c2fd7e519723e27f8b2b5274d03c340d32c5e552191869ddc23f63f46bd0370",
+    "results/mlsys-fresh-development-candidate-discovery-v4/screen.json": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "protocols/mlsys_fresh_development_candidate_selection_v1.json": "19254086ccd3093ed5a85518f4d49088fa9323b171e8ed190e0dd13f5d37ae10",
+    "results/mlsys-fresh-development-candidate-selection-v1/selection.json": "2ba539e52536e37ef47cd3df41171ab6ce1a5368c07ecee0022835e3e1e4cc3d",
+    "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-review-v1.json": "6a2f6bcff7bf58a2d02d0a1f83c23e43fd3f2a5449d683dbbfc495de97df9bb0",
+    "protocols/mlsys_fresh_development_candidate_selection_v2.json": "e728ebc6dd5fddf930b3d11bab093eab1b601fb3fa596cfbbb55e001dae28359",
+    "results/mlsys-fresh-development-candidate-selection-v2/selection.json": "fdf5c2977f8eba36bc31b72057c2eca66923ec2dd1a77a396f30377dcaee5bd8",
+    "research/flagship/state.json": "68446809c772dd787fea0a3d2e7da6787f3bb93d58e8b344302f17e3c3f034f0",
+    "scripts/select_mlsys_fresh_development_candidate_v1.py": "f54f8a07e258c176a2e36e6cb89f8e44014c989ae9834d3a0ec989f2694fb1b8"
+  },
+  "selection": {
+    "candidate_source": "results/mlsys-fresh-development-candidate-discovery-v4/screen.json",
+    "eligibility": "Only rows with coarse_screen=provisional_for_manual_review, an empty screen_reasons list, complete changed_paths, a test path in the merged diff, state=MERGED, qualification_status=UNQUALIFIED, split_assignment=UNASSIGNED, and task_family_overlap=NOT_ASSESSED are eligible.",
+    "excluded_identities": [
+      {
+        "repository": "vllm-project/vllm",
+        "number": 64675,
+        "reason": "Previously selected by v1 and blocked by its frozen overlap review; no reuse."
+      },
+      {
+        "repository": "vllm-project/vllm",
+        "number": 64575,
+        "reason": "Previously selected by v2 and source-qualified; its distinct 14B attempt was NOT RUN at the resource gate. No reuse under this new-task continuation."
+      }
+    ],
+    "rank_domain": "vare-fresh-development-selection-v1",
+    "rank": "SHA256(UTF8(rank_domain + '|' + repository + '#' + pull_request_number)); ascending bytewise hex order.",
+    "selection_count": 1,
+    "substitute_if_overlap_or_infeasible": false,
+    "output_path": "results/mlsys-fresh-development-candidate-selection-v3/"
+  },
+  "authorization": {
+    "metadata_only_selection": true,
+    "source_or_test_content_fetch": false,
+    "task_family_overlap_review": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "heldout_access": false,
+    "paid_compute_or_api": false
+  },
+  "stop_rules": [
+    "Verify every frozen input hash before ranking; stop on any mismatch.",
+    "Do not fetch or inspect PR bodies, discussions, patches, source, tests, task prompts, or grader assets during this metadata-only selection.",
+    "Select exactly the first ranked eligible identity after the two explicit exclusions; do not manually rerank or substitute if the selected candidate later overlaps, fails qualification, or is infeasible.",
+    "Keep the selected candidate UNQUALIFIED and UNASSIGNED; this selection does not authorize source access, assignment, inference, training, or Held-Out access.",
+    "If selection yields no candidate, preserve that outcome and freeze a separate protocol before any broader inventory search."
+  ],
+  "limitations": [
+    "The v4 metadata scan covers six repositories and one UTC date, not a global task inventory.",
+    "Recent merge date does not establish public-pretraining independence.",
+    "Metadata screening does not establish family independence, source-level qualification, CPU feasibility, or model capability.",
+    "This selection provides no evidence of a successful coding repair or policy learning."
+  ]
+}
