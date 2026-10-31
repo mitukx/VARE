@@ -1,6 +1,6 @@
 # Reproduction and resumption
 
-Run commands from the VARE repository root. The current checkpoint includes a frozen, one-attempt Train-only model trajectory on MLX-LM #1904. That attempt is consumed; do not rerun it. No model update, SFT, GRPO, Development evaluation, or Held-out evaluation was authorized or executed.
+Run commands from the VARE repository root. The evidence includes the prior one-attempt Train-only MLX-LM #1904 trajectory and the two one-attempt fresh Development coding-agent attempts on Transformers #49418 and Ray #66694. All three attempt slots are consumed; do not rerun them. No model update, SFT, GRPO/RL, or Held-out evaluation was authorized or executed.
 
 ## Test current implementation
 
@@ -267,4 +267,31 @@ Independent grader argv templates, test hashes, image digests, resource limits, 
 
 The first Transformers launch used the original Git worktree and failed before prompt encoding because the controller requires a real .git directory. The exact traceback and zero-token classification are in results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.json. Addendum 1 records that no inference slot was consumed and binds replacement workspaces with real .git directories, exact base revisions, allowlisted files, and clean pinned status. Use the replacement workspace paths shown in the commands above. No launch that reaches generate_turn may be repeated.
 
-At protocol freeze, import-only MLX/Metal preflight passed and no model generation had run. Repeat resource gates immediately before each actual generation.
+At protocol freeze, import-only MLX/Metal preflight passed and no model generation had run. The replacement workspace preflights then passed. Both authorized generations and both independent grades have now run once; results are in `results/mlsys-fresh-development-agent-diagnostic-v1/`. Transformers produced 126 tokens and Ray 399 tokens; neither produced a source edit, and both stopped on `context_budget_exhausted`. The independent results were Transformers 4 failed / 2 passed and Ray 2 failed / 2 passed, with zero skips. Never rerun either task.
+
+## Verify the fresh Development diagnostic evidence
+
+From the repository root, verify the evidence checksums and summary records:
+
+```bash
+cd results/mlsys-fresh-development-agent-diagnostic-v1
+shasum -a 256 -c SHA256SUMS
+python3 - <<'PY'
+import json
+from pathlib import Path
+
+root = Path('.')
+for task, expected in [('transformers-49418', (4, 2)), ('ray-66694', (2, 2))]:
+    attempt = json.loads((root / task / 'agent-attempt-001.json').read_text())
+    grade = json.loads((root / task / 'independent-grade.json').read_text())
+    assert attempt['edit_applied'] is False
+    assert attempt['candidate_diff'] == ''
+    assert attempt['stop_reason'] == 'context_budget_exhausted'
+    assert grade['grader_call_count'] == 1 and grade['feedback_to_agent'] is False
+    assert (grade['failed_cases'], grade['passed_cases']) == expected
+    assert grade['skipped_cases'] == 0
+print('both one-shot Development outcomes and single grader receipts: valid')
+PY
+```
+
+`report.md` summarizes the diagnostic and limitations. `exposure-append.json` records the two Development exposures; `resource-telemetry.json` contains pre-run gates and process metrics. Their hashes are included in `SHA256SUMS` and `research/flagship/state.json`.

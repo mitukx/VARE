@@ -172,13 +172,13 @@
       "path": "protocols/mlsys_fresh_development_agent_capability_v1.json",
       "protocol_id": "mlsys-fresh-development-agent-capability-v1",
       "sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d",
-      "status": "frozen_before_model_inference; exactly one Qwen3-4B greedy attempt and one independent grader call authorized for each of two Development families; not yet executed"
+      "status": "frozen before inference; one offline greedy Qwen3-4B attempt and one independent grade completed for each of two Development tasks; both yielded empty diffs"
     },
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/protocol-addendum-1.json",
       "protocol_id": "mlsys-fresh-development-agent-capability-v1-addendum-1",
       "sha256": "e36b7b7cfeefd831ed174e25500022ef62f01baa06a11b034ae1118375a83e23",
-      "status": "frozen before model generation; records zero-token pre-inference launch failure and binds clean guard-compatible workspaces; original one-inference slot per family remains"
+      "status": "frozen before generation; records zero-token launch correction; both replacement-workspace task attempts subsequently completed once"
     }
   ],
   "git_refs": {
@@ -196,9 +196,9 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Commit and push workspace-materialization addendum 1. Then repeat the frozen host resource gates and use the replacement real-.git workspaces for exactly one model generation attempt each. Grade the durable candidate outputs once, without feedback.",
-  "last_completed_step": "The first Transformers runner launch loaded model weights but failed the real-.git guard before chat-template rendering, prompt tokenization, or generation. Recorded it as pre-inference infrastructure failure with zero tokens; materialized clean guarded local workspaces for both pinned base revisions and validated clean status plus empty candidate diffs.",
-  "milestone_id": "p4-fresh-development-agent-workspace-preflight-corrected",
+  "highest_priority_next_task": "Implement and unit-test one context-efficiency controller change justified by the two context-budget failures. Then source-qualify a new Development task family, complete its metadata overlap review, freeze one attempt and independent grader protocol, and run no inference until those gates pass. Never rerun Transformers #49418 or Ray #66694.",
+  "last_completed_step": "Executed exactly one greedy offline Qwen3-4B attempt and one pinned independent grade on each frozen fresh Development task. Both attempts stopped on context_budget_exhausted without edits; all grade cases reproduced the frozen target/control outcomes. Recorded raw traces, grades, resource telemetry, exposure append, report, and checksums.",
+  "milestone_id": "p5-fresh-development-agent-diagnostic-complete",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -553,7 +553,7 @@
     {
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime-v2",
       "sha256": "9da37a8fb8c60e513e895437bced793250284d650ed5634ed298bdda80bc5c3b",
-      "status": "corrected canonical wheel filename in pinned Ray runtime Dockerfile"
+      "status": "canonical-wheel runtime Dockerfile for exact Ray merge commit"
     },
     {
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-4-runtime-build-retry.json",
@@ -648,7 +648,7 @@
     {
       "path": "protocols/mlsys_fresh_development_agent_capability_v1.json",
       "sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d",
-      "status": "frozen before model generation; inference authorized only for its two listed one-attempt Development tasks"
+      "status": "frozen protocol; executed once on each allocated fresh Development family; both candidates received one independent grade"
     },
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/transformers-49418/task.json",
@@ -688,17 +688,77 @@
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/protocol-addendum-1.json",
       "sha256": "e36b7b7cfeefd831ed174e25500022ef62f01baa06a11b034ae1118375a83e23",
-      "status": "frozen workspace-materialization addendum; no model generation"
+      "status": "frozen pre-generation workspace correction; preserves the zero-token launch failure and binds replacement workspaces"
     },
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.json",
       "sha256": "072471e81bf7f1de1683af034c0792c8800fed4aa0c59287d68109c190ad9daf",
-      "status": "runner launch failed before tokenizer prompt encoding or model generation; zero tokens"
+      "status": "pre-inference workspace guard failure; zero generated tokens and no attempt slot consumed"
     },
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.log",
       "sha256": "3690c62494a5cf40219197603723a94347cc934b1474df1697e5d5090136bf42",
-      "status": "pinned workspace guard traceback for the pre-inference launch"
+      "status": "raw pre-inference workspace guard traceback"
+    },
+    {
+      "path": "research/flagship/REPRODUCE.md",
+      "sha256": "ed704c826a5776432f5fa9f1daac14e89b5d7c3b22634cc9f780bf5369d88ed7",
+      "status": "execution and verification instructions for the diagnostic"
+    },
+    {
+      "path": "research/flagship/STATUS.md",
+      "sha256": "9997cd2426f13e801fae58d5509767877b1ad82f5a143ac96571ec3c79261514",
+      "status": "authoritative human-readable mission status after the diagnostic"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/SHA256SUMS",
+      "sha256": "b982d2ff629ca4c5c8f1ce57218f899bbbd85f0c7ff47e6578b47edf2afbe374",
+      "status": "hash index for diagnostic raw evidence and task artifacts"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+      "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700",
+      "status": "append-only two-task fresh Development model exposure record; no Held-Out use"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/agent-attempt-001.json",
+      "sha256": "dcbdd5702200280648bb0e6a27c7fc8855b53ffccc83362defb5b8b4813376f8",
+      "status": "single fresh Development model attempt; 399 tokens; empty diff; context budget exhausted"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/independent-grade.json",
+      "sha256": "f1fe98d0d424811fc14f6b8b32c57f0ea3fc5eba152d655e92126b8c544ceb3b",
+      "status": "single pinned independent grade; 2 failed, 2 passed, 0 skipped; no feedback"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/independent-grade.log",
+      "sha256": "336cdfab141dca349d9420133c7c0865d92d098fd360b81a643f72a3f832f6de",
+      "status": "raw pinned Ray candidate-grade output"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/report.md",
+      "sha256": "e2742971dd41ebcf270ad8d046138de7210c86130abe338649ee68b143c29c38",
+      "status": "diagnostic result, scientific interpretation, limitations, and next experiment"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/resource-telemetry.json",
+      "sha256": "37cfbccbafeb75fd05153dc98d7ddff4bb7725d45eef90c0ffadac976195b565",
+      "status": "per-attempt host gates and model process memory records"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/agent-attempt-001.json",
+      "sha256": "1e217c7eb45655047bfa9406c7e8bc9159fe02a650d4e90f41b0cc79648e6894",
+      "status": "single fresh Development model attempt; 126 tokens; empty diff; context budget exhausted"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/independent-grade.json",
+      "sha256": "05dc4eb1cfe95f2b7e35549ff984532f5a48d33ec0741d03b4759aebbb0f3272",
+      "status": "single pinned independent grade; 4 failed, 2 passed, 0 skipped; no feedback"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/independent-grade.log",
+      "sha256": "14b829c11a5935e49f0fe6e36c71bf811b6263875536da8122887b857fde2ae0",
+      "status": "raw pinned Transformers candidate-grade output"
     }
   ],
   "run_ids": [
@@ -731,22 +791,24 @@
     "freshdev-qualification-mlx-4778-attempt-001-fixed",
     "freshdev-qualification-ray-66694-attempt-001-baseline",
     "freshdev-qualification-ray-66694-attempt-001-wrong-mutant",
-    "freshdev-qualification-ray-66694-attempt-001-fixed"
+    "freshdev-qualification-ray-66694-attempt-001-fixed",
+    "freshdev-agent-transformers-49418-attempt-001",
+    "freshdev-agent-ray-66694-attempt-001"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
     "fresh_stage3_families_used": 0,
     "historical_heldout_1979_touched": false,
-    "path": "results/mlsys-repo-eval-v1/run-19/exposure-append.json",
-    "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884"
+    "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+    "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700"
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
-    "No Development model generation or policy update has run. The first Transformers launch is recorded as a pre-inference workspace failure with zero generated tokens; addendum 1 binds a guard-compatible workspace layout and leaves one inference slot per task.",
-    "No SFT/RL comparison, policy update, or Held-Out evaluation is authorized.",
+    "The two authorized Qwen3-4B Development attempts produced no edits and exhausted the 4096-token context; coding capability feasibility is NO-GO under the frozen rule.",
+    "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "PR #153 head 77a5160 has been pushed; its new-head CI must complete and review is still needed."
+    "PR #153 must pass required CI at its newest pushed head and receive required review before integration."
   ],
-  "updated_at": "2026-10-31T00:36:36Z"
+  "updated_at": "2026-10-31T00:45:00Z"
 }

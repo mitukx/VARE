@@ -1,0 +1,78 @@
+{
+  "append_id": "mlsys-fresh-development-agent-diagnostic-v1",
+  "created_at_utc": "2026-10-31T00:42:02Z",
+  "decision": {
+    "claim_limit": "Two one-shot failures on one small local model do not establish general coding-model incapability, pretraining independence, learning, or generalization.",
+    "fresh_development_families_attempted": 2,
+    "heldout_tasks_executed_or_graded": false,
+    "independently_verified_repairs": 0,
+    "model_inference_or_training_by_append": true
+  },
+  "disposition": "Append the first prospectively allocated fresh Development model exposures. The original frozen task-family review, task qualification artifacts, Train ledger, and Held-Out materials remain unchanged.",
+  "events": [
+    {
+      "agent_attempt_path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/agent-attempt-001.json",
+      "attempt_count": 1,
+      "attempt_id": "freshdev-agent-transformers-49418-attempt-001",
+      "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "correctness_cases_passed": 2,
+      "correctness_cases_total": 6,
+      "edit_applied": false,
+      "edit_attempted": false,
+      "feedback_to_agent": false,
+      "heldout_opened_or_used": false,
+      "independent_grade_passed": false,
+      "independent_grade_path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/independent-grade.json",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "model_training_or_update": false,
+      "pretraining_exposure": "unknown",
+      "public_tests_visible_or_run": false,
+      "run_id": "freshdev-agent-transformers-49418-attempt-001",
+      "source_pull_request": 49418,
+      "source_repository": "huggingface/transformers",
+      "split": "development",
+      "stage": "local base-model agent inference",
+      "task_family": "quantized_cache_residual_update_boundary",
+      "task_id": "transformers-49418-quantized-cache-residual-flush"
+    },
+    {
+      "agent_attempt_path": "results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/agent-attempt-001.json",
+      "attempt_count": 1,
+      "attempt_id": "freshdev-agent-ray-66694-attempt-001",
+      "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "correctness_cases_passed": 2,
+      "correctness_cases_total": 4,
+      "edit_applied": false,
+      "edit_attempted": false,
+      "feedback_to_agent": false,
+      "heldout_opened_or_used": false,
+      "independent_grade_passed": false,
+      "independent_grade_path": "results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/independent-grade.json",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "model_training_or_update": false,
+      "pretraining_exposure": "unknown",
+      "public_tests_visible_or_run": false,
+      "run_id": "freshdev-agent-ray-66694-attempt-001",
+      "source_pull_request": 66694,
+      "source_repository": "ray-project/ray",
+      "split": "development",
+      "stage": "local base-model agent inference",
+      "task_family": "operator_wall_time_multi_node_clock_domain",
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain"
+    }
+  ],
+  "model": {
+    "pretraining_exposure": "UNKNOWN",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "training_or_update": false
+  },
+  "protocol": {
+    "addendum_path": "results/mlsys-fresh-development-agent-diagnostic-v1/protocol-addendum-1.json",
+    "path": "protocols/mlsys_fresh_development_agent_capability_v1.json",
+    "sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d"
+  },
+  "schema_version": 1
+}
