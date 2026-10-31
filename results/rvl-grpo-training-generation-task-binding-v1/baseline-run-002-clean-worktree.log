@@ -1,0 +1,15 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task[prompt-id-mismatch] _
+tests/test_rvl_grpo_hooks.py:315: in test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task
+    assert error is not None, (
+E   AssertionError: mismatched ungrouped RVL generation reached train_step; train_step_calls=1
+E   assert None is not None
+_ test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task[prompt-text-mismatch] _
+tests/test_rvl_grpo_hooks.py:315: in test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task
+    assert error is not None, (
+E   AssertionError: mismatched ungrouped RVL generation reached train_step; train_step_calls=1
+E   assert None is not None
+=========================== short test summary info ============================
+FAILED tests/test_rvl_grpo_hooks.py::test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task[prompt-id-mismatch]
+FAILED tests/test_rvl_grpo_hooks.py::test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task[prompt-text-mismatch]

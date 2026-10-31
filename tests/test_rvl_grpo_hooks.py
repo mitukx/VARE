@@ -261,6 +261,64 @@ def test_rvl_trainer_boundary_rejects_non_exact_token_ids_before_optimizer(field
 
     assert trainer.weight == 0
     assert trainer.optimizer_step == 0
+
+
+@pytest.mark.parametrize(
+    ("prompt_id", "prompt"),
+    [("other-task", "expected prompt"), ("expected-task", "other prompt")],
+    ids=["prompt-id-mismatch", "prompt-text-mismatch"],
+)
+def test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task(
+    prompt_id, prompt
+):
+    trainer = FakeTrainer()
+    task = Task("expected-task", "expected prompt", "fixture")
+    raw = {
+        "prompt_id": prompt_id,
+        "prompt": prompt,
+        "response": "answer",
+        "logprob": -0.1,
+        "token_count": 1,
+        "latency_s": 0.001,
+        "metadata": {"prompt_token_ids": [1], "response_token_ids": [2]},
+    }
+    experience = Experience(
+        attempt=Attempt(
+            task,
+            "answer",
+            "policy-0",
+            0,
+            0,
+            metadata={"rvl_generation": raw},
+        ),
+        verification=Verification(1.0, True, 0.0, 1, "fixture", trusted=True),
+        policy_lag=0,
+        verifier_lag=0,
+        shift_score=0.0,
+    )
+    hooks = RVLGRPOHooks(
+        backend=FakeBackend(trainer),
+        trainer=trainer,
+        eval_tasks=[],
+        score_fn=lambda _task, _response: 0.0,
+        generation_factory=Generation,
+        verified_generation_factory=VerifiedGeneration,
+        current_verifier_version=1,
+    )
+
+    error = None
+    try:
+        asyncio.run(hooks.train_candidate("policy-0", [experience]))
+    except ValueError as exc:
+        error = exc
+
+    assert error is not None, (
+        "mismatched ungrouped RVL generation reached train_step; "
+        f"train_step_calls={trainer.train_step_calls}"
+    )
+    assert "task identity mismatch" in str(error)
+    assert trainer.train_step_calls == 0
+    assert trainer.optimizer_step == 0
     assert trainer.train_step_calls == 0
 
 

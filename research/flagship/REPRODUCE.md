@@ -537,3 +537,51 @@ git rev-parse origin/main
 ```
 
 The exact-head required checks and calibrated-cpu-tasks passed. The machine-readable CI record is in results/agent-incomplete-tool-retry-budget-v1/controller-change.json; verify its report checksum from that directory with `shasum -a 256 -c SHA256SUMS`.
+
+
+## RVL-GRPO training-generation task identity
+
+Protocol: `protocols/rvl_grpo_training_generation_task_binding_v1.lock.json`.
+The baseline is pinned to `96b3cb86046ccde579caa1c65ccde9f8a2c76e65`; its
+append-only run-1 instrumentation erratum is
+`protocols/rvl_grpo_training_generation_task_binding_v1_run1_erratum.json`.
+Both protocol sidecars and the result bundle are hash-checked below.
+
+Run the candidate regression and the focused adapter suite from the checkout:
+
+```bash
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q --tb=short \
+  tests/test_rvl_grpo_hooks.py::test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q --tb=short \
+  tests/test_rvl_grpo_eval_identity.py \
+  tests/test_rvl_grpo_group_boundary.py \
+  tests/test_rvl_grpo_group_boundary_calibration.py \
+  tests/test_rvl_grpo_hooks.py \
+  tests/test_rvl_grpo_inference_cancellation.py \
+  tests/test_rvl_grpo_rollout_task_binding.py \
+  tests/test_rvl_grpo_shared_module_mode.py \
+  tests/test_rvl_grpo_torch_state.py \
+  tests/test_rvl_grpo_verifier_trainer_prompt_alignment.py \
+  tests/test_rvl_integration.py \
+  tests/test_rvl_evaluation_promotion_e2e.py
+```
+
+To replay the baseline in a clean worktree with the same regression fixture,
+run from the feature checkout while its branch is available:
+
+```bash
+git worktree add work/scratch/rvl-grpo-task-identity-base 96b3cb86046ccde579caa1c65ccde9f8a2c76e65
+git -C work/scratch/rvl-grpo-task-identity-base checkout codex/rvl-training-generation-task-binding -- tests/test_rvl_grpo_hooks.py
+(cd work/scratch/rvl-grpo-task-identity-base && PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q --tb=short tests/test_rvl_grpo_hooks.py::test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task)
+```
+
+The baseline command is expected to fail both cases, each reporting
+`train_step_calls=1`. The candidate command is expected to pass both and leave
+the call counter at zero. Neither run uses model inference or an external
+optimizer. Raw outputs and the result summary are under
+`results/rvl-grpo-training-generation-task-binding-v1/`.
+
+```bash
+(cd protocols && shasum -a 256 -c rvl_grpo_training_generation_task_binding_v1.lock.json.sha256 rvl_grpo_training_generation_task_binding_v1_run1_erratum.json.sha256)
+(cd results/rvl-grpo-training-generation-task-binding-v1 && shasum -a 256 -c SHA256SUMS)
+```
