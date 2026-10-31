@@ -189,7 +189,43 @@ PREVIOUS_EXPECTED_SOURCES = frozenset({
     "src/vare/verifiers.py",
     "tests/test_e2e_rl_continuation.py",
 })
-EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES
+# Campaign source inventories are versioned. A published version is frozen:
+# a genuinely new source tree gets a new version instead of an edit to an
+# older one, so earlier fully snapshotted campaigns keep auditing exactly.
+# v3 is the 83-file inventory in use until the learning pipeline package.
+INVENTORY_V3_SOURCES = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES
+# Runtime modules of src/vare/learning_pipeline. Each is reached from the
+# package entry points (pipeline imports, the lora_worker subprocess) and is
+# hash-frozen by protocols/coding_policy_learning_mlx_4b_v1.json.
+LEARNING_PIPELINE_SOURCES = frozenset({
+    "src/vare/learning_pipeline/__init__.py",
+    "src/vare/learning_pipeline/comparison.py",
+    "src/vare/learning_pipeline/curriculum.py",
+    "src/vare/learning_pipeline/edit_format.py",
+    "src/vare/learning_pipeline/exclusions.py",
+    "src/vare/learning_pipeline/grpo.py",
+    "src/vare/learning_pipeline/lora_worker.py",
+    "src/vare/learning_pipeline/pipeline.py",
+    "src/vare/learning_pipeline/policy.py",
+    "src/vare/learning_pipeline/prompting.py",
+    "src/vare/learning_pipeline/repo_env.py",
+    "src/vare/learning_pipeline/resources.py",
+    "src/vare/learning_pipeline/scoring.py",
+    "src/vare/learning_pipeline/sources.py",
+    "src/vare/learning_pipeline/training.py",
+})
+INVENTORY_V4_SOURCES = INVENTORY_V3_SOURCES | LEARNING_PIPELINE_SOURCES
+# Exact-match registry; a campaign is identified by its complete source set.
+SOURCE_INVENTORIES = {
+    "v1-pinned": LEGACY_EXPECTED_SOURCES,
+    "v2": PREVIOUS_EXPECTED_SOURCES,
+    "v3": INVENTORY_V3_SOURCES,
+    "v4": INVENTORY_V4_SOURCES,
+}
+CURRENT_SOURCE_INVENTORY = "v4"
+EXPECTED_SOURCES = SOURCE_INVENTORIES[CURRENT_SOURCE_INVENTORY]
+# Versions whose campaigns record the recovery endpoint at the resumed-round end.
+EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4"})
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.
@@ -213,16 +249,22 @@ PINNED_LOCKED_SOURCE_SHA256 = {
 }
 
 
+def source_inventory_version(source_names):
+    """Name the registered inventory that exactly equals the snapshotted sources."""
+    matches=[version for version,names in SOURCE_INVENTORIES.items() if source_names==names]
+    need(len(matches)==1,"pinned source inventory differs")
+    return matches[0]
+
+
 def validate_source_inventory(manifest, source_names, locked):
     """Keep the frozen archive pinned while accepting fully snapshotted reruns."""
-    if source_names == LEGACY_EXPECTED_SOURCES:
+    version=source_inventory_version(source_names)
+    if version == "v1-pinned":
         need(locked and manifest.get("base_commit")==PINNED_LOCKED_BASE_COMMIT,
              "locked campaign commit differs from the independently pinned revision")
         need(manifest.get("sources")==PINNED_LOCKED_SOURCE_SHA256,
              "locked campaign source snapshots differ from the independently pinned revision")
         return
-    need(source_names in (PREVIOUS_EXPECTED_SOURCES,EXPECTED_SOURCES),
-         "pinned source inventory differs")
     commit=manifest.get("base_commit")
     need(type(commit) is str and len(commit)==40 and
          all(char in "0123456789abcdef" for char in commit),
@@ -377,8 +419,8 @@ def audit(root, check_tensors=False, model_dir=None):
         need(sha(root/name)==digest,f"changed artifact: {name}")
     manifest,summary,rows=read(root/"manifest.json"),read(root/"summary.json"),read(root/"progress.json")
     source_names=set(manifest.get("sources",{}))
-    need(source_names in (LEGACY_EXPECTED_SOURCES,PREVIOUS_EXPECTED_SOURCES,EXPECTED_SOURCES) and
-         manifest.get("source_sha256")==manifest.get("sources"),
+    source_inventory=source_inventory_version(source_names)
+    need(manifest.get("source_sha256")==manifest.get("sources"),
          "pinned source inventory differs")
     for name,digest in manifest["sources"].items():
         need(sha(root/"sources"/name)==digest,"source snapshot differs")
@@ -948,7 +990,7 @@ def audit(root, check_tensors=False, model_dir=None):
             resumed_spans=trace_stages.get(("round",expected_round,1),[])
             need(len(resumed_spans)==1,"recovery endpoint lacks one resumed-round trace")
             resumed_end=resumed_spans[0]["end"]
-            if source_names==EXPECTED_SOURCES:
+            if source_inventory in EXACT_RECOVERY_ENDPOINT_INVENTORIES:
                 need(progress.get("time")==resumed_end,
                      "recovery endpoint differs from resumed-round trace")
             else:

@@ -1,0 +1,257 @@
+{
+  "arms": {
+    "no_update": {
+      "cheap_false_positive": 0,
+      "cheap_pass": 15,
+      "checkpoint_ids": [
+        "base:mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+      ],
+      "file_sha256_matches_SHA256SUMS": true,
+      "finish": {
+        "length": 4,
+        "stop": 38
+      },
+      "ids_equal_admitted_heldout": true,
+      "outcomes": {
+        "edit_applied_but_wrong": 22,
+        "malformed_or_unapplied_edit": 5,
+        "pass": 15
+      },
+      "output_sha256_mismatches": [],
+      "pass": 15,
+      "per_task_group": {
+        "borntyping/python-colorlog": [
+          4,
+          14
+        ],
+        "msiemens/tinydb": [
+          6,
+          14
+        ],
+        "python-hyper/h11": [
+          5,
+          14
+        ]
+      },
+      "rate": 0.35714285714285715,
+      "reward_vs_recomputed_verdict_mismatches": [],
+      "rows": 42,
+      "rows_sample_index_0": 42,
+      "split_values": [
+        "heldout"
+      ],
+      "wilson95": [
+        0.22989188315618772,
+        0.5083363428054419
+      ]
+    },
+    "rft_self": {
+      "cheap_false_positive": 0,
+      "cheap_pass": 20,
+      "checkpoint_ids": [
+        "rft_self:5fb794f69958558c:mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+      ],
+      "file_sha256_matches_SHA256SUMS": true,
+      "finish": {
+        "length": 4,
+        "stop": 38
+      },
+      "ids_equal_admitted_heldout": true,
+      "outcomes": {
+        "edit_applied_but_wrong": 17,
+        "malformed_or_unapplied_edit": 5,
+        "pass": 20
+      },
+      "output_sha256_mismatches": [],
+      "pass": 20,
+      "per_task_group": {
+        "borntyping/python-colorlog": [
+          6,
+          14
+        ],
+        "msiemens/tinydb": [
+          9,
+          14
+        ],
+        "python-hyper/h11": [
+          5,
+          14
+        ]
+      },
+      "rate": 0.47619047619047616,
+      "reward_vs_recomputed_verdict_mismatches": [],
+      "rows": 42,
+      "rows_sample_index_0": 42,
+      "split_values": [
+        "heldout"
+      ],
+      "wilson95": [
+        0.3335960123070547,
+        0.6227753586865502
+      ]
+    },
+    "sft_reference": {
+      "cheap_false_positive": 1,
+      "cheap_pass": 15,
+      "checkpoint_ids": [
+        "sft_reference:7e7be1eff10f4ba9:mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+      ],
+      "file_sha256_matches_SHA256SUMS": true,
+      "finish": {
+        "length": 5,
+        "stop": 37
+      },
+      "ids_equal_admitted_heldout": true,
+      "outcomes": {
+        "edit_applied_but_wrong": 18,
+        "malformed_or_unapplied_edit": 10,
+        "pass": 14
+      },
+      "output_sha256_mismatches": [],
+      "pass": 14,
+      "per_task_group": {
+        "borntyping/python-colorlog": [
+          6,
+          14
+        ],
+        "msiemens/tinydb": [
+          3,
+          14
+        ],
+        "python-hyper/h11": [
+          5,
+          14
+        ]
+      },
+      "rate": 0.3333333333333333,
+      "reward_vs_recomputed_verdict_mismatches": [],
+      "rows": 42,
+      "rows_sample_index_0": 42,
+      "split_values": [
+        "heldout"
+      ],
+      "wilson95": [
+        0.21012467072357258,
+        0.484474926231662
+      ]
+    }
+  },
+  "checks": {
+    "admitted_sha256_matches": true,
+    "n_heldout_admitted": 42,
+    "n_train_admitted": 78,
+    "train_heldout_ids_disjoint": true,
+    "train_heldout_repos_disjoint": true
+  },
+  "exploratory": {
+    "rft_vs_sft": {
+      "mcnemar": {
+        "mid_p": 0.0654296875,
+        "one_sided_b_gt_c": 0.0546875,
+        "two_sided_exact": 0.109375
+      },
+      "rft_only": 8,
+      "sft_only": 2
+    }
+  },
+  "preregistered_comparisons_vs_no_update": {
+    "rft_self": {
+      "bootstrap95_own_rng": [
+        0.023809523809523808,
+        0.21428571428571427
+      ],
+      "diff": 0.11904761904761904,
+      "holm": 0.125,
+      "mcnemar": {
+        "mid_p": 0.03125,
+        "one_sided_b_gt_c": 0.03125,
+        "two_sided_exact": 0.0625
+      },
+      "newcombe95": {
+        "phi_corrected": [
+          0.01120409442882049,
+          0.2208918663108354
+        ],
+        "phi_uncorrected": [
+          0.021655593717519253,
+          0.21133189964999077
+        ]
+      },
+      "table_arm_vs_base": {
+        "both": 15,
+        "first_only": 5,
+        "first_only_tasks": [
+          "borntyping__python-colorlog.dfa10f59.func_basic__6guw6y6e",
+          "borntyping__python-colorlog.dfa10f59.func_basic__ehyczsel",
+          "msiemens__tinydb.10644a0e.func_basic__dr9gin5l",
+          "msiemens__tinydb.10644a0e.func_basic__epf25mef",
+          "msiemens__tinydb.10644a0e.func_basic__y2z38b1q"
+        ],
+        "neither": 22,
+        "second_only": 0,
+        "second_only_tasks": []
+      }
+    },
+    "sft_reference": {
+      "bootstrap95_own_rng": [
+        -0.16666666666666666,
+        0.11904761904761904
+      ],
+      "diff": -0.023809523809523808,
+      "holm": 1.0,
+      "mcnemar": {
+        "mid_p": 0.75390625,
+        "one_sided_b_gt_c": 0.74609375,
+        "two_sided_exact": 1.0
+      },
+      "newcombe95": {
+        "phi_corrected": [
+          -0.1665240739587956,
+          0.12038009558123844
+        ],
+        "phi_uncorrected": [
+          -0.15947028682366143,
+          0.11316974141624703
+        ]
+      },
+      "table_arm_vs_base": {
+        "both": 10,
+        "first_only": 4,
+        "first_only_tasks": [
+          "borntyping__python-colorlog.dfa10f59.combine_file__hofui8tk",
+          "borntyping__python-colorlog.dfa10f59.func_basic__ehyczsel",
+          "msiemens__tinydb.10644a0e.func_basic__dr9gin5l",
+          "python-hyper__h11.bed0dd4a.func_basic__9n37b8v3"
+        ],
+        "neither": 23,
+        "second_only": 5,
+        "second_only_tasks": [
+          "msiemens__tinydb.10644a0e.func_basic__2e18lkf6",
+          "msiemens__tinydb.10644a0e.func_basic__frecbuo1",
+          "msiemens__tinydb.10644a0e.func_basic__nbsjsuc2",
+          "msiemens__tinydb.10644a0e.func_basic__xewv2osl",
+          "python-hyper__h11.bed0dd4a.func_basic__vmtnm9qk"
+        ]
+      }
+    }
+  },
+  "schema": "run001_independent_reanalysis_v1",
+  "train_rollouts": {
+    "all_in_admitted_train": true,
+    "cheap_false_negative": 0,
+    "cheap_false_positive": 0,
+    "mixed_groups": 7,
+    "reward_vs_recomputed_verdict_mismatches": 0,
+    "rft_examples_recomputed": 16,
+    "rft_heldout_overlap": [],
+    "rft_provenance_rows": 16,
+    "rft_set_equals_provenance": true,
+    "rft_tasks_recomputed": 12,
+    "samples": 160,
+    "sha256_matches_SHA256SUMS": true,
+    "tasks": 40,
+    "tasks_all_pass": 5,
+    "tasks_with_pass": 12,
+    "trusted_pass": 32
+  }
+}

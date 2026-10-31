@@ -1,0 +1,218 @@
+{
+  "files": [
+    {
+      "original": "configs/learning_pipeline_v1/build_report.json",
+      "original_bytes": 6972,
+      "original_sha256": "3325f33af26d153c41cb30ec206778ce56a9197667fdaa6fdec791820b4ca704",
+      "redacted": "results/learning-pipeline-v1/public-redacted/configs/learning_pipeline_v1/build_report.json",
+      "redacted_bytes": 6829,
+      "redacted_sha256": "2381929bf4cf1506f0d571a70075238e08c2637a7e5db92f255c469e710d11b0",
+      "replacements": {
+        "<DATA_CACHE>": 11
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/adapters/rft_self/TRAINING_COMPLETE.json",
+      "original_bytes": 478,
+      "original_sha256": "f09035a7972bec491d421bbf4586668e7bd60658665ad143a341ad3002c8b667",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/adapters/rft_self/TRAINING_COMPLETE.json",
+      "redacted_bytes": 376,
+      "redacted_sha256": "7b004b4dc410e19523a8cfee6799f30bde47ecee517ca9cd3293bd9ccde99e9c",
+      "replacements": {
+        "<RUN_ROOT>": 2
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/adapters/rft_self/adapter_config.json",
+      "original_bytes": 1209,
+      "original_sha256": "12bc3e1f589a8d8092830b0f1be3a57f28cffa86cb99055d0785d82aaae0a3d7",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/adapters/rft_self/adapter_config.json",
+      "redacted_bytes": 1087,
+      "redacted_sha256": "b6b4129f5a258a0a6604f62f2f1b2ec2d601d1ef0c510edca2175a74ebd88c20",
+      "replacements": {
+        "<HF_HUB_CACHE>": 1,
+        "<RUN_ROOT>": 2
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/adapters/rft_self/lora_config.json",
+      "original_bytes": 783,
+      "original_sha256": "2e08f036ff9f5a9520d32e29f61058cffe8d08b853ba12aa5adcea2ea2b637c8",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/adapters/rft_self/lora_config.json",
+      "redacted_bytes": 661,
+      "redacted_sha256": "0ae75bd498c905733ce4cdb9d614b0a3fefbcee442fc31c3a6f0c82f58cff8ec",
+      "replacements": {
+        "<HF_HUB_CACHE>": 1,
+        "<RUN_ROOT>": 2
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/adapters/sft_reference/TRAINING_COMPLETE.json",
+      "original_bytes": 486,
+      "original_sha256": "c6835c1c78ddd883d8612a11f4fbd48c2c82d10534d2f806506963ba96c82c10",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/adapters/sft_reference/TRAINING_COMPLETE.json",
+      "redacted_bytes": 384,
+      "redacted_sha256": "7740d1cb300f6c44c5c8ae438f9cc491f8487a5c543360426af7e404109e9aa6",
+      "replacements": {
+        "<RUN_ROOT>": 2
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/adapters/sft_reference/adapter_config.json",
+      "original_bytes": 1219,
+      "original_sha256": "b9011232389bdda388efdd8692060f99648f7338cc1a10343a4c5a0749b5c82d",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/adapters/sft_reference/adapter_config.json",
+      "redacted_bytes": 1097,
+      "redacted_sha256": "f8a87a2edabbbc0ca5f4dc5f54b03cd5ad825b07e96f01affea804d2cd609b46",
+      "replacements": {
+        "<HF_HUB_CACHE>": 1,
+        "<RUN_ROOT>": 2
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/adapters/sft_reference/lora_config.json",
+      "original_bytes": 793,
+      "original_sha256": "d4dbee47d1f0ff9a5be0d155c8b85afaadca30d91df17f7913d5f1c4e6be20c0",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/adapters/sft_reference/lora_config.json",
+      "redacted_bytes": 671,
+      "redacted_sha256": "2b5b6c8e07bccaab5a8c8049a2738c2a08d275c331dae5200a2aff7e1d769ed8",
+      "replacements": {
+        "<HF_HUB_CACHE>": 1,
+        "<RUN_ROOT>": 2
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/eval/no_update/graded.jsonl",
+      "original_bytes": 393079,
+      "original_sha256": "afb5d597b1f2c832163de69362b1fda0b1fb35c23fa8024cd0f5923ab5f3ae00",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/eval/no_update/graded.jsonl",
+      "redacted_bytes": 392239,
+      "redacted_sha256": "a17e7ec239830794296907a2337d0658dd542e917ae40fc4dd55bcad6d1dd953",
+      "replacements": {
+        "<HF_HUB_CACHE>": 42
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/eval/rft_self/graded.jsonl",
+      "original_bytes": 385876,
+      "original_sha256": "061c9eae86dc52859646ca02abd69e73348c1c8146f18a6032739df3e67e0fe0",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/eval/rft_self/graded.jsonl",
+      "redacted_bytes": 382894,
+      "redacted_sha256": "edb639881cd65b32aebdcd8fe6afd593a8869ebd6825d2420b2911950123a471",
+      "replacements": {
+        "<HF_HUB_CACHE>": 42,
+        "<RUN_ROOT>": 42
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/eval/sft_reference/graded.jsonl",
+      "original_bytes": 357027,
+      "original_sha256": "167d2937e8622206176228e8dc7042c96e16355b9b4496512b027190268e480b",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/eval/sft_reference/graded.jsonl",
+      "redacted_bytes": 354045,
+      "redacted_sha256": "ad4463ade8f40b6390417eac07a8fadbef10778a31ae522541c5aad129b654c2",
+      "replacements": {
+        "<HF_HUB_CACHE>": 42,
+        "<RUN_ROOT>": 42
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/events.jsonl",
+      "original_bytes": 3602,
+      "original_sha256": "3d77239ff496ce5a258addbef109f1cb5848613b11130e3f8110e574024d6ca0",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/events.jsonl",
+      "redacted_bytes": 3398,
+      "redacted_sha256": "174da0244b70a097cad4676765d4debd0909b242f34d76428061fdf9c3fd9e5d",
+      "replacements": {
+        "<RUN_ROOT>": 4
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/preflight_train_smoke/train.log",
+      "original_bytes": 1873,
+      "original_sha256": "656247b583b886f7cc53e64e6c6dfa8035bd92c8e801aaeadc69c586c53f86df",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/preflight_train_smoke/train.log",
+      "redacted_bytes": 1802,
+      "redacted_sha256": "0a9c6d3ca8bfabf1cb95fec812902a75867f6a911c86ce2746d1eaa39adff5fc",
+      "replacements": {
+        "<HF_HUB_CACHE>": 1,
+        "<RUN_ROOT>": 1
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/run_meta.json",
+      "original_bytes": 278,
+      "original_sha256": "ac8593188d2d4690bb5077ba3d83142e728656c870df045639f78e63ade1d172",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/run_meta.json",
+      "redacted_bytes": 267,
+      "redacted_sha256": "ce1f5633bae70fb787f5fad485f377460830028c9fa9b5987a9210ab6acead8c",
+      "replacements": {
+        "<REPO_ROOT>": 1
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/train_report.json",
+      "original_bytes": 2380,
+      "original_sha256": "c3e1b5f24c22574a5075323aacbb62d935783b44e945b5877b44c90ed3251883",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/train_report.json",
+      "redacted_bytes": 2176,
+      "redacted_sha256": "8f1aafe649331c035dbba83c694af3f6aaa51c6f212e1dba112a84fc8af11da8",
+      "replacements": {
+        "<RUN_ROOT>": 4
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/train_rft_self.log",
+      "original_bytes": 2488,
+      "original_sha256": "92f42a31b762916c05d8854d84138ad5548a98a85d444dd64cfb28da41c00b16",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/train_rft_self.log",
+      "redacted_bytes": 2417,
+      "redacted_sha256": "e8a9f0f205f6761957483acae34851b4eb4c63dfb3eacc5413bfb24b5419f346",
+      "replacements": {
+        "<HF_HUB_CACHE>": 1,
+        "<RUN_ROOT>": 1
+      }
+    },
+    {
+      "original": "results/learning-pipeline-v1/run-001/train_sft_reference.log",
+      "original_bytes": 2488,
+      "original_sha256": "90997aefd8222d4171cb6073599efd5645054640a28f7ef7cc0a2f831b88601c",
+      "redacted": "results/learning-pipeline-v1/public-redacted/results/learning-pipeline-v1/run-001/train_sft_reference.log",
+      "redacted_bytes": 2417,
+      "redacted_sha256": "bbf82335ec02560d4c45c550970a9f8221adcfc2a3d94caf97a48f7c89b28dc7",
+      "replacements": {
+        "<HF_HUB_CACHE>": 1,
+        "<RUN_ROOT>": 1
+      }
+    }
+  ],
+  "rule": {
+    "placeholders": {
+      "<DATA_CACHE>": "dataset cache directory on the data-preparation host",
+      "<HF_HUB_CACHE>": "Hugging Face hub cache directory on the training host",
+      "<REPO_ROOT>": "repository checkout on the training host",
+      "<RUN_ROOT>": "run-001 output directory on the training host"
+    },
+    "substitutions": [
+      {
+        "pattern": "/Users/[^/\\s\\\"\\\\\\x1b]+/[^/\\s\\\"\\\\\\x1b]+/artifacts/learning_pipeline_v1/run-001",
+        "placeholder": "<RUN_ROOT>"
+      },
+      {
+        "pattern": "/Users/[^/\\s\\\"\\\\\\x1b]+/[^/\\s\\\"\\\\\\x1b.]+(?=/(?:artifacts|protocols)/)",
+        "placeholder": "<REPO_ROOT>"
+      },
+      {
+        "pattern": "/Users/[^/\\s\\\"\\\\\\x1b]+/\\.cache/huggingface/hub",
+        "placeholder": "<HF_HUB_CACHE>"
+      },
+      {
+        "pattern": "/workspace/[^/\\s\\\"\\\\\\x1b]+/lp-cache",
+        "placeholder": "<DATA_CACHE>"
+      }
+    ],
+    "type": "ordered regular-expression substitution (Python re) on the UTF-8 file text; each rule is applied to the output of the previous one",
+    "verification_pattern": "(?:/Users/|/home/|/private/|/var/folders/|/Volumes/|/root/|/workspace/|/opt/homebrew/|/mnt/|[A-Za-z]:\\\\\\\\Users\\\\\\\\|[A-Za-z]:\\\\Users\\\\)"
+  },
+  "schema": "vare_public_redaction_v1"
+}
