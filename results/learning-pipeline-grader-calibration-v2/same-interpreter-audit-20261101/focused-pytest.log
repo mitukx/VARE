@@ -1,0 +1,68 @@
+.................................s........................sssssssss...   [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_all_denied_passes
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[default_route_present]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[docker_socket_present]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[env_canary_visible]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[env_unexpected_keys]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[evidence_dir_visible]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[evidence_dir_writable]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[host_canary_readable]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[host_loopback_connect]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[interpreter_tree_writable]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[non_loopback_interfaces]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[rootfs_writable]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_any_single_exposure_fails[workspace_writable]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_missing_or_root_fails_closed[None]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_missing_or_root_fails_closed[obs1]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_missing_or_root_fails_closed[obs2]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_missing_or_root_fails_closed[obs3]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_probe_missing_or_root_fails_closed[obs4]
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_attest_fails_closed_when_backend_unavailable
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_attest_rejects_garbage_and_exposed_probe
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_no_pass_without_matching_attestation
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_honest_pass_and_workspace_is_ephemeral_and_without_git
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_all_passed_forgery_is_caught_by_failing_canary
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_exit_code_must_match_failing_canary
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_missing_test_is_failure
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_runner_source_pin_mismatch_fails_before_sandbox_execution
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_verifier_source_pin_mismatch_fails_before_sandbox_execution
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_verifier_source_change_after_execution_discards_verdict
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_verifier_source_inventory_pins_backend_and_image_config
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_sandbox_config_change_after_execution_discards_verdict
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_static_scan_quarantines_added_hostile_lines_only
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_quarantine_does_not_execute
+PASSED tests/test_learning_pipeline_isolated_grading.py::test_unsafe_target_path_rejected
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_authentic_complete_stream_passes
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_plain_passed_lines_carry_no_authority
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_tampered_streams_fail_closed[<lambda>-verdict_integrity_bad_frame0]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_tampered_streams_fail_closed[<lambda>-verdict_integrity_bad_frame1]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_tampered_streams_fail_closed[<lambda>-verdict_integrity_sequence0]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_tampered_streams_fail_closed[<lambda>-verdict_integrity_no_finish]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_tampered_streams_fail_closed[<lambda>-verdict_integrity_sequence1]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_tampered_streams_fail_closed[<lambda>-verdict_integrity_finish]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_tampered_streams_fail_closed[<lambda>-verdict_integrity_bad_frame2]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_duplicate_result_and_exit_mismatch_fail_closed
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_canaries_and_missing_ids
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_v2_static_patterns_extend_v1_without_changing_it
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_default_grade_fails_closed_without_attested_isolation[no_backend]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_default_grade_fails_closed_without_attested_isolation[failed_attestation]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_default_grade_fails_closed_without_attested_isolation[config_changed]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_default_grade_fails_closed_without_attested_isolation[other_backend]
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_unknown_isolation_mode_is_rejected
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_scoring_gives_zero_reward_and_no_admission_when_unverified
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_backend_selection_takes_first_attested_and_records_attempts
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_selected_backend_is_used_and_recorded
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_runner_source_change_fails_before_candidate_execution
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_verifier_source_change_fails_before_candidate_execution
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_legacy_native_is_explicit_opt_in_and_labelled
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_legacy_native_still_admits_the_audit_forgery
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_calibration_fails_closed_when_not_attested
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_mutants_exclude_bug_and_reference
+PASSED tests/test_learning_pipeline_trusted_grading.py::test_live_docker_a3_calibration
+SKIPPED [1] tests/test_learning_pipeline_isolated_grading.py:306: bubblewrap user namespaces unavailable
+SKIPPED [1] tests/test_learning_pipeline_trusted_grading.py:334: bubblewrap user namespaces unavailable
+SKIPPED [6] tests/test_learning_pipeline_trusted_grading.py:348: bubblewrap user namespaces unavailable
+SKIPPED [1] tests/test_learning_pipeline_trusted_grading.py:363: bubblewrap user namespaces unavailable
+SKIPPED [1] tests/test_learning_pipeline_trusted_grading.py:381: bubblewrap user namespaces unavailable

@@ -50,6 +50,16 @@ VERDICT_CHANNEL = "hmac_frames_v1"
 RUNNER_PATH = Path(__file__).with_name("learning_pipeline_trusted_runner.py")
 FRAME_PREFIX = "VARE_FRAME "
 PASSING = "PASSED"
+VERIFIER_SOURCE_PATHS = (
+    "scripts/learning_pipeline_trusted_verdict.py",
+    "scripts/learning_pipeline_trusted_runner.py",
+    "scripts/learning_pipeline_trusted_repo_env.py",
+    "scripts/learning_pipeline_isolated_grading.py",
+    "scripts/learning_pipeline_grader_calibration.py",
+    "src/vare/container_isolation.py",
+    "src/vare/learning_pipeline/repo_env.py",
+    "configs/learning_pipeline_grader_v2/Dockerfile",
+)
 
 
 # v1 patterns (unchanged, so the recorded run-001 scan stays reproducible) plus
@@ -84,6 +94,24 @@ def runner_source() -> str:
 
 def runner_sha256() -> str:
     return hashlib.sha256(runner_source().encode()).hexdigest()
+
+
+def verifier_source_hashes() -> dict[str, str]:
+    """Hashes for the host judge, sandbox runner, backend, and frozen RepoEnv code."""
+    root = Path(__file__).resolve().parents[1]
+    return {relative: hashlib.sha256((root / relative).read_bytes()).hexdigest()
+            for relative in VERIFIER_SOURCE_PATHS}
+
+
+def verifier_source_sha256(hashes: Mapping[str, str] | None = None) -> str:
+    """Stable digest binding the source files that decide or execute a verdict."""
+    sources = verifier_source_hashes() if hashes is None else hashes
+    digest = hashlib.sha256()
+    for relative, value in sorted(sources.items()):
+        digest.update(relative.encode())
+        digest.update(b"\0")
+        digest.update(bytes.fromhex(value))
+    return digest.hexdigest()
 
 
 class FrameError(ValueError):
@@ -187,6 +215,8 @@ def grade_isolated_v2(
     import_roots: Sequence[str] | None = None,
     timeout: float = 180,
     static_scan: bool = True,
+    expected_runner_sha256: str | None = None,
+    expected_verifier_sha256: str | None = None,
     on_workspace: Callable[[Path], None] | None = None,
 ) -> dict[str, Any]:
     """Grade one candidate in a fresh sandbox; the parent judges authenticated frames.
@@ -197,17 +227,61 @@ def grade_isolated_v2(
     """
     t0 = time.time()
     source = runner_source()
+    verifier_sources = verifier_source_hashes()
+    verifier_sha256 = verifier_source_sha256(verifier_sources)
     rec: dict[str, Any] = {
         "schema": SCHEMA, "verdict_channel": VERDICT_CHANNEL, "backend": backend.name,
         "config_digest": backend.config_digest(),
         "runner_sha256": hashlib.sha256(source.encode()).hexdigest(),
+        "expected_runner_sha256": expected_runner_sha256,
+        "verifier_source_hashes": verifier_sources,
+        "verifier_source_sha256": verifier_sha256,
+        "expected_verifier_sha256": expected_verifier_sha256,
         "candidate_sha256": hashlib.sha256(candidate_text.encode()).hexdigest(),
         "passed": False, "executed": False,
     }
 
     def done(reason: str, **extra: Any) -> dict[str, Any]:
+        identity_read_ok = True
+        try:
+            runner_after = runner_sha256()
+            verifier_sources_after = verifier_source_hashes()
+            verifier_after = verifier_source_sha256(verifier_sources_after)
+            config_after = backend.config_digest()
+            backend_after = backend.name
+        except Exception:
+            runner_after = None
+            verifier_sources_after = {}
+            verifier_after = None
+            config_after = None
+            backend_after = None
+            identity_read_ok = False
+            reason = "verifier_source_changed"
+            extra["source_identity_check_error"] = "unreadable"
+        if identity_read_ok:
+            if runner_after != rec["runner_sha256"] or (
+                    expected_runner_sha256 is not None and runner_after != expected_runner_sha256):
+                reason = "runner_source_changed"
+            elif verifier_after != verifier_sha256 or (
+                    expected_verifier_sha256 is not None and verifier_after != expected_verifier_sha256):
+                reason = "verifier_source_changed"
+            elif config_after != rec["config_digest"] or backend_after != rec["backend"]:
+                reason = "isolation_unverified_config_changed"
+        rec["runner_sha256_after"] = runner_after
+        rec["verifier_source_hashes_after"] = verifier_sources_after
+        rec["verifier_source_sha256_after"] = verifier_after
+        rec["config_digest_after"] = config_after
+        rec["backend_after"] = backend_after
+        if reason in {"runner_source_changed", "verifier_source_changed",
+                      "isolation_unverified_config_changed"}:
+            rec["passed"] = False
         rec.update(reason=reason, seconds=round(time.time() - t0, 3), **extra)
         return rec
+
+    if expected_runner_sha256 is not None and rec["runner_sha256"] != expected_runner_sha256:
+        return done("runner_source_changed", expected_runner_sha256=expected_runner_sha256)
+    if expected_verifier_sha256 is not None and verifier_sha256 != expected_verifier_sha256:
+        return done("verifier_source_changed", expected_verifier_sha256=expected_verifier_sha256)
 
     if attestation is None or not attestation.ok:
         return done("isolation_unverified")

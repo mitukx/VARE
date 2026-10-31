@@ -26,7 +26,7 @@ schema, so rewards from different verifier versions are never pooled silently.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 import time
 from typing import Any, Mapping, Sequence
@@ -79,6 +79,8 @@ class TrustedRepoEnv(RepoEnv):
     import_roots: tuple[str, ...] | None = None
     selection: tuple[Mapping[str, Any], ...] = ()
     static_scan: bool = True
+    runner_sha256_pin: str = field(default_factory=tv.runner_sha256)
+    verifier_source_sha256_pin: str = field(default_factory=tv.verifier_source_sha256)
 
     def isolation_record(self, mode: str) -> dict[str, Any]:
         if mode == ISOLATION_LEGACY_NATIVE:
@@ -86,6 +88,9 @@ class TrustedRepoEnv(RepoEnv):
                     "attestation": None, "verdict_channel": "pytest_stdout_v1", "grader": "repo_env_v1",
                     "note": "candidate code runs with operator privileges; not a security boundary"}
         b, att = self.backend, self.attestation
+        runner_sha256 = tv.runner_sha256()
+        verifier_source_hashes = tv.verifier_source_hashes()
+        verifier_source_sha256 = tv.verifier_source_sha256(verifier_source_hashes)
         return {"mode": mode, "backend": b.name if b is not None else None,
                 "config_digest": b.config_digest() if b is not None else None,
                 "attested": bool(att is not None and att.ok and b is not None
@@ -93,7 +98,13 @@ class TrustedRepoEnv(RepoEnv):
                 "attestation": att.to_dict() if att is not None else None,
                 "selection": [dict(t) for t in self.selection],
                 "verdict_channel": tv.VERDICT_CHANNEL, "grader": tv.SCHEMA,
-                "runner_sha256": tv.runner_sha256(), "static_scan": self.static_scan}
+                "runner_sha256": runner_sha256, "runner_sha256_pin": self.runner_sha256_pin,
+                "runner_source_unchanged": runner_sha256 == self.runner_sha256_pin,
+                "verifier_source_hashes": verifier_source_hashes,
+                "verifier_source_sha256": verifier_source_sha256,
+                "verifier_source_sha256_pin": self.verifier_source_sha256_pin,
+                "verifier_source_unchanged": verifier_source_sha256 == self.verifier_source_sha256_pin,
+                "static_scan": self.static_scan}
 
     def grade(  # type: ignore[override]
         self,
@@ -132,6 +143,10 @@ class TrustedRepoEnv(RepoEnv):
 
         if not info["attested"] or self.backend is None or self.attestation is None:
             return result(False, "isolation_unverified", {}, False)
+        if not info["runner_source_unchanged"]:
+            return result(False, "runner_source_changed", {}, False)
+        if not info["verifier_source_unchanged"]:
+            return result(False, "verifier_source_changed", {}, False)
         root = self.workspace_root or (self.cache / "grade-workspaces")
         root.mkdir(parents=True, exist_ok=True)
         # Trusted staging only (git checkout/apply, file reads); no candidate code runs here.
@@ -150,12 +165,19 @@ class TrustedRepoEnv(RepoEnv):
                 target_file=target_file, buggy_text=buggy,
                 candidate_text=buggy if candidate_text is None else candidate_text,
                 fail_to_pass=f2p_ids, pass_to_pass=p2p_ids, import_roots=self.import_roots,
-                timeout=timeout, static_scan=self.static_scan)
+                timeout=timeout, static_scan=self.static_scan,
+                expected_runner_sha256=self.runner_sha256_pin,
+                expected_verifier_sha256=self.verifier_source_sha256_pin)
         finally:
             self.reset()
         tests = v2.get("tests") or {}
-        keep = {k: v2[k] for k in ("candidate_sha256", "static_flags", "process_exit", "stdout_sha256",
-                                   "detail") if k in v2}
+        keep = {k: v2[k] for k in (
+            "candidate_sha256", "runner_sha256", "expected_runner_sha256", "runner_sha256_after",
+            "verifier_source_hashes", "verifier_source_sha256", "expected_verifier_sha256",
+            "verifier_source_hashes_after", "verifier_source_sha256_after", "config_digest",
+            "config_digest_after", "backend_after", "source_identity_check_error", "static_flags",
+            "process_exit", "stdout_sha256", "detail",
+        ) if k in v2}
         return result(bool(v2.get("passed")), str(v2.get("reason")), tests, bool(v2.get("executed")),
                       **keep)
 

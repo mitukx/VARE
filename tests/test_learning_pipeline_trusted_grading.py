@@ -238,9 +238,48 @@ def test_selected_backend_is_used_and_recorded(tmp_path):
     assert iso["backend"] == "fake" and iso["attested"] is True and iso["config_digest"] == "digest-1"
     assert iso["attestation"]["ok"] is True and iso["selection"][0]["backend"] == "fake"
     assert iso["verdict_channel"] == tv.VERDICT_CHANNEL and iso["runner_sha256"] == tv.runner_sha256()
+    assert r["runner_sha256"] == r["runner_sha256_after"]
+    assert r["verifier_source_hashes"] == r["verifier_source_hashes_after"]
+    assert r["config_digest"] == r["config_digest_after"] == "digest-1"
+    assert r["backend_after"] == "fake"
     assert b.calls[-1][:3] == ["/venv/bin/python", "-I", "-c"]
     assert (env.path / "pkg" / "core.py").read_text() == REFERENCE  # clone reset to the pinned commit
     assert list((tmp_path / "ws").iterdir()) == []
+
+
+def test_runner_source_change_fails_before_candidate_execution(tmp_path, monkeypatch):
+    env, patch = make_clone(tmp_path)
+    b = FakeBackend()
+    t = trusted(env, backend=b, attestation=attestation_for(b), workspace_root=tmp_path / "ws")
+    pinned = t.runner_sha256_pin
+    original = tre.tv.runner_source
+    monkeypatch.setattr(tre.tv, "runner_source", lambda: original() + "\n# changed during run\n")
+
+    rec = t.grade(**grade_kw(patch, REFERENCE))
+
+    assert rec["passed"] is False and rec["executed"] is False
+    assert rec["reason"] == "runner_source_changed"
+    isolation = rec["isolation"]
+    assert isolation["runner_sha256_pin"] == pinned
+    assert isolation["runner_source_unchanged"] is False
+    assert b.calls == []
+
+
+def test_verifier_source_change_fails_before_candidate_execution(tmp_path, monkeypatch):
+    env, patch = make_clone(tmp_path)
+    b = FakeBackend()
+    t = trusted(env, backend=b, attestation=attestation_for(b), workspace_root=tmp_path / "ws")
+    pinned = t.verifier_source_sha256_pin
+    monkeypatch.setattr(tre.tv, "verifier_source_sha256", lambda _hashes=None: "0" * 64)
+
+    rec = t.grade(**grade_kw(patch, REFERENCE))
+
+    assert rec["passed"] is False and rec["executed"] is False
+    assert rec["reason"] == "verifier_source_changed"
+    isolation = rec["isolation"]
+    assert isolation["verifier_source_sha256_pin"] == pinned
+    assert isolation["verifier_source_unchanged"] is False
+    assert b.calls == []
 
 
 # ------------------------------------------------------------ legacy opt-in
@@ -347,8 +386,13 @@ def test_live_a3_calibration_all_items_verified(tmp_path):
     assert set(report["items"]) == set(cal.ITEMS)
     assert {k: v["status"] for k, v in report["items"].items()} == {k: "verified" for k in cal.ITEMS}
     assert report["all_verified"] is True and report["workspaces_left"] == 0
+    assert report["source_identity_stable"] is True
+    assert report["sandbox_configuration_stable"] is True
+    assert report["runner_sha256"] == report["runner_sha256_after"]
+    assert report["verifier_source_hashes"] == report["verifier_source_hashes_after"]
     # Residual in-process attacks: blocked only by the static scan (documented limitation).
-    assert set(report["residual"]) == {"runner_closure_patch_via_gc", "always_equal_return_value"}
+    assert set(report["residual"]) == {
+        "runner_key_exfil_and_frame_forgery", "runner_closure_patch_via_gc", "always_equal_return_value"}
     assert all(v["scan_on_reason"] == "quarantined_static_flags" for v in report["residual"].values())
 
 
@@ -357,6 +401,8 @@ def test_calibration_fails_closed_when_not_attested(tmp_path):
     b = FakeBackend(ok=False)
     report = cal.calibrate(b, fx, work_root=tmp_path / "cal")
     assert report["all_verified"] is False and b.calls == []
+    assert report["source_identity_stable"] is True
+    assert report["sandbox_configuration_stable"] is True
     assert {v["status"] for v in report["items"].values()} == {"failed"}
 
 
@@ -383,3 +429,5 @@ def test_live_docker_a3_calibration(tmp_path):
     finally:
         shutil.rmtree(root, ignore_errors=True)
     assert report["all_verified"] is True, {k: v["status"] for k, v in report["items"].items()}
+    assert report["source_identity_stable"] is True
+    assert report["sandbox_configuration_stable"] is True

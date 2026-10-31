@@ -22,10 +22,11 @@ attack works (for example, they ``exec`` the reference fix if they can read
 it), so a pass is direct evidence of a broken boundary. Adversarial checks
 run with the static scan **off** so that the boundary, not the pattern list,
 is what is measured; A3.8 additionally requires that the production
-configuration (scan on) passes none of them. Two known residual attacks
-(patching the runner's closure through ``gc``; a return value whose
-``__eq__`` is always true) are reported under ``residual`` with their
-scan-off outcome; they are expected to pass with the scan off.
+configuration (scan on) passes none of them. Three known residual attacks
+(extracting the runner key from interpreter frames, patching the runner's
+closure through ``gc``, and a return value whose ``__eq__`` is always true)
+are reported under ``residual`` with their scan-off outcome; they are expected
+to pass with the scan off.
 
 The built-in fixture is a small synthetic repository; ``calibrate`` also
 accepts a real task's staged tree. Linux bubblewrap results are not evidence
@@ -261,6 +262,37 @@ def tamper_candidates(buggy: str, reference: str) -> dict[str, str]:
 def residual_candidates(buggy: str, reference: str) -> dict[str, str]:
     """Known in-process attacks the channel does not exclude (reported, expected to pass scan-off)."""
     return {
+        "runner_key_exfil_and_frame_forgery": buggy + (
+            "\n\nimport sys as _s, os as _o, json as _j, hmac as _h, hashlib as _hh\n"
+            "_frames = _s._current_frames()\n"
+            "_loc = None\n"
+            "for _top in _frames.values():\n"
+            "    _f = _top\n"
+            "    while _f is not None:\n"
+            "        _candidate_loc = _f.f_locals\n"
+            "        if all(_name in _candidate_loc for _name in ('key', 'spec', 'channel')):\n"
+            "            _loc = _candidate_loc\n"
+            "            break\n"
+            "        _f = _f.f_back\n"
+            "    if _loc is not None:\n"
+            "        break\n"
+            "if _loc is not None:\n"
+            "    _key, _spec, _channel = _loc['key'], _loc['spec'], _loc['channel']\n"
+            "    _bodies = [{'kind': 'collected', 'ids': _spec['test_ids']}]\n"
+            "    _bodies += [{'kind': 'result', 'nodeid': _t,\n"
+            "                 'status': 'FAILED' if '::test_b_' in _t else 'PASSED'}\n"
+            "                for _t in _spec['test_ids']]\n"
+            "    _bodies.append({'kind': 'finish', 'exit': 1,\n"
+            "                    'pytest_exit': 1, 'n_results': len(_spec['test_ids'])})\n"
+            "    for _offset, _body in enumerate(_bodies):\n"
+            "        _payload = _j.dumps(dict(_body, nonce=_spec['nonce'],\n"
+            "                                 seq=_loc['seq'][0] + _offset),\n"
+            "                            sort_keys=True, separators=(',', ':'))\n"
+            "        _mac = _h.new(_key, _payload.encode(), _hh.sha256).hexdigest()\n"
+            "        _data = ('VARE_FRAME ' + _mac + ' ' + _payload + '\\n').encode()\n"
+            "        while _data:\n"
+            "            _data = _data[_o.write(_channel, _data):]\n"
+            "    _o._exit(1)\n"),
         "runner_closure_patch_via_gc": buggy + (
             "\n\nimport gc as _gc, sys as _s\n"
             "if 'pytest' in _s.modules:\n"
@@ -313,6 +345,9 @@ def calibrate(backend: ig.SandboxBackend, fixture: Fixture, *, work_root: Path,
     """Run all A3 checks; every grade uses ``tv.grade_isolated_v2`` with a fresh sandbox."""
     t0 = time.time()
     work_root.mkdir(parents=True, exist_ok=True)
+    runner_sha256_pin = tv.runner_sha256()
+    verifier_source_hashes = tv.verifier_source_hashes()
+    verifier_source_sha256_pin = tv.verifier_source_sha256(verifier_source_hashes)
     ws = Path(tempfile.mkdtemp(prefix="cal-ws-", dir=work_root))
     evidence = Path(tempfile.mkdtemp(prefix="cal-evidence-", dir=work_root))
     protected = Path(tempfile.mkdtemp(prefix="cal-protected-", dir=work_root))
@@ -330,11 +365,16 @@ def calibrate(backend: ig.SandboxBackend, fixture: Fixture, *, work_root: Path,
     report: dict[str, Any] = {
         "schema": SCHEMA, "backend": backend.name, "config_digest": backend.config_digest(),
         "grader_schema": tv.SCHEMA, "verdict_channel": tv.VERDICT_CHANNEL,
-        "runner_sha256": tv.runner_sha256(), "attestation": attestation.to_dict(),
+        "runner_sha256": runner_sha256_pin, "runner_sha256_pin": runner_sha256_pin,
+        "verifier_source_hashes": verifier_source_hashes,
+        "verifier_source_sha256": verifier_source_sha256_pin,
+        "verifier_source_sha256_pin": verifier_source_sha256_pin,
+        "attestation": attestation.to_dict(),
         "fixture": {"target_file": fixture.target_file, "fail_to_pass": fixture.fail_to_pass,
                     "pass_to_pass": fixture.pass_to_pass,
                     "buggy_sha256": hashlib.sha256(buggy.encode()).hexdigest(),
-                    "reference_sha256": hashlib.sha256(ref.encode()).hexdigest()},
+                    "reference_sha256": hashlib.sha256(ref.encode()).hexdigest(),
+                    "source_tree_sha256": _sha_tree(fixture.source_tree)},
         "python": sys.version.split()[0], "platform": sys.platform, "items": {}, "residual": {},
     }
 
@@ -342,7 +382,9 @@ def calibrate(backend: ig.SandboxBackend, fixture: Fixture, *, work_root: Path,
         kw: dict[str, Any] = dict(workspace_root=ws, source_tree=fixture.source_tree,
                                   target_file=fixture.target_file, buggy_text=buggy,
                                   fail_to_pass=fixture.fail_to_pass, pass_to_pass=fixture.pass_to_pass,
-                                  import_roots=fixture.import_roots, timeout=timeout)
+                                  import_roots=fixture.import_roots, timeout=timeout,
+                                  expected_runner_sha256=runner_sha256_pin,
+                                  expected_verifier_sha256=verifier_source_sha256_pin)
         kw.update(over)
         return tv.grade_isolated_v2(backend, attestation, candidate_text=candidate, static_scan=scan, **kw)
 
@@ -480,6 +522,39 @@ def calibrate(backend: ig.SandboxBackend, fixture: Fixture, *, work_root: Path,
         os.environ.pop(secret_name, None)
         report["seconds"] = round(time.time() - t0, 2)
         report["workspaces_left"] = len(list(ws.iterdir())) if ws.exists() else 0
+        try:
+            runner_sha256_after = tv.runner_sha256()
+            verifier_source_hashes_after = tv.verifier_source_hashes()
+            verifier_source_sha256_after = tv.verifier_source_sha256(verifier_source_hashes_after)
+            config_digest_after = backend.config_digest()
+            backend_after = backend.name
+            source_identity_stable = (
+                runner_sha256_after == runner_sha256_pin
+                and verifier_source_hashes_after == verifier_source_hashes
+                and verifier_source_sha256_after == verifier_source_sha256_pin
+            )
+            sandbox_configuration_stable = (
+                config_digest_after == report["config_digest"] and backend_after == report["backend"]
+            )
+        except Exception:
+            runner_sha256_after = None
+            verifier_source_hashes_after = {}
+            verifier_source_sha256_after = None
+            config_digest_after = None
+            backend_after = None
+            source_identity_stable = False
+            sandbox_configuration_stable = False
+        report.update(
+            runner_sha256_after=runner_sha256_after,
+            verifier_source_hashes_after=verifier_source_hashes_after,
+            verifier_source_sha256_after=verifier_source_sha256_after,
+            config_digest_after=config_digest_after,
+            backend_after=backend_after,
+            source_identity_stable=source_identity_stable,
+            sandbox_configuration_stable=sandbox_configuration_stable,
+        )
+        report["all_verified"] = bool(report.get("all_verified")) and source_identity_stable \
+            and sandbox_configuration_stable and report["workspaces_left"] == 0
         for d in (ws, evidence, protected):
             shutil.rmtree(d, ignore_errors=True)
 

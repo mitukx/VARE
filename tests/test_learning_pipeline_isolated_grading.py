@@ -11,6 +11,7 @@ from typing import Sequence
 import pytest
 
 from scripts import learning_pipeline_isolated_grading as ig
+from scripts import learning_pipeline_trusted_verdict as tv
 
 BUGGY = "def add(a, b):\n    return a - b\n"
 CLEAN = "def add(a, b):\n    return a + b\n"
@@ -39,7 +40,8 @@ class FakeBackend:
     def python(self) -> str:
         return "/venv/bin/python"
 
-    def run(self, workspace: Path, command: Sequence[str], *, timeout: float) -> ig.RunResult:
+    def run(self, workspace: Path, command: Sequence[str], *, timeout: float,
+            stdin: bytes | None = None) -> ig.RunResult:
         self.calls.append(list(command))
         out = self.stdout
         if callable(out):
@@ -154,6 +156,116 @@ def test_missing_test_is_failure(tree):
         ("FAILED " if "::test_b_" in a else "PASSED ") + a for a in cmd if "::" in a and "test_other" not in a)
     r = grade(FakeBackend(stdout=partial), good_attestation(FakeBackend()), tree)
     assert r["passed"] is False and r["tests"]["tests/test_core.py::test_other"] == "MISSING"
+
+
+def test_runner_source_pin_mismatch_fails_before_sandbox_execution(tree):
+    backend = FakeBackend(stdout="unused")
+    attestation = good_attestation(backend)
+    r = tv.grade_isolated_v2(
+        backend,
+        attestation,
+        workspace_root=tree / "ws",
+        source_tree=tree / "src",
+        target_file="pkg/core.py",
+        buggy_text=BUGGY,
+        candidate_text=CLEAN,
+        fail_to_pass=F2P,
+        pass_to_pass=P2P,
+        expected_runner_sha256="0" * 64,
+    )
+    assert r["passed"] is False and r["executed"] is False
+    assert r["reason"] == "runner_source_changed"
+    assert r["runner_sha256"] == tv.runner_sha256()
+    assert r["expected_runner_sha256"] == "0" * 64
+    assert backend.calls == []
+
+
+def test_verifier_source_pin_mismatch_fails_before_sandbox_execution(tree):
+    backend = FakeBackend(stdout="unused")
+    attestation = good_attestation(backend)
+    r = tv.grade_isolated_v2(
+        backend,
+        attestation,
+        workspace_root=tree / "ws",
+        source_tree=tree / "src",
+        target_file="pkg/core.py",
+        buggy_text=BUGGY,
+        candidate_text=CLEAN,
+        fail_to_pass=F2P,
+        pass_to_pass=P2P,
+        expected_verifier_sha256="0" * 64,
+    )
+    assert r["passed"] is False and r["executed"] is False
+    assert r["reason"] == "verifier_source_changed"
+    assert r["verifier_source_sha256"] == tv.verifier_source_sha256()
+    assert r["expected_verifier_sha256"] == "0" * 64
+    assert backend.calls == []
+
+
+def test_verifier_source_change_after_execution_discards_verdict(tree, monkeypatch):
+    backend = FakeBackend(stdout="unused")
+    attestation = good_attestation(backend)
+    original_hashes = tv.verifier_source_hashes()
+    expected = tv.verifier_source_sha256(original_hashes)
+    real_hashes = tv.verifier_source_hashes
+    calls = 0
+
+    def changed_hashes():
+        nonlocal calls
+        calls += 1
+        hashes = real_hashes()
+        if calls >= 2:
+            hashes["scripts/learning_pipeline_isolated_grading.py"] = "0" * 64
+        return hashes
+
+    monkeypatch.setattr(tv, "verifier_source_hashes", changed_hashes)
+    r = tv.grade_isolated_v2(
+        backend,
+        attestation,
+        workspace_root=tree / "ws",
+        source_tree=tree / "src",
+        target_file="pkg/core.py",
+        buggy_text=BUGGY,
+        candidate_text=CLEAN,
+        fail_to_pass=F2P,
+        pass_to_pass=P2P,
+        expected_verifier_sha256=expected,
+    )
+    assert calls >= 2
+    assert r["passed"] is False and r["reason"] == "verifier_source_changed"
+    assert r["verifier_source_sha256_after"] != expected
+
+
+def test_verifier_source_inventory_pins_backend_and_image_config():
+    assert "scripts/learning_pipeline_isolated_grading.py" in tv.VERIFIER_SOURCE_PATHS
+    assert "src/vare/container_isolation.py" in tv.VERIFIER_SOURCE_PATHS
+    assert "configs/learning_pipeline_grader_v2/Dockerfile" in tv.VERIFIER_SOURCE_PATHS
+
+
+def test_sandbox_config_change_after_execution_discards_verdict(tree):
+    backend = FakeBackend(stdout="unused")
+    attestation = good_attestation(backend)
+    original_run = backend.run
+
+    def change_config(*args, **kwargs):
+        result = original_run(*args, **kwargs)
+        backend.config_digest = lambda: "digest-changed"
+        return result
+
+    backend.run = change_config
+    r = tv.grade_isolated_v2(
+        backend,
+        attestation,
+        workspace_root=tree / "ws",
+        source_tree=tree / "src",
+        target_file="pkg/core.py",
+        buggy_text=BUGGY,
+        candidate_text=CLEAN,
+        fail_to_pass=F2P,
+        pass_to_pass=P2P,
+    )
+    assert r["passed"] is False and r["reason"] == "isolation_unverified_config_changed"
+    assert r["config_digest_after"] == "digest-changed"
 
 
 def test_static_scan_quarantines_added_hostile_lines_only():

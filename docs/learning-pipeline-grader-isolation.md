@@ -4,8 +4,9 @@ Status: audit of the frozen v1 grader (`src/vare/learning_pipeline/repo_env.py`,
 `protocols/coding_policy_learning_mlx_4b_v1.json`) plus a proposed fail-closed sandboxed grader
 (`scripts/learning_pipeline_isolated_grading.py`; kept outside `src/vare` so the frozen package and the
 versioned continuation source inventory stay unchanged). The v1 protocol and its modules are unchanged;
-the new grader is for later protocols only. Evidence level: E0 (synthetic fixture, Linux host,
-bubblewrap backend). The Docker/Colima backend has **not** been executed for this change.
+the new grader is for later protocols only. Evidence uses a synthetic fixture with live Linux
+bubblewrap and macOS Docker/Colima calibrations. It does not establish security against arbitrary
+Python running in the candidate interpreter.
 
 ## 1. Which processes execute candidate-controlled code (v1)
 
@@ -104,18 +105,19 @@ From `probe.json` and `tests/test_learning_pipeline_isolated_grading.py` (29 tes
 
 ## 5. Not verified / residual risk
 
-* **Canary-aware forgery passes when the static scan is off** (`forge_canary_aware__scan_off`:
-  `pass`). Candidate code runs inside the pytest process; in-sandbox checks cannot prove verdict
-  integrity. The static scan is a pattern list, and obfuscated code can evade it. Before online RL
+* **Same-interpreter key extraction and runner patching pass when the static scan is off.** The
+  Mac calibration reproduces `runner_key_exfil_and_frame_forgery`, `runner_closure_patch_via_gc`,
+  and `always_equal_return_value`; the current static scan quarantines these exact fixtures. Candidate
+  code runs inside the pytest process; in-sandbox checks cannot prove verdict integrity. The static
+  scan is a pattern list, and obfuscated code can evade it. Before online RL
   on this grader, a result channel outside the candidate process is needed (for example, each test in
   a fresh interpreter, with results reported through a trusted worker as in
   `vare.isolated_candidate`), or an explicit acceptance of this risk in the protocol.
 * The current task's tests are readable by candidate code in the same sandbox (required for
   in-process pytest). The earlier Colima run (`results/isolation-boundary-verification-v1`) records
   the same limitation (`FAIL_SYNTHETIC_CANARY_VISIBLE` for the grader container).
-* Docker/Colima backend: argv construction reuses existing tested flags, but this change has not been
-  run on the Mac. It needs per-repository images (pinned base digest, dependencies from the lock,
-  network only at build time) and a recorded attestation per image before use.
+* The synthetic Docker/Colima calibration does not validate per-repository dependency images or
+  production tasks. Each such image still needs a digest, attestation and calibration before use.
 * Probes check the configured sandbox, not the kernel, the VM or the container runtime.
 * Run-time and memory overhead of a container per candidate are not measured. The v1 trusted grade
   median is 0.74 s per candidate.
@@ -172,6 +174,16 @@ full attestation, backend selection attempts, verdict channel and runner sha256.
 `select_backend([DockerBackend, BwrapBackend], ...)` returns the first backend whose attestation
 passes, and records each attempt.
 
+Each `TrustedRepoEnv` instance snapshots both the runner hash and a verifier-source bundle hash
+when constructed. The bundle covers the host judge, runner, sandbox/backend, `RepoEnv` adapter,
+calibration harness, Dockerfile and frozen v1 `RepoEnv`. The source pins are checked before the
+candidate launches and checked again when grading returns. A mismatch or unreadable source fails
+closed; a verdict is discarded if source identity or the sandbox configuration changes while the
+candidate runs. Records carry before/after individual source hashes, the bundle hashes, the
+sandbox configuration digests and the instance pins. A study that creates new environment
+instances should also record the pins in its frozen protocol or run metadata; per-grade hashes
+alone are evidence of identity, not a cross-run lock.
+
 ### 6.3 Why not in `src`
 
 The v1 protocol freeze hashes `src/vare/learning_pipeline/repo_env.py`, `pipeline.py` and
@@ -194,23 +206,41 @@ and whose tree carries the bug, and then checks:
 | A3.5 | unknown test ID, empty ID list, and syntax error fail |
 | A3.6 | import-time sleep and busy loop end in `test_timeout`, with no process left |
 | A3.7 | a positive oracle control passes; candidates that read protected paths (host canary, evidence, other task, reference, `.git`) fail |
-| A3.8 | 12 verdict-tampering candidates fail with the static scan on **and** off: the three reproduced audit exploits (argv echo + exit 0, canary-aware exit 1, git restore), forged frames, protocol-hook hijack, report and pyfunc hooks, pytest internals patch, conftest drop, atexit, `sys.exit` at import |
+| A3.8 | The 12 declared verdict-tampering fixtures fail with the static scan on and off. Three separately reported same-interpreter residual fixtures pass with scanning off and are quarantined with it on. |
 | A3.9 | no file persists outside the workspace, no detached process survives |
 | A3.10 | evidence tree hash unchanged; evidence directory not visible in the sandbox |
 
-Residual cases, reported separately and not counted as defended: patching the runner's own
-closures through `gc`, and a return value whose `__eq__` is always true (specification gaming,
-not channel forgery). Both pass with the static scan off and are quarantined with it on. v2
-narrows the channel. It does not make in-process forgery impossible: code in the same
-interpreter can, in principle, read the key from memory. The static scan remains a required
-layer, and its patterns can be evaded by obfuscation.
+Residual cases, reported separately and not counted as defended: candidate code can read the
+runner key from the active interpreter frame and forge a complete authenticated verdict stream;
+it can also patch the runner's execution closure through `gc`. Both attacks pass with the static
+scan off and are quarantined by the current scan. A return value whose `__eq__` is always true
+also passes with scanning off (specification gaming, not channel forgery). The HMAC channel
+therefore does not provide an arbitrary-Python trust boundary while candidate code shares the
+runner interpreter. The static scan is a required filter for the tested threat set, and its
+patterns can be evaded by obfuscation. Process separation can keep the key out of candidate
+memory, but a separate signer that blindly signs test-runner messages would still trust verdicts
+the candidate can forge. A stronger design must execute candidate behavior behind a black-box
+interface while trusted test logic and verdict signing stay outside the candidate process, or
+narrow the supported task/test contract accordingly.
 
-Linux (bubblewrap, this host): all ten items `verified`. This does **not** show that the Docker
-backend works on the Mac.
+Linux (bubblewrap, this host): all ten items `verified` in the retained Linux report.
 
-Mac (Docker on Colima). Not run yet. `DockerBackend` accepts only `name@sha256:<digest>`
-references, and a locally built image has no repository digest until it is pushed, so the image is
-pushed to a loopback-only local registry first. From the repository root, at the commit under test:
+Mac (Docker on Colima), 2026-11-01: all ten calibration items A3.1–A3.10 verified on the synthetic
+fixture. The run used Python 3.12.12, Colima 0.10.3, Docker CLI 29.9.1, Docker Engine 29.5.2, and image
+`localhost:5000/vare-lp-grader@sha256:6ff5cba42240c57340c215e78d28f8f94624ed57cc0d5b92b548b9dfb32796da`.
+Attestation recorded uid 65534, two visible processes, a writable workspace, and no observed host
+canary, environment canary, evidence directory, interpreter write access, root write access, network
+route, non-loopback interface, host loopback connection, or Docker socket. The report records equal
+before/after runner and verifier source pins, an unchanged sandbox configuration digest,
+`source_identity_stable: true`, `sandbox_configuration_stable: true`, and zero workspaces left. The
+three residual fixtures above are a blocking limitation for arbitrary Python candidates; scan-on
+calibration shows only that these literal fixtures are caught.
+
+The historical calibration and its run note remain unchanged. The post-pin calibration JSON,
+focused test log, checksums and exact run command are in
+`results/learning-pipeline-grader-calibration-v2/same-interpreter-audit-20261101/`.
+`DockerBackend` accepts only `name@sha256:<digest>` references, so a locally built image is pushed
+to a loopback-only registry before use. From the repository root, at the commit under test:
 
 ```sh
 export DOCKER_CONTEXT=colima
@@ -218,15 +248,16 @@ docker run -d --rm --name vare-registry -p 127.0.0.1:5000:5000 registry:2
 docker build -t localhost:5000/vare-lp-grader:v2 configs/learning_pipeline_grader_v2
 docker push localhost:5000/vare-lp-grader:v2
 IMAGE="$(docker image inspect --format '{{index .RepoDigests 0}}' localhost:5000/vare-lp-grader:v2)"
-echo "$IMAGE"   # localhost:5000/vare-lp-grader@sha256:<64 hex>
-WORK="$HOME/.cache/vare-grader-calibration-$(date +%Y%m%dT%H%M%S)"   # under $HOME: shared with the Colima VM
+WORK="$(mktemp -d "$HOME/.cache/vare-grader-calibration-replay.XXXXXX")"   # shared with the Colima VM
 PYTHONPATH=src python3.12 scripts/learning_pipeline_grader_calibration.py \
   --backend docker --image "$IMAGE" --work-root "$WORK" --timeout 120 \
-  --out results/learning-pipeline-grader-calibration-v2/calibration-colima.json
-VARE_GRADER_IMAGE="$IMAGE" PYTHONPATH=src python3.12 -m pytest -q tests/test_learning_pipeline_trusted_grading.py
+  --out /tmp/vare-grader-calibration-replay.json
+VARE_GRADER_IMAGE="$IMAGE" VARE_GRADER_WORK_ROOT="$HOME/.cache" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+  PYTHONPATH=src python3.12 -m pytest -q -rA tests/test_learning_pipeline_isolated_grading.py \
+  tests/test_learning_pipeline_trusted_grading.py
 docker stop vare-registry
 ```
 
-Exit status 0 and `all_verified: True` are required. The report records the backend, image
-digest, attestation and per-item evidence. Before real tasks are used, each repository needs its
-own dependencies-only image, and an attestation and A3 run for that image.
+Exit status 0 and `all_verified: true` are required. The report records the backend, image digest,
+attestation and per-item evidence. Before real tasks are used, each repository needs its own
+dependencies-only image, and an attestation and A3 run for that image.
