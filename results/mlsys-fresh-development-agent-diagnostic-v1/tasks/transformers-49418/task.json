@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "editable_files": [
+      "src/transformers/cache_utils.py"
+    ],
+    "grader_is_hidden": true,
+    "public_tests_available": false,
+    "task_family": "quantized_cache_residual_update_boundary"
+  },
+  "prompt": "At the pinned Transformers baseline, QuantizedCache updates that contain multiple tokens can leave the residual cache with an incorrect length around its capacity boundary. Make a minimal source change so multi-token updates preserve the expected residual behavior for empty and nonempty residuals at and beyond capacity, while retaining the existing below-capacity and single-token behavior. Only edit src/transformers/cache_utils.py. Do not add dependencies. Inspect the source, apply the change, and finish. The independent grader is hidden.",
+  "source": {
+    "base_revision": "bd3f926f52b55a0a59e812376e7624ca9d471ac2",
+    "calibration_revision": "1734d8d9d6a4c5331ba87dd4a1a36d3a3cb25ac1",
+    "repository": "https://github.com/huggingface/transformers"
+  },
+  "task_id": "transformers-49418-quantized-cache-residual-flush"
+}

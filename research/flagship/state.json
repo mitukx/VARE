@@ -167,6 +167,12 @@
       "protocol_id": "mlsys-fresh-development-task-family-overlap-v1-addendum-2",
       "sha256": "283296307bdacf3ebedbcd56274542ba1d5630644c2817b6166cf94d19b1efb5",
       "status": "pre-completion provenance addendum; directly binds Stage 2/3 exposure ledger and qualification catalog; no allocation decision"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_agent_capability_v1.json",
+      "protocol_id": "mlsys-fresh-development-agent-capability-v1",
+      "sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d",
+      "status": "frozen_before_model_inference; exactly one Qwen3-4B greedy attempt and one independent grader call authorized for each of two Development families; not yet executed"
     }
   ],
   "git_refs": {
@@ -177,16 +183,16 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/152",
     "last_verified_main_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "b721f0cd19ed79a3d3a816b9236f83a7760ef00a"
+    "verified_pr_head_sha_before_checkpoint_changes": "b3ba5fa1ec886292e662804800868e96cf9e1903"
   },
   "go_no_go": {
-    "integration": "GO_PENDING_REMOTE_CI",
     "coding_capability": "NO_GO",
+    "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Verify local Qwen3-4B MLX runtime and clean isolated source/test environments; then freeze a Development allocation and one-attempt independent-grading protocol for Transformers #49418 and Ray #66694. Keep MLX #4778 unassigned pending replacement or an explicit risk protocol; run no target-model inference until the allocation and attempt protocol are committed.",
-  "last_completed_step": "Completed the frozen metadata-only Development/Train family overlap review. No direct identity or same-family match was found; Transformers #49418 and Ray #66694 have no prior family overlap found, while MLX #4778 has possible broad gradient/autodiff relatedness to Train task #4662. No split was assigned or inference run.",
-  "milestone_id": "p3-fresh-repository-task-qualification-complete",
+  "highest_priority_next_task": "Immediately repeat the host memory-pressure, swap, and free-disk gates; if they pass, execute one offline greedy Qwen3-4B attempt for each frozen Development family, durably record both transcripts, then grade each candidate once in its pinned offline container without returning feedback.",
+  "last_completed_step": "Verified all 13 cached Qwen3-4B model-file hashes, installed the pinned MLX-LM runtime in an isolated Python 3.12.12 environment, passed import/Metal preflight, and froze a one-attempt Development allocation for Transformers #49418 and Ray #66694 before generation.",
+  "milestone_id": "p4-fresh-development-agent-protocol-frozen",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -632,6 +638,46 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json",
       "sha256": "bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5",
       "status": "frozen metadata-only task-family overlap review; two candidates supported for prospective protocol, MLX held pending possible Train-family relatedness"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_agent_capability_v1.json",
+      "sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d",
+      "status": "frozen before model generation; inference authorized only for its two listed one-attempt Development tasks"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/transformers-49418/task.json",
+      "sha256": "650630b337caf9acaf1586bf288f9d4b61dae5767c3b657ba4a0b8203cef95e3",
+      "status": "frozen agent task input"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/transformers-49418/TASK.md",
+      "sha256": "1b17b5d661f7997e7f08e52d807376499ee9c7d7fdbbb64c2948f2067ee1c558",
+      "status": "frozen agent task prompt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/ray-66694/task.json",
+      "sha256": "a492aebfcfec599ddebf8196078fb9081cf5ce8889a3f3b26fba3b2ba1675b89",
+      "status": "frozen agent task input"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/ray-66694/TASK.md",
+      "sha256": "9bb77216f3e6816b21c4d604c14e3383bfd264d743619ae984d0c11dbb6a31e5",
+      "status": "frozen agent task prompt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/requirements.lock",
+      "sha256": "fa9bcf897f07a9cda150e613f81e2f9bd5c51c7d629930d9c9f4e14f330c3085",
+      "status": "hashed isolated MLX-LM runtime dependencies"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/import-preflight.log",
+      "sha256": "47db4906aaf60c4bca99af937e125b93d3a08a8dce1d86ccdf87756f33c0a4c0",
+      "status": "MLX/Metal import-only preflight passed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/model-file-manifest.json",
+      "sha256": "20022d56b6c963d2af5dc0c17ae5f240a277e2f1532417a5db7c1b0cfedfb5b7",
+      "status": "13 model files hash-verified against run-19 protocol"
     }
   ],
   "run_ids": [
@@ -674,10 +720,12 @@
     "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884"
   },
   "unresolved_blockers": [
-    "MLX #4778 has possible broad gradient/autodiff family relatedness to Train #4662 and remains unassigned pending a replacement or explicit risk-handling protocol.",
-    "Public pretraining exposure for all selected upstream patches is UNKNOWN; no pretraining-independence claim is supported.",
-    "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-Out evaluation has run; coding capability and RL update remain NO_GO.",
-    "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded from the replacement cohort."
+    "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
+    "No fresh Development model attempt or policy update has run yet. The frozen protocol authorizes two one-shot attempts; coding capability remains NO_GO pending independent results.",
+    "No SFT/RL comparison, policy update, or Held-Out evaluation is authorized by the current protocol.",
+    "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
+    "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
+    "PR #153 has green required checks on head b3ba5fa but still needs review before integration."
   ],
-  "updated_at": "2026-10-31T09:20:57+09:00"
+  "updated_at": "2026-10-31T00:32:50Z"
 }

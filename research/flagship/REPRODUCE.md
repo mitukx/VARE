@@ -244,3 +244,25 @@ PY
 ```
 
 Transformers #49418 and Ray #66694 may proceed to a separately frozen prospective Development protocol. Keep MLX #4778 unassigned pending replacement or explicit risk handling. These are metadata-level judgments, not pretraining-independence findings.
+
+## Prospective Development model diagnostic v1
+
+Protocol: protocols/mlsys_fresh_development_agent_capability_v1.json (SHA-256 e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d). This freezes exactly one offline greedy Qwen3-4B attempt for Transformers #49418 and one for Ray #66694, followed by one independent grade per candidate. The only task source files exposed to the local agent are the allowlisted production paths. Do not run public tests, repeat attempts, or return grader results to the model.
+
+The local venv is isolated under work/; the hash-pinned dependency lock is tracked at results/mlsys-fresh-development-agent-diagnostic-v1/runtime/requirements.lock. The install must use hardlinks: uv's symlink mode made MLX's extension resolve its adjacent library from a cache directory. The existing model snapshot must match runtime/model-file-manifest.json.
+
+Before each attempt, inspect host resources. Abort without loading the model if memory pressure free falls below 50%, swap used exceeds 4 GiB, or free disk falls below 5 GiB.
+
+    memory_pressure -Q
+    sysctl vm.swapusage
+    df -h .
+
+Run from the VARE repository root. The attempt runner checks its wall budget between generations; stop the process if the 360-second outer limit is reached. Do not rerun after timeout or partial output.
+
+    PYTHONPATH=src HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1       work/mlx-qwen3-agent-runtime/venv/bin/python scripts/run_local_agent.py       --workspace "$PWD/work/agent-workspaces/transformers-49418"       --model-path /Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b       --model-repository mlx-community/Qwen3-4B-Instruct-2507-4bit       --backend mlx       --task-root results/mlsys-fresh-development-agent-diagnostic-v1/tasks/transformers-49418       --output results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/agent-attempt-001.json       --instruction "Inspect the task statement and make the minimal source change it requests. Use the tools to inspect and edit the workspace, then finish."       --seed 49418 --max-turns 12 --max-no-tool-retries 2       --max-new-tokens-per-turn 256 --max-total-new-tokens 2048       --max-context-tokens 4096 --wall-seconds 300       --temperature 0 --top-p 1 --top-k 0 --no-do-sample       --edit-format unified_diff
+
+    PYTHONPATH=src HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1       work/mlx-qwen3-agent-runtime/venv/bin/python scripts/run_local_agent.py       --workspace "$PWD/work/agent-workspaces/ray-66694"       --model-path /Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b       --model-repository mlx-community/Qwen3-4B-Instruct-2507-4bit       --backend mlx       --task-root results/mlsys-fresh-development-agent-diagnostic-v1/tasks/ray-66694       --output results/mlsys-fresh-development-agent-diagnostic-v1/ray-66694/agent-attempt-001.json       --instruction "Inspect the task statement and make the minimal source change it requests. Use the tools to inspect and edit the workspace, then finish."       --seed 66694 --max-turns 12 --max-no-tool-retries 2       --max-new-tokens-per-turn 256 --max-total-new-tokens 2048       --max-context-tokens 4096 --wall-seconds 300       --temperature 0 --top-p 1 --top-k 0 --no-do-sample       --edit-format unified_diff
+
+Independent grader argv templates, test hashes, image digests, resource limits, network restrictions, and expected cases are frozen in the protocol. Substitute the repository root for {VARE_ROOT} and redirect each one-shot Docker command's stdout/stderr to its task log. Save one JSON receipt per grader call. Grade only after the corresponding agent record is durable; never feed results back to either attempt.
+
+Current status at protocol freeze: import-only MLX/Metal preflight passed; no model weights were loaded and no generation has run. The next session must repeat resource gates before each attempt.

@@ -1,0 +1,447 @@
+{
+  "allocation": {
+    "pretraining_exposure": "UNKNOWN",
+    "remaining_prospective_pool": [
+      "mlx-4778-complex-power-vjp-conjugation remains unassigned because possible broad gradient/autodiff overlap with Train #4662; do not use in this protocol."
+    ],
+    "selection_basis": "Task-family overlap review found no prior family overlap for Transformers #49418 and Ray #66694; both were source-qualified and unassigned before this allocation.",
+    "split": "development",
+    "task_family_overlap_review": {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json",
+      "sha256": "bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5"
+    },
+    "tasks": [
+      {
+        "attempt_id": "freshdev-agent-transformers-49418-attempt-001",
+        "family_overlap": {
+          "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+          "confidence": "MODERATE",
+          "review_record": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json"
+        },
+        "grader_feedback_to_agent": false,
+        "independent_grader": {
+          "command_template": [
+            "docker",
+            "--context",
+            "colima",
+            "run",
+            "--rm",
+            "--network=none",
+            "--read-only",
+            "--memory=2500m",
+            "--memory-swap=2500m",
+            "--cpus=2",
+            "--pids-limit=256",
+            "--cap-drop=ALL",
+            "--security-opt=no-new-privileges:true",
+            "--shm-size=64m",
+            "--tmpfs",
+            "/tmp:rw,noexec,nosuid,nodev,size=256m,mode=1777",
+            "--tmpfs",
+            "/usr/local/lib/python3.12/site-packages/optimum/quanto/library/extensions/cpp/build:rw,exec,nosuid,nodev,size=256m,mode=1777",
+            "--volume",
+            "{VARE_ROOT}/work/mlsys-fresh-dev-qualification-v1/transformers-context/base/src:/source:ro",
+            "--volume",
+            "{VARE_ROOT}/work/agent-workspaces/transformers-49418/src/transformers/cache_utils.py:/source/transformers/cache_utils.py:ro",
+            "--volume",
+            "{VARE_ROOT}/work/mlsys-fresh-dev-qualification-v1/transformers-context/trusted-tests/tests/utils/test_cache_utils.py:/trusted/test_cache_utils.py:ro",
+            "--user=65534:65534",
+            "--env",
+            "HOME=/tmp",
+            "--env",
+            "MAX_JOBS=1",
+            "--env",
+            "PYTHONDONTWRITEBYTECODE=1",
+            "--env",
+            "TMPDIR=/tmp",
+            "--env",
+            "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+            "--env",
+            "PYTHONPATH=/source",
+            "--env",
+            "CUDA_VISIBLE_DEVICES=",
+            "--env",
+            "HF_HUB_OFFLINE=1",
+            "--env",
+            "TOKENIZERS_PARALLELISM=false",
+            "--env",
+            "TRANSFORMERS_OFFLINE=1",
+            "--entrypoint=python3",
+            "d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token"
+          ],
+          "expected_cases": 6,
+          "grader_result_visible_to_agent": false,
+          "grader_type": "pinned isolated pytest candidate check",
+          "image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+          "network": "none",
+          "selectors": [
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_0_empty_at_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_1_empty_over_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_2_nonempty_at_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_3_nonempty_over_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_4_below_capacity",
+            "/trusted/test_cache_utils.py::CacheTest::test_quantized_layer_chunked_updates_5_single_token"
+          ],
+          "source_mount": "/source:ro with candidate cache_utils.py overlay:ro",
+          "test_mount": "/trusted/test_cache_utils.py:ro",
+          "test_path": "work/mlsys-fresh-dev-qualification-v1/transformers-context/trusted-tests/tests/utils/test_cache_utils.py",
+          "test_sha256": "5088fd067cbc9d99e49b5edbb7a5d13431621922c6c651135b8f16a218f80bea"
+        },
+        "max_independent_grader_calls": 1,
+        "max_model_attempts": 1,
+        "public_tests_visible_to_agent": false,
+        "qualification": {
+          "baseline_expected_failures": 4,
+          "baseline_passed": 2,
+          "fixed_passed": 6,
+          "fixed_skips": 0,
+          "image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+          "record": "results/mlsys-fresh-development-task-qualification-v1/transformers-49418/qualification.json",
+          "record_sha256": "75bfa210ef7ce8184ade0d5c98c92047d6eab918e6e662d2f12a3ec07d28ea4e",
+          "status": "QUALIFIED_SOURCE_LEVEL"
+        },
+        "repository": "huggingface/transformers",
+        "source": {
+          "base_revision": "bd3f926f52b55a0a59e812376e7624ca9d471ac2",
+          "calibration_revision": "1734d8d9d6a4c5331ba87dd4a1a36d3a3cb25ac1",
+          "editable_files": [
+            "src/transformers/cache_utils.py"
+          ],
+          "source_sha256": {
+            "src/transformers/cache_utils.py": "abdcb0ae88aa5b924ef7d76879db680e9af8f3ec1dafbba7ce446ecb521a944b"
+          },
+          "workspace_path": "work/agent-workspaces/transformers-49418"
+        },
+        "split_assignment": "development",
+        "task_family": "quantized_cache_residual_update_boundary",
+        "task_id": "transformers-49418-quantized-cache-residual-flush",
+        "task_input": {
+          "agent_instruction": "Inspect the task statement and make the minimal source change it requests. Use the tools to inspect and edit the workspace, then finish.",
+          "agent_instruction_sha256": "7d40a6adda8426e08e9be72feef45504e0076311db3d574ae2c5fcc5a5f8aef2",
+          "prompt_sha256": "32ab8c98aad2f654ea84fcf0b94f169d67a967709bb3e473d574b38c4c81e0d5",
+          "task_json_path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/transformers-49418/task.json",
+          "task_json_sha256": "650630b337caf9acaf1586bf288f9d4b61dae5767c3b657ba4a0b8203cef95e3",
+          "task_md_path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/transformers-49418/TASK.md",
+          "task_md_sha256": "1b17b5d661f7997e7f08e52d807376499ee9c7d7fdbbb64c2948f2067ee1c558"
+        }
+      },
+      {
+        "attempt_id": "freshdev-agent-ray-66694-attempt-001",
+        "family_overlap": {
+          "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+          "confidence": "MODERATE_TO_HIGH",
+          "review_record": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json"
+        },
+        "grader_feedback_to_agent": false,
+        "independent_grader": {
+          "command_template": [
+            "docker",
+            "--context",
+            "colima",
+            "run",
+            "--rm",
+            "--network=none",
+            "--read-only",
+            "--memory=2500m",
+            "--memory-swap=2500m",
+            "--cpus=2",
+            "--pids-limit=256",
+            "--cap-drop=ALL",
+            "--security-opt=no-new-privileges:true",
+            "--shm-size=64m",
+            "--tmpfs",
+            "/tmp:rw,noexec,nosuid,nodev,size=256m,mode=1777",
+            "--volume",
+            "{VARE_ROOT}/work/agent-workspaces/ray-66694/python/ray/data/_internal/stats.py:/usr/local/lib/python3.12/site-packages/ray/data/_internal/stats.py:ro",
+            "--volume",
+            "{VARE_ROOT}/work/agent-workspaces/ray-66694/python/ray/data/block.py:/usr/local/lib/python3.12/site-packages/ray/data/block.py:ro",
+            "--volume",
+            "{VARE_ROOT}/results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py:/trusted/test_ray_66694.py:ro",
+            "--user=65534:65534",
+            "--env",
+            "PYTHONDONTWRITEBYTECODE=1",
+            "--env",
+            "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+            "--entrypoint=python3",
+            "04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b",
+            "-m",
+            "pytest",
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            "/trusted/test_ray_66694.py::test_dataset_throughput_calculation",
+            "/trusted/test_ray_66694.py::test_operator_throughput_calculation",
+            "/trusted/test_ray_66694.py::test_operator_wall_time_multi_node",
+            "/trusted/test_ray_66694.py::test_block_exec_stats_builder_records_unix_anchor"
+          ],
+          "expected_cases": 4,
+          "grader_result_visible_to_agent": false,
+          "grader_type": "pinned isolated pytest candidate check",
+          "image_id": "sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b",
+          "network": "none",
+          "selectors": [
+            "/trusted/test_ray_66694.py::test_dataset_throughput_calculation",
+            "/trusted/test_ray_66694.py::test_operator_throughput_calculation",
+            "/trusted/test_ray_66694.py::test_operator_wall_time_multi_node",
+            "/trusted/test_ray_66694.py::test_block_exec_stats_builder_records_unix_anchor"
+          ],
+          "source_mounts": [
+            {
+              "source": "python/ray/data/_internal/stats.py",
+              "target": "/usr/local/lib/python3.12/site-packages/ray/data/_internal/stats.py:ro"
+            },
+            {
+              "source": "python/ray/data/block.py",
+              "target": "/usr/local/lib/python3.12/site-packages/ray/data/block.py:ro"
+            }
+          ],
+          "test_mount": "/trusted/test_ray_66694.py:ro",
+          "test_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py",
+          "test_sha256": "945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c"
+        },
+        "max_independent_grader_calls": 1,
+        "max_model_attempts": 1,
+        "public_tests_visible_to_agent": false,
+        "qualification": {
+          "baseline_passed": 2,
+          "baseline_target_failures": 2,
+          "fixed_passed": 4,
+          "fixed_skips": 0,
+          "image_id": "sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b",
+          "record": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/qualification.json",
+          "record_sha256": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d",
+          "status": "QUALIFIED_SOURCE_LEVEL",
+          "wrong_mutant_rejected": true
+        },
+        "repository": "ray-project/ray",
+        "source": {
+          "base_revision": "8374f91cad9e89050368fdbb34ee78f042d73902",
+          "calibration_revision": "5808b33e30092d7761d545f8ce059b14c4cf0098",
+          "editable_files": [
+            "python/ray/data/_internal/stats.py",
+            "python/ray/data/block.py"
+          ],
+          "source_sha256": {
+            "python/ray/data/_internal/stats.py": "03bc1d1af986be18982626dbb8bed64c84330c9304c4e3fe421e1e9f17b3967d",
+            "python/ray/data/block.py": "38d638a9036b02a53666c3d23f65086c0887322d30a526968cc98bb567cb8110"
+          },
+          "workspace_path": "work/agent-workspaces/ray-66694"
+        },
+        "split_assignment": "development",
+        "task_family": "operator_wall_time_multi_node_clock_domain",
+        "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain",
+        "task_input": {
+          "agent_instruction": "Inspect the task statement and make the minimal source change it requests. Use the tools to inspect and edit the workspace, then finish.",
+          "agent_instruction_sha256": "7d40a6adda8426e08e9be72feef45504e0076311db3d574ae2c5fcc5a5f8aef2",
+          "prompt_sha256": "66037b09370002bd995d5f2a5b22c416b7c7c341d61ac9bd511d10db82316926",
+          "task_json_path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/ray-66694/task.json",
+          "task_json_sha256": "a492aebfcfec599ddebf8196078fb9081cf5ce8889a3f3b26fba3b2ba1675b89",
+          "task_md_path": "results/mlsys-fresh-development-agent-diagnostic-v1/tasks/ray-66694/TASK.md",
+          "task_md_sha256": "9bb77216f3e6816b21c4d604c14e3383bfd264d743619ae984d0c11dbb6a31e5"
+        }
+      }
+    ]
+  },
+  "controller": {
+    "backend": "mlx",
+    "budgets": {
+      "max_context_tokens": 4096,
+      "max_new_tokens_per_turn": 256,
+      "max_no_tool_retries": 2,
+      "max_total_new_tokens": 2048,
+      "max_turns": 12,
+      "model_attempts_per_task": 1,
+      "outer_process_timeout_seconds": 360,
+      "runner_wall_seconds": 300
+    },
+    "decoding": {
+      "do_sample": false,
+      "seed_by_task": {
+        "ray-66694": 66694,
+        "transformers-49418": 49418
+      },
+      "temperature": 0.0,
+      "top_k": 0,
+      "top_p": 1.0
+    },
+    "edit_format": "unified_diff",
+    "entrypoint": "scripts/run_local_agent.py",
+    "environment": {
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1",
+      "network_access_from_agent": "none"
+    },
+    "instruction": "Inspect the task statement and make the minimal source change it requests. Use the tools to inspect and edit the workspace, then finish.",
+    "native_chat_template": true,
+    "paths": {
+      "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+      "scripts/run_local_agent.py": "4e4fb0162d7fa12de447f996657a5749ebb8964a600ea6461bfe3f0342b4df0f",
+      "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+      "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd"
+    },
+    "public_tests_enabled": false,
+    "tool_call_continuity": "paired assistant tool-call and tool-result messages",
+    "tools": [
+      "list_files",
+      "read_file",
+      "search_text",
+      "apply_patch",
+      "replace_text",
+      "check_syntax",
+      "finish"
+    ]
+  },
+  "decision_rules": {
+    "capability_feasibility_go": "At least one task receives an agent-generated nonempty allowed-source patch and passes every frozen independent correctness case with a valid grader result.",
+    "failure": "No patch, disallowed or empty diff, failed independent grader, timeout, or infrastructure-valid agent failure is recorded as failure for that attempt; no retry.",
+    "infrastructure_failure": "Import, model-load, runner, workspace, container, or protocol failure is recorded separately. Any generated tokens consume that task's single attempt; no retry.",
+    "primary_metric": "Per-family independently verified repair success after one fixed greedy attempt.",
+    "rl_readiness": "No RL update under this protocol. A real learner requires additional diverse, verified model trajectories and nondegenerate rewards, plus compute and an authorized training protocol.",
+    "stronger_feasibility": "Correct agent repairs on both distinct task families; this is a feasibility signal only, not statistical proof."
+  },
+  "frozen_against_vare_commit": "b3ba5fa1ec886292e662804800868e96cf9e1903",
+  "frozen_at_utc": "2026-10-31T00:32:42Z",
+  "host_preflight": {
+    "abort_without_attempt_if_threshold_failed": true,
+    "expected_model_peak_memory_bytes_from_run19": 3430000000,
+    "maximum_swap_used_bytes": 4294967296,
+    "minimum_free_disk_bytes": 5368709120,
+    "minimum_free_memory_pressure_percent": 50,
+    "physical_memory_bytes": 34359738368,
+    "platform": "macOS-27.0.1-arm64",
+    "preflight_must_be_rechecked_immediately_before_each_attempt": true
+  },
+  "independent_grading": {
+    "baseline_and_known_fix_calibration": "Use only the already completed frozen qualification controls cited per task; do not spend additional candidate/test arms.",
+    "candidate_and_test_mounts": "read-only",
+    "grade_only_after_agent_result_is_durable": true,
+    "grader_calls_per_task": 1,
+    "network": "none",
+    "no_feedback_or_prompt_revision_after_first_grade": true,
+    "no_reruns": true,
+    "resource_limits": {
+      "cpus": 2,
+      "memory_mb": 2500,
+      "memory_swap_mb": 2500,
+      "pids_limit": 256
+    },
+    "result_visible_to_agent": false
+  },
+  "inference_authorized": true,
+  "mission_scope": "A bounded prospective Development capability diagnostic. This protocol authorizes exactly one local base-model attempt and one offline independent grader invocation per listed task family. It authorizes no retry, public-test access, grader feedback, SFT, optimizer update, RL, or Held-Out access.",
+  "model": {
+    "device": "Apple Metal on arm64 macOS; no network model download",
+    "file_manifest_path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/model-file-manifest.json",
+    "file_manifest_sha256": "20022d56b6c963d2af5dc0c17ae5f240a277e2f1532417a5db7c1b0cfedfb5b7",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+        "size_bytes": 1570
+      },
+      {
+        "path": "README.md",
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+        "size_bytes": 969
+      },
+      {
+        "path": "added_tokens.json",
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+        "size_bytes": 707
+      },
+      {
+        "path": "chat_template.jinja",
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+        "size_bytes": 4040
+      },
+      {
+        "path": "config.json",
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+        "size_bytes": 938
+      },
+      {
+        "path": "generation_config.json",
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+        "size_bytes": 238
+      },
+      {
+        "path": "merges.txt",
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "size_bytes": 1671853
+      },
+      {
+        "path": "model.safetensors",
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+        "size_bytes": 2263022417
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+        "size_bytes": 63964
+      },
+      {
+        "path": "special_tokens_map.json",
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "size_bytes": 613
+      },
+      {
+        "path": "tokenizer.json",
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "size_bytes": 11422654
+      },
+      {
+        "path": "tokenizer_config.json",
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+        "size_bytes": 5440
+      },
+      {
+        "path": "vocab.json",
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "size_bytes": 2776833
+      }
+    ],
+    "import_preflight_path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/import-preflight.log",
+    "import_preflight_sha256": "47db4906aaf60c4bca99af937e125b93d3a08a8dce1d86ccdf87756f33c0a4c0",
+    "model_pretraining_exposure": "UNKNOWN",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "runtime_lock_path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/requirements.lock",
+    "runtime_lock_sha256": "fa9bcf897f07a9cda150e613f81e2f9bd5c51c7d629930d9c9f4e14f330c3085",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "snapshot_total_bytes": 2278972236,
+    "software": {
+      "mlx": "0.32.4",
+      "mlx_lm": "0.32.2",
+      "python": "3.12.12",
+      "tokenizers": "0.23.3",
+      "transformers": "5.22.1"
+    },
+    "training_authorized": false
+  },
+  "nonclaims": [
+    "No generalization beyond these two Development families.",
+    "Public pretraining exposure remains UNKNOWN.",
+    "No policy update, SFT, GRPO/PPO/RL gain, causal controller attribution, algorithmic novelty, or Held-Out result.",
+    "Two one-shot task outcomes are not a statistical benchmark."
+  ],
+  "protocol_id": "mlsys-fresh-development-agent-capability-v1",
+  "protocol_status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "repository": "https://github.com/mitukx/VARE",
+  "required_outputs": [
+    "Per-task raw agent transcript and candidate diff.",
+    "One independent grader record and raw log per task, with no feedback loop.",
+    "Post-run resource telemetry, exposure append, report, and SHA256SUMS."
+  ],
+  "schema_version": 1
+}

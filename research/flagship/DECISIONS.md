@@ -303,3 +303,12 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Do not claim the full cohort is disjoint. Prepare a prospective Development protocol for Transformers #49418 and Ray #66694 only; keep MLX #4778 unassigned pending replacement or explicit risk handling. No split assignment or inference is authorized by this review.
 - **Falsification criteria:** New verified family/identity evidence, any hidden Held-Out access, or input hash mismatch.
 - **Follow-up:** Verify local model/runtime availability, then freeze allocation, prompts, budgets, and independent grading before a bounded target-model attempt.
+
+## 2026-10-31 — Allocate two fresh Development agent attempts
+
+- **Hypothesis:** The local Qwen3-4B-4bit policy, using VARE's current bounded native-tool controller, can repair at least one source-qualified coding task family it has not previously attempted.
+- **Evidence:** The frozen family-overlap review found no prior family overlap for Transformers #49418 and Ray #66694. Both tasks have baseline failures, known-fix passes, and pinned independent test images. Run 19 previously produced a 2/2 Train-task grade, but it is not fresh Development evidence. Public pretraining exposure is unknown.
+- **Alternative explanations:** Any success could depend on the controller, task specificity, or pretraining exposure. The small two-task diagnostic cannot establish generalization or a learning effect.
+- **Decision:** Assign only Transformers #49418 and Ray #66694 to a prospective Development diagnostic. Freeze one greedy attempt per family, 2,048 generated tokens, no public tests, one independent grader call per candidate, no retries, and no grader feedback. Keep MLX #4778 unassigned.
+- **Falsification criteria:** Both attempts produce no independently accepted patch, or either apparent success fails its frozen independent correctness suite.
+- **Follow-up experiment:** Inspect all tool traces and grades. If both fail, identify the largest observed failure stage and change one justified factor before spending another fresh family. Do not start RL without multiple verified trajectories and a nondegenerate reward signal.
