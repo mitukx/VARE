@@ -321,15 +321,15 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
     "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "2b97e96fea70394a98f23d8c5aabaae1c53fc8a8"
+    "verified_pr_head_sha_before_checkpoint_changes": "fb5b72b36076c9f4a46603629172c3c5b9138d4a"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
     "integration": "BLOCKED",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Wait for exact-head CI and CPU evidence on PR #162 head 18f829b4. Then synchronize the stacked PR branches in order, beginning with draft PR #161 against PR #160 head f91bb2c6, and refresh CI on each changed head. Complete the full 109-file PR #160 scope and dependency review before deciding whether it is safe to integrate. Do not force-push or rerun either frozen vLLM protocol.",
-  "last_completed_step": "Corrected the vLLM #64830 source-arm RSS interpretation with append-only erratum 001; the consumed 4 GiB resource result is inconclusive. PR #163 appended the later Development preflight NO_GO exposure event; refreshed its ledger sidecar and added a separate snapshot supplement. The original 58-file source-qualification manifest verifies at pre-append commit 18f829b4. PR #162 commit 18f829b4 includes the runner fix; four focused tests, Ruff, py_compile, and the current errata manifest passed. PR #162 exact-head CI is pending; PR #160 exact-head checks and calibrated CPU evidence pass.",
+  "highest_priority_next_task": "Wait for exact-head CI and calibrated CPU evidence on synchronized PRs #161–#163; diagnose any failure and rerun only transient CI jobs. Then complete a read-only scope and integration-order review of PR #160. Keep the vLLM frozen protocols closed, do not merge without normal review, and do not start a model attempt without a distinct viable task pair and a new passing resource preflight.",
+  "last_completed_step": "Synchronized stacked PRs #161, #162, and #163 to PR #160 head da625977, preserving both append-only RSS corrections and the #64830 exposure ledger. PR #163 is now at fb5b72b3 with base PR #162 head 57b6507b. Focused merged-tree validation passed 23 tests, both #64575 checksum manifests verified, and git diff --check passed. Exact-head CI/CPU evidence is running on PRs #161–#163; no branch was merged.",
   "milestone_id": "p16-vllm-64830-one-shot-development-attempt",
   "result_hash_references": [
     {
@@ -1536,6 +1536,21 @@
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/current-exposure-ledger-supplement-001.json",
       "sha256": "7cbe9683cb76a9542e0e2db6a3b9ef382a42972ea02dc9ebc86bf48e87869a05",
       "status": "Binds historical source-qualification ledger hashes and current Development preflight NO_GO event."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/rss-resource-measurement-erratum-001.json",
+      "sha256": "2b0879110e0ad7e095d2aff4e5d4c5cfdd421456b33db229d62321ec561db9d3",
+      "status": "Append-only #64575 RSS correction; original 30-file evidence bundle remains unchanged."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/rss-resource-measurement-erratum-001.md",
+      "sha256": "71b6979d387ea0656e2ac7f3fa7a5f7f8ace7f5333273886e8cd5a835890eb98",
+      "status": "Append-only #64575 RSS correction; original 30-file evidence bundle remains unchanged."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/SHA256SUMS",
+      "sha256": "f643611382402d7dfa9317b1e478515d83d26dec905c027d49f1cc22e434a1ac",
+      "status": "Append-only #64575 RSS correction; original 30-file evidence bundle remains unchanged."
     }
   ],
   "run_ids": [
@@ -1610,7 +1625,19 @@
     "41180546984",
     "41182365236",
     "41182368587",
-    "41182368584"
+    "41182368584",
+    "41183436031",
+    "41183439344",
+    "41183439489",
+    "41184057449",
+    "41184060589",
+    "41184060600",
+    "41184134388",
+    "41184138216",
+    "41184138294",
+    "41184199790",
+    "41184203745",
+    "41184203686"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -1628,11 +1655,12 @@
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
     "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Its resource preflight NO-GO remains valid, but the historical runner skipped the task JSON/prompt hashes; a retrospective hash check matches the frozen protocol. Model weights were not loaded. See the append-only integrity erratum; do not retry protocol v1.",
-    "PR #161 head ade8a0ac3dfe609e67698638faf6eb826101dbc5 passes checks on its old base 71aa74ab6a8f6f1625505b68f7f332c49fabff93, which is behind PR #160 head f91bb2c6e27a80136ee7b391a08cdebeb3442610; it remains a draft and needs synchronization plus fresh exact-head CI.",
     "The prospectively assigned vLLM #64830 Development task hit launch-preflight NO_GO: available memory was 11,035,787,264 bytes (<12 GiB) and estimated working-set-plus-headroom failed. Frozen inputs and model snapshot hashes verified, but no weights were loaded, no prompt or candidate was generated, and no grade ran. Do not retry the frozen protocol; any future execution needs a new protocol and a fresh passing resource gate.",
-    "PR #160 head f91bb2c6e27a80136ee7b391a08cdebeb3442610 has passing exact-head required CI and calibrated CPU evidence; its review threads are resolved and GitHub reports CLEAN. It changes 109 files with 7,761 additions as the parent of a #161/#162/#163 stack; complete the scope and integration-order review before merging. Do not merge it merely to reduce the open-PR count.",
-    "PR #162 head 18f829b40cb02b2edf71de6f69f2aafcff27ed6a includes the RSS measurement correction and its P1 review thread is resolved; two CI runs and calibrated CPU evidence are still in progress. Its base PR #161 is stale relative to PR #160 and must be synchronized before integration.",
-    "The vLLM #64830 source-arm receipts recorded 3,932,160 bytes from 0.5-second RSS samples, not measured process-tree peaks. The 4 GiB resource result is INCONCLUSIVE; see append-only erratum results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.json (SHA-256 0656b5343f613a74d0bd35f93003622f9074130b2d2e662d19e2c00c14ca6877). Do not rerun consumed arms or reuse protocol v1. The original 58-file manifest covers the pre-append snapshot at commit 18f829b4; the live ledger and refreshed sidecar are covered by the separate errata manifest."
+    "The vLLM #64830 source-arm receipts recorded 3,932,160 bytes from 0.5-second RSS samples, not measured process-tree peaks. The 4 GiB resource result is INCONCLUSIVE; see append-only erratum results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.json (SHA-256 0656b5343f613a74d0bd35f93003622f9074130b2d2e662d19e2c00c14ca6877). Do not rerun consumed arms or reuse protocol v1. The original 58-file manifest covers the pre-append snapshot at commit 18f829b4; the live ledger and refreshed sidecar are covered by the separate errata manifest.",
+    "PR #160 head da625977aa0d784909e9c292c7df4cd4871c5e1f passes exact-head CI and calibrated CPU evidence (runs 41183439344, 41183439489; push CI 41183436031). The pull request has no approval recorded; its 112-file scope and stacked integration order still need a complete review. Do not merge before normal review.",
+    "PR #161 draft is synchronized on base PR #160 head da625977aa0d784909e9c292c7df4cd4871c5e1f at head bbca0290d91ca3f0a5b67bd29ea51b3bcb16e686. Exact-head CI/CPU runs 41184060589 and 41184060600, plus push CI 41184057449, are in progress.",
+    "PR #162 is synchronized on base PR #161 head bbca0290d91ca3f0a5b67bd29ea51b3bcb16e686 at head 57b6507beae369e7ad865c98c96457b5fca3cc76. Exact-head CI/CPU runs 41184138216 and 41184138294, plus push CI 41184134388, are in progress.",
+    "PR #163 draft is synchronized on base PR #162 head 57b6507beae369e7ad865c98c96457b5fca3cc76 at head fb5b72b36076c9f4a46603629172c3c5b9138d4a. Exact-head CI/CPU runs 41184203745 and 41184203686, plus push CI 41184199790, are in progress."
   ],
-  "updated_at": "2026-10-31T07:57:58Z"
+  "updated_at": "2026-10-31T08:21:00Z"
 }
