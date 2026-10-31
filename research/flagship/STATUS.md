@@ -6,7 +6,7 @@
 - PR #150 is confirmed merged with its exact-head CI, CPU-evidence, and E2E checks passing.
 - PR #160 is open at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`. Its Python 3.11/3.12/3.13 CI, lint, typecheck, seeded-summary, RVL inference, Math500 grader, and CPU-evidence checks pass. GitHub reports merge state BLOCKED; normal review and branch protection remain.
 - PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`, stacked on #160. Its exact-head CI and CPU evidence pass. No review is recorded.
-- Active branch: `codex/freshdev-qualification-vllm64830-oct31`; draft PR #162 is open at `bd565d12193728c971d68f778b110ac3e98ca392`, based on PR #161. CI is running after the mutant evidence checkpoint.
+- Active branch: `codex/freshdev-qualification-vllm64830-oct31`; draft PR #162 is open at `91c2e1a3532c75e7c39d673a56435d70aa4e98cf`, based on PR #161. CI is running after the complete qualification checkpoint.
 - Milestone: `p15-fresh-vllm-64830-source-qualification`.
 
 ## Completed in this checkpoint
@@ -28,4 +28,4 @@
 
 ## Immediate next action
 
-Push the fixed-arm receipt, final source-only report, append-only exposure update, and checkpoint. Update PR #162 with all three arm results and the scope limits, then verify exact-head CI and review state. Keep #64830 unassigned; any Development attempt needs its own prospective frozen assignment and resource preflight.
+Push the final report wording/checksum correction, then verify exact-head CI and review state on PR #162. Keep #64830 unassigned; any Development attempt needs its own prospective frozen assignment and resource preflight.

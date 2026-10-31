@@ -315,14 +315,14 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
     "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "bd565d12193728c971d68f778b110ac3e98ca392"
+    "verified_pr_head_sha_before_checkpoint_changes": "91c2e1a3532c75e7c39d673a56435d70aa4e98cf"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
     "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Commit/push the qualification report, fixed-arm receipt, append-only exposure update, and final checkpoint. Update PR #162 with the complete evidence, then verify exact-head CI and review state. Preserve UNASSIGNED status and proceed to a separate resource-feasible Development assignment only under its own frozen protocol.",
+  "highest_priority_next_task": "Push the final wording correction and checksum update, then verify exact-head CI and review state on PR #162. Keep #64830 unassigned; any Development attempt requires a separate prospective protocol and resource preflight.",
   "last_completed_step": "Completed the hash-bound #64830 source-level qualification under pushed Addendum 4. Baseline attempt-002 failed both frozen post-override assertions; wrong-mutant attempt-002 failed the same two assertions; upstream-fixed attempt-002 passed both. Every arm matched its frozen source/test/Python/profile/command hashes and exact attempt-002 write root; default-deny/network-deny profiles held, with no timeout, RSS breach, skip, or unrelated error. The bundle-wide SHA256SUMS verifies all receipts. Exposure ledger now records source/test exposure to the research agent but no model exposure/inference/training/Held-Out use. Status is QUALIFIED_SOURCE_LEVEL only and UNASSIGNED; no capability or RL result is claimed.",
   "milestone_id": "p15-fresh-vllm-64830-source-qualification",
   "result_hash_references": [
@@ -1423,12 +1423,12 @@
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/qualification.md",
-      "sha256": "8096983306dcf0bac04c38bd55a72403aff4f38030e6bbb0cddf3275152c554b",
+      "sha256": "e9f413371ff36df4b274e5faaf0ca80c4c9d90a722f8bd72f545554f6a594112",
       "status": "scope-limited report: HiSparse and watermarking only"
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/SHA256SUMS",
-      "sha256": "53f835b09756b90b45b8eadfa2a04f967e6384a7471cb8d7725c2e840780cf7c",
+      "sha256": "0a14a5fe7efe269b2668c1cd0574eeb3af17666bb2fe5ab873ebe19df1824261",
       "status": "58 qualification bundle files verified"
     },
     {
@@ -1518,5 +1518,5 @@
     "vLLM #64830 is QUALIFIED_SOURCE_LEVEL for the two frozen method-level cases only and remains UNASSIGNED. The excluded custom-speculator behavior and whole upstream PR are not qualified; public pretraining exposure remains UNKNOWN. Any Development assignment needs a separate prospective protocol, overlap check, resource preflight, and exposure append before model inference.",
     "PR #162 is open as a draft at head bd565d12193728c971d68f778b110ac3e98ca392, stacked on draft PR #161; exact-head CI is running and will rerun after the final qualification evidence checkpoint."
   ],
-  "updated_at": "2026-10-31T05:56:01Z"
+  "updated_at": "2026-10-31T05:56:36Z"
 }

@@ -12,7 +12,7 @@ The unchanged upstream HiSparse and watermarking cases distinguish the pinned pr
 | Wrong-mutant attempt-002 | intended assertion failure | intended assertion failure | 2 failed | 0.529 s | 3,932,160 bytes |
 | Upstream-fixed attempt-002 | passed | passed | 2 passed | 0.529 s | 3,932,160 bytes |
 
-Each case failed at the unchanged post-override assertion in baseline and mutant; the fixed method passed both. All three selected nodes collected and ran. There were no skips/errors, timeouts, RSS breaches, or mismatched input hashes. Each command/profile was bound in execution Addendum 4 (SHA-256 `dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396`).
+Each case failed at the unchanged post-override assertion in baseline and mutant; the fixed method passed both. All six case executions across the three arms collected and ran. There were no skips/errors, timeouts, RSS breaches, or mismatched input hashes. Each command/profile was bound in execution Addendum 4 (SHA-256 `dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396`).
 
 ## Isolation and exposure
 
