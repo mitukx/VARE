@@ -85,7 +85,7 @@ def tools_for(edit_format: str, *, public_tests: bool = False) -> list[dict[str,
 
 
 def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[str, Any]],
-                  tools: list[dict[str, Any]], *, limit: int, args: argparse.Namespace) -> tuple[str, int, int]:
+                  tools: list[dict[str, Any]], *, limit: int, args: argparse.Namespace) -> tuple[str, int, int, int]:
     """Generate one bounded assistant response using a locally loaded backend."""
     prompt = render_chat_prompt(tokenizer, messages, tools)
     prompt_tokens = len(tokenizer.encode(prompt, add_special_tokens=False))
@@ -103,7 +103,7 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
         )
         raw = generate(model, tokenizer, prompt=prompt, max_tokens=limit,
                        sampler=sampler, verbose=False)
-        return raw, len(tokenizer.encode(raw, add_special_tokens=False)), prompt_tokens
+        return raw, len(tokenizer.encode(raw, add_special_tokens=False)), prompt_tokens, limit
 
     import torch
     encoded = tokenizer(prompt, return_tensors='pt')
@@ -117,7 +117,32 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
             max_new_tokens=limit, pad_token_id=tokenizer.eos_token_id,
         )
     new_ids = output[0][encoded['input_ids'].shape[1]:]
-    return tokenizer.decode(new_ids, skip_special_tokens=False), int(new_ids.shape[0]), prompt_tokens
+    return tokenizer.decode(new_ids, skip_special_tokens=False), int(new_ids.shape[0]), prompt_tokens, limit
+
+
+def generation_limit_for_turn(
+    base_limit: int,
+    remaining_tokens: int,
+    *,
+    retry_limit: int | None = None,
+    following_incomplete_tool_call: bool = False,
+) -> int:
+    """Select a per-turn cap without exceeding the attempt's total token budget.
+
+    The optional retry cap applies only to the turn immediately following an
+    incomplete tool call. It is opt-in so existing frozen attempt protocols
+    retain their original generation limits.
+    """
+    if base_limit < 1 or remaining_tokens < 1:
+        raise ValueError('generation token limits must be positive')
+    selected = (
+        retry_limit
+        if following_incomplete_tool_call and retry_limit is not None
+        else base_limit
+    )
+    if selected < base_limit:
+        raise ValueError('incomplete-tool retry limit cannot be below the base limit')
+    return min(selected, remaining_tokens)
 
 
 def render_chat_prompt(tokenizer: Any, messages: list[dict[str, Any]],
@@ -695,19 +720,24 @@ def bounded_tool_result(result: Any, tokenizer: Any) -> Any:
 
 
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
-                           token_limit: int) -> str:
+                           token_limit: int, next_token_limit: int | None = None) -> str:
     """Give the agent actionable feedback when a bounded response has no tool call."""
     if '<tool_call>' in raw and '</tool_call>' not in raw:
         path_list = ', '.join(allowed_paths)
+        budget_note = (
+            f'Your previous tool call was incomplete and may have been cut off. The previous response was limited to {token_limit} tokens. '
+            'The next response has a per-turn cap of '
+            f'{next_token_limit} tokens, still bounded by the remaining total and context budgets. '
+            if next_token_limit is not None and next_token_limit > token_limit
+            else f'Your previous tool call was incomplete and may have been cut off; each response is limited to {token_limit} tokens. '
+        )
         if edit_format == 'whole_file':
-            return (
-                f'Your previous tool call was incomplete and may have been cut off; each response is limited to {token_limit} tokens. '
+            return budget_note + (
                 'Do not reread the source. Emit one complete write_file tool call now, using the exact '
                 f'allowed path ({path_list}) and the complete updated source file. Keep it concise enough '
                 'to end with </tool_call>.'
             )
-        return (
-            f'Your previous tool call was incomplete and may have been cut off; each response is limited to {token_limit} tokens. '
+        return budget_note + (
             'Do not reread the source or rewrite a whole function. For one contiguous change, prefer '
             'replace_text with a short exact old_text snippet and its complete new_text. Otherwise use '
             'apply_patch with only the smallest changed hunk. Do not include unchanged function bodies. '
@@ -786,6 +816,10 @@ def main() -> int:
     parser.add_argument('--max-turns', type=int, default=16)
     parser.add_argument('--max-no-tool-retries', type=int, default=2)
     parser.add_argument('--max-new-tokens-per-turn', type=int, default=256)
+    parser.add_argument(
+        '--incomplete-tool-retry-tokens', type=int,
+        help='Optional larger one-turn cap after an incomplete tool call; total token budget is unchanged',
+    )
     parser.add_argument('--max-total-new-tokens', type=int, default=3072)
     parser.add_argument('--max-context-tokens', type=int, default=8192)
     parser.add_argument('--wall-seconds', type=int, default=900)
@@ -796,6 +830,14 @@ def main() -> int:
     parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file'), default='unified_diff')
     parser.add_argument('--require-split', choices=('train', 'heldout'))
     args = parser.parse_args()
+
+    if args.max_new_tokens_per_turn < 1 or args.max_total_new_tokens < 1:
+        parser.error('generation token budgets must be positive')
+    if args.incomplete_tool_retry_tokens is not None:
+        if args.incomplete_tool_retry_tokens <= args.max_new_tokens_per_turn:
+            parser.error('--incomplete-tool-retry-tokens must exceed --max-new-tokens-per-turn')
+        if args.incomplete_tool_retry_tokens > args.max_total_new_tokens:
+            parser.error('--incomplete-tool-retry-tokens cannot exceed --max-total-new-tokens')
 
     model_dir = args.model_path.resolve()
     if not model_dir.is_dir():
@@ -903,6 +945,8 @@ def main() -> int:
     context_compaction_events: list[dict[str, Any]] = []
     truncated_tool_call_turns: list[int] = []
     unterminated_tool_call_turns: list[int] = []
+    expanded_incomplete_retry_turns: list[int] = []
+    incomplete_tool_retry_pending = False
     pattern = re.compile(r'<tool_call>\s*(\{.*?\})\s*</tool_call>', re.DOTALL)
 
     def note_edit(edit_result: dict[str, Any]) -> None:
@@ -924,7 +968,13 @@ def main() -> int:
         if remaining <= 0:
             stop_reason = 'token_budget_exhausted'
             break
-        limit = min(args.max_new_tokens_per_turn, remaining)
+        was_incomplete_tool_retry = incomplete_tool_retry_pending
+        limit = generation_limit_for_turn(
+            args.max_new_tokens_per_turn, remaining,
+            retry_limit=args.incomplete_tool_retry_tokens,
+            following_incomplete_tool_call=was_incomplete_tool_retry,
+        )
+        incomplete_tool_retry_pending = False
         context_compaction = compact_tool_context(
             messages, tokenizer, tools, max_context_tokens=args.max_context_tokens,
         )
@@ -933,7 +983,7 @@ def main() -> int:
             context_compaction_events.append(context_compaction)
         generation_start = time.perf_counter()
         try:
-            raw, generated_tokens, prompt_tokens = generate_turn(
+            raw, generated_tokens, prompt_tokens, limit = generate_turn(
                 args.backend, model, tokenizer, messages, tools, limit=limit, args=args,
             )
         except ValueError as exc:
@@ -945,8 +995,11 @@ def main() -> int:
         token_total += generated_tokens
         entry: dict[str, Any] = {'turn': turn + 1, 'model_output': raw, 'tool_calls': [],
                                  'generated_tokens': generated_tokens,
+                                 'generation_token_limit': limit,
                                  'prompt_tokens': prompt_tokens,
                                  'generation_seconds': round(generation_elapsed, 6)}
+        if was_incomplete_tool_retry and limit > args.max_new_tokens_per_turn:
+            expanded_incomplete_retry_turns.append(turn + 1)
         tool_call_status = classify_incomplete_tool_call(
             raw, generated_tokens=generated_tokens, token_limit=limit,
         )
@@ -990,11 +1043,16 @@ def main() -> int:
             current_hashes = digest_tree(workspace, sorted(allowed))
             if current_hashes == before and no_tool_retries < args.max_no_tool_retries:
                 no_tool_retries += 1
+                next_token_limit = (
+                    args.incomplete_tool_retry_tokens
+                    if tool_call_status is not None else None
+                )
                 messages.append({'role': 'user', 'content': no_tool_retry_reminder(
                     raw, edit_format=args.edit_format, allowed_paths=sorted(editable),
-                    token_limit=limit,
+                    token_limit=limit, next_token_limit=next_token_limit,
                 )})
                 entry['automatic_reminder'] = no_tool_retries
+                incomplete_tool_retry_pending = tool_call_status is not None
                 continue
             stop_reason = 'no_tool_call_after_edit' if current_hashes != before else 'no_tool_call_retries_exhausted'
             break
@@ -1164,6 +1222,7 @@ def main() -> int:
         'model_files': {path.name: sha256(path) for path in sorted(model_dir.iterdir()) if path.is_file()},
         'runtime': runtime,
         'budgets': {'max_turns': args.max_turns, 'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
+                    'incomplete_tool_retry_tokens': args.incomplete_tool_retry_tokens,
                     'max_total_new_tokens': args.max_total_new_tokens,
                     'max_context_tokens': args.max_context_tokens, 'wall_seconds': args.wall_seconds,
                     'max_no_tool_retries': args.max_no_tool_retries,
@@ -1180,6 +1239,7 @@ def main() -> int:
             'truncated_turns': truncated_tool_call_turns,
             'unterminated_count': len(unterminated_tool_call_turns),
             'unterminated_turns': unterminated_tool_call_turns,
+            'expanded_incomplete_retry_turns': expanded_incomplete_retry_turns,
         },
         'stop_reason': stop_reason, 'agent_summary': final_summary,
         'elapsed_seconds': round(elapsed, 3), 'new_tokens': token_total,

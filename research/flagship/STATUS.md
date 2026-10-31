@@ -2,31 +2,19 @@
 
 ## Current checkpoint
 
-- Milestone: `p10-transformers-49458-agent-interaction-failure-diagnosed`.
-- Last verified `origin/main`: `719fbe368816d81addb29a1ba2c451fa7f1bf631`, integrating PR #154. PR #150 is already merged; the earlier mission prompt’s stale #150 blocker is resolved.
-- Work branch: `codex/fresh-development-family-overlap-v1`.
-- Active PR: [#155 — Qualify fresh Transformers #49458 candidate](https://github.com/mitukx/VARE/pull/155), open against main. The protocol commit `f3ff08e6d4e4b69adac534d61b6406804d7dffe5` was pushed before inference. Exact-head CI for the subsequent checkpoint changes must be checked after push.
-- The first CI run on commit `09605e254c47bb07a96dec7a8e318a9aae13fd68` found one Python 3.13 compatibility assertion failure: an existing test expects the retry reminder to retain `cut off`. The failed job ran 1,538 passes and 111 skips besides that assertion. All completed non-test checks passed; other Python test jobs were still running when triaged. The reminder has been corrected to say the call was incomplete and may have been cut off. Ruff and 48 targeted tests, including that compatibility assertion, pass locally. The correction is included in this checkpoint; fresh exact-head CI remains required.
+- Milestone: p11-incomplete-tool-retry-budget-controller-change.
+- Last verified origin/main: cf8bd808bbb1b03c996e8f2bb8f91779bec713db, PR #155 merged at 2026-10-31T02:36:24Z. Its exact-head required checks passed after correcting one retry-reminder compatibility assertion.
+- Work branch: codex/bounded-incomplete-tool-retry-v1, based on the verified merge SHA above. Active PR: [#156 — Bound retries after incomplete agent tool calls](https://github.com/mitukx/VARE/pull/156), open against main at head b6d0ea2274baf1cd9a753a35252b094ae172d69a.
+- PR #155 integrated the one-shot Transformers #49458 diagnostic and controller telemetry. That Development family is consumed and must not be retried.
+- New controller change: an opt-in per-turn retry cap can apply after an incomplete tool call. Default behavior and total generated-token budget are unchanged. Evidence and limits are recorded under results/agent-incomplete-tool-retry-budget-v1/.
+- Local checks on this branch: Ruff passed; the focused controller, retry-wording compatibility, and evidence-integrity suite passed 77 tests. Remote exact-head CI for PR #156 is pending.
 
-## Transformers #49458 one-shot outcome
+## Evidence and limits
 
-- Source qualification v2 remains **QUALIFIED_SOURCE_LEVEL** only. It proves the pinned CPU regression is reproducible, not model capability.
-- Frozen protocol `protocols/mlsys_transformers_49458_agent_attempt_v1.json` (SHA-256 `4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee`) was executed exactly once after its hash and resource gates passed.
-- The Qwen3-4B attempt produced 849 tokens in six turns. It searched for `AutoVideoProcessor`, read the legacy image-processor fallback at lines 360–400, then emitted three incomplete edit-tool outputs. Two re-encoded to the 256-token cap and one to 255/256. No edit call was dispatched and the diff remained empty.
-- The one independent grade ran against that unchanged baseline. Both pinned cases failed the expected `load_attribute.assert_not_called` assertion (47 and 141 mapping loads), with zero errors/skips. This confirms the baseline control; it is not a candidate patch rejection. Agent, grade, wrapper, logs, resource snapshots, diagnosis, and checksums are retained under `results/mlsys-fresh-development-agent-diagnostic-v2/`.
-- Failure class: **agent interaction failure from incomplete tool-call output, with off-target source localization**. The task family is consumed; do not retry or provide grader feedback. Public pretraining exposure remains unknown.
-
-## Engineering response
-
-The runner now records incomplete tool-call outputs and their turn numbers, distinguishes outputs ending at the configured cap from other unterminated calls, and gives a more concrete reminder for a single small edit. Added deterministic unit coverage for the classifier and reminder. `ruff check scripts/run_local_agent.py tests/test_run_local_agent_tool_format.py`, `work/ci-py311/bin/pytest -q tests/test_run_local_agent_tool_format.py` (47 passed), and `git diff --check` passed locally. This narrows diagnosis and improves the correction prompt; it does not claim to fix model capability. The consumed task was not rerun.
-
-## GO/NO-GO
-
-- Coding capability: **NO-GO**. There is no independently verified model-generated repair.
-- SFT/RL update: **NO-GO**. No positive repair trajectory or nondegenerate reward signal exists.
-- Held-Out: not opened or used.
-- Integration: **GO_PENDING_REMOTE_CI** until the current PR head’s required checks are verified; no branch-protection bypass or merge is permitted.
+- The #49458 Qwen3-4B attempt emitted three incomplete edit calls at 256, 255, and 256 generated tokens under a 256-token per-turn cap. No edit was dispatched and the candidate diff was empty.
+- The new larger retry cap is opt-in and not evaluated on a model. The change is controller engineering evidence only; it does not establish valid tool-call improvement or repair success.
+- Coding capability remains NO-GO. SFT/RL update remains NO-GO. Held-Out remains untouched. Public pretraining exposure remains unknown.
 
 ## Immediate next action
 
-Inspect exact-head GitHub checks for the Python 3.13 compatibility correction, reproduce any failures, and push corrections. If CI passes, review the complete diff and remaining PR blockers. Do not retry #49458 or start RL. A future attempt requires a distinct qualified Development family and a new frozen protocol after a material feasibility change.
+Review exact-head CI and remaining PR blockers on #156. If all required checks pass and no blocking review thread remains, merge under normal branch protection and verify main. Do not rerun #49458. Any future model use needs a distinct, prospectively authorized task and a separate frozen protocol; this controller-change record grants no inference authorization.

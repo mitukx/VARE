@@ -72,7 +72,8 @@ def fixture(tmp_path: Path) -> dict:
                   "file_hashes": {"config.json": "a" * 64}},
         "seeds": [101],
         "budgets": {"max_turns": 10, "max_new_tokens_per_turn": 256,
-                    "max_total_new_tokens": 2560, "wall_seconds": 300},
+                    "max_total_new_tokens": 2560, "wall_seconds": 300,
+                    "incomplete_tool_retry_tokens": None},
     }
     diff = ("diff --git a/src/pkg/x.py b/src/pkg/x.py\n"
             "index 0000000..1111111 100644\n"
@@ -85,7 +86,8 @@ def fixture(tmp_path: Path) -> dict:
         "workspace_revision": commit,
         "model_repository": "test/model", "model_snapshot": "pinned-hash",
         "model_files": {"config.json": "a" * 64}, "seed": 101,
-        "budgets": protocol["budgets"], "tool_turns": 2, "new_tokens": 132,
+        "budgets": copy.deepcopy(protocol["budgets"]),
+        "tool_turns": 2, "new_tokens": 132,
         "stop_reason": "agent_finished", "elapsed_seconds": 12.3,
         "transcript": [
             {"turn": 1, "model_output": "patch", "tool_calls": [
@@ -144,6 +146,46 @@ def test_independent_grader_success_and_deterministic_manifest(tmp_path: Path) -
     assert (output / "manifest.json").read_bytes() == (output2 / "manifest.json").read_bytes()
 
 
+def test_configured_retry_cap_requires_matching_turn_evidence(tmp_path: Path) -> None:
+    data = fixture(tmp_path)
+    data["protocol"]["budgets"]["incomplete_tool_retry_tokens"] = 512
+    data["agent"]["budgets"]["incomplete_tool_retry_tokens"] = 512
+    patch_call = copy.deepcopy(data["agent"]["transcript"][0]["tool_calls"][0])
+    finish_call = copy.deepcopy(data["agent"]["transcript"][1]["tool_calls"][0])
+    data["agent"]["tool_turns"] = 3
+    data["agent"]["transcript"] = [
+        {
+            "turn": 1,
+            "model_output": '<tool_call>{"name":"apply_patch"',
+            "tool_calls": [],
+            "tool_call_output_status": "truncated_at_token_limit",
+            "automatic_reminder": 1,
+            "generation_token_limit": 256,
+        },
+        {
+            "turn": 2, "model_output": "patch",
+            "tool_calls": [patch_call], "generation_token_limit": 512,
+        },
+        {
+            "turn": 3, "model_output": "finish",
+            "tool_calls": [finish_call], "generation_token_limit": 256,
+        },
+    ]
+    data["agent"]["tool_call_diagnostics"] = {
+        "expanded_incomplete_retry_turns": [2],
+    }
+
+    status, summary, _ = run(tmp_path, data)
+
+    assert status == 0
+    assert summary["record_integrity"] == "valid"
+
+    data["agent"]["tool_call_diagnostics"]["expanded_incomplete_retry_turns"] = []
+    status, summary, _ = run(tmp_path, data, index=1)
+    assert status == 1
+    assert summary["record_integrity"] == "invalid"
+
+
 def test_valid_negative_grader_is_preserved_not_rejected(tmp_path: Path) -> None:
     data = fixture(tmp_path)
     data["grade"].update(passed=False, failures=[{"case": "regression"}])
@@ -168,7 +210,8 @@ def test_no_op_cannot_pass(tmp_path: Path) -> None:
                                        "grader_hash", "task_id", "tampered_protocol",
                                        "token_budget", "missing_transcript", "tampered_diff",
                                        "agent_forged_finish", "modified_evaluator", "model_hash",
-                                       "grader_source_hash", "tool_result_type", "bad_hunk_counts"])
+                                       "grader_source_hash", "tool_result_type", "bad_hunk_counts",
+                                       "retry_token_budget", "invalid_retry_cap"])
 def test_mutations_fail_closed(tmp_path: Path, mutation: str) -> None:
     data = fixture(tmp_path)
     if mutation == "protected_patch":
@@ -193,6 +236,11 @@ def test_mutations_fail_closed(tmp_path: Path, mutation: str) -> None:
         data["protocol"]["task"]["hashes"]["grader.py"] = "0" * 64
     elif mutation == "token_budget":
         data["agent"]["new_tokens"] = 3000
+    elif mutation == "retry_token_budget":
+        data["protocol"]["budgets"]["incomplete_tool_retry_tokens"] = 512
+    elif mutation == "invalid_retry_cap":
+        data["protocol"]["budgets"]["incomplete_tool_retry_tokens"] = 256
+        data["agent"]["budgets"]["incomplete_tool_retry_tokens"] = 256
     elif mutation == "missing_transcript":
         data["agent"]["transcript"] = []
     elif mutation == "tampered_diff":

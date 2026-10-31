@@ -499,3 +499,27 @@ PY
 ```
 
 The local controller test result recorded for this checkpoint is 47 passed, and Ruff plus whitespace validation passed. These checks cover the runner instrumentation only. They do not change the NO-GO capability or RL decision.
+
+
+## Optional per-turn budget after an incomplete tool call
+
+The local controller change is opt-in. Existing attempt protocols retain their configured per-turn cap when `--incomplete-tool-retry-tokens` is omitted. A future frozen protocol may explicitly set a larger value; the protocol-driven runner forwards it, the local controller applies it only after an incomplete tool call enters the existing no-tool retry path, and the evidence collector checks budget equality plus the per-turn expansion chronology. The run record stores the configured value, each effective generation cap, and which turns used an expanded cap. The attempt's `--max-total-new-tokens` remains authoritative.
+
+No model inference is authorized by this controller test record. The consumed Transformers #49458 attempt must not be repeated. Verify the local implementation with:
+
+```bash
+ruff check scripts/run_local_agent.py scripts/run_separated_coding_eval.py scripts/record_coding_agent_baseline.py tests/test_run_local_agent_tool_format.py tests/test_record_coding_agent_baseline.py
+work/ci-py311/bin/pytest -o addopts='' -q tests/test_run_local_agent_tool_format.py tests/test_mlsys_4b_pilot_protocol.py tests/test_record_coding_agent_baseline.py
+python3 - <<'PY'
+import json
+from pathlib import Path
+from jsonschema import Draft202012Validator
+schema = json.loads(Path('research/flagship/state.schema.json').read_text())
+state = json.loads(Path('research/flagship/state.json').read_text())
+Draft202012Validator(schema).validate(state)
+print('mission state schema: valid')
+PY
+(cd results/agent-incomplete-tool-retry-budget-v1 && shasum -a 256 -c SHA256SUMS)
+```
+
+This is controller validation, not model-capability evidence. A future model comparison requires its own task, frozen protocol, and authorization.

@@ -195,12 +195,50 @@ def inspect(protocol: dict[str, Any], task: dict[str, Any], lock: dict[str, Any]
         actual = positive_int(agent_limits.get(name), "agent budget " + name)
         expect(actual == positive_int(limits.get(name), "protocol budget " + name),
                f"budget mismatch: {name}")
+    expected_retry_limit = limits.get("incomplete_tool_retry_tokens")
+    observed_retry_limit = agent_limits.get("incomplete_tool_retry_tokens")
+    if expected_retry_limit is not None:
+        expected_retry_limit = positive_int(expected_retry_limit, "protocol budget incomplete_tool_retry_tokens")
+        observed_retry_limit = positive_int(observed_retry_limit, "agent budget incomplete_tool_retry_tokens")
+    expect(observed_retry_limit == expected_retry_limit,
+           "budget mismatch: incomplete_tool_retry_tokens")
     steps = nonnegative_int(agent.get("tool_turns"), "tool_turns")
     tokens = nonnegative_int(agent.get("new_tokens"), "new_tokens")
     transcript = agent.get("transcript")
     expect(type(transcript) is list and len(transcript) == steps and
            steps <= limits["max_turns"] and tokens <= limits["max_total_new_tokens"],
            "missing trajectory or exceeded steps/tokens")
+    if expected_retry_limit is not None:
+        expanded_turns = []
+        base_turn_limit = limits["max_new_tokens_per_turn"]
+        expect(expected_retry_limit > base_turn_limit,
+               "protocol retry budget must exceed the base per-turn budget")
+        expect(expected_retry_limit <= limits["max_total_new_tokens"],
+               "protocol retry budget exceeds the total token budget")
+        for index, turn in enumerate(transcript):
+            expect(type(turn) is dict, "malformed trajectory turn")
+            turn_limit = positive_int(
+                turn.get("generation_token_limit"), "turn generation_token_limit",
+            )
+            expect(turn_limit <= expected_retry_limit,
+                   "turn generation limit exceeds protocol retry budget")
+            if turn_limit > base_turn_limit:
+                previous = transcript[index - 1] if index else {}
+                expect(
+                    previous.get("tool_call_output_status") in (
+                        "truncated_at_token_limit", "unterminated_tool_call",
+                    ) and type(previous.get("automatic_reminder")) is int
+                    and previous["automatic_reminder"] > 0,
+                    "expanded turn lacks an immediately preceding incomplete-call retry",
+                )
+                expanded_turns.append(turn.get("turn"))
+        diagnostics = agent.get("tool_call_diagnostics")
+        expect(type(diagnostics) is dict, "missing tool-call diagnostics")
+        recorded_expanded = diagnostics.get(
+            "expanded_incomplete_retry_turns",
+        )
+        expect(recorded_expanded == expanded_turns,
+               "expanded retry turns do not match per-turn budgets")
     expect(agent.get("stop_reason") in _ALLOWED_STOP_REASONS, "invalid stop reason")
     elapsed = agent.get("elapsed_seconds")
     expect(type(elapsed) in (float, int) and 0 <= elapsed < float("inf"),
