@@ -1,0 +1,227 @@
+{
+  "schema": "vare.protocol/coding_policy_learning/v1",
+  "protocol_id": "coding_policy_learning_mlx_4b_v1",
+  "status": "prospective_frozen_before_any_real_inference",
+  "question": "Does LoRA training of Qwen3-4B-Instruct-2507 (MLX 4bit) on verified SWE-smith-py Train tasks raise trusted pass rate on a repository-disjoint held-out set, versus the no-update policy, at identical inference budgets?",
+  "model": {
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "runtime": "mlx==0.32.2, mlx-lm==0.32.2 (requirements/mlsys-agent-mlx.lock.txt)",
+    "target_machine": "Apple M1 Pro, 32 GB unified memory, about 11 GiB free disk"
+  },
+  "curriculum": {
+    "source": "SWE-bench/SWE-smith-py@77cab9055d42ab4a5c25c89a8f937096db13558e (MIT)",
+    "config": "configs/learning_pipeline_v1/curriculum.json",
+    "repos_lock": "configs/learning_pipeline_v1/repos.lock.json",
+    "train_manifest": "configs/learning_pipeline_v1/train.manifest.jsonl",
+    "heldout_manifest": "configs/learning_pipeline_v1/heldout.manifest.jsonl",
+    "split_rule": "repository-disjoint; held-out repositories never contribute training, rollout, preflight or validation rows",
+    "exclusions": "huggingface/*, vllm-project/*, ml-explore/* and every repository named in VARE eval/Development identifiers (scan must find vllm-project/vllm#64830 and ml-explore/mlx-lm#1904); content dedup by normalized patch hash and (repo, file, issue-text hash)",
+    "execution": "native venv per repository at a pinned mirror commit; no containers",
+    "calibration": "on the run machine, before any inference: baseline (bug applied, no edit) must fail FAIL_TO_PASS and pass PASS_TO_PASS; reference fix must pass both; prompt must fit max_prompt_tokens. Non-qualifying tasks are dropped for every arm.",
+    "contamination": "UNKNOWN: upstream repositories are public and may be in pretraining data; the bug-introducing mutations are synthetic. Claims are relative (arm vs no-update on identical tasks)."
+  },
+  "arms": {
+    "no_update": "frozen base policy",
+    "sft_reference": "LoRA SFT on grader-verified reference-fix demonstrations of qualified Train tasks (dataset references, not student trajectories)",
+    "rft_self": "LoRA SFT on the base policy's own trusted-verified samples on Train tasks (rejection-sampling fine-tuning)",
+    "grpo": "not run in v1 (stub only; estimated 8-12 GiB peak, multi-turn loss would need custom code)"
+  },
+  "budgets": {
+    "prompt_version": "v1",
+    "inference": {
+      "max_prompt_tokens": 2560,
+      "max_tokens": 512,
+      "eval_temperature": 0.0,
+      "eval_samples_per_task": 1,
+      "seed": 20261031
+    },
+    "rollouts": {
+      "policy": "no_update",
+      "tasks": 40,
+      "samples_per_task": 4,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "max_tokens": 512,
+      "seed": 1
+    },
+    "rft": {
+      "max_examples_per_task": 2
+    },
+    "training": {
+      "num_layers": 8,
+      "batch_size": 1,
+      "grad_accumulation_steps": 1,
+      "iters": 100,
+      "learning_rate": 5e-05,
+      "lora_rank": 8,
+      "lora_scale": 20.0,
+      "max_seq_length": 3072,
+      "seed": 0,
+      "valid_rows": 4,
+      "val_batches": 4,
+      "steps_per_report": 10,
+      "steps_per_eval": 50,
+      "save_every": 25
+    },
+    "matched": "sft_reference and rft_self share every training hyperparameter and iteration count; all arms share the held-out task set, prompt, decoding and max_tokens. rft_self additionally consumes the rollout budget (40 x 4 base samples); sft_reference uses privileged reference fixes. Both asymmetries are reported, not hidden.",
+    "grading": {
+      "timeout_s": 180,
+      "verifiers": [
+        "cheap_f2p_v1",
+        "trusted_full_v1"
+      ],
+      "reward": "trusted_full_v1"
+    }
+  },
+  "preflight": {
+    "probe_instance_id": null,
+    "probe_split": "train",
+    "train_smoke_iters": 3,
+    "measures": [
+      "free disk",
+      "available memory and swap",
+      "dataset bytes",
+      "one-repository clone+venv bytes and seconds",
+      "one-task grade seconds",
+      "model bytes",
+      "one greedy generation (tokens, seconds, peak memory)",
+      "LoRA peak memory and tokens/s at about 0.85 x max_seq_length"
+    ]
+  },
+  "stopping_rules": {
+    "min_free_disk_gib": 4.0,
+    "disk_rule": "checked before every task/sample/arm and against the preflight projection; stop if free disk is or would fall below the minimum",
+    "min_available_memory_gib_start": 8.0,
+    "max_train_peak_memory_gib": 11.0,
+    "max_projected_seconds": 10800,
+    "max_total_wall_clock_s": 12600,
+    "max_train_seconds_per_arm": 2700,
+    "min_heldout_tasks": 32,
+    "rft_min_examples": 8,
+    "rft_min_tasks": 4,
+    "rft_rule": "below either minimum, rft_self is recorded NO_GO and not trained; the remaining comparison family shrinks accordingly",
+    "hash_rule": "any frozen input/code hash mismatch stops the run before any phase",
+    "adapter_rule": "a trained adapter with all-zero LoRA B matrices stops the run"
+  },
+  "success_criteria": {
+    "primary_metric": "per-task trusted_full_v1 pass, greedy, one sample, qualified held-out tasks",
+    "family": [
+      "sft_reference vs no_update",
+      "rft_self vs no_update"
+    ],
+    "test": "exact two-sided McNemar, Holm-adjusted over the family",
+    "alpha": 0.05,
+    "min_absolute_lift": 0.1,
+    "improved": "Holm p < alpha AND pass-rate lift >= min_absolute_lift AND arm-only wins > base-only wins",
+    "secondary": [
+      "paired bootstrap 95% interval of pass-rate difference",
+      "cheap_f2p_v1 pass and cheap-vs-trusted disagreement",
+      "malformed/unapplied edit rate",
+      "finish=length rate"
+    ],
+    "power_note": "with n=40, normal-approximation McNemar power is about 0.66 for discordant rates 0.20/0.025 and about 0.80 for 0.25/0.025 (single comparison, before Holm); smaller real effects will likely read as no_detectable_change"
+  },
+  "hypothesis_compatible_logging": {
+    "budgeted_verifier_error_correction": "every candidate records both verifier verdicts, their seconds and pytest exit/stdout hashes, so verifier false positives (cheap pass, trusted fail) and correction budgets can be replayed offline",
+    "training_time_verification_allocation": "rollout groups keep all samples with both verdicts and costs, so policies that spend trusted checks on a subset can be simulated against full-information labels before any new training run",
+    "rollout_log": {
+      "schema": "vare.learning_pipeline.rollout/v1",
+      "files": [
+        "rollouts/graded.jsonl (RFT data, base checkpoint, G=4 per task)",
+        "eval/<arm>/graded.jsonl (held-out, G=1)",
+        "data/<arm>/{train,valid}.provenance.jsonl (training-row provenance)"
+      ],
+      "keys": [
+        "checkpoint_id",
+        "checkpoint_step",
+        "group_id = checkpoint_id|instance_id",
+        "task_group = upstream repository",
+        "instance_id",
+        "split",
+        "stage",
+        "sample_index",
+        "seed",
+        "temperature",
+        "top_p",
+        "max_tokens",
+        "output_text",
+        "output_sha256",
+        "final_diff",
+        "apply",
+        "verifiers.cheap_f2p_v1.tests",
+        "verifiers.trusted_full_v1.tests",
+        "verifiers.*.seconds",
+        "verifiers.*.pytest_seconds",
+        "reward",
+        "cheap_false_positive",
+        "prompt_tokens",
+        "completion_tokens",
+        "generation_seconds"
+      ],
+      "per_test_status": "PASSED/FAILED/ERROR/SKIPPED/XFAIL/XPASS/MISSING/TIMEOUT for every requested F2P and P2P id; empty when the edit could not be applied (no tests run)",
+      "cheap_verifier_cost": "cheap_f2p_v1 is a separate pytest run of only FAIL_TO_PASS, so its wall time is measured directly, not derived",
+      "checkpoint_scope": "v1 RFT is single-round: every rollout comes from the base checkpoint (step 0). Rollouts from intermediate training checkpoints are not produced in v1."
+    }
+  },
+  "resources": {
+    "memory_estimate_gib": {
+      "inference_peak_measured_previously": "3.4-3.75",
+      "lora_train_seq3072_upper": 8.85,
+      "lora_train_seq3072_if_bf16_logits": 6.2,
+      "lora_train_seq4096_upper": 10.85,
+      "formula": "weights + 3 x seq x vocab x bytes (logits, grad, log-softmax) + checkpointed hidden states + one-layer recompute + LoRA/Adam + 0.75 GiB"
+    },
+    "time_estimate_minutes": {
+      "setup_and_calibration": 20,
+      "preflight": 8,
+      "rollouts": 45,
+      "train_two_arms": 35,
+      "evaluate_three_arms": 30,
+      "total": 138
+    },
+    "disk_estimate_gib": {
+      "model_if_not_cached": 2.3,
+      "dataset_shards": 0.22,
+      "repos_and_venvs": 0.3,
+      "run_artifacts": 0.1
+    }
+  },
+  "synthetic_mock": {
+    "p_correct": {
+      "no_update": 0.1,
+      "sft_reference": 0.4,
+      "rft_self": 0.25
+    },
+    "label": "mock outputs copy reference fixes; never evidence"
+  },
+  "frozen": {
+    "inputs": {
+      "configs/learning_pipeline_v1/curriculum.json": "4574bf5c6eac914619b601e57af9c0cc0f58cfe594abb6f444000cce720dcdac",
+      "configs/learning_pipeline_v1/repos.lock.json": "f3242c70ccd4d57548eca7070554b21b48f39ffda2549de90eb39d225889ecab",
+      "configs/learning_pipeline_v1/train.manifest.jsonl": "9e2c8197124091f23a1e2f5c2f7cfacd74abbe577928c294bf52469cc92775d1",
+      "configs/learning_pipeline_v1/heldout.manifest.jsonl": "ea5a29fea9b91d16def85e60404408363d1c1ba847fe6799f676db0abda47ba9",
+      "requirements/mlsys-agent-mlx.lock.txt": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+      "requirements/learning-pipeline-v1.txt": "ba2f0190494b3fadb8f5742089ff6fd9e98b4db064a686b1ca03cf7efe2958f6"
+    },
+    "code": {
+      "src/vare/learning_pipeline/__init__.py": "ac9611b33310a94cfbd3fbb9ce806f51c536af063e72d9257aded48e5c48cd85",
+      "src/vare/learning_pipeline/comparison.py": "672ebc77c1593f62e47e3feac3119315687a68abf07f135c1cd104e262322dcf",
+      "src/vare/learning_pipeline/curriculum.py": "030ffad6ba05bfa60dd2499d2fff79089193dc21a2e5d3ff824afdd5408ae2c1",
+      "src/vare/learning_pipeline/edit_format.py": "4f0ee215d5769b42df3aa83128e947b7259234141678856fba74d98bdc7c1f59",
+      "src/vare/learning_pipeline/exclusions.py": "b7167a0f4b96179023939f94b3da8722349c4fc83734fbaa517cbec277616167",
+      "src/vare/learning_pipeline/grpo.py": "b2efa7a849f7f0dc2b4c07e37857fa116bdd384cd9812b48ee1c229bd8ffb2ed",
+      "src/vare/learning_pipeline/lora_worker.py": "ae844531a9b5da7f9c1005fa21b34c89a3512764f8ee227a71c7242652600241",
+      "src/vare/learning_pipeline/pipeline.py": "5bfbcb33da5597eafb89247f77d00f1f3af8a668fe4d1a29d7653d8596bad9de",
+      "src/vare/learning_pipeline/policy.py": "f3bc25da7cbc7337c5e05e5fc9570513548f5474cceaa79df68836d412d1101c",
+      "src/vare/learning_pipeline/prompting.py": "25dabe74db0eb78d9aaff9ffd8dcf7e232864aa16f0f2b3521c71dc7ca0b52c2",
+      "src/vare/learning_pipeline/repo_env.py": "bc9c8858f39769d6a42d44da0659680ac50b7b5f8cb03573652fac60da2a8d09",
+      "src/vare/learning_pipeline/resources.py": "e3912ea376a114df53daaf8c8928cd4a8c5b9f20163d924b3690fe1940569669",
+      "src/vare/learning_pipeline/scoring.py": "9480c1a635688846f7aa1d58fea365b037e510c44e60115c5766f32f5572c663",
+      "src/vare/learning_pipeline/sources.py": "0f4e93aab2c6e38bd0e53f3d00ab2b7c2299ddf49c33d7c7c897012f7ec1c2dd",
+      "src/vare/learning_pipeline/training.py": "44db8b632e71040fd9cfe78b8620b79843cd0adf830c9e32de5071d15c0f2c11",
+      "src/vare/eval_stats.py": "9ba1f27421f721200f2596df3c595b6a5622852eb18950953093cddddbfd8f06",
+      "scripts/learning_pipeline_v1.py": "4f07e9583d4f0ca290d8662232388a2dee91c1a5f88373a252a0a8acfc7ae0e1"
+    }
+  }
+}

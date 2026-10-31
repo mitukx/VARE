@@ -1,0 +1,190 @@
+{
+  "counts": {
+    "heldout": 42,
+    "train": 80
+  },
+  "exclusion_scan": {
+    "excluded_owners": [
+      "huggingface",
+      "ml-explore",
+      "vllm-project"
+    ],
+    "excluded_repositories": [
+      "huggingface/accelerate",
+      "huggingface/peft",
+      "huggingface/transformers",
+      "huggingface/trl",
+      "ml-explore/mlx",
+      "ml-explore/mlx-lm",
+      "pytorch/pytorch",
+      "ray-project/ray",
+      "urllib3/urllib3",
+      "vllm-project/vllm"
+    ],
+    "files_scanned": 7544,
+    "identifier_count": 37,
+    "required_identifiers_found": [
+      "vllm-project/vllm#64830",
+      "ml-explore/mlx-lm#1904"
+    ]
+  },
+  "file_rejects": {
+    "reference_blocks_do_not_restore_file": 12,
+    "target_file_too_long": 100
+  },
+  "license_only_sources": [
+    {
+      "dataset_license": "CC-BY-4.0",
+      "execution": "docker_required",
+      "hf_dataset": "nebius/SWE-rebench-V2",
+      "notes": "Real GitHub issue/PR tasks with per-instance license fields. Grading requires the published x86 Docker images, so v1 records it as a license/dedup source only; it is not executed on the Mac route.",
+      "revision": "10483de0f50fe5da545942705a76c6150171af7f",
+      "source_id": "swe-rebench-v2"
+    }
+  ],
+  "manifest_sha256": {
+    "heldout": "ea5a29fea9b91d16def85e60404408363d1c1ba847fe6799f676db0abda47ba9",
+    "train": "9e2c8197124091f23a1e2f5c2f7cfacd74abbe577928c294bf52469cc92775d1"
+  },
+  "per_repository": {
+    "heldout": {
+      "borntyping/python-colorlog": 14,
+      "msiemens/tinydb": 14,
+      "python-hyper/h11": 14
+    },
+    "train": {
+      "Suor/funcy": 16,
+      "andialbrecht/sqlparse": 16,
+      "gweis/isodate": 16,
+      "luozhouyang/python-string-similarity": 16,
+      "pytest-dev/iniconfig": 16
+    }
+  },
+  "rejected": {
+    "duplicate": 2,
+    "fail_to_pass_count": 196,
+    "not_single_file": 120,
+    "patch_too_large": 169,
+    "problem_statement_length": 94,
+    "target_not_library_python": 9
+  },
+  "repositories": {
+    "Suor/funcy": {
+      "excluded": null,
+      "license": "BSD-3-Clause",
+      "mirror": "swesmith/Suor__funcy.207a7810"
+    },
+    "andialbrecht/sqlparse": {
+      "excluded": null,
+      "license": "BSD-3-Clause",
+      "mirror": "swesmith/andialbrecht__sqlparse.e57923b3"
+    },
+    "borntyping/python-colorlog": {
+      "excluded": null,
+      "license": "MIT",
+      "mirror": "swesmith/borntyping__python-colorlog.dfa10f59"
+    },
+    "gweis/isodate": {
+      "excluded": null,
+      "license": "BSD-3-Clause",
+      "mirror": "swesmith/gweis__isodate.17cb25eb"
+    },
+    "luozhouyang/python-string-similarity": {
+      "excluded": null,
+      "license": "MIT",
+      "mirror": "swesmith/luozhouyang__python-string-similarity.115acaac"
+    },
+    "msiemens/tinydb": {
+      "excluded": null,
+      "license": "MIT",
+      "mirror": "swesmith/msiemens__tinydb.10644a0e"
+    },
+    "pytest-dev/iniconfig": {
+      "excluded": null,
+      "license": "MIT",
+      "mirror": "swesmith/pytest-dev__iniconfig.16793ead"
+    },
+    "python-hyper/h11": {
+      "excluded": null,
+      "license": "MIT",
+      "mirror": "swesmith/python-hyper__h11.bed0dd4a"
+    }
+  },
+  "rows_considered": 1450,
+  "source": {
+    "citation": "arXiv:2504.21798",
+    "dataset_license": "MIT",
+    "hf_dataset": "SWE-bench/SWE-smith-py",
+    "revision": "77cab9055d42ab4a5c25c89a8f937096db13558e",
+    "shards": [
+      {
+        "bytes": 16852671,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00000-of-00011.parquet",
+        "sha256": "302a383bb9229c42063ff2364b2ea637e9e7a20d82e0d566614d3aba9234833d",
+        "shard": "data/train-00000-of-00011.parquet"
+      },
+      {
+        "bytes": 5574116,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00001-of-00011.parquet",
+        "sha256": "f15e5b8ab49866e93245a736056fab680d6dde8fb5c2ba89c06241cf12a32afe",
+        "shard": "data/train-00001-of-00011.parquet"
+      },
+      {
+        "bytes": 6006895,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00002-of-00011.parquet",
+        "sha256": "67512898124c03132ae5bbf78866610571a565724dcb6a2064009db8a6825613",
+        "shard": "data/train-00002-of-00011.parquet"
+      },
+      {
+        "bytes": 117625772,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00003-of-00011.parquet",
+        "sha256": "cc4c9812480faac2bc2de49e78a271d17cc8dcd89a8af2268246c3c8632fd27d",
+        "shard": "data/train-00003-of-00011.parquet"
+      },
+      {
+        "bytes": 9822409,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00004-of-00011.parquet",
+        "sha256": "6110c76e568c0ee03eb1c86d208887154c6406237f532436cf72ed2c265073ca",
+        "shard": "data/train-00004-of-00011.parquet"
+      },
+      {
+        "bytes": 7434902,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00005-of-00011.parquet",
+        "sha256": "517420b48132eda3c073e6b9bc5fecbaf34c3dea7f3fec49a46f8615584f8200",
+        "shard": "data/train-00005-of-00011.parquet"
+      },
+      {
+        "bytes": 12282590,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00006-of-00011.parquet",
+        "sha256": "8e55de0daa541c031779f17d6ef04ebc3a4e2caad708d3137edb4587d89e60f3",
+        "shard": "data/train-00006-of-00011.parquet"
+      },
+      {
+        "bytes": 6665621,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00007-of-00011.parquet",
+        "sha256": "c558fc3b6507f36ae520a8b23ac0cd71be7d7c8bb15c0b09060fe18d83d21045",
+        "shard": "data/train-00007-of-00011.parquet"
+      },
+      {
+        "bytes": 21661282,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00008-of-00011.parquet",
+        "sha256": "b861958c450293ee717c00659958d2f334a697edf804f33c10c75bd05b8787e7",
+        "shard": "data/train-00008-of-00011.parquet"
+      },
+      {
+        "bytes": 7641038,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00009-of-00011.parquet",
+        "sha256": "20923272dab2706c1e07e9e11a19373c5c642efbb594a3b1c104440cf8cfc132",
+        "shard": "data/train-00009-of-00011.parquet"
+      },
+      {
+        "bytes": 9078471,
+        "path": "/workspace/lisa1/lp-cache/datasets/swe-smith-py/77cab9055d42ab4a5c25c89a8f937096db13558e/train-00010-of-00011.parquet",
+        "sha256": "3b7c09dfa07209f550f210344caac267c2ac5ea9c6eefa84c67845ecdff0b6df",
+        "shard": "data/train-00010-of-00011.parquet"
+      }
+    ],
+    "source_id": "swe-smith-py"
+  },
+  "train_heldout_instance_overlap": []
+}
