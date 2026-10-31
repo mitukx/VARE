@@ -523,3 +523,17 @@ PY
 ```
 
 This is controller validation, not model-capability evidence. A future model comparison requires its own task, frozen protocol, and authorization.
+
+
+## Remote integration of incomplete-tool retry budget
+
+PR #156 was merged at 358932bd66e4e78157e5a46307ac182bc68a5c5b. Verify with:
+
+```bash
+gh pr view 156 --json state,headRefOid,baseRefOid,mergeCommit,mergedAt
+gh pr checks 156
+git fetch origin
+git rev-parse origin/main
+```
+
+The exact-head required checks and calibrated-cpu-tasks passed. The machine-readable CI record is in results/agent-incomplete-tool-retry-budget-v1/controller-change.json; verify its report checksum from that directory with `shasum -a 256 -c SHA256SUMS`.

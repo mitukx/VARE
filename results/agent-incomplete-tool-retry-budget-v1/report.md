@@ -15,3 +15,8 @@ The protocol-driven separated evaluator forwards this setting only when the froz
 Ruff passed on the runner, protocol-driven evaluator, evidence collector, and changed tests. The focused controller, retry-wording compatibility, and evidence-integrity suite passed 77 tests. Exact commands are listed in research/flagship/REPRODUCE.md.
 
 No model inference or grader invocation occurred. The change has not been shown to increase valid tool calls or repair success. A later comparison would require a separate frozen protocol and distinct authorized task; this record does not authorize one.
+
+
+## Remote CI and integration
+
+PR #156 merged at 2026-10-31T02:55:27Z. Exact head 318f46ed1f68b16c0bff27b81527f6faf10f9f66 was based on cf8bd808bbb1b03c996e8f2bb8f91779bec713db. All required checks passed: blob-budget, lint, math500-grader, rvl-inference-cpu, seeded-summary-cpu, test (3.11), test (3.12), test (3.13), and typecheck. The calibrated-cpu-tasks check also passed. Main now contains merge commit 358932bd66e4e78157e5a46307ac182bc68a5c5b.
