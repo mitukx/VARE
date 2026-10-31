@@ -1,0 +1,120 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  78.18MB
+Step 1/8 : FROM python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 AS build
+ ---> 34386ef0cb08
+Step 2/8 : ENV PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_NO_CACHE_DIR=1
+ ---> Using cache
+ ---> 07020c04cab5
+Step 3/8 : COPY ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl /tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl
+ ---> 43f9a044fc18
+Step 4/8 : RUN echo "73bfbeed219e33c6521e750c3eeac921fcaaded8eace2698fe29c254e6590946  /tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl" | sha256sum -c -     && python3 -m pip install --no-cache-dir --prefix=/install        "pytest==8.3.5"        "ray[data] @ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl"
+ ---> Running in 34dcd66332ec
+/tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl: OK
+Processing /tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl (from ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+Collecting pytest==8.3.5
+  Downloading pytest-8.3.5-py3-none-any.whl.metadata (7.6 kB)
+Collecting iniconfig (from pytest==8.3.5)
+  Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting packaging (from pytest==8.3.5)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2,>=1.5 (from pytest==8.3.5)
+  Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+Collecting click>=7.0 (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting filelock (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading filelock-4.2.5-py3-none-any.whl.metadata (2.0 kB)
+Collecting jsonschema (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)
+Collecting msgpack<2.0.0,>=1.0.0 (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading msgpack-1.2.4-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (8.3 kB)
+Collecting protobuf>=3.20.3 (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_aarch64.whl.metadata (595 bytes)
+Collecting pyyaml (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (2.4 kB)
+Collecting requests (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting numpy>=1.20 (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl.metadata (6.6 kB)
+Collecting pandas>=2.2.3 (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading pandas-3.1.0-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl.metadata (18 kB)
+Collecting pyarrow>=17.0.0 (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading pyarrow-26.0.0-cp312-cp312-manylinux_2_28_aarch64.whl.metadata (3.0 kB)
+Collecting fsspec (from ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+Collecting python-dateutil>=2.9.0 (from pandas>=2.2.3->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading python_dateutil-3.0.0-py2.py3-none-any.whl.metadata (8.2 kB)
+Collecting attrs>=22.2.0 (from jsonschema->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting referencing>=0.28.4 (from jsonschema->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.25.0 (from jsonschema->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (4.1 kB)
+Collecting charset_normalizer<4,>=2 (from requests->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (46 kB)
+Collecting idna<4,>=2.5 (from requests->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting urllib3<3,>=1.26 (from requests->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting certifi>=2023.5.7 (from requests->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting six>=1.6 (from python-dateutil>=2.9.0->pandas>=2.2.3->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting tzdata (from python-dateutil>=2.9.0->pandas>=2.2.3->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting typing-extensions>=4.4.0 (from referencing>=0.28.4->jsonschema->ray@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl->ray[data]@ file:///tmp/ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Downloading pytest-8.3.5-py3-none-any.whl (343 kB)
+Downloading click-8.5.0-py3-none-any.whl (125 kB)
+Downloading msgpack-1.2.4-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (461 kB)
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl (15.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.7/15.7 MB 16.4 MB/s eta 0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pandas-3.1.0-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl (11.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.5/11.5 MB 11.5 MB/s eta 0:00:00
+Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_aarch64.whl (344 kB)
+Downloading pyarrow-26.0.0-cp312-cp312-manylinux_2_28_aarch64.whl (50.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.9/50.9 MB 13.4 MB/s eta 0:00:00
+Downloading filelock-4.2.5-py3-none-any.whl (163 kB)
+Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (775 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 775.1/775.1 kB 33.4 MB/s eta 0:00:00
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+Downloading charset_normalizer-3.5.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (246 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Downloading python_dateutil-3.0.0-py2.py3-none-any.whl (94 kB)
+Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (373 kB)
+Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: urllib3, tzdata, typing-extensions, six, rpds-py, pyyaml, pyarrow, protobuf, pluggy, packaging, numpy, msgpack, iniconfig, idna, fsspec, filelock, click, charset_normalizer, certifi, attrs, requests, referencing, python-dateutil, pytest, pandas, jsonschema-specifications, jsonschema, ray
+Successfully installed attrs-26.1.0 certifi-2026.10.23 charset_normalizer-3.5.2 click-8.5.0 filelock-4.2.5 fsspec-2026.9.0 idna-3.20 iniconfig-2.3.1 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 msgpack-1.2.4 numpy-2.5.4 packaging-26.3 pandas-3.1.0 pluggy-1.7.0 protobuf-7.36.2 pyarrow-26.0.0 pytest-8.3.5 python-dateutil-3.0.0 pyyaml-6.0.3 ray-3.0.0.dev0 referencing-0.37.0 requests-2.34.2 rpds-py-2026.9.1 six-1.17.0 typing-extensions-4.16.0 tzdata-2026.6 urllib3-2.8.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0m ---> Removed intermediate container 34dcd66332ec
+ ---> 9501b050459d
+Step 5/8 : FROM python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 AS runtime
+ ---> 34386ef0cb08
+Step 6/8 : ENV PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PIP_DISABLE_PIP_VERSION_CHECK=1
+ ---> Running in e1d87da20a20
+ ---> Removed intermediate container e1d87da20a20
+ ---> 9dfc7f423d08
+Step 7/8 : COPY --from=build /install /usr/local
+ ---> 041671056299
+Step 8/8 : ENTRYPOINT ["python3"]
+ ---> Running in a8d02dc34f5a
+ ---> Removed intermediate container a8d02dc34f5a
+ ---> 04c1b652294c
+Successfully built 04c1b652294c
+Successfully tagged vare/fresh-qualification-ray-66694-runtime:0.1

@@ -223,3 +223,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Permit one build-only retry with this filename correction. Keep the same wheel bytes, base image, package version, source/test inputs, and acceptance rules.
 - **Falsification criteria:** Any wheel/hash change, build failure, or test launch before the image digest is frozen.
 - **Follow-up:** Build once, preserve the log, and freeze the image digest before test execution.
+
+
+## 2026-10-31 — Freeze Ray runtime identity and authorize source-level arms
+
+- **Hypothesis:** A single image built from the exact Ray merge commit can replay the frozen multi-node wall-time tests under CPU-only offline limits.
+- **Evidence:** The arm64 image ID is `sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b`. Its exact-commit wheel SHA-256 is `73bfbeed219e33c6521e750c3eeac921fcaaded8eace2698fe29c254e6590946`, Dockerfile SHA-256 `9da37a8fb8c60e513e895437bced793250284d650ed5634ed298bdda80bc5c3b`, and successful build log SHA-256 `924a33ce4e367222598143ab3d71e648fc5f143b904b4d17cfa8367c215892b2`. Addendum 5 (SHA-256 `ca77f6954d42d8d2bc46c55c19b879a2e60133fe3f797b0609c26e5be6857ab3`) binds these with the test/source/mutant hashes and command boundary.
+- **Alternative explanations:** Runtime imports or hidden setup requirements may fail; the import-only preflight runs before any task tests and does not count as a task result.
+- **Decision:** Permit one import-only preflight, then exactly one baseline attempt; run the wrong mutant and fixed arm only if their frozen gates permit. Do not retry any arm or change test inputs without a new addendum.
+- **Falsification criteria:** Image or mount hash mismatch; preflight failure; target assertion absent on baseline/mutant; any fixed failure/skip; or network/resource boundary violation.
+- **Follow-up:** Verify image ID and mount hashes, run preflight, and proceed sequentially.
