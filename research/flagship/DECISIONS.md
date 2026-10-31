@@ -283,3 +283,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Freeze addendum `protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_1.json` at SHA-256 `5d7a44df1cf27bbef1030c2c51dde1f89fe71361949a71d6404d379c22a8f0f2`. It adds two identity-only inputs; overlap rules, exclusions, and authorization remain unchanged.
 - **Falsification criteria:** Any parent or supplemental input hash mismatch or any use of held-out task content.
 - **Follow-up:** Verify both protocol layers and all input hashes, then conduct only the permitted Development/Train metadata comparison.
+
+
+## 2026-10-31 — Bind provenance for the historical exposure comparison
+
+- **Hypothesis:** The prior Development exposure append can be reconciled against its directly cited Stage 2/3 source ledger and frozen task catalog before candidate-level overlap classification.
+- **Evidence:** Addendum 2 `protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_2.json` at SHA-256 `283296307bdacf3ebedbcd56274542ba1d5630644c2817b6166cf94d19b1efb5` pins both provenance inputs. The parent protocol and addendum 1 already freeze the candidate metadata and review criteria. No candidate-level classification or split decision has been made.
+- **Alternative explanations:** The historical ledger may not contain enough issue-family or path detail to support a disjointness conclusion; if so, report `INDETERMINATE`.
+- **Decision:** Continue only after verifying every parent/addendum input hash. The Dev/Train-only filter and Held-Out exclusion remain unchanged.
+- **Falsification criteria:** Any hash mismatch or use/output of a Held-Out identifier or content invalidates the review.
+- **Follow-up:** Reconcile the frozen candidate identities and paths with verified Development/Train exposure metadata.
