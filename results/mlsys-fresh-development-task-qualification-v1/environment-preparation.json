@@ -129,7 +129,11 @@
     "trl-7668/qualification.json": {
       "sha256": "f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c",
       "size_bytes": 2443
-    }
+    },
+    "ray-66694/attempt-001-fixed.json": "673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab",
+    "ray-66694/attempt-001-fixed.log": "20b00d9cc4a3409a3582614799f69f2a82d46a590612cb448479055fd731933d",
+    "ray-66694/commands.json": "39a3895faadf9b51c7a3b70d7149c62571a969aea48b7e44268b8c16d8b922fc",
+    "ray-66694/qualification.json": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d"
   },
   "mlx_runtime": {
     "base_image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
@@ -176,6 +180,12 @@
       "record": "trl-7668/attempt-001-baseline.json",
       "record_sha256": "5d090e644f69d72a64fb1dadf22c690cc0489a45db233b83bc5c2b8f34619ed8",
       "task_id": "trl-7668-gradient-checkpointing-kwargs-restore"
+    },
+    {
+      "classification": "target wall-time and shared Unix-anchor assertions failed on baseline; throughput controls passed",
+      "record": "ray-66694/attempt-001-baseline.json",
+      "record_sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f",
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain"
     }
   ],
   "preserved_runner_errors": [
@@ -268,7 +278,7 @@
     }
   ],
   "schema_version": 1,
-  "state": "Transformers #49418 and MLX #4778 are QUALIFIED_SOURCE_LEVEL (2/3). TRL #7668 has paired target failure/fix pass but remains unqualified under its frozen baseline-assertion gate. MLX baseline target VJP assertion failed and exact fixed image passed 1/1. A wrong image-tag launch error is preserved; it started no container. No task is assigned to Development or exposed to an agent.",
+  "state": "Replacement cohort Transformers #49418, MLX #4778, and Ray #66694 is QUALIFIED_SOURCE_LEVEL (3/3). TRL #7668 remains NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE and is excluded. All four qualification records report NOT_ASSIGNED and no target model/agent prompt exposure. Pretraining exposure remains unknown; no model inference, SFT, policy update, RL, or Held-out evaluation ran.",
   "task_qualification_results": [
     {
       "development_assignment": "NOT_ASSIGNED",
@@ -293,6 +303,15 @@
       "qualification_record_sha256": "29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee",
       "status": "QUALIFIED_SOURCE_LEVEL",
       "task_id": "mlx-4778-complex-power-vjp-conjugation"
+    },
+    {
+      "development_assignment": "NOT_ASSIGNED",
+      "model_exposure": false,
+      "pretraining_exposure": "UNKNOWN",
+      "qualification_record": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/qualification.json",
+      "qualification_record_sha256": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d",
+      "status": "QUALIFIED_SOURCE_LEVEL",
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain"
     }
   ],
   "transformers_runtime": {
@@ -407,6 +426,70 @@
       "log_sha256": "99a24796443a1d07f66a424f8116a06a2079063af758e7d3c87801c191ad2ecd",
       "record": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/attempt-001-fixed.json",
       "record_sha256": "1f075d67591f197747d467b010962660d98ba7fd09cc1243634cc9f7e3cef5e8"
+    },
+    {
+      "classification": "valid baseline negative control: two target assertions failed, two throughput controls passed, zero skips",
+      "log": "ray-66694/attempt-001-baseline.log",
+      "log_sha256": "df53b377085b47e9703562635d6fe7c7b64c0ad2631a97a5be95ccb4b8ac5d22",
+      "record": "ray-66694/attempt-001-baseline.json",
+      "record_sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f"
+    },
+    {
+      "classification": "wrong mutant rejected by target multi-node assertion; dataset throughput collateral failure recorded; zero skips",
+      "log": "ray-66694/attempt-001-wrong-mutant.log",
+      "log_sha256": "5bbcadd23de887e2daee7d3f2458431ca4d88ea6c2696f6baabfb16c7ad9c57d",
+      "record": "ray-66694/attempt-001-wrong-mutant.json",
+      "record_sha256": "5ba305e5cc1643cdaf55c9275182734d2bf335d8309eb67a063a779a1df2ace8"
+    },
+    {
+      "classification": "fixed source PASSED 4/4 with zero skips on the same exact image, selectors, test overlay, and isolation limits",
+      "log": "ray-66694/attempt-001-fixed.log",
+      "log_sha256": "20b00d9cc4a3409a3582614799f69f2a82d46a590612cb448479055fd731933d",
+      "record": "ray-66694/attempt-001-fixed.json",
+      "record_sha256": "673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab"
     }
-  ]
+  ],
+  "ray_runtime": {
+    "base_commit": "8374f91cad9e89050368fdbb34ee78f042d73902",
+    "pr_head_commit": "4ec20f4047ecd405bd744d95f6c07a0b275d6677",
+    "fixed_commit": "5808b33e30092d7761d545f8ce059b14c4cf0098",
+    "image_id": "sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b",
+    "architecture": "linux/arm64",
+    "network": "disabled during import preflight and tests",
+    "build_attempts": {
+      "001": "failed: docker CLI rejected --progress option",
+      "002": "failed: wheel scratch filename was not canonical",
+      "003": "passed"
+    },
+    "preflight": {
+      "result": "PASSED",
+      "log": "ray-66694/runtime-import-preflight.log",
+      "sha256": "8522622295fbe227fbc37bf194e4954f9ad257b5dc8da46d34940a547304ba0c"
+    },
+    "task_qualification": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/qualification.json",
+    "task_qualification_sha256": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d",
+    "attempts": [
+      {
+        "arm": "baseline",
+        "result": "2 failed target assertions, 2 passed, 0 skipped",
+        "record": "ray-66694/attempt-001-baseline.json",
+        "record_sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f"
+      },
+      {
+        "arm": "wrong-mutant",
+        "result": "target multi-node assertion failed; dataset throughput collateral failure; 2 passed, 0 skipped",
+        "record": "ray-66694/attempt-001-wrong-mutant.json",
+        "record_sha256": "5ba305e5cc1643cdaf55c9275182734d2bf335d8309eb67a063a779a1df2ace8"
+      },
+      {
+        "arm": "fixed",
+        "result": "4 passed, 0 failed, 0 skipped",
+        "record": "ray-66694/attempt-001-fixed.json",
+        "record_sha256": "673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab"
+      }
+    ],
+    "command_record": "ray-66694/commands.json",
+    "command_record_sha256": "39a3895faadf9b51c7a3b70d7149c62571a969aea48b7e44268b8c16d8b922fc",
+    "replay_boundary": "All three one-attempt arms are consumed. Do not rerun without a new frozen protocol."
+  }
 }

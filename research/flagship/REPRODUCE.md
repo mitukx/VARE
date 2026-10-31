@@ -157,3 +157,26 @@ Baseline attempt 001: two target `TypeError` failures from the base function rej
 ### MLX #4778 paired source result
 
 Baseline attempt 001: the exact CPU complex-power test failed the frozen VJP assertion. Fixed attempt 001: 1 passed, zero skipped. The first fixed-image launch used a stale tag and never started a container; the failed launch is retained separately and excluded. Paired qualification SHA-256: `29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee`.
+
+
+## Ray #66694 source-level qualification
+
+The ordered baseline, wrong-mutant, and fixed attempts are consumed; do not rerun them without a new frozen protocol. The frozen selectors, exact Docker argv, logs, image identity, and hashes are recorded in `results/mlsys-fresh-development-task-qualification-v1/ray-66694/commands.json`, `protocol-addendum-5-runtime-freeze.json`, and the adjacent attempt/qualification records. The fixed result is 4/4 passed, zero skips. To audit without rerunning:
+
+```bash
+(cd results/mlsys-fresh-development-task-qualification-v1/ray-66694 && shasum -a 256 -c SHA256SUMS)
+python - <<'PY'
+import json
+from pathlib import Path
+root = Path('results/mlsys-fresh-development-task-qualification-v1/ray-66694')
+record = json.loads((root / 'attempt-001-fixed.json').read_text())
+qualification = json.loads((root / 'qualification.json').read_text())
+assert record['status'] == 'FIXED_PASSED'
+assert record['passed_cases'] == record['expected_cases'] == 4
+assert record['failed_cases'] == record['skipped_cases'] == 0
+assert qualification['status'] == 'QUALIFIED_SOURCE_LEVEL'
+assert qualification['split_assignment'] == 'NOT_ASSIGNED'
+PY
+```
+
+This result is a CPU source-level regression qualification only. It does not establish target-model capability, Development generalization, pretraining independence, SFT/RL gains, or algorithmic novelty.

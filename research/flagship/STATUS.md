@@ -2,29 +2,33 @@
 
 ## Current checkpoint
 
-- Milestone: `p3-fresh-repository-task-qualification`
-- Last verified remote `main`: `ce097a5d2c695d4fa7a2e2119c3e25bc3a460578`
-- Current work branch: `codex/fresh-dev-candidate-discovery-v1`
-- Active PR: none; candidate qualification is still underway.
-- Last integration: PR #152 merged at the verified `main` SHA above. PR #150 is also merged; its repaired checks passed at exact head. PR #149 is an unrelated older open PR.
+- Milestone: `p3-fresh-repository-task-qualification-complete`.
+- Last verified `origin/main`: `ce097a5d2c695d4fa7a2e2119e3c25bc3a460578` (fetched 2026-10-31).
+- Work branch: `codex/fresh-dev-candidate-discovery-v1`, currently 26 commits ahead of `origin/main`; no PR exists for this branch yet.
+- PR #150 is merged. Its latest exact-head check set is green: Python 3.11/3.12/3.13, lint, typecheck, blob budget, math grader, CPU evidence, seeded summary, and optimizer/recovery.
+- PR #152 is the last integrated change at the current `main` SHA. PR #149 remains open and unrelated.
 
-## Candidate qualification
+## Fresh task qualification result
 
-The frozen sample selected Transformers #49418, TRL #7668, and MLX #4778. Exact source/test inputs are pinned in `results/mlsys-fresh-development-task-qualification-v1/source-test-input-manifest.json` (SHA-256 `d29cfbffc94e3f66711094f7ce72cefb0bb0580cc10b6a5a016d98c67fa60633`).
+The frozen metadata sample and source/test qualification protocol selected an initial cohort, then selected Ray #66694 as the replacement for the unqualified TRL task. The replacement cohort is now **3/3 `QUALIFIED_SOURCE_LEVEL`**:
 
-- **Transformers #49418 — `QUALIFIED_SOURCE_LEVEL`.** Baseline: four expected residual-length assertion failures, two passes. Fixed source: 6/6 pass, zero skips.
-- **MLX #4778 — `QUALIFIED_SOURCE_LEVEL`.** Baseline: the single frozen complex VJP assertion failed. Fixed CPU image: 1/1 pass.
-- **TRL #7668 — paired source evidence, not qualified.** Baseline: both cases failed with target `TypeError` because the base API rejects `gradient_checkpointing_kwargs`; no assertion executed. Fixed: 2/2 passed, including the only two permitted tiny-fixture forward/loss/autograd checks. The frozen gate requires a baseline assertion failure, so this task remains unqualified. No generation or optimizer ran.
-- Earlier environment and launcher failures remain preserved with their logs.
+- Transformers #49418: baseline 4/6 expected residual-length assertion failures; fixed 6/6 passed.
+- MLX #4778: baseline complex VJP assertion failed; fixed 1/1 passed.
+- Ray #66694: baseline two target assertions failed and two throughput controls passed; the frozen wrong-clock mutant was rejected by the target assertion (plus one recorded collateral failure); fixed source passed 4/4 with zero skips on the exact frozen image and test overlay.
+- TRL #7668 remains `NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE`: baseline raised a target `TypeError` before assertions, despite the fixed arm passing 2/2. Its outcome is unchanged and it is excluded from the replacement cohort.
 
-Source-qualified tasks: **2/3**. None is assigned to Development or exposed to an agent. Coding capability remains **NO-GO**. SFT, policy updates, GRPO/RL, fresh-task model inference, and Held-out evaluation are **NOT RUN**. Public pretraining exposure remains unknown. No paid compute/API spend or accelerator use.
+The Ray raw output, JSON attempt record, exact commands, source-level qualification record, runtime identity, and hashes are in `results/mlsys-fresh-development-task-qualification-v1/ray-66694/`. The one-attempt baseline, mutant, and fixed arms are consumed.
 
-## Immediate next action
+## Capability and split decision
 
-The frozen metadata-only selector chose **Ray PR #66694**, rank 1 of 12 eligible rows (selection record SHA-256 `716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95`). Addendum 1 limited review to the four metadata-listed paths. Addendum 2 freezes exact source hashes, four adapted test selectors, and one wrong mutant. Its artifact-integrity erratum (SHA-256 `b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684`) binds the compressed diff. Runtime build attempt 003 succeeded from the exact Ray merge-commit wheel; local arm64 image ID is `sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b`. Addendum 5 (SHA-256 `ca77f6954d42d8d2bc46c55c19b879a2e60133fe3f797b0609c26e5be6857ab3`) binds the image, wheel, Dockerfile, and build log. The import preflight passed. Baseline: two target assertions failed; two throughput controls passed; zero skips. Wrong mutant: the target multi-node assertion failed (10810.0 vs 12.0), and the dataset throughput control also failed (75 vs 100); two cases passed and zero skipped. The fixed arm is authorized and has not run yet.
+All tasks remain `NOT_ASSIGNED`; no target coding model or agent received these task prompts or source/test inputs. Public pretraining exposure is `UNKNOWN`. Task-family overlap with prior Development/Train families has not yet been assessed. No new model inference, SFT, policy update, RL, or Held-out evaluation occurred. Coding capability and RL update remain **NO_GO**. This checkpoint establishes only source-level task qualification, not model capability, generalization, or pretraining independence.
+
+## Next executable task
+
+Freeze and execute a task-family overlap review against existing task exposure records, using task IDs, issue families, changed paths, and repository metadata only. If disjointness is supported, freeze prospective Development allocation and a bounded independent model-attempt protocol before any target-policy inference. Leave Held-out untouched.
 
 ## External blockers
 
-- The frozen cohort has only 2/3 source-qualified tasks because the TRL baseline did not execute an assertion.
-- Public pretraining exposure for the selected public upstream patches is unknown.
-- No independent fresh-task model result or post-update policy measurement exists.
+- Pretraining exposure to the public upstream patches is unknown.
+- No fresh Development model inference or policy update has run.
+- PR #149 and other older open branches are unrelated to this task-qualification branch.

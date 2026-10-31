@@ -162,13 +162,13 @@
     "verified_pr_head_sha_before_checkpoint_changes": null
   },
   "go_no_go": {
-    "coding_capability": "NO_GO",
     "integration": "GO_PENDING_REMOTE_CI",
+    "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Run the fixed source arm once on the same four selectors, test overlay, image, and resource limits. If all four pass with zero skips, complete Ray source-level qualification; otherwise preserve the result and leave it unqualified.",
-  "last_completed_step": "Ray #66694 wrong-clock mutant was rejected by the targeted multi-node span assertion (10810.0 vs 12.0); four cases ran, two passed, two failed, zero skipped. It also failed the dataset throughput control; this collateral failure is retained. The fixed arm is now authorized.",
-  "milestone_id": "p3-fresh-repository-task-qualification",
+  "highest_priority_next_task": "Freeze and execute a task-family overlap review for the three source-qualified candidates against prior Development/Train exposure using task IDs, issue families, changed paths, and existing exposure records; then freeze prospective Development allocation and a bounded independent model-attempt protocol before any target-policy inference. Keep Held-out untouched.",
+  "last_completed_step": "Completed the frozen Ray #66694 source-level qualification: baseline target assertions failed, the wrong mixed-clock mutant was rejected, and the fixed source passed all four frozen selectors with zero skips. The fresh replacement cohort now has 3/3 source-qualified tasks: Transformers #49418, MLX #4778, and Ray #66694. TRL #7668 remains excluded under its unchanged frozen gate. No Development assignment or model inference occurred.",
+  "milestone_id": "p3-fresh-repository-task-qualification-complete",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -452,8 +452,8 @@
     },
     {
       "path": "results/mlsys-fresh-development-task-qualification-v1/environment-preparation.json",
-      "sha256": "995f6f7592ab7f9c257ab5210138427a7d3fb06b0648e01421b7624e9a004729",
-      "status": "runtime and task outcome index updated"
+      "sha256": "015e253035db04c10ed014ec110fce58e2271c7a03086d1a8eec8fa0115675d9",
+      "status": "updated aggregate environment and task-attempt record; replacement cohort 3/3 qualified"
     },
     {
       "path": "protocols/mlsys_fresh_development_task_replacement_selection_v1.json",
@@ -569,6 +569,31 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-wrong-mutant.json",
       "sha256": "5ba305e5cc1643cdaf55c9275182734d2bf335d8309eb67a063a779a1df2ace8",
       "status": "frozen mutant gate met; fixed arm may run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-fixed.json",
+      "sha256": "673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab",
+      "status": "fixed source passed 4/4 exact selectors, zero skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-fixed.log",
+      "sha256": "20b00d9cc4a3409a3582614799f69f2a82d46a590612cb448479055fd731933d",
+      "status": "raw fixed-arm output; all four frozen selectors passed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/commands.json",
+      "sha256": "39a3895faadf9b51c7a3b70d7149c62571a969aea48b7e44268b8c16d8b922fc",
+      "status": "exact argv for build, preflight, baseline, wrong-mutant, and fixed arms; arms consumed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/qualification.json",
+      "sha256": "d3dc97d8a766a1f5760feae3c5dbc8e26381fce1dc4c1d6f9109fece3924773d",
+      "status": "QUALIFIED_SOURCE_LEVEL; claim limited to CPU source-level regression behavior"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/SHA256SUMS",
+      "sha256": "f96bef417d75ffa921502a2227da35b7808bd87e23af237ad348783b371b8510",
+      "status": "per-task integrity index for all Ray #66694 source-level qualification artifacts"
     }
   ],
   "run_ids": [
@@ -600,7 +625,8 @@
     "freshdev-qualification-mlx-4778-attempt-001-baseline",
     "freshdev-qualification-mlx-4778-attempt-001-fixed",
     "freshdev-qualification-ray-66694-attempt-001-baseline",
-    "freshdev-qualification-ray-66694-attempt-001-wrong-mutant"
+    "freshdev-qualification-ray-66694-attempt-001-wrong-mutant",
+    "freshdev-qualification-ray-66694-attempt-001-fixed"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -610,10 +636,10 @@
     "sha256": "6fce1980b2347a208f02b3b472892a9404b064119e101a4c383bb27370c93884"
   },
   "unresolved_blockers": [
-    "Only 2/3 selected tasks are source-qualified. TRL #7668 has paired target failure/fix pass but no baseline assertion; under the frozen gate it remains unqualified. A replacement must be selected and qualified before cohort assignment.",
-    "Public pretraining exposure of the selected public upstream patches remains unknown.",
-    "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
-    "PR #149 and other older open branches are unrelated to this qualification experiment."
+    "Task-family overlap between the three source-qualified candidates and prior Development/Train families has not been assessed; do not assign them until a frozen overlap review is complete.",
+    "Public pretraining exposure for the selected upstream patches is UNKNOWN and must not be represented as absent.",
+    "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run; coding capability remains NO_GO.",
+    "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded from the 3/3 replacement cohort."
   ],
-  "updated_at": "2026-10-31T09:07:14+09:00"
+  "updated_at": "2026-10-31T09:11:12+09:00"
 }

@@ -1,0 +1,93 @@
+{
+  "base_commit": "8374f91cad9e89050368fdbb34ee78f042d73902",
+  "baseline": {
+    "expected_target_assertions_failed": [
+      "multi-node time_total_s 10690.0 vs 12.0",
+      "builder anchor missing"
+    ],
+    "failed": 2,
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-baseline.log",
+    "log_sha256": "df53b377085b47e9703562635d6fe7c7b64c0ad2631a97a5be95ccb4b8ac5d22",
+    "passed": 2,
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-baseline.json",
+    "record_sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f",
+    "selected_cases": 4,
+    "skipped": 0
+  },
+  "claim_boundary": "Source-level CPU regression qualification only. Does not establish model capability, Development generalization, pretraining independence, SFT/RL gains, or algorithmic novelty. The task remains unassigned.",
+  "commands_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/commands.json",
+  "commands_sha256": "39a3895faadf9b51c7a3b70d7149c62571a969aea48b7e44268b8c16d8b922fc",
+  "fixed": {
+    "failed": 0,
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-fixed.log",
+    "log_sha256": "20b00d9cc4a3409a3582614799f69f2a82d46a590612cb448479055fd731933d",
+    "passed": 4,
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-fixed.json",
+    "record_sha256": "673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab",
+    "selected_cases": 4,
+    "skipped": 0
+  },
+  "fixed_commit": "5808b33e30092d7761d545f8ce059b14c4cf0098",
+  "input_manifest_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/input-manifest.json",
+  "input_manifest_sha256": "1631baa877ac8e3f0f260ebf6ebfd9e3ce4ea9328c556cf4be31b5dcdd29279a",
+  "model_or_agent_exposure": false,
+  "pr_head_commit": "4ec20f4047ecd405bd744d95f6c07a0b275d6677",
+  "preflight_log_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-import-preflight.log",
+  "preflight_log_sha256": "8522622295fbe227fbc37bf194e4954f9ad257b5dc8da46d34940a547304ba0c",
+  "pretraining_exposure": "UNKNOWN",
+  "protocols": [
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-1.json",
+      "sha256": "9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2.json",
+      "sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2-erratum.json",
+      "sha256": "b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-3-runtime-build-retry.json",
+      "sha256": "07cfef610b9140684f2f50b6bc3e34f3a3fb643882ad98a14904e10edcdb3cec"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-4-runtime-build-retry.json",
+      "sha256": "8a161b0a157b970722ce00fded9031e06ba3d91791e2c876ca057343feb75429"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-5-runtime-freeze.json",
+      "sha256": "ca77f6954d42d8d2bc46c55c19b879a2e60133fe3f797b0609c26e5be6857ab3"
+    }
+  ],
+  "replacement_for": "trl-7668-gradient-checkpointing-kwargs-restore",
+  "repository": "ray-project/ray",
+  "runtime_build_log_sha256": "924a33ce4e367222598143ab3d71e648fc5f143b904b4d17cfa8367c215892b2",
+  "runtime_image_id": "sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b",
+  "schema_version": 1,
+  "selection_record_path": "results/mlsys-fresh-development-task-qualification-v1/replacement-selection.json",
+  "selection_record_sha256": "716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95",
+  "split_assignment": "NOT_ASSIGNED",
+  "status": "QUALIFIED_SOURCE_LEVEL",
+  "task_family_overlap": "NOT_ASSESSED",
+  "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain",
+  "task_key": "ray-project/ray#66694",
+  "test_only_delta_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py",
+  "test_only_delta_sha256": "945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c",
+  "wrong_mutant": {
+    "collateral_failure": "dataset throughput 75 vs 100",
+    "failed": 2,
+    "gate": "REJECTED_BY_TARGET_ASSERTION",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-wrong-mutant.log",
+    "log_sha256": "5bbcadd23de887e2daee7d3f2458431ca4d88ea6c2696f6baabfb16c7ad9c57d",
+    "passed": 2,
+    "record_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-wrong-mutant.json",
+    "record_sha256": "5ba305e5cc1643cdaf55c9275182734d2bf335d8309eb67a063a779a1df2ace8",
+    "selected_cases": 4,
+    "skipped": 0,
+    "target_assertion_failed": "multi-node time_total_s 10810.0 vs 12.0"
+  },
+  "wrong_mutant_patch_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/wrong-mutant.patch",
+  "wrong_mutant_patch_sha256": "ddbd0679b8b5e6bb0356fd9befd5273ba8d1a9d58b1466eac5e8f90b30b00040"
+}

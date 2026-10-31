@@ -253,3 +253,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Count the wrong-mutant negative control as rejected under the frozen gate and proceed to the one fixed-source attempt.
 - **Falsification criteria:** Source/test/image hashes disagree, target assertion did not execute, any case is skipped, or the failure is a setup/environment error.
 - **Follow-up:** Run the exact fixed source once using the same image, test overlay, selectors, and limits.
+
+
+## 2026-10-31 — Ray #66694 fixed arm passes the frozen gate
+
+- **Hypothesis:** The exact PR source corrects the cross-node wall-time calculation and records a shared Unix anchor without regressing the two frozen throughput controls.
+- **Evidence:** Fixed attempt record SHA-256 `673eeaa1d57505b8d1e957177500d174f652ee6547866a7c46737c16cfb418ab` binds four selected cases, zero skips, exact source hashes, test hash, image `sha256:04c1b652294c61d1536d0a4b89d8d288b3f8499a3cc83f8d1b5175587660598b`, and exit code 0. Raw log SHA-256 `20b00d9cc4a3409a3582614799f69f2a82d46a590612cb448479055fd731933d`. Baseline and wrong-mutant gates were previously met; their records and the collateral mutant failure are retained.
+- **Alternative explanations:** A source-level CPU regression pass does not establish that a coding model can discover or repair the issue, that the task is independent of pretraining, or that the task family is disjoint from earlier exposures.
+- **Decision:** Count Ray #66694 as `QUALIFIED_SOURCE_LEVEL`. The replacement cohort is 3/3 qualified (Transformers #49418, MLX #4778, Ray #66694); preserve TRL #7668 as unqualified under its original frozen gate. Do not yet assign tasks or run inference.
+- **Falsification criteria:** Any mismatch in frozen source/test/image identity, a skipped case, a fixed-arm failure, or a baseline/mutant target assertion not executing.
+- **Follow-up:** Freeze and execute the task-family overlap review, then freeze Development allocation and inference protocol before a target-model attempt. Keep Held-out data untouched and pretraining exposure labeled unknown.
