@@ -213,22 +213,22 @@
   ],
   "git_refs": {
     "repository": "mitukx/VARE",
-    "last_verified_main_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
-    "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
-    "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "09605e254c47bb07a96dec7a8e318a9aae13fd68",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
-    "active_pr_state": "open"
+    "last_verified_main_sha": "cf8bd808bbb1b03c996e8f2bb8f91779bec713db",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/155",
+    "last_integrated_pr_merge_sha": "cf8bd808bbb1b03c996e8f2bb8f91779bec713db",
+    "active_branch": "codex/bounded-incomplete-tool-retry-v1",
+    "verified_pr_head_sha_before_checkpoint_changes": null,
+    "active_pr_url": null,
+    "active_pr_state": "none"
   },
   "go_no_go": {
     "integration": "GO_PENDING_REMOTE_CI",
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Verify every exact-head required CI and CPU-evidence check for the retry-reminder compatibility correction on PR #155, inspect all failures, and keep coding capability, SFT/RL, and Held-Out decisions NO-GO unless new independent repair evidence meets their gates.",
-  "last_completed_step": "Pushed the one-shot result and controller diagnostics to PR #155. Exact-head CI at 09605e25 identified a single Python 3.13 assertion mismatch in established retry wording (1538 passed, 1 failed, 111 skipped); the compatible wording correction and CI diagnosis are included in this checkpoint, and the fresh remote CI result is pending.",
-  "milestone_id": "p10-transformers-49458-agent-interaction-failure-diagnosed",
+  "highest_priority_next_task": "Review, commit, push, and open a focused PR for the opt-in incomplete-tool retry cap; verify all exact-head required checks and integrate without bypass. Preserve coding-capability, SFT/RL, and Held-Out NO-GO decisions. Do not retry Transformers #49458 or run inference without a separate authorized task and frozen protocol.",
+  "last_completed_step": "Merged PR #155 at cf8bd808 after every required exact-head check passed; implemented and locally validated the opt-in incomplete-tool retry budget, protocol forwarding, and fail-closed evidence binding on codex/bounded-incomplete-tool-retry-v1. The focused controller, compatibility, and collector suite passed 77 tests; no model inference or grader call occurred.",
+  "milestone_id": "p11-incomplete-tool-retry-budget-controller-change",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -731,16 +731,6 @@
       "status": "raw pre-inference workspace guard traceback"
     },
     {
-      "path": "research/flagship/REPRODUCE.md",
-      "sha256": "d67ff2115016cd345b0dba13061194decc85a8bc8b1cd7ffa80077145c8911b1",
-      "status": "authoritative checkpoint updated after one-shot Transformers #49458 result and controller diagnostics"
-    },
-    {
-      "path": "research/flagship/STATUS.md",
-      "sha256": "dd7b9fe1f8e10fdcc3e460c0c026f49c608877d0765733267c07ce1c04948d84",
-      "status": "authoritative checkpoint updated after one-shot Transformers #49458 result and controller diagnostics"
-    },
-    {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/SHA256SUMS",
       "sha256": "b982d2ff629ca4c5c8f1ce57218f899bbbd85f0c7ff47e6578b47edf2afbe374",
       "status": "hash index for diagnostic raw evidence and task artifacts"
@@ -791,24 +781,9 @@
       "status": "raw pinned Transformers candidate-grade output"
     },
     {
-      "path": "research/flagship/DECISIONS.md",
-      "sha256": "927c72fec1e7c6c89ddff7435edaa9ae3b997e5811e4287691200c61d731e504",
-      "status": "authoritative checkpoint updated after one-shot Transformers #49458 result and controller diagnostics"
-    },
-    {
-      "path": "scripts/run_local_agent.py",
-      "sha256": "2abda8f48a533dc5ec420916918d6cbc6fb4620134253c1ee79566efde72439f",
-      "status": "post-run incomplete tool-call telemetry/reminder implementation; not model capability evidence"
-    },
-    {
       "path": "scripts/replay_agent_context_compaction.py",
       "sha256": "c36d6ac0141068072ab9c4bda71ec41c18e3e355fd245c8476110186d213ffd5",
       "status": "tokenizer-only saved-transcript replay tool"
-    },
-    {
-      "path": "tests/test_run_local_agent_tool_format.py",
-      "sha256": "4479920f5babc151b0b51f772388c8845021328fa2acd4f354f623c053ba0f75",
-      "status": "focused regression tests for incomplete tool-call classification and reminder"
     },
     {
       "path": "results/agent-context-compaction-replay-v1/README.md",
@@ -1064,6 +1039,61 @@
       "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/ci-diagnostic-001.json",
       "sha256": "afdbd3cbca2f63a2895f1319e1b9a1ed637cdff91d8b4ca690fb4d936eff6fec",
       "status": "exact-head Python 3.13 CI wording failure and targeted local correction record"
+    },
+    {
+      "path": "results/agent-incomplete-tool-retry-budget-v1/controller-change.json",
+      "sha256": "0790b48c1051c759696293fe742f06e8078a7af827360641f8fbd9feac980df6",
+      "status": "hash-bound controller change record; no inference authorized"
+    },
+    {
+      "path": "results/agent-incomplete-tool-retry-budget-v1/report.md",
+      "sha256": "ddaf3d228e33d7599f9896261300d0ae92b23e79e32744ec3ea1f03cb7e5ff1b",
+      "status": "failure-driven controller change report; 77 focused tests and lint passed; no model inference"
+    },
+    {
+      "path": "results/agent-incomplete-tool-retry-budget-v1/SHA256SUMS",
+      "sha256": "2d298d40b988d0745cfb343b2d09d6bceb00352a9aad8b82948514f2dc9dc357",
+      "status": "integrity index for controller change record and report"
+    },
+    {
+      "path": "scripts/run_local_agent.py",
+      "sha256": "9ac2b9af00b1802663f88b600dc1293ccd892451e18bbea0cab77efc227ab19a",
+      "status": "runner with opt-in incomplete-tool retry budget and per-turn cap telemetry"
+    },
+    {
+      "path": "scripts/run_separated_coding_eval.py",
+      "sha256": "69aa4faed86ffc6c25c08d24f36da3f873a6441b323e91f9d3d9c9a74eb38cbf",
+      "status": "forwards only explicitly frozen retry cap to the local runner"
+    },
+    {
+      "path": "scripts/record_coding_agent_baseline.py",
+      "sha256": "73b141e1030b9206f3cd5cef2eb78cddad7b39466d1012e81217a2d33f082e62",
+      "status": "validates retry budget equality and per-turn retry provenance"
+    },
+    {
+      "path": "tests/test_run_local_agent_tool_format.py",
+      "sha256": "d33d138fb9fdf090d93af09799a5bf48aee32ee584462f882a5ceefd6299d23f",
+      "status": "deterministic retry-budget, total-clamp, forwarding, and reminder coverage"
+    },
+    {
+      "path": "tests/test_record_coding_agent_baseline.py",
+      "sha256": "d78e6bddb8cafaa87cd9264e6c5477ae8b6ce6612a0a398799101cf3ff473a34",
+      "status": "fail-closed tests for retry-budget mismatch and expanded-turn provenance"
+    },
+    {
+      "path": "research/flagship/STATUS.md",
+      "sha256": "4681b0fffa7648859a96b7919c4a85744d1936c6ef93559560a6d536be8f17fb",
+      "status": "checkpoint updated through merged PR #155 and current local controller work"
+    },
+    {
+      "path": "research/flagship/DECISIONS.md",
+      "sha256": "1ce94ea80f020144bea92e3a22462546e99580867b568df42b1ca569e1f038a3",
+      "status": "append-only controller budget decision"
+    },
+    {
+      "path": "research/flagship/REPRODUCE.md",
+      "sha256": "092ef58f141d7c1d69dcef792d00cac4ae3a052aff8d19e138aab59f5802eff7",
+      "status": "reproduction instructions for retry budget checks"
     }
   ],
   "run_ids": [
@@ -1115,7 +1145,7 @@
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
-    "Exact-head PR #155 check on 09605e254c47bb07a96dec7a8e318a9aae13fd68 had one Python 3.13 retry-reminder wording assertion failure; the compatible, cautious wording fix passes 48 targeted tests locally but awaits a new remote CI run."
+    "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown."
   ],
-  "updated_at": "2026-10-31T02:26:44Z"
+  "updated_at": "2026-10-31T02:46:15Z"
 }

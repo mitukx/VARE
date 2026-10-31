@@ -472,6 +472,14 @@ def ensure_model(repository: str, revision: str, file_hashes: dict[str, str] | N
     return path
 
 
+def incomplete_tool_retry_args(budgets: dict[str, Any]) -> list[str]:
+    """Forward an explicitly frozen retry cap to the local agent runner."""
+    value = budgets.get("incomplete_tool_retry_tokens")
+    if value is None:
+        return []
+    return ["--incomplete-tool-retry-tokens", str(value)]
+
+
 def run_agent(
     protocol: dict, *, model_path: Path, repository: str, seed: int,
     workspace: Path, task_root: Path, output: Path, instruction: str,
@@ -510,6 +518,7 @@ def run_agent(
         "--max-context-tokens", str(budgets.get("max_context_tokens", 8192)),
         "--wall-seconds", str(budgets["wall_seconds"]),
     ]
+    command.extend(incomplete_tool_retry_args(budgets))
     started = time.perf_counter()
     samples: list[dict] = []
     interval = max(1, int(budgets.get("resource_preflight", {}).get("sample_interval_seconds", 1)))

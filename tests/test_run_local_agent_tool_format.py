@@ -23,6 +23,7 @@ from scripts.run_local_agent import (
     bounded_tool_result,
     classify_incomplete_tool_call,
     compact_tool_context,
+    generation_limit_for_turn,
     no_tool_retry_reminder,
     normalize_tool_call_format,
     render_chat_prompt,
@@ -34,6 +35,7 @@ from scripts.run_local_agent import candidate_source_diff, snapshot_allowed_sour
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
+    incomplete_tool_retry_args,
     verified_task_success,
 )
 
@@ -470,6 +472,36 @@ def test_incomplete_tool_call_is_classified_at_the_generation_cap():
     ) is None
 
 
+def test_incomplete_tool_retry_budget_is_opt_in_and_bounded_by_total_budget():
+    assert generation_limit_for_turn(256, 2048, retry_limit=512) == 256
+    assert generation_limit_for_turn(
+        256, 2048, retry_limit=512, following_incomplete_tool_call=True,
+    ) == 512
+    assert generation_limit_for_turn(
+        256, 400, retry_limit=512, following_incomplete_tool_call=True,
+    ) == 400
+    assert generation_limit_for_turn(
+        256, 2048, following_incomplete_tool_call=True,
+    ) == 256
+
+
+def test_incomplete_tool_retry_budget_rejects_invalid_limits():
+    with pytest.raises(ValueError, match='below the base limit'):
+        generation_limit_for_turn(
+            256, 2048, retry_limit=128, following_incomplete_tool_call=True,
+        )
+    with pytest.raises(ValueError, match='must be positive'):
+        generation_limit_for_turn(256, 0)
+
+
+def test_separated_runner_forwards_only_explicitly_frozen_retry_caps():
+    assert incomplete_tool_retry_args({}) == []
+    assert incomplete_tool_retry_args({'incomplete_tool_retry_tokens': None}) == []
+    assert incomplete_tool_retry_args({'incomplete_tool_retry_tokens': 512}) == [
+        '--incomplete-tool-retry-tokens', '512',
+    ]
+
+
 def test_unified_diff_truncation_reminder_requests_a_small_edit_payload():
     reminder = no_tool_retry_reminder(
         '<tool_call>{"name":"apply_patch"', edit_format='unified_diff',
@@ -482,6 +514,17 @@ def test_unified_diff_truncation_reminder_requests_a_small_edit_payload():
     assert 'short exact old_text snippet' in reminder
     assert 'Do not include unchanged function bodies' in reminder
     assert 'src/module.py' in reminder
+
+
+def test_truncation_reminder_reports_the_opt_in_retry_cap():
+    reminder = no_tool_retry_reminder(
+        '<tool_call>{"name":"apply_patch"', edit_format='unified_diff',
+        allowed_paths=['src/module.py'], token_limit=256, next_token_limit=512,
+    )
+
+    assert 'previous response was limited to 256 tokens' in reminder
+    assert 'next response has a per-turn cap of 512 tokens' in reminder
+    assert 'remaining total and context budgets' in reminder
 
 
 def test_context_compaction_preserves_task_and_latest_complete_tool_round():
