@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "teacher": {
+    "attempts": 4,
+    "generated_tokens": 3072,
+    "independent_successes": 0,
+    "valid_edits": 0,
+    "executed_model_tools": 0,
+    "public_test_calls": 0,
+    "groups": 2,
+    "all_groups_constant_zero_reward": true,
+    "eligibility": "exploratory consumed Development; original grading-image qualification revoked",
+    "rows": [
+      {
+        "task": "gptq-groups",
+        "attempt": "greedy",
+        "reward": 0,
+        "negative_source_independently_bound_to_calibrated_baseline": true
+      },
+      {
+        "task": "gptq-groups",
+        "attempt": "sampled",
+        "reward": 0,
+        "negative_source_independently_bound_to_calibrated_baseline": true
+      },
+      {
+        "task": "thinking-markers",
+        "attempt": "greedy",
+        "reward": 0,
+        "negative_source_independently_bound_to_calibrated_baseline": true
+      },
+      {
+        "task": "thinking-markers",
+        "attempt": "sampled",
+        "reward": 0,
+        "negative_source_independently_bound_to_calibrated_baseline": true
+      }
+    ]
+  },
+  "installed_source_and_compiled_repair_leakage_reproduced_and_closed": true,
+  "image_record_integrity_and_source_inventory_checked": true,
+  "training": "NO_GO",
+  "heldout_evaluation": "NOT_RUN"
+}

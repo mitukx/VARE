@@ -1,0 +1,400 @@
+{
+  "model_inference": "NOT_RUN",
+  "optimizer_steps": 0,
+  "outcomes": [
+    {
+      "cases": [
+        {
+          "case_id": "single-group",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.1291091249372556
+        },
+        {
+          "case_id": "two-groups",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.1800881240100625
+        },
+        {
+          "case_id": "four-groups",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.308563999972552
+        },
+        {
+          "case_id": "eight-bit",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.2126464990105097
+        }
+      ],
+      "elapsed_seconds": 5.707698500016704,
+      "passed": false,
+      "source_sha256": "81d7df02f5de9ec8cb79390145f34724ee549a1a7cafadaac3edaaa7bc2cb318",
+      "task": "gptq-groups",
+      "task_kind": "correctness",
+      "variant": "baseline"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "single-group",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.0649108330175163
+        },
+        {
+          "case_id": "two-groups",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.1879866250549362
+        },
+        {
+          "case_id": "four-groups",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.2759513339789597
+        },
+        {
+          "case_id": "eight-bit",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.1869905420473026
+        }
+      ],
+      "elapsed_seconds": 5.563589125056751,
+      "passed": true,
+      "source_sha256": "bd4c08453a24fe41fea8ce5885f433b718628c16c4e7a0596900fc72553daf16",
+      "task": "gptq-groups",
+      "task_kind": "correctness",
+      "variant": "known-fix"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "single-group",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.1779672490301314
+        },
+        {
+          "case_id": "two-groups",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.1717346249540863
+        },
+        {
+          "case_id": "four-groups",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.2909892499850755
+        },
+        {
+          "case_id": "eight-bit",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.1443369579308331
+        }
+      ],
+      "elapsed_seconds": 5.583282207953744,
+      "passed": false,
+      "source_sha256": "952cee6241cfcb86eb24370711b05eeadda0d1f09b0f8a70fe3a915cc832cf29",
+      "task": "gptq-groups",
+      "task_kind": "correctness",
+      "variant": "wrong-local-error-index"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "single-group",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.084099206944308
+        },
+        {
+          "case_id": "two-groups",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.1465122489725605
+        },
+        {
+          "case_id": "four-groups",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.2819700830169531
+        },
+        {
+          "case_id": "eight-bit",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.1150793750139698
+        }
+      ],
+      "elapsed_seconds": 5.481928791967221,
+      "passed": false,
+      "source_sha256": "101d9887e1a2ac98b02669c6a8adf079532824176a4602e7b99f5c9184ad39a4",
+      "task": "gptq-groups",
+      "task_kind": "correctness",
+      "variant": "wrong-group-slice"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "bracket",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.0471757510624125
+        },
+        {
+          "case_id": "existing-angle",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9464377909971178
+        },
+        {
+          "case_id": "existing-longcat",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9810720830278471
+        },
+        {
+          "case_id": "text-marker",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 0.9863155419838429
+        },
+        {
+          "case_id": "dict-template",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.0250833330950695
+        },
+        {
+          "case_id": "ordinary-null",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.0871235010530171
+        },
+        {
+          "case_id": "one-marker-only",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9557333750519976
+        },
+        {
+          "case_id": "thinking-enabled",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 0.9616179589698208
+        },
+        {
+          "case_id": "thinking-disabled",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9810347909510838
+        }
+      ],
+      "elapsed_seconds": 10.86304220801685,
+      "passed": false,
+      "source_sha256": "a6c3b727ae30989c5d65d4c1e81b8616cd3e960f02cf6e9cd5474c14926fe49f",
+      "task": "thinking-markers",
+      "task_kind": "correctness",
+      "variant": "baseline"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "bracket",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9675689570998538
+        },
+        {
+          "case_id": "existing-angle",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9972769169793235
+        },
+        {
+          "case_id": "existing-longcat",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9475850829833032
+        },
+        {
+          "case_id": "text-marker",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9721957929774683
+        },
+        {
+          "case_id": "dict-template",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9589371250036359
+        },
+        {
+          "case_id": "ordinary-null",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.009991541033848
+        },
+        {
+          "case_id": "one-marker-only",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9539793750038221
+        },
+        {
+          "case_id": "thinking-enabled",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9677415419867219
+        },
+        {
+          "case_id": "thinking-disabled",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.0077937499431298
+        }
+      ],
+      "elapsed_seconds": 10.636388042010367,
+      "passed": true,
+      "source_sha256": "59b2da204db859d64baf60efea842a217445cec82d910b132367e5fc86eea6ec",
+      "task": "thinking-markers",
+      "task_kind": "correctness",
+      "variant": "known-fix"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "bracket",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9786599580895677
+        },
+        {
+          "case_id": "existing-angle",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9819587510172693
+        },
+        {
+          "case_id": "existing-longcat",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 0.98318033396769
+        },
+        {
+          "case_id": "text-marker",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9643212910929173
+        },
+        {
+          "case_id": "dict-template",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9552042090067534
+        },
+        {
+          "case_id": "ordinary-null",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.0124011250215024
+        },
+        {
+          "case_id": "one-marker-only",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9419336250444948
+        },
+        {
+          "case_id": "thinking-enabled",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9593222500037923
+        },
+        {
+          "case_id": "thinking-disabled",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9976521659898789
+        }
+      ],
+      "elapsed_seconds": 10.648754916037433,
+      "passed": false,
+      "source_sha256": "5acdf66e144abe0afe0364845bde67ca74f4b5c80da77473b34ae199b3b31f9c",
+      "task": "thinking-markers",
+      "task_kind": "correctness",
+      "variant": "wrong-existing-mode"
+    },
+    {
+      "cases": [
+        {
+          "case_id": "bracket",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9920062080769986
+        },
+        {
+          "case_id": "existing-angle",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.0418768329731034
+        },
+        {
+          "case_id": "existing-longcat",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.0108531660076592
+        },
+        {
+          "case_id": "text-marker",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9983198739945474
+        },
+        {
+          "case_id": "dict-template",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.9899077509904962
+        },
+        {
+          "case_id": "ordinary-null",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.0171370000113356
+        },
+        {
+          "case_id": "one-marker-only",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 1.0352869160151141
+        },
+        {
+          "case_id": "thinking-enabled",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.0160022089662446
+        },
+        {
+          "case_id": "thinking-disabled",
+          "failure": null,
+          "passed": true,
+          "wall_s": 1.0261185830779138
+        }
+      ],
+      "elapsed_seconds": 10.990121708018705,
+      "passed": false,
+      "source_sha256": "af3388e58fffef18f8e960a96f1bf87b6ea3036a0e534bc6328d0a9dd196cb8b",
+      "task": "thinking-markers",
+      "task_kind": "correctness",
+      "variant": "wrong-always-angle"
+    }
+  ],
+  "protocol_sha256": "63495ce52b1f30771d646bfaba903db4f69a588c5b81d987a08c7e97f51df51e",
+  "qualification_passed": true
+}

@@ -1,0 +1,46 @@
+[
+    {
+        "Architecture": "arm64",
+        "Config": {
+            "Cmd": [
+                "python3"
+            ],
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+                "PYTHON_VERSION=3.12.15",
+                "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a"
+            ]
+        },
+        "Created": "2026-10-21T08:33:16.536057896+09:00",
+        "Descriptor": {
+            "digest": "sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 1402
+        },
+        "Id": "sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+        "Metadata": {
+            "LastTagTime": "2026-10-20T23:33:18.146811682Z"
+        },
+        "Os": "linux",
+        "Parent": "sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+        "RepoDigests": [
+            "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7"
+        ],
+        "RepoTags": [
+            "vare-mlx-cpu:0.32.4-0.32.0"
+        ],
+        "RootFS": {
+            "Layers": [
+                "sha256:258ba1f62b513e7bb7492d3cc8ce445e4ef176a14980f193f789b6d7270ae61c",
+                "sha256:373ce1c1778b9a35fa1db898d648974a737e314bb3503ac5c988fa42ca1f63d5",
+                "sha256:11d89b6e886fe5bea9177eb50df86009b68b75957e4605f2bb472bbb4a76751b",
+                "sha256:84dd5a4db43e5a9bfe3a50e18c5b5ad0a8789ea9b894392200ad8a95388a745e",
+                "sha256:c6e41459095b40bcac2f892afcf7289f246d56d7f7f8485cde45d8b0d70cbec1"
+            ],
+            "Type": "layers"
+        },
+        "Size": 131913042
+    }
+]

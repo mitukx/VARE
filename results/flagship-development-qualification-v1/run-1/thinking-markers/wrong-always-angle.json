@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "case_id": "bracket",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.9920062080769986
+    },
+    {
+      "case_id": "existing-angle",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.0418768329731034
+    },
+    {
+      "case_id": "existing-longcat",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.0108531660076592
+    },
+    {
+      "case_id": "text-marker",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.9983198739945474
+    },
+    {
+      "case_id": "dict-template",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.9899077509904962
+    },
+    {
+      "case_id": "ordinary-null",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 1.0171370000113356
+    },
+    {
+      "case_id": "one-marker-only",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 1.0352869160151141
+    },
+    {
+      "case_id": "thinking-enabled",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.0160022089662446
+    },
+    {
+      "case_id": "thinking-disabled",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.0261185830779138
+    }
+  ],
+  "elapsed_seconds": 10.990121708018705,
+  "passed": false,
+  "source_sha256": "af3388e58fffef18f8e960a96f1bf87b6ea3036a0e534bc6328d0a9dd196cb8b",
+  "task": "thinking-markers",
+  "task_kind": "correctness",
+  "variant": "wrong-always-angle"
+}

@@ -1,0 +1,34 @@
+{
+  "cases": [
+    {
+      "case_id": "single-group",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.1779672490301314
+    },
+    {
+      "case_id": "two-groups",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.1717346249540863
+    },
+    {
+      "case_id": "four-groups",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 1.2909892499850755
+    },
+    {
+      "case_id": "eight-bit",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.1443369579308331
+    }
+  ],
+  "elapsed_seconds": 5.583282207953744,
+  "passed": false,
+  "source_sha256": "952cee6241cfcb86eb24370711b05eeadda0d1f09b0f8a70fe3a915cc832cf29",
+  "task": "gptq-groups",
+  "task_kind": "correctness",
+  "variant": "wrong-local-error-index"
+}

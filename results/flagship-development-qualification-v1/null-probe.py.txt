@@ -1,0 +1,26 @@
+"""JSON null must retain its type through the real parent comparison path."""
+from pathlib import Path
+
+import pytest
+
+from vare import isolated_candidate as grading
+
+
+@pytest.mark.parametrize("value", [None, [None, 2], {"routes": [None, "ok"]}])
+def test_null_roundtrip_through_parent(monkeypatch, tmp_path: Path, value):
+    monkeypatch.setattr(grading, "_one_call", lambda *a, **kw: (value, 0.0, None))
+    report = grading.grade_calls(
+        tmp_path, [grading.FunctionCall("null", "subject", "run", [], value)],
+        task_kind="correctness",
+        image="python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    )
+    assert report.passed
+
+
+@pytest.mark.parametrize("other", [False, 0, "null", [], {}])
+def test_null_does_not_match_other_json_types(other):
+    for actual, expected in [(None, other), (other, None)]:
+        assert not grading.values_close(actual, expected, rtol=0, atol=0)
+        assert not grading.values_close(
+            actual, expected, rtol=0, atol=0, bool_as_number=True,
+        )
