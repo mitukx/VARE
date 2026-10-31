@@ -175,13 +175,11 @@ def compact_tool_context(
                 and call['function']['name']
                 for call in calls
             ):
-                index += 1
-                continue
+                break
             call_ids = [call['id'] for call in calls]
             expected_ids = set(call_ids)
             if len(expected_ids) != len(call_ids):
-                index += 1
-                continue
+                break
             names = [call['function']['name'] for call in calls]
             end = index + 1
             observed_ids: list[str] = []
@@ -199,7 +197,7 @@ def compact_tool_context(
                 rounds.append((index, end, names))
                 index = end
             else:
-                index += 1
+                break
         return rounds
 
     after_tokens = before_tokens

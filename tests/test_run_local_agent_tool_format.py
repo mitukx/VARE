@@ -508,7 +508,7 @@ def test_context_compaction_keeps_the_only_tool_round_when_it_cannot_fit():
     assert messages == original
 
 
-def test_context_compaction_keeps_an_incomplete_multi_tool_round():
+def test_context_compaction_stops_at_an_incomplete_multi_tool_round():
     tokenizer = _CharacterTokenizer()
     messages = [
         {'role': 'system', 'content': 'system instructions'},
@@ -519,6 +519,9 @@ def test_context_compaction_keeps_an_incomplete_multi_tool_round():
         ('search_text', {'query': 'target'}, {'matches': ['second result']}),
     ])
     messages.pop()
+    append_tool_interaction(messages, [
+        ('search_text', {'query': 'later'}, {'matches': ['later result']}),
+    ])
     original = json.loads(json.dumps(messages))
     before_tokens = len(tokenizer.encode(render_chat_prompt(tokenizer, messages, [])))
 
