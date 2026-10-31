@@ -701,13 +701,13 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
         path_list = ', '.join(allowed_paths)
         if edit_format == 'whole_file':
             return (
-                f'Your previous tool call was incomplete; each response is limited to {token_limit} tokens. '
+                f'Your previous tool call was incomplete and may have been cut off; each response is limited to {token_limit} tokens. '
                 'Do not reread the source. Emit one complete write_file tool call now, using the exact '
                 f'allowed path ({path_list}) and the complete updated source file. Keep it concise enough '
                 'to end with </tool_call>.'
             )
         return (
-            f'Your previous tool call was incomplete; each response is limited to {token_limit} tokens. '
+            f'Your previous tool call was incomplete and may have been cut off; each response is limited to {token_limit} tokens. '
             'Do not reread the source or rewrite a whole function. For one contiguous change, prefer '
             'replace_text with a short exact old_text snippet and its complete new_text. Otherwise use '
             'apply_patch with only the smallest changed hunk. Do not include unchanged function bodies. '

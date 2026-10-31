@@ -6,6 +6,7 @@
 - Last verified `origin/main`: `719fbe368816d81addb29a1ba2c451fa7f1bf631`, integrating PR #154. PR #150 is already merged; the earlier mission prompt’s stale #150 blocker is resolved.
 - Work branch: `codex/fresh-development-family-overlap-v1`.
 - Active PR: [#155 — Qualify fresh Transformers #49458 candidate](https://github.com/mitukx/VARE/pull/155), open against main. The protocol commit `f3ff08e6d4e4b69adac534d61b6406804d7dffe5` was pushed before inference. Exact-head CI for the subsequent checkpoint changes must be checked after push.
+- The first CI run on commit `09605e254c47bb07a96dec7a8e318a9aae13fd68` found one Python 3.13 compatibility assertion failure: an existing test expects the retry reminder to retain `cut off`. The failed job ran 1,538 passes and 111 skips besides that assertion. All completed non-test checks passed; other Python test jobs were still running when triaged. The reminder has been corrected to say the call was incomplete and may have been cut off. Ruff and 48 targeted tests, including that compatibility assertion, pass locally. The correction is included in this checkpoint; fresh exact-head CI remains required.
 
 ## Transformers #49458 one-shot outcome
 
@@ -28,4 +29,4 @@ The runner now records incomplete tool-call outputs and their turn numbers, dist
 
 ## Immediate next action
 
-Commit and push the run diagnosis, append-only exposure record, and tested controller telemetry/reminder change to PR #155. Inspect exact-head GitHub checks, reproduce any failures, and push corrections. If CI passes, review the complete diff and remaining PR blockers. Do not retry #49458 or start RL. A future attempt requires a distinct qualified Development family and a new frozen protocol after a material feasibility change.
+Inspect exact-head GitHub checks for the Python 3.13 compatibility correction, reproduce any failures, and push corrections. If CI passes, review the complete diff and remaining PR blockers. Do not retry #49458 or start RL. A future attempt requires a distinct qualified Development family and a new frozen protocol after a material feasibility change.

@@ -27,15 +27,18 @@
   },
   "post_run_engineering": {
     "runner_source": "scripts/run_local_agent.py",
-    "runner_source_sha256": "83ad013ae1038ecfe7600d75237ef7aa6a833174964fc240919209c985ada873",
+    "runner_source_sha256": "2abda8f48a533dc5ec420916918d6cbc6fb4620134253c1ee79566efde72439f",
     "focused_test": "tests/test_run_local_agent_tool_format.py",
     "focused_test_sha256": "4479920f5babc151b0b51f772388c8845021328fa2acd4f354f623c053ba0f75",
     "validation": {
       "ruff": "passed",
-      "focused_pytest": "47 passed",
-      "git_diff_check": "passed"
+      "focused_pytest": "47 controller-format tests passed after initial instrumentation",
+      "git_diff_check": "passed",
+      "ci_compatibility_targeted_pytest": "48 passed (47 controller-format tests plus 1 existing retry-reminder regression test)"
     },
-    "not_model_capability_evidence": true
+    "not_model_capability_evidence": true,
+    "initial_exact_head_ci_diagnostic": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/ci-diagnostic-001.json",
+    "new_head_ci_after_correction": "pending at commit preparation"
   },
   "artifacts": [
     {
@@ -121,6 +124,10 @@
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/report.md",
       "sha256": "576e5a1e37e6790f795eb715027932ea1d58d26b1d40a1f5ad9df5742a581229"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/ci-diagnostic-001.json",
+      "sha256": "afdbd3cbca2f63a2895f1319e1b9a1ed637cdff91d8b4ca690fb4d936eff6fec"
     }
   ]
 }
