@@ -1,0 +1,46 @@
+{
+  "arm": "baseline",
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/sandbox/baseline.sb",
+    "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python3.12",
+    "-m",
+    "pytest",
+    "-c",
+    "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/pytest.ini",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-001/pytest-tmp",
+    "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+    "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+  ],
+  "command_sha256": "13cd2c4ef7a5d09c4c33f603c263aa9ed5335d7338c1e4a2d8776f2cb40be6ea",
+  "environment": {
+    "HOME": "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-001/home",
+    "PIP_NO_INDEX": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONHASHSEED": "0",
+    "PYTHONNOUSERSITE": "1",
+    "TMPDIR": "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-001/tmp",
+    "VARE_METHOD_FILE": "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/vllm_config_baseline_method.py"
+  },
+  "input_sha256": {
+    "method_file": "8e27720d05507ce6596dcc53fb47b858087efb29baa762e44a7aca6526f2c7ba",
+    "profile": "9cce7769b123e054a1c1bbd50c919fa03f7f1d396bf7e39ecd6765f103e3ff4f",
+    "pytest_config": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+    "python": "a4d273ad5c99ab7a1c93d78bedb890512daed93210f11175b10c30c1e33a125a",
+    "test_file": "c7d87ac08859609e015df3071a10a26ce5d057102d83dd7609a1a61817f0cbcd"
+  },
+  "max_process_tree_rss_bytes": 4294967296,
+  "max_wall_seconds": 600,
+  "runtime": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]\npytest=8.4.2",
+  "selected_test_ids": [
+    "test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+    "test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+  ],
+  "source_revision": "17550580e932f15e772185847382d3ae4211f5ec"
+}

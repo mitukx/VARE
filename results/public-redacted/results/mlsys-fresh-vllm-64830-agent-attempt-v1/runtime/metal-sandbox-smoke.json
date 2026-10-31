@@ -1,0 +1,29 @@
+{
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/model-agent.sb",
+    "/usr/bin/env",
+    "HF_HUB_OFFLINE=1",
+    "TRANSFORMERS_OFFLINE=1",
+    "PYTHONNOUSERSITE=1",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "HOME=<TMP>/vare-vllm-64830-development-attempt-001/home",
+    "TMPDIR=<TMP>/vare-vllm-64830-development-attempt-001/tmp",
+    "<TMP>/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python",
+    "-B",
+    "-c",
+    "import mlx.core as mx; import mlx_lm, transformers, tokenizers; x = mx.array([1, 2, 3]); print({\"device\": str(mx.default_device()), \"result\": (x + x).tolist(), \"mlx\": mx.__version__, \"mlx_lm\": mlx_lm.__version__, \"transformers\": transformers.__version__, \"tokenizers\": tokenizers.__version__})"
+  ],
+  "network_enabled": false,
+  "purpose": "Metal/MLX runtime smoke only; no model weights loaded.",
+  "sandbox_profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/sandbox/model-agent.sb",
+  "sandbox_profile_sha256": "35c69da25f8685d4d80afa59f95776f40db35157ee94186a34e62b405fc7397b",
+  "schema_version": 1,
+  "status": "PASSED",
+  "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke-003.stderr",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/metal-smoke-003.stdout",
+  "stdout_sha256": "6688948350149d55ee2b93e3b5c91706b4626a7ef69f7e02316096820f175f72",
+  "weights_loaded": false
+}

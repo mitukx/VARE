@@ -1,0 +1,201 @@
+
+==================================== ERRORS ====================================
+____________________ ERROR collecting tests/test_durable.py ____________________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_durable.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_durable.py:13: in <module>
+    from benchmarks.scheduler.fixtures import make_fixture
+E   ModuleNotFoundError: No module named 'benchmarks.scheduler'
+____________ ERROR collecting tests/test_durable_runtime_source.py _____________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_durable_runtime_source.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_durable_runtime_source.py:13: in <module>
+    from benchmarks.scheduler.fixtures import make_fixture
+E   ModuleNotFoundError: No module named 'benchmarks.scheduler'
+_________ ERROR collecting tests/test_durable_runtime_source_hashes.py _________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_durable_runtime_source_hashes.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_durable_runtime_source_hashes.py:4: in <module>
+    from benchmarks.scheduler.fixtures import make_fixture
+E   ModuleNotFoundError: No module named 'benchmarks.scheduler'
+____________ ERROR collecting tests/test_e2e_rl_system_benchmark.py ____________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_e2e_rl_system_benchmark.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_e2e_rl_system_benchmark.py:6: in <module>
+    from benchmarks.e2e_rl_system.runner import _child_trial, _run_fault_case, main, run_experiment
+E   ModuleNotFoundError: No module named 'benchmarks.e2e_rl_system'
+___________________ ERROR collecting tests/test_flagship.py ____________________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_flagship.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_flagship.py:10: in <module>
+    from minigrpo.expr import evaluate_expression
+E   ModuleNotFoundError: No module named 'minigrpo'
+_______________ ERROR collecting tests/test_grader_owner_loss.py _______________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_grader_owner_loss.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_grader_owner_loss.py:13: in <module>
+    from benchmarks.scheduler.fixtures import make_fixture
+E   ModuleNotFoundError: No module named 'benchmarks.scheduler'
+____________________ ERROR collecting tests/test_graders.py ____________________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_graders.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_graders.py:5: in <module>
+    from benchmarks.historical.trl_grpo_accumulation_scale.evaluator.grade import (
+E   ModuleNotFoundError: No module named 'benchmarks.historical'
+_______________ ERROR collecting tests/test_math500_grader_v1.py _______________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_math500_grader_v1.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_math500_grader_v1.py:1: in <module>
+    from scripts.math500_grader_v1 import exact_match, has_valid_final_box, parse_prediction
+scripts/math500_grader_v1.py:15: in <module>
+    from latex2sympy2_extended import latex2sympy
+E   ModuleNotFoundError: No module named 'latex2sympy2_extended'
+_______________ ERROR collecting tests/test_math500_grader_v2.py _______________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_math500_grader_v2.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_math500_grader_v2.py:3: in <module>
+    from latex2sympy2_extended import NormalizationConfig
+E   ModuleNotFoundError: No module named 'latex2sympy2_extended'
+___________________ ERROR collecting tests/test_minigrpo.py ____________________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_minigrpo.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_minigrpo.py:10: in <module>
+    from minigrpo.expr import evaluate_expression, parse_final_integer
+E   ModuleNotFoundError: No module named 'minigrpo'
+_________ ERROR collecting tests/test_minigrpo_preupdate_integrity.py __________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_minigrpo_preupdate_integrity.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_minigrpo_preupdate_integrity.py:14: in <module>
+    from minigrpo.grpo import TokenRow, sequence_loss
+E   ModuleNotFoundError: No module named 'minigrpo'
+____________ ERROR collecting tests/test_qwen25_deepmath_gate_v3.py ____________
+tests/test_qwen25_deepmath_gate_v3.py:15: in <module>
+    PROTOCOL = json.loads(open("protocols/qwen25_deepmath_grpo_math500_v3.lock.json", encoding="utf-8").read())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'protocols/qwen25_deepmath_grpo_math500_v3.lock.json'
+____________ ERROR collecting tests/test_qwen25_deepmath_gate_v4.py ____________
+tests/test_qwen25_deepmath_gate_v4.py:17: in <module>
+    PROTOCOL = json.loads(open("protocols/qwen25_deepmath_grpo_math500_v4.lock.json", encoding="utf-8").read())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'protocols/qwen25_deepmath_grpo_math500_v4.lock.json'
+____________ ERROR collecting tests/test_qwen25_deepmath_gate_v5.py ____________
+tests/test_qwen25_deepmath_gate_v5.py:12: in <module>
+    V5 = json.loads(V5_PATH.read_text(encoding="utf-8"))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pathlib.py:1044: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'protocols/qwen25_deepmath_grpo_math500_v5.lock.json'
+__________ ERROR collecting tests/test_qwen25_deepmath_protocol_v2.py __________
+tests/test_qwen25_deepmath_protocol_v2.py:15: in <module>
+    PROTOCOL = json.loads(open("protocols/qwen25_deepmath_grpo_math500_v2.lock.json", encoding="utf-8").read())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'protocols/qwen25_deepmath_grpo_math500_v2.lock.json'
+____________________ ERROR collecting tests/test_runner.py _____________________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_runner.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_runner.py:9: in <module>
+    from benchmarks.scheduler.fixtures import make_fixture
+E   ModuleNotFoundError: No module named 'benchmarks.scheduler'
+_______________ ERROR collecting tests/test_seeded_summary_v3.py _______________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_seeded_summary_v3.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_seeded_summary_v3.py:12: in <module>
+    from reproducers.seeded_summary_fixture_v1 import synthetic_grid
+E   ModuleNotFoundError: No module named 'reproducers'
+__________________ ERROR collecting tests/test_selfimprove.py __________________
+ImportError while importing test module '<SESSION_ROOT>/work/VARE-stream-ingestion/tests/test_selfimprove.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_selfimprove.py:9: in <module>
+    from minigrpo.expr import evaluate_expression
+E   ModuleNotFoundError: No module named 'minigrpo'
+____________ ERROR collecting tests/test_urllib3_3352_evaluator.py _____________
+tests/test_urllib3_3352_evaluator.py:17: in <module>
+    SPEC.loader.exec_module(EVALUATOR)
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1130: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '<SESSION_ROOT>/work/VARE-stream-ingestion/benchmarks/historical/urllib3_3352/evaluator/grade.py'
+=========================== short test summary info ============================
+ERROR tests/test_durable.py
+ERROR tests/test_durable_runtime_source.py
+ERROR tests/test_durable_runtime_source_hashes.py
+ERROR tests/test_e2e_rl_system_benchmark.py
+ERROR tests/test_flagship.py
+ERROR tests/test_grader_owner_loss.py
+ERROR tests/test_graders.py
+ERROR tests/test_math500_grader_v1.py
+ERROR tests/test_math500_grader_v2.py
+ERROR tests/test_minigrpo.py
+ERROR tests/test_minigrpo_preupdate_integrity.py
+ERROR tests/test_qwen25_deepmath_gate_v3.py - FileNotFoundError: [Errno 2] No...
+ERROR tests/test_qwen25_deepmath_gate_v4.py - FileNotFoundError: [Errno 2] No...
+ERROR tests/test_qwen25_deepmath_gate_v5.py - FileNotFoundError: [Errno 2] No...
+ERROR tests/test_qwen25_deepmath_protocol_v2.py - FileNotFoundError: [Errno 2...
+ERROR tests/test_runner.py
+ERROR tests/test_seeded_summary_v3.py
+ERROR tests/test_selfimprove.py
+ERROR tests/test_urllib3_3352_evaluator.py - FileNotFoundError: [Errno 2] No ...
+!!!!!!!!!!!!!!!!!!! Interrupted: 19 errors during collection !!!!!!!!!!!!!!!!!!!

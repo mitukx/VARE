@@ -1,0 +1,23 @@
+{
+  "protocol_id": "vare-xii-publication-control-v1",
+  "frozen_before_execution": true,
+  "frozen_utc": "2026-10-28T15:34:01.270115+00:00",
+  "source_sha256": "cfa257ba588abbb0cfd72716fa9feafd2eb9181b90465fb617b8522ab67a5f53",
+  "parent_protocol": "<SESSION_ROOT>/work/VARE-sprint-xii/results/sprint_xii_20261029/protocol-v1.json",
+  "source_run": "<SESSION_ROOT>/work/VARE-sprint-xii/results/sprint_xii_20261029/run-001",
+  "exposure": "Parent systems results already observed. Separate publication correctness control with new deterministic evaluation prompts; not a confirmation of learning or capability.",
+  "evaluation_prompts": [
+    "Synthetic publication validation 1001. Select a routing label from A, B, C, D. Return one label.",
+    "Synthetic publication validation 1002. Select a routing label from A, B, C, D. Return one label.",
+    "Synthetic publication validation 1003. Select a routing label from A, B, C, D. Return one label."
+  ],
+  "rule": "Current verifier v1 expected reward is P(C)+P(D) at temperature1. Promote final D checkpoint over its group0 incumbent iff nondecreasing score; reject a declared -20 C/D-bias adverse control and preserve active pointer. Independent evaluator loads actual checkpoints.",
+  "seeds": [
+    101,
+    202,
+    303
+  ],
+  "budgets": "One CPU model, inherited 16GiB RSS / 512MiB swap / 2GiB hard minimum / 120 seconds. No optimizer updates.",
+  "stopping": "Fail closed on missing/hash-invalid checkpoint, resource failure or negative-control acceptance.",
+  "decision": "Publication plumbing remains NO-GO if pointer changes after negative-control rejection."
+}

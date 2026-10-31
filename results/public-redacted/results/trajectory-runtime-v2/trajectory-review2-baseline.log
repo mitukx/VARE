@@ -1,0 +1,77 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+______ test_terminal_behavior_identity_is_required[sampling_temperature] _______
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-290/test_terminal_behavior_identit0')
+fault = 'sampling_temperature'
+
+    @pytest.mark.parametrize("fault", ["sampling_temperature", "logprob_distribution", "model", "prompt_tokens"])
+    def test_terminal_behavior_identity_is_required(tmp_path, fault):
+        store, root = group(tmp_path, fault)
+        result = admit(store, root)
+>       assert not result.admitted and not result.experiences
+E       AssertionError: assert (not True)
+E        +  where True = TrajectoryAdmission(group_id='g', admitted=True, reasons=(), heads={'t0': '85494a18fd9d59cbf86bc9a473b39788384c61dff89...y_lag=0, verifier_lag=0, shift_score=0.0, priority=1.0, failure_label=None)), policy_lags=(0, 0), verifier_lags=(0, 0)).admitted
+
+tests/test_trajectory_admission.py:176: AssertionError
+______ test_terminal_behavior_identity_is_required[logprob_distribution] _______
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-290/test_terminal_behavior_identit1')
+fault = 'logprob_distribution'
+
+    @pytest.mark.parametrize("fault", ["sampling_temperature", "logprob_distribution", "model", "prompt_tokens"])
+    def test_terminal_behavior_identity_is_required(tmp_path, fault):
+        store, root = group(tmp_path, fault)
+        result = admit(store, root)
+>       assert not result.admitted and not result.experiences
+E       AssertionError: assert (not True)
+E        +  where True = TrajectoryAdmission(group_id='g', admitted=True, reasons=(), heads={'t0': '3ef939763322dfb60b8271d9862ad35db8889e5b379...y_lag=0, verifier_lag=0, shift_score=0.0, priority=1.0, failure_label=None)), policy_lags=(0, 0), verifier_lags=(0, 0)).admitted
+
+tests/test_trajectory_admission.py:176: AssertionError
+______________ test_terminal_behavior_identity_is_required[model] ______________
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-290/test_terminal_behavior_identit2')
+fault = 'model'
+
+    @pytest.mark.parametrize("fault", ["sampling_temperature", "logprob_distribution", "model", "prompt_tokens"])
+    def test_terminal_behavior_identity_is_required(tmp_path, fault):
+        store, root = group(tmp_path, fault)
+        result = admit(store, root)
+>       assert not result.admitted and not result.experiences
+E       AssertionError: assert (not True)
+E        +  where True = TrajectoryAdmission(group_id='g', admitted=True, reasons=(), heads={'t0': 'f53d4bb3d8d5f426f3c69098be4a2a53d86d257c796...y_lag=0, verifier_lag=0, shift_score=0.0, priority=1.0, failure_label=None)), policy_lags=(0, 0), verifier_lags=(0, 0)).admitted
+
+tests/test_trajectory_admission.py:176: AssertionError
+__________ test_terminal_behavior_identity_is_required[prompt_tokens] __________
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-290/test_terminal_behavior_identit3')
+fault = 'prompt_tokens'
+
+    @pytest.mark.parametrize("fault", ["sampling_temperature", "logprob_distribution", "model", "prompt_tokens"])
+    def test_terminal_behavior_identity_is_required(tmp_path, fault):
+        store, root = group(tmp_path, fault)
+        result = admit(store, root)
+>       assert not result.admitted and not result.experiences
+E       AssertionError: assert (not True)
+E        +  where True = TrajectoryAdmission(group_id='g', admitted=True, reasons=(), heads={'t0': '8ae35bfb10132ae0ee653d473a0532a4b4894a65fe2...y_lag=0, verifier_lag=0, shift_score=0.0, priority=1.0, failure_label=None)), policy_lags=(0, 0), verifier_lags=(0, 0)).admitted
+
+tests/test_trajectory_admission.py:176: AssertionError
+__________________ test_quarantine_requires_matching_history ___________________
+
+store = <vare.trajectory_store.TrajectoryStore object at 0x10812e090>
+
+    def test_quarantine_requires_matching_history(store):
+        submit(store)
+        with store.connection(True) as db:
+            db.execute("UPDATE trajectories SET state='quarantined',reason='invented'")
+>       with pytest.raises(ValueError, match="terminal"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_trajectory_store.py:363: Failed
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_admission.py::test_terminal_behavior_identity_is_required[sampling_temperature]
+FAILED tests/test_trajectory_admission.py::test_terminal_behavior_identity_is_required[logprob_distribution]
+FAILED tests/test_trajectory_admission.py::test_terminal_behavior_identity_is_required[model]
+FAILED tests/test_trajectory_admission.py::test_terminal_behavior_identity_is_required[prompt_tokens]
+FAILED tests/test_trajectory_store.py::test_quarantine_requires_matching_history
+5 failed, 47 deselected in 0.40s

@@ -1,0 +1,128 @@
+{
+  "fault": "fifo",
+  "failed_round_status": {
+    "active_policy_id": "p0",
+    "active_checkpoint_sha256": "61d1a2ecff1a09fd777b3d208c13f0a5a17acd2fe1dabb2882cb692d7b005ca5",
+    "pending_tx_id": null,
+    "round_owner_id": null
+  },
+  "reopened_status": {
+    "active_policy_id": "p1",
+    "active_checkpoint_sha256": "6dcdaa47cbe9779fd8d39519a2b12e847fd10c82a62f04c8ce54871bd71e5a3f",
+    "pending_tx_id": null,
+    "round_owner_id": null
+  },
+  "round_result": {
+    "round_index": 1,
+    "incumbent_id": "p0",
+    "candidate_id": "p1",
+    "promoted_id": "p1",
+    "decision": {
+      "accepted": true,
+      "reasons": [],
+      "primary_gain": 0.5,
+      "worst_slice_regression": -0.5,
+      "paired_gain": 0.5,
+      "paired_lcb": null,
+      "paired_n": 6
+    },
+    "incumbent_eval": {
+      "policy_id": "p0",
+      "primary": 0.5,
+      "slices": {
+        "io-control": 0.5
+      },
+      "cost": 0.0,
+      "verifier_disagreement": 0.0,
+      "n": 6,
+      "metadata": {
+        "per_task_scores": {
+          "checkpoint-io-0": 1.0,
+          "checkpoint-io-1": 1.0,
+          "checkpoint-io-2": 1.0,
+          "checkpoint-io-3": 0.0,
+          "checkpoint-io-4": 0.0,
+          "checkpoint-io-5": 0.0
+        },
+        "vare_checkpoint_sha256": "61d1a2ecff1a09fd777b3d208c13f0a5a17acd2fe1dabb2882cb692d7b005ca5",
+        "vare_evaluation_set_sha256": "4882341b26ab76dd52361eda8566310a3b6553776fb44ba15530511de36ac582",
+        "vare_evidence_receipt": {
+          "mac_sha256": "bfe043585cc1ed10f66d1ce78f07b5a2d6e9d2b889762c2d205ba067dfa813aa",
+          "schema": "vare.promotion-evidence.checkpoint.v2"
+        },
+        "vare_promotion_nonce": "trusted-eval-promotion-01"
+      }
+    },
+    "candidate_eval": {
+      "policy_id": "p1",
+      "primary": 1.0,
+      "slices": {
+        "io-control": 1.0
+      },
+      "cost": 0.0,
+      "verifier_disagreement": 0.0,
+      "n": 6,
+      "metadata": {
+        "per_task_scores": {
+          "checkpoint-io-0": 1.0,
+          "checkpoint-io-1": 1.0,
+          "checkpoint-io-2": 1.0,
+          "checkpoint-io-3": 1.0,
+          "checkpoint-io-4": 1.0,
+          "checkpoint-io-5": 1.0
+        },
+        "vare_checkpoint_sha256": "6dcdaa47cbe9779fd8d39519a2b12e847fd10c82a62f04c8ce54871bd71e5a3f",
+        "vare_evaluation_set_sha256": "4882341b26ab76dd52361eda8566310a3b6553776fb44ba15530511de36ac582",
+        "vare_evidence_receipt": {
+          "mac_sha256": "1f5a291bbe1b53201aa60fbf5acdef559a38be446763f8436012c9ebe700c518",
+          "schema": "vare.promotion-evidence.checkpoint.v2"
+        },
+        "vare_promotion_nonce": "trusted-eval-promotion-01"
+      }
+    },
+    "failures": [],
+    "admitted_experiences": 1,
+    "dropped_experiences": 0,
+    "deferred_cancellation_count": 0
+  },
+  "worker_outcomes": [
+    {
+      "policy_id": "p0",
+      "timeout": false,
+      "wall_s": 0.06555591599317268,
+      "returncode": 0,
+      "stdout": "{\"cost\":0.0,\"metadata\":{\"per_task_scores\":{\"checkpoint-io-0\":1.0,\"checkpoint-io-1\":1.0,\"checkpoint-io-2\":1.0,\"checkpoint-io-3\":0.0,\"checkpoint-io-4\":0.0,\"checkpoint-io-5\":0.0},\"vare_checkpoint_sha256\":\"61d1a2ecff1a09fd777b3d208c13f0a5a17acd2fe1dabb2882cb692d7b005ca5\",\"vare_evaluation_set_sha256\":\"4882341b26ab76dd52361eda8566310a3b6553776fb44ba15530511de36ac582\",\"vare_evidence_receipt\":{\"mac_sha256\":\"bfe043585cc1ed10f66d1ce78f07b5a2d6e9d2b889762c2d205ba067dfa813aa\",\"schema\":\"vare.promotion-evidence.checkpoint.v2\"},\"vare_promotion_nonce\":\"trusted-eval-promotion-01\"},\"n\":6,\"policy_id\":\"p0\",\"primary\":0.5,\"slices\":{\"io-control\":0.5},\"verifier_disagreement\":0.0}\n",
+      "stderr": ""
+    },
+    {
+      "policy_id": "p1",
+      "timeout": false,
+      "wall_s": 0.06453429200337268,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"<SESSION_ROOT>/work/vare-slice/src/vare/trusted_evaluation.py\", line 160, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"<SESSION_ROOT>/work/vare-slice/src/vare/trusted_evaluation.py\", line 149, in main\n    report = evaluate_cpu_fixture(\n             ^^^^^^^^^^^^^^^^^^^^^\n  File \"<SESSION_ROOT>/work/vare-slice/src/vare/trusted_evaluation.py\", line 73, in evaluate_cpu_fixture\n    checkpoint_raw, checkpoint_sha = store.read_verified(policy_id, max_read_bytes=100_000)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<SESSION_ROOT>/work/vare-slice/src/vare/checkpoint_artifacts.py\", line 179, in read_verified\n    blocks = list(self._read_chunks(\n             ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<SESSION_ROOT>/work/vare-slice/src/vare/checkpoint_artifacts.py\", line 85, in _read_chunks\n    raise CheckpointIntegrityError(\"checkpoint is not a bounded regular file\")\nvare.checkpoint_artifacts.CheckpointIntegrityError: checkpoint is not a bounded regular file\n"
+    },
+    {
+      "policy_id": "p0",
+      "timeout": false,
+      "wall_s": 0.06533462498919107,
+      "returncode": 0,
+      "stdout": "{\"cost\":0.0,\"metadata\":{\"per_task_scores\":{\"checkpoint-io-0\":1.0,\"checkpoint-io-1\":1.0,\"checkpoint-io-2\":1.0,\"checkpoint-io-3\":0.0,\"checkpoint-io-4\":0.0,\"checkpoint-io-5\":0.0},\"vare_checkpoint_sha256\":\"61d1a2ecff1a09fd777b3d208c13f0a5a17acd2fe1dabb2882cb692d7b005ca5\",\"vare_evaluation_set_sha256\":\"4882341b26ab76dd52361eda8566310a3b6553776fb44ba15530511de36ac582\",\"vare_evidence_receipt\":{\"mac_sha256\":\"bfe043585cc1ed10f66d1ce78f07b5a2d6e9d2b889762c2d205ba067dfa813aa\",\"schema\":\"vare.promotion-evidence.checkpoint.v2\"},\"vare_promotion_nonce\":\"trusted-eval-promotion-01\"},\"n\":6,\"policy_id\":\"p0\",\"primary\":0.5,\"slices\":{\"io-control\":0.5},\"verifier_disagreement\":0.0}\n",
+      "stderr": ""
+    },
+    {
+      "policy_id": "p1",
+      "timeout": false,
+      "wall_s": 0.06553437502589077,
+      "returncode": 0,
+      "stdout": "{\"cost\":0.0,\"metadata\":{\"per_task_scores\":{\"checkpoint-io-0\":1.0,\"checkpoint-io-1\":1.0,\"checkpoint-io-2\":1.0,\"checkpoint-io-3\":1.0,\"checkpoint-io-4\":1.0,\"checkpoint-io-5\":1.0},\"vare_checkpoint_sha256\":\"6dcdaa47cbe9779fd8d39519a2b12e847fd10c82a62f04c8ce54871bd71e5a3f\",\"vare_evaluation_set_sha256\":\"4882341b26ab76dd52361eda8566310a3b6553776fb44ba15530511de36ac582\",\"vare_evidence_receipt\":{\"mac_sha256\":\"1f5a291bbe1b53201aa60fbf5acdef559a38be446763f8436012c9ebe700c518\",\"schema\":\"vare.promotion-evidence.checkpoint.v2\"},\"vare_promotion_nonce\":\"trusted-eval-promotion-01\"},\"n\":6,\"policy_id\":\"p1\",\"primary\":1.0,\"slices\":{\"io-control\":1.0},\"verifier_disagreement\":0.0}\n",
+      "stderr": ""
+    }
+  ],
+  "heldout_sha256": "4882341b26ab76dd52361eda8566310a3b6553776fb44ba15530511de36ac582",
+  "checkpoint_sha256": {
+    "p0": "61d1a2ecff1a09fd777b3d208c13f0a5a17acd2fe1dabb2882cb692d7b005ca5",
+    "p1": "6dcdaa47cbe9779fd8d39519a2b12e847fd10c82a62f04c8ce54871bd71e5a3f"
+  },
+  "scope": "linear-classifier protocol control; no training or model-capability result"
+}

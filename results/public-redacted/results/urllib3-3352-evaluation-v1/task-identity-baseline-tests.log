@@ -1,0 +1,105 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.12, pytest-8.4.2, pluggy-1.6.0 -- <HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python3.12
+cachedir: .pytest_cache
+rootdir: <TMP>/vare-task-id-baseline
+configfile: pyproject.toml
+collecting ... collected 2 items
+
+tests/test_environment_catalog.py::test_rollout_rejects_task_metadata_override FAILED [ 50%]
+tests/test_environment_catalog.py::test_verifier_rejects_attempt_task_id_override FAILED [100%]
+
+=================================== FAILURES ===================================
+_________________ test_rollout_rejects_task_metadata_override __________________
+
+tmp_path = PosixPath('${BASELINE_TMP}/test_rollout_rejects_task_meta0')
+
+    def test_rollout_rejects_task_metadata_override(tmp_path):
+        import asyncio
+    
+        catalog = TaskCatalog.discover(ROOT / "benchmarks/smoke")
+        source_entry = catalog.get("smoke-stable-logsumexp")
+        always_pass = replace(
+            source_entry.spec,
+            id="always-pass",
+            title="Always passing task used only for identity regression",
+            prompt="No-op fixture.",
+            tests=(CommandSpec(argv=("python", "-c", "pass"), name="always-pass"),),
+        )
+        catalog = TaskCatalog(
+            [source_entry, CatalogEntry(source_entry.spec_path, always_pass)]
+        )
+        challenge = catalog.as_vare_tasks()[0]
+        spoofed = Task(
+            id=challenge.id,
+            prompt=challenge.prompt,
+            family=challenge.family,
+            metadata={"engineering_task_id": "always-pass"},
+        )
+        class NoopAgent:
+            called = False
+    
+            async def run(self, *, prompt: str, workspace: Path, step: int) -> str:
+                self.called = True
+                return "no edit"
+    
+        agent = NoopAgent()
+        run_root = tmp_path / "runs"
+        rollout = WorkspaceAgentRollout(catalog, agent, run_root)
+    
+>       with pytest.raises(ValueError, match="task identity mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_environment_catalog.py:79: Failed
+________________ test_verifier_rejects_attempt_task_id_override ________________
+
+tmp_path = PosixPath('${BASELINE_TMP}/test_verifier_rejects_attempt_0')
+
+    def test_verifier_rejects_attempt_task_id_override(tmp_path):
+        import asyncio
+    
+        catalog = TaskCatalog.discover(ROOT / "benchmarks/smoke")
+        challenge = catalog.get("smoke-stable-logsumexp")
+        always_pass = replace(
+            challenge.spec,
+            id="always-pass",
+            title="Always passing task used only for identity regression",
+            prompt="No-op fixture.",
+            tests=(CommandSpec(argv=("python", "-c", "pass"), name="always-pass"),),
+        )
+        catalog = TaskCatalog(
+            [challenge, CatalogEntry(challenge.spec_path, always_pass)]
+        )
+        workspace = tmp_path / "workspace"
+        Workspace(challenge.spec, root=workspace)
+        # The alternate task's own checks accept this workspace, so selecting it
+        # through caller-controlled metadata would produce a false task pass.
+        assert ExecutableEvaluator(
+            always_pass, evaluator_root=challenge.spec_path.parent
+        ).evaluate(workspace).passed
+        attempt = Attempt(
+            task=Task(
+                id=challenge.spec.id,
+                prompt=challenge.spec.prompt,
+                family=challenge.spec.family,
+                metadata={"engineering_task_id": challenge.spec.id},
+            ),
+            output="",
+            policy_id="policy",
+            policy_version=0,
+            created_step=0,
+            metadata={
+                "workspace_path": str(workspace),
+                "engineering_task_id": "always-pass",
+            },
+        )
+    
+>       with pytest.raises(ValueError, match="task identity mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_environment_catalog.py:125: Failed
+=========================== short test summary info ============================
+FAILED tests/test_environment_catalog.py::test_rollout_rejects_task_metadata_override
+FAILED tests/test_environment_catalog.py::test_verifier_rejects_attempt_task_id_override
+============================== 2 failed in 0.33s ===============================

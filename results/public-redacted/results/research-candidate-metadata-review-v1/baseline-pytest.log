@@ -1,0 +1,606 @@
+....FF.FF.FF.FF.FF.FF.FF                                                 [100%]
+=================================== FAILURES ===================================
+_________ test_verification_survives_optimized_python[inventory-flag] __________
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt4')
+mode = 'flag', corruption = 'inventory'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python...s_opt4'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+______ test_verification_survives_optimized_python[inventory-environment] ______
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt5')
+mode = 'environment', corruption = 'inventory'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python...s_opt5'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+__________ test_verification_survives_optimized_python[checksum-flag] __________
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt7')
+mode = 'flag', corruption = 'checksum'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python...s_opt7'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+______ test_verification_survives_optimized_python[checksum-environment] _______
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt8')
+mode = 'environment', corruption = 'checksum'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python...s_opt8'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+___ test_verification_survives_optimized_python[model_inference_calls-flag] ____
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt10')
+mode = 'flag', corruption = 'model_inference_calls'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt10'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+_ test_verification_survives_optimized_python[model_inference_calls-environment] _
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt11')
+mode = 'environment', corruption = 'model_inference_calls'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt11'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+______ test_verification_survives_optimized_python[optimizer_calls-flag] _______
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt13')
+mode = 'flag', corruption = 'optimizer_calls'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt13'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+___ test_verification_survives_optimized_python[optimizer_calls-environment] ___
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt14')
+mode = 'environment', corruption = 'optimizer_calls'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt14'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+___ test_verification_survives_optimized_python[task_payload_downloads-flag] ___
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt16')
+mode = 'flag', corruption = 'task_payload_downloads'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt16'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+_ test_verification_survives_optimized_python[task_payload_downloads-environment] _
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt17')
+mode = 'environment', corruption = 'task_payload_downloads'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt17'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+_______ test_verification_survives_optimized_python[request_length-flag] _______
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt19')
+mode = 'flag', corruption = 'request_length'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt19'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+___ test_verification_survives_optimized_python[request_length-environment] ____
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt20')
+mode = 'environment', corruption = 'request_length'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt20'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+_______ test_verification_survives_optimized_python[request_digest-flag] _______
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt22')
+mode = 'flag', corruption = 'request_digest'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt22'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+___ test_verification_survives_optimized_python[request_digest-environment] ____
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-269/test_verification_survives_opt23')
+mode = 'environment', corruption = 'request_digest'
+
+    @pytest.mark.parametrize('mode', ['normal', 'flag', 'environment'])
+    @pytest.mark.parametrize('corruption', ['clean', 'inventory', 'checksum', 'model_inference_calls',
+                                          'optimizer_calls', 'task_payload_downloads', 'request_length', 'request_digest'])
+    def test_verification_survives_optimized_python(tmp_path, mode, corruption):
+        payload = b'{"metadata":true}\n'
+        (tmp_path / 'response.json').write_bytes(payload)
+        capture = {'model_inference_calls':0, 'optimizer_calls':0, 'task_payload_downloads':0,
+                   'requests':[{'retained_file':'response.json', 'response_bytes':len(payload),
+                                'response_sha256':hashlib.sha256(payload).hexdigest()}]}
+        if corruption in ('model_inference_calls', 'optimizer_calls', 'task_payload_downloads'):
+            capture[corruption] = 1
+        elif corruption == 'request_length':
+            capture['requests'][0]['response_bytes'] += 1
+        elif corruption == 'request_digest':
+            capture['requests'][0]['response_sha256'] = '0' * 64
+        (tmp_path / 'capture.json').write_text(json.dumps(capture))
+        seal(tmp_path)
+        if corruption == 'checksum':
+            (tmp_path / 'response.json').write_bytes(payload + b' ')
+        elif corruption == 'inventory':
+            (tmp_path / 'unexpected.json').write_text('{}')
+        command = [sys.executable, *(['-O'] if mode == 'flag' else []), str(COLLECTOR), '--verify', str(tmp_path)]
+        env = {key:value for key,value in os.environ.items() if key != 'PYTHONOPTIMIZE'}
+        if mode == 'environment':
+            env['PYTHONOPTIMIZE'] = '1'
+        result = subprocess.run(command, env=env, capture_output=True, text=True, timeout=20)
+        if corruption == 'clean':
+            assert result.returncode == 0, result.stderr
+            assert json.loads(result.stdout)['metadata_integrity'] == 'PASS'
+        else:
+>           assert result.returncode != 0, result.stdout
+E           AssertionError: {"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}
+E             
+E           assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['<SESSION_ROOT>/work/venv/bin/python..._opt23'], returncode=0, stdout='{"failed_fetches_retained": 0, "files": 2, "metadata_integrity": "PASS"}\n', stderr='').returncode
+
+tests/test_research_candidate_metadata_verification.py:52: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[inventory-flag]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[inventory-environment]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[checksum-flag]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[checksum-environment]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[model_inference_calls-flag]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[model_inference_calls-environment]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[optimizer_calls-flag]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[optimizer_calls-environment]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[task_payload_downloads-flag]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[task_payload_downloads-environment]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[request_length-flag]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[request_length-environment]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[request_digest-flag]
+FAILED tests/test_research_candidate_metadata_verification.py::test_verification_survives_optimized_python[request_digest-environment]
+14 failed, 10 passed in 1.68s

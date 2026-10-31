@@ -1,0 +1,320 @@
+FFFFFFFFFFF                                                              [100%]
+=================================== FAILURES ===================================
+_ test_rehashed_incomplete_independent_evaluation_is_rejected[incumbent-minimal] _
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep0')
+mode = 'minimal', corruption = 'incumbent'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+_ test_rehashed_incomplete_independent_evaluation_is_rejected[incumbent-guarded] _
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep1')
+mode = 'guarded', corruption = 'incumbent'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+_ test_rehashed_incomplete_independent_evaluation_is_rejected[candidate-minimal] _
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep2')
+mode = 'minimal', corruption = 'candidate'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+_ test_rehashed_incomplete_independent_evaluation_is_rejected[candidate-guarded] _
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep3')
+mode = 'guarded', corruption = 'candidate'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+__ test_rehashed_incomplete_independent_evaluation_is_rejected[both-minimal] ___
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep4')
+mode = 'minimal', corruption = 'both'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+__ test_rehashed_incomplete_independent_evaluation_is_rejected[both-guarded] ___
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep5')
+mode = 'guarded', corruption = 'both'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+_ test_rehashed_incomplete_independent_evaluation_is_rejected[split_attempt-minimal] _
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep6')
+mode = 'minimal', corruption = 'split_attempt'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+_ test_rehashed_incomplete_independent_evaluation_is_rejected[split_attempt-guarded] _
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep7')
+mode = 'guarded', corruption = 'split_attempt'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+_ test_rehashed_incomplete_independent_evaluation_is_rejected[duplicate_policy-minimal] _
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep8')
+mode = 'minimal', corruption = 'duplicate_policy'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+_ test_rehashed_incomplete_independent_evaluation_is_rejected[duplicate_policy-guarded] _
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_incomplete_indep9')
+mode = 'guarded', corruption = 'duplicate_policy'
+
+    @pytest.mark.parametrize("mode",["minimal","guarded"])
+    @pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+    def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+        changed=tmp_path/"incomplete"
+        shutil.copytree(audit_records,changed)
+        row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+        directory=changed/row["directory"]/"rounds/r0000"
+        candidate=auditor.read(directory/"committed.json")["candidate_id"]
+        incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+        candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+        if corruption in ("incumbent","both"):
+            incumbent_file.unlink()
+        if corruption in ("candidate","both"):
+            candidate_file.unlink()
+        if corruption=="split_attempt":
+            candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+        if corruption=="duplicate_policy":
+            candidate_file.write_bytes(incumbent_file.read_bytes())
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:143: Failed
+___________ test_rehashed_absent_independent_evaluation_is_rejected ____________
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-regression-tests-final/continuation0/run')
+tmp_path = PosixPath('<SESSION_ROOT>/work/continuation-audit-review-baseline/test_rehashed_absent_independe0')
+
+    def test_rehashed_absent_independent_evaluation_is_rejected(audit_records,tmp_path):
+        changed=tmp_path/"absent"
+        shutil.copytree(audit_records,changed)
+        for path in changed.glob('*/rounds/r*/evaluation-*.json'):
+            path.unlink()
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="independent evaluation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_e2e_rl_continuation.py:153: Failed
+=========================== short test summary info ============================
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[incumbent-minimal]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[incumbent-guarded]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[candidate-minimal]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[candidate-guarded]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[both-minimal]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[both-guarded]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[split_attempt-minimal]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[split_attempt-guarded]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[duplicate_policy-minimal]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[duplicate_policy-guarded]
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_absent_independent_evaluation_is_rejected
+11 failed, 11 deselected in 5.85s

@@ -1,0 +1,125 @@
+{
+  "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-4",
+  "schema_version": 1,
+  "frozen_at_utc": "2026-10-31T04:16:54Z",
+  "status": "frozen after wrong-mutant v1 failed its precondition and before the corrected wrong-mutant or fixed arm; authorizes one corrected mutant retry and conditionally one fixed arm",
+  "parent_addendum": {
+    "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_3.json",
+    "sha256": "6119febc5ab669dcc1642246cd3fd24172d064e3f3d5af6c7c7f39334e282cb2"
+  },
+  "frozen_evidence": {
+    "baseline_gate_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/baseline-attempt-002/gate.json",
+    "baseline_gate_sha256": "3889a6ae5d4f7aa6c8cef66a271aae25cdd03595b0640b69d2d4244b9c65fec9",
+    "wrong_mutant_v1_classification_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/wrong-mutant-attempt-001/classification.json",
+    "wrong_mutant_v1_classification_sha256": "e3faeb5dc33cd0ebd6ceee0ecaea4a9f5159d37b486b4052ecc61ac5660596ec",
+    "wrong_mutant_v1_pytest_log_sha256": "07fc12b9c9081bc04b01d59ae2e6326bec7639d1a170e0ce2ec370d9fd417791",
+    "decision": "Baseline gate passed. Wrong-mutant v1 was caught, but it did not pass web_search_20250305 through Pydantic's Literal['custom'] field and therefore did not meet the mutation precondition; no upstream-fixed arm ran. Preserve v1 as a failed mutation-design attempt, not as qualification evidence."
+  },
+  "scope": "Keep the candidate, baseline, exact five test cases, fixed source, sandbox profiles, resource limits, and assertions unchanged. Replace only the wrong-mutant fixture with a hash-bound mutation that lets one unsupported type value through both the type field and before-validator, while preserving required input_schema. The test should then fail because the observed ValidationError has the wrong reason.",
+  "corrected_wrong_mutant": {
+    "base_revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+    "base_source_path": "<TMP>/vare-vllm-64575-qualification/fixed/vllm/entrypoints/anthropic/protocol.py",
+    "base_source_sha256": "cb83d99789f5d543a90c5487ac974821e7f3af9a77df9ceceadad8ba1f7b5560",
+    "source_path": "<TMP>/vare-vllm-64575-qualification/mutant-v2/vllm/entrypoints/anthropic/protocol.py",
+    "source_sha256": "56f375df352e854e548d1e65042c21b501142210e1f48e12abcd8c88cfa75ddd",
+    "mutation_spec_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/wrong-mutant-v2-mutation.json",
+    "mutation_spec_sha256": "5f3e3b78cf6aa6db7c6b2652789dd22b771d538aa9e58eadc0a7bdd84c87877d",
+    "exact_changes": [
+      "Change AnthropicTool.type from Literal['custom'] | None to str | None so web_search_20250305 passes field parsing.",
+      "Permit web_search_20250305 through the before-validator while continuing to reject bash_20250124.",
+      "Leave input_schema required. In the frozen web_search fixture the model therefore raises only the missing-input_schema error; the frozen assertion must reject that wrong error reason."
+    ],
+    "protocol_interpretation": "The mutation accepts the unsupported type value through AnthropicTool's type parsing and type guard. It does not make the full fixture request valid because input_schema remains required; the task contract being calibrated is type-specific rejection/error precedence. Do not claim the unsupported fixture request itself is accepted.",
+    "expected": {
+      "cases": 5,
+      "failures": 1,
+      "failure_case": "web_search_20250305 fails only at assert f\"{tool['type']!r} is not supported\" in errors[0]['msg']; input_schema remains missing and ValidationError is raised.",
+      "passes": 4,
+      "errors": 0,
+      "skips": 0,
+      "unrelated_failures": 0
+    }
+  },
+  "inherited_frozen_inputs": {
+    "parent_protocol_sha256": "c4f482f037e725980c7e46027bad60f7a98d825a8e1b453fb8f05b6e24353da7",
+    "addendum_1_sha256": "5d7016f6edf17621c008d77d728f4879b1ec80e341aa4ca40c1f5c20439714b6",
+    "addendum_2_sha256": "e0b6636997a28131ecade4e7452cbe40a449bd55d4a41cdf525ecb3653cb6ac3",
+    "addendum_3_sha256": "6119febc5ab669dcc1642246cd3fd24172d064e3f3d5af6c7c7f39334e282cb2",
+    "runner_sha256": "cd67ac0624f1bcd65edddbb135c669a89fa9d80a7a4d1dd7fcce95be09a736a3",
+    "test_overlay_sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8",
+    "baseline_source_sha256": "d59e35292a3eaeddea0da3aa71caafe7862214d41ad1d549b78f9ae56218c9c0",
+    "fixed_source_sha256": "cb83d99789f5d543a90c5487ac974821e7f3af9a77df9ceceadad8ba1f7b5560",
+    "baseline_gate": "passed: 2 intended error-message failures, 3 controls pass",
+    "profiles_unchanged": true,
+    "limits_unchanged": true
+  },
+  "remaining_invocations": [
+    {
+      "order": 1,
+      "arm": "wrong-mutant",
+      "attempt": 2,
+      "profile": "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/wrong-mutant.sb",
+      "output_dir": "<TMP>/vare-vllm-64575-qualification/writable/wrong-mutant/attempt-002",
+      "argv": [
+        "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python",
+        "<SESSION_ROOT>/work/VARE/scripts/run_mlsys_vllm_64575_qualification_arm.py",
+        "--arm", "wrong-mutant",
+        "--profile", "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/wrong-mutant.sb",
+        "--source-file", "<TMP>/vare-vllm-64575-qualification/mutant-v2/vllm/entrypoints/anthropic/protocol.py",
+        "--test-file", "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+        "--output-dir", "<TMP>/vare-vllm-64575-qualification/writable/wrong-mutant/attempt-002",
+        "--python", "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python"
+      ],
+      "gate": "Run exactly once. Continue only if one web_search_20250305 error-message assertion fails and four cases pass, with no errors/skips/unrelated failures."
+    },
+    {
+      "order": 2,
+      "arm": "upstream-fixed",
+      "attempt": 1,
+      "profile": "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/upstream-fixed.sb",
+      "output_dir": "<TMP>/vare-vllm-64575-qualification/writable/upstream-fixed/attempt-001",
+      "argv": [
+        "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python",
+        "<SESSION_ROOT>/work/VARE/scripts/run_mlsys_vllm_64575_qualification_arm.py",
+        "--arm", "upstream-fixed",
+        "--profile", "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/upstream-fixed.sb",
+        "--source-file", "<TMP>/vare-vllm-64575-qualification/fixed/vllm/entrypoints/anthropic/protocol.py",
+        "--test-file", "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+        "--output-dir", "<TMP>/vare-vllm-64575-qualification/writable/upstream-fixed/attempt-001",
+        "--python", "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python"
+      ],
+      "gate": "Run exactly once only after corrected wrong-mutant gate passes. Require all five cases pass, with no errors/skips/unrelated failures."
+    }
+  ],
+  "commands": {
+    "runner": "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python <SESSION_ROOT>/work/VARE/scripts/run_mlsys_vllm_64575_qualification_arm.py",
+    "test_file": "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+    "python": "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python",
+    "pytest_log_option": "-o log_file=<arm-output-dir>/pytest-internal.log",
+    "profile_hashes": {
+      "wrong-mutant": "43d2021c2c1de0372275d50c10687cf3b57de680580a5cbe3b23619a70e00774",
+      "upstream-fixed": "7dbab4bd65f05b0719d3881fe728a6d7295a0547cb127337c09278e8bf57c73f"
+    },
+    "max_wall_seconds": 600,
+    "max_process_tree_rss_bytes": 4294967296,
+    "network": "denied",
+    "concurrency": 1,
+    "paid_compute_or_api_spend_usd": 0
+  },
+  "stop_rules": [
+    "Do not run wrong-mutant v2 or fixed until this addendum is committed and pushed and its remote hash is verified.",
+    "The v1 mutant attempt remains consumed; attempt 002 uses distinct, previously unused output paths.",
+    "Do not run fixed unless corrected mutant v2 matches its exact expected outcome.",
+    "No additional retries, source edits, task split assignment, model inference, training, or Held-Out access are authorized."
+  ],
+  "authorization": {
+    "wrong_mutant_v2_attempt_002": true,
+    "fixed_attempt_001_after_mutant_gate": true,
+    "baseline_retry": false,
+    "model_or_agent_inference": false,
+    "training": false,
+    "Development_assignment": false,
+    "Held_Out_access": false,
+    "paid_compute_or_api": false
+  }
+}

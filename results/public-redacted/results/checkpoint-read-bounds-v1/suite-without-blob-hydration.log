@@ -1,0 +1,112 @@
+............sssssss..................................................... [  9%]
+........................................................................ [ 19%]
+....................................FFF................................. [ 29%]
+.................................................................ss..... [ 39%]
+.s......................................................ss.............. [ 48%]
+........................................................................ [ 58%]
+........................................................................ [ 68%]
+............................s........................................... [ 78%]
+........................................................................ [ 87%]
+........................................................................ [ 97%]
+.................                                                        [100%]
+=================================== FAILURES ===================================
+__________________ test_zero_tensor_witness_rejects_nonzero_b __________________
+
+    def test_zero_tensor_witness_rejects_nonzero_b():
+        path = audit.RECORD / "format-zero-adapters/20261016.safetensors"
+>       blob = bytearray(path.read_bytes())
+                         ^^^^^^^^^^^^^^^^^
+
+tests/test_format_comparison_record_audit_v1.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('<SESSION_ROOT>/work/vare-slice/results/format-comparison-record-v1/format-zero-adapters/20261016.safetensors')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '<SESSION_ROOT>/work/vare-slice/results/format-comparison-record-v1/format-zero-adapters/20261016.safetensors'
+
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+____________ test_audit_rejects_corrupted_archive_before_reporting _____________
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-187/test_audit_rejects_corrupted_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x107378410>
+
+    def test_audit_rejects_corrupted_archive_before_reporting(tmp_path, monkeypatch):
+        source = audit.RECORD
+        record = tmp_path / "record"
+        record.mkdir()
+>       manifest = json.loads((source / "record-manifest.json").read_text())
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_format_comparison_record_audit_v1.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('<SESSION_ROOT>/work/vare-slice/results/format-comparison-record-v1/record-manifest.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '<SESSION_ROOT>/work/vare-slice/results/format-comparison-record-v1/record-manifest.json'
+
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+________ test_optimizer_witness_rejects_wrong_step_and_nonzero_momentum ________
+
+    def test_optimizer_witness_rejects_wrong_step_and_nonzero_momentum():
+>       with tarfile.open(fileobj=io.BytesIO((audit.RECORD / "format-zero-optimizers.tar.gz").read_bytes()), mode="r:gz") as archive:
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_format_comparison_record_audit_v1.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('<SESSION_ROOT>/work/vare-slice/results/format-comparison-record-v1/format-zero-optimizers.tar.gz')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '<SESSION_ROOT>/work/vare-slice/results/format-comparison-record-v1/format-zero-optimizers.tar.gz'
+
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+- generated xml file: <SESSION_ROOT>/outputs/checkpoint-read-review/suite-without-blob-hydration.xml -
+=========================== short test summary info ============================
+FAILED tests/test_format_comparison_record_audit_v1.py::test_zero_tensor_witness_rejects_nonzero_b
+FAILED tests/test_format_comparison_record_audit_v1.py::test_audit_rejects_corrupted_archive_before_reporting
+FAILED tests/test_format_comparison_record_audit_v1.py::test_optimizer_witness_rejects_wrong_step_and_nonzero_momentum
+3 failed, 721 passed, 14 skipped in 66.55s (0:01:06)

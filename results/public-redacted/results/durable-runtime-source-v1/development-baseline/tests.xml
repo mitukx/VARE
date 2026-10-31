@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="14" skipped="0" tests="15" time="4.878" timestamp="2026-10-15T15:47:22.353092+09:00" hostname="redacted-host"><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[__init__.py-claim]" time="0.148"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c0')
+name = '__init__.py', phase = 'claim'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[__init__.py-complete]" time="0.368"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c1')
+name = '__init__.py', phase = 'complete'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[__main__.py-claim]" time="0.135"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c2')
+name = '__main__.py', phase = 'claim'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[__main__.py-complete]" time="0.370"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c3')
+name = '__main__.py', phase = 'complete'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[runner.py-claim]" time="0.158"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c4')
+name = 'runner.py', phase = 'claim'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[runner.py-complete]" time="0.410"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c5')
+name = 'runner.py', phase = 'complete'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[durable.py-claim]" time="0.132"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c6')
+name = 'durable.py', phase = 'claim'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[durable.py-complete]" time="0.348"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c7')
+name = 'durable.py', phase = 'complete'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[_grader_guard.py-claim]" time="0.125"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c8')
+name = '_grader_guard.py', phase = 'claim'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_declared_executor_drift_cannot_change_state[_grader_guard.py-complete]" time="0.353"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_declared_executor_drift_c9')
+name = '_grader_guard.py', phase = 'complete'
+
+    @pytest.mark.parametrize('phase', ['claim', 'complete'])
+    @pytest.mark.parametrize('name', ASSETS)
+    def test_declared_executor_drift_cannot_change_state(tmp_path, name, phase):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        if phase == 'complete':
+            claim = store.claim('worker', 10)
+            outcome = asyncio.run(evaluate(job, root, time.monotonic()))
+            assert outcome[0]['status'] == 'candidate_passed'
+        drift(store, name)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:45: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_executor_inventory_mismatch_refuses_claim[missing]" time="0.130"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_executor_inventory_mismat0')
+fault = 'missing'
+
+    @pytest.mark.parametrize('fault', ['missing', 'extra'])
+    def test_executor_inventory_mismatch_refuses_claim(tmp_path, fault):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        with store.connection(True) as db:
+            if fault == 'missing':
+                db.execute("DELETE FROM assets WHERE name='vare/_grader_guard.py'")
+            else:
+                db.execute('INSERT INTO assets VALUES(?,?)', ('vare/unexpected.py', b'unreviewed'))
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:63: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_executor_inventory_mismatch_refuses_claim[extra]" time="0.123"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_executor_inventory_mismat1')
+fault = 'extra'
+
+    @pytest.mark.parametrize('fault', ['missing', 'extra'])
+    def test_executor_inventory_mismatch_refuses_claim(tmp_path, fault):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        with store.connection(True) as db:
+            if fault == 'missing':
+                db.execute("DELETE FROM assets WHERE name='vare/_grader_guard.py'")
+            else:
+                db.execute('INSERT INTO assets VALUES(?,?)', ('vare/unexpected.py', b'unreviewed'))
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:63: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_worker_rejects_drift_before_refresh_or_grading" time="0.409"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_worker_rejects_drift_befo0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x106d17200&gt;
+
+    def test_worker_rejects_drift_before_refresh_or_grading(tmp_path, monkeypatch):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        drift(store, 'runner.py')
+        calls = []
+        original = store.refresh
+    
+        def refresh(*args):
+            calls.append('refresh')
+            return original(*args)
+    
+        monkeypatch.setattr(store, 'refresh', refresh)
+        before = state(store)
+&gt;       with pytest.raises(ValueError, match='runtime'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/test_durable_runtime_source.py:81: Failed</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_real_crash_resume_pins_exported_executor[changed-source]" time="0.759"><failure message="AssertionError: {'audit': {'attempts': 2, 'events': 5, 'jobs': 1, 'outcomes': {'candidate_passed': 1}, ...}, 'exported_runner_sha256':...6ce099dbc262c7c622336d77828b90fa73af9e436664f24c391ad7aa391', 'loaded_marker': 'runtime-b', 'status': 'completed', ...}&#10;assert 0 == 17">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-245/test_real_crash_resume_pins_ex0')
+changed = True
+
+    @pytest.mark.parametrize('changed', [True, False], ids=['changed-source', 'matching-control'])
+    def test_real_crash_resume_pins_exported_executor(tmp_path, changed):
+        root, job = make_fixture(tmp_path, 'valid')
+        store = durable.Store.create(tmp_path / 'state.db', [job], root)
+        source = Path(durable.__file__).resolve().parent
+        for label in ['a', 'b']:
+            shutil.copytree(source, tmp_path / label / 'vare', ignore=shutil.ignore_patterns('__pycache__'))
+        if changed:
+            with (tmp_path / 'b/vare/runner.py').open('a') as stream:
+                stream.write("\nSOURCE_PIN_DIAGNOSTIC = 'runtime-b'\n")
+        script = '''import asyncio,hashlib,json,os,pathlib,sys
+    from vare import runner
+    from vare.durable import Store,worker,audit_durable
+    store=Store(sys.argv[1]); mode=sys.argv[2]
+    if mode=='crash':
+        claim=store.claim('lost-owner',.2)
+        print(json.dumps({'token':claim['token']}),flush=True)
+        os._exit(42)
+    result={'used_runner_sha256':hashlib.sha256(pathlib.Path(runner.__file__).read_bytes()).hexdigest(),
+            'loaded_marker':getattr(runner,'SOURCE_PIN_DIAGNOSTIC',None)}
+    try:
+        asyncio.run(worker(store,'replacement',2))
+    except ValueError as exc:
+        result.update(status='refused',error_type=type(exc).__name__,message=str(exc))
+    else:
+        result['status']='completed'
+    output=pathlib.Path(sys.argv[3]);store.export(output)
+    result['audit']=audit_durable(output)
+    result['exported_runner_sha256']=hashlib.sha256((output/'snapshot/vare/runner.py').read_bytes()).hexdigest()
+    result['token']=store.jobs()[0]['token']
+    print(json.dumps(result),flush=True)
+    sys.exit(17 if result['status']=='refused' else 0)
+    '''
+        records = []
+        evidence = os.environ.get('VARE_RUNTIME_SOURCE_EVIDENCE_DIR')
+        label = 'changed-source' if changed else 'matching-control'
+        try:
+            for runtime, mode, output in [('a', 'crash', 'unused'), ('b', 'resume', 'after-b')]:
+                process = subprocess.run([sys.executable, '-c', script, str(store.path), mode, str(tmp_path / output)],
+                    cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(tmp_path / runtime),
+                                      'PYTHONDONTWRITEBYTECODE': '1'}, capture_output=True, text=True, timeout=15)
+                records.append({'runtime': runtime, 'mode': mode, 'exit_code': process.returncode,
+                                'stdout': process.stdout, 'stderr': process.stderr})
+            assert records[0]['exit_code'] == 42
+            resumed = json.loads(records[1]['stdout'])
+&gt;           assert records[1]['exit_code'] == (17 if changed else 0), resumed
+E           AssertionError: {'audit': {'attempts': 2, 'events': 5, 'jobs': 1, 'outcomes': {'candidate_passed': 1}, ...}, 'exported_runner_sha256':...6ce099dbc262c7c622336d77828b90fa73af9e436664f24c391ad7aa391', 'loaded_marker': 'runtime-b', 'status': 'completed', ...}
+E           assert 0 == 17
+
+tests/test_durable_runtime_source.py:131: AssertionError</failure></testcase><testcase classname="tests.test_durable_runtime_source" name="test_real_crash_resume_pins_exported_executor[matching-control]" time="0.785" /></testsuite></testsuites>

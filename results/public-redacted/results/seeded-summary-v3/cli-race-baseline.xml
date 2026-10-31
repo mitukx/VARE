@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="0.179" timestamp="2026-10-13T12:13:41.093863+09:00" hostname="redacted-host"><testcase classname="tests.test_seeded_summary_v3" name="test_cli_hash_and_metrics_use_one_progress_snapshot[False]" time="0.056"><failure message="AssertionError: assert {'alpha': 0.0...00000002, ...} == {'alpha': 0.0...99999993, ...}&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing items:&#10;  {'low': 0.15000000000000002} != {'low': -0.04999999999999993}&#10;  {'mean': 0.15000000000000002} != {'mean': -0.04999999999999993}&#10;  {'high': 0.15000000000000002} != {'high': -0.04999999999999993}&#10;  Use -v to get more diff">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-12/test_cli_hash_and_metrics_use_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x1044d3710&gt;
+prospective = False
+
+    @pytest.mark.parametrize("prospective", [False, True])
+    def test_cli_hash_and_metrics_use_one_progress_snapshot(tmp_path, monkeypatch, prospective):
+        run = synthetic_run(tmp_path, monkeypatch, prospective=prospective)
+        progress = run / "progress.jsonl"
+        before = progress.read_bytes()
+        original_rows = [json.loads(line) for line in before.splitlines()]
+        confirm, pack, _ = synthetic_grid()
+        expected = summarize_seeded_comparison(confirm, pack, original_rows, prospective=prospective)
+        altered = copy.deepcopy(original_rows)
+        for row in altered:
+            if row["kind"] == "eval" and row["arm"] == "format_sft":
+                row["output"] = "no answer"
+        changed = "".join(json.dumps(row) + "\n" for row in altered).encode()
+        other = summarize_seeded_comparison(confirm, pack, altered, prospective=prospective)
+        assert other["paired_bootstrap"] != expected["paired_bootstrap"]
+        old_summary = run / "summary.json"
+        old_summary.write_text("legacy sentinel")
+        real_read = Path.read_bytes
+        reads = 0
+    
+        def replace_after_snapshot(path):
+            nonlocal reads
+            blob = real_read(path)
+            if path == progress:
+                reads += 1
+                path.write_bytes(changed)  # Another writer replaces the file after capture.
+            return blob
+    
+        monkeypatch.setattr(Path, "read_bytes", replace_after_snapshot)
+        output = run / "summary.seeded-v3.json"
+        command.analyze(run, output, retrospective=not prospective)
+        result = json.loads(output.read_text())
+        assert reads == 1
+        assert result["progress_sha256"] == hashlib.sha256(before).hexdigest()
+&gt;       assert result["paired_bootstrap"] == expected["paired_bootstrap"]
+E       AssertionError: assert {'alpha': 0.0...00000002, ...} == {'alpha': 0.0...99999993, ...}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'low': 0.15000000000000002} != {'low': -0.04999999999999993}
+E         {'mean': 0.15000000000000002} != {'mean': -0.04999999999999993}
+E         {'high': 0.15000000000000002} != {'high': -0.04999999999999993}
+E         Use -v to get more diff
+
+tests/test_seeded_summary_v3.py:224: AssertionError</failure></testcase><testcase classname="tests.test_seeded_summary_v3" name="test_cli_hash_and_metrics_use_one_progress_snapshot[True]" time="0.055"><failure message="AssertionError: assert {'alpha': 0.0...00000002, ...} == {'alpha': 0.0...99999993, ...}&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing items:&#10;  {'low': 0.15000000000000002} != {'low': -0.04999999999999993}&#10;  {'mean': 0.15000000000000002} != {'mean': -0.04999999999999993}&#10;  {'high': 0.15000000000000002} != {'high': -0.04999999999999993}&#10;  Use -v to get more diff">tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-12/test_cli_hash_and_metrics_use_1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x103df7b30&gt;
+prospective = True
+
+    @pytest.mark.parametrize("prospective", [False, True])
+    def test_cli_hash_and_metrics_use_one_progress_snapshot(tmp_path, monkeypatch, prospective):
+        run = synthetic_run(tmp_path, monkeypatch, prospective=prospective)
+        progress = run / "progress.jsonl"
+        before = progress.read_bytes()
+        original_rows = [json.loads(line) for line in before.splitlines()]
+        confirm, pack, _ = synthetic_grid()
+        expected = summarize_seeded_comparison(confirm, pack, original_rows, prospective=prospective)
+        altered = copy.deepcopy(original_rows)
+        for row in altered:
+            if row["kind"] == "eval" and row["arm"] == "format_sft":
+                row["output"] = "no answer"
+        changed = "".join(json.dumps(row) + "\n" for row in altered).encode()
+        other = summarize_seeded_comparison(confirm, pack, altered, prospective=prospective)
+        assert other["paired_bootstrap"] != expected["paired_bootstrap"]
+        old_summary = run / "summary.json"
+        old_summary.write_text("legacy sentinel")
+        real_read = Path.read_bytes
+        reads = 0
+    
+        def replace_after_snapshot(path):
+            nonlocal reads
+            blob = real_read(path)
+            if path == progress:
+                reads += 1
+                path.write_bytes(changed)  # Another writer replaces the file after capture.
+            return blob
+    
+        monkeypatch.setattr(Path, "read_bytes", replace_after_snapshot)
+        output = run / "summary.seeded-v3.json"
+        command.analyze(run, output, retrospective=not prospective)
+        result = json.loads(output.read_text())
+        assert reads == 1
+        assert result["progress_sha256"] == hashlib.sha256(before).hexdigest()
+&gt;       assert result["paired_bootstrap"] == expected["paired_bootstrap"]
+E       AssertionError: assert {'alpha': 0.0...00000002, ...} == {'alpha': 0.0...99999993, ...}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'low': 0.15000000000000002} != {'low': -0.04999999999999993}
+E         {'mean': 0.15000000000000002} != {'mean': -0.04999999999999993}
+E         {'high': 0.15000000000000002} != {'high': -0.04999999999999993}
+E         Use -v to get more diff
+
+tests/test_seeded_summary_v3.py:224: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,14 @@
+[
+  {
+    "fault": "changed_measurement",
+    "rejected": true,
+    "exit_code": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"<SESSION_ROOT>/work/vare-slice/scripts/audit_checkpoint_read_bounds_v1.py\", line 93, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<SESSION_ROOT>/work/vare-slice/scripts/audit_checkpoint_read_bounds_v1.py\", line 21, in audit\n    assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: candidate-oversized-0.json\n"
+  },
+  {
+    "fault": "missing_worker_record",
+    "rejected": true,
+    "exit_code": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"<SESSION_ROOT>/work/vare-slice/scripts/audit_checkpoint_read_bounds_v1.py\", line 93, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<SESSION_ROOT>/work/vare-slice/scripts/audit_checkpoint_read_bounds_v1.py\", line 16, in audit\n    assert set(assets) == {str(p.relative_to(root)) for p in root.rglob(\"*\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  }
+]

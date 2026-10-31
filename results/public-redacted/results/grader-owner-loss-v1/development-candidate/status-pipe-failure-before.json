@@ -1,0 +1,7 @@
+{
+  "fault": "private status reader closes before grader exits",
+  "guard_exit": 1,
+  "child_state": "S",
+  "child_still_running": true,
+  "stderr": "Traceback (most recent call last):\n  File \"<SESSION_ROOT>/work/vare-slice/src/vare/_grader_guard.py\", line 46, in <module>\n    main()\n  File \"<SESSION_ROOT>/work/vare-slice/src/vare/_grader_guard.py\", line 36, in main\n    os.write(status_fd, struct.pack('!i', code))\nBrokenPipeError: [Errno 32] Broken pipe\n"
+}

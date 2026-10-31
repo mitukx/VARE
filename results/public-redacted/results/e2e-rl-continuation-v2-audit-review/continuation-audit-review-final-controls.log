@@ -1,0 +1,79 @@
+PR #69 independent-review falsification controls.
+Old audit: saved independent auditor from commit 135b8fcca7c5aee97dc2efeea29c12b556bae5cf.
+All archives are byte-resealed after mutation; source campaign is hardlinked read-only and unchanged.
+
+[trace-span] prior audit exit=0
+{"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+
+[trace-span] corrected audit exit=1
+
+Traceback (most recent call last):
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 467, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 193, in audit
+    need(sorted(span_indices)==expected_timed_rounds and len(set(span_indices))==len(spans),
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 17, in need
+    raise ValueError(message)
+ValueError: round trace spans do not cover each timed committed round exactly once
+
+[behavior-logprob] prior audit exit=0
+{"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+
+[behavior-logprob] corrected audit exit=1
+
+Traceback (most recent call last):
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 467, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 262, in audit
+    need(rollout["logprob"]==worker["logprob"]==generation["logprob"] and
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 17, in need
+    raise ValueError(message)
+ValueError: rollout logprob differs from worker/RVL evidence
+
+[gate-evaluation-pair] prior audit exit=0
+{"artifacts_hashed": 6520, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 506, "evaluation_reports_verified": 1012, "pass": true, "protocol_conformant": true}
+
+[gate-evaluation-pair] corrected audit exit=1
+
+Traceback (most recent call last):
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 467, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 353, in audit
+    need(set(by_attempt)==complete_attempts==expected_evaluation_attempts,
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 17, in need
+    raise ValueError(message)
+ValueError: evaluation pairs do not cover every optimizer attempt that reached the gate
+
+[attempt-round] prior audit exit=0
+{"artifacts_hashed": 6524, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 508, "evaluation_reports_verified": 1016, "pass": true, "protocol_conformant": true}
+
+[attempt-round] corrected audit exit=1
+
+Traceback (most recent call last):
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 467, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 186, in audit
+    need(attempts_by_round.get(index,set())==expected_attempt_ids,
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 17, in need
+    raise ValueError(message)
+ValueError: optimizer attempt identities do not match the kill-round schedule
+
+[resources] prior audit exit=0
+{"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+
+[resources] corrected audit exit=1
+
+Traceback (most recent call last):
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 467, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 208, in audit
+    need(resources["sample_count"]==measured_resources["sample_count"] and
+  File "<SESSION_ROOT>/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 17, in need
+    raise ValueError(message)
+ValueError: resource sample count, interval, or peak RSS differs from retained samples
+
