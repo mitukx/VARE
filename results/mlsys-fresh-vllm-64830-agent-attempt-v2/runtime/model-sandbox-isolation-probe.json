@@ -1,0 +1,105 @@
+{
+  "approved_read_paths": [
+    "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/task/TASK.md",
+    "/private/tmp/vare-vllm-64830-development-attempt-002/workspace/vllm/config/vllm.py",
+    "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b/tokenizer.json"
+  ],
+  "checks": [
+    {
+      "exit_code": 0,
+      "expected_readable": true,
+      "name": "task_prompt",
+      "observed_bytes": 353,
+      "path": "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/task/TASK.md",
+      "status": "PASSED",
+      "stderr_excerpt": "",
+      "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-task_prompt.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-task_prompt.stdout",
+      "stdout_sha256": "9c48dc637a854400f2afc1b209c81a93371f87ea01822b5749f7df6e2b02eb14"
+    },
+    {
+      "exit_code": 0,
+      "expected_readable": true,
+      "name": "candidate_source",
+      "observed_bytes": 168974,
+      "path": "/private/tmp/vare-vllm-64830-development-attempt-002/workspace/vllm/config/vllm.py",
+      "status": "PASSED",
+      "stderr_excerpt": "",
+      "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-candidate_source.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-candidate_source.stdout",
+      "stdout_sha256": "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738"
+    },
+    {
+      "command": [
+        "/usr/bin/head",
+        "-c",
+        "1",
+        "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b/tokenizer.json"
+      ],
+      "exit_code": 0,
+      "expected_readable": true,
+      "name": "model_tokenizer",
+      "observed_bytes": 1,
+      "path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b/tokenizer.json",
+      "status": "PASSED",
+      "stderr_excerpt": "",
+      "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-model_tokenizer.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-model_tokenizer.stdout",
+      "stdout_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96"
+    },
+    {
+      "exit_code": 1,
+      "expected_readable": false,
+      "name": "trusted_test",
+      "observed_bytes": 0,
+      "path": "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/trusted/test_vllm_config_unsupported_features.py",
+      "status": "PASSED",
+      "stderr_excerpt": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/trusted/test_vllm_config_unsupported_features.py: Operation not permitted\n",
+      "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-trusted_test.stderr",
+      "stderr_sha256": "ba580e0e5b924add0f2d36f16faa6b256cdcd4913a411bd7103b3a41f0a560d1",
+      "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-trusted_test.stdout",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "exit_code": 1,
+      "expected_readable": false,
+      "name": "prior_calibration",
+      "observed_bytes": 0,
+      "path": "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/upstream-fixed/grade.json",
+      "status": "PASSED",
+      "stderr_excerpt": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/upstream-fixed/grade.json: Operation not permitted\n",
+      "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-prior_calibration.stderr",
+      "stderr_sha256": "54d4b20fc05bc7ff7984aff263e10c78a7dc4140306ddc7cadeb7a11e4d9fd3b",
+      "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-prior_calibration.stdout",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "exit_code": 1,
+      "expected_readable": false,
+      "name": "codex_attachment",
+      "observed_bytes": 0,
+      "path": "/Users/user/.codex/attachments/7b43c6ec-09cb-4b51-8f59-40fc8f7be11d/Pasted text.txt",
+      "status": "PASSED",
+      "stderr_excerpt": "cat: /Users/user/.codex/attachments/7b43c6ec-09cb-4b51-8f59-40fc8f7be11d/Pasted text.txt: Operation not permitted\n",
+      "stderr_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-codex_attachment.stderr",
+      "stderr_sha256": "0d7f69e9e5e4be7fc15a15080f75b2641074f26f631ca221dfa925b7899888f3",
+      "stdout_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/sandbox-codex_attachment.stdout",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "denied_read_paths": [
+    "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/trusted/test_vllm_config_unsupported_features.py",
+    "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/upstream-fixed/grade.json",
+    "/Users/user/.codex/attachments/7b43c6ec-09cb-4b51-8f59-40fc8f7be11d/Pasted text.txt"
+  ],
+  "inference_started": false,
+  "model_loaded": false,
+  "network_denied": true,
+  "sandbox_profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/sandbox/model-agent.sb",
+  "sandbox_profile_sha256": "8949a2834b4f8e0f36694a5244f923d66ad1bec46bdf125aae732285b4e32e36",
+  "schema_version": 1,
+  "status": "PASSED"
+}

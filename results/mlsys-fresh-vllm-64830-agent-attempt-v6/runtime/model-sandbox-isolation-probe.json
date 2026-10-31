@@ -1,0 +1,76 @@
+{
+  "generation_started": false,
+  "grade_calls": 0,
+  "model_loaded": false,
+  "model_weights_read": false,
+  "profiles": {
+    "development": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/runtime/model-sandbox-isolation-probe-development.json",
+      "probe_result": {
+        "codex_private_denied": true,
+        "grader_denied": true,
+        "hidden_tests_denied": true,
+        "load_callable": true,
+        "mlx_lm_file": "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/__init__.py",
+        "network_denied": true,
+        "original_symlinked_runtime_denied": true,
+        "runtime_listing": [
+          "venv"
+        ],
+        "runtime_parent_listing": [
+          "runtime"
+        ],
+        "runtime_path_match": true,
+        "uv_cache_package_denied": true,
+        "workspace_clean": true,
+        "workspace_revision": "17550580e932f15e772185847382d3ae4211f5ec"
+      },
+      "profile_sha256": "586772da862ab622c35c071fde60ae70e607dc3715a2c1d8dc81a359cad842f5",
+      "sha256": "d6bfb5551e461999c95279829af3675f7e7094c342f7076a88bbbab71439f0fe"
+    },
+    "train-diagnostic-005": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/runtime/sandbox-isolation-probe-train-diagnostic-005.json",
+      "probe_result": {
+        "codex_private_denied": true,
+        "grader_denied": true,
+        "hidden_tests_denied": true,
+        "load_callable": true,
+        "mlx_lm_file": "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/__init__.py",
+        "network_denied": true,
+        "original_symlinked_runtime_denied": true,
+        "runtime_listing": [
+          "venv"
+        ],
+        "runtime_parent_listing": [
+          "runtime"
+        ],
+        "runtime_path_match": true,
+        "uv_cache_package_denied": true,
+        "workspace_clean": true,
+        "workspace_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59"
+      },
+      "profile_sha256": "df275873c420034f9ab39def05c53c38c256b42f651768c4ca59cc15f3ce91ee",
+      "sha256": "080bb8a533e12bfa9b1f49062f5de61d76c083054d05964c9056f33cf78e4516"
+    }
+  },
+  "record_id": "qwen3-4b-no-model-sandbox-import-probe-001",
+  "runtime_copy_fidelity_record": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/runtime/runtime-copy-fidelity.json",
+  "schema_version": 1,
+  "security_gates": {
+    "Codex_private_data_denied": true,
+    "grader_and_method_worker_denied": true,
+    "hidden_tests_denied": true,
+    "network_denied": true,
+    "original_symlinked_runtime_denied": true,
+    "uv_package_cache_denied": true
+  },
+  "status": "PASSED",
+  "task_prompt_loaded_or_delivered": false,
+  "task_workspaces": {
+    "development_clean": true,
+    "development_head": "17550580e932f15e772185847382d3ae4211f5ec",
+    "train_clean": true,
+    "train_head": "2af5f7ce8620115bf37fbbddf9817f083118df59"
+  },
+  "timestamp_utc": "2026-10-31T11:32:21.637189+00:00"
+}

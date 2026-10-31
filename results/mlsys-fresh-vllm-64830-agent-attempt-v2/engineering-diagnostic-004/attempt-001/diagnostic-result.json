@@ -1,0 +1,39 @@
+{
+  "attempt_process_started": true,
+  "bounded_record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/attempt-001/bounded-attempt.json",
+  "completed_at_utc": "2026-10-31T11:21:48Z",
+  "development_attempt_authorized_or_started": false,
+  "elapsed_seconds": 0.539,
+  "error": "ImportError: cannot import name load from mlx_lm (unknown location)",
+  "evidence": "The interpreter resolved mlx_lm as a namespace package inside the sandbox and could not read its __init__.py. Outside the sandbox the same pinned venv imports mlx_lm.load successfully. The profile denied the attempt-001 ancestor and only allowed the nested venv; the exact directory-entry permissions are corrected in the next frozen protocol.",
+  "exit_code": 1,
+  "failure_classification": "SANDBOX_RUNTIME_IMPORT_FAILURE",
+  "generated_tokens": 0,
+  "generation_started": false,
+  "independent_grade_calls": 0,
+  "live_resource_monitor_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/attempt-001/diagnostic-live-resource-monitor.jsonl",
+  "model_loaded": false,
+  "preflight_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/attempt-001/preflight-before-diagnostic.json",
+  "preflight_snapshot_after_exit": {
+    "available_memory_bytes": 14266073088,
+    "disk_free_bytes": 21740421120,
+    "memory_pressure_free_percent": 82,
+    "swap_used_bytes": 1689193021
+  },
+  "preflight_status": "PASSED",
+  "process_limits": {
+    "max_process_tree_rss_bytes": 8589934592,
+    "max_wall_seconds": 600,
+    "os_wait4_child_max_rss_bytes": 46956544,
+    "sampled_process_tree_rss_max_bytes": 7421952
+  },
+  "protocol_id": "qwen3-4b-current-controller-train-diagnostic-after-narrow-null-write-fix-v3",
+  "protocol_sha256": "5bac162495485078f4baf94450594996c8863102826fb0bb3e474c8fa58b32c2",
+  "record_id": "qwen3-4b-train-diagnostic-004-outcome-001",
+  "retry_under_this_protocol": false,
+  "schema_version": 1,
+  "source_edits": 0,
+  "tool_calls": 0,
+  "train_prompt_loaded_or_delivered": false,
+  "weights_loaded": false
+}

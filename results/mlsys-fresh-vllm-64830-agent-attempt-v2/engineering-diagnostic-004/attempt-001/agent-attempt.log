@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 1268, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 865, in main
+    from mlx_lm import load
+ImportError: cannot import name 'load' from 'mlx_lm' (unknown location)

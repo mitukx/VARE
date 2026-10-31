@@ -1,0 +1,43 @@
+{
+  "correction": "Added literal directory-entry read permissions for the exact ancestor directories needed for traversal while retaining default-deny on their contents and explicit child allowlists. The subsequent exact pinned Git probe and all final V5/D4 isolation cases passed.",
+  "grader_called": false,
+  "inference_started": false,
+  "initial_profile_hashes": {
+    "development_model_profile_without_parent_literal": "f250b0fef0844634cfcd240d091a1690cde0bf2f39c4f079374aad91f6bfcfc2",
+    "train_diagnostic_profile_before_parent_literals": "bfec8bf65ca75f4b9bcdfc0212ef0bc3490314fd54021df6987107f63a06fc4e"
+  },
+  "model_loaded": false,
+  "observations": [
+    {
+      "exit_code": 1,
+      "expected_success": true,
+      "failure_cause": "Git could not traverse /private/tmp/vare-vllm-64830-development-attempt-004 because the profile denied its parent.",
+      "name": "development_pinned_git_under_initial_v5_profile",
+      "stderr": "PinnedWorkspaceError: pinned Git command failed"
+    },
+    {
+      "exit_code": 1,
+      "expected_success": true,
+      "failure_cause": "Git could not traverse /private/tmp/vare-vllm-64830-development-attempt-004/controller-diagnostic-003 because the profile denied the directory entry.",
+      "name": "train_pinned_git_under_initial_d4_profile",
+      "stderr": "PinnedWorkspaceError: pinned Git command failed"
+    },
+    {
+      "details": "Allowed source/task/model reads and denied hidden tests, Codex-private file, grader scratch/scripts, and network.",
+      "name": "non_git_isolation_cases",
+      "status": "PASSED"
+    },
+    {
+      "exit_code": 128,
+      "expected_success": true,
+      "failure_cause": "The controller profile also needed a literal directory-entry allowance for the intermediate controller-diagnostic-003 directory.",
+      "name": "train_git_after_root_literal_but_before_nested_parent_literals",
+      "stderr": "fatal: Invalid path \"/private/tmp/vare-vllm-64830-development-attempt-004/controller-diagnostic-003\": Operation not permitted"
+    }
+  ],
+  "record_id": "vllm-64830-qwen3-4b-sandbox-parent-traversal-failure-001",
+  "recorded_at_utc": "2026-10-31T11:10:25.769455+00:00",
+  "schema_version": 1,
+  "status": "FAILED_SETUP_PROBE",
+  "summary": "The initial V5 and D4 profiles allowed nested workspaces but denied their ancestor directory. The pinned_workspace_git helper failed before model load; all other allow/deny isolation cases passed."
+}

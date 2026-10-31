@@ -1,0 +1,24 @@
+{
+  "colima_status": "not running",
+  "current_turn_process_actions": [],
+  "docker_ps": "unavailable because Docker API is not running; local method-worker grader is not Docker-dependent",
+  "latest_resource_snapshot": {
+    "available_memory_bytes": 13658324992,
+    "disk_free_bytes": 21370015744,
+    "free_bytes": 1523643842,
+    "host": "macOS-27.0.1-arm64-arm-64bit",
+    "memory_pressure_free_percent": 81,
+    "physical_memory_bytes": 34359738368,
+    "timestamp_utc": "2026-10-31T11:02:44.274016+00:00",
+    "total_bytes": 3221225472,
+    "used_bytes": 1697581629
+  },
+  "mission_model_processes_found": false,
+  "physical_memory_bytes": 34359738368,
+  "record_id": "vllm-64830-memory-audit-003-after-v4-preflight",
+  "route_decision": "14B V4 was not loaded because the additional operator margin failed. Qwen3-4B is the lower-memory fallback; no weights are loaded until the new V5 exact-head preflight passes.",
+  "rss_caveat": "Chrome and Codex are user applications; process RSS includes shared pages and is not an additive reclaim estimate.",
+  "schema_version": 1,
+  "timestamp_utc": "2026-10-31T11:02:44.274016+00:00",
+  "user_applications_terminated": false
+}

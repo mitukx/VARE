@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "editable_files": [
+      "vllm/config/vllm.py"
+    ],
+    "task_family": "vllm_v1_model_runner_unsupported_feature_guards"
+  },
+  "prompt": "Extend the V1 model-runner unsupported-feature checks in vllm/config/vllm.py so configurations that require the V2 model runner are rejected. When HiSparse attention is configured, report HiSparse; when watermarking is configured, report watermarking. Preserve the existing checks and make the smallest safe change in the allowed production file.",
+  "schema_version": 1,
+  "source": {
+    "base_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+    "repository": "https://github.com/vllm-project/vllm.git"
+  },
+  "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+}

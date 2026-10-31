@@ -1,0 +1,81 @@
+{
+  "based_on_pr_head": "513233a077c3f649ef7d10d5430d5ec07ac0be6a",
+  "exact_head_ci": "19/19 checks success before this record commit",
+  "interpretation": "Both preflights are no-load checks. No model inference, Development prompt delivery, candidate patch, independent grade, or policy update has occurred.",
+  "memory_actions": [
+    "gracefully stopped idle Colima; no containers or volumes deleted"
+  ],
+  "record_id": "vllm-64830-post-cleanup-model-route-selection-001",
+  "recorded_at_utc": "2026-10-31T10:09:48.508032+00:00",
+  "routes": {
+    "qwen2_5_coder_14b": {
+      "available_gib": 12.27911376953125,
+      "available_memory_bytes": 13184598016,
+      "decision": "Do not repair and rerun this frozen protocol. Resource gates were individually true, but full preflight failed because two frozen runner hashes were stale; current memory also leaves only about 0.29 GiB above estimated weights+KV+runtime reserve+explicit headroom, which is not a sufficient safety margin for the 14B route.",
+      "development_prompt_delivered": false,
+      "disk_free_bytes": 21430444032,
+      "estimated_required_gib": 11.988819562830031,
+      "estimated_weight_kv_runtime_plus_explicit_headroom_bytes": 12872896985,
+      "extra_margin_bytes": 311701031,
+      "extra_margin_gib": 0.2902942067012191,
+      "failures": [
+        "frozen input hash mismatch: bounded_attempt_runner (/private/tmp/vare-pr160-runner-fix/scripts/run_bounded_local_agent_attempt.py)",
+        "frozen input hash mismatch: preflight_runner (/private/tmp/vare-pr160-runner-fix/scripts/preflight_local_model_attempt.py)"
+      ],
+      "memory_pressure_free_percent": 78,
+      "model_loaded": false,
+      "model_snapshot_hashes_verified": true,
+      "preflight_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/attempt-001/launch-preflight-after-cleanup-001.json",
+      "preflight_sha256": "47ef0ac7423c22c58660dc3ea4782a7c16f99a084d8fb33fef0f79026f903258",
+      "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/protocol.json",
+      "protocol_sha256": "473f8867659a5bac499600eebb2d5c8f76f97430efc33dad84612acc10a991e7",
+      "resource_gate_checks": {
+        "available_memory_bytes": true,
+        "disk_free_bytes": true,
+        "estimated_working_set_and_headroom": true,
+        "memory_pressure_free_percent": true,
+        "swap_used_bytes": true
+      },
+      "status": "NO_GO",
+      "swap_used_bytes": 1697581629
+    },
+    "qwen3_4b": {
+      "available_gib": 13.00140380859375,
+      "available_memory_bytes": 13960151040,
+      "decision": "Select this frozen fallback route. Run its already-exposed Train controller diagnostic after the updated exact-head CI passes; only continue to the one Development attempt if the diagnostic and a fresh immediate preflight pass.",
+      "disk_free_bytes": 21433151488,
+      "estimated_required_gib": 6.670103863812983,
+      "estimated_weight_kv_runtime_plus_explicit_headroom_bytes": 7161969489,
+      "extra_margin_bytes": 6798181551,
+      "extra_margin_gib": 6.331299944780767,
+      "failures": [],
+      "memory_pressure_free_percent": 78,
+      "model_loaded": false,
+      "model_snapshot_hashes_verified": true,
+      "post_diagnostic_preflight_command": [
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "scripts/preflight_local_model_attempt.py",
+        "--protocol",
+        "results/mlsys-fresh-vllm-64830-agent-attempt-v2/protocol.json",
+        "--output",
+        "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/launch-preflight-after-controller-diagnostic-001.json",
+        "--repo-root",
+        "."
+      ],
+      "preflight_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/launch-preflight-after-14b-resource-check-001.json",
+      "preflight_sha256": "6bb408646507c665db1f317caf4767a79b33e71c8e00a7b223ab9fc0b5ed7b2f",
+      "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/protocol.json",
+      "protocol_sha256": "1bea9fffedee2b7fc495ecf1645bb5c0ecc9cbfa73d08b3fa93b8cfc0e85bb12",
+      "resource_gate_checks": {
+        "available_memory_bytes": true,
+        "disk_free_bytes": true,
+        "estimated_working_set_and_headroom": true,
+        "memory_pressure_free_percent": true,
+        "swap_used_bytes": true
+      },
+      "status": "PASSED",
+      "swap_used_bytes": 1697581629
+    }
+  },
+  "schema_version": 1
+}

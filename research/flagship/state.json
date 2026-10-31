@@ -311,25 +311,43 @@
       "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v1",
       "sha256": "27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9",
       "status": "FROZEN; exact-head CI passed on 4ca735f; launch preflight NO_GO; no weights loaded; no retry under this protocol"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v4-qwen2.5-14b-corrected-sandbox",
+      "sha256": "c59b3a584b9958514b725d9e8d9447a20cb8dbeaa2dbea838415fe96c173e127",
+      "status": "frozen before inference; exact-head CI and fresh no-load 14B preflight required; >=2 GiB additional margin; not run"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-003/protocol.json",
+      "protocol_id": "qwen25-14b-current-controller-train-diagnostic-after-narrow-null-write-fix-v2",
+      "sha256": "7b1cb5f41c6efe8c555f056a7248e81838e1da5438efbfaa239a2b2c9feba357",
+      "status": "frozen; one exposed Train controller diagnostic; not run"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v7-qwen3-4b-metal-cache-sandbox",
+      "sha256": "e2dcf7bae7719a63fed541444ce6883f5051fe908aa8b8df517212025be2f0f2",
+      "status": "frozen; one Development attempt ran; closed after first-generation Metal JIT sandbox failure; no retry authorized"
     }
   ],
   "git_refs": {
-    "active_branch": "codex/vllm64830-development-attempt-v1",
-    "active_pr_state": "open",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/163",
-    "last_integrated_pr_merge_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
-    "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
+    "active_branch": "codex/qwen3-vllm64830-dev-v2",
+    "active_pr_state": "open_draft",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/164",
+    "last_integrated_pr_merge_sha": "da15797ca6345f73eba8249c9059db3b1a9de41e",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/163",
+    "last_verified_main_sha": "da15797ca6345f73eba8249c9059db3b1a9de41e",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "19e835b2a04279d880b82f36cc38534f78c4e79a"
+    "verified_pr_head_sha_before_checkpoint_changes": "eb82cb00c21fe9614e4978db9bfa7969c2655c1e"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
-    "integration": "BLOCKED",
+    "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Integrate PRs #160–#163 in order after exact-head required checks pass. Then execute one prospective Qwen3-4B vLLM #64830 Development repair with a new frozen assignment/protocol and immediate model-specific resource preflight; the existing #1904 Train repair already validates native tool round-trip. Do not spend a fresh task on controller debugging, retry closed 14B protocols, pay for compute/API, train, or access Held-Out.",
-  "last_completed_step": "Synchronized PRs #161–#163 to PR #160 head da625977 and refreshed the mission checkpoint. The verified PR #163 engineering head before this checkpoint is 19e835b2; exact-head CI and calibrated CPU evidence passed on #161 bbca0290 (runs 41184060589/41184057449/41184060600), #162 57b6507b (41184138216/41184134388/41184138294), and #163 19e835b2 (41184300330/41184295425/41184300363). PR #160 scope/integration review found no additional issue. A previous superseded #163 head fb5b72b3 failed one timing-sensitive Python 3.12 SIGKILL fixture; the later full exact-head run passed unchanged code. Focused merged-tree validation passed 23 tests, 69 immutable artifact checks passed, checksums and git diff --check passed. No PR was merged. Current GitHub state was refreshed: main remains 416f35c; #160 integrity erratum is ported to e9a5fc42, #161 is synchronized at f005f8da, #162 at 210a5642, and #163 is being synchronized. #160 CPU evidence passed while fresh CI runs; #161/#162 exact-head checks are running. The resource-feasible model route is Qwen3-4B: cached weights 2,263,022,417 bytes, estimated 4,096-token fp16 KV 603,979,776 bytes, empirical prior MLX peak 3,752,736,344 bytes; prior host snapshot had 11,035,787,264 available bytes. A new immediate preflight is still mandatory. Existing run-19 provides one narrow Train repair (2/2 grader cases); fresh Development repair count remains zero.",
+  "highest_priority_next_task": "Diagnose why the macOS sandbox denied Metal compiler extension/cache access despite narrowly scoped write rules, using no-model probes only. Do not retry V7. Any future inference requires a separately frozen protocol and a no-model proof of the exact first-generation Metal compiler path; fresh exact-head CI and resource preflight remain mandatory.",
+  "last_completed_step": "PR #164 head eb82cb00 exact-head checks passed (19/19; Python 3.12 failed once and passed on failed-job rerun). Frozen V7 Qwen3-4B Development attempt loaded weights and delivered the assigned prompt, then failed in its first Metal generation call before any token because sandbox extensions denied Metal compiler cache/runtime access. Zero tokens, tools, edits, candidate, and grades; V7 closed with no retry. Evidence is recorded in results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/development-result.json.",
   "milestone_id": "p16-vllm-64830-one-shot-development-attempt",
   "result_hash_references": [
     {
@@ -1556,6 +1574,91 @@
       "path": "results/mlsys-repo-eval-v1/run-19/report.md",
       "sha256": "f5a3b4931ee9898e38afaa58a80aaacc662eb7d98bbfbe1afb3507d2437ba88b",
       "status": "One independently graded Train repair; one trajectory, 2/2 task cases; no Development generalization or policy update."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/protocol.json",
+      "sha256": "c59b3a584b9958514b725d9e8d9447a20cb8dbeaa2dbea838415fe96c173e127",
+      "status": "Frozen V4 14B Development protocol; model not loaded"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/model-sandbox-isolation-probe.json",
+      "sha256": "29c66288adea2bcf9ce5b9e22ea6793811048af0c9b092a2be45a8b0c46f817c",
+      "status": "Passed no-model isolation probes; grader not called"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/route-selection-after-memory-recovery-002.json",
+      "sha256": "dd55ecc399927a51242b35bfe66930914aa5b882414fb937dadab2043802cd20",
+      "status": "14B candidate route; launch conditional on fresh preflight"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/memory-recovery-002.json",
+      "sha256": "a99c0bb4e5e55009b65886e9e1e9cfc994b6cbd6cf67ed04ac3d3362314e2940",
+      "status": "No current-turn processes stopped; Colima already down"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-003/protocol.json",
+      "sha256": "7b1cb5f41c6efe8c555f056a7248e81838e1da5438efbfaa239a2b2c9feba357",
+      "status": "Frozen corrected 14B Train diagnostic; not run"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/preflight-after-exact-head-ci.json",
+      "sha256": "d7c2187094b8ee06e8a832888ff9232be70c93743faee25a3fff9886bade510a",
+      "status": "V4 14B no-load preflight: all frozen input hashes and base resource gates passed; additional operator margin failed; model not loaded."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/operator-route-decision-after-preflight-001.json",
+      "sha256": "45c69caeff79e6666767f68287844ea820b019abac5058ff58bafb3d56ca9e90",
+      "status": "Authoritative overall NO_GO for V4 because extra 2 GiB memory margin was short by 1,362,055,641 bytes."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/protocol.json",
+      "sha256": "c5717596f728a97e85cc370a7cea64923a82d62ff34fce2a93a94eeade6c8dca",
+      "status": "Frozen Qwen3-4B fallback V5 protocol; requires new exact-head CI and fresh preflight."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/runtime/model-sandbox-isolation-probe.json",
+      "sha256": "ee8d349e58b231b78884a9e99c24a5bc8191fdcd2f210aab3d227ae43e58de62",
+      "status": "Final no-model 4B Development/Train sandbox probes passed; no inference or grader call."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/runtime/model-sandbox-isolation-probe-parent-traversal-failure-001.json",
+      "sha256": "4e1687d183753700d6c284de964bdbd6ab81376955109ff7b2c8bd33bcd67e3a",
+      "status": "Append-only initial V5/D4 parent traversal setup failure; preserved before final profile correction."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/protocol.json",
+      "sha256": "5bac162495485078f4baf94450594996c8863102826fb0bb3e474c8fa58b32c2",
+      "status": "Frozen Qwen3-4B exposed Train controller diagnostic-004; one attempt, no grade, no prompt run."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/development-result.json",
+      "sha256": "d6ff3a08b0b0be79c08ba4e3838887437b1956c6d3e23a04d090bf1411d84c97",
+      "status": "V7 one-shot Development attempt; Metal JIT sandbox failure before first token; no candidate or grade."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/preflight-before-development-002.json",
+      "sha256": "f24d7dcb81202307d4994053bba2e7c1142c5594bfc579b6b3d90ed8f2d4cbf4",
+      "status": "Fresh pre-launch V7 no-load preflight passed every resource and frozen-input gate."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/bounded-attempt.json",
+      "sha256": "53380ac71e9862a7eb832ef48b56e8c6ae90923c60c1bf64649399c90e3f941e",
+      "status": "Bounded V7 Development run record; exit 1 before first token; under RSS/time limits."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/agent-attempt.log",
+      "sha256": "96e2d8019f0ed5a3358769c242f8b38872be28e47bb0acc4a3732a0d046918e4",
+      "status": "V7 model log; Metal JIT cache output denied before token emission."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/live-resource-monitor-001.jsonl",
+      "sha256": "89b18c2c68f162a0d14e125da78bb7ce54dd62d5226f3b7aabd852dd7f99c52b",
+      "status": "Live pressure/swap/process-tree monitor for the one V7 attempt."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/SHA256SUMS",
+      "sha256": "d483442dc5d0ef488654ad53d60e91ca7b67904c36a70743efb2a5bd8957d364",
+      "status": "V7 attempt-output SHA-256 manifest."
     }
   ],
   "run_ids": [
@@ -1642,7 +1745,11 @@
     "41184138294",
     "41184199790",
     "41184203745",
-    "41184203686"
+    "41184203686",
+    "vllm-64830-post-sweep-model-route-selection-002",
+    "vllm-64830-v4-additional-margin-no-go-001",
+    "vllm-64830-qwen3-4b-fallback-v5",
+    "vllm-64830-qwen3-4b-development-attempt-v7"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -1660,12 +1767,14 @@
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
     "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Its resource preflight NO-GO remains valid, but the historical runner skipped the task JSON/prompt hashes; a retrospective hash check matches the frozen protocol. Model weights were not loaded. See the append-only integrity erratum; do not retry protocol v1.",
-    "The prospectively assigned vLLM #64830 Development task hit launch-preflight NO_GO: available memory was 11,035,787,264 bytes (<12 GiB) and estimated working-set-plus-headroom failed. Frozen inputs and model snapshot hashes verified, but no weights were loaded, no prompt or candidate was generated, and no grade ran. Do not retry the frozen protocol; any future execution needs a new protocol and a fresh passing resource gate.",
     "The vLLM #64830 source-arm receipts recorded 3,932,160 bytes from 0.5-second RSS samples, not measured process-tree peaks. The 4 GiB resource result is INCONCLUSIVE; see append-only erratum results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.json (SHA-256 0656b5343f613a74d0bd35f93003622f9074130b2d2e662d19e2c00c14ca6877). Do not rerun consumed arms or reuse protocol v1. The original 58-file manifest covers the pre-append snapshot at commit 18f829b4; the live ledger and refreshed sidecar are covered by the separate errata manifest.",
-    "PR #160 is at e9a5fc42a289c5820547977f1eaa18f41f70336c with the #64575 integrity erratum ported; CPU evidence 41185980005 passed and exact-head CI runs 41185980035/41185976417 are in progress. Main requires nine contexts and zero approving reviews.",
-    "PR #161 is synchronized at f005f8da1135e875f498e31e51fc43b811aa17ad with the updated #160 parent; exact-head CI and CPU evidence are in progress.",
-    "PR #162 is synchronized at 210a564248b472343220c1c722cdc89671aa3e02 with the updated #161 parent; exact-head CI and CPU evidence are in progress.",
-    "PR #163 is being synchronized with #162 head 210a5642 and requires fresh exact-head CI before integration."
+    "The historical #64830 14B V3 NO_GO and Qwen3-4B diagnostic-001 failure remain immutable. Neither is being retried; V4/diagnostic-003 is a new protocol and remains unrun.",
+    "Fresh Development repair success remains zero; no policy update, coding-RL learning, or Held-Out evaluation is established.",
+    "PR #164 commit 053b25fe passed all exact-head checks, but the next V5 fallback commit requires fresh exact-head CI.",
+    "Qwen2.5-Coder-14B V4 is NO_GO after its actual no-load preflight failed the additional 2 GiB margin; weights were not loaded and its Development prompt was not delivered.",
+    "Qwen3-4B V5 and corrected Train diagnostic-004 are frozen but unrun. A fresh exact-head preflight with the 2 GiB additional margin is mandatory before any 4B weight load.",
+    "Fresh Development repair success remains zero; no policy update, coding-RL learning, or Held-Out evaluation is established.",
+    "V7 Qwen3-4B Development attempt failed during first Metal generation before any token despite a passing tiny-tensor smoke; no candidate or independent grade exists. V7 permits no retry. A new one-shot protocol must prove the exact generation-time sandbox extension path with no model before any further inference."
   ],
-  "updated_at": "2026-10-31T08:53:57Z"
+  "updated_at": "2026-10-31T12:25:46.505807Z"
 }

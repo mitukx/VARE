@@ -1,0 +1,12 @@
+{
+  "id": "qwen3-vllm64830-metal-smoke-classification-correction-001",
+  "inference_started": false,
+  "original_classifier_error": "The post-run assertion expected JSON-quoted output, but the smoke used Python print(dict), so the valid dict repr did not match that string. This was a result-parser error, not a runtime failure.",
+  "original_classifier_status": "FAILED",
+  "recheck_method": "Inspect the retained stdout and exit status without rerunning MLX; verify Device(gpu, 0), exact tiny-array result [2, 4, 6], and pinned package versions.",
+  "recheck_passed": true,
+  "recorded_at_utc": "2026-10-31T09:07:16+00:00",
+  "retained_stdout_sha256": "6688948350149d55ee2b93e3b5c91706b4626a7ef69f7e02316096820f175f72",
+  "schema_version": 1,
+  "weights_loaded": false
+}

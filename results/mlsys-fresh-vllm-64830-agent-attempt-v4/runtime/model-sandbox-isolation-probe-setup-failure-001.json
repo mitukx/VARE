@@ -1,0 +1,253 @@
+{
+  "candidate_worker_sandbox": {
+    "checks": [
+      {
+        "bytes": 94,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "candidate_method_scratch_read_allowed",
+        "passed": true,
+        "sha256": "78da1fe01bb3ba0ee313ffd72017a450dcc2e84a4549dc2f635806be599a2dab",
+        "stderr": ""
+      },
+      {
+        "bytes": 126,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "development_workspace_read_denied",
+        "passed": true,
+        "sha256": "aa0f91a97ce8be46fe47c61bcd31667ee052dfa19d5b53f33654f2dc1c864da7",
+        "stderr": "cat: /private/tmp/vare-vllm-64830-development-attempt-004/workspace-isolated-wt/vllm/config/vllm.py: Operation not permitted"
+      },
+      {
+        "bytes": 163,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "hidden_test_read_denied",
+        "passed": true,
+        "sha256": "01839e0364df7962b01d9877e83026f2249b20dfef0fe9cbd4af766471f900a3",
+        "stderr": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py: Operation not permitted"
+      },
+      {
+        "bytes": 184,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "14b_snapshot_read_denied",
+        "passed": true,
+        "sha256": "823e6b6aaec3ff251ede038bb96d95f7ec8d18df4cf9555e83d0e7de0e4d0870",
+        "stderr": "cat: /Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477/config.json: Operation not permitted"
+      },
+      {
+        "bytes": 152,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "grader_calibration_read_denied",
+        "passed": true,
+        "sha256": "5867860a546a3b7548e974aed40a95e40fa49f855a48ef7a2d1ae6fa9ac64522",
+        "stderr": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/upstream-fixed/grade.json: Operation not permitted"
+      },
+      {
+        "bytes": 138,
+        "exit_code": 71,
+        "expected_success": false,
+        "name": "network_denied",
+        "passed": true,
+        "sha256": "829cf038988e448d8d3fe2830c021eaa605e09d7f1c2cc380b161942df541d55",
+        "stderr": "sandbox-exec: execvp() of '/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python' failed: Operation not permitted"
+      }
+    ],
+    "dummy_worker_execution": {
+      "bytes": 138,
+      "exit_code": 71,
+      "expected_success": true,
+      "name": "dummy_candidate_worker_execution",
+      "passed": false,
+      "sha256": "829cf038988e448d8d3fe2830c021eaa605e09d7f1c2cc380b161942df541d55",
+      "stderr": "sandbox-exec: execvp() of '/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python' failed: Operation not permitted"
+    },
+    "grader_called": false,
+    "profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/sandbox/candidate-method-worker.sb",
+    "profile_sha256": "e639802e834e33892f99447757c0fff80f83ab18819abc7d26176f822b763b7c"
+  },
+  "model_sandbox": {
+    "checks": [
+      {
+        "bytes": 37,
+        "exit_code": 128,
+        "expected_success": true,
+        "name": "pinned_dev_git_rev_parse_with_devnull",
+        "passed": false,
+        "sha256": "bb47858637623b3b347d1ef3d99f2e0b3d8ff5a33b7444e46bad47f37d533368",
+        "stderr": "fatal: not a git repository: (null)"
+      },
+      {
+        "bytes": 168975,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "dev_workspace_source_read",
+        "passed": true,
+        "sha256": "60d99b1afb0563e4cdd37f93eb19f8962c1c2a0ec125224424b28568f87ee7b3",
+        "stderr": ""
+      },
+      {
+        "bytes": 354,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "train_task_read",
+        "passed": true,
+        "sha256": "f064a3c01d928200485d7114afee5d0c42d459dbd04669d9bdb4598d2d97b440",
+        "stderr": ""
+      },
+      {
+        "bytes": 868,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "14b_snapshot_config_read",
+        "passed": true,
+        "sha256": "7ae5f213505dcd64b24c163c1519ef5bbc41acd31343d99a8d6f88e347dc6fa8",
+        "stderr": ""
+      },
+      {
+        "bytes": 163,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "hidden_test_read_denied",
+        "passed": true,
+        "sha256": "01839e0364df7962b01d9877e83026f2249b20dfef0fe9cbd4af766471f900a3",
+        "stderr": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py: Operation not permitted"
+      },
+      {
+        "bytes": 115,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "codex_private_read_denied",
+        "passed": true,
+        "sha256": "4a089c65743208b4ab249314c7da3bddfaf223eb9456e5bec337be60a98d6c7b",
+        "stderr": "cat: /Users/user/.codex/attachments/43e08d43-a48d-4728-90f0-5caa1e58c2a2/Pasted text.txt: Operation not permitted"
+      },
+      {
+        "bytes": 100,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "grader_scratch_read_denied",
+        "passed": true,
+        "sha256": "3af23a7ca28a132b83983e45447387a84e2f46bf884d5a8a9427d1c183d7a311",
+        "stderr": "cat: /private/tmp/vare-vllm-64830-grader-v4-isolation/candidate_method.py: Operation not permitted"
+      },
+      {
+        "bytes": 16,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "pinned_runtime_version",
+        "passed": true,
+        "sha256": "3c80ec8ef3d6da22ed92b3a55d4333e09e5099b641637f808eee15a96ebe9245",
+        "stderr": ""
+      },
+      {
+        "bytes": 379,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "network_denied",
+        "passed": true,
+        "sha256": "236779e73d5a7efb7f76479e25c4cd5a94abb0f883aaee6aea768f7df0d106a3",
+        "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/socket.py\", line 865, in create_connection\n    raise exceptions[0]\n  File \"/opt/homebrew/Caskroom/minifor"
+      }
+    ],
+    "inference_started": false,
+    "model_loaded": false,
+    "profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/sandbox/model-agent.sb",
+    "profile_sha256": "bc078733e85ffe7407809026325805c962db11e320d9ac3d4e77cf6b90b36820"
+  },
+  "recorded_at_utc": "2026-10-31T10:55:00Z",
+  "schema_version": 1,
+  "status": "FAILED",
+  "train_controller_sandbox": {
+    "checks": [
+      {
+        "bytes": 42,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "pinned_train_git_rev_parse_with_devnull",
+        "passed": true,
+        "sha256": "c8f4a172abd932842c53b3630a0b6752bd2915d20f32f0a8d26ee99f7479cc34",
+        "stderr": ""
+      },
+      {
+        "bytes": 70766,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "train_workspace_source_read",
+        "passed": true,
+        "sha256": "773dc8f40b7b17e01ea0c4a3bf7830a22bd7f1cd293e98b90c4c98294d05ef67",
+        "stderr": ""
+      },
+      {
+        "bytes": 156,
+        "exit_code": 1,
+        "expected_success": true,
+        "name": "train_task_read",
+        "passed": false,
+        "sha256": "b509bd3caee1818570798cee5f8d71a95f69a8b68b5997c5eaee008745b512c1",
+        "stderr": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-003/task/TASK.md: No such file or directory"
+      },
+      {
+        "bytes": 126,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "development_workspace_read_denied",
+        "passed": true,
+        "sha256": "aa0f91a97ce8be46fe47c61bcd31667ee052dfa19d5b53f33654f2dc1c864da7",
+        "stderr": "cat: /private/tmp/vare-vllm-64830-development-attempt-004/workspace-isolated-wt/vllm/config/vllm.py: Operation not permitted"
+      },
+      {
+        "bytes": 163,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "hidden_test_read_denied",
+        "passed": true,
+        "sha256": "01839e0364df7962b01d9877e83026f2249b20dfef0fe9cbd4af766471f900a3",
+        "stderr": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py: Operation not permitted"
+      },
+      {
+        "bytes": 115,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "codex_private_read_denied",
+        "passed": true,
+        "sha256": "4a089c65743208b4ab249314c7da3bddfaf223eb9456e5bec337be60a98d6c7b",
+        "stderr": "cat: /Users/user/.codex/attachments/43e08d43-a48d-4728-90f0-5caa1e58c2a2/Pasted text.txt: Operation not permitted"
+      },
+      {
+        "bytes": 100,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "grader_scratch_read_denied",
+        "passed": true,
+        "sha256": "3af23a7ca28a132b83983e45447387a84e2f46bf884d5a8a9427d1c183d7a311",
+        "stderr": "cat: /private/tmp/vare-vllm-64830-grader-v4-isolation/candidate_method.py: Operation not permitted"
+      },
+      {
+        "bytes": 868,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "14b_snapshot_config_read",
+        "passed": true,
+        "sha256": "7ae5f213505dcd64b24c163c1519ef5bbc41acd31343d99a8d6f88e347dc6fa8",
+        "stderr": ""
+      },
+      {
+        "bytes": 379,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "network_denied",
+        "passed": true,
+        "sha256": "236779e73d5a7efb7f76479e25c4cd5a94abb0f883aaee6aea768f7df0d106a3",
+        "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/socket.py\", line 865, in create_connection\n    raise exceptions[0]\n  File \"/opt/homebrew/Caskroom/minifor"
+      }
+    ],
+    "inference_started": false,
+    "model_loaded": false,
+    "profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-003/sandbox/current-controller-diagnostic.sb",
+    "profile_sha256": "a5fbc89aede2dc2294da93810ea2d439fb123a303100b39760bda2cf1ad23973"
+  }
+}

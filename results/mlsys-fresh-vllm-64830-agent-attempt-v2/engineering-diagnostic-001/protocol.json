@@ -1,0 +1,108 @@
+{
+  "budget": {
+    "attempts": 1,
+    "edit_format": "unified_diff",
+    "incomplete_tool_retry_tokens": 1024,
+    "max_context_tokens": 4096,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_process_tree_rss_bytes": 8589934592,
+    "max_total_new_tokens": 2048,
+    "max_turns": 12,
+    "max_wall_seconds": 600,
+    "paid_compute_or_api": false,
+    "seed": 1904,
+    "training_or_policy_update": false
+  },
+  "controller": {
+    "expected_new_behavior": "Context compaction and the optional expanded next-turn cap after incomplete tool-call output are active; record events and whether either triggers.",
+    "files": {
+      "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+      "scripts/run_local_agent.py": "9ac2b9af00b1802663f88b600dc1293ccd892451e18bbea0cab77efc227ab19a",
+      "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+      "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd"
+    },
+    "revision_commit": "c2add02a4882edf906efd9ea5e27d4a6b3c7255c"
+  },
+  "execution": {
+    "agent_runner": "scripts/run_local_agent.py",
+    "attempt_output": "/private/tmp/vare-vllm-64830-development-attempt-002/controller-diagnostic-001/agent-attempt.json",
+    "bounded_record": "/private/tmp/vare-vllm-64830-development-attempt-002/controller-diagnostic-001/bounded-attempt.json",
+    "feedback_to_model": false,
+    "interpretation": "If the candidate diff SHA exactly matches the prior independently graded Train diff, the prior receipt applies to that identical diff only. Any different diff remains ungraded. This run is controller feasibility evidence only.",
+    "no_independent_grade_this_run": true,
+    "outcome_metric": "model loads; valid native tool calls; one nonempty applied edit; finish; token/time/resource diagnostics",
+    "outer_log": "/private/tmp/vare-vllm-64830-development-attempt-002/controller-diagnostic-001/agent-attempt.log",
+    "runner": "scripts/run_bounded_local_agent_attempt.py",
+    "task_root": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/task",
+    "workspace": "/private/tmp/vare-vllm-64830-development-attempt-002/controller-diagnostic-001/workspace"
+  },
+  "model": {
+    "backend": "MLX 0.32.4 / mlx-lm 0.32.2 on Apple Silicon Metal",
+    "network": "denied; offline mode enabled",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "runtime_python": "3.12.12",
+    "sampling": "greedy; do_sample=false; temperature=0; top_p=1; top_k=0",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "weights_bytes": 2263022417,
+    "weights_sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+  },
+  "not_established": [
+    "Development generalization",
+    "task-family independence",
+    "policy learning",
+    "RL improvement",
+    "new independently graded task success"
+  ],
+  "preflight": {
+    "must_pass_before_any_weight_load": true,
+    "output_path": "/private/tmp/vare-vllm-64830-development-attempt-002/controller-diagnostic-001/controller-diagnostic-preflight.json",
+    "protocol": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/protocol.json",
+    "same_frozen_resource_gates_as": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/protocol.json"
+  },
+  "protocol_id": "qwen3-4b-current-controller-train-diagnostic-v1",
+  "purpose": "Validate model loading and the current native tool controller on a previously exposed Train task before the prospective vLLM Development attempt. This diagnostic is not a new capability result.",
+  "sandbox": {
+    "denied_reference_paths": [
+      "/private/tmp/vare-pr160-runner-fix/results",
+      "/private/tmp/vare-pr160-runner-fix/benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments",
+      "/private/tmp/vare-vllm-64830-development-attempt-002/workspace",
+      "/private/tmp/vare-sprint-vii-mlx-lm-fixed",
+      "/private/tmp/vare-sprint-vii-mlx-lm-wrong",
+      "/private/tmp/vare-sprint-ix-mlx1777-fixed",
+      "/private/tmp/vare-sprint-x-mutant-debug2",
+      "/private/tmp/vare-sprint-vii-mlx",
+      "/private/tmp/vare-mlx-lm-1912-upstream"
+    ],
+    "deny_codex_private_data": true,
+    "deny_network": true,
+    "profile": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/sandbox/current-controller-diagnostic.sb",
+    "sha256": "ba4bfda96137e0d769d1b1fe54e1994903ef59462b0d391f9e8a228bacd4f279",
+    "source_write_allowlist": [
+      "mlx_lm/server.py"
+    ]
+  },
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_INFERENCE; controller feasibility only; no Development or generalization claim",
+  "stop_rule": "If the frozen resource preflight fails, record NO_GO and do not load weights. If controller load/tool/edit fails, stop after this single diagnostic; do not retry it. Continue to Development only if the controller completes and the subsequent Development preflight passes.",
+  "task": {
+    "baseline_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+    "baseline_source_sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+    "hidden_tests_visible": false,
+    "prior_candidate_diff_sha256": "e95091b6c6ff482234360c01e59ef8a31cd5fd1ff2956ea8d47872decc5d8419",
+    "prior_independent_grade": "results/mlsys-repo-eval-v1/run-19/independent-grade.json",
+    "prior_qwen3_attempt": "results/mlsys-repo-eval-v1/run-19/manifest.json",
+    "prompt_sha256": "3855eae179864cddd35af9cb5b6e65812f414ceae7b5affc1a29b7e7d9c67699",
+    "public_tests_enabled": false,
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "source_relative_path": "mlx_lm/server.py",
+    "split": "Train",
+    "task_family": "tool_call_dict_arguments",
+    "task_id": "mlxlm-1904-tool-arguments",
+    "task_json_sha256": "e80f2e89f613953345b662dbf17535b19a21157267079048cd964d9054cf2d1a",
+    "task_statement_path": "results/mlsys-repo-eval-v1/run-19/snapshots/task.md",
+    "workspace": "/private/tmp/vare-vllm-64830-development-attempt-002/controller-diagnostic-001/workspace",
+    "workspace_is_exact_upstream_git_revision": true
+  }
+}
