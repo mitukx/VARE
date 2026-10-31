@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "erratum_id": "vllm-64830-source-qualification-resource-measurement-erratum-001",
+  "created_at": "2026-10-31",
+  "applies_to": {
+    "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1",
+    "qualification_bundle_sha256": "0a14a5fe7efe269b2668c1cd0574eeb3af17666bb2fe5ab873ebe19df1824261",
+    "attempt_receipts": {
+      "baseline-attempt-002/attempt.json": "0992a933e64e27d499d92505ea961417c75aab8915e49df8dc0d734e5bb132d8",
+      "wrong-mutant-attempt-002/attempt.json": "6470cfec7d50c775055a1487c8fe15ca1387ca1d6bdeaf5d1fe029e6add3db58",
+      "upstream-fixed-attempt-002/attempt.json": "fd739c21b8afed60dd2e25d95dfce57fc385d91262ea3fc30998d783b1fe5a77"
+    },
+    "preservation": "The original protocol, attempt receipts, qualification report, and root SHA256SUMS remain unchanged. This append-only erratum supersedes only the resource-peak interpretation."
+  },
+  "finding": {
+    "original_field": "peak_process_tree_rss_bytes",
+    "original_recorded_value_bytes": 3932160,
+    "original_sampling_interval_seconds": 0.5,
+    "arm_elapsed_seconds": {
+      "baseline-attempt-002": 0.53,
+      "wrong-mutant-attempt-002": 0.529,
+      "upstream-fixed-attempt-002": 0.529
+    },
+    "correct_interpretation": "The field is only the largest process_tree_rss snapshot observed by the polling loop. Because each arm completed in about one polling interval, this value does not establish its OS-reported high-water mark or a complete process-tree peak.",
+    "superseded_claims": [
+      "3,932,160 bytes is the measured peak process-tree RSS for each arm.",
+      "The frozen 4 GiB memory gate passed or a transient memory-limit breach was excluded."
+    ]
+  },
+  "independent_reproduction": {
+    "platform": "macOS Darwin 27.0.0",
+    "method": "A short-lived child waited 0.15 seconds, touched a 91 MiB allocation, then exited 0.05 seconds later. The first process_tree_rss sample was 2,867,200 bytes; after waiting 0.5 seconds, wait4 reported a direct-child high-water mark of 106,774,528 bytes.",
+    "reproduction_result": {
+      "first_process_tree_sample_bytes": 2867200,
+      "wait4_direct_child_high_water_bytes": 106774528,
+      "exit_code": 0,
+      "sample_gap_seconds": 0.5
+    },
+    "future_regression_test": "tests/test_mlsys_vllm_64830_qualification_tools.py::test_wait4_records_a_short_lived_child_high_water_mark",
+    "future_runner_fields": [
+      "sampled_process_tree_rss_max_bytes",
+      "os_wait4_child_max_rss_bytes"
+    ],
+    "scope_limit": "wait4 reports the OS high-water mark for the direct waited child. It is not a complete concurrent process-tree high-water mark; transient aggregate peaks across unreported descendants remain unexcluded."
+  },
+  "revised_interpretation": {
+    "behavioral_source_result": "Unchanged: baseline failed the two intended assertions, the wrong mutant was rejected by both, and upstream-fixed passed both.",
+    "resource_gate": "INCONCLUSIVE: the consumed runs do not establish that peak process-tree RSS stayed below 4 GiB.",
+    "qualification_scope": "The source behavior result remains limited to the two frozen method-level cases. Do not use the old resource fields as evidence that a future Development run is resource-safe.",
+    "retry_policy": "Do not rerun the three consumed arms or reuse protocol v1. Any future execution requires a new frozen protocol and runner hash."
+  }
+}
