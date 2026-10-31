@@ -1,0 +1,41 @@
+{
+  "events": [
+    {
+      "details": "Frozen metadata selection v2 and overlap review v4 found no direct identity/family overlap with prior Development/Train families; source-level qualification passed before assignment.",
+      "event": "prospective_development_assignment"
+    },
+    {
+      "details": "One local Qwen2.5-Coder-14B-Instruct-4bit greedy attempt may start only after this record and protocol are pushed and immediate launch gates pass.",
+      "event": "single_model_attempt_authorized"
+    }
+  ],
+  "heldout_access": false,
+  "model_attempts_authorized": 1,
+  "model_attempts_started": 0,
+  "model_or_agent_exposure": false,
+  "previous_ledger": {
+    "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/exposure-record.json",
+    "sha256": "e4cc070288db479ff31c922df4a299391b7055dd15776f466eeb663796fd3723"
+  },
+  "previous_unmaterialized_ledger_reference": {
+    "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+    "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72",
+    "verified_in": "origin/main Git object; included in ancestor exposure chain"
+  },
+  "protocol_id": "mlsys-fresh-vllm-64575-agent-attempt-v1",
+  "protocol_path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/protocol.json",
+  "public_pretraining_exposure": "UNKNOWN",
+  "record_id": "vllm-64575-development-assignment-v1",
+  "record_status": "FROZEN_PROSPECTIVE_ASSIGNMENT",
+  "schema_version": 1,
+  "split_assignment": "DEVELOPMENT",
+  "task": {
+    "baseline_revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "family": "anthropic_request_tool_type_error_precedence",
+    "fixed_revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+    "pull_request": 64575,
+    "repository": "vllm-project/vllm",
+    "task_id": "vllm-64575-anthropic-tool-type-validation"
+  },
+  "training_attempts": 0
+}

@@ -1,0 +1,11 @@
+--- a/vllm/entrypoints/anthropic/protocol.py
++++ b/vllm/entrypoints/anthropic/protocol.py
+@@ -149,7 +149,7 @@
+         # missing input_schema and point the client at the wrong problem.
+         if isinstance(data, dict):
+             tool_type = data.get("type")
+-            if tool_type not in (None, "custom"):
++            if tool_type not in (None, "custom", "web_search_20250305"):
+                 raise ValueError(
+                     f"tool type {tool_type!r} is not supported; only custom "
+                     "tools with an input_schema are supported"

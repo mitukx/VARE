@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-selection-v1",
+  "protocol_status": "frozen_before_deterministic_selection; selected_task_remains_unqualified_and_unassigned",
+  "frozen_at_utc": "2026-10-31T03:43:37Z",
+  "source_main_commit": "416f35c465712898e8e5764a8e43193ef86e7afb",
+  "purpose": "Select exactly one candidate from the Oct 31 incremental metadata-only scan for a prospective Development/Train overlap review, without opening source or tests.",
+  "hypothesis": "A deterministic hash-ranked selection among coarse metadata-eligible, non-hardware-specific candidates can reduce manual choice while preserving an explicit no-substitution rule.",
+  "source_scan": {
+    "protocol_path": "protocols/mlsys_fresh_development_candidate_discovery_v4.json",
+    "protocol_sha256": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+    "addendum_sha256s": [
+      "b7260d07f87b0b8eda5c03aa281ea629fb23f7deb26e7f59c509c5e14e68fc2f",
+      "cba8630c341fe55c34d5f844a0004786fbd1d2858a32673017666ea3fd027a0f",
+      "f4285bb50a2c8141344995f58a4e78310c167fea94ce189f0c2c3990a0f335f9"
+    ],
+    "candidate_count": 19,
+    "provisional_candidate_count": 11
+  },
+  "frozen_inputs": {
+    "screen_path": "results/mlsys-fresh-development-candidate-discovery-v4/screen.json",
+    "screen_sha256": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "candidate_pool_path": "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json",
+    "candidate_pool_sha256": "8c2fd7e519723e27f8b2b5274d03c340d32c5e552191869ddc23f63f46bd0370",
+    "source_manifest_path": "results/mlsys-fresh-development-candidate-discovery-v4/evidence-manifest.json",
+    "source_manifest_sha256": "39d4ad0957aba7a9360fb5f60cc81bb74788cfe858ce5fac473e98158d91b853"
+  },
+  "selector_path": "scripts/select_mlsys_fresh_development_candidate_v1.py",
+  "selector_sha256": "de4785e3a9a353d8487790e6455d815da5d8b3c6da3b8a4c89983bf5f4a97133",
+  "selection_rules": {
+    "source_status_required": "provisional_for_manual_review",
+    "qualification_status_required": "UNQUALIFIED",
+    "split_assignment_required": "UNASSIGNED",
+    "task_family_overlap_required": "NOT_ASSESSED",
+    "exclude_repository_owners": [
+      "huggingface",
+      "ml-explore"
+    ],
+    "excluded_path_markers": [
+      "cuda",
+      "rocm",
+      "metal",
+      "gpu",
+      "kernel",
+      "triton",
+      "flash_attn",
+      "amd",
+      "nvidia",
+      "xpu",
+      "tpu",
+      "neuron"
+    ],
+    "excluded_title_markers": [
+      "gpu",
+      "rocm",
+      "amd",
+      "cuda",
+      "metal",
+      "kimi",
+      "deepseek",
+      "eplb",
+      "expert parallel",
+      "distributed",
+      "colbert",
+      "feature",
+      "perf",
+      "speed up",
+      "flash_attn",
+      "triton",
+      "swa"
+    ],
+    "test_and_production_paths_required": true,
+    "maximum_changed_files": 5,
+    "maximum_changed_lines": 200,
+    "rank_domain": "vare-fresh-development-selection-v1",
+    "rank": "SHA256(UTF8(rank_domain + '|' + repository + '#' + pull_request_number)); sort ascending and select the first row.",
+    "selection_count": 1,
+    "substitute_if_overlap_or_infeasible": false
+  },
+  "authorization": {
+    "source_or_test_content_fetch": false,
+    "task_family_overlap_review": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "heldout_access": false,
+    "paid_compute_or_api": false
+  },
+  "stop_rules": [
+    "Do not inspect PR body, discussions, patches, source, tests, or grader assets during selection.",
+    "Retain the selected task as UNQUALIFIED and UNASSIGNED; selection does not grant source access or authorize inference.",
+    "Do not substitute another candidate if the selected identity later overlaps or fails qualification; preserve that result and freeze a new selection separately."
+  ],
+  "limitations": [
+    "Repository-owner exclusions are a prospective diversification rule, not evidence of task-family independence.",
+    "The title/path hardware filter does not prove CPU feasibility.",
+    "A post-cutoff merge date does not establish absence from public pretraining.",
+    "This selection is metadata-only and is not a model-capability result."
+  ],
+  "output_path": "results/mlsys-fresh-development-candidate-selection-v1/"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-discovery-v4-addendum-1",
+  "status": "frozen_before_metadata_collection; implementation-binding-correction-only",
+  "frozen_at_utc": "2026-10-31T03:37:49Z",
+  "parent_protocol_path": "protocols/mlsys_fresh_development_candidate_discovery_v4.json",
+  "parent_protocol_sha256": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+  "failed_collector_sha256": "4d9420b5c2ee44fe35b8f1d65d7cd819ba4e97ca7eb3cef7d31c068198c76fe5",
+  "corrected_collector_path": "scripts/discover_mlsys_fresh_development_candidates_v4.py",
+  "corrected_collector_sha256": "6d87ba6d480547a9b3eba78e81bc4b9e950064554e740aed993640f14dfcae8b",
+  "pre_collection_failure": {
+    "observed": "The collector expected collector_sha256 at the protocol root, while the frozen protocol correctly places it under discovery.collector_sha256.",
+    "metadata_queries_started": false,
+    "output_directory_created": false
+  },
+  "correction": "The collector now validates its code hash through this addendum, whose parent hash binds the original frozen protocol, and records the addendum hash in output evidence.",
+  "unchanged_frozen_fields": [
+    "repositories",
+    "merged date window",
+    "snapshot cutoff",
+    "prior exposure input hashes",
+    "coarse screen",
+    "authorization boundaries",
+    "stop rules",
+    "limitations"
+  ],
+  "authorization": {
+    "source_or_test_content_fetch": false,
+    "heldout_source_or_test_access": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "paid_compute_or_api": false
+  }
+}

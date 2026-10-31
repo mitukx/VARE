@@ -1,0 +1,51 @@
+{
+  "development_split_assignment_performed": false,
+  "eligible_candidate_count": 2,
+  "heldout_access_authorized": false,
+  "model_or_agent_inference_authorized": false,
+  "protocol_addendum_2_sha256": "5e5459b10018a3c0ca7227560f4138ad160c33bc9bc826e628c671bdce6e9b15",
+  "protocol_addendum_sha256": "5b0f968fa609bbb971ef3e504697ddc15b92cf0d362109090e1d194bf43453b1",
+  "protocol_sha256": "19254086ccd3093ed5a85518f4d49088fa9323b171e8ed190e0dd13f5d37ae10",
+  "schema_version": 1,
+  "selected_candidate": {
+    "additions": 160,
+    "base_ref_sha_at_capture": "67d677bdef939cb95b433dfcd43a4eca234aa29b",
+    "changed_file_count": 2,
+    "changed_paths": [
+      "tests/parser/engine/test_qwen3.py",
+      "vllm/parser/qwen3.py"
+    ],
+    "changed_paths_complete": true,
+    "coarse_screen": "provisional_for_manual_review",
+    "created_at": "2026-10-30T06:26:39Z",
+    "deletions": 18,
+    "head_sha": "0d25d9d5bda0ce4b74b51f171a37f2bf2e484352",
+    "is_draft": false,
+    "merge_base_sha": "0aa72a450c9a98642c698e36a26e26c750400157",
+    "merge_commit_sha": "c7a683bde5909bf2862d5d4500239dd1e3bd44bc",
+    "merged_at": "2026-10-31T01:51:14Z",
+    "number": 64675,
+    "qualification_status": "UNQUALIFIED",
+    "repository": "vllm-project/vllm",
+    "screen_reasons": [],
+    "selection_rank_sha256": "4a0c10be33e0fc918971a54758bb3df37a1d5c2bcb29318b5c9449da64b1addf",
+    "split_assignment": "UNASSIGNED",
+    "state": "MERGED",
+    "task_family_overlap": "NOT_ASSESSED",
+    "test_paths": [
+      "tests/parser/engine/test_qwen3.py"
+    ],
+    "title": "[Bugfix][Parser] Parse closed Qwen3 tool parameters once while streaming",
+    "updated_at": "2026-10-31T01:51:14Z",
+    "url": "https://github.com/vllm-project/vllm/pull/64675"
+  },
+  "selected_count": 1,
+  "selection_id": "mlsys-fresh-development-candidate-selection-v1",
+  "selection_rule": "Select exactly the minimum SHA-256 rank; no substitution if later overlap review or source qualification fails.",
+  "source_candidate_pool_sha256": "8c2fd7e519723e27f8b2b5274d03c340d32c5e552191869ddc23f63f46bd0370",
+  "source_manifest_sha256": "39d4ad0957aba7a9360fb5f60cc81bb74788cfe858ce5fac473e98158d91b853",
+  "source_or_test_content_accessed": false,
+  "source_screen_sha256": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+  "task_qualification_performed": false,
+  "training_authorized": false
+}

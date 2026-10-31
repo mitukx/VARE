@@ -1,0 +1,19 @@
+{
+  "attempt_id": "vllm-64575-source-qualification-baseline-attempt-001",
+  "arm_invocation_consumed": true,
+  "arm_gate": "STOPPED_BEFORE_TEST_COLLECTION",
+  "classification": "harness initialization failure caused by the Seatbelt write boundary",
+  "pytest_exit_code": 3,
+  "failure_point": "pytest_configure logging plugin initialization, before collection",
+  "observed_exception": "PermissionError: [Errno 1] Operation not permitted: '/dev/null'",
+  "candidate_test_cases_collected": 0,
+  "candidate_assertions_executed": 0,
+  "source_or_test_hashes_matched_frozen_inputs": true,
+  "timeout": false,
+  "process_tree_rss_limit_exceeded": false,
+  "network_access_attempted_or_observed": false,
+  "cause_and_correction": "pytest's default log_file setting opens /dev/null. The exact Seatbelt profile allows writes only under the arm-specific output directory. A retry addendum may direct pytest's log_file setting to an explicit file in that allowed directory; do not relax the sandbox profile.",
+  "retry_authority": "No retry under the frozen protocol v1 addendum. A new append-only, hash-bound addendum must be pushed before any retry; the original invocation remains preserved and consumed.",
+  "attempt_json_sha256": "c49de0daabf41423efb12eda26a1f590abff39428fd5ef3d82bdddf6b5dff48d",
+  "pytest_log_sha256": "bf4fc7804c9e92c2adc436d7cf85109f616b8d9126ba0138964864488c0f29b2"
+}

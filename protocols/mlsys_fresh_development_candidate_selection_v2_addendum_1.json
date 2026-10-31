@@ -1,0 +1,50 @@
+{
+  "authorization": {
+    "agent_or_model_inference": false,
+    "development_split_assignment": false,
+    "heldout_access": false,
+    "metadata_only_selection_retry": true,
+    "source_or_test_content_fetch": false,
+    "task_family_overlap_review": false,
+    "task_qualification": false,
+    "training": false
+  },
+  "corrected_input_hashes": {
+    "scripts/select_mlsys_fresh_development_candidate_v2.py": {
+      "corrected_sha256": "208ba5629dc3c3e9627f4adeb94d5178f88317f79a1862370d2dc17705025d89",
+      "original_sha256": "11eac94e61f236ea65a330ec64025602f3372e3c532b5a66a3481a1cc98e6a09",
+      "reason": "Read the frozen screen path from source_scan.screen_path, where the v2 protocol defines it."
+    },
+    "tests/test_select_mlsys_fresh_development_candidate_v2.py": {
+      "corrected_sha256": "daabd1b7aaa72695b95ae332bb1b8f4e867b1d7251333a84dbbc9390cd1379a1",
+      "original_sha256": "3d4e24351c3bc5246e96aa1c86d8839d083935d8284a847470e61f6a4b064578",
+      "reason": "Add a regression asserting that screen-path lookup follows the frozen protocol structure."
+    }
+  },
+  "corrected_selector_path": "scripts/select_mlsys_fresh_development_candidate_v2.py",
+  "corrected_selector_sha256": "208ba5629dc3c3e9627f4adeb94d5178f88317f79a1862370d2dc17705025d89",
+  "corrected_test_path": "tests/test_select_mlsys_fresh_development_candidate_v2.py",
+  "corrected_test_sha256": "daabd1b7aaa72695b95ae332bb1b8f4e867b1d7251333a84dbbc9390cd1379a1",
+  "correction": "The selector reads protocol.source_scan.screen_path through a small tested accessor. All eligibility, exclusions, rank, and no-substitution rules remain unchanged.",
+  "failed_selector_sha256": "11eac94e61f236ea65a330ec64025602f3372e3c532b5a66a3481a1cc98e6a09",
+  "frozen_at_utc": "2026-10-31T03:52:43Z",
+  "parent_protocol_path": "protocols/mlsys_fresh_development_candidate_selection_v2.json",
+  "parent_protocol_sha256": "e728ebc6dd5fddf930b3d11bab093eab1b601fb3fa596cfbbb55e001dae28359",
+  "preselection_failure": {
+    "candidate_metadata_selected_or_parsed": false,
+    "model_or_agent_inference": false,
+    "observed": "The first v2 selector invocation raised KeyError(\"screen_path\") after validating frozen input hashes because it looked for a top-level protocol key; the frozen path is nested at source_scan.screen_path.",
+    "remote_query_performed": false,
+    "selection_output_created": false,
+    "source_or_test_content_accessed": false
+  },
+  "protocol_id": "mlsys-fresh-development-candidate-selection-v2-addendum-1",
+  "schema_version": 1,
+  "status": "frozen-before-selection; selector-path-binding-correction-only",
+  "unchanged_selection_rules": [
+    "v1 frozen metadata eligibility and rank implementation",
+    "explicit exclusion of the v1 selected identity blocked by possible overlap",
+    "select exactly one minimum-ranked remaining candidate",
+    "no substitution if v2 candidate overlaps or fails qualification"
+  ]
+}

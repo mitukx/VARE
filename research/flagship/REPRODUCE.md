@@ -1,5 +1,28 @@
 # Reproduction and resumption
 
+## Current checkpoint — vLLM #64575 source-level task qualification
+
+As of 2026-10-31, vLLM PR #64575 is **QUALIFIED_SOURCE_LEVEL** on the five frozen request-model cases only. The pinned baseline failed both type-specific error-message assertions while all three controls passed; corrected wrong-mutant v2 failed the one intended message assertion while four controls passed; upstream-fixed emitted five passing case indicators and exited 0. The first baseline invocation failed during pytest logging setup before collection, and wrong-mutant v1 did not meet its mutation precondition. Both failed attempts are retained and hash-bound; neither is treated as candidate-task failure evidence.
+
+The exact inputs, corrected Git-parent interpretation, environments, arm outcomes, and limitations are recorded in `protocols/mlsys_fresh_vllm_64575_source_qualification_v1.json`, its four append-only addenda, and `results/mlsys-fresh-vllm-64575-source-qualification-v1/`. Verify all 30 result files from the repository root:
+
+```bash
+shasum -a 256 -c results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS
+```
+
+The source qualification runner's own tests and lint can be rechecked without invoking the candidate tests:
+
+```bash
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q \
+  tests/test_mlsys_vllm_64575_qualification_tools.py
+ruff check \
+  scripts/prepare_mlsys_vllm_64575_qualification_overlay.py \
+  scripts/run_mlsys_vllm_64575_qualification_arm.py \
+  tests/test_mlsys_vllm_64575_qualification_tools.py
+```
+
+All baseline, wrong-mutant, and fixed arm invocations for this qualification are consumed. Do not rerun them or change their evidence. The historical task is **UNASSIGNED**; no model inference, training, or Held-Out evaluation occurred, and public pretraining exposure is unknown. Any model attempt needs a separate prospective exposure-ledger event and frozen protocol.
+
 Run commands from the VARE repository root. The evidence includes the prior one-attempt Train-only MLX-LM #1904 trajectory and the two one-attempt fresh Development coding-agent attempts on Transformers #49418 and Ray #66694. All three attempt slots are consumed; do not rerun them. No model update, SFT, GRPO/RL, or Held-out evaluation was authorized or executed.
 
 ## Test current implementation
@@ -386,7 +409,7 @@ shasum -a 256 work/transformers-49458-inputs/transformers-base-429e6916.tar.gz \
 docker --context colima image inspect vare/fresh-qualification-transformers:0.3 --format '{{.Id}} {{.Os}}/{{.Architecture}}'
 ```
 
-Expected protocol SHA-256: `b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524`. Expected input hashes and the image ID are in the frozen protocol. The current local input filenames are listed above; rename the pinned test overlay to exactly `test_video_processing_auto.py` in a separate read-only mount outside the source tree. Extract the pinned merge-base archive once, then make independent baseline, mutant, and fixed source trees. The wrong mutant changes only the first built-in loop in `video_processor_class_from_name` from `VIDEO_PROCESSOR_MAPPING.items()` to `VIDEO_PROCESSOR_MAPPING_NAMES.items()`; do not change `_load_backend_class`. The fixed tree replaces only `src/transformers/models/auto/video_processing_auto.py` with the hash-pinned merged version.
+Expected protocol SHA-256: `22041c1ef3084b8c47aa091b11aa3b1e4daa1ea50e91248fadb55cd7a176e8b2`. Expected input hashes and the image ID are in the frozen protocol. The current local input filenames are listed above; rename the pinned test overlay to exactly `test_video_processing_auto.py` in a separate read-only mount outside the source tree. Extract the pinned merge-base archive once, then make independent baseline, mutant, and fixed source trees. The wrong mutant changes only the first built-in loop in `video_processor_class_from_name` from `VIDEO_PROCESSOR_MAPPING.items()` to `VIDEO_PROCESSOR_MAPPING_NAMES.items()`; do not change `_load_backend_class`. The fixed tree replaces only `src/transformers/models/auto/video_processing_auto.py` with the hash-pinned merged version.
 
 The first baseline command as originally written failed during pytest collection because the trusted test imports helper modules from the repository `utils/` tree. Preserve that attempt 001 log; do not count it as a semantic baseline result. Protocol addendum `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json` freezes the only runner correction: replace the container template environment `PYTHONPATH=/source/src:/source` with `PYTHONPATH=/source/src:/source:/source/utils`. The trusted test remains mounted read-only at `/trusted` and its bytes remain unchanged. Push the addendum before running the corrected baseline. Run one frozen container command at a time, in the required order, using the `container_template` in the protocol. Capture combined output in `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-<arm>.log` and write a JSON receipt next to each log with the exact argv, protocol/source/test/image hashes, start/end UTC, elapsed seconds, exit code, timeout flag, selected/passed/failed/skipped counts, observed assertion, and gate classification. Enforce the 600-second limit with a monotonic timer; check progress at least once per minute and terminate the container if time expires. Every started pytest consumes that arm. Do not retry.
 
@@ -585,3 +608,27 @@ optimizer. Raw outputs and the result summary are under
 (cd protocols && shasum -a 256 -c rvl_grpo_training_generation_task_binding_v1.lock.json.sha256 rvl_grpo_training_generation_task_binding_v1_run1_erratum.json.sha256)
 (cd results/rvl-grpo-training-generation-task-binding-v1 && shasum -a 256 -c SHA256SUMS)
 ```
+
+
+## Fresh vLLM #64575 one-shot Development attempt
+
+Frozen protocol: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/protocol.json` (SHA-256 `18f66455cf111708fde170e784cd0a9a07316eacd9db1d5b5b0baf4fa74d8268`). The prospective Development assignment is hash-bound in `results/mlsys-fresh-vllm-64575-agent-attempt-v1/exposure-assignment.json`. The cached model is Qwen2.5-Coder-14B-Instruct-4bit at revision `29efdbab55a161237ab1e432a3abaf6c7ae2b477`; its complete local file manifest is `results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/model-file-manifest.json`. The launch preflight has already failed; do not load weights or retry this protocol.
+
+The exact model-attempt argv and independent grader argv are stored in the frozen protocol under `commands`. The attempt command is one-shot, network-denied, and process-tree RSS/time limited. The model workspace contains only the baseline `vllm/entrypoints/anthropic/protocol.py`; the five-case trusted overlay is not exposed to the model. The grader runs once after the agent receipt is durable and never returns feedback to the model.
+
+Pre-protocol resource snapshot: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/pre-protocol-resource-snapshot.json`. Launch receipt: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json` (SHA-256 `d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e`). A later code review found that the historical preflight skipped the task JSON and prompt hash checks: its generic `path`/`sha256` guard ran before the task-specific branch, but the frozen task entry uses `task_json_path`/`task_json_sha256` and `task_prompt_path`/`task_prompt_sha256`. The receipt's `frozen_inputs_verified=true` flag therefore overstates the checks performed. A retrospective hash calculation against the frozen repository content matches both protocol hashes, but those hashes were not checked by that historical preflight. The separate model-snapshot checks remain recorded as verified. The working-set-plus-headroom check independently failed: 11,993,432,064 bytes available versus 12,872,896,985 bytes required. Status remains **NO-GO / NOT RUN**; the model was not loaded, and no task prompt was delivered to it. The original protocol, receipt, and checksum manifest remain unchanged. The append-only correction is `results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/preflight-integrity-erratum-001.json`; verify it with `(cd results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata && shasum -a 256 -c SHA256SUMS)`. Do not retry this frozen protocol.
+
+## vLLM #64575 source-qualification RSS erratum 001
+
+The original qualification bundle remains immutable. Its root manifest is `results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS` (SHA-256 `7d999d51daf233c2ab84677c35fa0b988019c7160777f2a313a2da2e0b7e60bf`); it covers the original 30 files. The append-only correction is `results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/rss-resource-measurement-erratum-001.json` and its Markdown explanation. Verify both records with:
+
+```bash
+shasum -a 256 -c results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS
+(cd results/mlsys-fresh-vllm-64575-source-qualification-v1/errata && shasum -a 256 -c SHA256SUMS)
+```
+
+The five old arms all completed in about 0.53 seconds, while the runner sampled process-tree RSS every 0.5 seconds. Their identical 3,915,776-byte readings are sample maxima, not OS high-water measurements. In a local reproduction, the first sample was 4,046,848 bytes; after a short-lived child touched 91 MiB, `wait4` reported 107,511,808 bytes. The 4 GiB resource result is therefore **INCONCLUSIVE**. The baseline, wrong-mutant, and upstream-fixed behavioral outcomes are unchanged. Do not rerun any consumed arm.
+
+The corrected runner now records `sampled_process_tree_rss_max_bytes` and `os_wait4_child_max_rss_bytes` separately, reaps the direct child with `wait4`, and cleans up descendants after the leader exits. `wait4` covers the direct waited child; the runner still does not claim a complete concurrent aggregate high-water mark for all descendants. The regression test is `tests/test_mlsys_vllm_64575_qualification_tools.py::test_wait4_records_short_lived_child_rss_high_water`.
+
+The shared one-shot attempt wrapper, `scripts/run_bounded_local_agent_attempt.py`, now records the same two RSS signals and applies the memory threshold to both. Its regression is `tests/test_run_bounded_local_agent_attempt.py::test_run_limited_catches_short_lived_child_rss_high_water`. No completed model attempt used this wrapper in the current branch; this forward-looking correction does not change the #64575 or #64830 source-arm errata.

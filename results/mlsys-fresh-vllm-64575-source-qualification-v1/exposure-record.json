@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "record_id": "vllm-64575-source-qualification-exposure-record-v1",
+  "previous_ledger": {
+    "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+    "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72"
+  },
+  "task": {
+    "task_id": "vllm-64575-anthropic-tool-type-validation",
+    "family": "anthropic_request_tool_type_error_precedence",
+    "repository": "vllm-project/vllm",
+    "pull_request": 64575,
+    "source_revision_baseline": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "source_revision_fixed": "5829ca82e82ec0b17c3da0100446cbca25cb1149"
+  },
+  "events": [
+    {
+      "event": "metadata_selected_and_overlap_reviewed",
+      "details": "Selected by frozen deterministic candidate rank; metadata-only overlap review against prior Development/Train families found no prior family overlap."
+    },
+    {
+      "event": "source_and_regression_tests_opened_for_qualification",
+      "details": "The source and exact PR-added request-model test class were read to prepare source qualification. No model or agent received the task, source, tests, patch, or grader output."
+    },
+    {
+      "event": "source_level_qualification_completed",
+      "details": "Pinned baseline, corrected wrong-mutant v2, and upstream-fixed source arms completed under the frozen five-case overlay; see qualification-report.json."
+    }
+  ],
+  "split_assignment": "UNASSIGNED",
+  "model_or_agent_exposure": false,
+  "model_attempts": 0,
+  "training_attempts": 0,
+  "heldout_access": false,
+  "public_pretraining_exposure": "UNKNOWN",
+  "future_use_requires": "A separate prospective model-attempt protocol and a new append-only ledger event before any model inference; task remains unassigned until then."
+}

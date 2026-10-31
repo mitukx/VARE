@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-discovery-v4-addendum-3",
+  "status": "frozen-before-metadata-collection; conservative-prior-identity-coverage-correction",
+  "frozen_at_utc": "2026-10-31T03:41:13Z",
+  "parent_protocol_path": "protocols/mlsys_fresh_development_candidate_discovery_v4.json",
+  "parent_protocol_sha256": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+  "parent_addendum_path": "protocols/mlsys_fresh_development_candidate_discovery_v4_addendum_2.json",
+  "parent_addendum_sha256": "cba8630c341fe55c34d5f844a0004786fbd1d2858a32673017666ea3fd027a0f",
+  "failed_collector_sha256": "400b46fb4987749892cf618b3b7225dbfef957c9f51305e4a44f846b5f35dc20",
+  "corrected_collector_path": "scripts/discover_mlsys_fresh_development_candidates_v4.py",
+  "corrected_collector_sha256": "400b46fb4987749892cf618b3b7225dbfef957c9f51305e4a44f846b5f35dc20",
+  "pre_collection_failure": {
+    "observed": "The frozen protocol did not inline two previously reviewed Development task identities from the task-qualification records: TRL #7668 and MLX #4778. The collector's previous reference to a missing additional_prior_identities field stopped before any metadata query.",
+    "metadata_queries_started": false,
+    "output_directory_created": false
+  },
+  "additional_exposure_inputs": [
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/qualification.json",
+      "sha256": "f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/qualification.json",
+      "sha256": "29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json",
+      "sha256": "bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5"
+    }
+  ],
+  "additional_prior_identities": [
+    {
+      "repository": "huggingface/trl",
+      "number": 7668,
+      "task_id": "trl-7668-gradient-checkpointing-kwargs-restore",
+      "source_path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/qualification.json",
+      "disposition": "Exclude exact identity: it failed the frozen qualification assertion gate and remains unqualified."
+    },
+    {
+      "repository": "ml-explore/mlx",
+      "number": 4778,
+      "task_id": "mlx-4778-complex-power-vjp-conjugation",
+      "source_path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/qualification.json",
+      "overlap_review_path": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json",
+      "disposition": "Exclude exact identity: it remains unassigned after possible family overlap with Train task #4662."
+    }
+  ],
+  "correction": "The collector now resolves additional prior identities from this addendum and includes the addendum's hash-bound evidence inputs in the scan manifest. This only adds exact identities already used in VARE Development/Train review; it does not change the search window, screen thresholds, or task-assignment rule.",
+  "authorization": {
+    "source_or_test_content_fetch": false,
+    "heldout_source_or_test_access": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "paid_compute_or_api": false
+  }
+}

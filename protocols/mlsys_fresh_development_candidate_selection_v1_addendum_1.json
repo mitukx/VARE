@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-selection-v1-addendum-1",
+  "status": "frozen-before-selection; implementation-binding-correction-only",
+  "frozen_at_utc": "2026-10-31T03:44:29Z",
+  "parent_protocol_path": "protocols/mlsys_fresh_development_candidate_selection_v1.json",
+  "parent_protocol_sha256": "19254086ccd3093ed5a85518f4d49088fa9323b171e8ed190e0dd13f5d37ae10",
+  "original_selector_sha256": "de4785e3a9a353d8487790e6455d815da5d8b3c6da3b8a4c89983bf5f4a97133",
+  "corrected_selector_path": "scripts/select_mlsys_fresh_development_candidate_v1.py",
+  "corrected_selector_sha256": "242829e0b2ed9c57b869104f2aba88e4137f4367c27fdcc174d153b35d11d512",
+  "preselection_failure": {
+    "observed": "The selector expected excluded_repository_owners, while the frozen selection protocol defines exclude_repository_owners.",
+    "selection_output_created": false,
+    "source_or_test_content_accessed": false
+  },
+  "correction": "The selector now reads the exact frozen protocol key and validates its corrected source hash through this addendum.",
+  "unchanged_selection_rules": [
+    "repository-owner exclusion",
+    "hardware path/title exclusions",
+    "changed-file and line limits",
+    "deterministic SHA-256 ranking",
+    "select one candidate",
+    "no substitution after later overlap/qualification failure"
+  ],
+  "authorization": {
+    "source_or_test_content_fetch": false,
+    "task_family_overlap_review": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "heldout_access": false
+  }
+}

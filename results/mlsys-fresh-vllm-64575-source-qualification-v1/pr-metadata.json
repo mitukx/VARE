@@ -1,0 +1,41 @@
+{
+  "baseRefName": "main",
+  "baseRefOid": "67d677bdef939cb95b433dfcd43a4eca234aa29b",
+  "files": [
+    {
+      "additions": 2,
+      "changeType": "MODIFIED",
+      "deletions": 0,
+      "path": "docs/serving/integrations/claude_code.md"
+    },
+    {
+      "additions": 38,
+      "changeType": "MODIFIED",
+      "deletions": 0,
+      "path": "tests/entrypoints/anthropic/test_anthropic_messages_conversion.py"
+    },
+    {
+      "additions": 17,
+      "changeType": "MODIFIED",
+      "deletions": 0,
+      "path": "tests/entrypoints/anthropic/test_messages.py"
+    },
+    {
+      "additions": 17,
+      "changeType": "MODIFIED",
+      "deletions": 0,
+      "path": "vllm/entrypoints/anthropic/protocol.py"
+    }
+  ],
+  "headRefName": "anthropic-server-tool-400",
+  "headRefOid": "46c6391a443952a40c8942abad407bd1587125b0",
+  "isDraft": false,
+  "mergeCommit": {
+    "oid": "5829ca82e82ec0b17c3da0100446cbca25cb1149"
+  },
+  "mergedAt": "2026-10-31T01:44:48Z",
+  "number": 64575,
+  "state": "MERGED",
+  "title": "[Frontend] Reject Anthropic-defined tools by type in /v1/messages",
+  "url": "https://github.com/vllm-project/vllm/pull/64575"
+}

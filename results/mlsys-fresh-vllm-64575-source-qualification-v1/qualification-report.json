@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "result_id": "vllm-64575-anthropic-tool-type-validation-source-qualification-v1",
+  "status": "QUALIFIED_SOURCE_LEVEL",
+  "candidate": {
+    "repository": "vllm-project/vllm",
+    "pull_request": 64575,
+    "url": "https://github.com/vllm-project/vllm/pull/64575",
+    "task_id": "vllm-64575-anthropic-tool-type-validation",
+    "baseline_sha": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "upstream_fixed_sha": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+    "baseline_role": "merge commit direct first parent, exact pre-merge source",
+    "true_merge_base_of_captured_base_and_head": "67d677bdef939cb95b433dfcd43a4eca234aa29b",
+    "qualification_scope": "Anthropic request-model type-specific rejection/error precedence"
+  },
+  "protocol_chain": [
+    {
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1.json",
+      "sha256": "c4f482f037e725980c7e46027bad60f7a98d825a8e1b453fb8f05b6e24353da7"
+    },
+    {
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_1.json",
+      "sha256": "5d7016f6edf17621c008d77d728f4879b1ec80e341aa4ca40c1f5c20439714b6"
+    },
+    {
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_2.json",
+      "sha256": "e0b6636997a28131ecade4e7452cbe40a449bd55d4a41cdf525ecb3653cb6ac3"
+    },
+    {
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_3.json",
+      "sha256": "6119febc5ab669dcc1642246cd3fd24172d064e3f3d5af6c7c7f39334e282cb2"
+    },
+    {
+      "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_4.json",
+      "sha256": "4d29a72156bccb32b90dd91ee8862d4a18a017504b1c393c10dbf1e230b9c037"
+    }
+  ],
+  "test_overlay": {
+    "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+    "sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8",
+    "case_count": 5,
+    "case_summary": "2 unsupported built-in tool types must report type-specific rejection; 2 custom-tool controls pass; custom input_schema remains required.",
+    "excluded": "test_anthropic_server_tool_is_rejected requires the upstream server/client integration stack."
+  },
+  "pretest_manifest": {
+    "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/pretest-manifest.json",
+    "sha256": "a1d3ae2b2065f00ecd274d00610b1a0ece5a9ace884d130dc88281a7a3685225"
+  },
+  "arms": [
+    {
+      "arm": "baseline-attempt-001",
+      "status": "HARNESS_FAILURE_BEFORE_COLLECTION",
+      "reason": "pytest logging initialization tried to open /dev/null and the Seatbelt write boundary denied it.",
+      "candidate_cases_collected": 0,
+      "candidate_assertions_executed": 0,
+      "attempt_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/baseline-attempt-001/attempt.json",
+      "attempt_sha256": "c49de0daabf41423efb12eda26a1f590abff39428fd5ef3d82bdddf6b5dff48d",
+      "log_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/baseline-attempt-001/pytest.log",
+      "log_sha256": "bf4fc7804c9e92c2adc436d7cf85109f616b8d9126ba0138964864488c0f29b2"
+    },
+    {
+      "arm": "baseline-attempt-002",
+      "status": "PASSED_NEGATIVE_CONTROL_GATE",
+      "pytest_exit_code": 1,
+      "cases": 5,
+      "intended_failures": 2,
+      "controls_passed": 3,
+      "errors": 0,
+      "skips": 0,
+      "failure_site": "The sole ValidationError reports missing input_schema; both frozen type-specific message assertions fail as intended.",
+      "gate_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/baseline-attempt-002/gate.json",
+      "gate_sha256": "3889a6ae5d4f7aa6c8cef66a271aae25cdd03595b0640b69d2d4244b9c65fec9"
+    },
+    {
+      "arm": "wrong-mutant-v1-attempt-001",
+      "status": "MUTANT_SPECIFICATION_NOT_MET",
+      "pytest_exit_code": 1,
+      "cases": 5,
+      "failures": 1,
+      "passed": 4,
+      "reason": "The mutation relaxed the before-validator but retained Literal['custom']; Pydantic returned two errors, and the test failed at its error-count assertion. This arm is retained but not accepted as the frozen wrong-mutant control.",
+      "classification_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/wrong-mutant-attempt-001/classification.json",
+      "classification_sha256": "e3faeb5dc33cd0ebd6ceee0ecaea4a9f5159d37b486b4052ecc61ac5660596ec"
+    },
+    {
+      "arm": "wrong-mutant-v2-attempt-002",
+      "status": "PASSED_WRONG_MUTANT_GATE",
+      "pytest_exit_code": 1,
+      "cases": 5,
+      "intended_failures": 1,
+      "controls_passed": 4,
+      "errors": 0,
+      "skips": 0,
+      "failure_site": "The web_search_20250305 value passes type parsing and the before-validator; required input_schema then raises ValidationError, and the test rejects the wrong error message.",
+      "gate_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/wrong-mutant-attempt-002/gate.json",
+      "gate_sha256": "7815b8ab9a74893c45e0cde467197ce331794f1aceccff048a6e0be376f8b1ff"
+    },
+    {
+      "arm": "upstream-fixed-attempt-001",
+      "status": "PASSED_FIXED_GATE",
+      "pytest_exit_code": 0,
+      "cases": 5,
+      "passing_case_indicators": 5,
+      "errors": 0,
+      "skips": 0,
+      "gate_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/upstream-fixed-attempt-001/gate.json",
+      "gate_sha256": "b024d3ddb190ed0a281524fa5829b5a9a7c39a45fe1291a0472dd7fed175156d"
+    }
+  ],
+  "isolation_and_resources": {
+    "all_run_arms_used_exact_hashed_seatbelt_profiles": true,
+    "network_denied": true,
+    "max_observed_process_tree_rss_bytes": 3915776,
+    "process_tree_rss_limit_bytes": 4294967296,
+    "max_wall_seconds": 600,
+    "paid_compute_or_api_spend_usd": 0,
+    "accelerator_used": false
+  },
+  "split_and_exposure": {
+    "task_status": "QUALIFIED_SOURCE_LEVEL",
+    "split_assignment": "UNASSIGNED",
+    "model_or_agent_inference": false,
+    "training": false,
+    "heldout_access": false,
+    "public_pretraining_exposure": "UNKNOWN",
+    "append_only_exposure_record_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/exposure-record.json",
+    "append_only_exposure_record_sha256": "e4cc070288db479ff31c922df4a299391b7055dd15776f466eeb663796fd3723"
+  },
+  "limitations": [
+    "This qualifies only the five isolated Pydantic request-model cases, not the excluded server/client integration test or the full vLLM repository.",
+    "The public PR and tests could have appeared in model pretraining data; exposure is unknown.",
+    "No model attempt, independent coding repair, capability gain, SFT/RL improvement, or algorithmic advantage is established.",
+    "The first baseline harness invocation and first wrong-mutant design are retained as failures and were not overwritten."
+  ]
+}

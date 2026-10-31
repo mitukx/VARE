@@ -479,3 +479,85 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Validate RVL prompt ID and exact prompt against the attached VARE task unconditionally in `_to_verified_generation()`. Treat this as E0 adapter provenance integrity; make no claim about task success, policy learning, coding capability, or an upstream RVL defect.
 - **Falsification criteria:** Either malformed identity reaches `train_step`, or a valid matched ungrouped/grouped batch is rejected by the new check.
 - **Follow-up:** Push a focused PR, inspect exact-head CI and review feedback, and merge only under normal branch protection. Keep the model-learning gate NO-GO until a fresh Development cohort and a separate frozen protocol exist.
+## 2026-10-31 — Qualify vLLM #64575 at source level; keep it unassigned
+
+- **Hypothesis:** The frozen five-case request-model regression distinguishes the pinned pre-merge source, a type-policy mutant, and the upstream fixed source under a network-denied CPU harness.
+- **Evidence:** After correcting the baseline's Git meaning to the merge commit's direct first parent, baseline attempt 002 produced the two expected type-specific error-message failures and three passing controls. Corrected wrong-mutant v2 produced the single expected message failure and four passing controls. The upstream-fixed arm produced five passing indicators and exit code 0. All source/test/runner/profile hashes matched, and resource limits held. The initial baseline attempt failed pytest logging initialization before collection because Seatbelt denied `/dev/null`; it is retained. Wrong-mutant v1 failed the intended mutation precondition because Pydantic's `Literal['custom']` produced an extra error; it is retained and not accepted as a gate. The excluded server integration test did not run. Raw receipts and logs are under `results/mlsys-fresh-vllm-64575-source-qualification-v1/`; the qualification report SHA-256 is recorded in `research/flagship/state.json`.
+- **Alternative explanations:** A successful source-level gate could be misreported as an agent repair or Development assignment; the test overlay could be mistaken for full-repository coverage; public upstream exposure could be mistaken for pretraining independence. None is supported by these results.
+- **Decision:** Mark the task **QUALIFIED_SOURCE_LEVEL** only and leave it **UNASSIGNED**. Keep coding capability, SFT/RL update, and Held-Out decisions NO-GO. Public pretraining exposure remains UNKNOWN. Do not claim model capability, an independent repair, or learning.
+- **Falsification criteria:** Any manifest/source/test/profile/runner mismatch; baseline or corrected mutant not failing at the frozen error-message assertion; fixed source not passing all five cases; any error, skip, timeout, memory breach, or network/write escape; or a newly identified prior family overlap would invalidate or narrow qualification.
+- **Follow-up:** Perform read-only local model/runtime/resource preflight for this distinct source-qualified family. If feasible and still justified, freeze a separate prospective Development assignment, append-only exposure event, one-shot local model attempt, and independent grader before inference. Otherwise retain NO-GO and continue non-inference engineering.
+
+
+## 2026-10-31 — Freeze one fresh Development attempt with Qwen2.5-Coder-14B
+
+- **Hypothesis:** The pinned local Qwen2.5-Coder-14B-Instruct 4-bit MLX policy, using VARE's bounded tool controller, can produce a minimal source repair for the newly qualified vLLM #64575 request-model task that passes all five independent cases in one greedy attempt.
+- **Evidence:** The task is `QUALIFIED_SOURCE_LEVEL` only: the frozen baseline produced the two intended unsupported-type failures, wrong-mutant v2 produced its intended failure, and the upstream-fixed source passed all five cases. Metadata overlap review v4 found no direct prior Development/Train family overlap. The task has never been assigned to a model; public pretraining exposure is unknown. The cached Qwen2.5-Coder-14B snapshot is pinned at `29efdbab55a161237ab1e432a3abaf6c7ae2b477` with 8309494233 weight bytes; MLX-LM 0.32.2 imports its `qwen2` architecture. The pre-protocol resource snapshot passed the 50% memory-pressure, 5 GiB available-memory, 4 GiB maximum swap-used, 15 GiB disk, and estimated working-set gates.
+- **Alternative explanations:** A success could reflect public pretraining exposure, task specificity, or the controller rather than learned capability; a failure could reflect source localization, tool serialization, output budgets, or the policy itself. The 14B model's projected working set is close to the current available-memory envelope, so launch-time gates remain mandatory.
+- **Decision:** Prospectively assign this one task to Development and freeze one offline greedy Qwen2.5-Coder-14B attempt with a 12 GiB process-tree RSS guard, 600-second limit, 2,048 generated-token cap, and one hidden independent grade. Commit and push the protocol first; recheck resources immediately before model load. Do not retry, train, use Held-Out, or send grader feedback.
+- **Falsification criteria:** Any resource/input/hash mismatch, no applied non-empty allowed-file edit, malformed diff, or any of the five independent cases failing; such an outcome remains a task-level attempt result and does not alter the broader NO-GO capability/RL status.
+- **Follow-up:** Inspect the one-shot tool trace and independent receipt. If the attempt fails, identify the decisive failure stage and select a justified next model or controller change on a distinct fresh family. If it passes, report one verified repair, preserve UNKNOWN pretraining exposure, and collect more independent families before changing the capability GO/NO-GO decision.
+
+
+## 2026-10-31 — Preserve Metal access under the offline attempt sandbox
+
+- **Hypothesis:** The initial default-deny Seatbelt profile blocks MLX device discovery, while permitting the required local Mach lookup and IOKit access can restore Apple Metal without opening network access or broadening writable roots.
+- **Evidence:** The no-allowance smoke exited before model loading with `No Metal device available`. A tiny `mx.array` addition under the same profile plus `allow mach-lookup` and `allow iokit-open` selected `Device(gpu, 0)` and returned `[2, 4, 6]`. The profile still denies all network access and writes only under the isolated task workspace, home, temp, and attempt-output directories. No model weights were loaded.
+- **Alternative explanations:** The model could still fail during weight loading or generation; the smoke only verifies device access. The IOKit allowance is broad at the device-open boundary, so the model remains restricted to the pinned local controller and offline environment.
+- **Decision:** Use the hash-bound profile with the two Metal requirements, and include the smoke receipt as a frozen protocol input. Do not run inference until the protocol and assignment are pushed and the automatic launch preflight passes.
+- **Falsification criteria:** Any network access, write outside the isolated roots, model weight load during smoke, or failure to reproduce the Metal device/output under the frozen profile.
+- **Follow-up:** Execute the single frozen attempt under this profile; preserve any sandbox or runtime failure and do not retry after generation begins.
+
+
+## 2026-10-31 — Stop the frozen vLLM #64575 model attempt at the resource gate
+
+- **Hypothesis:** The launch-time host check would still fit the pinned 14B model, KV cache, runtime reserve, and required safety headroom.
+- **Evidence:** The frozen input and model snapshot hashes all matched. Available memory was 11,993,432,064 bytes; the estimated working set was 11,799,155,161 bytes, and the protocol requires another 1,073,741,824 bytes of headroom. The gate therefore failed by 879,464,921 bytes. The durable receipt is `results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json` (SHA-256 `d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e`). `model_loaded` is false.
+- **Decision:** Record **NO-GO / NOT RUN** for this protocol. Do not load weights and do not retry this frozen attempt. The Development assignment remains unexposed to the model; public pretraining exposure remains UNKNOWN. Coding capability and RL update remain NO-GO.
+- **Falsification criteria:** Any evidence that model weights were loaded or the frozen attempt command started would invalidate this no-run record.
+- **Follow-up:** Complete the PR #160 engineering and exact-head CI work. Any future model attempt must use a distinct fresh task and a separately frozen protocol whose preflight passes.
+
+
+## 2026-10-31 — Recheck the warmup-cosine CI failure on the next exact PR head
+
+- **Hypothesis:** The Python 3.13 warmup-cosine oracle failure on prior head `b12d4913` may be transient or dependent on its execution environment; the updated test assertion should expose per-command output if the failure recurs.
+- **Evidence:** Exact head `a7a2509c4ddc2434053cc23d7a59508cb5b3304d` passed CI run 2035 across all nine jobs, including Python 3.11, 3.12, and 3.13, and CPU-evidence run 743. The same target test also passed locally with Python 3.13.5 when `DOCKER_CONTEXT=colima`. No failure output was generated on the new head.
+- **Decision:** Treat the previous failure as not reproduced, not as a diagnosed or fixed defect. Keep the added assertion detail for a future recurrence. Do not claim this test result establishes model capability or learning.
+- **Falsification criteria:** Any recurrence on a later exact head requires collecting per-command stdout/stderr and return codes, reproducing under a correctly selected Docker daemon, then fixing the evidenced cause.
+- **Follow-up:** Re-run the full workflow on the durable status checkpoint, then await normal PR review. PR #160 has no review submissions or threads and remains draft.
+
+
+## 2026-10-31 — Record the green status-checkpoint head
+
+- **Evidence:** PR #160 head `2927c05fbe7adcc9f5c03bca3c539fe25b929919` passed CI run 2037 across all nine jobs, including Python 3.11, 3.12, and 3.13; CPU-evidence run 744 also passed. The preceding code head `a7a2509` passed run 2035 and CPU-evidence run 743. No review submissions or review threads exist on PR #160.
+- **Decision:** Preserve the green exact-head results and keep the PR draft pending normal review. The historical Python 3.13 warmup-cosine failure remains unexplained because it was not reproduced; do not attribute the pass to a fix. The local vLLM model attempt remains NO-GO / NOT RUN under its failed resource preflight.
+- **Follow-up:** Continue after review feedback. Do not merge without required reviews and branch protection. Any future model inference needs a distinct fresh task and a new resource-feasible frozen protocol.
+
+
+## 2026-10-31 — Reclassify vLLM #64575 source-runner RSS evidence
+
+- **Hypothesis:** The 0.5-second process-tree polling loop can establish that every source-qualification arm stayed below its 4 GiB RSS limit.
+- **Evidence:** All five immutable attempt receipts report `peak_process_tree_rss_bytes=3915776` and finish in about 0.53 seconds. A local reproduction with the same polling approach sampled 4,046,848 bytes, then a child touched 91 MiB and exited before the next sample; `wait4` recorded a 107,511,808-byte direct-child high-water mark. The original runner therefore did not establish an OS high-water mark or exclude transient aggregate process-tree peaks. The append-only erratum binds the original 30-file manifest, report, and five receipts by hash.
+- **Alternative explanations:** Treat the successful source-behavior assertions as evidence that the resource limit passed, or rerun the consumed arms with a corrected runner. Assertion results do not measure memory, and rerunning would change the frozen execution record.
+- **Decision:** Withdraw only the historical RSS-pass interpretation and classify the old resource gate as **INCONCLUSIVE**. Preserve the source-behavior outcome: the corrected baseline and wrong-mutant gates behaved as expected, and the upstream-fixed arm passed all five cases. Keep the original protocol, receipts, qualification report, and root manifest byte-for-byte; append the correction under `results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/`. Do not rerun consumed arms or reuse protocol v1. The corrected runner records sampled tree RSS and OS direct-child high-water separately, without claiming a complete concurrent process-tree high-water mark.
+- **Falsification criteria:** Any original receipt or manifest hash mismatch; a reproduced old-run record showing a complete OS process-tree peak; or a regression where the new short-lived-child test fails to capture its OS high-water invalidates this interpretation.
+- **Follow-up:** Push the runner, regression test, and append-only erratum on PR #160; verify the frozen bundle and exact-head CI. Any future source qualification must use a new protocol identity and runner hash. This correction does not authorize model inference or change the model-attempt status **NO-GO / NOT RUN**.
+
+
+## 2026-10-31 — Capture short-lived child RSS in the bounded agent runner
+
+- **Hypothesis:** The shared bounded-agent runner's 0.5-second process-tree samples are sufficient to enforce its memory limit for short local attempts.
+- **Evidence:** The runner previously ended with only `max_observed_process_tree_rss_bytes`, derived from live `ps` snapshots. The same timing gap demonstrated in the #64575 source runner applies here. A new regression holds sampled RSS below the cap while a child allocates and touches 64 MiB, exits before the next poll, and is still reported above the cap by `wait4` direct-child high-water. This runner has no completed model attempt in this branch; the frozen #64575 and #64830 source arms use separate runners and are recorded independently.
+- **Alternative explanations:** Reduce the sampling interval and assume short bursts cannot exceed the gap, or keep the sampled value as a peak. Sampling more frequently still leaves a blind interval, and the existing value must describe the sampling method.
+- **Decision:** Record `sampled_process_tree_rss_max_bytes` and `os_wait4_child_max_rss_bytes` separately, enforce the configured threshold against either signal, and label the aggregate descendant-peak limitation. Keep process-group cleanup after normal leader exit. Do not claim a complete concurrent aggregate high-water mark or retrofit a past model result that never ran.
+- **Falsification criteria:** The regression misses the short-lived child's `wait4` high-water; an over-limit direct-child high-water is recorded as within-limit; or surviving descendants remain after process-group cleanup.
+- **Follow-up:** Push the shared-runner correction and tests with PR #160, verify the full focused suites and exact-head CI. Any future bounded attempt must use the new output fields and retain its runner hash in the frozen protocol.
+
+
+## 2026-10-31 — Correct the historical vLLM #64575 preflight integrity claim
+
+- **Hypothesis:** The vLLM #64575 launch-preflight receipt's `frozen_inputs_verified=true` flag established that the task JSON and task prompt matched their frozen protocol hashes.
+- **Evidence:** The receipt is unchanged. In the historical `_check_artifact_hashes`, the generic `path`/`sha256` guard ran before the special `task` branch. The frozen task entry instead contains `task_json_path`/`task_json_sha256` and `task_prompt_path`/`task_prompt_sha256`, so those checks were unreachable. Retrospective hashes of both frozen repository files match the protocol declarations, but the original preflight did not check them. Model snapshot hashes were checked separately. The resource gate independently failed by 879,464,921 bytes; `model_loaded=false`, no prompt was delivered, no candidate was generated, and no grade ran.
+- **Decision:** Preserve the original protocol, receipt, and checksum manifest unchanged. Add the append-only correction at `results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/preflight-integrity-erratum-001.json` and verify it with its `SHA256SUMS`. The task JSON/prompt integrity claim is corrected; the resource NO-GO and NOT RUN decision remain valid. Do not retry protocol v1.
+- **Correction:** PR #160's current task-hash validation orders the task-specific checks before generic artifact filtering and adds regression coverage. Exact-head CI and CPU evidence pass; this validates the corrected implementation only and does not retroactively change the old receipt.
+- **Follow-up:** Keep this erratum beside the immutable receipt and include it in the PR #160 integration.

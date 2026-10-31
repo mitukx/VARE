@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "protocol_path": "protocols/mlsys_fresh_development_task_family_overlap_v3.json",
+  "protocol_sha256": "a0e52e43c08228057e397023027a53be214f6889955cef80eefb93ab083ada42",
+  "files": {
+    "task-family-overlap-review-v1.json": {
+      "bytes": 10982,
+      "sha256": "6a2f6bcff7bf58a2d02d0a1f83c23e43fd3f2a5449d683dbbfc495de97df9bb0"
+    },
+    "task-family-overlap-report.md": {
+      "bytes": 3365,
+      "sha256": "848dffdbdba04b00390763a8772bc5a0b8f4cd45141bc421a7318456d9547377"
+    }
+  },
+  "review_inputs": [
+    {
+      "path": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+      "sha256": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7"
+    },
+    {
+      "path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+      "sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+      "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+      "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json",
+      "sha256": "bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/qualification.json",
+      "sha256": "f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/qualification.json",
+      "sha256": "29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee"
+    },
+    {
+      "path": "origin/pr149-head:docs/sprint-xiv-measurable-learning-report-20261029.md",
+      "revision": "e68f2785df91327832c31c4ba7a65faab51f135c",
+      "sha256": "c3e7aaa25d94b3baf2342cca0fa64356e0246525390b3422abdea96147eb5448"
+    }
+  ],
+  "scope": "Development/Train metadata only; Held-Out data and identifiers excluded before semantic comparison. No candidate source, tests, patches, or grader artifacts were accessed."
+}

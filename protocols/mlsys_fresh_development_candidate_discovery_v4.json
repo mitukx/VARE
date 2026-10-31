@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-discovery-v4",
+  "protocol_status": "frozen_before_metadata_collection; candidate_qualification_not_authorized",
+  "supersedes_protocol_id": "mlsys-fresh-development-candidate-discovery-v3",
+  "frozen_at_utc": "2026-10-31T03:35:14Z",
+  "source_main_commit": "416f35c465712898e8e5764a8e43193ef86e7afb",
+  "purpose": "Refresh the external ML-systems task inventory by collecting only the incremental GitHub PR metadata merged on 2026-10-31 UTC, after the prior metadata scan ended on 2026-10-30.",
+  "hypothesis": "A one-day incremental metadata-only scan can reveal a recent merged repair candidate without reopening consumed tasks or touching PR source and test contents.",
+  "primary_output": "An immutable metadata pool with a coarse manual-review screen. No row from this output is qualified or assigned to a split.",
+  "discovery": {
+    "api": "GitHub GraphQL Search and PullRequest metadata fields",
+    "repositories": [
+      "huggingface/transformers",
+      "ml-explore/mlx-lm",
+      "ml-explore/mlx",
+      "huggingface/trl",
+      "vllm-project/vllm",
+      "ray-project/ray"
+    ],
+    "merged_date_start": "2026-10-31",
+    "merged_date_end": "2026-10-31",
+    "snapshot_cutoff_utc": "2026-10-31T03:35:14Z",
+    "model_training_cutoff_proxy": "2025-08-09",
+    "search_page_size": 100,
+    "search_result_limit_per_repository": 1000,
+    "maximum_pull_requests": 500,
+    "max_parallel_pull_queries": 4,
+    "metadata_fields": [
+      "repository",
+      "pull_request_number",
+      "title",
+      "url",
+      "state",
+      "created_at",
+      "updated_at",
+      "merged_at",
+      "base_ref_sha_at_capture",
+      "merge_commit_sha",
+      "merge_base_sha",
+      "head_sha",
+      "additions",
+      "deletions",
+      "changed_file_count",
+      "changed_paths"
+    ],
+    "excluded_api_fields": [
+      "pull_request_body",
+      "comments",
+      "review_comments",
+      "patches",
+      "source_contents",
+      "test_contents",
+      "task_assets",
+      "grader_artifacts"
+    ],
+    "collector_path": "scripts/discover_mlsys_fresh_development_candidates_v4.py",
+    "collector_sha256": "4d9420b5c2ee44fe35b8f1d65d7cd819ba4e97ca7eb3cef7d31c068198c76fe5",
+    "prior_candidate_queue_path": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+    "prior_qualification_path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+    "development_exposure_paths": [
+      "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+      "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json"
+    ],
+    "output_path": "results/mlsys-fresh-development-candidate-discovery-v4/"
+  },
+  "prior_exposure_inputs": [
+    {
+      "path": "research/flagship/state.json",
+      "sha256": "293740543fce1f293420b35ff0fe62c49db1fd4bdaf12cd8430f8533ca9deafe"
+    },
+    {
+      "path": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+      "sha256": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7"
+    },
+    {
+      "path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+      "sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+      "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+      "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72"
+    }
+  ],
+  "coarse_screen": {
+    "graphql_pull_request_state_required": "MERGED",
+    "merged_at_must_fall_inside_frozen_date_window": true,
+    "merged_at_must_not_exceed_snapshot_cutoff": true,
+    "merge_commit_and_merge_base_required": true,
+    "complete_changed_path_inventory_required": true,
+    "at_least_one_changed_test_spec_or_fixture_path_required": true,
+    "maximum_changed_lines": 250,
+    "maximum_changed_files": 8,
+    "specialized_title_markers": [
+      "gpu",
+      "metal",
+      "cuda",
+      "fsdp",
+      "distributed",
+      "expert parallel",
+      "neuron",
+      "architecture",
+      "support ",
+      "add ",
+      "integration test",
+      "preemption"
+    ],
+    "exclude_exact_identity_in_prior_development_train_or_candidate_queue": true,
+    "meaning": "Metadata-only provisional shortlist for later manual review. This is not task qualification, family independence, pretraining independence, or Development split assignment."
+  },
+  "authorization": {
+    "source_or_test_content_fetch": false,
+    "heldout_source_or_test_access": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "paid_compute_or_api": false
+  },
+  "stop_rules": [
+    "Preserve metadata failures; do not silently omit a repository, search page, or pull-request metadata response.",
+    "Stop if a search exceeds 1,000 results for a repository or the aggregate metadata request ceiling is exceeded.",
+    "Do not retrieve PR bodies, comments, review discussion, patches, source, tests, task prompts, or grader artifacts.",
+    "Do not inspect, identify, report, or use any historical Held-Out task or artifact; filter Held-Out rows before extracting prior identity fields.",
+    "Keep every candidate UNQUALIFIED and UNASSIGNED until a separate frozen protocol authorizes source/test qualification, exposure review, license review, baseline/fix/mutant controls, and isolation checks."
+  ],
+  "limitations": [
+    "The scan covers only six specified repositories and the 2026-10-31 UTC date; it is not a global task inventory.",
+    "A merged date after the 2025-08-09 public model training-completion proxy does not prove absence from pretraining.",
+    "Titles and changed paths do not establish executable regression, objective grader independence, CPU feasibility, task-family independence, or model capability.",
+    "This scan authorizes no model attempt, optimizer update, Held-Out access, or training."
+  ]
+}

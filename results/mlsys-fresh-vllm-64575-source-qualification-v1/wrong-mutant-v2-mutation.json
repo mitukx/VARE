@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "target_path": "vllm/entrypoints/anthropic/protocol.py",
+  "base_revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+  "base_source_sha256": "cb83d99789f5d543a90c5487ac974821e7f3af9a77df9ceceadad8ba1f7b5560",
+  "mutant_source_sha256": "56f375df352e854e548d1e65042c21b501142210e1f48e12abcd8c88cfa75ddd",
+  "transformations": [
+    {
+      "find_exactly_once": "type: Literal[\"custom\"] | None = None",
+      "replace_with": "type: str | None = None"
+    },
+    {
+      "find_exactly_once": "if tool_type not in (None, \"custom\"):",
+      "replace_with": "if tool_type not in (None, \"custom\", \"web_search_20250305\"):"
+    }
+  ],
+  "postcondition": "AnthropicTool.type parsing and the before-validator both permit web_search_20250305. input_schema remains required; this mutant deliberately preserves that separate validation and should fail the target test because it reports missing input_schema instead of the required type-specific rejection message."
+}

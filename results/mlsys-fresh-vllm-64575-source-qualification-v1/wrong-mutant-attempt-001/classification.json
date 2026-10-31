@@ -1,0 +1,18 @@
+{
+  "attempt_id": "vllm-64575-source-qualification-wrong-mutant-attempt-001",
+  "arm_invocation_consumed": true,
+  "gate": "WRONG_MUTANT_SPECIFICATION_NOT_MET",
+  "pytest_cases": 5,
+  "failed": 1,
+  "passed": 4,
+  "errors": 0,
+  "skipped": 0,
+  "observed_failure": "web_search_20250305 case failed at assert len(errors) == 1 because Pydantic reported both the Literal['custom'] field error and the missing input_schema error.",
+  "source_hash_matched_frozen_mutant_v1": true,
+  "diagnosis": "The mutant relaxed the before-validator but retained type: Literal['custom'] | None, so it did not allow the unsupported type value through Pydantic model validation as required by the frozen wrong-mutant precondition. The test rejected this partial mutation, but this is not accepted as the preregistered wrong-mutant gate.",
+  "fixed_arm_run": false,
+  "qualification_result": "INCONCLUSIVE; no task qualification pass",
+  "next_step": "Freeze a new exact wrong-mutant source/diff and a one-shot retry addendum before running any further candidate test arm.",
+  "attempt_json_sha256": "0b08ca5c5c4a3444e8a06edcf75d3937bcd3dde51b592d725f5b6230d3facb78",
+  "pytest_log_sha256": "07fc12b9c9081bc04b01d59ae2e6326bec7639d1a170e0ce2ec370d9fd417791"
+}
