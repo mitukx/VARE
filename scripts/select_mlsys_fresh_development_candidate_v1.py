@@ -10,6 +10,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v1.json"
+ADDENDUM_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_selection_v1_addendum_1.json"
 SCREEN_PATH = ROOT / "results/mlsys-fresh-development-candidate-discovery-v4/screen.json"
 POOL_PATH = ROOT / "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json"
 SOURCE_MANIFEST_PATH = ROOT / "results/mlsys-fresh-development-candidate-discovery-v4/evidence-manifest.json"
@@ -32,12 +33,15 @@ def is_test_path(path: str) -> bool:
     return any(marker in lower for marker in ("test", "spec", "fixture"))
 
 
-def load_protocol() -> dict[str, Any]:
+def load_protocol() -> tuple[dict[str, Any], dict[str, Any]]:
     protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
+    addendum = json.loads(ADDENDUM_PATH.read_text(encoding="utf-8"))
     if protocol.get("protocol_id") != "mlsys-fresh-development-candidate-selection-v1":
         raise ValueError("unexpected candidate-selection protocol ID")
-    if sha256_file(Path(__file__)) != protocol.get("selector_sha256"):
-        raise ValueError("selector source differs from the frozen protocol")
+    if sha256_file(PROTOCOL_PATH) != addendum.get("parent_protocol_sha256"):
+        raise ValueError("frozen selection protocol differs from its preselection addendum")
+    if sha256_file(Path(__file__)) != addendum.get("corrected_selector_sha256"):
+        raise ValueError("selector source differs from the preselection addendum")
     expected = protocol["frozen_inputs"]
     for path, key in (
         (SCREEN_PATH, "screen_sha256"),
@@ -46,7 +50,7 @@ def load_protocol() -> dict[str, Any]:
     ):
         if sha256_file(path) != expected[key]:
             raise ValueError(f"frozen selection input differs: {path.relative_to(ROOT)}")
-    return protocol
+    return protocol, addendum
 
 
 def eligible_rows(screen: dict[str, Any], protocol: dict[str, Any]) -> list[dict[str, Any]]:
@@ -113,6 +117,7 @@ def run(protocol: dict[str, Any], output_dir: Path) -> dict[str, Any]:
         "schema_version": 1,
         "selection_id": protocol["protocol_id"],
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
+        "protocol_addendum_sha256": sha256_file(ADDENDUM_PATH),
         "source_screen_sha256": sha256_bytes(screen_bytes),
         "source_candidate_pool_sha256": sha256_file(POOL_PATH),
         "source_manifest_sha256": sha256_file(SOURCE_MANIFEST_PATH),
@@ -133,6 +138,7 @@ def run(protocol: dict[str, Any], output_dir: Path) -> dict[str, Any]:
     manifest = {
         "schema_version": 1,
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
+        "protocol_addendum_sha256": sha256_file(ADDENDUM_PATH),
         "selector_sha256": sha256_file(Path(__file__)),
         "files": {"selection.json": {"bytes": len(raw), "sha256": sha256_bytes(raw)}},
     }
@@ -153,7 +159,8 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    result = run(load_protocol(), args.output)
+    protocol, _addendum = load_protocol()
+    result = run(protocol, args.output)
     print(json.dumps(result, sort_keys=True))
     return 0 if result["eligible_candidate_count"] else 2
 

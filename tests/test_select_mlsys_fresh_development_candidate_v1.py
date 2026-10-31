@@ -57,11 +57,12 @@ def test_selection_is_deterministic_and_keeps_candidate_unassigned():
 
 
 def test_selector_protocol_is_bound_to_the_completed_metadata_scan():
-    protocol = load_protocol()
+    protocol, addendum = load_protocol()
 
     assert protocol["protocol_id"] == "mlsys-fresh-development-candidate-selection-v1"
     assert protocol["selection_rules"]["selection_count"] == 1
     assert protocol["authorization"]["source_or_test_content_fetch"] is False
+    assert addendum["protocol_id"] == "mlsys-fresh-development-candidate-selection-v1-addendum-1"
 
 
 def test_selection_excludes_prior_owners_and_hardware_paths():
