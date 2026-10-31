@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 1268, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 867, in main
+    model, tokenizer = load(str(model_dir))
+                       ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/utils.py", line 690, in load
+    model, config = load_model(
+                    ^^^^^^^^^^^
+  File "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/utils.py", line 456, in load_model
+    weights.update(mx.load(wf))
+                   ^^^^^^^^^^^
+RuntimeError: [load_safetensors] Failed to open file /Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b/model.safetensors
