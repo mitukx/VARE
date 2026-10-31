@@ -1,0 +1,17 @@
+{
+  "protocol_id": "rvl-grpo-training-generation-task-binding-v1-run1-erratum",
+  "created_at_utc": "2026-10-31T03:08:36Z",
+  "parent_protocol": "protocols/rvl_grpo_training_generation_task_binding_v1.lock.json",
+  "parent_protocol_sha256": "7f414e856d29f95030f4e8af148f3aa475288370a53f86aa7cc2aaa6d990ba07",
+  "reason": "The first frozen regression run failed in both cases because no ValueError was raised, but the assertion reported optimizer_step=0. Candidate-training rollback restores optimizer_step to its incumbent value after train_step returns, making that state field unable to reveal whether the trainer call occurred.",
+  "observation": "train_candidate returned normally in both malformed cases. The baseline implementation calls trainer.train_step before returning a candidate ID, so normal return establishes that the mismatched generation crossed the training boundary; the first fixture did not expose the non-snapshotted train_step_calls counter in its failure message.",
+  "instrumentation_correction": {
+    "fixture_path": "tests/test_rvl_grpo_hooks.py",
+    "fixture_sha256": "642efdaf88b72c0f782ee13112d3711c6e7108e0fd6f0d1dc6f4e9d5f7e24578",
+    "change": "Report and assert FakeTrainer.train_step_calls == 0 on rejection. This counter is deliberately outside snapshot_training_state, so rollback cannot erase evidence of an optimizer-boundary call.",
+    "task_identity_cases_unchanged": true,
+    "acceptance_criteria_changed": false
+  },
+  "next_command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q --tb=short tests/test_rvl_grpo_hooks.py::test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task",
+  "claim_limit": "The first run is retained as an observability-limited failed fixture attempt, not as a separate research result. The corrected instrumentation will be run before implementation changes on the same baseline source."
+}

@@ -305,6 +305,9 @@ class RVLGRPOHooks:
         raw = exp.attempt.metadata.get("rvl_generation")
         if not isinstance(raw, dict):
             raise ValueError("experience lacks token-exact rvl_generation metadata")
+        task = exp.attempt.task
+        if raw.get("prompt_id") != task.id or raw.get("prompt") != task.prompt:
+            raise ValueError("RVL generation task identity mismatch")
         if raw.get("response") != exp.attempt.output:
             raise ValueError("RVL generation response differs from its verified experience")
         generation_metadata = raw.get("metadata")

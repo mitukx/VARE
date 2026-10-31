@@ -1,0 +1,44 @@
+{
+  "run_id": "rvl-grpo-training-generation-task-binding-v1-run-001",
+  "protocol_path": "protocols/rvl_grpo_training_generation_task_binding_v1.lock.json",
+  "protocol_sha256": "7f414e856d29f95030f4e8af148f3aa475288370a53f86aa7cc2aaa6d990ba07",
+  "protocol_erratum_path": "protocols/rvl_grpo_training_generation_task_binding_v1_run1_erratum.json",
+  "protocol_erratum_sha256": "80659e5ced4ccdeff413b40dda87e2ea940761ca73053f1b5e239638da4c0331",
+  "environment": {
+    "os": "Darwin 27.0.0 arm64",
+    "python": "3.12.12",
+    "model_inference": false,
+    "real_optimizer": false,
+    "external_services": false
+  },
+  "baseline": {
+    "source_commit": "96b3cb86046ccde579caa1c65ccde9f8a2c76e65",
+    "source_path": "src/vare/integrations/rvl_grpo.py",
+    "source_sha256": "d4d511a9cc71949205a25ca4dbb9b384cb38c9f430f590adafdfd0126cac1eb7",
+    "test_command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q --tb=short tests/test_rvl_grpo_hooks.py::test_rvl_trainer_boundary_rejects_un_grouped_generation_for_other_task",
+    "result": "FAIL_AS_PREDICTED",
+    "cases": 2,
+    "cases_reaching_fake_trainer": 2,
+    "log": "baseline-run-001.log",
+    "clean_worktree_reproduction": {
+      "base_commit": "96b3cb86046ccde579caa1c65ccde9f8a2c76e65",
+      "test_fixture_source": "codex/rvl-training-generation-task-binding before implementation patch",
+      "result": "FAIL_AS_PREDICTED",
+      "cases": 2,
+      "cases_reaching_fake_trainer": 2,
+      "log": "baseline-run-002-clean-worktree.log"
+    }
+  },
+  "candidate": {
+    "source_sha256": "f8b9da6b8e8025b6ee527e867f2832f00c4b10e5fb11c3dbbcae2ad1442944c6",
+    "test_sha256": "642efdaf88b72c0f782ee13112d3711c6e7108e0fd6f0d1dc6f4e9d5f7e24578",
+    "result": "PASS",
+    "targeted_suite_command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q --tb=short tests/test_rvl_grpo_eval_identity.py tests/test_rvl_grpo_group_boundary.py tests/test_rvl_grpo_group_boundary_calibration.py tests/test_rvl_grpo_hooks.py tests/test_rvl_grpo_inference_cancellation.py tests/test_rvl_grpo_rollout_task_binding.py tests/test_rvl_grpo_shared_module_mode.py tests/test_rvl_grpo_torch_state.py tests/test_rvl_grpo_verifier_trainer_prompt_alignment.py tests/test_rvl_integration.py tests/test_rvl_evaluation_promotion_e2e.py",
+    "test_suites": 11,
+    "tests_passed": 79,
+    "test_log": "fixed-targeted-tests.log",
+    "ruff": "pass",
+    "py_compile": "pass"
+  },
+  "claim_limit": "Synthetic adapter-boundary integrity evidence only; no historical incidence, learning, task success, model capability, or held-out claim."
+}
