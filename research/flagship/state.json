@@ -298,7 +298,13 @@
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-3-corrected-logging.json",
       "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1-addendum-3-corrected-logging",
       "sha256": "140f25ab7b2ccc1c75100398719f6f72db0e15fb56b16dfe89cdf263cba04546",
-      "status": "frozen after attempt-001 pytest setup failure and runner validation; authorizes one corrected baseline attempt-002 before conditional mutant/fixed arms; must be pushed before execution"
+      "status": "pushed in ba25adfe but superseded before execution after audit found the profiles allowed writes only to attempt-001 while commands targeted attempt-002; no command under this addendum was invoked"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-4-output-profile-binding.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1-addendum-4-output-profile-binding",
+      "sha256": "dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396",
+      "status": "frozen after Addendum 3 profile-path audit and before any corrected candidate test; binds exact attempt-002 write roots and commands; must be pushed before execution"
     }
   ],
   "git_refs": {
@@ -309,15 +315,15 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
     "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "28a198a5d6abf1cf4d881efddc65d597d4ba41cd"
+    "verified_pr_head_sha_before_checkpoint_changes": "ba25adfe015272455c4baac959cd6de927a54dd5"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
     "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Commit and push the runner logging correction, regression test, failed setup receipt, and frozen execution addendum 3; verify it is on PR #162 before running only the stored baseline attempt-002. Continue to the mutant and fixed arms only through their exact frozen gates.",
-  "last_completed_step": "Executed the #64830 baseline invocation once under execution addendum 2; pytest setup stopped in pytest_configure when the logging plugin attempted /dev/null under Seatbelt, before collection or candidate assertions. Preserved attempt-001 and its classification. Updated the trusted runner to place pytest internal logs inside its existing arm output boundary; Ruff, py_compile, and the new runner regression passed. Addendum 3 is hash-bound locally and awaits push before the corrected baseline attempt-002. No other arm, model inference, training, split assignment, or Held-Out access occurred.",
+  "highest_priority_next_task": "Commit and push the three corrected attempt-002 Seatbelt profiles and execution addendum 4. Verify the exact remote PR head and addendum hash, then run only the stored baseline attempt-002 once; proceed conditionally to mutant and fixed, stopping on any gate failure.",
+  "last_completed_step": "Pushed the pytest internal-log correction, runner regression, and baseline attempt-001 setup-failure receipt in commit ba25adfe. A pre-execution audit found Addendum 3\u2019s attempt-002 output paths did not match its inherited Seatbelt write roots (attempt-001); Addendum 3 was not invoked. Created Addendum 4 with three new profiles whose only write roots match their arm-specific attempt-002 outputs and whose network/default-deny rules are preserved. Local checks verified every profile and command hash, exact runner reconstruction, and unused output roots. Addendum 4 must be pushed before the corrected baseline. No candidate assertion, inference, training, split assignment, or Held-Out access occurred.",
   "milestone_id": "p15-fresh-vllm-64830-source-qualification",
   "result_hash_references": [
     {
@@ -1344,6 +1350,31 @@
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/retry-tooling-001/SHA256SUMS",
       "sha256": "27901524e4792a760de5b65ca094cf2bde876d03c53a31d56065de2c1c1d9ddf",
       "status": "all runner correction validation log and summary hashes match"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-4-output-profile-binding.json",
+      "sha256": "dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396",
+      "status": "frozen; exact attempt-002 profiles and commands validated locally; awaiting push"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-4-output-profile-binding.json.sha256",
+      "sha256": "64ff2dcf40c61345e71c74be92a52ae92588299c985d5492bd653f53dd2c08fc",
+      "status": "addendum 4 sidecar matches its JSON hash"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/sandbox/baseline-attempt-002.sb",
+      "sha256": "08a0686f6ea32878d5f99a21a2aeea2641fa38f3accfd2f42e1be6cafbad914c",
+      "status": "default-deny/network-deny profile; only writable subtree is its matching attempt-002 output"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/sandbox/wrong-mutant-attempt-002.sb",
+      "sha256": "66c4bcff27ca6735c62da6bffc7700f81f8b7ee3a32171162ab240c00d4900ed",
+      "status": "default-deny/network-deny profile; only writable subtree is its matching attempt-002 output"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/sandbox/upstream-fixed-attempt-002.sb",
+      "sha256": "1cb52eb5c3a73051b26b56b8895f470990c0aa35b75f5984d2957644ba7fd60f",
+      "status": "default-deny/network-deny profile; only writable subtree is its matching attempt-002 output"
     }
   ],
   "run_ids": [
@@ -1394,7 +1425,8 @@
     "41172336313",
     "41172352616",
     "vllm-64830-source-baseline-attempt-001-setup-failure",
-    "vllm-64830-qualification-runner-tooling-001"
+    "vllm-64830-qualification-runner-tooling-001",
+    "vllm-64830-addendum3-profile-binding-audit-preexec"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -1413,10 +1445,10 @@
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
     "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Launch preflight failed the estimated working-set-plus-headroom gate by 879,464,921 bytes; model weights were not loaded. Do not retry this frozen protocol.",
     "vLLM #64830 remains UNQUALIFIED and UNASSIGNED. Its frozen source test overlay is intentionally scoped to HiSparse and watermarking; modified custom-speculator behavior is excluded from this qualification claim.",
-    "vLLM #64830 remains UNQUALIFIED / UNASSIGNED. Baseline attempt-001 stopped in pytest setup before collection because Seatbelt denied the logging plugin write to /dev/null; no candidate assertion ran. Attempt-002 requires pushed addendum 3 and must meet the exact baseline assertion gate. Mutant and fixed arms remain unauthorized until their preceding gates pass.",
-    "PR #162 is open as a draft at head 28a198a5d6abf1cf4d881efddc65d597d4ba41cd, stacked on draft PR #161. Current exact-head CI matrix is still running; this checkpoint will trigger another run.",
     "PR #160 exact head 71aa74ab6a8f6f1625505b68f7f332c49fabff93 has passing exact-head CI and CPU evidence; GitHub reports merge state BLOCKED and normal review/branch-protection requirements remain.",
-    "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 has passing exact-head CI and CPU evidence but remains a draft; no review is recorded."
+    "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 has passing exact-head CI and CPU evidence but remains a draft; no review is recorded.",
+    "vLLM #64830 remains UNQUALIFIED / UNASSIGNED. Baseline attempt-001 stopped before collection due /dev/null logging setup. Addendum 3 was pushed but never invoked because its Seatbelt write roots did not match attempt-002. Addendum 4 corrects and binds each output/profile pair and must be pushed before the only authorized attempt-002 baseline.",
+    "PR #162 is open as a draft at head ba25adfe015272455c4baac959cd6de927a54dd5; current exact-head CI follows the pushed runner correction. The profile-binding checkpoint will trigger another CI run."
   ],
-  "updated_at": "2026-10-31T05:48:13Z"
+  "updated_at": "2026-10-31T05:50:24Z"
 }
