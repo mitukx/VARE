@@ -193,3 +193,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Build the runtime only. No baseline, mutant, or fixed tests may run until the image identity is recorded in a separate addendum.
 - **Falsification criteria:** Any test/source hash mismatch; the mutant is not rejected by the target assertion; the fixed arm does not pass all four cases; a skip occurs; or network/resource limits are violated.
 - **Follow-up:** Build the exact-commit wheel runtime and freeze its digest before the first test execution.
+
+
+## 2026-10-31 — Correct Ray #66694 pretest artifact binding
+
+- **Hypothesis:** The exact source-diff evidence can be stored in a review-clean compressed form without changing any frozen test input or gate.
+- **Evidence:** Addendum 2 (SHA-256 `22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918`) initially referenced the pre-archive manifest SHA. Erratum (SHA-256 `b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684`) binds the current manifest SHA `1631baa877ac8e3f0f260ebf6ebfd9e3ce4ea9328c556cf4be31b5dcdd29279a` and the gzip archive plus its decompressed content SHA `425ba97673e9f90a681a0f30e95b148acd983118893a0012a65d0a326da5b8ae`. No test ran and no selected source/test content changed.
+- **Alternative explanations:** A stale pointer could go unnoticed and later weaken evidence reproducibility. All current state references are recomputed from the committed artifacts.
+- **Decision:** Preserve Addendum 2 unchanged; use the erratum as the authoritative manifest/archive binding. Its only effect is artifact path/hash bookkeeping.
+- **Falsification criteria:** The gzip content hash differs from the original exact four-path diff, or any test/mutant/source hash, selector, or acceptance criterion changed.
+- **Follow-up:** Freeze the runtime image identity before test execution.

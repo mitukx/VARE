@@ -125,6 +125,12 @@
       "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-2",
       "sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918",
       "status": "frozen test selectors, adapted tests, source hashes, and wrong mutant before runtime build; test execution awaits image-digest addendum"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2-erratum.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-2-erratum",
+      "sha256": "b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684",
+      "status": "pretest artifact-integrity correction only; test gates unchanged; test execution not authorized"
     }
   ],
   "git_refs": {
@@ -142,8 +148,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Build the pinned Ray PR-commit runtime and verify its image/wheel identity, then freeze those digests in a runtime addendum before executing the four exact baseline, wrong-mutant, and fixed selectors.",
-  "last_completed_step": "Reviewed only the selected PR changed paths; froze exact source hashes, four compatibility-adapted test selectors, and a one-change wrong mutant. No test has executed.",
+  "highest_priority_next_task": "Build the exact Ray PR-commit runtime, verify the wheel and runtime image digests, and freeze them before the first test execution.",
+  "last_completed_step": "Frozen Ray #66694 test suite and wrong mutant. A pretest erratum now binds the correctly archived diff and manifest hash; no test execution or task-source changes occurred.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -470,6 +476,11 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2.json",
       "sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918",
       "status": "frozen before runtime image build; test execution remains unauthorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2-erratum.json",
+      "sha256": "b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684",
+      "status": "corrects Addendum 2 manifest/archive hash pointer before any tests"
     }
   ],
   "run_ids": [
@@ -514,5 +525,5 @@
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T09:08:00+09:00"
+  "updated_at": "2026-10-31T09:02:07+09:00"
 }
