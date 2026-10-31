@@ -1,0 +1,31 @@
+sandbox_extension_issue_file failed for /var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/C//com.apple.metalfe: 1 (Operation not permitted)
+sandbox_extension_issue_file failed for /private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/bin: 1 (Operation not permitted)
+sandbox_extension_issue_file failed for /var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/C//com.apple.gpuarchiver: 1 (Operation not permitted)
+Traceback (most recent call last):
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 1268, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 986, in main
+    raw, generated_tokens, prompt_tokens, limit = generate_turn(
+                                                  ^^^^^^^^^^^^^^
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 104, in generate_turn
+    raw = generate(model, tokenizer, prompt=prompt, max_tokens=limit,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/generate.py", line 797, in generate
+    for response in stream_generate(model, tokenizer, prompt, **kwargs):
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/generate.py", line 734, in stream_generate
+    for n, (token, logprobs, from_draft) in enumerate(token_generator):
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/generate.py", line 722, in <genexpr>
+    (token, logprobs, False) for token, logprobs in token_generator
+                                                    ^^^^^^^^^^^^^^^
+  File "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/generate.py", line 450, in generate_step
+    mx.eval([c.state for c in prompt_cache])
+RuntimeError: [metal::Device] Unable to build metal library from source
+error: unable to open output file '/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/C/com.apple.metalfe/NIJM6ZK7ZPU5/monolithic_metal.pcm': 'Operation not permitted'
+<built-in>:1:10: fatal error: could not build module 'monolithic_metal'
+#include "metal_types"
+ ~~~~~~~~^~~~~~~~~~~~~
+
+

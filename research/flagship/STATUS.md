@@ -1,3 +1,15 @@
+Updated 2026-10-31 12:25 UTC. PR #164 V7 one-shot Development attempt is closed after a first-generation Metal JIT sandbox failure. The latest exact head `eb82cb00c21fe9614e4978db9bfa7969c2655c1e` passed all 19 reported exact-head checks; the initial Python 3.12 timeout (1,616 passed, 111 skipped) passed when only the failed job was rerun.
+
+## V7 Development outcome
+
+- The frozen V7 protocol and two fresh no-load preflights passed hash/resource validation. The final preflight before launch reported 12.75 GiB available, 81% pressure free, 1.57 GiB swap used and 16.83 GiB disk free. All five base gates and the additional 2 GiB operator margin passed.
+- Exactly one Development prompt was delivered to the pinned Qwen3-4B-Instruct-2507-4bit model. Weights loaded and one generation call started, but MLX failed before emitting a token: Metal could not create `monolithic_metal.pcm` under `com.apple.metalfe` (`Operation not permitted`). The stderr also reports sandbox-extension failures for both Metal cache scopes and the copied runtime `venv/bin`, despite the frozen profile's narrow write rules.
+- Result: 0 generated tokens, 0 native tool calls, 0 permitted edits, no candidate output, and 0 independent grades. The isolated candidate source remains byte-identical to the frozen baseline. This is a sandbox/runtime failure, not a coding-capability result. V7 is closed and will not be retried.
+- The bounded run exited in 3.168 s; sampled process-tree peak was 2569338880 bytes and direct-child OS high-water was 2615672832 bytes, both below 8 GiB. The external monitor recorded 4 samples with pressure 80–81%, swap unchanged at 1680804413 bytes, and no dynamic abort. Post-run snapshot: 13.69 GiB available, 80% pressure free, 1.57 GiB swap used.
+- No independent grader was run because no candidate exists. No training, policy update, or Held-Out access occurred.
+
+The detailed receipt and checksums are under `results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/`. Any follow-up must diagnose the sandbox-extension/Metal cache issue without reusing V7; a new inference requires a separately frozen protocol and a successful no-model proof of the exact first-generation path.
+
 Updated 2026-10-31 12:05 UTC. PR #164 commit 77b8a9b717c1a2f607d65f61babe8d40090d9b6a passed all 19 reported exact-head checks. Diagnostic-005 and diagnostic-006 each used their one frozen attempt and failed for separate sandbox issues. Both outcomes are preserved. Diagnostic-006 loaded the exact 4B weights and entered the first generation call with its exposed Train prompt, but emitted zero tokens because Metal JIT could not write its compiler cache. A new V7 Development protocol is frozen locally with an exact-path sandbox and a passing no-model Metal smoke; it requires a fresh exact-head CI and resource preflight before the still-undelivered Development prompt.
 
 ## Current memory and execution checkpoint
