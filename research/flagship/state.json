@@ -211,7 +211,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "5ded516164fddd471d2af07ecf33c3e372924866",
+    "verified_pr_head_sha_before_checkpoint_changes": "41acbbe711d95e53815237c15a12ffd93fe50779",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
@@ -220,9 +220,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Execute v2 baseline, wrong-mutant, and upstream-fixed once each in order with the case-aware runner; require named outcomes for both subTests and stop at any gate failure. Candidate remains unassigned; do not run inference.",
-  "last_completed_step": "Pushed v1 source qualification records in PR #155. The baseline met its target assertion gate, but the wrong-mutant pytest output lacked subTest filename attribution, so v1 fixed arm was withheld. Created and smoke-checked a case-aware stdlib unittest runner on a generic two-subTest fixture only, then froze v2 before any v2 Transformers test. V2 binds the same test method, source/image, and a three-arm ordered control with explicit named-subtest results.",
-  "milestone_id": "p8-transformers-49458-source-qualification-v2-frozen",
+  "highest_priority_next_task": "Commit and push the fresh v2 input manifest, then execute v2 baseline once with the case-aware runner; continue to wrong-mutant and fixed only when each preceding gate is explicitly met.",
+  "last_completed_step": "V2 protocol and case-aware runner were pushed before any v2 candidate test. Re-extracted the frozen merge-base archive into fresh v2 trees, reconstructed the one-loop mutant and upstream-fixed source, and verified all three complete tree digests and target-file hashes match the v1 input manifest. Pinned the fresh v2 test/runner/image/tree input manifest; no v2 task test has executed.",
+  "milestone_id": "p8-transformers-49458-v2-inputs-pinned",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -888,6 +888,11 @@
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/case_runner.py",
       "sha256": "2ec495123c435fd08a8717a993170edce909f81403eb8dd45074154830c6eff7",
       "status": "case-aware unittest runner; generic smoke confirmed both subTest parameters/outcomes are reported; no candidate test was run in the smoke"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
+      "sha256": "f5c61913ab2f992e65cfa85f7938b74e74ad597d4d7bf0184d6ddde2665c0bd5",
+      "status": "fresh v2 tree/test/runner/image identities; all three full tree digests match v1 frozen source inputs; v2 tests not started"
     }
   ],
   "run_ids": [
@@ -939,5 +944,5 @@
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "Transformers #49458 remains UNQUALIFIED and UNASSIGNED; v1 wrong-mutant case attribution was incomplete, and all v2 named-subtest controls remain pending."
   ],
-  "updated_at": "2026-10-31T01:52:16Z"
+  "updated_at": "2026-10-31T01:53:52Z"
 }

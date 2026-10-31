@@ -34,7 +34,7 @@ The controller now removes only oldest complete assistant tool-call rounds at th
 
 ## Immediate next action
 
-Execute frozen source-qualification protocol v2 in order: baseline, wrong-mutant, upstream-fixed. Its case-aware unittest runner emits both subTest names and outcomes. Keep the candidate unassigned and do not run model inference.
+Fresh v2 source trees now match all pinned tree and target-file hashes, and the v2 input manifest is saved at SHA-256 `f5c61913ab2f992e65cfa85f7938b74e74ad597d4d7bf0184d6ddde2665c0bd5`. Commit and push this pre-run manifest, then execute the v2 baseline once with the case-aware runner. Keep the candidate unassigned and do not run model inference.
 
 
 ## v1 qualification diagnostic
