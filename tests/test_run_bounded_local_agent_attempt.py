@@ -1,3 +1,8 @@
+import os
+import signal
+import subprocess
+import sys
+import time
 from unittest.mock import patch
 
 import pytest
@@ -52,6 +57,78 @@ def test_run_limited_stops_process_at_wall_budget(tmp_path) -> None:
 
     assert record["limit_reason"] == "wall_clock_limit_exceeded"
     assert record["elapsed_seconds"] < 3
+
+
+def _pid_is_running(pid: int) -> bool:
+    try:
+        state = subprocess.check_output(
+            ["ps", "-o", "stat=", "-p", str(pid)], text=True
+        ).strip()
+    except subprocess.CalledProcessError:
+        return False
+    return bool(state) and not state.startswith("Z")
+
+
+def test_run_limited_kills_descendant_that_ignores_sigterm(tmp_path) -> None:
+    ready_file = tmp_path / "child-ready"
+    pid_file = tmp_path / "child.pid"
+    child_code = (
+        "import pathlib,signal,sys,time; "
+        "signal.signal(signal.SIGTERM, signal.SIG_IGN); "
+        "pathlib.Path(sys.argv[1]).write_text('ready'); time.sleep(60)"
+    )
+    parent_code = """\
+import pathlib
+import subprocess
+import sys
+import time
+
+child = subprocess.Popen([sys.executable, "-c", sys.argv[1], sys.argv[2]])
+pathlib.Path(sys.argv[3]).write_text(str(child.pid))
+deadline = time.monotonic() + 5
+ready = pathlib.Path(sys.argv[2])
+while not ready.exists() and time.monotonic() < deadline:
+    time.sleep(0.01)
+time.sleep(60)
+"""
+    command = [
+        sys.executable,
+        "-c",
+        parent_code,
+        child_code,
+        str(ready_file),
+        str(pid_file),
+    ]
+
+    def report_over_limit_after_child_is_ready(_root_pid):
+        deadline = time.monotonic() + 5
+        while not ready_file.exists() and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert ready_file.exists()
+        return 2
+
+    with patch(
+        "scripts.run_bounded_local_agent_attempt.process_tree_rss",
+        side_effect=report_over_limit_after_child_is_ready,
+    ):
+        record = run_limited(
+            command,
+            wall_seconds=10,
+            rss_limit_bytes=1,
+            sample_seconds=0.01,
+            log_path=tmp_path / "attempt.log",
+        )
+
+    child_pid = int(pid_file.read_text(encoding="utf-8"))
+    try:
+        assert record["limit_reason"] == "process_tree_rss_limit_exceeded"
+        deadline = time.monotonic() + 3
+        while _pid_is_running(child_pid) and time.monotonic() < deadline:
+            time.sleep(0.02)
+        assert not _pid_is_running(child_pid)
+    finally:
+        if _pid_is_running(child_pid):
+            os.kill(child_pid, signal.SIGKILL)
 
 
 @pytest.mark.parametrize(
