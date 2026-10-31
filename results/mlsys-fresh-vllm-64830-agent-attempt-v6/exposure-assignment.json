@@ -1,0 +1,58 @@
+{
+  "assigned_at_utc": "2026-10-31T11:30:33.659157+00:00",
+  "authorization": {
+    "diagnostic_005_required_before_development_prompt": true,
+    "grader_feedback_to_model": false,
+    "heldout_access": false,
+    "one_independent_grade_after_candidate_record_is_committed_and_pushed": true,
+    "one_local_development_attempt_after_protocol_commit_push_ci_and_passing_fresh_preflight": true,
+    "paid_compute_or_api": false,
+    "retry_after_generation_begins": false,
+    "training_or_policy_update": false
+  },
+  "created_for_protocol": "mlsys-fresh-vllm-64830-agent-attempt-v6-qwen3-4b-sanitized-runtime-copy",
+  "event_id": "vllm-64830-development-qwen3-4b-assignment-after-runtime-copy-v1",
+  "event_type": "prospective_development_assignment_route_addendum",
+  "family_level_independence": "NOT_ESTABLISHED; same-repository configuration adjacency is possible",
+  "model": {
+    "exposure_before_assignment": "NOT_EXPOSED_TO_DEVELOPMENT_PROMPT",
+    "public_pretraining_exposure": "UNKNOWN",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "model_hidden_inputs": [
+    "candidate patch",
+    "trusted test overlay",
+    "grader command/output",
+    "source-qualification arm logs",
+    "exposure and overlap metadata"
+  ],
+  "model_visible_inputs": [
+    "task/TASK.md",
+    "vllm/config/vllm.py",
+    "controller-generated tool schemas and allowed-path boundary"
+  ],
+  "previous_4b_diagnostic_failure": {
+    "model_loaded": false,
+    "prompt_delivered": false,
+    "record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/attempt-001/diagnostic-result.json",
+    "sha256": "e3695c12afae91a822648e4f6f951ee3ff3c036c6ab44b7399b882e020003561"
+  },
+  "repository": "vllm-project/vllm",
+  "researcher_source_and_test_exposure": true,
+  "retained_prior_assignment": {
+    "development_attempt_started": false,
+    "development_prompt_delivered": false,
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/exposure-assignment.json",
+    "sha256": "4513211b6c8f36e0ca584b3036ead2391787683ec60f4f047c8a80317b82b04d",
+    "task_binding_unchanged": true
+  },
+  "route_selection_record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/runtime/route-selection-after-v5-import-failure-001.json",
+  "route_selection_record_sha256": "86fdea01aa1781b11a8318b7513851760c38968ce4ea44b802bde255dfcc1f31",
+  "schema_version": 1,
+  "source_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+  "split": "Development",
+  "status": "ASSIGNED; one prospective Development attempt remains unused pending protocol gates",
+  "task_family": "vllm_v1_model_runner_unsupported_feature_guards",
+  "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+}
