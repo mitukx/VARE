@@ -138,7 +138,16 @@ class Slice:
         rollout_n = self.b["rollouts"]["tasks"]
         qualified = [t for t in manifest if t["instance_id"] in admitted]
         assert all(t["split"] == "train" for t in qualified)
-        chosen = qualified[rollout_n + self.a.task_offset: rollout_n + self.a.task_offset + self.a.tasks]
+        if self.a.task_list:
+            # A frozen protocol names the tasks; each must be an admitted Train task.
+            by_id = {t["instance_id"]: t for t in qualified}
+            ids = json.loads(Path(self.a.task_list).expanduser().read_text())["tasks"]
+            missing = [i for i in ids if i not in by_id]
+            if missing or len(set(ids)) != len(ids):
+                raise ValueError(f"task list must name distinct admitted Train tasks; not admitted: {missing}")
+            chosen = [by_id[i] for i in ids]
+        else:
+            chosen = qualified[rollout_n + self.a.task_offset: rollout_n + self.a.task_offset + self.a.tasks]
         tasks = curriculum.attach_payloads(chosen, self.cache)
         for t in tasks:
             env = self.env(t)
@@ -231,7 +240,7 @@ class Slice:
         a = self.a
         meta = {"schema": "vare.grpo_vertical_slice.run/v1", "evidence_level": "real RL parameter updates (Train only)",
                 "model": self.protocol["model"], "args": {k: v for k, v in vars(a).items()
-                                                          if k not in ("run_dir", "cache")},
+                                                          if k not in ("run_dir", "cache", "task_list")},
                 "grpo_config": self.cfg.to_dict(), "lora": {k: self.b["training"][k] for k in
                                                             ("num_layers", "lora_rank", "lora_scale")},
                 "optimizer": {"name": "Adam", "learning_rate": a.lr}, "prompt_version": PROMPT_VERSION,
@@ -239,7 +248,10 @@ class Slice:
                              "distribution": "untruncated softmax(logits / temperature)",
                              "ratio": "exact (behavior and current log-probs under the sampled distribution)"},
                 "platform": platform.platform(), "machine": platform.machine(), "mlx": mx.__version__,
-                "heldout_manifest_loaded": False}
+                "heldout_manifest_loaded": False,
+                "task_list": Path(a.task_list).name if a.task_list else None,
+                "task_list_sha256": (hashlib.sha256(Path(a.task_list).expanduser().read_bytes()).hexdigest()
+                                     if a.task_list else None)}
         jdump(self.run / "run_meta.json", meta)
         t_all = time.time()
         self.note("start", memory=memory_snapshot())
@@ -377,6 +389,8 @@ def parse(argv=None):
     p.add_argument("--cache", required=True)
     p.add_argument("--tasks", type=int, default=12, help="Train tasks in the survey")
     p.add_argument("--task-offset", type=int, default=0, help="offset after run-001's rollout tasks")
+    p.add_argument("--task-list", default=None,
+                   help="frozen protocol JSON whose 'tasks' lists admitted Train instance ids (overrides --tasks)")
     p.add_argument("--group-size", type=int, default=4)
     p.add_argument("--steps", type=int, default=3)
     p.add_argument("--groups-per-step", type=int, default=2)

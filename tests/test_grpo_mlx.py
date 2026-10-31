@@ -488,3 +488,33 @@ def test_top_p_one_sampler_draws_from_untruncated_temperature_softmax():
         mx.random.seed(seed)
         want = int(mx.random.categorical(logprobs * (1 / t)).item())
         assert got == want
+
+
+def test_vertical_slice_task_list_accepts_only_admitted_train_tasks(tmp_path):
+    vs = _load_vertical_slice()
+    bad = tmp_path / "tasks.json"
+    bad.write_text('{"tasks": ["not-a-train-task"]}')
+    s = vs.Slice(vs.parse(["--run-dir", str(tmp_path / "run"), "--cache", str(tmp_path / "cache"),
+                           "--task-list", str(bad)]))
+    with pytest.raises(ValueError, match="admitted Train"):
+        s.train_tasks()
+
+
+def test_smoke_v2_protocol_is_exact_ratio_train_only():
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    proto = json.loads((root / "protocols/grpo_vertical_slice_smoke_v2.json").read_text())
+    assert proto["sampling"]["top_p"] == proto["args"]["top_p"] == 1.0
+    G.check_exact_ratio_sampling(temperature=proto["args"]["temperature"], top_p=proto["args"]["top_p"])
+    train = {json.loads(x)["instance_id"]: json.loads(x)
+             for x in (root / "configs/learning_pipeline_v1/train.manifest.jsonl").read_text().splitlines() if x}
+    heldout = [json.loads(x) for x in
+               (root / "configs/learning_pipeline_v1/heldout.manifest.jsonl").read_text().splitlines() if x]
+    admitted = set(json.loads((root / "results/learning-pipeline-v1/run-001/calibration/admitted.json")
+                              .read_text())["train"])
+    assert proto["tasks"] and len(set(proto["tasks"])) == len(proto["tasks"])
+    for iid in proto["tasks"]:
+        assert iid in admitted and train[iid]["split"] == "train"
+        assert iid not in {t["instance_id"] for t in heldout}
+        assert train[iid]["upstream_repo"] not in {t["upstream_repo"] for t in heldout}
