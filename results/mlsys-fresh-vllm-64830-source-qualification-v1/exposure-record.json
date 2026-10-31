@@ -9,7 +9,7 @@
     "selection_path": "results/mlsys-fresh-development-candidate-selection-v3/selection.json",
     "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
   },
-  "event_id": "mlsys-fresh-vllm-64830-source-review-001",
+  "event_id": "vllm-64830-development-attempt-001-preflight-no-go",
   "events": [
     {
       "event_type": "metadata_selection_and_overlap_review",
@@ -56,16 +56,56 @@
       "split_assignment": "UNASSIGNED",
       "status": "QUALIFIED_SOURCE_LEVEL only for the two scoped method-level cases after final isolation/hash audit; no capability or pretraining-independence claim",
       "training": false
+    },
+    {
+      "assignment_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/exposure-assignment.json",
+      "assignment_sha256": "2216ed24547f1c58034c01fa30c3cd388f09654630c88c40a39ab3746c42cc46",
+      "candidate_patch_generated": false,
+      "event_id": "vllm-64830-development-attempt-001-preflight-no-go",
+      "event_type": "prospective_development_assignment_preflight",
+      "heldout_access": false,
+      "independent_grade": false,
+      "launch_preflight": {
+        "failures": [
+          "launch resource gate failed: available_memory_bytes",
+          "launch resource gate failed: estimated_working_set_and_headroom"
+        ],
+        "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/launch-preflight.json",
+        "sha256": "0288c39c811bd129923582ba378e4a609f97ffbe0981b32e6b8a2c264603bdda",
+        "status": "NO_GO"
+      },
+      "model_exposure": false,
+      "model_or_agent_inference": false,
+      "model_prompt_delivered": false,
+      "model_weights_loaded": false,
+      "paid_compute_or_api": false,
+      "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json",
+      "protocol_sha256": "27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9",
+      "recorded_at_utc": "2026-10-31T07:05:56.686286Z",
+      "resource_snapshot": {
+        "available_memory_bytes": 11035787264,
+        "disk_free_bytes": 21491724288,
+        "free_bytes": 1305540034,
+        "host": "macOS-27.0.1-arm64-arm-64bit",
+        "memory_pressure_free_percent": 65,
+        "physical_memory_bytes": 34359738368,
+        "timestamp_utc": "2026-10-31T07:05:56.686286+00:00",
+        "total_bytes": 3221225472,
+        "used_bytes": 1915685437
+      },
+      "split_assignment": "Development",
+      "status": "NOT RUN; preflight NO_GO; do not retry under frozen protocol",
+      "training": false
     }
   ],
   "heldout_access": false,
   "model_exposure": false,
-  "next_event": "If considering Development use, perform a separate prospective assignment and resource preflight, append it before any model attempt, and use a fresh model-visible context; this source qualification itself authorizes no inference, training, Held-Out access, or split assignment.",
+  "next_event": "Do not retry under the frozen protocol. Any future execution requires a new prospectively frozen protocol and a fresh passing resource preflight.",
   "paid_compute_or_api": false,
   "public_pretraining_exposure": "UNKNOWN",
   "qualification_status": "QUALIFIED_SOURCE_LEVEL",
-  "recorded_at_utc": "2026-10-31T05:54:48Z",
+  "recorded_at_utc": "2026-10-31T07:05:56.686286Z",
   "schema_version": 1,
-  "split_assignment": "UNASSIGNED",
+  "split_assignment": "Development",
   "training": false
 }

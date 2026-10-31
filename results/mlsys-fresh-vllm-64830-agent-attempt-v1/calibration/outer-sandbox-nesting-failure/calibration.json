@@ -1,0 +1,17 @@
+{
+  "calibration_id": "vllm-64830-grader-outer-nested-seatbelt-failure-v1",
+  "cause": "Nested sandbox-exec could not be applied from inside an outer candidate-grader Seatbelt profile. The trusted test proxy surfaced RuntimeError in both cases; the then-current runner classified two worker failures as TARGET_GATE_FAILED. This receipt is retained only as a runner defect and is not source or candidate behavior evidence.",
+  "model_loaded": false,
+  "next_fix": "Run the trusted grader parent outside Seatbelt and invoke only the candidate method worker under the default-deny, network-deny Seatbelt profile. Require assertion-diff evidence before classifying target failure.",
+  "official_attempt_consumed": false,
+  "outer_profile_sha256": "67e214d45424d50cb18bc1b6cba1f084c6ad64da229b6d6db5ff3f37a7b68332",
+  "raw_files_sha256": {
+    "calibration.json": "9b81bd7e04c4d4a0d46bf96727a39690f1262a9d706d2b9ca043db822cd9545d",
+    "candidate-grader.sb": "67e214d45424d50cb18bc1b6cba1f084c6ad64da229b6d6db5ff3f37a7b68332",
+    "candidate_method.py": "8e27720d05507ce6596dcc53fb47b858087efb29baa762e44a7aca6526f2c7ba",
+    "grade.json": "3fcd7696def4db36b2bcf08f8eb00e00625d650c3072258b7e9e5656b17ae4f3",
+    "pytest-console.log": "0091d3efcddbdc2e88b6fd05bd078d5740c09ba54281ce599331c69fe4628ddc"
+  },
+  "schema_version": 1,
+  "status": "INVALID_CALIBRATION_NOT_BEHAVIORAL"
+}

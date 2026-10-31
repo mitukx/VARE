@@ -1,0 +1,77 @@
+{
+  "actual_control_outcomes": {
+    "baseline": "TARGET_GATE_FAILED",
+    "upstream-fixed": "TARGET_GATE_PASSED",
+    "wrong-mutant": "TARGET_GATE_FAILED"
+  },
+  "arms": {
+    "baseline": {
+      "candidate_diff_bytes": 0,
+      "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "candidate_method_sha256": "8e27720d05507ce6596dcc53fb47b858087efb29baa762e44a7aca6526f2c7ba",
+      "classification": "TARGET_GATE_FAILED",
+      "feedback_to_model": false,
+      "grader_call_count": 1,
+      "pytest_summary": {
+        "failed": 2
+      },
+      "raw_files_sha256": {
+        "candidate.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "candidate_method.py": "8e27720d05507ce6596dcc53fb47b858087efb29baa762e44a7aca6526f2c7ba",
+        "grade.json": "bb0f17c263fae31442957f02e5fe6dc83b01613baab164074dd3020369b77787",
+        "pytest-console.log": "cc60907bdeac88c17ef7cd63560a39708b63f071b8dd3423ed0dc384d4895d45",
+        "pytest.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "upstream-fixed": {
+      "candidate_diff_bytes": 1192,
+      "candidate_diff_sha256": "2b642812845346ef19931e084c3bdffc1c233863d35a0b5fb614052d34cd5cde",
+      "candidate_method_sha256": "8963659dedc3900222424438a5d812090e7d3e2839a8ad157a73b0753cf012fa",
+      "classification": "TARGET_GATE_PASSED",
+      "feedback_to_model": false,
+      "grader_call_count": 1,
+      "pytest_summary": {
+        "passed": 2
+      },
+      "raw_files_sha256": {
+        "candidate.diff": "2b642812845346ef19931e084c3bdffc1c233863d35a0b5fb614052d34cd5cde",
+        "candidate_method.py": "8963659dedc3900222424438a5d812090e7d3e2839a8ad157a73b0753cf012fa",
+        "grade.json": "2bf670b1d62a83f7216df082cd99db17f2b6aad6f025d9e642b7a966e9ef0ed8",
+        "pytest-console.log": "7494fc45ced51ac29652b1651f1c8a683e307e72603b62f0a1556695b2160e9d",
+        "pytest.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "wrong-mutant": {
+      "candidate_diff_bytes": 632,
+      "candidate_diff_sha256": "c4acc07c42b45d7a041c1577948d544a182db36a6ad49261a4721250e30c496e",
+      "candidate_method_sha256": "70025c1721eed1e3139e6ffd6be72c4c16423d41788db4cabe1cbbd65a4e0ffd",
+      "classification": "TARGET_GATE_FAILED",
+      "feedback_to_model": false,
+      "grader_call_count": 1,
+      "pytest_summary": {
+        "failed": 2
+      },
+      "raw_files_sha256": {
+        "candidate.diff": "c4acc07c42b45d7a041c1577948d544a182db36a6ad49261a4721250e30c496e",
+        "candidate_method.py": "70025c1721eed1e3139e6ffd6be72c4c16423d41788db4cabe1cbbd65a4e0ffd",
+        "grade.json": "053a75ae05115fdf37d93f90fa215a271dc6d396f9152f1e3b2b9991c2b4367d",
+        "pytest-console.log": "b42477cfbb2f8d3e7920c3393faf773484ab2a8e10d29941dbf80f987f3cbd51",
+        "pytest.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "calibration_id": "vllm-64830-independent-grader-calibration-v1",
+  "candidate_method_worker_sandboxed": true,
+  "controls_passed": true,
+  "expected_control_outcomes": {
+    "baseline": "TARGET_GATE_FAILED with both frozen assertion diffs",
+    "upstream-fixed": "TARGET_GATE_PASSED with 2/2 cases",
+    "wrong-mutant": "TARGET_GATE_FAILED with both frozen assertion diffs"
+  },
+  "model_inference": false,
+  "model_loaded": false,
+  "purpose": "Validate the one-shot method-worker grader against the source-qualified baseline, fixed method, and wrong mutant before any model attempt.",
+  "schema_version": 1,
+  "trusted_test_sha256": "c397c9407f3294460ce939fab3c43835da75844ec0e274e2b9dfc8f44832c28e",
+  "worker_profile_sha256": "9539fbec90497ad89b3fd3c0995f6d684a45766b7342d0d5ad7958492a710151"
+}

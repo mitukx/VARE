@@ -1,0 +1,38 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.12, pytest-8.4.2, pluggy-1.6.0 -- /opt/homebrew/Caskroom/miniforge/base/bin/python3.12
+rootdir: /Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted
+configfile: pytest.ini
+collecting ... collected 2 items
+
+../../../../Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse] FAILED [ 50%]
+../../../../Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking] FAILED [100%]
+
+=================================== FAILURES ===================================
+_______ test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse] _______
+/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py:99: in test_v1_model_runner_rejects_v2_only_config
+    assert VllmConfig._get_v1_model_runner_unsupported_features(config) == [feature]
+E   AssertionError: assert [] == ['HiSparse']
+E     
+E     Right contains one more item: 'HiSparse'
+E     
+E     Full diff:
+E     + []
+E     - [
+E     -     'HiSparse',
+E     - ]
+_____ test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking] _____
+/Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py:99: in test_v1_model_runner_rejects_v2_only_config
+    assert VllmConfig._get_v1_model_runner_unsupported_features(config) == [feature]
+E   AssertionError: assert [] == ['watermarking']
+E     
+E     Right contains one more item: 'watermarking'
+E     
+E     Full diff:
+E     + []
+E     - [
+E     -     'watermarking',
+E     - ]
+=========================== short test summary info ============================
+FAILED ../../../../Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]
+FAILED ../../../../Users/user/Documents/Codex/2026-10-31/files-pasted-by-the-user-vare/work/VARE/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]
+============================== 2 failed in 0.17s ===============================

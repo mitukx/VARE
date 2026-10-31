@@ -1,0 +1,16 @@
+diff --git a/vllm/config/vllm.py b/vllm/config/vllm.py
+index d4d9a66..32c71b0 100644
+--- a/vllm/config/vllm.py
++++ b/vllm/config/vllm.py
+@@ -3180,6 +3180,11 @@ class VllmConfig:
+                 XPressSpeculatorConfig,
+             )
+ 
++            if self.speculative_config.custom_method is not None:
++                unsupported.append(
++                    "custom speculative method "
++                    f"'{self.speculative_config.custom_method}'"
++                )
+             if self.speculative_config.method == "dspark":
+                 unsupported.append("dspark speculative decoding")
+             elif isinstance(

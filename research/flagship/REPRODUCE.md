@@ -691,7 +691,38 @@ The trusted runner now sets `-o log_file=<arm-output-dir>/pytest-internal.log`; 
 
 Execution addendum 3 (`protocol-addendum-3-corrected-logging.json`) is preserved but superseded before execution: its attempt-002 commands pointed to profiles that allowed writes only under attempt-001. It was never invoked. Execution addendum 4 (`protocol-addendum-4-output-profile-binding.json`) is authoritative. Verify its `.sha256` sidecar, parent hash, runner/test/source/test/Python hashes, all exact stored `runner_argv` and `inner_pytest_command` arrays, and that each profile's sole writable subpath equals its arm's attempt-002 output directory. The three profiles retain default-deny and network-deny rules. **Commit and push addendum 4 and those profiles before any candidate test retry.** Then execute only the stored baseline `runner_argv` once. It must produce exactly the two post-override assertion failures, with successful collection/import and no skips, timeout, resource or isolation breach. If this gate passes, execute the stored wrong-mutant argv once and require the same failures. Only then execute upstream-fixed once and require both cases to pass. Any unexpected result stops the sequence; there is no retry under addendum 4.
 
-Baseline attempt-002 failed both intended assertions; the wrong-mutant attempt was rejected by both; upstream-fixed passed both. The original RSS values and the claim that the 4 GiB memory gate passed are superseded by `results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.md` and its JSON checksum manifest. The resource result is **INCONCLUSIVE**. Original receipts and the root bundle `SHA256SUMS` remain unchanged and verifiable; do not treat their sampled RSS field as an OS high-water mark. The result qualifies only the scoped method-level behavior; the task remains unassigned and no inference is authorized by these source-level results.
+Baseline attempt-002 failed both intended assertions; the wrong-mutant attempt was rejected by both; upstream-fixed passed both. The original RSS values and the claim that the 4 GiB memory gate passed are superseded by `results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.md` and its checksum manifest. The resource result is **INCONCLUSIVE**. Original receipts and the root bundle `SHA256SUMS` remain unchanged; the root manifest verifies the pre-append snapshot at commit `18f829b4`. Do not treat the old sampled RSS field as an OS high-water mark. The result qualifies only scoped method-level behavior; the later prospective Development assignment stopped at preflight NO_GO, before model exposure or inference.
+
+PR #163 later appended the prospective Development preflight NO_GO event to the source qualification's exposure ledger. The original 58-file root manifest verifies the pre-append snapshot at commit `18f829b40cb02b2edf71de6f69f2aafcff27ed6a`; it remains unchanged and should not be expected to verify the two subsequently updated ledger files in the current tree. Verify the live ledger and its refreshed sidecar using `results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/SHA256SUMS` and `current-exposure-ledger-supplement-001.json`.
+
+At the source-qualification checkpoint the task remained unassigned. A separate prospective Development assignment and one-shot protocol were frozen later, as recorded in the following section. Public pretraining exposure remains UNKNOWN. A source-level pass cannot establish agent capability or RL improvement.
+
+
+## vLLM #64830 — one-shot Development protocol (frozen; preflight NO-GO; attempt NOT RUN)
+
+Protocol: `results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json` (SHA-256 `27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9`). It pins the Qwen2.5-Coder-14B 4-bit MLX snapshot, source/test/worker hashes, one allowed source file, no network, a 4,096-token context, 2,048 generated-token total, 600-second wall limit, and a 12-GiB process-tree RSS limit. The launch preflight and attempt commands are stored as argv arrays in the protocol.
+
+The protocol was locally hash-checked against its sidecar and declared frozen inputs. The source qualification and original source-exposure record were pinned at parent revision `a1bc5dc255e38ad1741f58399504fdaf357eae1a`; the append-only source-exposure record now also contains the preflight outcome. After both exact-head CI runs passed, the frozen preflight verified the model snapshot hashes and returned **NO_GO**. Available memory was `11,035,787,264` bytes, below the 12 GiB gate, and estimated working set plus headroom also failed. The model weights were not loaded. The model sandbox isolation probe and Metal smoke had passed without loading weights. Independent grader controls are under `results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/`.
+
+The frozen attempt is **NOT RUN** and the independent grader is **NOT RUN**. The v1 protocol must not be retried. Its outcome artifacts are `results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/launch-preflight.json`, `attempt.json`, and `SHA256SUMS`. Verify them with:
+
+```bash
+(cd results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001 && shasum -a 256 -c SHA256SUMS)
+```
+
+Run the focused checks:
+
+```bash
+shasum -a 256 -c results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.sha256
+gzip -dc results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json.gz | shasum -a 256
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_mlsys_vllm_64830_agent_grader_v1.py
+python -m ruff check scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py tests/test_mlsys_vllm_64830_agent_grader_v1.py
+python -m py_compile scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py tests/test_mlsys_vllm_64830_agent_grader_v1.py
+```
+
+The exact frozen `preflight_command` has already run once after the protocol was pushed and exact-head CI passed. It returned `NO_GO`, so the append-only exposure record records a Development preflight outcome with no model prompt, weights, inference, patch, or independent grade. The model-attempt command and grader command were not run. Do not retry protocol v1. If a new resource-qualified protocol is ever frozen, keep the one-attempt and one-independent-grade order, commit and push the resulting attempt record and candidate diff before grading, and keep grader output away from the model. The frozen scratch path and durable-copy command are unused under the NOT RUN outcome.
+
+No model inference, repair, independent grade, training, or policy update has run under this protocol. No capability, RL, generalization, or algorithmic novelty claim follows from the controls.
 
 No split assignment, model inference, training, or Held-Out access is authorized. Public pretraining exposure remains UNKNOWN. A source-level pass cannot establish agent capability or RL improvement.
 

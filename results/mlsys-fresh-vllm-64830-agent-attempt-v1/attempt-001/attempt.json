@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "attempt_id": "vllm-64830-development-attempt-001",
+  "attempt_status": "NOT_RUN",
+  "recorded_at_utc": "2026-10-31T07:05:56.686286Z",
+  "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v1",
+  "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json",
+  "protocol_sha256": "27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9",
+  "assignment_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/exposure-assignment.json",
+  "assignment_sha256": "2216ed24547f1c58034c01fa30c3cd388f09654630c88c40a39ab3746c42cc46",
+  "launch_preflight_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/launch-preflight.json",
+  "launch_preflight_sha256": "0288c39c811bd129923582ba378e4a609f97ffbe0981b32e6b8a2c264603bdda",
+  "launch_preflight_status": "NO_GO",
+  "exposure_record_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
+  "exposure_record_sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed",
+  "failure_gates": [
+    "launch resource gate failed: available_memory_bytes",
+    "launch resource gate failed: estimated_working_set_and_headroom"
+  ],
+  "model_weight_bytes": 8309494233,
+  "model_weights_loaded": false,
+  "model_prompt_delivered": false,
+  "generation_started": false,
+  "model_or_agent_inference": false,
+  "candidate_patch_generated": false,
+  "independent_grader_status": "NOT_RUN",
+  "training": false,
+  "heldout_access": false,
+  "paid_compute_or_api": false,
+  "retry_under_frozen_protocol_authorized": false,
+  "disposition": "No model inference. The frozen protocol says to record NOT RUN and stop when launch preflight fails."
+}

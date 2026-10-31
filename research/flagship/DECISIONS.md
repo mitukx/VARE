@@ -604,6 +604,51 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Follow-up:** Push the complete report and receipts, update PR #162, and inspect exact-head CI/reviews. A possible Development use requires a separate prospective assignment, overlap and resource checks, exposure append, and frozen one-shot model/grader protocol.
 
 
+## 2026-10-31 — Freeze one prospective Qwen2.5-Coder attempt on vLLM #64830
+
+- **Hypothesis:** A stronger local coding model with the repaired bounded tool controller can produce a correct two-guard repair on one source-qualified Development task under a reliable independent grader.
+- **Evidence before inference:** PR #162 head `a1bc5dc255e38ad1741f58399504fdaf357eae1a` passed all required exact-head checks and is ready for review. Grader calibration rejected the baseline and wrong mutant and passed the upstream-fixed method. The added partial-repair regression passed. The local MLX smoke selected Metal, and a model-sandbox probe denied hidden tests, calibration receipts, and user prompt attachments while permitting the task prompt, allowed source, and tokenizer. The source workspace is clean at `17550580e932f15e772185847382d3ae4211f5ec`.
+- **Protocol:** `results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json` SHA-256 `27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9`. One local greedy MLX attempt is bounded to 12 turns, 2,048 generated tokens, 4,096 context tokens, 600 seconds, and 12 GiB process-tree RSS. The protocol and 25 declared frozen local inputs passed static hash checks. Public pretraining exposure remains UNKNOWN; broad same-repository configuration adjacency is possible.
+- **Decision:** Authorize only the prospective one-attempt Development pairing already recorded in the assignment. Do not load weights until protocol commit/push, exact-head CI, and the launch-time resource gate all pass. A failed preflight means `NOT RUN` with no retry. No training, Held-Out access, paid compute/API, or grader feedback is authorized.
+- **Status:** Model inference **NOT RUN**; repair and independent grade **NOT RUN**; coding capability and RL remain **NO-GO**. The smoke test loaded no model weights.
+- **Falsification criteria:** Any protocol/input hash mismatch, workspace drift, hidden-input access, network access, profile mismatch, failed resource gate, timeout/RSS overrun, grader runtime error, or target test failure blocks a positive capability conclusion.
+- **Follow-up:** Push the protocol as a focused child PR against #162's head, wait for exact-head CI, run launch preflight, append the assignment event before any model attempt, and proceed only if every gate passes.
+
+
+## 2026-10-31 — Correct the PR #163 blob-budget failure
+
+- **Evidence:** Exact-head CI on PR #163 head `5e18a75d9e6af9b4c3aea38472f1ef47f8da7194` passed lint, typecheck, Math500, and seeded-summary checks. Both CI runs failed `blob-budget`; the tracked uncompressed `runtime-file-manifest.json` was 1,482,277 bytes, exceeding the repository's 1 MiB threshold. The run logs are not yet published while the full workflow remains in progress; the failed step identifies `scripts/check_tracked_blob_budget.py`.
+- **Correction:** Preserve all 6,289 file entries but gzip deterministically with `gzip -9 -n`; the compressed manifest is 105,574 bytes and expands to the pinned SHA-256 `7e6b84ab45115bf2893a2dbe76e4e891a6ea1fc8dc594ced46822725d6b03ba4`. Update the runtime manifest, frozen protocol hash, and artifact inventory together. No model weights or inference were involved.
+- **Decision:** Do not change the blob allowlist or drop runtime file evidence. Push the compressed representation and require fresh exact-head CI. Launch preflight and model inference remain blocked until green checks.
+- **Follow-up:** Commit and push the corrected protocol bundle, inspect the completed failed-job log, then verify all checks on the new PR head.
+
+
+## 2026-10-31 — Move candidate-grader scratch output outside the worker deny tree
+
+- **Finding:** The frozen final grader argv originally wrote `candidate_method.py` under the repository's `results/` directory, which is inside `/Users/user`. The candidate worker profile denies reads under that tree, so the exact final grader call would fail closed before evaluating a model patch.
+- **Correction:** Change the frozen scratch output to `/private/tmp/vare-vllm-64830-development-attempt-001/final-grader-output-v1`, a sibling of the denied candidate workspace/runtime paths and outside the denied user tree. After the single grade completes, the frozen `durable_copy_command` copies the complete receipt to the tracked `attempt-001/independent-grade-v1/` directory. The scratch parent exists and the output directory is unused. Static frozen-input hashes pass; no model candidate or official grade has run.
+- **Decision:** Keep the worker's read-deny policy intact. Push this protocol correction and require fresh exact-head CI before launch preflight.
+- **Follow-up:** Wait for CI on the latest PR #163 head, then run the one frozen launch preflight.
+
+
+## 2026-10-31 — Stop the vLLM #64830 attempt at the launch resource gate
+
+- **Hypothesis:** The pinned local Qwen2.5-Coder-14B 4-bit MLX snapshot can run within the frozen one-shot limits only when the launch-time memory and working-set gates pass.
+- **Evidence:** Both exact-head CI runs on PR #163 head `4ca735f9310c40a76a9f2df54c532680acb4edc1` passed, including the three Python versions; calibrated CPU evidence passed. The frozen preflight then verified all declared inputs and model snapshot hashes but returned `NO_GO`. Available memory was `11,035,787,264` bytes, below the 12 GiB minimum. The estimated weight-plus-KV reserve was `11,799,155,161` bytes, and adding the frozen 1 GiB headroom required `12,872,896,985` bytes, so the working-set-plus-headroom gate also failed. Disk free (`21,491,724,288` bytes), swap used (`1,915,685,437` bytes), and memory-pressure free (`65%`) passed. The model was not loaded and the task prompt was not delivered.
+- **Alternative explanations:** Memory availability may change, or a suitable GPU/high-memory worker may exist. Neither possibility changes this preflight result. Paid compute or API use is not authorized, and a later resource change does not authorize rerunning a frozen protocol.
+- **Decision:** Mark the model attempt **NOT RUN** and protocol v1 **NO-GO**. Preserve the resource snapshot and append-only no-exposure event. Do not invoke the attempt or grader commands and do not retry protocol v1. Coding capability and RL remain **NO-GO**; this is not a model-quality result.
+- **Falsification criteria:** This NO-GO classification would be invalid only if the saved receipt or frozen protocol hash were wrong, or the resource-gate calculation failed to reproduce from those exact inputs. A future attempt requires a distinct protocol, unchanged task-exposure safeguards, and a new preflight with every resource gate passing.
+- **Follow-up:** Push the receipt, ledger event, and state update; verify exact-head CI. Then assess a suitable no-cost memory-sufficient execution host. If none is available, move to the next independent engineering milestone without claiming model capability.
+
+## 2026-10-31 — Correct the historical vLLM #64575 preflight integrity claim
+
+- **Hypothesis:** The vLLM #64575 launch-preflight receipt's `frozen_inputs_verified=true` flag established that the task JSON and task prompt matched their frozen protocol hashes.
+- **Evidence:** The receipt is unchanged at `results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json` (SHA-256 `d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e`). Its pinned runner (`scripts/preflight_local_model_attempt.py`, SHA-256 `91f70bec7683d1f82157ee9e8f0cdfad65a5f476461df3ec22233a8f0d9bdd9b`, revision `a7a2509c4ddc2434053cc23d7a59508cb5b3304d`) checked for generic `path` and `sha256` keys before branching on the `task` entry. Because the task entry uses `task_json_path`/`task_json_sha256` and `task_prompt_path`/`task_prompt_sha256`, it was skipped. Retrospective hashes of both frozen repository files match the protocol, but the historical preflight did not check them. The model snapshot hashes were checked separately. The independent resource gate still failed: 11,993,432,064 bytes available versus 12,872,896,985 required, a 879,464,921-byte shortfall. `model_loaded=false`; no prompt was delivered to the model, no candidate was generated, no grade ran, and the attempt remains NOT RUN.
+- **Decision:** Preserve the original protocol, receipt, and checksum manifest unchanged. Record this correction in `results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/preflight-integrity-erratum-001.json` and its separate `errata/SHA256SUMS`. The retrospective hash match does not retroactively validate the old preflight flag. Do not retry protocol v1; the NO-GO and no-exposure outcome remain valid.
+- **Correction:** PR #160 commit `71aa74ab6a8f6f1625505b68f7f332c49fabff93` validates task entries before generic filtering and adds regression coverage. Its exact-head checks passed. This verifies the corrected implementation only.
+- **Follow-up:** Correct the PR #160 description and current checkpoint summaries; retain the original receipt for auditability.
+
+
 ## 2026-10-31 — Correct the vLLM #64830 RSS evidence interpretation
 
 - **Finding:** Review of the frozen runner showed that `peak_process_tree_rss_bytes` was only the maximum 0.5-second `ps` sample. Each retained arm finished in about 0.53 seconds and recorded 3,932,160 bytes, so the value cannot establish the OS high-water mark or exclude a short-lived limit breach. A local reproduction sampled 2,867,200 bytes before a child touched 91 MiB, then `wait4` reported a 106,774,528-byte direct-child high-water mark after a 0.5-second gap.
@@ -611,6 +656,15 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Keep the three behavioral outcomes: baseline fails both intended assertions, the wrong mutant is rejected, and upstream-fixed passes both. Reclassify the consumed runs' 4 GiB resource result as **INCONCLUSIVE**. Do not rerun the arms or reuse protocol v1. The corrected runner records sampled process-tree RSS separately from the OS `wait4` direct-child high-water and states that the latter is not a complete concurrent process-tree peak.
 - **Limit:** Neither the old nor corrected runner proves the maximum aggregate RSS of every concurrent descendant. New protocols must bind the measurement scope and cannot claim a full-tree peak from polling alone.
 - **Follow-up:** Run the focused runner regression, lint, and compile checks; push the fix and erratum to PR #162; inspect exact-head CI and resolve the RSS review thread only after the pushed diff is visible.
+
+
+## 2026-10-31 — Preserve the appended #64830 Development preflight ledger
+
+- **Finding:** PR #163 appended event `vllm-64830-development-attempt-001-preflight-no-go` to the existing source-qualification exposure ledger. This changed the live `exposure-record.json` from its original root-manifest hash `e966664a...` to `9375669c...`; the old `.sha256` sidecar still contained the prior value.
+- **Evidence:** The original 58-file bundle verifies at the pre-append Git snapshot `18f829b40cb02b2edf71de6f69f2aafcff27ed6a`. The live record states that the prospective Development launch preflight returned `NO_GO`; model weights were not loaded, no prompt was delivered, and no inference or grade occurred. The current sidecar now matches the appended ledger, and errata `current-exposure-ledger-supplement-001.json` records both historical and current hashes. Errata `SHA256SUMS` verifies the live ledger, sidecar, and supplements.
+- **Decision:** Keep the original root `SHA256SUMS` immutable as the manifest for the pre-append qualification snapshot. Verify the current ledger through the supplemental errata manifest. Report the task as prospectively assigned Development with a preflight NO_GO; do not call it unassigned or infer model capability.
+- **Limit:** The current root bundle manifest intentionally does not authenticate the later mutable ledger append; Git preserves the prior bytes and commit. Do not rewrite the old qualification receipt or pretend the old manifest covers the updated ledger.
+- **Follow-up:** Keep the current ledger hash in `state.json`; retain both append-only corrections and do not retry the frozen protocol.
 
 ## 2026-10-31 — Reclassify vLLM #64575 source-runner RSS evidence
 
@@ -630,12 +684,3 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Record `sampled_process_tree_rss_max_bytes` and `os_wait4_child_max_rss_bytes` separately, enforce the configured threshold against either signal, and label the aggregate descendant-peak limitation. Keep process-group cleanup after normal leader exit. Do not claim a complete concurrent aggregate high-water mark or retrofit a past model result that never ran.
 - **Falsification criteria:** The regression misses the short-lived child's `wait4` high-water; an over-limit direct-child high-water is recorded as within-limit; or surviving descendants remain after process-group cleanup.
 - **Follow-up:** Push the shared-runner correction and tests with PR #160, verify the full focused suites and exact-head CI. Any future bounded attempt must use the new output fields and retain its runner hash in the frozen protocol.
-
-
-## 2026-10-31 — Correct the historical vLLM #64575 preflight integrity claim
-
-- **Hypothesis:** The vLLM #64575 launch-preflight receipt's `frozen_inputs_verified=true` flag established that the task JSON and task prompt matched their frozen protocol hashes.
-- **Evidence:** The receipt is unchanged. In the historical `_check_artifact_hashes`, the generic `path`/`sha256` guard ran before the special `task` branch. The frozen task entry instead contains `task_json_path`/`task_json_sha256` and `task_prompt_path`/`task_prompt_sha256`, so those checks were unreachable. Retrospective hashes of both frozen repository files match the protocol declarations, but the original preflight did not check them. Model snapshot hashes were checked separately. The resource gate independently failed by 879,464,921 bytes; `model_loaded=false`, no prompt was delivered, no candidate was generated, and no grade ran.
-- **Decision:** Preserve the original protocol, receipt, and checksum manifest unchanged. Add the append-only correction at `results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/preflight-integrity-erratum-001.json` and verify it with its `SHA256SUMS`. The task JSON/prompt integrity claim is corrected; the resource NO-GO and NOT RUN decision remain valid. Do not retry protocol v1.
-- **Correction:** PR #160's current task-hash validation orders the task-specific checks before generic artifact filtering and adds regression coverage. Exact-head CI and CPU evidence pass; this validates the corrected implementation only and does not retroactively change the old receipt.
-- **Follow-up:** Keep this erratum beside the immutable receipt and include it in the PR #160 integration.

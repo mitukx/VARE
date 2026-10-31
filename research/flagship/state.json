@@ -305,26 +305,32 @@
       "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1-addendum-4-output-profile-binding",
       "sha256": "dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396",
       "status": "pushed before candidate retries; baseline, wrong-mutant, and upstream-fixed attempt-002 gates all passed; source-only qualification complete"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v1",
+      "sha256": "27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9",
+      "status": "FROZEN; exact-head CI passed on 4ca735f; launch preflight NO_GO; no weights loaded; no retry under this protocol"
     }
   ],
   "git_refs": {
-    "active_branch": "codex/freshdev-qualification-vllm64830-oct31",
+    "active_branch": "codex/vllm64830-development-attempt-v1",
     "active_pr_state": "open",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/162",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/163",
     "last_integrated_pr_merge_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
     "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "8c29522fa4f48dbc0922256df75fba43adc6cef3"
+    "verified_pr_head_sha_before_checkpoint_changes": "19e835b2a04279d880b82f36cc38534f78c4e79a"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
-    "integration": "GO",
+    "integration": "BLOCKED",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Finish integrating PRs #160–#163 in order with required exact-head checks green. Then use Qwen3-4B (already independently successful on Train #1904) for one prospective vLLM #64830 Development repair under a new frozen protocol and model-specific passing resource gate; do not retry closed 14B protocols.",
-  "last_completed_step": "Completed the hash-bound #64830 source-level qualification under pushed Addendum 4. Baseline attempt-002 failed both frozen post-override assertions; wrong-mutant attempt-002 failed the same two assertions; upstream-fixed attempt-002 passed both. Every arm matched its frozen source/test/Python/profile/command hashes and exact attempt-002 write root; default-deny/network-deny profiles held, with no timeout, RSS breach, skip, or unrelated error. The bundle-wide SHA256SUMS verifies all receipts. Exposure ledger records source/test exposure to the research agent but no model exposure/inference/training/Held-Out use. On exact PR #162 head 8c29522fa4f48dbc0922256df75fba43adc6cef3, both duplicate CI runs passed Python 3.11/3.12/3.13, lint, typecheck, blob budget, Math500 grader, seeded-summary CPU, RVL inference CPU, and calibrated CPU tasks. Status is QUALIFIED_SOURCE_LEVEL only and UNASSIGNED; no capability or RL result is claimed. The historical #64575 preflight integrity claim is corrected by an append-only erratum: task JSON/prompt hashes were not checked by the old runner but retrospectively match; the resource NO-GO and NOT RUN result remain valid.",
-  "milestone_id": "p15-fresh-vllm-64830-source-qualification",
+  "highest_priority_next_task": "Integrate PRs #160–#163 in order after exact-head required checks pass. Then execute one prospective Qwen3-4B vLLM #64830 Development repair with a new frozen assignment/protocol and immediate model-specific resource preflight; the existing #1904 Train repair already validates native tool round-trip. Do not spend a fresh task on controller debugging, retry closed 14B protocols, pay for compute/API, train, or access Held-Out.",
+  "last_completed_step": "Synchronized PRs #161–#163 to PR #160 head da625977 and refreshed the mission checkpoint. The verified PR #163 engineering head before this checkpoint is 19e835b2; exact-head CI and calibrated CPU evidence passed on #161 bbca0290 (runs 41184060589/41184057449/41184060600), #162 57b6507b (41184138216/41184134388/41184138294), and #163 19e835b2 (41184300330/41184295425/41184300363). PR #160 scope/integration review found no additional issue. A previous superseded #163 head fb5b72b3 failed one timing-sensitive Python 3.12 SIGKILL fixture; the later full exact-head run passed unchanged code. Focused merged-tree validation passed 23 tests, 69 immutable artifact checks passed, checksums and git diff --check passed. No PR was merged. Current GitHub state was refreshed: main remains 416f35c; #160 integrity erratum is ported to e9a5fc42, #161 is synchronized at f005f8da, #162 at 210a5642, and #163 is being synchronized. #160 CPU evidence passed while fresh CI runs; #161/#162 exact-head checks are running. The resource-feasible model route is Qwen3-4B: cached weights 2,263,022,417 bytes, estimated 4,096-token fp16 KV 603,979,776 bytes, empirical prior MLX peak 3,752,736,344 bytes; prior host snapshot had 11,035,787,264 available bytes. A new immediate preflight is still mandatory. Existing run-19 provides one narrow Train repair (2/2 grader cases); fresh Development repair count remains zero.",
+  "milestone_id": "p16-vllm-64830-one-shot-development-attempt",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -1259,7 +1265,7 @@
     {
       "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json",
       "sha256": "d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e",
-      "status": "Historical receipt reports frozen_inputs_verified=true, but its runner skipped task JSON/prompt hashes; retrospective hashes match, model snapshot hashes were checked separately, resource NO_GO remains valid, model_loaded=false."
+      "status": "Historical receipt reports frozen_inputs_verified=true, but pinned runner skipped task JSON/prompt hashes; retrospective hashes match protocol. Model snapshot hashes were checked separately; resource NO_GO remains valid; model_loaded=false."
     },
     {
       "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/SHA256SUMS",
@@ -1283,8 +1289,8 @@
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
-      "sha256": "e966664a97f80bc5e90c57f5d94140415fdcf17301f0e17c120ee7a49cab857f",
-      "status": "append-only exposure ledger records source/test access by research agent; no model exposure; task remains unassigned"
+      "sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed",
+      "status": "Current append-only exposure ledger; Development launch preflight NO_GO, no model exposure or inference; current hash is verified by errata supplement 001."
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-2-execution.json",
@@ -1429,7 +1435,7 @@
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/SHA256SUMS",
       "sha256": "0a14a5fe7efe269b2668c1cd0574eeb3af17666bb2fe5ab873ebe19df1824261",
-      "status": "58 qualification bundle files verified"
+      "status": "Immutable 58-file manifest for the pre-append source-qualification snapshot at commit 18f829b4."
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/upstream-fixed-attempt-002/attempt.json",
@@ -1442,14 +1448,114 @@
       "status": "2 passed, 0 failed/skipped/errors"
     },
     {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json",
+      "sha256": "27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9",
+      "status": "FROZEN; launch preflight NO_GO; model not loaded; inference NOT RUN"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol-artifact-inventory.json",
+      "sha256": "9c2178561f6fe19b7c86ae0d1141f09aaba33bcd7610e1056014f09a76b481a3",
+      "status": "Declared frozen-input hashes verified; launch preflight verified snapshot hashes; resource NO_GO; model not loaded"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/grader-calibration.json",
+      "sha256": "8857e07256eae5721c08c6895602e1217882c90d95ca041a38d162cae2fa2d20",
+      "status": "Baseline/mutant rejected; upstream fixed passed; no model candidate"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/local-harness-checks-001/checks.json",
+      "sha256": "a8d3674138790ab6ccc252b376d53dd0079c743b701cd6711e8fced95847f3a4",
+      "status": "7 focused tests, Ruff, and py_compile passed"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/metal-sandbox-smoke.json",
+      "sha256": "695cdfc7f98b8555616702e98272361b4797292f013cb8d530dabaa30c8deccf",
+      "status": "Metal smoke passed; weights not loaded"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/model-sandbox-isolation-probe.json",
+      "sha256": "b057d56cdf6e70fe09e4c51be47d12a9d9cd5b3b2568dab2df0595f35fd8aab3",
+      "status": "Hidden-input reads denied; no inference"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json.gz",
+      "sha256": "f3c30720549f7b5f1da6aea5bacc0cbcd22b7b6f938ebbfaf9abd0969bd52572",
+      "status": "Compressed full runtime-file hash inventory; expands to pinned 7e6b84ab SHA-256"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-manifest.json",
+      "sha256": "5e00c0d4de98d51f02351363529cc3890a857ef0f76c56fc8f8ca0eb49973747",
+      "status": "Runtime/package manifest updated to point to the deterministic gzip file inventory"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/launch-preflight.json",
+      "sha256": "0288c39c811bd129923582ba378e4a609f97ffbe0981b32e6b8a2c264603bdda",
+      "status": "NO_GO: available-memory and working-set-plus-headroom gates failed; snapshot hashes verified; model not loaded"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/attempt.json",
+      "sha256": "e856b5f8f628b055a6664bd880c8c996cf100b5221e5dfe86eb08f2ca66c0c2d",
+      "status": "NOT RUN; no prompt, generation, candidate, independent grade, training, or Held-Out access"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/SHA256SUMS",
+      "sha256": "d19f385557c9f791266ec6085355ecfd6b9a4d1181bcc4d748b6ac7a3c141323",
+      "status": "Checksums for preflight, no-run receipt, assignment record, and updated exposure ledger"
+    },
+    {
       "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/preflight-integrity-erratum-001.json",
       "sha256": "c16cb7514187d6a5e19c7e780c6dba220217389f42ba78d694a70d1fbb2f09b0",
-      "status": "Append-only correction: historical preflight skipped task JSON/prompt hashes; retrospective hashes match; original receipt and protocol unchanged."
+      "status": "Append-only integrity erratum: historical preflight skipped task JSON/prompt hashes; retrospective hashes match; receipt/protocol unchanged."
     },
     {
       "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/SHA256SUMS",
       "sha256": "22c4334905deb3b018eaf43d8fbe9f6b7b00da54bcb5dc5b37aa06ed7a4f75d3",
-      "status": "Checksum manifest for the separate historical preflight integrity erratum."
+      "status": "Checksum manifest for the separate preflight integrity erratum."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.json",
+      "sha256": "0656b5343f613a74d0bd35f93003622f9074130b2d2e662d19e2c00c14ca6877",
+      "status": "Append-only erratum: original RSS fields were sampled values; the consumed 4 GiB resource result is inconclusive."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.md",
+      "sha256": "d9f4cc9fb18d8db09cca862730dabdf9b973565ab10243479ff5eb5d6075259f",
+      "status": "Human-readable resource measurement correction; original result bundle preserved."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/SHA256SUMS",
+      "sha256": "69046e5fdadd71a2ac7f6bc0516af44673477c596dc3aae077f6187c7337fb2f",
+      "status": "Supplemental manifest verifies RSS erratum, current exposure ledger, and its refreshed sidecar."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json.sha256",
+      "sha256": "9d3b472aa441f7f248462b3a50961ac6e60b51668eea3f10dc2272e5c97d8fa0",
+      "status": "Refreshed sidecar for the current append-only exposure record; original root manifest retains its pre-append sidecar hash."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/current-exposure-ledger-supplement-001.json",
+      "sha256": "7cbe9683cb76a9542e0e2db6a3b9ef382a42972ea02dc9ebc86bf48e87869a05",
+      "status": "Binds historical source-qualification ledger hashes and current Development preflight NO_GO event."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/rss-resource-measurement-erratum-001.json",
+      "sha256": "2b0879110e0ad7e095d2aff4e5d4c5cfdd421456b33db229d62321ec561db9d3",
+      "status": "Append-only #64575 RSS correction; original 30-file evidence bundle remains unchanged."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/rss-resource-measurement-erratum-001.md",
+      "sha256": "71b6979d387ea0656e2ac7f3fa7a5f7f8ace7f5333273886e8cd5a835890eb98",
+      "status": "Append-only #64575 RSS correction; original 30-file evidence bundle remains unchanged."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/SHA256SUMS",
+      "sha256": "f643611382402d7dfa9317b1e478515d83d26dec905c027d49f1cc22e434a1ac",
+      "status": "Append-only #64575 RSS correction; original 30-file evidence bundle remains unchanged."
+    },
+    {
+      "path": "results/mlsys-repo-eval-v1/run-19/report.md",
+      "sha256": "f5a3b4931ee9898e38afaa58a80aaacc662eb7d98bbfbe1afb3507d2437ba88b",
+      "status": "One independently graded Train repair; one trajectory, 2/2 task cases; no Development generalization or policy update."
     }
   ],
   "run_ids": [
@@ -1504,28 +1610,62 @@
     "vllm-64830-addendum3-profile-binding-audit-preexec",
     "vllm-64830-source-baseline-attempt-002",
     "vllm-64830-source-wrong-mutant-attempt-002",
-    "vllm-64830-source-upstream-fixed-attempt-002"
+    "vllm-64830-source-upstream-fixed-attempt-002",
+    "vllm-64830-agent-grader-controls-v1",
+    "vllm-64830-agent-protocol-v1-preflight-not-run",
+    "41178261435",
+    "41178265604",
+    "41178695665",
+    "41178698379",
+    "41178698361",
+    "vllm-64830-agent-attempt-001-preflight-no-go",
+    "41173420782",
+    "41173424840",
+    "41173424824",
+    "41179614062",
+    "41179616851",
+    "41179616866",
+    "41180541051",
+    "41180546951",
+    "41180546984",
+    "41182365236",
+    "41182368587",
+    "41182368584",
+    "41183436031",
+    "41183439344",
+    "41183439489",
+    "41184057449",
+    "41184060589",
+    "41184060600",
+    "41184134388",
+    "41184138216",
+    "41184138294",
+    "41184199790",
+    "41184203745",
+    "41184203686"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
     "fresh_stage3_families_used": 3,
     "historical_heldout_1979_touched": false,
     "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
-    "sha256": "e966664a97f80bc5e90c57f5d94140415fdcf17301f0e17c120ee7a49cab857f"
+    "sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed"
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
-    "The two authorized Qwen3-4B Development attempts produced no edits and exhausted the 4096-token context; coding capability feasibility remains NO-GO under the frozen rule.",
-    "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
+    "Qwen3-4B has one independently verified Train #1904 repair (one trajectory, 2/2 grader cases), but its two prior fresh Development attempts produced no edits. Fresh Development repair success remains 0; no generalization or RL improvement is established.",
+    "A narrow verified Train repair exists, but there is no verified Development repair, nondegenerate RL reward signal, actual policy update, or Held-Out evaluation.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
-    "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Its resource preflight NO-GO remains valid, but the historical runner skipped task JSON/prompt hash checks; retrospective hashes match the frozen protocol. Model weights were not loaded. See the append-only integrity erratum; do not retry protocol v1.",
-    "PR #160 is at e9a5fc42a289c5820547977f1eaa18f41f70336c with the #64575 integrity erratum ported; fresh exact-head CI is in progress, CPU evidence passed, and main requires nine checks with zero approving reviews.",
+    "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Its resource preflight NO-GO remains valid, but the historical runner skipped the task JSON/prompt hashes; a retrospective hash check matches the frozen protocol. Model weights were not loaded. See the append-only integrity erratum; do not retry protocol v1.",
+    "The prospectively assigned vLLM #64830 Development task hit launch-preflight NO_GO: available memory was 11,035,787,264 bytes (<12 GiB) and estimated working-set-plus-headroom failed. Frozen inputs and model snapshot hashes verified, but no weights were loaded, no prompt or candidate was generated, and no grade ran. Do not retry the frozen protocol; any future execution needs a new protocol and a fresh passing resource gate.",
+    "The vLLM #64830 source-arm receipts recorded 3,932,160 bytes from 0.5-second RSS samples, not measured process-tree peaks. The 4 GiB resource result is INCONCLUSIVE; see append-only erratum results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.json (SHA-256 0656b5343f613a74d0bd35f93003622f9074130b2d2e662d19e2c00c14ca6877). Do not rerun consumed arms or reuse protocol v1. The original 58-file manifest covers the pre-append snapshot at commit 18f829b4; the live ledger and refreshed sidecar are covered by the separate errata manifest.",
+    "PR #160 is at e9a5fc42a289c5820547977f1eaa18f41f70336c with the #64575 integrity erratum ported; CPU evidence 41185980005 passed and exact-head CI runs 41185980035/41185976417 are in progress. Main requires nine contexts and zero approving reviews.",
     "PR #161 is synchronized at f005f8da1135e875f498e31e51fc43b811aa17ad with the updated #160 parent; exact-head CI and CPU evidence are in progress.",
-    "vLLM #64830 is QUALIFIED_SOURCE_LEVEL for the two frozen method-level cases only and remains UNASSIGNED. The excluded custom-speculator behavior and whole upstream PR are not qualified; public pretraining exposure remains UNKNOWN. Any Development assignment needs a separate prospective protocol, overlap check, resource preflight, and exposure append before model inference.",
-    "PR #162 requires conflict-resolved synchronization with updated PR #161 before its new exact-head CI can be accepted."
+    "PR #162 is synchronized at 210a564248b472343220c1c722cdc89671aa3e02 with the updated #161 parent; exact-head CI and CPU evidence are in progress.",
+    "PR #163 is being synchronized with #162 head 210a5642 and requires fresh exact-head CI before integration."
   ],
-  "updated_at": "2026-10-31T08:51:51Z"
+  "updated_at": "2026-10-31T08:53:57Z"
 }

@@ -1,0 +1,8 @@
+(version 1)
+(deny default)
+(allow file-read*)
+(allow file-write* (subpath "/private/tmp/vare-vllm-64830-development-attempt-001/grader-output-001"))
+(allow file-write* (literal "/dev/null"))
+(allow process*)
+(allow sysctl-read)
+(deny network*)
