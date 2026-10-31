@@ -2,39 +2,31 @@
 
 ## Current checkpoint
 
-- Milestone: `p6-context-compaction-pr-154-open`.
-- Last verified `origin/main`: `5259a721e263baf47a52d4519c7cee949443df12` (2026-10-31), integrating PR #153.
-- Work branch: `codex/agent-context-compaction-v1`.
-- Active PR: [#154 — Compact stale tool history before context exhaustion](https://github.com/mitukx/VARE/pull/154), open against main; required CI and review are being checked at the pushed head.
-- PR #153 is merged at `5259a721e263baf47a52d4519c7cee949443df12`; required checks passed at the final pushed head.
+- Milestone: `p10-transformers-49458-agent-interaction-failure-diagnosed`.
+- Last verified `origin/main`: `719fbe368816d81addb29a1ba2c451fa7f1bf631`, integrating PR #154. PR #150 is already merged; the earlier mission prompt’s stale #150 blocker is resolved.
+- Work branch: `codex/fresh-development-family-overlap-v1`.
+- Active PR: [#155 — Qualify fresh Transformers #49458 candidate](https://github.com/mitukx/VARE/pull/155), open against main. The protocol commit `f3ff08e6d4e4b69adac534d61b6406804d7dffe5` was pushed before inference. Exact-head CI for the subsequent checkpoint changes must be checked after push.
+- The first CI run on commit `09605e254c47bb07a96dec7a8e318a9aae13fd68` found one Python 3.13 compatibility assertion failure: an existing test expects the retry reminder to retain `cut off`. The failed job ran 1,538 passes and 111 skips besides that assertion. All completed non-test checks passed; other Python test jobs were still running when triaged. The reminder has been corrected to say the call was incomplete and may have been cut off. Ruff and 48 targeted tests, including that compatibility assertion, pass locally. The correction is included in this checkpoint; fresh exact-head CI remains required.
 
-## Task selection and exposure
+## Transformers #49458 one-shot outcome
 
-The source-qualified prospective cohort was Transformers #49418, MLX #4778, and Ray #66694; TRL #7668 remains excluded because its baseline failed before the frozen assertion gate. The metadata-only Development/Train review found no prior family overlap for Transformers #49418 or Ray #66694 and possible broad gradient/autodiff relatedness between MLX #4778 and Train #4662. Only Transformers and Ray were allocated. Their one allowed Development attempts are consumed. MLX remains unassigned. Public pretraining exposure is **UNKNOWN**; no Held-Out task was opened or used.
+- Source qualification v2 remains **QUALIFIED_SOURCE_LEVEL** only. It proves the pinned CPU regression is reproducible, not model capability.
+- Frozen protocol `protocols/mlsys_transformers_49458_agent_attempt_v1.json` (SHA-256 `4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee`) was executed exactly once after its hash and resource gates passed.
+- The Qwen3-4B attempt produced 849 tokens in six turns. It searched for `AutoVideoProcessor`, read the legacy image-processor fallback at lines 360–400, then emitted three incomplete edit-tool outputs. Two re-encoded to the 256-token cap and one to 255/256. No edit call was dispatched and the diff remained empty.
+- The one independent grade ran against that unchanged baseline. Both pinned cases failed the expected `load_attribute.assert_not_called` assertion (47 and 141 mapping loads), with zero errors/skips. This confirms the baseline control; it is not a candidate patch rejection. Agent, grade, wrapper, logs, resource snapshots, diagnosis, and checksums are retained under `results/mlsys-fresh-development-agent-diagnostic-v2/`.
+- Failure class: **agent interaction failure from incomplete tool-call output, with off-target source localization**. The task family is consumed; do not retry or provide grader feedback. Public pretraining exposure remains unknown.
 
-## Executed model diagnostic
+## Engineering response
 
-- Model: `mlx-community/Qwen3-4B-Instruct-2507-4bit`, revision `50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b`; local offline Apple Metal, greedy, 4,096 context cap, 2,048 generated-token cap.
-- Transformers #49418: 126 generated tokens, 4 tool turns, `context_budget_exhausted`, no edit, empty diff; independent pinned grade: 4/6 failed (all four boundary targets), 2/6 controls passed, 0 skips.
-- Ray #66694: 399 generated tokens, 5 tool turns, `context_budget_exhausted`, no edit, empty diff; independent pinned grade: 2/4 failed (both target cases), 2/4 controls passed, 0 skips.
-- Each model attempt and independent grade ran once. No grader feedback was returned. Both tasks yielded zero independently verified repairs.
-- Raw traces, candidate outputs, grader logs/receipts, resource telemetry, exposure append, report, and checksums are retained under `results/mlsys-fresh-development-agent-diagnostic-v1/`.
+The runner now records incomplete tool-call outputs and their turn numbers, distinguishes outputs ending at the configured cap from other unterminated calls, and gives a more concrete reminder for a single small edit. Added deterministic unit coverage for the classifier and reminder. `ruff check scripts/run_local_agent.py tests/test_run_local_agent_tool_format.py`, `work/ci-py311/bin/pytest -q tests/test_run_local_agent_tool_format.py` (47 passed), and `git diff --check` passed locally. This narrows diagnosis and improves the correction prompt; it does not claim to fix model capability. The consumed task was not rerun.
 
-## Controller change — implementation and retrospective evidence
+## GO/NO-GO
 
-- `scripts/run_local_agent.py` now compacts only when the rendered prompt reaches the configured hard context cap. It removes oldest fully paired assistant tool-call rounds, preserving the initial system/task messages, newest complete tool round, compaction note, and unabridged result transcript.
-- Malformed, duplicate-ID, and incomplete multi-tool rounds are not removed. If the latest complete round alone cannot fit, the controller preserves it and retains the existing `context_budget_exhausted` stop.
-- `scripts/replay_agent_context_compaction.py` rebuilds saved messages and checks every historical prompt token count without loading model weights or generating tokens. The two replay records are in `results/agent-context-compaction-replay-v1/`: Transformers 4,296 → 2,765 tokens; Ray 4,140 → 2,795 tokens.
-- The focused agent/protocol/grader suite, Ruff, Python compilation, and `git diff --check` pass locally. Full PR CI is pending.
-- xAI's public Grok Build already has manual/automatic session compaction, compaction checkpoints, summary generation, and an optional two-pass path. This controller change is a narrow fallback and is not an algorithmic novelty claim.
+- Coding capability: **NO-GO**. There is no independently verified model-generated repair.
+- SFT/RL update: **NO-GO**. No positive repair trajectory or nondegenerate reward signal exists.
+- Held-Out: not opened or used.
+- Integration: **GO_PENDING_REMOTE_CI** until the current PR head’s required checks are verified; no branch-protection bypass or merge is permitted.
 
-## Decision
+## Immediate next action
 
-- Coding capability feasibility: **NO-GO** under the frozen rule (0/2 independently verified repairs).
-- RL update: **NO-GO**. No successful repair trajectory or nondegenerate verified reward signal exists; no SFT, optimizer update, GRPO/RL, or Held-Out run occurred.
-- Retrospective compaction replay: both reconstructed contexts fit under 4,096 tokens. This is deterministic prompt-controller evidence only; the model has not been run with the changed controller and no repair benefit is established.
-- Scientific claim limit: the frozen one-shot Qwen3-4B configuration failed on these two families. The result does not establish general model incapability, pretraining independence, generalization, or algorithmic novelty.
-
-## Next executable task
-
-Finish the focused PR and verify all required checks on its final head. Then source-qualify a new Development family, complete its metadata overlap review, and freeze a one-attempt protocol before any further inference. Never rerun Transformers #49418 or Ray #66694. Keep MLX #4778 unassigned until its possible Train-family overlap is resolved or explicitly risk-handled in a frozen protocol.
+Inspect exact-head GitHub checks for the Python 3.13 compatibility correction, reproduce any failures, and push corrections. If CI passes, review the complete diff and remaining PR blockers. Do not retry #49458 or start RL. A future attempt requires a distinct qualified Development family and a new frozen protocol after a material feasibility change.

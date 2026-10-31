@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-task-family-overlap-v2",
+  "frozen_at_utc": "2026-10-31T01:30:22Z",
+  "frozen_against_main_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
+  "purpose": "Assess prior Development/Train family overlap for one prospective fresh Development candidate from the frozen metadata sample before opening its issue body, source, tests, or patch.",
+  "candidate_task_ids": [
+    "transformers-49458-lazy-auto-video-processor"
+  ],
+  "candidate_identity": {
+    "repository": "huggingface/transformers",
+    "upstream_pull_request": 49458,
+    "title": "Keep AutoVideoProcessor class lookup lazy",
+    "base_ref_sha_at_capture": "33ab420a77c2fee01cbdd2db4a5d0969b9aa42d0",
+    "head_sha": "6afd4e32d7953126ace39b630db675c8ac0b4276",
+    "merge_base_sha": "429e69162e2944922e45c2cea24887d32e96fbe7",
+    "merge_commit_sha": "927af2f73bd0d53d339f8fc0d4bd8b053f3836bb",
+    "candidate_row_canonical_sha256": "3637f75f2dd5612572e08720e5d2fdfa757611b6077646cd628075e048706a69",
+    "changed_paths": [
+      "src/transformers/models/auto/video_processing_auto.py",
+      "tests/models/auto/test_video_processing_auto.py"
+    ]
+  },
+  "frozen_inputs": [
+    {
+      "path": "protocols/mlsys_fresh_development_candidate_screen_v4.json",
+      "sha256": "45e75d3f616892514d22416c27163221b6d5eccdaed66dad691b8a33e1c737ff"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_candidate_metadata_sample_v1.json",
+      "sha256": "2bf791ea9d99184298a1be38f4d0f584b45ac509fe79b5e801f5749c8ee42c20"
+    },
+    {
+      "path": "results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json",
+      "sha256": "810fb823781f3bc44a0272db230cc3d65b43751c415e53229c81104a6183baad"
+    },
+    {
+      "path": "results/mlsys-fresh-development-metadata-review-sample-v1/evidence-manifest.json",
+      "sha256": "41f9cf1c380a165613721b8bf516e7f2da8b2d3f7cf1f5e92ff3a91419e1f798"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1.json",
+      "sha256": "6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_1.json",
+      "sha256": "5d7a44df1cf27bbef1030c2c51dde1f89fe71361949a71d6404d379c22a8f0f2"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1_addendum_2.json",
+      "sha256": "283296307bdacf3ebedbcd56274542ba1d5630644c2817b6166cf94d19b1efb5"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json",
+      "sha256": "bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+      "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700"
+    }
+  ],
+  "comparison_scope": {
+    "prior_splits": [
+      "Development",
+      "Train"
+    ],
+    "heldout": "Exclude Held-out rows before semantic comparison. Do not inspect, print, or report Held-out identifiers or contents.",
+    "candidate_material": [
+      "the single candidate identity and row bound above",
+      "issue-family metadata and changed paths in the frozen metadata sample"
+    ],
+    "historical_material": [
+      "the prior frozen Development/Train inventory and candidate assessments",
+      "the two Development events in the frozen post-attempt exposure append"
+    ]
+  },
+  "decision_rules": [
+    {
+      "label": "DIRECT_IDENTITY_OVERLAP",
+      "rule": "Same repository and upstream PR/task identity as a previously exposed Development or Train task."
+    },
+    {
+      "label": "SAME_TASK_FAMILY",
+      "rule": "Metadata documents the same underlying defect or behavioral contract in the same component; changed-path overlap corroborates but does not alone establish family identity."
+    },
+    {
+      "label": "POSSIBLE_FAMILY_OVERLAP",
+      "rule": "Metadata suggests a shared subsystem or contract, but evidence is insufficient to conclude the same defect family."
+    },
+    {
+      "label": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rule": "No direct identity or same-family match is found among available Development/Train exposure metadata; this does not establish pretraining independence."
+    },
+    {
+      "label": "INDETERMINATE",
+      "rule": "Available exposure metadata is incomplete or lacks enough issue/path detail to apply the preceding criteria."
+    }
+  ],
+  "report_requirements": [
+    "verify every frozen input and the canonical candidate-row hash",
+    "record repository, upstream PR identity, issue family, changed paths, prior match category, rationale, and confidence",
+    "report only Development/Train comparison rows and omit Held-Out identifiers",
+    "state whether metadata supports proceeding to source qualification, without assigning a split"
+  ],
+  "prohibited_actions": [
+    "opening or fetching the candidate issue body, source, tests, patch, or grader artifacts",
+    "running tests, baselines, or task environments",
+    "model or agent inference",
+    "split assignment or changing any historical exposure ledger",
+    "using Held-Out data or reporting Held-Out identifiers",
+    "claiming absence of public pretraining exposure"
+  ],
+  "authorization": "METADATA_ONLY_OVERLAP_REVIEW; source qualification, split assignment, testing, and inference are not authorized by this protocol"
+}

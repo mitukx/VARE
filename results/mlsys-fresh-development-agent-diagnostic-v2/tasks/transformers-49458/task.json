@@ -1,0 +1,19 @@
+{
+  "task_id": "transformers-49458-lazy-auto-video-processor",
+  "prompt": "At the pinned Transformers baseline, loading one built-in video processor through AutoVideoProcessor can resolve unrelated built-in processor modules while searching its registry. Change the lazy lookup so selecting the requested built-in processor does not resolve unrelated built-in processor modules. Preserve explicitly registered classes, backend overrides, and current fallback behavior. Make the smallest source change in `src/transformers/models/auto/video_processing_auto.py`. Do not add dependencies or edit tests. The independent evaluator is hidden. Inspect the source, apply the change, and finish.",
+  "source": {
+    "repository": "https://github.com/huggingface/transformers",
+    "base_revision": "429e69162e2944922e45c2cea24887d32e96fbe7",
+    "calibration_revision": "927af2f73bd0d53d339f8fc0d4bd8b053f3836bb"
+  },
+  "metadata": {
+    "editable_files": [
+      "src/transformers/models/auto/video_processing_auto.py"
+    ],
+    "task_family": "lazy_video_processor_registry_resolution",
+    "split": "train",
+    "vare_split": "development",
+    "grader_is_hidden": true,
+    "public_tests_available": false
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-transformers-49458-agent-attempt-v1",
+  "task_id": "transformers-49458-lazy-auto-video-processor",
+  "split": {
+    "vare_name": "development",
+    "runner_name": "train",
+    "assigned_at_utc": "2026-10-31T02:08:28Z"
+  },
+  "public_pretraining_exposure": "UNKNOWN",
+  "model_or_agent_exposure_before_attempt": false,
+  "task_family_overlap": {
+    "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+    "confidence": "MODERATE",
+    "review_path": "results/mlsys-fresh-development-task-family-overlap-v2/review.json",
+    "review_sha256": "68888d1beea680c1e3c7a2437152e95ab4e712079ab2f42623632d7958c39bc5"
+  },
+  "source": {
+    "repository": "huggingface/transformers",
+    "base_revision": "429e69162e2944922e45c2cea24887d32e96fbe7",
+    "baseline_tree_sha256": "c66ad86a105cad5d615dc94af1d4abb14d8403b383f751dd9b3513a245c1f705",
+    "editable_file": "src/transformers/models/auto/video_processing_auto.py",
+    "editable_file_sha256": "ce6441262488f027de47b1bec8fd3bb7c52b3fa8c182c650b7c3b2cc4881a93d",
+    "qualification": {
+      "status": "QUALIFIED_SOURCE_LEVEL",
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/qualification.json",
+      "sha256": "8be77a994cfc97bdf746d96f7d3660d517b44e077e10b1b1caa83a94029a8fc4"
+    }
+  },
+  "task": {
+    "path": "results/mlsys-fresh-development-agent-diagnostic-v2/tasks/transformers-49458/task.json",
+    "sha256": "dcbfbf72cdf65757881cbdbf0b38fb0d0e4b1a70122f892058ed1687ad208ec1",
+    "brief_path": "results/mlsys-fresh-development-agent-diagnostic-v2/tasks/transformers-49458/TASK.md",
+    "brief_sha256": "6a460573726467cf7757c07ac463911a344d1e6d21e9033b35abed2cdbc10411",
+    "prompt_sha256": "1a2a9cce7f323b341ca090b7d9e43cff4995c0fd012c0688f1611165f72cea50",
+    "issue_url": "https://github.com/huggingface/transformers/issues/49451",
+    "issue_body_sha256": "c675c9d59f4e8eb6d8948d41134799361f7db34d4957b71bb0afc01cc9ab8fe6",
+    "upstream_pr_url": "https://github.com/huggingface/transformers/pull/49458",
+    "upstream_fix_commit": "927af2f73bd0d53d339f8fc0d4bd8b053f3836bb"
+  },
+  "independent_evaluator": {
+    "test_source_path": "results/mlsys-fresh-development-agent-diagnostic-v2/trusted-test/test_video_processing_auto.py",
+    "test_sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3",
+    "runner_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/case_runner.py",
+    "runner_sha256": "2ec495123c435fd08a8717a993170edce909f81403eb8dd45074154830c6eff7",
+    "class": "AutoVideoProcessorTest",
+    "method": "test_video_processor_loading_does_not_resolve_other_models",
+    "expected_named_subtests": [
+      "video_preprocessor_config.json",
+      "preprocessor_config.json"
+    ],
+    "image": "vare/fresh-qualification-transformers:0.3",
+    "image_digest": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+    "network": "none",
+    "source_and_test_mounts": "read-only; trusted test and runner outside candidate workspace",
+    "grader_calls": 1,
+    "grader_result_visible_to_agent": false,
+    "feedback_to_agent": false
+  }
+}

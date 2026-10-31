@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-transformers-49458-agent-attempt-v1",
+  "attempt_id": "freshdev-agent-transformers-49458-attempt-001",
+  "status": "AGENT_INTERACTION_FAILURE_INCOMPLETE_TOOL_CALLS_WITH_OFF_TARGET_LOCALIZATION",
+  "task_id": "transformers-49458-lazy-auto-video-processor",
+  "split": "development",
+  "task_family": "lazy_video_processor_registry_resolution",
+  "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "stop_reason": "no_tool_call_retries_exhausted",
+  "new_tokens_total": 849,
+  "tool_turns": 6,
+  "prompt_tokens_by_turn": [
+    1383,
+    1444,
+    2318,
+    3055,
+    3384,
+    3712
+  ],
+  "generated_tokens_by_turn": [
+    15,
+    21,
+    46,
+    256,
+    255,
+    256
+  ],
+  "dispatched_tool_names": [
+    "list_files",
+    "search_text",
+    "read_file"
+  ],
+  "truncated_tool_call_outputs": [
+    {
+      "turn": 4,
+      "generated_tokens": 256,
+      "prompt_tokens": 3055,
+      "output_starts_tool_call": true,
+      "output_ends_with_tool_call_close": false
+    },
+    {
+      "turn": 5,
+      "generated_tokens": 255,
+      "prompt_tokens": 3384,
+      "output_starts_tool_call": true,
+      "output_ends_with_tool_call_close": false
+    },
+    {
+      "turn": 6,
+      "generated_tokens": 256,
+      "prompt_tokens": 3712,
+      "output_starts_tool_call": true,
+      "output_ends_with_tool_call_close": false
+    }
+  ],
+  "no_tool_retries": 2,
+  "format_parse_failure": null,
+  "format_parse_failure_count": 0,
+  "edit_attempted": false,
+  "edit_applied": false,
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate_patch_path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/candidate.patch",
+  "candidate_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate_patch_bytes": 0,
+  "independent_grade_path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/independent-grade-001.json",
+  "independent_grade_sha256": "c04451a97a486c4c28e27baa18ad24128fd19942f0e2d9e3deef29fa349a2e0e",
+  "independent_grade_passed": false,
+  "correctness_cases_passed": 0,
+  "correctness_cases_total": 2,
+  "independent_grade_exit_code": 1,
+  "agent_result_sha256": "6c79ef7d093875bffb59bcb9db3e8d6e254fefb9467e5c4bc4eba41e127f0bfe",
+  "agent_log_sha256": "acb9dbf97304b2396fa9be9f0e6d0b259ed8d8927a4e10452dfec6ced48a5ad5",
+  "agent_wrapper_sha256": "6f537dfedad346d5b6ff0ef8df06476a3af4793cf215ada05104b070e4b2208e",
+  "mlx_active_memory_bytes": 2264693768,
+  "mlx_peak_memory_bytes": 3752736344,
+  "max_rss_bytes": 2623471616,
+  "elapsed_seconds": 62.213,
+  "failure_classification": {
+    "primary": "incomplete_model_tool_call_output",
+    "secondary": "off_target_source_localization",
+    "not_classified_as": [
+      "hardware_failure",
+      "grader_transport_failure",
+      "candidate_correctness_rejection"
+    ],
+    "explanation": "The model emitted three unclosed edit-tool payloads that the runner did not dispatch. Two re-encoded at the per-turn token cap; the third was one token under the cap. The attempted edit area was the legacy image-processor fallback rather than the lazy registry lookup implicated by the task."
+  },
+  "source_localization": {
+    "turn_2_search_query": "AutoVideoProcessor",
+    "turn_2_search_returned_lazy_lookup_context": true,
+    "turn_3_read_path": "src/transformers/models/auto/video_processing_auto.py",
+    "turn_3_read_lines": [
+      360,
+      400
+    ],
+    "turn_3_read_focus": "legacy image_processor_type fallback inside from_pretrained",
+    "relevant_registry_helpers_in_pinned_source": [
+      "video_processor_class_from_name",
+      "_load_backend_class"
+    ],
+    "edit_payload_targets": "fallback code around the legacy image-processor inference path",
+    "edit_tool_dispatch_count": 0,
+    "edit_applied": false,
+    "basis": "Saved transcript in agent-attempt-001.json; the baseline source snapshot identifies the helper locations."
+  },
+  "tool_call_diagnostics_from_transcript": {
+    "incomplete_count": 3,
+    "incomplete_turns": [
+      4,
+      5,
+      6
+    ],
+    "exact_token_cap_turns": [
+      4,
+      6
+    ],
+    "near_cap_turns": [
+      {
+        "turn": 5,
+        "generated_tokens_reencoded": 255,
+        "per_turn_cap": 256
+      }
+    ],
+    "closing_delimiter_missing": true,
+    "dispatched_tool_calls_after_source_read": 0
+  },
+  "interpretation": "This attempt produced no candidate patch. The independent grade exercised the unchanged pinned baseline and failed the two expected lazy-resolution assertions (0/2), so it is an evaluator/control confirmation, not a candidate patch rejection or a model repair result. The task family is consumed; no retry or grader feedback is permitted under the frozen protocol."
+}

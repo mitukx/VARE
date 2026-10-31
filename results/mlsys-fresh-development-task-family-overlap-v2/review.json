@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "review_id": "mlsys-fresh-development-task-family-overlap-v2",
+  "reviewed_at_utc": "2026-10-31T01:31:30Z",
+  "protocol": {
+    "path": "protocols/mlsys_fresh_development_task_family_overlap_v2.json",
+    "sha256": "39314381d33e9399e08a7a69053d8f77e49ba5ce2f95934e167e906efee221c8",
+    "frozen_commit": "e0a2c70463ad7ff5f8418e4455957939e82b72af"
+  },
+  "input_hash_verification": "PASSED_ALL_9_FROZEN_INPUTS_AND_CANDIDATE_ROW",
+  "scope": {
+    "historical_splits_compared": [
+      "Development",
+      "Train"
+    ],
+    "historical_rows_reviewed": 8,
+    "heldout_access": "NONE",
+    "heldout_identifiers_reported": false,
+    "candidate_issue_body_opened": false,
+    "candidate_source_or_tests_opened": false,
+    "candidate_patch_or_grader_opened": false,
+    "tests_run_during_review": false,
+    "target_model_or_agent_inference": "NONE",
+    "split_assignment": "NONE",
+    "public_pretraining_exposure": "UNKNOWN"
+  },
+  "candidate_assessments": [
+    {
+      "task_id": "transformers-49458-lazy-auto-video-processor",
+      "repository": "huggingface/transformers",
+      "upstream_pull_request": 49458,
+      "title": "Keep AutoVideoProcessor class lookup lazy",
+      "task_family_label": "lazy AutoVideoProcessor class lookup (title-derived metadata label)",
+      "candidate_row_canonical_sha256": "3637f75f2dd5612572e08720e5d2fdfa757611b6077646cd628075e048706a69",
+      "qualification_status": "UNQUALIFIED",
+      "split_assignment": "UNASSIGNED",
+      "candidate_changed_paths": [
+        "src/transformers/models/auto/video_processing_auto.py",
+        "tests/models/auto/test_video_processing_auto.py"
+      ],
+      "prior_comparisons": [
+        {
+          "task_id": "transformers-45852-4d-mask",
+          "split": "Development",
+          "repository": "huggingface/transformers",
+          "source_pr": 45852,
+          "task_family": "4d_masked_batch_collation",
+          "historical_grader_path": "tests/trainer/test_data_collator.py",
+          "same_repository": true,
+          "same_upstream_identity": false,
+          "result": "DISTINCT_FAMILY_METADATA",
+          "rationale": "The prior task concerns 4D attention-mask collation; the candidate title concerns lazy video-processor lookup. The historical changed-file list is unavailable in the bound exposure metadata, so no historical path-disjointness claim is made."
+        },
+        {
+          "task_id": "transformers-49418-quantized-cache-residual-flush",
+          "split": "Development",
+          "repository": "huggingface/transformers",
+          "source_pr": 49418,
+          "task_family": "quantized_cache_residual_update_boundary",
+          "historical_changed_paths": [
+            "src/transformers/cache_utils.py",
+            "tests/utils/test_cache_utils.py"
+          ],
+          "same_repository": true,
+          "same_upstream_identity": false,
+          "result": "DISTINCT_FAMILY_METADATA",
+          "rationale": "The prior task concerns quantized-cache residual flushing in cache utilities; the candidate concerns lazy AutoVideoProcessor lookup in auto video processing. The bound metadata gives distinct task families and distinct recorded paths."
+        },
+        {
+          "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain",
+          "split": "Development",
+          "repository": "ray-project/ray",
+          "source_pr": 66694,
+          "task_family": "operator_wall_time_multi_node_clock_domain",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "result": "DISTINCT_REPOSITORY_AND_FAMILY_METADATA"
+        },
+        {
+          "task_id": "mlx-4662-padding-input-gradient",
+          "split": "Train",
+          "repository": "ml-explore/mlx",
+          "task_family": "convolution_input_gradient_shape",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "result": "DISTINCT_REPOSITORY_AND_FAMILY_METADATA"
+        },
+        {
+          "task_id": "mlxlm-1795-moe-routing-gradient",
+          "split": "Train",
+          "repository": "ml-explore/mlx-lm",
+          "task_family": "moe_router_gradient_indices",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "result": "DISTINCT_REPOSITORY_AND_FAMILY_METADATA"
+        },
+        {
+          "task_id": "mlxlm-1904-tool-arguments",
+          "split": "Train",
+          "repository": "ml-explore/mlx-lm",
+          "task_family": "tool_call_dict_arguments",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "result": "DISTINCT_REPOSITORY_AND_FAMILY_METADATA"
+        },
+        {
+          "task_id": "mlxlm-1912-top-p-min-token",
+          "split": "Development",
+          "repository": "ml-explore/mlx-lm",
+          "task_family": "top_p_retains_most_likely_token",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "result": "DISTINCT_REPOSITORY_AND_FAMILY_METADATA"
+        },
+        {
+          "task_id": "mlxlm-1971-mimo-value-scale",
+          "split": "Development",
+          "repository": "ml-explore/mlx-lm",
+          "task_family": "mimo_attention_value_scale",
+          "same_repository": false,
+          "same_upstream_identity": false,
+          "result": "DISTINCT_REPOSITORY_AND_FAMILY_METADATA"
+        }
+      ],
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "confidence": "MODERATE",
+      "rationale": "No direct identity or same-family match appears in the eight bound Development/Train exposure rows. The only same-repository prior tasks are 4D mask collation and quantized-cache residual flushing, with distinct metadata families. The candidate paths are in auto video processing; no source, test body, patch, or grader was inspected. Historical patch paths are incomplete, so the review does not establish complete source-level disjointness or pretraining independence.",
+      "metadata_supports": "PROCEED_TO_SOURCE_QUALIFICATION_ONLY",
+      "development_allocation": "NOT_MADE"
+    }
+  ],
+  "decision": {
+    "direct_identity_overlaps": 0,
+    "same_family_matches": 0,
+    "possible_family_overlaps": 0,
+    "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+    "supports_source_qualification_for": [
+      "transformers-49458-lazy-auto-video-processor"
+    ],
+    "source_qualification_completed": false,
+    "split_assignments_made": false,
+    "model_inference_authorized": false
+  },
+  "limitations": [
+    "The candidate family label is derived from the frozen PR title and metadata only.",
+    "Historical changed paths are unavailable for some prior Development/Train rows; those comparisons use family labels and grader metadata only.",
+    "The result does not establish absence of public pretraining exposure, source-level independence, task qualification, or model capability."
+  ]
+}

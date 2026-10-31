@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-transformers-49458-agent-attempt-v1",
+  "attempt_id": "freshdev-agent-transformers-49458-attempt-001",
+  "checked_at_utc": "2026-10-31T02:09:35Z",
+  "inference_started": false,
+  "status": "PASS",
+  "conditions": {
+    "protocol_hash_matches_sidecar": true,
+    "protocol_commit_is_remote_head": true,
+    "task_workspace_pinned_clean": true,
+    "baseline_target_hash_matches": true,
+    "controller_hash_matches": true,
+    "model_files_match_frozen_manifest": true,
+    "model_runtime_versions_match": true,
+    "grader_image_digest_matches": true,
+    "agent_output_path_is_new": true,
+    "memory_pressure_gate": true,
+    "swap_gate": true,
+    "disk_gate": true
+  },
+  "resource_snapshot": {
+    "physical_memory_bytes": 34359738368,
+    "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 70%",
+    "memory_free_percent": 70,
+    "swap_output": "vm.swapusage: total = 3072.00M  used = 1826.94M  free = 1245.06M  (encrypted)",
+    "swap_used_bytes": 1915685437,
+    "disk_free_bytes": 23620132864
+  },
+  "model_snapshot": {
+    "path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "file_count": 13,
+    "manifest_sha256": "20022d56b6c963d2af5dc0c17ae5f240a277e2f1532417a5db7c1b0cfedfb5b7",
+    "mismatches": [],
+    "runtime": {
+      "python": "3.12.12",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "transformers": "5.22.1",
+      "tokenizers": "0.23.3"
+    }
+  },
+  "candidate_workspace": {
+    "head": "429e69162e2944922e45c2cea24887d32e96fbe7",
+    "dirty": false,
+    "target_file_sha256": "ce6441262488f027de47b1bec8fd3bb7c52b3fa8c182c650b7c3b2cc4881a93d"
+  },
+  "controller_sha256": "4d1ebc3d6bb6b861c83e669cbff9244ec22e183cc60e6bd97d9e4c764686328d",
+  "protocol_sha256": "4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee",
+  "remote_branch_head": "f3ff08e6d4e4b69adac534d61b6406804d7dffe5",
+  "local_vare_head": "f3ff08e6d4e4b69adac534d61b6406804d7dffe5",
+  "grader_image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+  "output_path_previously_absent": true
+}

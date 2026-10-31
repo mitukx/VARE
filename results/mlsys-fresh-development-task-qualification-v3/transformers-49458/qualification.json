@@ -1,0 +1,86 @@
+{
+  "arms": {
+    "baseline": {
+      "log_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.log",
+      "log_sha256": "ecee4766d4c918e36abc71175e1be09748eb263978c1b1ed53dcde5f8bc43566",
+      "mapping_load_calls": {
+        "preprocessor_config.json": 141,
+        "video_preprocessor_config.json": 47
+      },
+      "outcome": "both named subTests failed at load_attribute.assert_not_called",
+      "receipt_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.json",
+      "receipt_sha256": "ef5c864eb1bc119a11600bd2fce2b24cc7481bb30f68072cf1073f29b6dc11cc"
+    },
+    "upstream_fixed": {
+      "failed_subtests": 0,
+      "log_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-upstream-fixed.log",
+      "log_sha256": "133a2f9ca1348655b22cadd2b47e6e0dc251f56a2580254ebe344df8a1661736",
+      "outcome": "both named subTests passed",
+      "passed_subtests": 2,
+      "receipt_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-upstream-fixed.json",
+      "receipt_sha256": "51fd81144e53099241c7e61e88afb53450d5b7b857bfbb9f0d85333aa0149be7",
+      "skipped_subtests": 0
+    },
+    "wrong_mutant": {
+      "log_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.log",
+      "log_sha256": "5db740dacb7d9406da01e860fae420cf977125504473bfecaeb7f3d472a53f0c",
+      "mapping_load_calls": {
+        "preprocessor_config.json": 47,
+        "video_preprocessor_config.json": 47
+      },
+      "outcome": "both named subTests failed at load_attribute.assert_not_called",
+      "receipt_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.json",
+      "receipt_sha256": "76e78ba63938bfc21013868504960df91a9a01fc7fc2d2093b8078ead3be5d4a"
+    }
+  },
+  "claim_boundary": "Task/evaluator source-level qualification only. The candidate remains unassigned; no model inference or training occurred.",
+  "input_manifest_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
+  "input_manifest_sha256": "741c4907b9eb929204cf1235f106cdecbb5685a7d01b0efc3a1dab6352898b51",
+  "issue_url": "https://github.com/huggingface/transformers/issues/49451",
+  "license_spdx": "Apache-2.0",
+  "limitations": [
+    "The issue and regression test are public; pretraining exposure is unknown.",
+    "Only one regression method and two config subTests were checked; the full Transformers suite was not run.",
+    "This result does not establish a model-generated repair, coding capability, SFT/RL improvement, held-out performance, or algorithmic novelty."
+  ],
+  "merge_base_sha": "429e69162e2944922e45c2cea24887d32e96fbe7",
+  "metadata_overlap": {
+    "confidence": "moderate",
+    "protocol": "protocols/mlsys_fresh_development_task_family_overlap_v2.json",
+    "protocol_sha256": "39314381d33e9399e08a7a69053d8f77e49ba5ce2f95934e167e906efee221c8",
+    "result": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+    "result_path": "results/mlsys-fresh-development-task-family-overlap-v2/review.json",
+    "result_sha256": "68888d1beea680c1e3c7a2437152e95ab4e712079ab2f42623632d7958c39bc5"
+  },
+  "model_or_agent_exposure": false,
+  "pretraining_exposure": "UNKNOWN",
+  "protocols": [
+    {
+      "path": "protocols/mlsys_transformers_49458_source_qualification_v2.json",
+      "sha256": "f62f163be8984323c0d237b82fbaef3cf075a80e5bb49d23fd0fd8328141ee9b"
+    },
+    {
+      "path": "protocols/mlsys_transformers_49458_source_qualification_v1.json",
+      "sha256": "b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
+      "sha256": "b9763deb7f5cd9229da77a001afa38a7a7062d34475a2cf9afa7f0ec3dcdfff5"
+    }
+  ],
+  "qualification_scope": "Source-level CPU regression reproduction for the pinned upstream test method only.",
+  "qualified_at_utc": "2026-10-31T01:57:37Z",
+  "repository": "huggingface/transformers",
+  "runner_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/case_runner.py",
+  "runner_sha256": "2ec495123c435fd08a8717a993170edce909f81403eb8dd45074154830c6eff7",
+  "runtime": "Linux ARM64; Python 3.12.15; torch 2.9.1+cpu; torchvision 0.24.1",
+  "runtime_image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+  "schema_version": 1,
+  "split_assignment": "NOT_ASSIGNED",
+  "status": "QUALIFIED_SOURCE_LEVEL",
+  "task_id": "transformers-49458-lazy-auto-video-processor",
+  "test_method": "AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models",
+  "test_sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3",
+  "upstream_fixed_commit": "927af2f73bd0d53d339f8fc0d4bd8b053f3836bb",
+  "upstream_pr_url": "https://github.com/huggingface/transformers/pull/49458"
+}

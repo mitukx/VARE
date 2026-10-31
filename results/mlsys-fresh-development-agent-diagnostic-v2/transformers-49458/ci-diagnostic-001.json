@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "pr_number": 155,
+  "head_sha": "09605e254c47bb07a96dec7a8e318a9aae13fd68",
+  "run_id": 41159602206,
+  "job_id": 124413981602,
+  "job_name": "test (3.13)",
+  "job_url": "https://github.com/mitukx/VARE/actions/runs/41159602206/job/124413981602",
+  "python_version": "3.13.17",
+  "pytest_command": "python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py",
+  "conclusion": "failure",
+  "summary": {
+    "passed": 1538,
+    "failed": 1,
+    "skipped": 111
+  },
+  "failure": {
+    "test_id": "tests/test_mlsys_4b_pilot_protocol.py::test_truncated_whole_file_call_gets_actionable_retry",
+    "cause": "Existing compatibility assertion expects the retry reminder to contain 'cut off'; the initial wording said 'incomplete' without that phrase.",
+    "classification": "retry_reminder_wording_compatibility_assertion"
+  },
+  "other_completed_checks_at_triage": [
+    "lint: success",
+    "typecheck: success",
+    "blob-budget: success",
+    "math500-grader: success",
+    "seeded-summary-cpu: success",
+    "rvl-inference-cpu: success",
+    "calibrated-cpu-tasks: success"
+  ],
+  "remediation": {
+    "change": "Retry text now says the previous call was incomplete and may have been cut off, while stating the configured response limit.",
+    "targeted_local_tests": 48,
+    "targeted_local_result": "passed",
+    "ruff": "passed",
+    "new_head_ci": "pending"
+  },
+  "claim_limit": "The failure was an existing assertion mismatch in retry wording; it did not show a parser, dispatch, or grader regression. Full post-fix exact-head CI must pass before integration."
+}

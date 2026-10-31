@@ -179,16 +179,46 @@
       "protocol_id": "mlsys-fresh-development-agent-capability-v1-addendum-1",
       "sha256": "e36b7b7cfeefd831ed174e25500022ef62f01baa06a11b034ae1118375a83e23",
       "status": "frozen before generation; records zero-token launch correction; both replacement-workspace task attempts subsequently completed once"
+    },
+    {
+      "protocol_id": "mlsys-fresh-development-task-family-overlap-v2",
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v2.json",
+      "sha256": "39314381d33e9399e08a7a69053d8f77e49ba5ce2f95934e167e906efee221c8",
+      "status": "frozen and pushed before metadata review; compares one candidate against Development/Train only; no source/test access, split assignment, or inference"
+    },
+    {
+      "protocol_id": "mlsys-transformers-49458-source-qualification-v1",
+      "path": "protocols/mlsys_transformers_49458_source_qualification_v1.json",
+      "sha256": "b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524",
+      "status": "frozen and pushed before any candidate test execution; source qualification only; no Development assignment or inference"
+    },
+    {
+      "protocol_id": "mlsys-transformers-49458-source-qualification-v1-addendum-1",
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
+      "sha256": "b9763deb7f5cd9229da77a001afa38a7a7062d34475a2cf9afa7f0ec3dcdfff5",
+      "status": "frozen before corrected baseline invocation; preserves original protocol and limits; authorizes one corrected baseline only"
+    },
+    {
+      "protocol_id": "mlsys-transformers-49458-source-qualification-v2",
+      "path": "protocols/mlsys_transformers_49458_source_qualification_v2.json",
+      "sha256": "f62f163be8984323c0d237b82fbaef3cf075a80e5bb49d23fd0fd8328141ee9b",
+      "status": "frozen before any v2 Transformers test; case-aware reporting; source qualification only; no split or inference"
+    },
+    {
+      "protocol_id": "mlsys-transformers-49458-agent-attempt-v1",
+      "path": "protocols/mlsys_transformers_49458_agent_attempt_v1.json",
+      "sha256": "4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee",
+      "status": "frozen before inference; executed exactly once; no retry, grader feedback, training, or Held-Out use; incomplete tool-call output produced no candidate edit"
     }
   ],
   "git_refs": {
     "repository": "mitukx/VARE",
-    "last_verified_main_sha": "5259a721e263baf47a52d4519c7cee949443df12",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/153",
-    "last_integrated_pr_merge_sha": "5259a721e263baf47a52d4519c7cee949443df12",
-    "active_branch": "codex/agent-context-compaction-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "f272c2268d57c11bfc0f7261f9bcfc73c99e710c",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/154",
+    "last_verified_main_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
+    "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
+    "active_branch": "codex/fresh-development-family-overlap-v1",
+    "verified_pr_head_sha_before_checkpoint_changes": "09605e254c47bb07a96dec7a8e318a9aae13fd68",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
   "go_no_go": {
@@ -196,9 +226,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Review and resolve CI on PR #154 at its final pushed head, merge when required checks and review requirements are satisfied, verify remote main, then source-qualify a new Development family before any further inference.",
-  "last_completed_step": "Merged PR #153 at 5259a721e263baf47a52d4519c7cee949443df12. Implemented and locally tested fail-closed context compaction plus a tokenizer-only replay that exactly reconstructs all recorded prompts from the two consumed Development attempts; both histories compact below 4096 tokens. No new model generation, grade, task exposure, or policy update occurred.",
-  "milestone_id": "p6-context-compaction-pr-154-open",
+  "highest_priority_next_task": "Verify every exact-head required CI and CPU-evidence check for the retry-reminder compatibility correction on PR #155, inspect all failures, and keep coding capability, SFT/RL, and Held-Out decisions NO-GO unless new independent repair evidence meets their gates.",
+  "last_completed_step": "Pushed the one-shot result and controller diagnostics to PR #155. Exact-head CI at 09605e25 identified a single Python 3.13 assertion mismatch in established retry wording (1538 passed, 1 failed, 111 skipped); the compatible wording correction and CI diagnosis are included in this checkpoint, and the fresh remote CI result is pending.",
+  "milestone_id": "p10-transformers-49458-agent-interaction-failure-diagnosed",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -702,13 +732,13 @@
     },
     {
       "path": "research/flagship/REPRODUCE.md",
-      "sha256": "f92cd499c7c55117019530117c816080fceac39ef039a7cf34a6213c0c5b9265",
-      "status": "diagnostic and offline context-compaction replay reproduction commands"
+      "sha256": "d67ff2115016cd345b0dba13061194decc85a8bc8b1cd7ffa80077145c8911b1",
+      "status": "authoritative checkpoint updated after one-shot Transformers #49458 result and controller diagnostics"
     },
     {
       "path": "research/flagship/STATUS.md",
-      "sha256": "852298efe74065a1c69f1b555176680a6b0db69c6837de3f8ff594b1c9333b78",
-      "status": "authoritative current checkpoint after PR #153 integration and context-compaction replay"
+      "sha256": "dd7b9fe1f8e10fdcc3e460c0c026f49c608877d0765733267c07ce1c04948d84",
+      "status": "authoritative checkpoint updated after one-shot Transformers #49458 result and controller diagnostics"
     },
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/SHA256SUMS",
@@ -762,13 +792,13 @@
     },
     {
       "path": "research/flagship/DECISIONS.md",
-      "sha256": "bc82a2e4a700df604a88389d152873484b0db4c1265def018b17fd6608d5d4ba",
-      "status": "append-only controller decision and closest-prior-work comparison"
+      "sha256": "927c72fec1e7c6c89ddff7435edaa9ae3b997e5811e4287691200c61d731e504",
+      "status": "authoritative checkpoint updated after one-shot Transformers #49458 result and controller diagnostics"
     },
     {
       "path": "scripts/run_local_agent.py",
-      "sha256": "4d1ebc3d6bb6b861c83e669cbff9244ec22e183cc60e6bd97d9e4c764686328d",
-      "status": "context-compaction controller implementation; not model capability evidence"
+      "sha256": "2abda8f48a533dc5ec420916918d6cbc6fb4620134253c1ee79566efde72439f",
+      "status": "post-run incomplete tool-call telemetry/reminder implementation; not model capability evidence"
     },
     {
       "path": "scripts/replay_agent_context_compaction.py",
@@ -777,8 +807,8 @@
     },
     {
       "path": "tests/test_run_local_agent_tool_format.py",
-      "sha256": "e6faeb5ae82facb82c45f48249df627cc3f737cb7204d0f2715e1aeb5bcbd7e9",
-      "status": "focused compaction and replay tests"
+      "sha256": "4479920f5babc151b0b51f772388c8845021328fa2acd4f354f623c053ba0f75",
+      "status": "focused regression tests for incomplete tool-call classification and reminder"
     },
     {
       "path": "results/agent-context-compaction-replay-v1/README.md",
@@ -799,6 +829,241 @@
       "path": "results/agent-context-compaction-replay-v1/SHA256SUMS",
       "sha256": "fdf4cdf1675b533ced11aeba0859d8e676844c4fac965c476f49ee31e470b469",
       "status": "integrity index for context-compaction replay artifacts"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-family-overlap-v2/review.json",
+      "sha256": "68888d1beea680c1e3c7a2437152e95ab4e712079ab2f42623632d7958c39bc5",
+      "status": "metadata-only family overlap review for Transformers #49458; no split assignment or inference"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-family-overlap-v2/report.md",
+      "sha256": "b352344642874f8278d3d2d9c43efbcd79b81c3e7b3147130d3fa014aaaaab5b",
+      "status": "human-readable metadata overlap summary"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-family-overlap-v2/SHA256SUMS",
+      "sha256": "d742092399a6203073c7b967f3c445f3f84a715c5ee7589be68da6168a50a385",
+      "status": "integrity index for metadata overlap report"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-baseline.log",
+      "sha256": "b237bf93972b09aefbaf32e8fa21c5c3051f93ee00a74d2c6878ccda3723008e",
+      "status": "initial baseline invocation; pytest collection environment error, exit 4, zero tests selected; no semantic baseline result"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
+      "sha256": "2f0b884306f2a76786acf6c1ed5ef6c2d6b7fb4941d328d3b89643daa71c231f",
+      "status": "pinned input and source-tree identities; records initial inconclusive collection attempt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
+      "sha256": "b9763deb7f5cd9229da77a001afa38a7a7062d34475a2cf9afa7f0ec3dcdfff5",
+      "status": "pre-execution environment-only addendum; adds /source/utils to PYTHONPATH; one corrected baseline invocation authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-002-baseline.json",
+      "sha256": "7f029dfc000548f3e88cdd631194527f1d4dd983eaaeb974fa6cd32cba05cfaf",
+      "status": "corrected baseline arm; expected target assertion failure, 1 selected/1 failed/0 skipped; mutant may run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-002-baseline.log",
+      "sha256": "2a06f0a82d534b970fa5900424b008d28e742aef37f486657dfb906eddcc5a96",
+      "status": "corrected baseline raw pytest log; target assertion failed after 47 mapping loads"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
+      "sha256": "87f9af3961f75d2fe466b6b70a0a45b9a5a55d00cc31bc1f56346ab53f3c1608",
+      "status": "pinned source-tree/test/image identities plus both initial collection failure and corrected baseline receipt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.json",
+      "sha256": "e6809ac56412ac25e5d74a8947a4539fdec34287be709a5ef1861c27e6c2d6ae",
+      "status": "wrong-mutant target assertion rejected; aggregate pytest output does not attribute the subTest filename; v1 fixed gate unmet"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.log",
+      "sha256": "efc0512856814536762e88275a10a599204805443b221a9ee7e6129adf3459ae",
+      "status": "wrong-mutant raw pytest log; intended assertion failed after 47 mapping loads; legacy-case attribution unavailable"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
+      "sha256": "d51ded43b37e639382ada61e5c9c1b1b901b35adcee92a23bcd5a3ef25c1e1e3",
+      "status": "pinned task inputs and baseline/wrong-mutant outcomes; no fixed-source run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/case_runner.py",
+      "sha256": "2ec495123c435fd08a8717a993170edce909f81403eb8dd45074154830c6eff7",
+      "status": "case-aware unittest runner; generic smoke confirmed both subTest parameters/outcomes are reported; no candidate test was run in the smoke"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
+      "sha256": "f5c61913ab2f992e65cfa85f7938b74e74ad597d4d7bf0184d6ddde2665c0bd5",
+      "status": "fresh v2 tree/test/runner/image identities; all three full tree digests match v1 frozen source inputs; v2 tests not started"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.log",
+      "sha256": "ecee4766d4c918e36abc71175e1be09748eb263978c1b1ed53dcde5f8bc43566",
+      "status": "v2 baseline raw log; both named subTests failed at the intended assertion, no errors/skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.json",
+      "sha256": "ef5c864eb1bc119a11600bd2fce2b24cc7481bb30f68072cf1073f29b6dc11cc",
+      "status": "v2 baseline receipt; both named target assertions failed; wrong-mutant may run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
+      "sha256": "0f846ba334e45e495645a446821b1397e2f78a2e99ee696a2799b5d5798ade5e",
+      "status": "v2 frozen inputs and baseline outcome"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.log",
+      "sha256": "5db740dacb7d9406da01e860fae420cf977125504473bfecaeb7f3d472a53f0c",
+      "status": "v2 wrong-mutant raw log; both named subTests failed at the target assertion, no errors/skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.json",
+      "sha256": "76e78ba63938bfc21013868504960df91a9a01fc7fc2d2093b8078ead3be5d4a",
+      "status": "v2 wrong-mutant receipt; both named target assertions failed; upstream-fixed may run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
+      "sha256": "a2177d7fedd6bb2cfef58bec94097d9f98c6845fc72967be372675c00b92c150",
+      "status": "v2 frozen inputs plus baseline and wrong-mutant outcomes"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-upstream-fixed.json",
+      "sha256": "51fd81144e53099241c7e61e88afb53450d5b7b857bfbb9f0d85333aa0149be7",
+      "status": "v2 upstream-fixed receipt; both named subTests passed with no errors/skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-upstream-fixed.log",
+      "sha256": "133a2f9ca1348655b22cadd2b47e6e0dc251f56a2580254ebe344df8a1661736",
+      "status": "v2 upstream-fixed raw log; two named subTests passed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/qualification.json",
+      "sha256": "8be77a994cfc97bdf746d96f7d3660d517b44e077e10b1b1caa83a94029a8fc4",
+      "status": "source-level qualification summary; candidate remains unassigned; no inference"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/report.md",
+      "sha256": "31af764fd58c69331e156d399e496d7d015be4f0965994fef8d6c702d66b9b80",
+      "status": "human-readable v2 source qualification report; limitations explicit"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/SHA256SUMS",
+      "sha256": "9721e3b844b148cfa8ba57d577810468f94a7f8393a1f28dbf37577f107d2ca0",
+      "status": "integrity index for v2 source qualification artifacts"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
+      "sha256": "741c4907b9eb929204cf1235f106cdecbb5685a7d01b0efc3a1dab6352898b51",
+      "status": "v2 frozen inputs and all three ordered arm outcomes"
+    },
+    {
+      "path": "protocols/mlsys_transformers_49458_agent_attempt_v1.json",
+      "sha256": "4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee",
+      "status": "one-shot model-attempt protocol frozen before inference"
+    },
+    {
+      "path": "protocols/mlsys_transformers_49458_agent_attempt_v1.json.sha256",
+      "sha256": "3693d93d2c9ac91fdc27a1b17b80ec2542e137db24c40bf6f75cc103af7d6527",
+      "status": "protocol sidecar hash"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/tasks/transformers-49458/task.json",
+      "sha256": "dcbfbf72cdf65757881cbdbf0b38fb0d0e4b1a70122f892058ed1687ad208ec1",
+      "status": "fixed Development task contract"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/tasks/transformers-49458/TASK.md",
+      "sha256": "6a460573726467cf7757c07ac463911a344d1e6d21e9033b35abed2cdbc10411",
+      "status": "fixed task prompt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/tasks/transformers-49458/protocol.lock.json",
+      "sha256": "bbf7bde09f86d1dc69f69d4db667a558f719405a409c2d0312059d4bfc5989fa",
+      "status": "task, split, source, and grader lock"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/trusted-test/test_video_processing_auto.py",
+      "sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3",
+      "status": "trusted test bytes isolated from agent"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/grader-mount-preflight-001.log",
+      "sha256": "185de59eebb5bbe28792471a4c0d34184b6501b2f5663481e7e5c6a251cd1364",
+      "status": "Docker read-only mount/hash preflight; no test run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/grader-mount-preflight-001.json",
+      "sha256": "be528440b10cb8116376b79437a6ded1f094634023d9de82cd23a2e1c5f57a38",
+      "status": "pre-inference mount preflight receipt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/pre-inference-SHA256SUMS",
+      "sha256": "7c70b1e11574abda409904a8362d9e5d0d8345ac0070f8e1c40c0e0d87249ea0",
+      "status": "pre-inference integrity manifest"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/agent-attempt-001.json",
+      "sha256": "6c79ef7d093875bffb59bcb9db3e8d6e254fefb9467e5c4bc4eba41e127f0bfe",
+      "status": "raw one-shot Development attempt; empty candidate diff; incomplete edit-tool outputs"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/agent-attempt-001.log",
+      "sha256": "acb9dbf97304b2396fa9be9f0e6d0b259ed8d8927a4e10452dfec6ced48a5ad5",
+      "status": "raw local model attempt log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/agent-attempt-wrapper-001.json",
+      "sha256": "6f537dfedad346d5b6ff0ef8df06476a3af4793cf215ada05104b070e4b2208e",
+      "status": "durable wrapper receipt for the sole attempt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/independent-grade-001.json",
+      "sha256": "c04451a97a486c4c28e27baa18ad24128fd19942f0e2d9e3deef29fa349a2e0e",
+      "status": "sole independent grade of unchanged baseline; both expected cases failed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/independent-grade-001.log",
+      "sha256": "c4fc8f78a443efdfc1302bb7d2ece285ef1ca7267482edbd48d5c8bd75114aff",
+      "status": "raw isolated independent grade log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/agent-outcome-summary.json",
+      "sha256": "4f385d319baf1a050edb76caa57bd633a76da5a2c24db03c27e84dd2e23d1063",
+      "status": "transcript-derived failure classification and localization diagnosis"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/post-run-resource-telemetry.json",
+      "sha256": "1e5efc1cf3cc440c63f3dced98520cfe5d7d3cdf4b7f73e8247317b1c164d92e",
+      "status": "post-run host and model memory telemetry"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/report.md",
+      "sha256": "576e5a1e37e6790f795eb715027932ea1d58d26b1d40a1f5ad9df5742a581229",
+      "status": "one-shot result, limits, and engineering response"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/run-manifest.json",
+      "sha256": "cf64de9e078689b20b3884a8791e16f3baf4b04f68f98c543b72e5353005bef7",
+      "status": "hash-bound experiment inputs, attempt, grade, and post-run checks"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+      "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72",
+      "status": "append-only third Development family exposure; v1 preserved"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/SHA256SUMS",
+      "sha256": "3a4ccb7cb9b9ff83856c9ae4016f98c3d827c9a7e6de5c319601f83066ae6d0d",
+      "status": "integrity index over v2 input and output artifacts"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/ci-diagnostic-001.json",
+      "sha256": "afdbd3cbca2f63a2895f1319e1b9a1ed637cdff91d8b4ca690fb4d936eff6fec",
+      "status": "exact-head Python 3.13 CI wording failure and targeted local correction record"
     }
   ],
   "run_ids": [
@@ -833,14 +1098,15 @@
     "freshdev-qualification-ray-66694-attempt-001-wrong-mutant",
     "freshdev-qualification-ray-66694-attempt-001-fixed",
     "freshdev-agent-transformers-49418-attempt-001",
-    "freshdev-agent-ray-66694-attempt-001"
+    "freshdev-agent-ray-66694-attempt-001",
+    "freshdev-agent-transformers-49458-attempt-001"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
-    "fresh_stage3_families_used": 0,
-    "historical_heldout_1979_touched": false,
-    "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
-    "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700"
+    "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+    "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72",
+    "fresh_stage3_families_used": 3,
+    "historical_heldout_1979_touched": false
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
@@ -848,7 +1114,8 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "PR #154 required exact-head CI is running; review and merge readiness remain to be verified."
+    "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
+    "Exact-head PR #155 check on 09605e254c47bb07a96dec7a8e318a9aae13fd68 had one Python 3.13 retry-reminder wording assertion failure; the compatible, cautious wording fix passes 48 targeted tests locally but awaits a new remote CI run."
   ],
-  "updated_at": "2026-10-31T01:20:57Z"
+  "updated_at": "2026-10-31T02:26:44Z"
 }

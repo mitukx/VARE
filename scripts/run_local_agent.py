@@ -701,20 +701,31 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
         path_list = ', '.join(allowed_paths)
         if edit_format == 'whole_file':
             return (
-                f'Your previous tool call was cut off at the {token_limit}-token response limit. '
+                f'Your previous tool call was incomplete and may have been cut off; each response is limited to {token_limit} tokens. '
                 'Do not reread the source. Emit one complete write_file tool call now, using the exact '
                 f'allowed path ({path_list}) and the complete updated source file. Keep it concise enough '
                 'to end with </tool_call>.'
             )
         return (
-            f'Your previous tool call was cut off at the {token_limit}-token response limit. '
-            'Do not reread the source or rewrite the whole file. Emit one complete apply_patch tool call '
-            f'with a minimal change and exact allowed paths ({path_list}); end it with </tool_call>.'
+            f'Your previous tool call was incomplete and may have been cut off; each response is limited to {token_limit} tokens. '
+            'Do not reread the source or rewrite a whole function. For one contiguous change, prefer '
+            'replace_text with a short exact old_text snippet and its complete new_text. Otherwise use '
+            'apply_patch with only the smallest changed hunk. Do not include unchanged function bodies. '
+            f'Use exact allowed paths ({path_list}) and end the complete call with </tool_call>.'
         )
     return (
         'Your previous response did not call a tool and no source file changed. Continue the task now. '
         'Call read_file on the exact path named in my first instruction. Do not ask a question.'
     )
+
+
+def classify_incomplete_tool_call(raw: str, *, generated_tokens: int, token_limit: int) -> str | None:
+    """Classify an emitted but unclosed tool call in the raw model response."""
+    if not raw.lstrip().startswith('<tool_call>') or '</tool_call>' in raw:
+        return None
+    if generated_tokens >= token_limit:
+        return 'truncated_at_token_limit'
+    return 'unterminated_tool_call'
 
 
 def normalize_tool_call_format(raw: str, tool_names: set[str]) -> tuple[str, bool]:
@@ -890,6 +901,8 @@ def main() -> int:
     format_parse_failure = None
     format_parse_failure_count = 0
     context_compaction_events: list[dict[str, Any]] = []
+    truncated_tool_call_turns: list[int] = []
+    unterminated_tool_call_turns: list[int] = []
     pattern = re.compile(r'<tool_call>\s*(\{.*?\})\s*</tool_call>', re.DOTALL)
 
     def note_edit(edit_result: dict[str, Any]) -> None:
@@ -934,6 +947,15 @@ def main() -> int:
                                  'generated_tokens': generated_tokens,
                                  'prompt_tokens': prompt_tokens,
                                  'generation_seconds': round(generation_elapsed, 6)}
+        tool_call_status = classify_incomplete_tool_call(
+            raw, generated_tokens=generated_tokens, token_limit=limit,
+        )
+        if tool_call_status is not None:
+            entry['tool_call_output_status'] = tool_call_status
+            if tool_call_status == 'truncated_at_token_limit':
+                truncated_tool_call_turns.append(turn + 1)
+            else:
+                unterminated_tool_call_turns.append(turn + 1)
         if context_compaction is not None:
             entry['context_compaction'] = context_compaction
         parse_text, recovered_tool_format = normalize_tool_call_format(raw, tool_names)
@@ -1153,6 +1175,12 @@ def main() -> int:
         'public_test_result': public_test_result,
         'format_parse_failure': format_parse_failure,
         'format_parse_failure_count': format_parse_failure_count,
+        'tool_call_diagnostics': {
+            'truncated_count': len(truncated_tool_call_turns),
+            'truncated_turns': truncated_tool_call_turns,
+            'unterminated_count': len(unterminated_tool_call_turns),
+            'unterminated_turns': unterminated_tool_call_turns,
+        },
         'stop_reason': stop_reason, 'agent_summary': final_summary,
         'elapsed_seconds': round(elapsed, 3), 'new_tokens': token_total,
         'max_rss_bytes': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,

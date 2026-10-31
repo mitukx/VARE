@@ -338,3 +338,164 @@ PY
 ```
 
 The expected result is exact agreement between reconstructed and recorded token counts on every historical turn, followed by `context_fits: true` at 2,765 tokens for Transformers and 2,795 for Ray under the 4,096-token cap. This replay is not a model capability result; the agent may still fail to use the retained context productively.
+
+## Verify the next Development candidate's metadata-only overlap review
+
+The review is limited to frozen candidate metadata and Development/Train exposure records. It does not open task source or tests, run an environment, allocate a split, or perform inference. The candidate remains unqualified and unassigned.
+
+From the repository root, verify the report checksums and all frozen inputs against the exact main commit bound by the protocol:
+
+```bash
+set -euo pipefail
+python3 -m json.tool protocols/mlsys_fresh_development_task_family_overlap_v2.json >/dev/null
+python3 -m json.tool results/mlsys-fresh-development-task-family-overlap-v2/review.json >/dev/null
+(cd results/mlsys-fresh-development-task-family-overlap-v2 && shasum -a 256 -c SHA256SUMS)
+python3 - <<'PY'
+import hashlib
+import json
+import subprocess
+
+protocol = json.load(open('protocols/mlsys_fresh_development_task_family_overlap_v2.json'))
+for item in protocol['frozen_inputs']:
+    raw = subprocess.check_output(['git', 'show', f"{protocol['frozen_against_main_sha']}:{item['path']}"])
+    assert hashlib.sha256(raw).hexdigest() == item['sha256'], item['path']
+sample_path = 'results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json'
+sample = json.loads(subprocess.check_output(['git', 'show', f"{protocol['frozen_against_main_sha']}:{sample_path}"]))
+row = next(row for row in sample['candidates'] if row['repository'] == 'huggingface/transformers' and row['number'] == 49458)
+canonical = json.dumps(row, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()
+assert hashlib.sha256(canonical).hexdigest() == protocol['candidate_identity']['candidate_row_canonical_sha256']
+print('nine frozen inputs and the bound candidate row verify; no task content was read')
+PY
+```
+
+The row-level Development/Train comparisons, confidence, and limitations are recorded in `results/mlsys-fresh-development-task-family-overlap-v2/review.json`. A `NO_PRIOR_FAMILY_OVERLAP_FOUND` result supports source qualification only; it is not task qualification, split allocation, or pretraining-independence evidence.
+
+
+## Verify and execute Transformers #49458 source qualification
+
+The candidate remains unassigned. This protocol is source/evaluator qualification only and authorizes no model inference. The protocol was committed and pushed before its first candidate test. Check its SHA-256 before preparing or running an arm:
+
+```bash
+python3 -m json.tool protocols/mlsys_transformers_49458_source_qualification_v1.json >/dev/null
+shasum -a 256 protocols/mlsys_transformers_49458_source_qualification_v1.json
+shasum -a 256 work/transformers-49458-inputs/transformers-base-429e6916.tar.gz \
+  work/transformers-49458-inputs/video_processing_auto.base-merge-base.py \
+  work/transformers-49458-inputs/video_processing_auto.fixed.py \
+  work/transformers-49458-inputs/test_video_processing_auto.fixed.py \
+  work/transformers-49458-inputs/issue-49451.md
+docker --context colima image inspect vare/fresh-qualification-transformers:0.3 --format '{{.Id}} {{.Os}}/{{.Architecture}}'
+```
+
+Expected protocol SHA-256: `b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524`. Expected input hashes and the image ID are in the frozen protocol. The current local input filenames are listed above; rename the pinned test overlay to exactly `test_video_processing_auto.py` in a separate read-only mount outside the source tree. Extract the pinned merge-base archive once, then make independent baseline, mutant, and fixed source trees. The wrong mutant changes only the first built-in loop in `video_processor_class_from_name` from `VIDEO_PROCESSOR_MAPPING.items()` to `VIDEO_PROCESSOR_MAPPING_NAMES.items()`; do not change `_load_backend_class`. The fixed tree replaces only `src/transformers/models/auto/video_processing_auto.py` with the hash-pinned merged version.
+
+The first baseline command as originally written failed during pytest collection because the trusted test imports helper modules from the repository `utils/` tree. Preserve that attempt 001 log; do not count it as a semantic baseline result. Protocol addendum `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json` freezes the only runner correction: replace the container template environment `PYTHONPATH=/source/src:/source` with `PYTHONPATH=/source/src:/source:/source/utils`. The trusted test remains mounted read-only at `/trusted` and its bytes remain unchanged. Push the addendum before running the corrected baseline. Run one frozen container command at a time, in the required order, using the `container_template` in the protocol. Capture combined output in `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-<arm>.log` and write a JSON receipt next to each log with the exact argv, protocol/source/test/image hashes, start/end UTC, elapsed seconds, exit code, timeout flag, selected/passed/failed/skipped counts, observed assertion, and gate classification. Enforce the 600-second limit with a monotonic timer; check progress at least once per minute and terminate the container if time expires. Every started pytest consumes that arm. Do not retry.
+
+Run one corrected baseline invocation only. The original collection failure is not a baseline result. The corrected baseline must fail at `load_attribute.assert_not_called`; only then run the wrong mutant, which must be rejected by the target assertion on the legacy image-config subcase; only then run upstream-fixed, which must pass both subcases with no skips. Stop on any inconclusive arm. A completed qualification establishes only source-level CPU regression reproducibility. Do not change the split assignment or run inference.
+
+
+The first corrected baseline attempt is preserved at `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-002-baseline.log` with its machine-readable receipt `attempt-002-baseline.json`. It met the target baseline gate (47 mapping-resolution calls; one failed test, zero passes/skips). The video-config case failed first, so the legacy-image config case was not reached. The wrong-mutant arm is now authorized; it must be rejected by the same target assertion on the legacy-image case before the fixed arm can run.
+
+
+The v1 wrong-mutant log and receipt are preserved at `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.*`. The target assertion failed after 47 mapping lookups, but pytest did not expose the filename for the upstream method's `unittest.subTest` loop. Since v1 required legacy-case attribution, do not run its fixed arm. A new protocol must report subtest parameters explicitly and bind fresh arm outputs before further candidate tests.
+
+
+## Case-aware Transformers #49458 source qualification v2
+
+V1's immutable logs remain unchanged. V2 uses the same upstream test file and method, but a frozen stdlib unittest runner that emits each `subTest` parameter/outcome as `VARE_CASE_RUNNER_RESULT=<JSON>`. Verify the V2 protocol and runner hashes, then execute one container per arm using the v2 `container_template`; mount only `case_runner.py` at `/runner`, the trusted test at `/trusted`, and one arm-specific source tree at `/source`, all read-only. Keep `/source/utils` in `PYTHONPATH` as required by addendum 1.
+
+The v2 schedule is baseline → wrong-mutant → upstream-fixed. Each log must contain records for both `video_preprocessor_config.json` and `preprocessor_config.json`. Baseline and wrong-mutant must report `failed` at the target assertion for both; fixed must report `passed` for both. Any collection error, missing case record, skip, timeout, or different assertion is inconclusive and stops the sequence. V1 results do not substitute for v2 arms. Do not assign a split or run inference.
+
+
+Prepare v2 arm trees with the frozen source archive and overlays:
+
+```bash
+mkdir -p work/transformers-49458-v2/baseline work/transformers-49458-v2/trusted work/transformers-49458-v2/runner
+mkdir -p work/transformers-49458-v2/wrong-mutant work/transformers-49458-v2/upstream-fixed
+tar -xzf work/transformers-49458-inputs/transformers-base-429e6916.tar.gz \
+  -C work/transformers-49458-v2/baseline --strip-components=1
+cp -a work/transformers-49458-v2/baseline/. work/transformers-49458-v2/wrong-mutant/
+cp -a work/transformers-49458-v2/baseline/. work/transformers-49458-v2/upstream-fixed/
+cp work/transformers-49458-inputs/test_video_processing_auto.fixed.py \
+  work/transformers-49458-v2/trusted/test_video_processing_auto.py
+cp results/mlsys-fresh-development-task-qualification-v3/transformers-49458/case_runner.py \
+  work/transformers-49458-v2/runner/case_runner.py
+cp work/transformers-49458-inputs/video_processing_auto.fixed.py \
+  work/transformers-49458-v2/upstream-fixed/src/transformers/models/auto/video_processing_auto.py
+python3 - <<'PY'
+from pathlib import Path
+path=Path('work/transformers-49458-v2/wrong-mutant/src/transformers/models/auto/video_processing_auto.py')
+text=path.read_text()
+old='for model_type, extractors_dict in VIDEO_PROCESSOR_MAPPING.items():'
+new='for model_type, extractors_dict in VIDEO_PROCESSOR_MAPPING_NAMES.items():'
+assert text.count(old)==1
+path.write_text(text.replace(old,new,1))
+PY
+docker --context colima image inspect vare/fresh-qualification-transformers:0.3 --format '{{.Id}} {{.Os}}/{{.Architecture}}'
+```
+
+Verify each generated source-tree digest against `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json` before execution. Execute the exact per-arm command by substituting its source directory, trusted directory, runner directory, and result log into the v2 `container_template`. Capture stdout and stderr together. Enforce the 600-second ceiling with a monotonic host timer; check at least once per minute and stop the container on expiry. Write one JSON receipt per arm with exact argv, protocol/runner/source/test/image hashes, start/end UTC, elapsed seconds, exit code, timeout flag, named subtest outcomes, and gate classification. Do not retry.
+
+
+V2 baseline attempt 001 is recorded in `results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.json` (SHA-256 ef5c864eb1bc119a11600bd2fce2b24cc7481bb30f68072cf1073f29b6dc11cc); raw output is `results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-baseline.log` (SHA-256 ecee4766d4c918e36abc71175e1be09748eb263978c1b1ed53dcde5f8bc43566). Both named config subTests failed at the target assertion: 47 calls for the video config and 141 for the legacy-image config, with no errors or skips. The v2 wrong-mutant gate is now open.
+
+
+V2 wrong-mutant attempt 001 is recorded in `results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.json` (SHA-256 76e78ba63938bfc21013868504960df91a9a01fc7fc2d2093b8078ead3be5d4a); raw output is `results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.log` (SHA-256 5db740dacb7d9406da01e860fae420cf977125504473bfecaeb7f3d472a53f0c). Both named cases failed the target assertion after 47 mapping loads, with no errors or skips. The upstream-fixed v2 arm is now authorized.
+
+
+## Verify Transformers #49458 source qualification v2
+
+From the VARE root, verify every result artifact and check the qualification summary:
+
+```bash
+cd results/mlsys-fresh-development-task-qualification-v3/transformers-49458
+shasum -a 256 -c SHA256SUMS
+python3 - <<'PY'
+import json
+from pathlib import Path
+q=json.loads(Path('qualification.json').read_text())
+assert q['status']=='QUALIFIED_SOURCE_LEVEL'
+assert q['split_assignment']=='NOT_ASSIGNED'
+assert q['model_or_agent_exposure'] is False
+assert q['arms']['baseline']['outcome'].startswith('both named subTests failed')
+assert q['arms']['wrong_mutant']['outcome'].startswith('both named subTests failed')
+assert q['arms']['upstream_fixed']['passed_subtests']==2
+assert q['arms']['upstream_fixed']['skipped_subtests']==0
+print('source qualification and no-inference boundary verified')
+PY
+```
+
+This verifies source/evaluator reproducibility only. For the commands that prepared and ran each arm, see the v2 protocol and preceding section. Do not infer model capability or assign the candidate based solely on this result.
+
+
+## One-shot Transformers #49458 Development attempt
+
+Protocol: `protocols/mlsys_transformers_49458_agent_attempt_v1.json` (SHA-256 `4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee`). The task contract, prompt, split mapping, source identity, and grader identity are hash-locked under `results/mlsys-fresh-development-agent-diagnostic-v2/tasks/transformers-49458/`. The trusted upstream test bytes are stored separately under `results/mlsys-fresh-development-agent-diagnostic-v2/trusted-test/`; they are not mounted into the agent workspace.
+
+The candidate workspace is a clean sparse checkout of Transformers base `429e69162e2944922e45c2cea24887d32e96fbe7` with only `src/transformers/models/auto/video_processing_auto.py` present. Before model load, revalidate the local model file manifest, check host memory free percentage >= 50, swap used <= 4 GiB, and disk free >= 5 GiB. If any gate fails, do not infer. Then run the exact `controller.command_argv` in the frozen protocol from the VARE root with its offline environment. The agent has no shell, public test, or grader tool. Save the raw result before using the single `independent_grading.command_argv`. That isolated Docker call has network disabled, read-only source/test/runner/root mounts, and no feedback path.
+
+The first Docker preflight checked only mount layout and SHA-256 values; it did not import or execute the test and used zero grader calls. Its receipt is `results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/grader-mount-preflight-001.json`. After the attempt, preserve the transcript, patch, sole grader log/receipt, resource telemetry, exposure append, report, and final `SHA256SUMS`. Do not retry under this protocol. One passing Development family would be a feasibility signal only, not RL or generalization evidence.
+
+### Recorded outcome and post-run controller validation
+
+The one authorized attempt is consumed. Its transcript ends with three incomplete, undispatched edit-tool calls (turns 4–6); there is no candidate patch. After listing and searching, the model's third tool turn read lines 360–400 in the legacy image-processor fallback, an off-target area for the lazy registry lookup. The single independent grade ran on the unchanged baseline and failed both named cases at the expected assertion, so it confirms the negative control and does not grade a model patch. See `results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/report.md` and `agent-outcome-summary.json`.
+
+The follow-up runner records unclosed tool calls as `truncated_at_token_limit` or `unterminated_tool_call` and includes their turn numbers. The reminder now favors a short exact `replace_text` call for one contiguous change or a minimal changed hunk. This follow-up has no inference path and must not be used to retry #49458. After checkout, validate it with:
+
+```bash
+ruff check scripts/run_local_agent.py tests/test_run_local_agent_tool_format.py
+work/ci-py311/bin/pytest -q tests/test_run_local_agent_tool_format.py
+git diff --check
+python3 - <<'PY'
+import json
+from pathlib import Path
+from jsonschema import Draft202012Validator
+
+schema = json.loads(Path('research/flagship/state.schema.json').read_text())
+state = json.loads(Path('research/flagship/state.json').read_text())
+Draft202012Validator(schema).validate(state)
+print('mission state schema: valid')
+PY
+(cd results/mlsys-fresh-development-agent-diagnostic-v2 && shasum -a 256 -c SHA256SUMS)
+```
+
+The local controller test result recorded for this checkpoint is 47 passed, and Ruff plus whitespace validation passed. These checks cover the runner instrumentation only. They do not change the NO-GO capability or RL decision.
