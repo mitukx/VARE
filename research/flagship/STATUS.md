@@ -4,12 +4,14 @@
 
 - Last verified `origin/main`: `416f35c465712898e8e5764a8e43193ef86e7afb`; PR #159 is integrated.
 - PR #150 is confirmed merged with its exact-head CI, CPU-evidence, and E2E checks passing.
-- PR #160 is open at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`. Its Python 3.11/3.12/3.13 CI, lint, typecheck, seeded-summary, RVL inference, Math500 grader, and CPU-evidence checks pass. GitHub reports merge state BLOCKED; normal review and branch protection remain.
-- PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`, stacked on #160. Its exact-head CI and CPU evidence pass. No review is recorded.
-- Active branch: `codex/freshdev-qualification-vllm64830-oct31`; draft PR #162 is open at `8c29522fa4f48dbc0922256df75fba43adc6cef3`, based on draft PR #161. GitHub reported merge state CLEAN, with no reviews recorded.
+- PR #160 is open at `e9a5fc42a289c5820547977f1eaa18f41f70336c`. The #64575 model-preflight integrity erratum is included; fresh exact-head CI is running and CPU evidence passed. Main requires nine check contexts and zero approving reviews.
+- PR #161 is open as a draft at `f005f8da1135e875f498e31e51fc43b811aa17ad`, synchronized with #160 head `e9a5fc42`. Fresh exact-head checks are running.
+- PR #162 is being synchronized with the updated #161 parent; its fresh exact-head checks must pass before integration.
 - Milestone: `p15-fresh-vllm-64830-source-qualification`.
 
 ## Completed in this checkpoint
+
+- The historical #64575 model attempt remains **NOT RUN**: the old preflight skipped task JSON/prompt hashes, although retrospective hashes match. The resource NO-GO remains valid and the original receipt/protocol are unchanged; see the append-only erratum.
 
 - Corrected `_check_artifact_hashes` so `frozen_inputs.task` is validated before generic artifact filtering. Missing task entries, paths, hashes, files, or content mismatches now fail closed.
 - Corrected bounded-attempt cleanup to send `SIGKILL` to surviving process-group members even if the group leader already exited.
@@ -29,4 +31,4 @@
 
 ## Immediate next action
 
-Commit and push this durable CI checkpoint, verify the resulting exact-head CI, then mark PR #162 ready for review if it passes. Keep #64830 unassigned; any Development attempt needs a separate prospective protocol, overlap check, resource preflight, and exposure append before model inference.
+Finish integrating the #160 → #161 → #162 → #163 stack in order, with each exact-head check set green. Then use the already demonstrated local Qwen3-4B route for one prospective #64830 Development repair attempt under a new frozen protocol and model-specific resource gate; do not retry either closed 14B protocol.

@@ -322,8 +322,8 @@
     "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Commit and push this durable checkpoint, verify exact-head CI on the resulting PR #162 head, and mark it ready for review only if those checks pass. Keep #64830 unassigned; any Development attempt requires a separate prospective protocol, overlap check, resource preflight, and exposure append before inference.",
-  "last_completed_step": "Completed the hash-bound #64830 source-level qualification under pushed Addendum 4. Baseline attempt-002 failed both frozen post-override assertions; wrong-mutant attempt-002 failed the same two assertions; upstream-fixed attempt-002 passed both. Every arm matched its frozen source/test/Python/profile/command hashes and exact attempt-002 write root; default-deny/network-deny profiles held, with no timeout, RSS breach, skip, or unrelated error. The bundle-wide SHA256SUMS verifies all receipts. Exposure ledger records source/test exposure to the research agent but no model exposure/inference/training/Held-Out use. On exact PR #162 head 8c29522fa4f48dbc0922256df75fba43adc6cef3, both duplicate CI runs passed Python 3.11/3.12/3.13, lint, typecheck, blob budget, Math500 grader, seeded-summary CPU, RVL inference CPU, and calibrated CPU tasks. Status is QUALIFIED_SOURCE_LEVEL only and UNASSIGNED; no capability or RL result is claimed.",
+  "highest_priority_next_task": "Finish integrating PRs #160–#163 in order with required exact-head checks green. Then use Qwen3-4B (already independently successful on Train #1904) for one prospective vLLM #64830 Development repair under a new frozen protocol and model-specific passing resource gate; do not retry closed 14B protocols.",
+  "last_completed_step": "Completed the hash-bound #64830 source-level qualification under pushed Addendum 4. Baseline attempt-002 failed both frozen post-override assertions; wrong-mutant attempt-002 failed the same two assertions; upstream-fixed attempt-002 passed both. Every arm matched its frozen source/test/Python/profile/command hashes and exact attempt-002 write root; default-deny/network-deny profiles held, with no timeout, RSS breach, skip, or unrelated error. The bundle-wide SHA256SUMS verifies all receipts. Exposure ledger records source/test exposure to the research agent but no model exposure/inference/training/Held-Out use. On exact PR #162 head 8c29522fa4f48dbc0922256df75fba43adc6cef3, both duplicate CI runs passed Python 3.11/3.12/3.13, lint, typecheck, blob budget, Math500 grader, seeded-summary CPU, RVL inference CPU, and calibrated CPU tasks. Status is QUALIFIED_SOURCE_LEVEL only and UNASSIGNED; no capability or RL result is claimed. The historical #64575 preflight integrity claim is corrected by an append-only erratum: task JSON/prompt hashes were not checked by the old runner but retrospectively match; the resource NO-GO and NOT RUN result remain valid.",
   "milestone_id": "p15-fresh-vllm-64830-source-qualification",
   "result_hash_references": [
     {
@@ -1259,7 +1259,7 @@
     {
       "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json",
       "sha256": "d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e",
-      "status": "verified frozen-input and model-snapshot hashes; launch NO_GO on estimated working-set-plus-headroom gate; model_loaded=false"
+      "status": "Historical receipt reports frozen_inputs_verified=true, but its runner skipped task JSON/prompt hashes; retrospective hashes match, model snapshot hashes were checked separately, resource NO_GO remains valid, model_loaded=false."
     },
     {
       "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/SHA256SUMS",
@@ -1440,6 +1440,16 @@
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/upstream-fixed-attempt-002/pytest.log",
       "sha256": "f9991bfc1c7ebd12bb16ce56e1cf3117618ca286795cd280e4f6ac597c67ff48",
       "status": "2 passed, 0 failed/skipped/errors"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/preflight-integrity-erratum-001.json",
+      "sha256": "c16cb7514187d6a5e19c7e780c6dba220217389f42ba78d694a70d1fbb2f09b0",
+      "status": "Append-only correction: historical preflight skipped task JSON/prompt hashes; retrospective hashes match; original receipt and protocol unchanged."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/SHA256SUMS",
+      "sha256": "22c4334905deb3b018eaf43d8fbe9f6b7b00da54bcb5dc5b37aa06ed7a4f75d3",
+      "status": "Checksum manifest for the separate historical preflight integrity erratum."
     }
   ],
   "run_ids": [
@@ -1511,11 +1521,11 @@
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
-    "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Launch preflight failed the estimated working-set-plus-headroom gate by 879,464,921 bytes; model weights were not loaded. Do not retry this frozen protocol.",
-    "PR #160 exact head 71aa74ab6a8f6f1625505b68f7f332c49fabff93 has passing exact-head CI and CPU evidence; GitHub reports merge state BLOCKED and normal review/branch-protection requirements remain.",
-    "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 has passing exact-head CI and CPU evidence but remains a draft; no review is recorded.",
+    "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Its resource preflight NO-GO remains valid, but the historical runner skipped task JSON/prompt hash checks; retrospective hashes match the frozen protocol. Model weights were not loaded. See the append-only integrity erratum; do not retry protocol v1.",
+    "PR #160 is at e9a5fc42a289c5820547977f1eaa18f41f70336c with the #64575 integrity erratum ported; fresh exact-head CI is in progress, CPU evidence passed, and main requires nine checks with zero approving reviews.",
+    "PR #161 is synchronized at f005f8da1135e875f498e31e51fc43b811aa17ad with the updated #160 parent; exact-head CI and CPU evidence are in progress.",
     "vLLM #64830 is QUALIFIED_SOURCE_LEVEL for the two frozen method-level cases only and remains UNASSIGNED. The excluded custom-speculator behavior and whole upstream PR are not qualified; public pretraining exposure remains UNKNOWN. Any Development assignment needs a separate prospective protocol, overlap check, resource preflight, and exposure append before model inference.",
-    "PR #162 is open as a draft at verified pre-checkpoint head 8c29522fa4f48dbc0922256df75fba43adc6cef3, stacked on draft PR #161; all exact-head checks passed and no review is recorded. The state checkpoint advances the branch, so the resulting head still needs CI before PR #162 is marked ready."
+    "PR #162 requires conflict-resolved synchronization with updated PR #161 before its new exact-head CI can be accepted."
   ],
-  "updated_at": "2026-10-31T06:05:45Z"
+  "updated_at": "2026-10-31T08:51:51Z"
 }

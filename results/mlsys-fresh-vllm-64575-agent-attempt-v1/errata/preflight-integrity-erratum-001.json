@@ -1,0 +1,67 @@
+{
+  "erratum_id": "mlsys-fresh-vllm-64575-preflight-integrity-erratum-001",
+  "recorded_date": "2026-10-31",
+  "scope": "Correction to the integrity claim made by the historical vLLM #64575 launch-preflight receipt. This erratum does not alter the frozen protocol or original receipt.",
+  "immutable_sources": {
+    "protocol": {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/protocol.json",
+      "sha256": "18f66455cf111708fde170e784cd0a9a07316eacd9db1d5b5b0baf4fa74d8268"
+    },
+    "launch_preflight_receipt": {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json",
+      "sha256": "d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e",
+      "recorded_frozen_inputs_verified": true,
+      "recorded_model_snapshot_hashes_verified": true,
+      "recorded_model_loaded": false
+    },
+    "original_preflight_runner": {
+      "path": "scripts/preflight_local_model_attempt.py",
+      "protocol_pinned_sha256": "91f70bec7683d1f82157ee9e8f0cdfad65a5f476461df3ec22233a8f0d9bdd9b",
+      "revision": "a7a2509c4ddc2434053cc23d7a59508cb5b3304d"
+    }
+  },
+  "finding": {
+    "status": "TASK_JSON_AND_PROMPT_HASHES_NOT_CHECKED_BY_HISTORICAL_PREFLIGHT",
+    "code_path": "_check_artifact_hashes iterated frozen_inputs and skipped entries without generic path and sha256 keys before checking name == task",
+    "reason": "The frozen task entry uses task_json_path/task_json_sha256 and task_prompt_path/task_prompt_sha256, so it did not satisfy the earlier generic path/sha256 guard and its task-specific hash branch was unreachable.",
+    "affected_inputs": [
+      {
+        "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/task/task.json",
+        "protocol_sha256": "85c9d0e8e94e23a17779ae73013c77a94909ff9d358d6026fcbd116eea087aed",
+        "retrospective_hash_of_frozen_repository_content": "85c9d0e8e94e23a17779ae73013c77a94909ff9d358d6026fcbd116eea087aed",
+        "retrospective_match": true,
+        "historically_checked_by_preflight": false
+      },
+      {
+        "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/task/TASK.md",
+        "protocol_sha256": "e58638ed53fdc451d4d09d4fdc154dc79c3e324b0789d2762ece1ecf459a6cc9",
+        "retrospective_hash_of_frozen_repository_content": "e58638ed53fdc451d4d09d4fdc154dc79c3e324b0789d2762ece1ecf459a6cc9",
+        "retrospective_match": true,
+        "historically_checked_by_preflight": false
+      }
+    ],
+    "receipt_flag_interpretation": "The receipt's frozen_inputs_verified=true flag overstates what the historical code established for the task JSON and prompt hashes. A later retrospective hash calculation against the frozen repository content matches the protocol declarations, but does not make those checks part of the original preflight."
+  },
+  "impact": {
+    "resource_no_go_remains_valid": true,
+    "available_memory_bytes": 11993432064,
+    "estimated_working_set_bytes": 11799155161,
+    "required_headroom_bytes": 1073741824,
+    "required_memory_bytes": 12872896985,
+    "shortfall_bytes": 879464921,
+    "model_snapshot_hashes_were_separately_checked": true,
+    "model_loaded": false,
+    "task_prompt_delivered_to_model": false,
+    "candidate_generated": false,
+    "independent_grade_run": false,
+    "model_attempt_status": "NOT_RUN",
+    "public_pretraining_exposure": "UNKNOWN"
+  },
+  "correction": {
+    "historical_protocol_retried": false,
+    "historical_receipt_or_original_checksum_manifest_modified": false,
+    "code_fix_revision": "71aa74ab6a8f6f1625505b68f7f332c49fabff93",
+    "code_fix_summary": "The task entry is validated before generic path/sha256 filtering, with regression coverage for task hash verification.",
+    "code_fix_ci": "PR #160 exact-head required checks and CPU evidence passed; this establishes the corrected implementation, not retroactive execution of the old check."
+  }
+}
