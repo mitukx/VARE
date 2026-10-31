@@ -1,0 +1,25 @@
+{
+  "schema": "vare.learning_pipeline.curriculum/v1",
+  "source_id": "swe-smith-py",
+  "seed": "coding-policy-learning-mlx-4b-v1",
+  "train_repositories": [
+    "Suor/funcy",
+    "andialbrecht/sqlparse",
+    "gweis/isodate",
+    "luozhouyang/python-string-similarity",
+    "pytest-dev/iniconfig"
+  ],
+  "heldout_repositories": [
+    "python-hyper/h11",
+    "msiemens/tinydb",
+    "borntyping/python-colorlog"
+  ],
+  "train_per_repository": 16,
+  "heldout_per_repository": 14,
+  "max_changed_lines": 30,
+  "max_fail_to_pass": 30,
+  "max_pass_to_pass": 400,
+  "max_problem_chars": 3000,
+  "max_file_chars": 8000,
+  "scan_skip": ["configs/learning_pipeline_v1/", "src/vare/learning_pipeline/", "tests/test_learning_pipeline_v1.py", "docs/coding-policy-learning-v1.md", "protocols/coding_policy_learning_mlx_4b_v1.json", "scripts/learning_pipeline_v1.py"]
+}

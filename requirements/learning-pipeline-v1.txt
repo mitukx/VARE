@@ -1,0 +1,6 @@
+# Coding-policy learning v1 (Apple Silicon, Python 3.12).
+# Install the hashed MLX lock first, then these two extras:
+#   pip install --require-hashes -r requirements/mlsys-agent-mlx.lock.txt
+#   pip install -r requirements/learning-pipeline-v1.txt
+pyarrow==26.0.0
+pytest==9.2.0
