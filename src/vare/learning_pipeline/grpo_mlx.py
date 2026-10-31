@@ -22,7 +22,9 @@ rollout groups:
 * By default the update is strictly on-policy: every sample must come from the
   checkpoint being updated (``max_policy_lag = 0``), so ``rho == 1`` at the
   update point and the gradient equals the REINFORCE-with-group-baseline
-  gradient. Stale samples raise ``StalePolicyError`` instead of being reused.
+  gradient. Behavior log-probs come from the same traced (differentiated)
+  computation as the update, so ``rho == 1`` holds numerically, not only in
+  exact arithmetic; ``max_abs_log_ratio`` is reported per step. Stale samples raise ``StalePolicyError`` instead of being reused.
 * Gradients are accumulated one sample at a time; because each microbatch loss
   is divided by the step-wide token count, the accumulated gradient equals the
   full-batch gradient.
@@ -213,6 +215,7 @@ def clipped_surrogate(logp, behavior_logp, advantages, mask, *, eps_low: float, 
         "ratio_max": mx.max(mx.where(mask > 0, ratio, 0.0)),
         # k3 estimator of KL(behavior || current) on behavior samples
         "kl_sum": ((mx.exp(behavior_logp - logp) - (behavior_logp - logp) - 1.0) * mask).sum(),
+        "max_abs_log_ratio": mx.max(mx.abs(logp - behavior_logp) * mask),
     }
     return loss, stats
 
@@ -232,15 +235,40 @@ def informative_samples(samples: Sequence[Sample], cfg: GRPOConfig) -> list[Samp
     return out
 
 
-def compute_behavior_logprobs(model, samples: Iterable[Sample], *, temperature: float, pad_id: int = 0) -> None:
-    """Fill ``behavior_logprobs`` with the current (behavior) parameters,
-    without gradients. Call before any update that uses these samples."""
+def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -> list[float]:
+    """Plain (untraced) forward log-probs of ``s``'s completion tokens. Not used
+    for the ratio: on Metal/bf16 it can differ from the differentiated forward
+    by ~0.1 nats on single tokens (see ``compute_behavior_logprobs``)."""
     import mlx.core as mx
 
+    tokens, _, start = sample_tensors(s, pad_id)
+    lp = token_logprobs(model, tokens, temperature=temperature, start=start)
+    mx.eval(lp)
+    return [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
+
+
+def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig | None = None, *,
+                              temperature: float | None = None, pad_id: int = 0) -> None:
+    """Fill ``behavior_logprobs`` with the current (behavior) parameters using
+    the exact traced computation that ``policy_gradient`` differentiates, so a
+    lag-0 ratio is exactly 1. Call before any update that uses these samples,
+    under the same execution context (e.g. gradient checkpointing) as the
+    update. Measured on the 4B MLX bf16 model, an untraced forward differs from
+    the differentiated one by up to 0.13 nats per token; the traced pass is
+    deterministic, so the gradients it also produces are discarded."""
+    import mlx.core as mx
+
+    if cfg is None:
+        if temperature is None:
+            raise ValueError("pass cfg or temperature")
+        cfg = GRPOConfig(temperature=temperature)
+    value_and_grad = _value_and_grad(model, cfg, n_tokens=1)
     for s in samples:
         tokens, mask, start = sample_tensors(s, pad_id)
-        lp = mx.stop_gradient(token_logprobs(model, tokens, temperature=temperature, start=start))
-        mx.eval(lp)
+        zeros = mx.zeros(mask.shape, dtype=mx.float32)
+        (_, (_, lp)), g = value_and_grad(tokens, mask, start, mx.zeros((1,), dtype=mx.float32), zeros)
+        mx.eval(lp, g)
+        del g
         s.behavior_logprobs = [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
 
 
@@ -257,28 +285,35 @@ def trainable_digest(model) -> str:
     return h.hexdigest()
 
 
+def _value_and_grad(model, cfg: GRPOConfig, *, n_tokens: int):
+    """The one traced loss used both for behavior log-probs and for the update."""
+    import mlx.nn as nn
+
+    def loss_fn(tokens, mask, start, adv, blp):
+        lp = token_logprobs(model, tokens, temperature=cfg.temperature, start=start)
+        loss, stats = clipped_surrogate(lp, blp, adv, mask, eps_low=cfg.clip_eps_low, eps_high=cfg.clip_eps_high,
+                                        n_tokens=float(n_tokens))
+        return loss, (stats, lp)
+
+    return nn.value_and_grad(model, loss_fn)
+
+
 def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig, *, n_tokens: int,
                     pad_id: int = 0) -> tuple[Any, dict[str, float]]:
     """Gradient of the step loss w.r.t. trainable parameters, accumulated one
     sample at a time; equals the gradient of the full-batch token-mean loss."""
     import mlx.core as mx
-    import mlx.nn as nn
     from mlx.utils import tree_map
 
-    def loss_fn(tokens, mask, start, adv, blp):
-        lp = token_logprobs(model, tokens, temperature=cfg.temperature, start=start)
-        return clipped_surrogate(lp, blp, adv, mask, eps_low=cfg.clip_eps_low, eps_high=cfg.clip_eps_high,
-                                 n_tokens=float(n_tokens))
-
-    value_and_grad = nn.value_and_grad(model, loss_fn)
+    value_and_grad = _value_and_grad(model, cfg, n_tokens=n_tokens)
     grads: Any = None
-    loss_total = clipped = ratio_sum = kl_sum = ratio_max = 0.0
+    loss_total = clipped = ratio_sum = kl_sum = ratio_max = max_lr = 0.0
     for s, a in work:
         if s.behavior_logprobs is None:
             raise ValueError("missing behavior log-probs")
         tokens, mask, start = sample_tensors(s, pad_id)
         blp = mx.array([s.behavior_logprobs], dtype=mx.float32)
-        (loss, st), g = value_and_grad(tokens, mask, start, mx.array([a], dtype=mx.float32), blp)
+        (loss, (st, _lp)), g = value_and_grad(tokens, mask, start, mx.array([a], dtype=mx.float32), blp)
         grads = g if grads is None else tree_map(lambda x, y: x + y, grads, g)
         mx.eval(loss, st, grads)
         loss_total += float(loss)
@@ -286,8 +321,10 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
         ratio_sum += float(st["ratio_sum"])
         kl_sum += float(st["kl_sum"])
         ratio_max = max(ratio_max, float(st["ratio_max"]))
+        max_lr = max(max_lr, float(st["max_abs_log_ratio"]))
     diag = {"loss": loss_total, "clip_fraction": clipped / n_tokens, "ratio_mean": ratio_sum / n_tokens,
-            "ratio_max": ratio_max, "approx_kl": kl_sum / n_tokens}
+            "ratio_max": ratio_max, "approx_kl": kl_sum / n_tokens,
+            "max_abs_log_ratio": max_lr}
     return grads, diag
 
 

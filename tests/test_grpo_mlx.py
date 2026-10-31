@@ -310,6 +310,44 @@ def _lora_qwen3(lora_seed=0):
 
 
 @needs_mlx
+def test_on_policy_ratio_is_exactly_one_through_the_update_path():
+    """Behavior log-probs use the traced loss the update differentiates, also
+    under mlx-lm gradient checkpointing, so a lag-0 ratio is 1 to float
+    precision and never clipped. Advantages do not change the log-probs."""
+    import mlx.optimizers as optim
+    from mlx_lm.tuner.trainer import grad_checkpoint
+
+    m = _lora_qwen3(lora_seed=3)
+    samples = [S("a", 0, [5, 9, 11, 2], 1, prompt=[1, 7, 3]), S("a", 1, [6, 6], 0, prompt=[1, 7, 3]),
+               S("b", 0, [4, 8, 30], 0, prompt=[2]), S("b", 1, [13], 1, prompt=[2])]
+    cfg = G.GRPOConfig(temperature=0.7, max_grad_norm=None)
+    layer_cls = type(m.layers[0])
+    original = layer_cls.__call__
+    try:
+        grad_checkpoint(m.layers[0])
+        G.compute_behavior_logprobs(m, samples, cfg)
+        first = [list(s.behavior_logprobs) for s in samples]
+        G.compute_behavior_logprobs(m, samples, cfg)
+        assert [s.behavior_logprobs for s in samples] == first  # deterministic
+        rec = G.train_step(m, optim.SGD(learning_rate=0.1), samples, cfg, policy_checkpoint_id="c0", policy_step=0)
+    finally:
+        layer_cls.__call__ = original
+    assert rec["update_applied"] and rec["params_changed"]
+    assert rec["max_abs_log_ratio"] <= 1e-6
+    assert rec["ratio_mean"] == pytest.approx(1.0, abs=1e-6) and rec["clip_fraction"] == 0.0
+    assert rec["approx_kl"] == pytest.approx(0.0, abs=1e-9)
+    # untraced forward agrees on CPU float32 (on Metal bf16 it may not, which is why it is not used)
+    for s, lp in zip(samples, first):
+        assert G.forward_logprobs(_lora_qwen3(lora_seed=3), s, temperature=0.7) == pytest.approx(lp, abs=1e-4)
+
+
+@needs_mlx
+def test_behavior_logprobs_require_cfg_or_temperature():
+    with pytest.raises(ValueError):
+        G.compute_behavior_logprobs(_bigram(), [S("a", 0, [3], 1)])
+
+
+@needs_mlx
 def test_lora_update_is_real_and_context_dependent():
     import mlx.core as mx
     import mlx.optimizers as optim

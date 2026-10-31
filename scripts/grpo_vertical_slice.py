@@ -270,14 +270,13 @@ class Slice:
             samples = [s for s, _ in cur]
             t_lp = time.time()
             mx.reset_peak_memory()
-            grpo_mlx.compute_behavior_logprobs(model, grpo_mlx.informative_samples(samples, self.cfg),
-                                               temperature=self.cfg.temperature)
-            lp_s = time.time() - t_lp
-            mismatch = sampler_forward_mismatch(model, [p for p in cur if p[0].behavior_logprobs][:2])
-            t_upd = time.time()
-            with grad_checkpointing(model.layers[0]):
+            with grad_checkpointing(model.layers[0]):  # behavior pass on the exact update path
+                grpo_mlx.compute_behavior_logprobs(model, grpo_mlx.informative_samples(samples, self.cfg), self.cfg)
+                lp_s = time.time() - t_lp
+                mismatch = sampler_forward_mismatch(model, [p for p in cur if p[0].behavior_logprobs][:2])
+                t_upd = time.time()
                 rec = grpo_mlx.train_step(model, opt, samples, self.cfg, policy_checkpoint_id=ck, policy_step=step)
-            upd_s = time.time() - t_upd
+                upd_s = time.time() - t_upd
             rec["update_peak_gib"] = round(mx.get_peak_memory() / GiB, 3)
             rec.update(step_stats=self.group_stats(samples), seconds={
                 "generate_and_grade": round(gen_s, 1), "behavior_logprobs": round(lp_s, 1),
@@ -293,7 +292,7 @@ class Slice:
             step_records.append(rec)
             self.note("step", step=step, **{k: rec.get(k) for k in (
                 "update_applied", "n_informative_groups", "n_tokens", "loss", "grad_norm_preclip", "clip_fraction",
-                "ratio_mean", "approx_kl", "params_changed", "update_peak_gib", "seconds")})
+                "ratio_mean", "approx_kl", "max_abs_log_ratio", "params_changed", "update_peak_gib", "seconds")})
 
         # context-dependent change on the step-0 informative samples
         drift = []
@@ -331,7 +330,7 @@ class Slice:
                                                      if r.get("update_applied")),
             "step_metrics": [{k: r.get(k) for k in (
                 "policy_step", "update_applied", "n_groups", "n_informative_groups", "n_trained_samples",
-                "n_tokens", "loss", "grad_norm_preclip", "clip_fraction", "ratio_mean", "approx_kl",
+                "n_tokens", "loss", "grad_norm_preclip", "clip_fraction", "ratio_mean", "approx_kl", "max_abs_log_ratio",
                 "params_changed", "update_peak_gib", "seconds", "update_tokens_per_s")} for r in step_records],
             "context_dependent_drift": drift,
             "reload": {"ok": reload_ok, "seconds_incl_post_generation": round(time.time() - t_r, 1),
