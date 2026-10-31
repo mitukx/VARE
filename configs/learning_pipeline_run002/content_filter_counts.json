@@ -1,0 +1,3367 @@
+{
+ "schema": "vare.run002.content_filter_counts.v1",
+ "criteria_sha256": "7ed490f8945f9ad395d3f5752540aa5e5148aca6cd99c6d541e3f6ba8e8f3cab",
+ "vare_commit": "6cafa37a",
+ "dataset_revision": "77cab9055d42ab4a5c25c89a8f937096db13558e",
+ "config": {
+  "max_changed_lines": 30,
+  "max_fail_to_pass": 30,
+  "max_pass_to_pass": 400,
+  "max_problem_chars": 3000,
+  "max_file_chars": 8000
+ },
+ "exclusion_scan": {
+  "files_scanned": 7598,
+  "identifier_count": 37,
+  "required_missing": [],
+  "excluded_repositories": [
+   "huggingface/accelerate",
+   "huggingface/peft",
+   "huggingface/transformers",
+   "huggingface/trl",
+   "ml-explore/mlx",
+   "ml-explore/mlx-lm",
+   "pytorch/pytorch",
+   "ray-project/ray",
+   "urllib3/urllib3",
+   "vllm-project/vllm"
+  ]
+ },
+ "exposed_ids_total": 263,
+ "ledger_ids": 263,
+ "manifest_ids": 122,
+ "download_git_bytes_total": 11422036,
+ "elapsed_s": 247.9,
+ "repos": {
+  "Project-MONAI/MONAI": {
+   "group": "B",
+   "mirror": "swesmith/Project-MONAI__MONAI.a09c1f08",
+   "rows": 527,
+   "exposed_removed": 0,
+   "metadata_rejected": 123,
+   "metadata_eligible_disjoint": 404,
+   "drops": {
+    "not_single_file": 102,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 71,
+    "problem_statement_length": 175,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 49,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 6
+   },
+   "static_pass": 56,
+   "mirror_commit": "acfea3e9e300e7b1b709345ed04d2f6f0baaede0",
+   "evaluated": true,
+   "download_git_bytes": 596301,
+   "heavy_rule": {
+    "compiled_build": true,
+    "ml_framework_dep": true,
+    "evidence": [
+     "setup.py:ext_modules",
+     "runtime_deps:torch"
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 1,
+   "license_survey": [
+    "github_api",
+    "Apache-2.0"
+   ],
+   "license_code": null,
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": true,
+   "admissible_pre_env": false
+  },
+  "alanjds/drf-nested-routers": {
+   "group": "B",
+   "mirror": "swesmith/alanjds__drf-nested-routers.6144169d",
+   "rows": 35,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 35,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 8,
+    "problem_statement_length": 1,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 0,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 2
+   },
+   "static_pass": 26,
+   "mirror_commit": "d01dfb41640f05c596486b01624fe5d718f69206",
+   "evaluated": true,
+   "download_git_bytes": 45806,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 24,
+   "license_survey": [
+    "github_api",
+    "Apache-2.0"
+   ],
+   "license_code": null,
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "alecthomas/voluptuous": {
+   "group": "A",
+   "mirror": "swesmith/alecthomas__voluptuous.a7a55f83",
+   "rows": 248,
+   "exposed_removed": 0,
+   "metadata_rejected": 30,
+   "metadata_eligible_disjoint": 218,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 24,
+    "problem_statement_length": 26,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 152,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 168,
+   "mirror_commit": "b8b062752cb57db85878170d3ca5e9d4febe7d18",
+   "evaluated": true,
+   "download_git_bytes": 60731,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 168,
+    "agree": 168,
+    "head_matches": true
+   },
+   "pass_count": 16,
+   "license_survey": [
+    "github_api",
+    "BSD-3-Clause"
+   ],
+   "license_code": "BSD-3-Clause",
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "amueller/word_cloud": {
+   "group": "B",
+   "mirror": "swesmith/amueller__word_cloud.ec24191c",
+   "rows": 84,
+   "exposed_removed": 0,
+   "metadata_rejected": 21,
+   "metadata_eligible_disjoint": 63,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 18,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 33,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 3
+   },
+   "static_pass": 45,
+   "mirror_commit": "1b17b8a2588d724cfe746556f17156d4bc05d53c",
+   "evaluated": true,
+   "download_git_bytes": 67610,
+   "heavy_rule": {
+    "compiled_build": true,
+    "ml_framework_dep": false,
+    "evidence": [
+     "setup.py:ext_modules",
+     "setup.py:cythonize",
+     "pyproject:requires:cython"
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 4
+   },
+   "pass_count": 9,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": true,
+   "admissible_pre_env": false
+  },
+  "arrow-py/arrow": {
+   "group": "A",
+   "mirror": "swesmith/arrow-py__arrow.1d70d009",
+   "rows": 333,
+   "exposed_removed": 0,
+   "metadata_rejected": 333,
+   "metadata_eligible_disjoint": 0,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 0,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 0,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 0,
+   "mirror_commit": "e2ffa95da9e1b81ea793a8cd910bbf25593b1971",
+   "evaluated": true,
+   "download_git_bytes": 37948,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 1
+   },
+   "full_clone_crosscheck": {
+    "tasks": 0,
+    "agree": 0,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "Apache-2.0"
+   ],
+   "license_code": "Apache-2.0",
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "bottlepy/bottle": {
+   "group": "B",
+   "mirror": "swesmith/bottlepy__bottle.a8dfef30",
+   "rows": 373,
+   "exposed_removed": 0,
+   "metadata_rejected": 58,
+   "metadata_eligible_disjoint": 315,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 29,
+    "problem_statement_length": 6,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 280,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 280,
+   "mirror_commit": "53355d3c238579ca0a18a1b161348fdf2d8807f7",
+   "evaluated": true,
+   "download_git_bytes": 113227,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "burnash/gspread": {
+   "group": "B",
+   "mirror": "swesmith/burnash__gspread.a8be3b96",
+   "rows": 90,
+   "exposed_removed": 0,
+   "metadata_rejected": 5,
+   "metadata_eligible_disjoint": 85,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 24,
+    "problem_statement_length": 1,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 59,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 60,
+   "mirror_commit": "897b81366e81c943d9ffa67c0daa0a7ab589fe32",
+   "evaluated": true,
+   "download_git_bytes": 117366,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 1,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "cantools/cantools": {
+   "group": "B",
+   "mirror": "swesmith/cantools__cantools.0c6a7871",
+   "rows": 1440,
+   "exposed_removed": 0,
+   "metadata_rejected": 256,
+   "metadata_eligible_disjoint": 1184,
+   "drops": {
+    "not_single_file": 88,
+    "unsupported_patch": 0,
+    "target_not_library_python": 36,
+    "patch_too_large": 151,
+    "problem_statement_length": 209,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 519,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 8
+   },
+   "static_pass": 700,
+   "mirror_commit": "2fb1682c99b2933dbcbccee84ab3a30c0b388afa",
+   "evaluated": true,
+   "download_git_bytes": 209122,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 6
+   },
+   "pass_count": 173,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "chardet/chardet": {
+   "group": "A",
+   "mirror": "swesmith/chardet__chardet.9630f238",
+   "rows": 215,
+   "exposed_removed": 0,
+   "metadata_rejected": 215,
+   "metadata_eligible_disjoint": 0,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 0,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 0,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 0,
+   "mirror_commit": "37ada3f752ec88bbeae0a8fc90471d4c1a12bfb8",
+   "evaluated": true,
+   "download_git_bytes": 108316,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 0,
+    "agree": 0,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "0BSD"
+   ],
+   "license_code": "0BSD",
+   "license_api_recheck": "0BSD",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "cknd/stackprinter": {
+   "group": "A",
+   "mirror": "swesmith/cknd__stackprinter.219fcc52",
+   "rows": 137,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 137,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 34,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 67,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 1
+   },
+   "static_pass": 103,
+   "mirror_commit": "60ab1766145487cbfb0d7c2fab2f5f1045c8de5b",
+   "evaluated": true,
+   "download_git_bytes": 57786,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 103,
+    "agree": 103,
+    "head_matches": true
+   },
+   "pass_count": 35,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "conan-io/conan": {
+   "group": "B",
+   "mirror": "swesmith/conan-io__conan.86f29e13",
+   "rows": 978,
+   "exposed_removed": 0,
+   "metadata_rejected": 101,
+   "metadata_eligible_disjoint": 877,
+   "drops": {
+    "not_single_file": 343,
+    "unsupported_patch": 3,
+    "target_not_library_python": 0,
+    "patch_too_large": 97,
+    "problem_statement_length": 10,
+    "duplicate": 1,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 296,
+    "reference_blocks_do_not_apply": 1,
+    "reference_blocks_do_not_restore_file": 109
+   },
+   "static_pass": 423,
+   "mirror_commit": "74a5787ce5a69519232adebde844c3f480ce9aad",
+   "evaluated": true,
+   "download_git_bytes": 610190,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [
+     "setup.py:install_requires_non_literal"
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "pass_count": 17,
+   "license_survey": [
+    "rebench_v2_field",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "cookiecutter/cookiecutter": {
+   "group": "B",
+   "mirror": "swesmith/cookiecutter__cookiecutter.b4451231",
+   "rows": 67,
+   "exposed_removed": 0,
+   "metadata_rejected": 19,
+   "metadata_eligible_disjoint": 48,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 25,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 9,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 6
+   },
+   "static_pass": 23,
+   "mirror_commit": "383cfa97350ef893f1c5a52a772ad62d4a996645",
+   "evaluated": true,
+   "download_git_bytes": 119298,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 8
+   },
+   "pass_count": 8,
+   "license_survey": [
+    "github_api",
+    "BSD-3-Clause"
+   ],
+   "license_code": null,
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "cool-RR/PySnooper": {
+   "group": "A",
+   "mirror": "swesmith/cool-RR__PySnooper.57472b46",
+   "rows": 78,
+   "exposed_removed": 0,
+   "metadata_rejected": 37,
+   "metadata_eligible_disjoint": 41,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 2,
+    "problem_statement_length": 13,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 9,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 26,
+   "mirror_commit": "540ae6f570b4fc0f62e732af704fa412c7e9503a",
+   "evaluated": true,
+   "download_git_bytes": 48919,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [
+     "setup.py:install_requires_non_literal"
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 1
+   },
+   "full_clone_crosscheck": {
+    "tasks": 26,
+    "agree": 26,
+    "head_matches": true
+   },
+   "pass_count": 17,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "dask/dask": {
+   "group": "B",
+   "mirror": "swesmith/dask__dask.5f61e423",
+   "rows": 336,
+   "exposed_removed": 0,
+   "metadata_rejected": 206,
+   "metadata_eligible_disjoint": 130,
+   "drops": {
+    "not_single_file": 11,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 49,
+    "problem_statement_length": 31,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 31,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 3
+   },
+   "static_pass": 39,
+   "mirror_commit": "723747617189ba308875e750e9e65e00e2c39bd7",
+   "evaluated": true,
+   "download_git_bytes": 333057,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 8
+   },
+   "pass_count": 5,
+   "license_survey": [
+    "rebench_v2_field",
+    "BSD-3-Clause"
+   ],
+   "license_code": null,
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "datamade/usaddress": {
+   "group": "B",
+   "mirror": "swesmith/datamade__usaddress.a42a8f0c",
+   "rows": 8,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 8,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 3,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 5,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 5,
+   "mirror_commit": "d7e151bed902609a5775b8162a89f40fb3ce1491",
+   "evaluated": true,
+   "download_git_bytes": 43915,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "dbader/schedule": {
+   "group": "A",
+   "mirror": "swesmith/dbader__schedule.82a43db1",
+   "rows": 80,
+   "exposed_removed": 0,
+   "metadata_rejected": 17,
+   "metadata_eligible_disjoint": 63,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 8,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 55,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 55,
+   "mirror_commit": "9a84ffc9b7f8d9b724e2e5b6975fa405fb984c18",
+   "evaluated": true,
+   "download_git_bytes": 46607,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 55,
+    "agree": 55,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "django/channels": {
+   "group": "B",
+   "mirror": "swesmith/django__channels.a144b4b8",
+   "rows": 112,
+   "exposed_removed": 0,
+   "metadata_rejected": 12,
+   "metadata_eligible_disjoint": 100,
+   "drops": {
+    "not_single_file": 2,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 9,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 57,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 89,
+   "mirror_commit": "e855e96f13e789177afd69167282453632d30274",
+   "evaluated": true,
+   "download_git_bytes": 68415,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 32,
+   "license_survey": [
+    "rebench_v2_field",
+    "BSD-3-Clause"
+   ],
+   "license_code": null,
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "django/daphne": {
+   "group": "B",
+   "mirror": "swesmith/django__daphne.32ac73e1",
+   "rows": 50,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 50,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 3,
+    "patch_too_large": 17,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 23,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 3
+   },
+   "static_pass": 30,
+   "mirror_commit": "738fa71bbc6cfee2226b0b3d948f55a028a5f5e7",
+   "evaluated": true,
+   "download_git_bytes": 52155,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 3
+   },
+   "pass_count": 4,
+   "license_survey": [
+    "github_api",
+    "BSD-3-Clause"
+   ],
+   "license_code": null,
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "erikrose/parsimonious": {
+   "group": "A",
+   "mirror": "swesmith/erikrose__parsimonious.0d3f5f93",
+   "rows": 95,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 95,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 6,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 73,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 89,
+   "mirror_commit": "4c817331415d1f5f78e2710ca314be1a62f1ad15",
+   "evaluated": true,
+   "download_git_bytes": 56946,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 1
+   },
+   "full_clone_crosscheck": {
+    "tasks": 89,
+    "agree": 89,
+    "head_matches": true
+   },
+   "pass_count": 16,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "facebookresearch/fvcore": {
+   "group": "B",
+   "mirror": "swesmith/facebookresearch__fvcore.a491d5b9",
+   "rows": 484,
+   "exposed_removed": 0,
+   "metadata_rejected": 39,
+   "metadata_eligible_disjoint": 445,
+   "drops": {
+    "not_single_file": 81,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 35,
+    "problem_statement_length": 286,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 26,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 7
+   },
+   "static_pass": 43,
+   "mirror_commit": "a06ad86ea1d5e3c7990eede36b8be396ce140ae3",
+   "evaluated": true,
+   "download_git_bytes": 94918,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 9
+   },
+   "pass_count": 10,
+   "license_survey": [
+    "github_api",
+    "Apache-2.0"
+   ],
+   "license_code": null,
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "facebookresearch/hydra": {
+   "group": "B",
+   "mirror": "swesmith/facebookresearch__hydra.0f03eb60",
+   "rows": 428,
+   "exposed_removed": 0,
+   "metadata_rejected": 351,
+   "metadata_eligible_disjoint": 77,
+   "drops": {
+    "not_single_file": 19,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 24,
+    "problem_statement_length": 1,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 19,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 9
+   },
+   "static_pass": 33,
+   "mirror_commit": "d702f80c3e65001efe37cc6aa3e4e86f54e0ff02",
+   "evaluated": true,
+   "download_git_bytes": 368226,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [
+     "setup.py:install_requires_non_literal"
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "pass_count": 5,
+   "license_survey": [
+    "rebench_v2_field",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "facelessuser/soupsieve": {
+   "group": "B",
+   "mirror": "swesmith/facelessuser__soupsieve.a8080d97",
+   "rows": 285,
+   "exposed_removed": 0,
+   "metadata_rejected": 96,
+   "metadata_eligible_disjoint": 189,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 25,
+    "problem_statement_length": 26,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 105,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 4
+   },
+   "static_pass": 138,
+   "mirror_commit": "042c64b174cd8219d24956db41a99a604adca7bb",
+   "evaluated": true,
+   "download_git_bytes": 87862,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "pass_count": 29,
+   "license_survey": [
+    "rebench_v2_field",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "getmoto/moto": {
+   "group": "B",
+   "mirror": "swesmith/getmoto__moto.694ce1f4",
+   "rows": 541,
+   "exposed_removed": 0,
+   "metadata_rejected": 60,
+   "metadata_eligible_disjoint": 481,
+   "drops": {
+    "not_single_file": 156,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 48,
+    "problem_statement_length": 26,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 216,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 15
+   },
+   "static_pass": 251,
+   "mirror_commit": "4fb53dd44e14bfb77551ac24bfb8a931cd594be6",
+   "evaluated": true,
+   "download_git_bytes": 1258085,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 9
+   },
+   "pass_count": 20,
+   "license_survey": [
+    "rebench_v2_field",
+    "Apache-2.0"
+   ],
+   "license_code": null,
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "getnikola/nikola": {
+   "group": "B",
+   "mirror": "swesmith/getnikola__nikola.0f4c230e",
+   "rows": 435,
+   "exposed_removed": 0,
+   "metadata_rejected": 373,
+   "metadata_eligible_disjoint": 62,
+   "drops": {
+    "not_single_file": 1,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 10,
+    "problem_statement_length": 2,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 47,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 1
+   },
+   "static_pass": 49,
+   "mirror_commit": "29343c51e7b647d670a614bf32cda756a8801e1c",
+   "evaluated": true,
+   "download_git_bytes": 342773,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 16
+   },
+   "pass_count": 1,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "google/textfsm": {
+   "group": "A",
+   "mirror": "swesmith/google__textfsm.c31b6007",
+   "rows": 79,
+   "exposed_removed": 0,
+   "metadata_rejected": 1,
+   "metadata_eligible_disjoint": 78,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 11,
+    "problem_statement_length": 1,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 66,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 66,
+   "mirror_commit": "b8d48ec31de6fcc701b3b1b2f5952831d90a8b09",
+   "evaluated": true,
+   "download_git_bytes": 71872,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 66,
+    "agree": 66,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "Apache-2.0"
+   ],
+   "license_code": "Apache-2.0",
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "gruns/icecream": {
+   "group": "A",
+   "mirror": "swesmith/gruns__icecream.f76fef56",
+   "rows": 17,
+   "exposed_removed": 0,
+   "metadata_rejected": 8,
+   "metadata_eligible_disjoint": 9,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 3,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 6,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 6,
+   "mirror_commit": "9f9af7188fdb8154485a7b60b1276db25683b28e",
+   "evaluated": true,
+   "download_git_bytes": 40211,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 4
+   },
+   "full_clone_crosscheck": {
+    "tasks": 6,
+    "agree": 6,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "hukkin/tomli": {
+   "group": "A",
+   "mirror": "swesmith/hukkin__tomli.443a0c1b",
+   "rows": 80,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 80,
+   "drops": {
+    "not_single_file": 26,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 9,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 36,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 45,
+   "mirror_commit": "f7058cd4848de25cbf61e27a8bf34298b8aabb81",
+   "evaluated": true,
+   "download_git_bytes": 193825,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 45,
+    "agree": 45,
+    "head_matches": true
+   },
+   "pass_count": 9,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "iterative/dvc": {
+   "group": "B",
+   "mirror": "swesmith/iterative__dvc.1d6ea681",
+   "rows": 467,
+   "exposed_removed": 0,
+   "metadata_rejected": 60,
+   "metadata_eligible_disjoint": 407,
+   "drops": {
+    "not_single_file": 134,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 83,
+    "problem_statement_length": 4,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 96,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 39
+   },
+   "static_pass": 186,
+   "mirror_commit": "6cade21fda479f5e1b616ad19b0d25d2ecb19b7d",
+   "evaluated": true,
+   "download_git_bytes": 324819,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 42
+   },
+   "pass_count": 51,
+   "license_survey": [
+    "rebench_v2_field",
+    "Apache-2.0"
+   ],
+   "license_code": null,
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "jawah/charset_normalizer": {
+   "group": "B",
+   "mirror": "swesmith/jawah__charset_normalizer.1fdd6463",
+   "rows": 187,
+   "exposed_removed": 0,
+   "metadata_rejected": 72,
+   "metadata_eligible_disjoint": 115,
+   "drops": {
+    "not_single_file": 2,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 17,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 94,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 1
+   },
+   "static_pass": 96,
+   "mirror_commit": "9ca2360b323b9f512f78654df73a079c5667201c",
+   "evaluated": true,
+   "download_git_bytes": 72443,
+   "heavy_rule": {
+    "compiled_build": true,
+    "ml_framework_dep": false,
+    "evidence": [
+     "setup.py:ext_modules"
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "pass_count": 1,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": true,
+   "admissible_pre_env": false
+  },
+  "jd/tenacity": {
+   "group": "A",
+   "mirror": "swesmith/jd__tenacity.0d40e76f",
+   "rows": 152,
+   "exposed_removed": 1,
+   "metadata_rejected": 28,
+   "metadata_eligible_disjoint": 123,
+   "drops": {
+    "not_single_file": 9,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 8,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 58,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 3
+   },
+   "static_pass": 106,
+   "mirror_commit": "88214ad37db95e1adc7e780518e9656dac630ab1",
+   "evaluated": true,
+   "download_git_bytes": 64392,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 106,
+    "agree": 106,
+    "head_matches": true
+   },
+   "pass_count": 45,
+   "license_survey": [
+    "github_api",
+    "Apache-2.0"
+   ],
+   "license_code": "Apache-2.0",
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "john-kurkowski/tldextract": {
+   "group": "B",
+   "mirror": "swesmith/john-kurkowski__tldextract.3d1bf184",
+   "rows": 100,
+   "exposed_removed": 0,
+   "metadata_rejected": 33,
+   "metadata_eligible_disjoint": 67,
+   "drops": {
+    "not_single_file": 3,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 12,
+    "problem_statement_length": 26,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 10,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 3
+   },
+   "static_pass": 26,
+   "mirror_commit": "50ed4232f7fb7e8bf6b783b8e6d0141ba652350f",
+   "evaluated": true,
+   "download_git_bytes": 50479,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 4
+   },
+   "pass_count": 13,
+   "license_survey": [
+    "github_api",
+    "BSD-3-Clause"
+   ],
+   "license_code": null,
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "jsvine/pdfplumber": {
+   "group": "B",
+   "mirror": "swesmith/jsvine__pdfplumber.02ff4313",
+   "rows": 261,
+   "exposed_removed": 0,
+   "metadata_rejected": 35,
+   "metadata_eligible_disjoint": 226,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 56,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 143,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 8
+   },
+   "static_pass": 170,
+   "mirror_commit": "1b881ff1bd683e425dda6506ec027d2d1c066f21",
+   "evaluated": true,
+   "download_git_bytes": 99745,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [
+     "setup.py:install_requires_non_literal"
+    ],
+    "files_present": [
+     "setup.py",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 3
+   },
+   "pass_count": 19,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "keleshev/schema": {
+   "group": "A",
+   "mirror": "swesmith/keleshev__schema.24a30457",
+   "rows": 88,
+   "exposed_removed": 0,
+   "metadata_rejected": 32,
+   "metadata_eligible_disjoint": 56,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 3,
+    "problem_statement_length": 5,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 48,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 48,
+   "mirror_commit": "f8d65684043a2fab7d1959ff9bcbdec4add1657c",
+   "evaluated": true,
+   "download_git_bytes": 45398,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [
+     "setup.py:install_requires_non_literal"
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 1
+   },
+   "full_clone_crosscheck": {
+    "tasks": 48,
+    "agree": 48,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "kennethreitz/records": {
+   "group": "B",
+   "mirror": "swesmith/kennethreitz__records.5941ab27",
+   "rows": 34,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 34,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 4,
+    "problem_statement_length": 2,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 28,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 28,
+   "mirror_commit": "ff3a757ebf60ea137c38374ca60d4214b976d771",
+   "evaluated": true,
+   "download_git_bytes": 40213,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 5
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "ISC"
+   ],
+   "license_code": null,
+   "license_api_recheck": "ISC",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "lepture/mistune": {
+   "group": "A",
+   "mirror": "swesmith/lepture__mistune.bf54ef67",
+   "rows": 729,
+   "exposed_removed": 0,
+   "metadata_rejected": 729,
+   "metadata_eligible_disjoint": 0,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 0,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 0,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 0,
+   "mirror_commit": "62750c95db25a8fb93dda09242f64e07508d9231",
+   "evaluated": true,
+   "download_git_bytes": 48289,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 1
+   },
+   "full_clone_crosscheck": {
+    "tasks": 0,
+    "agree": 0,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "BSD-3-Clause"
+   ],
+   "license_code": "BSD-3-Clause",
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "life4/textdistance": {
+   "group": "A",
+   "mirror": "swesmith/life4__textdistance.c3aca916",
+   "rows": 269,
+   "exposed_removed": 0,
+   "metadata_rejected": 257,
+   "metadata_eligible_disjoint": 12,
+   "drops": {
+    "not_single_file": 1,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 1,
+    "problem_statement_length": 2,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 2,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 8,
+   "mirror_commit": "97d7d4d227ae2f644a0c9b4544514b26c91ca6a8",
+   "evaluated": true,
+   "download_git_bytes": 53515,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 8,
+    "agree": 8,
+    "head_matches": true
+   },
+   "pass_count": 6,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "madzak/python-json-logger": {
+   "group": "A",
+   "mirror": "swesmith/madzak__python-json-logger.5f85723f",
+   "rows": 38,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 38,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 5,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 33,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 33,
+   "mirror_commit": "35f84a7c0e94cd886697021690d25fde18f8d950",
+   "evaluated": true,
+   "download_git_bytes": 38633,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 33,
+    "agree": 33,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "BSD-2-Clause"
+   ],
+   "license_code": "BSD-2-Clause",
+   "license_api_recheck": "BSD-2-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "marshmallow-code/apispec": {
+   "group": "B",
+   "mirror": "swesmith/marshmallow-code__apispec.8b421526",
+   "rows": 301,
+   "exposed_removed": 0,
+   "metadata_rejected": 291,
+   "metadata_eligible_disjoint": 10,
+   "drops": {
+    "not_single_file": 2,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 4,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 4,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 4,
+   "mirror_commit": "d8b6184dbd502b9824e83fe8b294552f31ee754e",
+   "evaluated": true,
+   "download_git_bytes": 52418,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 1
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "rebench_v2_field",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "martinblech/xmltodict": {
+   "group": "A",
+   "mirror": "swesmith/martinblech__xmltodict.0952f382",
+   "rows": 44,
+   "exposed_removed": 0,
+   "metadata_rejected": 13,
+   "metadata_eligible_disjoint": 31,
+   "drops": {
+    "not_single_file": 1,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 4,
+    "problem_statement_length": 12,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 14,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 14,
+   "mirror_commit": "09f1733cf76d2ef790433e51dfa9d6c519c61c1c",
+   "evaluated": true,
+   "download_git_bytes": 38950,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 14,
+    "agree": 14,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "matthewwithanm/python-markdownify": {
+   "group": "B",
+   "mirror": "swesmith/matthewwithanm__python-markdownify.6258f5c3",
+   "rows": 83,
+   "exposed_removed": 0,
+   "metadata_rejected": 10,
+   "metadata_eligible_disjoint": 73,
+   "drops": {
+    "not_single_file": 1,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 12,
+    "problem_statement_length": 10,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 50,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 50,
+   "mirror_commit": "f471b8049ffab44252718ee04b112d24ac998e19",
+   "evaluated": true,
+   "download_git_bytes": 40493,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "rebench_v2_field",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "mewwts/addict": {
+   "group": "A",
+   "mirror": "swesmith/mewwts__addict.75284f95",
+   "rows": 29,
+   "exposed_removed": 0,
+   "metadata_rejected": 9,
+   "metadata_eligible_disjoint": 20,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 0,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 0,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 20,
+   "mirror_commit": "affe22eca56438234ec2c79e8e036d5d8b46a71b",
+   "evaluated": true,
+   "download_git_bytes": 35191,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 20,
+    "agree": 20,
+    "head_matches": true
+   },
+   "pass_count": 20,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "mido/mido": {
+   "group": "B",
+   "mirror": "swesmith/mido__mido.a0158ff9",
+   "rows": 361,
+   "exposed_removed": 0,
+   "metadata_rejected": 43,
+   "metadata_eligible_disjoint": 318,
+   "drops": {
+    "not_single_file": 77,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 12,
+    "problem_statement_length": 83,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 69,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 9
+   },
+   "static_pass": 146,
+   "mirror_commit": "e2c2f8cdd415f6924acb7a5b2351118428522e2b",
+   "evaluated": true,
+   "download_git_bytes": 84766,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 68,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "modin-project/modin": {
+   "group": "B",
+   "mirror": "swesmith/modin-project__modin.8c7799fd",
+   "rows": 91,
+   "exposed_removed": 0,
+   "metadata_rejected": 4,
+   "metadata_eligible_disjoint": 87,
+   "drops": {
+    "not_single_file": 10,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 14,
+    "problem_statement_length": 4,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 52,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 5
+   },
+   "static_pass": 59,
+   "mirror_commit": "965d62153902812cdadb6c7726b7a016b9f1b235",
+   "evaluated": true,
+   "download_git_bytes": 277562,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 5
+   },
+   "pass_count": 2,
+   "license_survey": [
+    "rebench_v2_field",
+    "Apache-2.0"
+   ],
+   "license_code": null,
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "pallets/markupsafe": {
+   "group": "B",
+   "mirror": "swesmith/pallets__markupsafe.620c06c9",
+   "rows": 38,
+   "exposed_removed": 0,
+   "metadata_rejected": 8,
+   "metadata_eligible_disjoint": 30,
+   "drops": {
+    "not_single_file": 3,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 1,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 25,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 26,
+   "mirror_commit": "3b347537309ee72e34288c57f478764041b66526",
+   "evaluated": true,
+   "download_git_bytes": 44749,
+   "heavy_rule": {
+    "compiled_build": true,
+    "ml_framework_dep": false,
+    "evidence": [
+     "setup.py:ext_modules",
+     "setup.py:Extension("
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "pass_count": 1,
+   "license_survey": [
+    "github_api",
+    "BSD-3-Clause"
+   ],
+   "license_code": null,
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": true,
+   "admissible_pre_env": false
+  },
+  "pandas-dev/pandas": {
+   "group": "B",
+   "mirror": "swesmith/pandas-dev__pandas.95280573",
+   "rows": 2354,
+   "exposed_removed": 0,
+   "metadata_rejected": 1664,
+   "metadata_eligible_disjoint": 690,
+   "drops": {
+    "not_single_file": 58,
+    "unsupported_patch": 0,
+    "target_not_library_python": 3,
+    "patch_too_large": 82,
+    "problem_statement_length": 166,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 356,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 8
+   },
+   "static_pass": 381,
+   "mirror_commit": "53b043ab929fc0d04be16a1a24c05201270f1494",
+   "evaluated": true,
+   "download_git_bytes": 1105854,
+   "heavy_rule": {
+    "compiled_build": true,
+    "ml_framework_dep": false,
+    "evidence": [
+     "setup.py:ext_modules",
+     "setup.py:Extension(",
+     "setup.py:cythonize",
+     "pyproject:build-backend",
+     "pyproject:requires:cython",
+     "pyproject:requires:numpy"
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 3
+   },
+   "pass_count": 17,
+   "license_survey": [
+    "rebench_v2_field",
+    "BSD-3-Clause"
+   ],
+   "license_code": null,
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": true,
+   "admissible_pre_env": false
+  },
+  "pdfminer/pdfminer.six": {
+   "group": "B",
+   "mirror": "swesmith/pdfminer__pdfminer.six.1a8bd2f7",
+   "rows": 660,
+   "exposed_removed": 0,
+   "metadata_rejected": 172,
+   "metadata_eligible_disjoint": 488,
+   "drops": {
+    "not_single_file": 1,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 69,
+    "problem_statement_length": 7,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 369,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 6
+   },
+   "static_pass": 411,
+   "mirror_commit": "9755560ebf30fdd9469cd9ec67810a3dcb64ea55",
+   "evaluated": true,
+   "download_git_bytes": 165280,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 36,
+   "license_survey": [
+    "rebench_v2_field",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "pndurette/gTTS": {
+   "group": "B",
+   "mirror": "swesmith/pndurette__gTTS.dbcda4f3",
+   "rows": 112,
+   "exposed_removed": 0,
+   "metadata_rejected": 67,
+   "metadata_eligible_disjoint": 45,
+   "drops": {
+    "not_single_file": 7,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 8,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 15,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 2
+   },
+   "static_pass": 30,
+   "mirror_commit": "c0ac11a14de38ef09a35674d4e2f153398d39f37",
+   "evaluated": true,
+   "download_git_bytes": 55103,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 13,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "pudo/dataset": {
+   "group": "B",
+   "mirror": "swesmith/pudo__dataset.5c2dc8d3",
+   "rows": 107,
+   "exposed_removed": 0,
+   "metadata_rejected": 6,
+   "metadata_eligible_disjoint": 101,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 12,
+    "problem_statement_length": 48,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 21,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 3
+   },
+   "static_pass": 41,
+   "mirror_commit": "c076082c7861d86c1c69d0cd53482bac6a863a44",
+   "evaluated": true,
+   "download_git_bytes": 52655,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 3
+   },
+   "pass_count": 17,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "r1chardj0n3s/parse": {
+   "group": "A",
+   "mirror": "swesmith/r1chardj0n3s__parse.30da9e4f",
+   "rows": 90,
+   "exposed_removed": 0,
+   "metadata_rejected": 32,
+   "metadata_eligible_disjoint": 58,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 9,
+    "problem_statement_length": 5,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 44,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 44,
+   "mirror_commit": "dcf2c9f0c57e2ede052a4f42b9bbd5ddb4b40cae",
+   "evaluated": true,
+   "download_git_bytes": 44599,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 44,
+    "agree": 44,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "rsalmei/alive-progress": {
+   "group": "B",
+   "mirror": "swesmith/rsalmei__alive-progress.35853799",
+   "rows": 371,
+   "exposed_removed": 0,
+   "metadata_rejected": 232,
+   "metadata_eligible_disjoint": 139,
+   "drops": {
+    "not_single_file": 16,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 13,
+    "problem_statement_length": 15,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 61,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 1
+   },
+   "static_pass": 95,
+   "mirror_commit": "ec0d4658b25eeb8a452fe1d3261bef5012680c04",
+   "evaluated": true,
+   "download_git_bytes": 77428,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 33,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "rubik/radon": {
+   "group": "B",
+   "mirror": "swesmith/rubik__radon.54b88e58",
+   "rows": 205,
+   "exposed_removed": 0,
+   "metadata_rejected": 4,
+   "metadata_eligible_disjoint": 201,
+   "drops": {
+    "not_single_file": 29,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 23,
+    "problem_statement_length": 23,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 93,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 6
+   },
+   "static_pass": 126,
+   "mirror_commit": "22f6654c53433a6ad37004db5063d628dd50b876",
+   "evaluated": true,
+   "download_git_bytes": 117793,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 3
+   },
+   "pass_count": 27,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "rustedpy/result": {
+   "group": "A",
+   "mirror": "swesmith/rustedpy__result.0b855e1e",
+   "rows": 64,
+   "exposed_removed": 0,
+   "metadata_rejected": 5,
+   "metadata_eligible_disjoint": 59,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 1,
+    "problem_statement_length": 7,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 51,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 51,
+   "mirror_commit": "67b1563bdeb87e413d079161e214bf183f26f6ea",
+   "evaluated": true,
+   "download_git_bytes": 41212,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 1
+   },
+   "full_clone_crosscheck": {
+    "tasks": 51,
+    "agree": 51,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "scrapy/scrapy": {
+   "group": "B",
+   "mirror": "swesmith/scrapy__scrapy.35212ec5",
+   "rows": 198,
+   "exposed_removed": 0,
+   "metadata_rejected": 52,
+   "metadata_eligible_disjoint": 146,
+   "drops": {
+    "not_single_file": 35,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 20,
+    "problem_statement_length": 1,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 34,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 15
+   },
+   "static_pass": 90,
+   "mirror_commit": "e6b7862478a4658dca1fabd50971d03395c42d4e",
+   "evaluated": true,
+   "download_git_bytes": 187059,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 18
+   },
+   "pass_count": 41,
+   "license_survey": [
+    "rebench_v2_field",
+    "BSD-3-Clause"
+   ],
+   "license_code": null,
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "seatgeek/thefuzz": {
+   "group": "B",
+   "mirror": "swesmith/seatgeek__thefuzz.8a05a3ee",
+   "rows": 32,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 32,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 3,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 19,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 29,
+   "mirror_commit": "4dc2e6df6d273b98386d4e3e9423b2afbaff6c50",
+   "evaluated": true,
+   "download_git_bytes": 40295,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 10
+   },
+   "pass_count": 10,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "sloria/environs": {
+   "group": "B",
+   "mirror": "swesmith/sloria__environs.73c372df",
+   "rows": 68,
+   "exposed_removed": 0,
+   "metadata_rejected": 12,
+   "metadata_eligible_disjoint": 56,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 12,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 44,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 44,
+   "mirror_commit": "7685f68e4acfa3a069d65789a86753aaeec3a59e",
+   "evaluated": true,
+   "download_git_bytes": 44053,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 3
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "rebench_v2_field",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "spulec/freezegun": {
+   "group": "A",
+   "mirror": "swesmith/spulec__freezegun.5f171db0",
+   "rows": 108,
+   "exposed_removed": 0,
+   "metadata_rejected": 23,
+   "metadata_eligible_disjoint": 85,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 3,
+    "problem_statement_length": 1,
+    "duplicate": 1,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 71,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 80,
+   "mirror_commit": "66cba7358a3608207c975253a5cca3582f6ba138",
+   "evaluated": true,
+   "download_git_bytes": 46983,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 5
+   },
+   "full_clone_crosscheck": {
+    "tasks": 80,
+    "agree": 80,
+    "head_matches": true
+   },
+   "pass_count": 9,
+   "license_survey": [
+    "github_api",
+    "Apache-2.0"
+   ],
+   "license_code": "Apache-2.0",
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "sqlfluff/sqlfluff": {
+   "group": "B",
+   "mirror": "swesmith/sqlfluff__sqlfluff.50a1c4b6",
+   "rows": 1293,
+   "exposed_removed": 0,
+   "metadata_rejected": 136,
+   "metadata_eligible_disjoint": 1157,
+   "drops": {
+    "not_single_file": 111,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 223,
+    "problem_statement_length": 20,
+    "duplicate": 3,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 647,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 31
+   },
+   "static_pass": 800,
+   "mirror_commit": "aeeb06ca3b23578861bd744ff600b2c8eb3c1159",
+   "evaluated": true,
+   "download_git_bytes": 1048171,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 14
+   },
+   "pass_count": 122,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "stanfordnlp/dspy": {
+   "group": "B",
+   "mirror": "swesmith/stanfordnlp__dspy.651a4c71",
+   "rows": 661,
+   "exposed_removed": 0,
+   "metadata_rejected": 96,
+   "metadata_eligible_disjoint": 565,
+   "drops": {
+    "not_single_file": 34,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 99,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 273,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 37
+   },
+   "static_pass": 432,
+   "mirror_commit": "57c387e36f136a5a8c9284f9a57bdfb8d096a83e",
+   "evaluated": true,
+   "download_git_bytes": 296831,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 22
+   },
+   "pass_count": 122,
+   "license_survey": [
+    "rebench_v2_field",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "stanfordnlp/string2string": {
+   "group": "B",
+   "mirror": "swesmith/stanfordnlp__string2string.c4a72f59",
+   "rows": 128,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 128,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 11,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 111,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 117,
+   "mirror_commit": "99542a900f8fb483578767e50c11498f2ec11ee9",
+   "evaluated": true,
+   "download_git_bytes": 70325,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": true,
+    "evidence": [
+     "runtime_deps:torch"
+    ],
+    "files_present": [
+     "setup.py",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 10
+   },
+   "pass_count": 6,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": true,
+   "admissible_pre_env": false
+  },
+  "sunpy/sunpy": {
+   "group": "B",
+   "mirror": "swesmith/sunpy__sunpy.f8edfd5c",
+   "rows": 743,
+   "exposed_removed": 0,
+   "metadata_rejected": 34,
+   "metadata_eligible_disjoint": 709,
+   "drops": {
+    "not_single_file": 96,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 104,
+    "problem_statement_length": 3,
+    "duplicate": 1,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 379,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 13
+   },
+   "static_pass": 505,
+   "mirror_commit": "0cd78e256ccd5c37ae18b900d628b137eb447a71",
+   "evaluated": true,
+   "download_git_bytes": 424506,
+   "heavy_rule": {
+    "compiled_build": true,
+    "ml_framework_dep": false,
+    "evidence": [
+     "pyproject:requires:extension-helpers",
+     "pyproject:requires:numpy"
+    ],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 7
+   },
+   "pass_count": 113,
+   "license_survey": [
+    "github_api",
+    "BSD-2-Clause"
+   ],
+   "license_code": null,
+   "license_api_recheck": "BSD-2-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": true,
+   "admissible_pre_env": false
+  },
+  "termcolor/termcolor": {
+   "group": "A",
+   "mirror": "swesmith/termcolor__termcolor.3a42086f",
+   "rows": 17,
+   "exposed_removed": 0,
+   "metadata_rejected": 8,
+   "metadata_eligible_disjoint": 9,
+   "drops": {
+    "not_single_file": 2,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 4,
+    "problem_statement_length": 1,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 0,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 2,
+   "mirror_commit": "900f9bedc1042671aa3d0a4bd529a2267d8793ee",
+   "evaluated": true,
+   "download_git_bytes": 39396,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 2,
+    "agree": 2,
+    "head_matches": true
+   },
+   "pass_count": 2,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "theskumar/python-dotenv": {
+   "group": "A",
+   "mirror": "swesmith/theskumar__python-dotenv.2b8635b7",
+   "rows": 141,
+   "exposed_removed": 0,
+   "metadata_rejected": 35,
+   "metadata_eligible_disjoint": 106,
+   "drops": {
+    "not_single_file": 41,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 6,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 26,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 59,
+   "mirror_commit": "c53aad5a94cb710edc8404146e04905964c60491",
+   "evaluated": true,
+   "download_git_bytes": 48863,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 11
+   },
+   "full_clone_crosscheck": {
+    "tasks": 59,
+    "agree": 59,
+    "head_matches": true
+   },
+   "pass_count": 33,
+   "license_survey": [
+    "rebench_v2_field",
+    "BSD-3-Clause"
+   ],
+   "license_code": "BSD-3-Clause",
+   "license_api_recheck": "BSD-3-Clause",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "tkrajina/gpxpy": {
+   "group": "B",
+   "mirror": "swesmith/tkrajina__gpxpy.09fc46b3",
+   "rows": 679,
+   "exposed_removed": 0,
+   "metadata_rejected": 36,
+   "metadata_eligible_disjoint": 643,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 246,
+    "patch_too_large": 33,
+    "problem_statement_length": 4,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 330,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 7
+   },
+   "static_pass": 360,
+   "mirror_commit": "a8565e949a735629d09ad30ff5f905238ea0a20d",
+   "evaluated": true,
+   "download_git_bytes": 72228,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "pass_count": 23,
+   "license_survey": [
+    "github_api",
+    "Apache-2.0"
+   ],
+   "license_code": null,
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "tobymao/sqlglot": {
+   "group": "B",
+   "mirror": "swesmith/tobymao__sqlglot.036601ba",
+   "rows": 790,
+   "exposed_removed": 0,
+   "metadata_rejected": 231,
+   "metadata_eligible_disjoint": 559,
+   "drops": {
+    "not_single_file": 42,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 86,
+    "problem_statement_length": 7,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 383,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 8
+   },
+   "static_pass": 424,
+   "mirror_commit": "11710cc8e44a685969087a8b1f24a5a06fde0161",
+   "evaluated": true,
+   "download_git_bytes": 399721,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "pyproject.toml",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "pass_count": 33,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "tox-dev/pipdeptree": {
+   "group": "B",
+   "mirror": "swesmith/tox-dev__pipdeptree.c31b6418",
+   "rows": 284,
+   "exposed_removed": 0,
+   "metadata_rejected": 46,
+   "metadata_eligible_disjoint": 238,
+   "drops": {
+    "not_single_file": 34,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 35,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 52,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 1
+   },
+   "static_pass": 169,
+   "mirror_commit": "95f5eaf97bdebead3ef4a31179816402e870c160",
+   "evaluated": true,
+   "download_git_bytes": 64448,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "pyproject.toml"
+    ],
+    "declared_runtime_dep_count": 2
+   },
+   "pass_count": 116,
+   "license_survey": [
+    "rebench_v2_field",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "tweepy/tweepy": {
+   "group": "B",
+   "mirror": "swesmith/tweepy__tweepy.91a41c6e",
+   "rows": 302,
+   "exposed_removed": 0,
+   "metadata_rejected": 47,
+   "metadata_eligible_disjoint": 255,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 21,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 226,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 234,
+   "mirror_commit": "ec4173316bc3b461cbb9712ac737a59584cbef58",
+   "evaluated": true,
+   "download_git_bytes": 133746,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 3
+   },
+   "pass_count": 8,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": null,
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "un33k/python-slugify": {
+   "group": "A",
+   "mirror": "swesmith/un33k__python-slugify.872b3750",
+   "rows": 18,
+   "exposed_removed": 0,
+   "metadata_rejected": 2,
+   "metadata_eligible_disjoint": 16,
+   "drops": {
+    "not_single_file": 2,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 4,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 0,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 3
+   },
+   "static_pass": 10,
+   "mirror_commit": "3646001cc3041097d81db2fe68a85b123c64c136",
+   "evaluated": true,
+   "download_git_bytes": 39428,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py"
+    ],
+    "declared_runtime_dep_count": 1
+   },
+   "full_clone_crosscheck": {
+    "tasks": 10,
+    "agree": 10,
+    "head_matches": true
+   },
+   "pass_count": 7,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "vi3k6i5/flashtext": {
+   "group": "A",
+   "mirror": "swesmith/vi3k6i5__flashtext.b316c7e9",
+   "rows": 46,
+   "exposed_removed": 0,
+   "metadata_rejected": 0,
+   "metadata_eligible_disjoint": 46,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 9,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 37,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 37,
+   "mirror_commit": "beb18e1f6531b0281a799f4ec98ba4e2d18fae9b",
+   "evaluated": true,
+   "download_git_bytes": 45133,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "setup.cfg"
+    ],
+    "declared_runtime_dep_count": 0
+   },
+   "full_clone_crosscheck": {
+    "tasks": 37,
+    "agree": 37,
+    "head_matches": true
+   },
+   "pass_count": 0,
+   "license_survey": [
+    "github_api",
+    "MIT"
+   ],
+   "license_code": "MIT",
+   "license_api_recheck": "MIT",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  },
+  "weaveworks/grafanalib": {
+   "group": "B",
+   "mirror": "swesmith/weaveworks__grafanalib.5c3b17ed",
+   "rows": 122,
+   "exposed_removed": 0,
+   "metadata_rejected": 4,
+   "metadata_eligible_disjoint": 118,
+   "drops": {
+    "not_single_file": 0,
+    "unsupported_patch": 0,
+    "target_not_library_python": 0,
+    "patch_too_large": 7,
+    "problem_statement_length": 0,
+    "duplicate": 0,
+    "duplicate_of_exposed": 0,
+    "bug_patch_does_not_apply": 0,
+    "target_file_too_long": 86,
+    "reference_blocks_do_not_apply": 0,
+    "reference_blocks_do_not_restore_file": 0
+   },
+   "static_pass": 111,
+   "mirror_commit": "837ba8e8fa6f1e4fb1f726ff923e10823e0ccfe4",
+   "evaluated": true,
+   "download_git_bytes": 97384,
+   "heavy_rule": {
+    "compiled_build": false,
+    "ml_framework_dep": false,
+    "evidence": [],
+    "files_present": [
+     "setup.py",
+     "requirements.txt"
+    ],
+    "declared_runtime_dep_count": 4
+   },
+   "pass_count": 25,
+   "license_survey": [
+    "github_api",
+    "Apache-2.0"
+   ],
+   "license_code": null,
+   "license_api_recheck": "Apache-2.0",
+   "license_ok": true,
+   "scan_excluded": null,
+   "heavy_excluded": false,
+   "admissible_pre_env": true
+  }
+ }
+}
