@@ -8,6 +8,7 @@ from scripts.prepare_mlsys_vllm_64575_qualification_overlay import (
     extract_source_segment,
 )
 from scripts.run_mlsys_vllm_64575_qualification_arm import (
+    ARM_CHOICES,
     build_pytest_command,
     process_tree_rss,
 )
@@ -66,3 +67,8 @@ def test_pytest_log_file_stays_inside_the_arm_writable_directory(tmp_path) -> No
 
     assert command[command.index("-o") + 1] == f"log_file={log_file}"
     assert command[-2] == str(basetemp)
+
+
+def test_candidate_arm_is_recorded_separately_from_qualification_arms() -> None:
+    assert "agent-candidate" in ARM_CHOICES
+    assert ARM_CHOICES[:3] == ("baseline", "wrong-mutant", "upstream-fixed")

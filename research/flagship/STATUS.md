@@ -2,24 +2,25 @@
 
 ## Current checkpoint
 
-- Milestone: `p13-vllm-64575-source-qualified`.
-- Last verified `origin/main`: `416f35c465712898e8e5764a8e43193ef86e7afb`, PR #159 merged at 2026-10-31T03:30:28Z. PR #159 head `493e34339df458fe0fd0e99a7c8d9e1eed78c788`; its exact-head CI checks passed.
-- Active work branch: `codex/fresh-task-inventory-oct31`, based on that main and carrying the fresh-task discovery/selection, overlap review, and vLLM source-qualification evidence. Draft PR #160: https://github.com/mitukx/VARE/pull/160, exact head `4393dac913a2e4c270249b2fea9d0f370b2c0c36`, base `416f35c465712898e8e5764a8e43193ef86e7afb`. Exact-head CI is running; the initial event has partial checks. The PR is draft because the next independent task step remains open.
+- Last verified `origin/main`: `416f35c465712898e8e5764a8e43193ef86e7afb`; PR #159 is merged with successful exact-head checks.
+- PR #150 is verified merged; its relevant exact-head checks all passed. The three historical CI failures are no longer open blockers.
+- Active branch: `codex/fresh-task-inventory-oct31`; draft PR #160: https://github.com/mitukx/VARE/pull/160. At the last check, head `b12d4913d37c280390d252d3a9e62ab603b01dde` passed all checks except the Python 3.13 suite. That suite had one failure: the warmup-cosine oracle acceptance test. The exact test passes locally on Python 3.13.5 with the configured Colima Docker context; the CI-specific cause remains unresolved.
+- Milestone: `p14-vllm-64575-agent-attempt-no-go-resource-gate`.
 
-## Completed in this checkpoint
+## Completed
 
-- Reverified PR #150 is merged (2026-10-30) and refreshed remote state; the historical #150 CI issue is no longer open.
-- Selected `vllm-project/vllm#64575` prospectively using frozen metadata selection and a metadata-only prior-family overlap review.
-- Froze source qualification before source/tests. Corrected the baseline source identity to the merge commit's direct first parent (`8777b4c…`); the true merge-base of the captured PR base and head is `67d677b…`.
-- Qualified five isolated request-model cases with the expected baseline failures, corrected wrong-mutant rejection, and fixed-source pass. Raw attempts, the two harness/mutant-design failures, source/test/profile hashes, and decisions are retained under `results/mlsys-fresh-vllm-64575-source-qualification-v1/`.
+- vLLM #64575 remains `QUALIFIED_SOURCE_LEVEL` only; its 30-file evidence checksum manifest reverified successfully.
+- Prospectively assigned one fresh Development task-family attempt with no prior Development/Train overlap found.
+- Froze one local greedy attempt using cached Qwen2.5-Coder-14B-Instruct-4bit, MLX-LM 0.32.2 / MLX 0.32.4, one editable file, 2,048 output tokens, 4,096 context, 600 seconds, 12 GiB process-tree RSS cap, and one hidden five-case independent grade. Protocol SHA-256: `18f66455cf111708fde170e784cd0a9a07316eacd9db1d5b5b0baf4fa74d8268`.
+- Launch preflight verified the frozen inputs and all model snapshot hashes, but failed the working-set-plus-headroom gate: 11.99 GB available versus 12.87 GB required, a 0.88 GB shortfall. Model weights were not loaded and inference status is **NOT RUN**; this frozen protocol will not be retried. Receipt SHA-256: `d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e`.
+- Focused runner/grader tests passed: 17 tests; Ruff and `py_compile` passed. The exact Python 3.13 warmup-cosine oracle test passed locally with `DOCKER_CONTEXT=colima` (1 pytest case, all 12 oracle subcases).
 
-## Evidence and limits
+## Current decisions and limits
 
-- Result: `QUALIFIED_SOURCE_LEVEL` only. Baseline attempt 002: 2 intended error-message failures and 3 passing controls. Wrong-mutant v2 attempt 002: 1 intended error-message failure and 4 passing controls. Upstream-fixed attempt 001: 5 passing case indicators, exit 0. All arms were CPU-only, network-denied, and below 4 GiB RSS.
-- Baseline attempt 001 failed pytest logging setup before collection because Seatbelt denied a `/dev/null` write; its log is retained. Wrong-mutant v1 did not meet its mutation precondition; its log is retained. Neither is counted as a gate.
-- The upstream server/client integration test was excluded. Full vLLM coverage is not established.
-- Task remains `UNASSIGNED`; no model or agent saw the task; no inference, SFT/RL, or Held-Out evaluation occurred. Public pretraining exposure remains unknown. Coding capability and RL update remain NO-GO.
+- Coding capability remains **NO-GO** overall; this single attempt cannot establish general capability. RL update remains **NO-GO**; no verified new reward trajectory or policy update exists.
+- No training, Held-Out access, paid inference, or external API is authorized. Public pretraining exposure is UNKNOWN.
+- PR #160 remains draft while exact-head CI and review are outstanding. The frozen vLLM #64575 attempt is closed as **NOT RUN** at the resource gate.
 
 ## Immediate next action
 
-First inspect PR #160 exact-head checks and fix any failures. Then perform read-only preflight of local model snapshots, pinned runtime, memory pressure, swap, and disk for a single bounded attempt on this distinct source-qualified family. If an available local model/runtime clears the prior resource gates, freeze a new Development assignment, exposure event, model attempt, and independent grading protocol before one inference. Otherwise record NO-GO and continue non-inference engineering.
+Commit and push the frozen protocol, assignment, and preserved **NO-GO** preflight receipt with the engineering changes. Diagnose the remaining Python 3.13 CI failure using the newly added per-command failure details and verify the exact pushed head. Keep this model attempt **NOT RUN**; select a distinct task and freeze a separately resource-feasible protocol before any future inference.

@@ -13,6 +13,7 @@ from pathlib import Path
 
 MAX_SECONDS = 600
 MAX_RSS_BYTES = 4 * 1024**3
+ARM_CHOICES = ("baseline", "wrong-mutant", "upstream-fixed", "agent-candidate")
 
 
 def sha256_file(path: Path) -> str:
@@ -74,7 +75,7 @@ def build_pytest_command(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--arm", required=True, choices=("baseline", "wrong-mutant", "upstream-fixed"))
+    parser.add_argument("--arm", required=True, choices=ARM_CHOICES)
     parser.add_argument("--profile", type=Path, required=True)
     parser.add_argument("--source-file", type=Path, required=True)
     parser.add_argument("--test-file", type=Path, required=True)

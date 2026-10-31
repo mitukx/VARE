@@ -181,96 +181,102 @@
       "status": "frozen before generation; records zero-token launch correction; both replacement-workspace task attempts subsequently completed once"
     },
     {
-      "protocol_id": "mlsys-fresh-development-task-family-overlap-v2",
       "path": "protocols/mlsys_fresh_development_task_family_overlap_v2.json",
+      "protocol_id": "mlsys-fresh-development-task-family-overlap-v2",
       "sha256": "39314381d33e9399e08a7a69053d8f77e49ba5ce2f95934e167e906efee221c8",
       "status": "frozen and pushed before metadata review; compares one candidate against Development/Train only; no source/test access, split assignment, or inference"
     },
     {
-      "protocol_id": "mlsys-transformers-49458-source-qualification-v1",
       "path": "protocols/mlsys_transformers_49458_source_qualification_v1.json",
+      "protocol_id": "mlsys-transformers-49458-source-qualification-v1",
       "sha256": "b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524",
       "status": "frozen and pushed before any candidate test execution; source qualification only; no Development assignment or inference"
     },
     {
-      "protocol_id": "mlsys-transformers-49458-source-qualification-v1-addendum-1",
       "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
+      "protocol_id": "mlsys-transformers-49458-source-qualification-v1-addendum-1",
       "sha256": "b9763deb7f5cd9229da77a001afa38a7a7062d34475a2cf9afa7f0ec3dcdfff5",
       "status": "frozen before corrected baseline invocation; preserves original protocol and limits; authorizes one corrected baseline only"
     },
     {
-      "protocol_id": "mlsys-transformers-49458-source-qualification-v2",
       "path": "protocols/mlsys_transformers_49458_source_qualification_v2.json",
+      "protocol_id": "mlsys-transformers-49458-source-qualification-v2",
       "sha256": "f62f163be8984323c0d237b82fbaef3cf075a80e5bb49d23fd0fd8328141ee9b",
       "status": "frozen before any v2 Transformers test; case-aware reporting; source qualification only; no split or inference"
     },
     {
-      "protocol_id": "mlsys-transformers-49458-agent-attempt-v1",
       "path": "protocols/mlsys_transformers_49458_agent_attempt_v1.json",
+      "protocol_id": "mlsys-transformers-49458-agent-attempt-v1",
       "sha256": "4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee",
       "status": "frozen before inference; executed exactly once; no retry, grader feedback, training, or Held-Out use; incomplete tool-call output produced no candidate edit"
     },
     {
-      "protocol_id": "rvl-grpo-training-generation-task-binding-v1",
       "path": "protocols/rvl_grpo_training_generation_task_binding_v1.lock.json",
+      "protocol_id": "rvl-grpo-training-generation-task-binding-v1",
       "sha256": "7f414e856d29f95030f4e8af148f3aa475288370a53f86aa7cc2aaa6d990ba07",
       "status": "frozen against main 96b3cb8 before the corrected baseline rerun; two ungrouped identity mismatches reproduced; no inference"
     },
     {
-      "protocol_id": "rvl-grpo-training-generation-task-binding-v1-run1-erratum",
       "path": "protocols/rvl_grpo_training_generation_task_binding_v1_run1_erratum.json",
+      "protocol_id": "rvl-grpo-training-generation-task-binding-v1-run1-erratum",
       "sha256": "80659e5ced4ccdeff413b40dda87e2ea940761ca73053f1b5e239638da4c0331",
       "status": "append-only instrumentation correction; task cases and acceptance criteria unchanged"
     },
     {
-      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1",
       "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1.json",
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1",
       "sha256": "c4f482f037e725980c7e46027bad60f7a98d825a8e1b453fb8f05b6e24353da7",
       "status": "frozen and pushed before candidate source/test access; source qualification only; no split assignment or inference"
     },
     {
-      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-1",
       "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_1.json",
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-1",
       "sha256": "5d7016f6edf17621c008d77d728f4879b1ec80e341aa4ca40c1f5c20439714b6",
       "status": "corrected merge-parent semantics and froze exact test inputs, runner, profiles, limits, and expected arms before candidate tests"
     },
     {
-      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-2",
       "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_2.json",
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-2",
       "sha256": "e0b6636997a28131ecade4e7452cbe40a449bd55d4a41cdf525ecb3653cb6ac3",
       "status": "preserved pytest /dev/null setup failure and authorized one corrected baseline retry before its execution"
     },
     {
-      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-3",
       "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_3.json",
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-3",
       "sha256": "6119febc5ab669dcc1642246cd3fd24172d064e3f3d5af6c7c7f39334e282cb2",
       "status": "corrected expected baseline/mutant assertion location before the baseline retry; arm inputs and gates otherwise unchanged"
     },
     {
-      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-4",
       "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1_addendum_4.json",
+      "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-4",
       "sha256": "4d29a72156bccb32b90dd91ee8862d4a18a017504b1c393c10dbf1e230b9c037",
       "status": "froze corrected type-policy mutant v2 after mutant v1 failed its precondition; fixed arm conditional on v2 gate"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64575-agent-attempt-v1",
+      "sha256": "18f66455cf111708fde170e784cd0a9a07316eacd9db1d5b5b0baf4fa74d8268",
+      "status": "frozen before inference; launch preflight failed the working-set-plus-headroom gate; model NOT RUN and not loaded"
     }
   ],
   "git_refs": {
-    "repository": "mitukx/VARE",
-    "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
-    "last_integrated_pr_merge_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "active_branch": "codex/fresh-task-inventory-oct31",
-    "verified_pr_head_sha_before_checkpoint_changes": "493e34339df458fe0fd0e99a7c8d9e1eed78c788",
+    "active_pr_state": "open",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/160",
-    "active_pr_state": "open"
+    "last_integrated_pr_merge_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
+    "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
+    "repository": "mitukx/VARE",
+    "verified_pr_head_sha_before_checkpoint_changes": "b12d4913d37c280390d252d3a9e62ab603b01dde"
   },
   "go_no_go": {
-    "integration": "GO",
     "coding_capability": "NO_GO",
+    "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Run a read-only local model/runtime and host-resource preflight for the newly source-qualified vLLM #64575 family. If a cached model and pinned runtime meet the frozen memory/swap/disk gates, append a prospective Development exposure event, freeze one bounded attempt and independent grader protocol, push it, then execute once. If no cached model/runtime satisfies the gates, record a concrete NO-GO and continue non-inference work; do not use paid compute.",
-  "last_completed_step": "VARE main 416f35c465712898e8e5764a8e43193ef86e7afb is PR #159 merged with successful exact-head checks. On branch codex/fresh-task-inventory-oct31, vLLM #64575 was source-qualified under five frozen request-model cases: baseline attempt 002 had 2 intended message-assertion failures and 3 passing controls; corrected wrong-mutant v2 attempt 002 had 1 intended message-assertion failure and 4 passing controls; upstream-fixed attempt 001 had 5 passing case indicators and exit 0. Baseline attempt 001 failed at pytest logging initialization before collection; wrong-mutant v1 did not meet its frozen mutation precondition. All failures are retained. Qualification is source-level only; split remains UNASSIGNED, no model inference/training/Held-Out use occurred, and public pretraining exposure is UNKNOWN. Evidence SHA256SUMS covers 30 files. Draft PR #160 was opened at https://github.com/mitukx/VARE/pull/160 on exact head 4393dac913a2e4c270249b2fea9d0f370b2c0c36, based on 416f35c465712898e8e5764a8e43193ef86e7afb. The first PR event has partial checks; exact-head CI is still running.",
-  "milestone_id": "p13-vllm-64575-source-qualified",
+  "highest_priority_next_task": "Commit and push the tested process-guard/preflight tooling, frozen vLLM #64575 assignment/protocol, and preserved launch NO_GO receipt to draft PR #160. Diagnose the remaining Python 3.13 exact-head CI failure using richer failure evidence and rerun exact-head checks. Do not run the vLLM model attempt under this protocol; the frozen launch preflight failed the working-set-plus-headroom gate. After CI, identify a distinct fresh task and a separately frozen, resource-feasible protocol before any later model inference.",
+  "last_completed_step": "Fetched current GitHub state: origin/main remains 416f35c465712898e8e5764a8e43193ef86e7afb; PR #150 is MERGED with successful exact-head checks. PR #160 remote head is b12d4913d37c280390d252d3a9e62ab603b01dde. Its latest CI run passed all checks except Python 3.13, where the warmup_cosine oracle acceptance failed; the exact test passed locally on Python 3.13.5 with DOCKER_CONTEXT=colima, so the CI-specific cause remains unresolved. The vLLM #64575 source qualification evidence was hash-verified. Its one-shot Qwen2.5-Coder-14B Development protocol and assignment were frozen, then launch preflight verified all frozen input and model snapshot hashes but failed the estimated working-set-plus-headroom gate (available memory 11,993,432,064 bytes vs estimated requirement 12,872,896,985 bytes). The model was not loaded and the attempt is NOT RUN. Protocol SHA-256 18f66455cf111708fde170e784cd0a9a07316eacd9db1d5b5b0baf4fa74d8268; assignment SHA-256 74592200276818ab6778113057041bf9c6aa8c64f5bdee0aca366b5a7ccd445c; launch preflight SHA-256 d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e.",
+  "milestone_id": "p14-vllm-64575-agent-attempt-no-go-resource-gate",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -1201,6 +1207,46 @@
       "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/upstream-fixed-attempt-001/gate.json",
       "sha256": "b024d3ddb190ed0a281524fa5829b5a9a7c39a45fe1291a0472dd7fed175156d",
       "status": "upstream-fixed source passed all five frozen cases"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/model-file-manifest.json",
+      "sha256": "7089cb874bf7a08c21b32322b9c6a6dd850b8be966268a35c08622112b4da23b",
+      "status": "verified cached Qwen2.5-Coder-14B snapshot files and weight shards; weights not loaded"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/runtime-manifest.json",
+      "sha256": "27518725d31adfa12afb1ce31b1859ce74003fcd0aa5f5f5282763718da58032",
+      "status": "MLX qwen2 import smoke passed without loading weights"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/pre-protocol-resource-snapshot.json",
+      "sha256": "03af289e862c2736c9b7d59343f6280bd466ee91af103c0d6fae9093667b705a",
+      "status": "pre-protocol resource gates passed; recheck required before inference"
+    },
+    {
+      "path": "scripts/preflight_local_model_attempt.py",
+      "sha256": "91f70bec7683d1f82157ee9e8f0cdfad65a5f476461df3ec22233a8f0d9bdd9b",
+      "status": "automatic launch preflight runner; focused tests pending"
+    },
+    {
+      "path": "tests/test_preflight_local_model_attempt.py",
+      "sha256": "a71c066b3e65fe66c2cdeb16b3693214a7ee62edd25ee464216c209bf53a8283",
+      "status": "resource parser tests; focused tests pending"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/metal-sandbox-smoke.json",
+      "sha256": "1e05f27851a108f14ffec220942fd9ca0a062b53dc4c4d6d02ad3de602910acd",
+      "status": "GPU Metal access validated under network-denied model sandbox without loading model weights"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json",
+      "sha256": "d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e",
+      "status": "verified frozen-input and model-snapshot hashes; launch NO_GO on estimated working-set-plus-headroom gate; model_loaded=false"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/SHA256SUMS",
+      "sha256": "44da13d2d296b91697d00ad3ddf58032583f1550fd37ee7e9d1b6d858a0b6ec4",
+      "status": "all 12 frozen protocol, task, runtime, sandbox, assignment, and launch-preflight files matched"
     }
   ],
   "run_ids": [
@@ -1246,10 +1292,10 @@
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
-    "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
-    "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72",
     "fresh_stage3_families_used": 3,
-    "historical_heldout_1979_touched": false
+    "historical_heldout_1979_touched": false,
+    "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/exposure-assignment.json",
+    "sha256": "74592200276818ab6778113057041bf9c6aa8c64f5bdee0aca366b5a7ccd445c"
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
@@ -1259,7 +1305,7 @@
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
-    "vLLM #64575 is source-qualified but remains UNASSIGNED; no local model attempt has run. Pretraining exposure is UNKNOWN, and any attempt requires resource preflight plus a separate frozen prompt, exposure, and independent-grader protocol."
+    "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Launch preflight failed the estimated working-set-plus-headroom gate by 879,464,921 bytes; model weights were not loaded. Do not retry this frozen protocol."
   ],
-  "updated_at": "2026-10-31T04:23:22Z"
+  "updated_at": "2026-10-31T04:44:30Z"
 }

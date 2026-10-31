@@ -487,3 +487,32 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Mark the task **QUALIFIED_SOURCE_LEVEL** only and leave it **UNASSIGNED**. Keep coding capability, SFT/RL update, and Held-Out decisions NO-GO. Public pretraining exposure remains UNKNOWN. Do not claim model capability, an independent repair, or learning.
 - **Falsification criteria:** Any manifest/source/test/profile/runner mismatch; baseline or corrected mutant not failing at the frozen error-message assertion; fixed source not passing all five cases; any error, skip, timeout, memory breach, or network/write escape; or a newly identified prior family overlap would invalidate or narrow qualification.
 - **Follow-up:** Perform read-only local model/runtime/resource preflight for this distinct source-qualified family. If feasible and still justified, freeze a separate prospective Development assignment, append-only exposure event, one-shot local model attempt, and independent grader before inference. Otherwise retain NO-GO and continue non-inference engineering.
+
+
+## 2026-10-31 — Freeze one fresh Development attempt with Qwen2.5-Coder-14B
+
+- **Hypothesis:** The pinned local Qwen2.5-Coder-14B-Instruct 4-bit MLX policy, using VARE's bounded tool controller, can produce a minimal source repair for the newly qualified vLLM #64575 request-model task that passes all five independent cases in one greedy attempt.
+- **Evidence:** The task is `QUALIFIED_SOURCE_LEVEL` only: the frozen baseline produced the two intended unsupported-type failures, wrong-mutant v2 produced its intended failure, and the upstream-fixed source passed all five cases. Metadata overlap review v4 found no direct prior Development/Train family overlap. The task has never been assigned to a model; public pretraining exposure is unknown. The cached Qwen2.5-Coder-14B snapshot is pinned at `29efdbab55a161237ab1e432a3abaf6c7ae2b477` with 8309494233 weight bytes; MLX-LM 0.32.2 imports its `qwen2` architecture. The pre-protocol resource snapshot passed the 50% memory-pressure, 5 GiB available-memory, 4 GiB maximum swap-used, 15 GiB disk, and estimated working-set gates.
+- **Alternative explanations:** A success could reflect public pretraining exposure, task specificity, or the controller rather than learned capability; a failure could reflect source localization, tool serialization, output budgets, or the policy itself. The 14B model's projected working set is close to the current available-memory envelope, so launch-time gates remain mandatory.
+- **Decision:** Prospectively assign this one task to Development and freeze one offline greedy Qwen2.5-Coder-14B attempt with a 12 GiB process-tree RSS guard, 600-second limit, 2,048 generated-token cap, and one hidden independent grade. Commit and push the protocol first; recheck resources immediately before model load. Do not retry, train, use Held-Out, or send grader feedback.
+- **Falsification criteria:** Any resource/input/hash mismatch, no applied non-empty allowed-file edit, malformed diff, or any of the five independent cases failing; such an outcome remains a task-level attempt result and does not alter the broader NO-GO capability/RL status.
+- **Follow-up:** Inspect the one-shot tool trace and independent receipt. If the attempt fails, identify the decisive failure stage and select a justified next model or controller change on a distinct fresh family. If it passes, report one verified repair, preserve UNKNOWN pretraining exposure, and collect more independent families before changing the capability GO/NO-GO decision.
+
+
+## 2026-10-31 — Preserve Metal access under the offline attempt sandbox
+
+- **Hypothesis:** The initial default-deny Seatbelt profile blocks MLX device discovery, while permitting the required local Mach lookup and IOKit access can restore Apple Metal without opening network access or broadening writable roots.
+- **Evidence:** The no-allowance smoke exited before model loading with `No Metal device available`. A tiny `mx.array` addition under the same profile plus `allow mach-lookup` and `allow iokit-open` selected `Device(gpu, 0)` and returned `[2, 4, 6]`. The profile still denies all network access and writes only under the isolated task workspace, home, temp, and attempt-output directories. No model weights were loaded.
+- **Alternative explanations:** The model could still fail during weight loading or generation; the smoke only verifies device access. The IOKit allowance is broad at the device-open boundary, so the model remains restricted to the pinned local controller and offline environment.
+- **Decision:** Use the hash-bound profile with the two Metal requirements, and include the smoke receipt as a frozen protocol input. Do not run inference until the protocol and assignment are pushed and the automatic launch preflight passes.
+- **Falsification criteria:** Any network access, write outside the isolated roots, model weight load during smoke, or failure to reproduce the Metal device/output under the frozen profile.
+- **Follow-up:** Execute the single frozen attempt under this profile; preserve any sandbox or runtime failure and do not retry after generation begins.
+
+
+## 2026-10-31 — Stop the frozen vLLM #64575 model attempt at the resource gate
+
+- **Hypothesis:** The launch-time host check would still fit the pinned 14B model, KV cache, runtime reserve, and required safety headroom.
+- **Evidence:** The frozen input and model snapshot hashes all matched. Available memory was 11,993,432,064 bytes; the estimated working set was 11,799,155,161 bytes, and the protocol requires another 1,073,741,824 bytes of headroom. The gate therefore failed by 879,464,921 bytes. The durable receipt is `results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json` (SHA-256 `d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e`). `model_loaded` is false.
+- **Decision:** Record **NO-GO / NOT RUN** for this protocol. Do not load weights and do not retry this frozen attempt. The Development assignment remains unexposed to the model; public pretraining exposure remains UNKNOWN. Coding capability and RL update remain NO-GO.
+- **Falsification criteria:** Any evidence that model weights were loaded or the frozen attempt command started would invalidate this no-run record.
+- **Follow-up:** Complete the PR #160 engineering and exact-head CI work. Any future model attempt must use a distinct fresh task and a separately frozen protocol whose preflight passes.

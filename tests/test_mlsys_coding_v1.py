@@ -253,7 +253,17 @@ def test_hidden_grade_rejects_baseline_and_accepts_oracle(task_dir: Path):
     oracle_result, oracle_decision = outcomes["oracle"]
     assert baseline_result.passed is False
     assert baseline_decision["success"] is False
-    assert oracle_result.passed is True
+    assert oracle_result.passed is True, [
+        {
+            "name": test.name,
+            "returncode": test.returncode,
+            "timed_out": test.timed_out,
+            "output_limited": test.output_limited,
+            "stdout": test.stdout,
+            "stderr": test.stderr,
+        }
+        for test in oracle_result.tests
+    ]
     assert oracle_decision["success"] is True
     assert oracle_decision["reward"] == pytest.approx(
         min(
