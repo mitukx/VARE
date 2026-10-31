@@ -110,8 +110,9 @@ RUN002_LICENSE_SOURCES: dict[str, str] = {
     "weaveworks/grafanalib": "github_api",
 }
 
-# Design bounds. k is in {7, 8} by criterion R6; the cap R <= 32 is fixed before any build
-# check. The refusal floor is a parameter of scripts/run002_freeze_heldout.py.
+# Design bounds. Criterion R6 allows k in {7, 8}; the frozen design uses k = 8 only (the k = 7
+# pool size is kept for the pool-count evidence). The cap R <= 32 is fixed before any build
+# check; the 26 x 8 refusal floor is FLOOR_REPOS in scripts/run002_freeze_heldout.py.
 MAX_REPOS = 32
 MAX_TASKS_PER_REPO = 8
 MIN_TASKS_PER_REPO = 7
