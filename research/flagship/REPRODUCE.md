@@ -369,3 +369,25 @@ PY
 ```
 
 The row-level Development/Train comparisons, confidence, and limitations are recorded in `results/mlsys-fresh-development-task-family-overlap-v2/review.json`. A `NO_PRIOR_FAMILY_OVERLAP_FOUND` result supports source qualification only; it is not task qualification, split allocation, or pretraining-independence evidence.
+
+
+## Verify and execute Transformers #49458 source qualification
+
+The candidate remains unassigned. This protocol is source/evaluator qualification only and authorizes no model inference. The protocol was committed and pushed before its first candidate test. Check its SHA-256 before preparing or running an arm:
+
+```bash
+python3 -m json.tool protocols/mlsys_transformers_49458_source_qualification_v1.json >/dev/null
+shasum -a 256 protocols/mlsys_transformers_49458_source_qualification_v1.json
+shasum -a 256 work/transformers-49458-inputs/transformers-base-429e6916.tar.gz \
+  work/transformers-49458-inputs/video_processing_auto.base-merge-base.py \
+  work/transformers-49458-inputs/video_processing_auto.fixed.py \
+  work/transformers-49458-inputs/test_video_processing_auto.fixed.py \
+  work/transformers-49458-inputs/issue-49451.md
+docker --context colima image inspect vare/fresh-qualification-transformers:0.3 --format '{{.Id}} {{.Os}}/{{.Architecture}}'
+```
+
+Expected protocol SHA-256: `b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524`. Expected input hashes and the image ID are in the frozen protocol. The current local input filenames are listed above; rename the pinned test overlay to exactly `test_video_processing_auto.py` in a separate read-only mount outside the source tree. Extract the pinned merge-base archive once, then make independent baseline, mutant, and fixed source trees. The wrong mutant changes only the first built-in loop in `video_processor_class_from_name` from `VIDEO_PROCESSOR_MAPPING.items()` to `VIDEO_PROCESSOR_MAPPING_NAMES.items()`; do not change `_load_backend_class`. The fixed tree replaces only `src/transformers/models/auto/video_processing_auto.py` with the hash-pinned merged version.
+
+Run one frozen container command at a time, in the required order, using the `container_template` in the protocol. Capture combined output in `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-<arm>.log` and write a JSON receipt next to each log with the exact argv, protocol/source/test/image hashes, start/end UTC, elapsed seconds, exit code, timeout flag, selected/passed/failed/skipped counts, observed assertion, and gate classification. Enforce the 600-second limit with a monotonic timer; check progress at least once per minute and terminate the container if time expires. Every started pytest consumes that arm. Do not retry.
+
+The baseline must first fail at `load_attribute.assert_not_called`; only then run the wrong mutant, which must be rejected by the target assertion on the legacy image-config subcase; only then run upstream-fixed, which must pass both subcases with no skips. Stop on any inconclusive arm. A completed qualification establishes only source-level CPU regression reproducibility. Do not change the split assignment or run inference.

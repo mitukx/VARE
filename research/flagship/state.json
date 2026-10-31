@@ -185,6 +185,12 @@
       "path": "protocols/mlsys_fresh_development_task_family_overlap_v2.json",
       "sha256": "39314381d33e9399e08a7a69053d8f77e49ba5ce2f95934e167e906efee221c8",
       "status": "frozen and pushed before metadata review; compares one candidate against Development/Train only; no source/test access, split assignment, or inference"
+    },
+    {
+      "protocol_id": "mlsys-transformers-49458-source-qualification-v1",
+      "path": "protocols/mlsys_transformers_49458_source_qualification_v1.json",
+      "sha256": "b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524",
+      "status": "frozen and pushed before any candidate test execution; source qualification only; no Development assignment or inference"
     }
   ],
   "git_refs": {
@@ -193,7 +199,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "2956dd18e711324bb3b7dc6a2d275013c8c2baf3",
+    "verified_pr_head_sha_before_checkpoint_changes": "5e8f3589914cefc5831fff7097dc1cf770df5dac",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
@@ -202,9 +208,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Resolve exact-head required CI and review on PR #155, merge when branch protection permits, then freeze a source-qualification protocol and qualify Transformers #49458. Keep the candidate unassigned and do not run inference until qualification passes and a separate one-attempt protocol is frozen.",
-  "last_completed_step": "Merged PR #154 at 719fbe368816d81addb29a1ba2c451fa7f1bf631 after exact-head required CI, CPU evidence, and resolved review. Froze and executed metadata-only overlap review for Transformers #49458 against eight Development/Train rows; no source/test, split assignment, or inference. Proceed to source qualification only. Opened PR #155 for the frozen metadata-only review and its state/reproduction records.",
-  "milestone_id": "p7-fresh-development-family-overlap-v2-review-complete",
+  "highest_priority_next_task": "Execute the frozen Transformers #49458 source qualification in order: baseline, wrong-mutant, upstream-fixed; preserve one log and receipt per arm, stop on an inconclusive baseline, keep the candidate unassigned, and do not run model inference.",
+  "last_completed_step": "Fetched origin and verified main at 719fbe368816d81addb29a1ba2c451fa7f1bf631. On PR #155 head 5e8f3589914cefc5831fff7097dc1cf770df5dac, exact-head Python 3.11/3.12/3.13 CI, lint, typecheck, and CPU evidence passed; GitHub reports mergeStateStatus BLOCKED pending review. Verified the frozen Transformers #49458 issue/source/test/archive/image inputs. Froze source-qualification protocol v1 before candidate test execution; no test, split assignment, or inference has run.",
+  "milestone_id": "p8-transformers-49458-source-qualification-protocol-frozen",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -869,7 +875,7 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "Transformers #49458 has no prior Development/Train family overlap found, but remains unqualified and unassigned pending source qualification."
+    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED until its frozen baseline, wrong-mutant, and fixed-source gates complete; no model inference is authorized by source qualification."
   ],
-  "updated_at": "2026-10-31T01:34:12Z"
+  "updated_at": "2026-10-31T01:44:15Z"
 }

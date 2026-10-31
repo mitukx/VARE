@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-transformers-49458-source-qualification-v1",
+  "frozen_at_utc": "2026-10-31T01:44:15Z",
+  "protocol_status": "frozen_before_any_candidate_test_execution; no source qualification result yet",
+  "purpose": "Independently establish whether Transformers #49458 is a reproducible CPU source-level repair task suitable for later prospective Development allocation. This protocol does not allocate a split or authorize model/agent inference.",
+  "candidate": {
+    "task_id": "transformers-49458-lazy-auto-video-processor",
+    "repository": "huggingface/transformers",
+    "license_spdx": "Apache-2.0",
+    "issue": {
+      "number": 49451,
+      "url": "https://github.com/huggingface/transformers/issues/49451",
+      "title": "AutoVideoProcessor eagerly imports unrelated video processors after backend registration update",
+      "body_sha256": "c675c9d59f4e8eb6d8948d41134799361f7db34d4957b71bb0afc01cc9ab8fe6"
+    },
+    "pull_request": {
+      "number": 49458,
+      "url": "https://github.com/huggingface/transformers/pull/49458",
+      "title": "Keep AutoVideoProcessor class lookup lazy",
+      "base_ref_sha_at_capture": "33ab420a77c2fee01cbdd2db4a5d0969b9aa42d0",
+      "merge_base_sha": "429e69162e2944922e45c2cea24887d32e96fbe7",
+      "head_sha": "6afd4e32d7953126ace39b630db675c8ac0b4276",
+      "merge_commit_sha": "927af2f73bd0d53d339f8fc0d4bd8b053f3836bb",
+      "merge_commit_first_parent": "429e69162e2944922e45c2cea24887d32e96fbe7",
+      "merge_commit_comparison": {
+        "base": "429e69162e2944922e45c2cea24887d32e96fbe7",
+        "head": "927af2f73bd0d53d339f8fc0d4bd8b053f3836bb",
+        "ahead_by": 1,
+        "changed_files": [
+          "src/transformers/models/auto/video_processing_auto.py",
+          "tests/models/auto/test_video_processing_auto.py"
+        ]
+      }
+    },
+    "metadata_overlap_review": {
+      "protocol_path": "protocols/mlsys_fresh_development_task_family_overlap_v2.json",
+      "protocol_sha256": "39314381d33e9399e08a7a69053d8f77e49ba5ce2f95934e167e906efee221c8",
+      "result_path": "results/mlsys-fresh-development-task-family-overlap-v2/review.json",
+      "result_sha256": "68888d1beea680c1e3c7a2437152e95ab4e712079ab2f42623632d7958c39bc5",
+      "candidate_row_canonical_sha256": "3637f75f2dd5612572e08720e5d2fdfa757611b6077646cd628075e048706a69"
+    }
+  },
+  "frozen_inputs": [
+    {
+      "role": "baseline source tree archive at the upstream PR merge base",
+      "path": "https://github.com/huggingface/transformers/archive/429e69162e2944922e45c2cea24887d32e96fbe7.tar.gz",
+      "sha256": "4c50763469886980fb2805209a373f94ffcf7ffbca856eec2aea057a16e7d45f"
+    },
+    {
+      "role": "baseline source file",
+      "path": "src/transformers/models/auto/video_processing_auto.py at 429e69162e2944922e45c2cea24887d32e96fbe7",
+      "sha256": "ce6441262488f027de47b1bec8fd3bb7c52b3fa8c182c650b7c3b2cc4881a93d"
+    },
+    {
+      "role": "fixed source file",
+      "path": "src/transformers/models/auto/video_processing_auto.py at 927af2f73bd0d53d339f8fc0d4bd8b053f3836bb",
+      "sha256": "45b4218af43505c4357f014fd0ce89eb3125d617f913d35e4c11e2b658d3ab23"
+    },
+    {
+      "role": "independent trusted regression test overlay",
+      "path": "tests/models/auto/test_video_processing_auto.py at 927af2f73bd0d53d339f8fc0d4bd8b053f3836bb",
+      "sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3"
+    },
+    {
+      "role": "environment Dockerfile provenance",
+      "path": "results/mlsys-fresh-development-task-qualification-v1/environment/Dockerfile.transformers-v3",
+      "sha256": "c62eaf32a8d172559a70417f1d4bd4dd4f7c3751e583d78c33bfca983cdcb4ad"
+    },
+    {
+      "role": "offline Linux CPU test image",
+      "image": "vare/fresh-qualification-transformers:0.3",
+      "image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+      "architecture": "linux/arm64",
+      "python": "3.12.15",
+      "pytest": "8.4.2",
+      "torch": "2.9.1+cpu",
+      "torchvision": "0.24.1"
+    }
+  ],
+  "qualification_test": {
+    "trusted_overlay_filename": "test_video_processing_auto.py",
+    "pytest_node_id": "test_video_processing_auto.py::AutoVideoProcessorTest::test_video_processor_loading_does_not_resolve_other_models",
+    "source_path_not_in_agent_workspace": true,
+    "asserted_contract": "Loading the named built-in video processor and the legacy image-processor configuration must not resolve unrelated entries in VIDEO_PROCESSOR_MAPPING; both public from_pretrained cases must instantiate LlavaOnevisionVideoProcessor."
+  },
+  "arms": [
+    {
+      "name": "baseline",
+      "source": "full source tree archive at 429e69162e2944922e45c2cea24887d32e96fbe7, unmodified",
+      "required_outcome": "The pinned regression test reaches load_attribute.assert_not_called and fails because the old eager mapping lookup resolves unrelated entries. Any import, collection, or environment error is INCONCLUSIVE and stops the protocol."
+    },
+    {
+      "name": "wrong-mutant",
+      "source": "copy of the exact PR-merge-base tree with only video_processor_class_from_name changed to VIDEO_PROCESSOR_MAPPING_NAMES.items(); leave _load_backend_class iterating VIDEO_PROCESSOR_MAPPING.values()",
+      "required_outcome": "The pinned test still rejects the incomplete repair through the legacy image-configuration subcase. A pass means the mutation did not test the target contract; an unrelated failure is INCONCLUSIVE."
+    },
+    {
+      "name": "upstream-fixed",
+      "source": "exact baseline tree with src/transformers/models/auto/video_processing_auto.py replaced by the hash-pinned file from merge commit 927af2f73bd0d53d339f8fc0d4bd8b053f3836bb",
+      "required_outcome": "The pinned regression test passes with both configuration subcases executed and no skip."
+    }
+  ],
+  "run_order_and_attempt_limits": {
+    "order": [
+      "baseline",
+      "wrong-mutant",
+      "upstream-fixed"
+    ],
+    "maximum_invocations_per_arm": 1,
+    "baseline_gate": "Do not launch wrong-mutant or upstream-fixed unless baseline reaches the intended regression assertion and fails.",
+    "retry_rule": "Any failure after pytest starts consumes that arm. A pre-pytest launcher/environment failure is retained as INCONCLUSIVE; do not retry without a hash-bound protocol addendum committed before retry.",
+    "maximum_wall_seconds_per_arm": 600,
+    "maximum_concurrent_arms": 1,
+    "maximum_container_memory_bytes": 2621440000,
+    "maximum_container_cpus": 2,
+    "maximum_paid_compute_or_api_spend_usd": 0
+  },
+  "isolation": {
+    "source_mount": "one arm-specific /source bind mount, read-only",
+    "trusted_test_mount": "only the hash-pinned test file under /trusted, read-only and outside /source",
+    "container_root": "read-only",
+    "network": "disabled",
+    "writable_mounts": [
+      "512 MiB /tmp tmpfs only"
+    ],
+    "model_or_agent": "none",
+    "grader_feedback_to_model": false,
+    "candidate_or_test_edits_during_run": false,
+    "heldout_access": false
+  },
+  "commands": {
+    "prepare_source": "Verify the archive SHA-256, then extract the tarball with one leading directory stripped into an immutable baseline tree. Copy it separately for mutant and fixed arms. Replace the fixed source file only after verifying its pinned SHA-256. Keep /trusted outside each source tree.",
+    "mutant_construction": "In the mutant copy, change only the first built-in loop in video_processor_class_from_name from VIDEO_PROCESSOR_MAPPING.items() to VIDEO_PROCESSOR_MAPPING_NAMES.items(); retain the base version of _load_backend_class unchanged. Record the resulting file hash.",
+    "container_template": "docker --context colima run --rm --network none --read-only --memory=2500m --memory-swap=2500m --cpus=2 --pids-limit=128 --tmpfs /tmp:rw,nosuid,nodev,size=512m,mode=1777 --mount type=bind,source=<arm-source>,target=/source,readonly --mount type=bind,source=<trusted-test-dir>,target=/trusted,readonly --workdir /source --env PYTHONPATH=/source/src:/source --env PYTHONDONTWRITEBYTECODE=1 --env HOME=/tmp --env HF_HOME=/tmp/hf --env HF_HUB_OFFLINE=1 --env TRANSFORMERS_OFFLINE=1 --env HF_DATASETS_OFFLINE=1 vare/fresh-qualification-transformers:0.3 python3 -m pytest -q -p no:cacheprovider /trusted/test_video_processing_auto.py::AutoVideoProcessorTest::test_video_processor_loading_does_not_resolve_other_models",
+    "expected_run_count": 3,
+    "wall_timeout_enforcement": "Enforce the 600-second per-arm limit with a host-side monotonic timer. If the limit expires, terminate the docker run/container, record timed_out=true and the partial log, and do not retry that arm. The operator must check elapsed time at least once per minute."
+  },
+  "qualification_gate": "QUALIFIED only if all pinned inputs match, baseline fails at the intended assertion, the targeted wrong-mutant is rejected by that same test, and upstream-fixed passes without skips under the identical image, test, resource limits, and isolation boundary.",
+  "authorization": {
+    "candidate_issue_source_and_public_test_access": true,
+    "source_task_qualification_only": true,
+    "development_split_assignment": false,
+    "model_or_agent_inference": false,
+    "training": false,
+    "heldout_access": false
+  },
+  "limitations": [
+    "The upstream test and issue are public; successful qualification does not establish absence of pretraining exposure.",
+    "Qualification covers one targeted regression method, not the full Transformers suite or all processor backends.",
+    "The result will establish task/evaluator reproducibility only; it will not demonstrate a model repair or coding capability."
+  ],
+  "output_path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/"
+}

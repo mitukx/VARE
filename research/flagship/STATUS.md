@@ -2,12 +2,12 @@
 
 ## Current checkpoint
 
-- Milestone: `p7-fresh-development-family-overlap-v2-review-complete`.
+- Milestone: `p8-transformers-49458-source-qualification-protocol-frozen`.
 - Last verified `origin/main`: `719fbe368816d81addb29a1ba2c451fa7f1bf631` (2026-10-31), integrating PR #154.
 - Last integrated PR: [#154 — Compact stale tool history before context exhaustion](https://github.com/mitukx/VARE/pull/154), merge commit `719fbe368816d81addb29a1ba2c451fa7f1bf631`.
 - PR #154 exact-head CI and CPU evidence passed; the sole review thread was resolved before merge.
 - Work branch: `codex/fresh-development-family-overlap-v1`.
-- Active PR: [#155 — Review overlap for a fresh Development candidate](https://github.com/mitukx/VARE/pull/155), open against main; exact-head CI is being checked.
+- Active PR: [#155 — Review overlap for a fresh Development candidate](https://github.com/mitukx/VARE/pull/155), open against main; exact-head Python 3.11/3.12/3.13, lint, typecheck, and CPU evidence passed; GitHub reports the PR merge blocked pending review.
 
 ## Prior capability evidence
 
@@ -17,12 +17,12 @@ The two authorized Qwen3-4B Development attempts on Transformers #49418 and Ray 
 
 The controller now removes only oldest complete assistant tool-call rounds at the hard context limit, while preserving the original task prompt, newest complete round, and full transcript. Tokenizer-only retrospective replay exactly reconstructed the saved per-turn prompt counts and reduced the two final contexts from 4,296 to 2,765 and 4,140 to 2,795 tokens. This is controller evidence only; it does not establish model capability or an algorithmic novelty claim. Public Grok Build already documents session compaction.
 
-## Next candidate — metadata review only
+## Current candidate — source qualification only
 
 - Candidate: Transformers #49458, “Keep AutoVideoProcessor class lookup lazy.”
 - Frozen protocol: `protocols/mlsys_fresh_development_task_family_overlap_v2.json`, SHA-256 `39314381d33e9399e08a7a69053d8f77e49ba5ce2f95934e167e906efee221c8`.
 - Review: `NO_PRIOR_FAMILY_OVERLAP_FOUND` at moderate confidence across eight Development/Train exposure rows. The two same-repository prior families were 4D attention-mask collation and quantized-cache residual flushing.
-- Candidate remains **UNQUALIFIED** and **UNASSIGNED**. No task body, source, test body, patch, or grader was opened; no tests, split assignment, or inference occurred. This review supports source qualification only and does not establish pretraining independence.
+- Candidate remains **UNQUALIFIED** and **UNASSIGNED**. After the metadata review, the pinned issue/source/test inputs were inspected and hashed. Source-qualification protocol `protocols/mlsys_transformers_49458_source_qualification_v1.json` is frozen at SHA-256 `b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524`, before any candidate test execution. No candidate test or inference has run. Source-level qualification will not establish pretraining independence.
 
 ## Decisions and blockers
 
@@ -34,4 +34,4 @@ The controller now removes only oldest complete assistant tool-call rounds at th
 
 ## Immediate next action
 
-Freeze a source-qualification protocol for Transformers #49458. Then inspect only its pinned issue/source/test inputs and establish a reproducible environment, baseline failure, known-fix success, wrong-mutant rejection, source/evaluator isolation, and valid grader receipts. Keep the candidate unassigned and do not run model inference until qualification passes and a separate one-attempt model protocol is frozen.
+Execute the frozen Transformers #49458 source-qualification protocol in order: baseline, wrong-mutant, upstream-fixed. Preserve one bounded log/receipt per arm. Keep the candidate unassigned; source qualification alone does not authorize model inference.
