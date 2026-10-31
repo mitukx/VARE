@@ -1,0 +1,66 @@
+{
+  "approved_read_paths": [
+    "/private/tmp/vare-vllm-64830-development-attempt-002/worker-probe/candidate_method.py"
+  ],
+  "checks": [
+    {
+      "exit_code": 0,
+      "expected_readable": true,
+      "name": "candidate_method",
+      "observed_bytes": 41,
+      "path": "/private/tmp/vare-vllm-64830-development-attempt-002/worker-probe/candidate_method.py",
+      "status": "PASSED",
+      "stderr": ""
+    },
+    {
+      "exit_code": 1,
+      "expected_readable": false,
+      "name": "grader_test_overlay",
+      "observed_bytes": 0,
+      "path": "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/trusted/test_vllm_config_unsupported_features.py",
+      "status": "PASSED",
+      "stderr": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/trusted/test_vllm_config_unsupported_features.py: Operation not permitted\n"
+    },
+    {
+      "exit_code": 1,
+      "expected_readable": false,
+      "name": "prior_grader_calibration",
+      "observed_bytes": 0,
+      "path": "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/upstream-fixed/grade.json",
+      "status": "PASSED",
+      "stderr": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/upstream-fixed/grade.json: Operation not permitted\n"
+    },
+    {
+      "exit_code": 1,
+      "expected_readable": false,
+      "name": "candidate_workspace_source",
+      "observed_bytes": 0,
+      "path": "/private/tmp/vare-vllm-64830-development-attempt-002/workspace/vllm/config/vllm.py",
+      "status": "PASSED",
+      "stderr": "cat: /private/tmp/vare-vllm-64830-development-attempt-002/workspace/vllm/config/vllm.py: Operation not permitted\n"
+    },
+    {
+      "exit_code": 1,
+      "expected_readable": false,
+      "name": "model_tokenizer",
+      "observed_bytes": 0,
+      "path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b/tokenizer.json",
+      "status": "PASSED",
+      "stderr": "cat: /Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b/tokenizer.json: Operation not permitted\n"
+    }
+  ],
+  "denied_read_paths": [
+    "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/trusted/test_vllm_config_unsupported_features.py",
+    "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/upstream-fixed/grade.json",
+    "/private/tmp/vare-vllm-64830-development-attempt-002/workspace/vllm/config/vllm.py",
+    "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b/tokenizer.json"
+  ],
+  "grader_called": false,
+  "inference_started": false,
+  "model_loaded": false,
+  "network_denied": true,
+  "sandbox_profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/sandbox/candidate-method-worker.sb",
+  "sandbox_profile_sha256": "e995dfd0318de8210f7c0c6476d1965612d6cfd652eede30cc11decc1fc1c5d3",
+  "schema_version": 1,
+  "status": "PASSED"
+}

@@ -1,0 +1,23 @@
+{
+  "host_architecture": "Apple Silicon arm64 macOS",
+  "model_capability_reference": {
+    "interpretation": "Qwen3-4B Train-only evidence: valid tool calls, nonempty edit, and independent grader pass; not Development evidence.",
+    "path": "results/mlsys-repo-eval-v1/run-19/manifest.json",
+    "sha256": "620c985f1ddefe38487a8c00c3eb5095638ffcd5c7667e91b39f97e2f5a242d1"
+  },
+  "packages": {
+    "mlx": "0.32.4",
+    "mlx-lm": "0.32.2",
+    "tokenizers": "0.23.3",
+    "transformers": "5.22.1"
+  },
+  "python": "3.12.12",
+  "python_executable": "/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python",
+  "runtime_file_manifest": {
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json.gz",
+    "sha256": "f3c30720549f7b5f1da6aea5bacc0cbcd22b7b6f938ebbfaf9abd0969bd52572"
+  },
+  "runtime_origin": "Existing pinned MLX runtime from the #64830 v1 setup; no model weights were loaded under v1.",
+  "schema_version": 1,
+  "venv_path": "/private/tmp/vare-vllm-64830-development-attempt-001/runtime"
+}
