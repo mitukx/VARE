@@ -1,0 +1,52 @@
+{
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v7/sandbox/model-agent.sb",
+    "/usr/bin/env",
+    "PYTHONNOUSERSITE=1",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "HOME=/private/tmp/vare-vllm-64830-development-attempt-004/controller-development-007/home",
+    "TMPDIR=/private/tmp/vare-vllm-64830-development-attempt-004/controller-development-007/tmp",
+    "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/bin/python",
+    "-B",
+    "-c",
+    "import mlx.core as mx; x=mx.array([2.0]); y=x+x; mx.eval(y); print(float(y.item()))"
+  ],
+  "created_at_utc": "2026-10-31T12:03:55.789133+00:00",
+  "exit_code": 0,
+  "generated_tokens": 0,
+  "hidden_grader_directory_probe": {
+    "denied": true,
+    "exit_code": 1,
+    "path": "/private/tmp/vare-vllm-64830-grader-v4",
+    "stderr": "ls: /private/tmp/vare-vllm-64830-grader-v4: Operation not permitted"
+  },
+  "metal_cache_write_scopes": [
+    "/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/C/com.apple.metalfe",
+    "/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/C/com.apple.gpuarchiver"
+  ],
+  "model_loaded": false,
+  "pinned_blob_one_byte_access": [
+    {
+      "bytes_read": 1,
+      "exit_code": 0,
+      "path": "/Users/user/.cache/huggingface/hub/blobs/4a/4ae82815c30780b930535c80899215a15651b182544ed87eda312d596abd6983",
+      "stderr": ""
+    },
+    {
+      "bytes_read": 1,
+      "exit_code": 0,
+      "path": "/Users/user/.cache/huggingface/hub/blobs/6a/6aec39639a0a2d1ca966356b8c2b8426a484f80ff80731f44fa8482040713bdf",
+      "stderr": ""
+    }
+  ],
+  "protocol_stage": "no-model Metal JIT sandbox smoke; no model weights loaded, no task prompt read or delivered",
+  "sandbox_profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/sandbox/model-agent.sb",
+  "sandbox_profile_sha256": "dc64c3117547c4e45a6b8ba9a1f7c612e1c3bac84ad25f8023222c95116e464f",
+  "schema_version": 1,
+  "stderr": "",
+  "stdout": "4.0",
+  "task_prompt_delivered": false,
+  "weight_blob_reads": 0
+}
