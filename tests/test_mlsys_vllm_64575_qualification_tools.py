@@ -1,4 +1,5 @@
 import ast
+import json
 import os
 import signal
 import subprocess
@@ -16,6 +17,7 @@ from scripts.run_mlsys_vllm_64575_qualification_arm import (
     ARM_CHOICES,
     build_pytest_command,
     create_attempt_output_dir,
+    main,
     process_tree_rss,
     stop_process_group,
 )
@@ -91,6 +93,39 @@ def test_attempt_output_dir_refuses_to_overwrite_existing_evidence(tmp_path) -> 
         create_attempt_output_dir(output)
 
     assert receipt.read_text(encoding="utf-8") == '{"status":"kept"}'
+
+
+def test_main_records_launch_failure_without_running_or_overwriting(tmp_path, monkeypatch, capsys) -> None:
+    profile = tmp_path / "arm.sb"
+    source = tmp_path / "source.py"
+    test_file = tmp_path / "test_case.py"
+    output = tmp_path / "attempt-001"
+    profile.write_text("(version 1)\n", encoding="utf-8")
+    source.write_text("def target(): return 1\n", encoding="utf-8")
+    test_file.write_text("def test_target(): pass\n", encoding="utf-8")
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "run_mlsys_vllm_64575_qualification_arm.py",
+            "--arm", "baseline",
+            "--profile", str(profile),
+            "--source-file", str(source),
+            "--test-file", str(test_file),
+            "--output-dir", str(output),
+            "--python", sys.executable,
+        ],
+    )
+    with patch(
+        "scripts.run_mlsys_vllm_64575_qualification_arm.subprocess.Popen",
+        side_effect=FileNotFoundError("sandbox executable is missing"),
+    ):
+        exit_code = main()
+
+    record = json.loads((output / "attempt.json").read_text(encoding="utf-8"))
+    assert exit_code == 2
+    assert record["status"] == "LAUNCH_FAILED"
+    assert "sandbox executable is missing" in record["launch_error"]
+    assert json.loads(capsys.readouterr().out)["status"] == "LAUNCH_FAILED"
 
 
 def test_stop_process_group_kills_descendant_after_leader_exits(tmp_path) -> None:

@@ -138,7 +138,27 @@ def main() -> int:
     rss_exceeded = False
     monitor_error = None
     with log_path.open("wb") as log:
-        proc = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, env=env, start_new_session=True)
+        try:
+            proc = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, env=env, start_new_session=True)
+        except OSError as exc:
+            record = {
+                "arm": args.arm,
+                "command": command,
+                "status": "LAUNCH_FAILED",
+                "launch_error": f"{type(exc).__name__}: {exc}",
+                "elapsed_seconds": round(time.monotonic() - started, 3),
+                "peak_process_tree_rss_bytes": peak_rss,
+                "timed_out": False,
+                "rss_limit_exceeded": False,
+                "monitor_error": None,
+                "test_file_sha256": sha256_file(args.test_file.resolve()),
+                "source_file_sha256": sha256_file(args.source_file.resolve()),
+                "sandbox_profile_sha256": sha256_file(args.profile.resolve()),
+                "pytest_log_sha256": sha256_file(log_path),
+            }
+            result_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
+            print(json.dumps(record, sort_keys=True))
+            return 2
         while proc.poll() is None:
             try:
                 rss = process_tree_rss(proc.pid)
