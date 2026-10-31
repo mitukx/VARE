@@ -310,7 +310,7 @@
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json",
       "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v1",
       "sha256": "5d54c9f5853bdc11a8cfd5549903348bff4e28d05f1de7832b394512394ad881",
-      "status": "frozen before inference; pushed in protocol commit; PR #163 exact-head CI found an oversized raw runtime manifest; deterministic gzip correction prepared locally; launch remains gated"
+      "status": "frozen before inference; committed and pushed; PR #163 initial head found oversized runtime manifest; deterministic gzip correction pushed in 7becbff0; fresh exact-head CI pending; launch remains gated"
     }
   ],
   "git_refs": {
@@ -328,8 +328,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Commit and push the deterministic gzip conversion and hash updates, inspect the completed blob-budget failure log, then wait for fresh exact-head CI on PR #163. Run launch preflight only after all required checks pass.",
-  "last_completed_step": "Implemented and calibrated the scoped #64830 independent grader, added a partial-repair target-failure regression, verified the model sandbox denies hidden inputs, and froze protocol SHA-256 5d54c9f5853bdc11a8cfd5549903348bff4e28d05f1de7832b394512394ad881. The protocol and declared local inputs passed static hash checks. Model preflight and inference have not run. Commit 793e076d was pushed on codex/vllm64830-development-attempt-v1 and draft PR #163 was opened against PR #162 head; exact-head CI is pending. Exact-head CI at PR #163 head 5e18a75d passed lint, typecheck, Math500, and seeded-summary but failed blob-budget because the uncompressed runtime file manifest was 1,482,277 bytes (>1 MiB). Deterministic gzip compression to 105,574 bytes is prepared locally; no model inference or weight load occurred.",
+  "highest_priority_next_task": "Wait for fresh exact-head CI on PR #163 after commit 7becbff0. If all required checks pass, run the frozen vLLM #64830 launch preflight; on NO_GO stop without loading weights, and on PASS append the assignment event before the single model attempt.",
+  "last_completed_step": "Implemented and calibrated the scoped #64830 independent grader, added a partial-repair target-failure regression, verified the model sandbox denies hidden inputs, and froze protocol SHA-256 5d54c9f5853bdc11a8cfd5549903348bff4e28d05f1de7832b394512394ad881. The protocol and declared local inputs passed static hash checks. Model preflight and inference have not run. Commit 793e076d was pushed on codex/vllm64830-development-attempt-v1 and draft PR #163 was opened against PR #162 head; exact-head CI is pending. Exact-head CI at PR #163 head 5e18a75d passed lint, typecheck, Math500, and seeded-summary but failed blob-budget because the uncompressed runtime file manifest was 1,482,277 bytes (>1 MiB). Deterministic gzip compression to 105,574 bytes was pushed in `7becbff0` and the local tracked-blob-budget check passes; exact-head CI is pending. No model inference or weight load occurred.",
   "milestone_id": "p16-vllm-64830-one-shot-development-attempt",
   "result_hash_references": [
     {
@@ -1565,7 +1565,8 @@
     "PR #160 exact head 71aa74ab6a8f6f1625505b68f7f332c49fabff93 has passing exact-head CI and CPU evidence; GitHub reports merge state BLOCKED and normal review/branch-protection requirements remain.",
     "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 has passing exact-head CI and CPU evidence but remains a draft; no review is recorded.",
     "vLLM #64830 is source-qualified only for the frozen HiSparse/watermarking method cases and is prospectively assigned for one local Development attempt. The frozen launch preflight is not run; model exposure/inference remain NOT RUN, public pretraining exposure UNKNOWN, and family-level independence NOT ESTABLISHED.",
-    "PR #163 exact-head CI at 5e18a75d failed only the blob-budget job in the runs observed so far; the 1.48 MB raw runtime manifest was replaced locally with a 105,574-byte deterministic gzip artifact preserving the uncompressed SHA. Correction commit and fresh CI are pending; do not run launch preflight yet."
+    "PR #163 exact-head CI at 5e18a75d failed only the blob-budget job in the runs observed so far; the 1.48 MB raw runtime manifest was replaced locally with a 105,574-byte deterministic gzip artifact preserving the uncompressed SHA. Correction commit and fresh CI are pending; do not run launch preflight yet.",
+    "The deterministic gzip correction for the PR #163 blob-budget failure is pushed in 7becbff0 and passes the local tracked-blob-budget check. Fresh exact-head CI is pending; do not run launch preflight until it passes."
   ],
-  "updated_at": "2026-10-31T06:53:41.246522+00:00"
+  "updated_at": "2026-10-31T06:54:17.171593+00:00"
 }

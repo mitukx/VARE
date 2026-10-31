@@ -7,7 +7,7 @@
 - PR #160 is open at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`; its exact-head CI and CPU evidence pass, while GitHub reports merge state `BLOCKED` and no review is recorded.
 - PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`; its exact-head checks pass, and no review is recorded.
 - PR #162 is open and ready for review at `a1bc5dc255e38ad1741f58399504fdaf357eae1a`, based on `codex/freshdev-selection-v3-oct31`. All required exact-head checks pass: Python 3.11/3.12/3.13, lint, typecheck, blob budget, Math500 grader, seeded-summary CPU, RVL inference CPU, and calibrated CPU. No reviews are recorded.
-- PR #163 is open as a draft on child branch `codex/vllm64830-development-attempt-v1`, based on PR #162 head branch `codex/freshdev-qualification-vllm64830-oct31`. The first exact-head CI run found the 1.48 MB uncompressed runtime-file manifest exceeded the 1 MiB blob threshold. The manifest is now deterministically compressed to 105,574 bytes with the original uncompressed SHA preserved; a corrected commit and exact-head CI are pending. PR #162 remains unchanged.
+- PR #163 is open as a draft on child branch `codex/vllm64830-development-attempt-v1`, based on PR #162 head branch `codex/freshdev-qualification-vllm64830-oct31`. The first exact-head CI run found the 1.48 MB uncompressed runtime-file manifest exceeded the 1 MiB blob threshold. The manifest is deterministically compressed to 105,574 bytes with the original uncompressed SHA preserved in commit `7becbff0`. The local blob-budget check passes; fresh exact-head CI is pending. PR #162 remains unchanged.
 
 ## Completed in this checkpoint
 
@@ -26,4 +26,4 @@
 
 ## Immediate next action
 
-Commit and push the deterministic runtime-manifest compression and its hash updates, then wait for exact-head CI on PR #163. If checks pass, run the frozen launch preflight. If it fails, preserve a `NOT RUN` receipt and stop without loading weights. If it passes, append the prospective assignment event, push the receipt, and invoke the single frozen model attempt. Commit and push the attempt record and nonempty diff before the one independent grade.
+Wait for exact-head CI on the pushed compression and state checkpoint. If checks pass, run the frozen launch preflight. If it fails, preserve a `NOT RUN` receipt and stop without loading weights. If it passes, append the prospective assignment event, push the receipt, and invoke the single frozen model attempt. Commit and push the attempt record and nonempty diff before the one independent grade.
