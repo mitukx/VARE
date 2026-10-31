@@ -26,7 +26,7 @@ All tasks remain `NOT_ASSIGNED`; no target coding model or agent received these 
 
 ## Next executable task
 
-Freeze and execute a task-family overlap review against existing task exposure records, using task IDs, issue families, changed paths, and repository metadata only. If disjointness is supported, freeze prospective Development allocation and a bounded independent model-attempt protocol before any target-policy inference. Leave Held-out untouched.
+Execute the frozen metadata-only overlap review `protocols/mlsys_fresh_development_task_family_overlap_v1.json` (SHA-256 `6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d`) against prior Development/Train exposure. If disjointness is supported, freeze prospective Development allocation and a bounded independent model-attempt protocol before any target-policy inference. Leave Held-Out untouched.
 
 ## External blockers
 

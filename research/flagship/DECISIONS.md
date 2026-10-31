@@ -263,3 +263,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Count Ray #66694 as `QUALIFIED_SOURCE_LEVEL`. The replacement cohort is 3/3 qualified (Transformers #49418, MLX #4778, Ray #66694); preserve TRL #7668 as unqualified under its original frozen gate. Do not yet assign tasks or run inference.
 - **Falsification criteria:** Any mismatch in frozen source/test/image identity, a skipped case, a fixed-arm failure, or a baseline/mutant target assertion not executing.
 - **Follow-up:** Freeze and execute the task-family overlap review, then freeze Development allocation and inference protocol before a target-model attempt. Keep Held-out data untouched and pretraining exposure labeled unknown.
+
+
+## 2026-10-31 — Freeze metadata-only task-family overlap review
+
+- **Hypothesis:** The three source-qualified candidate families can be checked against prior Development/Train exposure using identity, issue-family metadata, and changed paths without consuming Held-Out task contents.
+- **Evidence:** Protocol `protocols/mlsys_fresh_development_task_family_overlap_v1.json` is frozen at SHA-256 `6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d` and binds eight inputs before reviewing historical exposure metadata.
+- **Alternative explanations:** Public pretraining may include any upstream issue or patch regardless of VARE task exposure; missing historical metadata can make family overlap indeterminate.
+- **Decision:** Authorize metadata-only comparison for Transformers #49418, MLX #4778, and Ray #66694. No split assignment, model inference, test execution, or Held-Out access is authorized.
+- **Falsification criteria:** An input hash mismatch, use of Held-Out metadata in semantic comparison, or any source/test/prompt read outside the frozen scope invalidates the review.
+- **Follow-up:** Execute the frozen comparison, retain candidate-level rationale and limitations, then decide whether the cohort can be allocated prospectively to Development.

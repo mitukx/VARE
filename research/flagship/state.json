@@ -149,6 +149,12 @@
       "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-5-runtime-freeze-and-test-authorization",
       "sha256": "ca77f6954d42d8d2bc46c55c19b879a2e60133fe3f797b0609c26e5be6857ab3",
       "status": "runtime image/wheel/build log bound; import preflight and ordered baseline-mutant-fixed tests authorized under exact limits"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1.json",
+      "protocol_id": "mlsys-fresh-development-task-family-overlap-v1",
+      "sha256": "6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d",
+      "status": "frozen before reviewing historical Development/Train exposure metadata; metadata-only; no split assignment, Held-Out access, or inference authorized"
     }
   ],
   "git_refs": {
@@ -159,15 +165,15 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/152",
     "last_verified_main_sha": "ce097a5d2c695d4fa7a2e2119c3e25bc3a460578",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "fa80d35e46c9902fd711b985ec172fa75c8d9879"
+    "verified_pr_head_sha_before_checkpoint_changes": "c3713640b115deccf3c65af424568167f05ec344"
   },
   "go_no_go": {
     "integration": "GO_PENDING_REMOTE_CI",
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Freeze and execute a task-family overlap review for the three source-qualified candidates against prior Development/Train exposure using task IDs, issue families, changed paths, and existing exposure records; then freeze prospective Development allocation and a bounded independent model-attempt protocol before any target-policy inference. Keep Held-out untouched.",
-  "last_completed_step": "Completed the frozen Ray #66694 source-level qualification: baseline target assertions failed, the wrong mixed-clock mutant was rejected, and the fixed source passed all four frozen selectors with zero skips. The fresh replacement cohort now has 3/3 source-qualified tasks: Transformers #49418, MLX #4778, and Ray #66694. TRL #7668 remains excluded under its unchanged frozen gate. No Development assignment or model inference occurred.",
+  "highest_priority_next_task": "Execute the frozen task-family overlap review against the hash-bound Development/Train exposure metadata; then freeze prospective Development allocation and a bounded target-model attempt protocol only if the overlap decision supports it. Keep Held-Out untouched.",
+  "last_completed_step": "Completed the frozen Ray #66694 source-level qualification: baseline target assertions failed, the wrong mixed-clock mutant was rejected, and the fixed source passed all four frozen selectors with zero skips. The fresh replacement cohort now has 3/3 source-qualified tasks: Transformers #49418, MLX #4778, and Ray #66694. TRL #7668 remains excluded under its unchanged frozen gate. No Development assignment or model inference occurred. The metadata-only task-family overlap review was frozen in protocols/mlsys_fresh_development_task_family_overlap_v1.json (SHA-256 6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d) before opening historical exposure records.",
   "milestone_id": "p3-fresh-repository-task-qualification-complete",
   "result_hash_references": [
     {
@@ -594,6 +600,11 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/SHA256SUMS",
       "sha256": "f96bef417d75ffa921502a2227da35b7808bd87e23af237ad348783b371b8510",
       "status": "per-task integrity index for all Ray #66694 source-level qualification artifacts"
+    },
+    {
+      "path": "protocols/mlsys_fresh_development_task_family_overlap_v1.json",
+      "sha256": "6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d",
+      "status": "frozen metadata-only overlap review protocol; no assignment or inference authorized"
     }
   ],
   "run_ids": [
@@ -641,5 +652,5 @@
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run; coding capability remains NO_GO.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded from the 3/3 replacement cohort."
   ],
-  "updated_at": "2026-10-31T09:13:30+09:00"
+  "updated_at": "2026-10-31T09:15:33+09:00"
 }
