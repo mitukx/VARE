@@ -45,7 +45,7 @@ def test_run_limited_stops_process_when_rss_budget_is_exceeded(tmp_path) -> None
     )
 
     assert record["limit_reason"] == "process_tree_rss_limit_exceeded"
-    assert record["max_observed_process_tree_rss_bytes"] > 1
+    assert record["sampled_process_tree_rss_max_bytes"] > 1
 
 
 def test_run_limited_stops_process_at_wall_budget(tmp_path) -> None:
@@ -59,6 +59,32 @@ def test_run_limited_stops_process_at_wall_budget(tmp_path) -> None:
 
     assert record["limit_reason"] == "wall_clock_limit_exceeded"
     assert record["elapsed_seconds"] < 3
+
+
+def test_run_limited_catches_short_lived_child_rss_high_water(tmp_path) -> None:
+    allocation_mib = 64
+    child_code = (
+        "import time; time.sleep(0.15); "
+        f"payload = bytearray({allocation_mib} * 1024 * 1024); "
+        "payload[::4096] = b'x' * (len(payload) // 4096); "
+        "time.sleep(0.05)"
+    )
+    with patch(
+        "scripts.run_bounded_local_agent_attempt.process_tree_rss",
+        return_value=1,
+    ):
+        record = run_limited(
+            [sys.executable, "-c", child_code],
+            wall_seconds=2,
+            rss_limit_bytes=32 * 1024**2,
+            sample_seconds=0.5,
+            log_path=tmp_path / "short-lived.log",
+        )
+
+    assert record["sampled_process_tree_rss_max_bytes"] == 1
+    assert record["os_wait4_child_max_rss_bytes"] >= allocation_mib * 1024**2
+    assert record["rss_limit_exceeded"] is True
+    assert record["limit_reason"] == "process_tree_rss_limit_exceeded"
 
 
 def _pid_is_running(pid: int) -> bool:
