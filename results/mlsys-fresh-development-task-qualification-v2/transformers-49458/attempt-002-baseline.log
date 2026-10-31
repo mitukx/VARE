@@ -1,0 +1,99 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models _
+
+self = <test_video_processing_auto.AutoVideoProcessorTest testMethod=test_video_processor_loading_does_not_resolve_other_models>
+
+    def test_video_processor_loading_does_not_resolve_other_models(self):
+        """
+        Image and video processors resolve class names for the requested backend without accessing the lazy mapping.
+        `from_pretrained` imports the resolved class directly, so `_load_attr_from_module` should not be called
+        for these named processor configurations.
+    
+        Regression test for https://github.com/huggingface/transformers/pull/48984.
+        """
+        for filename, processor_config in (
+            ("video_preprocessor_config.json", {"video_processor_type": "LlavaOnevisionVideoProcessor"}),
+            ("preprocessor_config.json", {"image_processor_type": "LlavaOnevisionImageProcessor"}),
+        ):
+            with self.subTest(filename=filename), tempfile.TemporaryDirectory() as tmpdirname:
+                with open(Path(tmpdirname) / filename, "w", encoding="utf-8") as fp:
+                    json.dump(processor_config, fp)
+    
+                with patch.object(
+                    VIDEO_PROCESSOR_MAPPING,
+                    "_load_attr_from_module",
+                    wraps=VIDEO_PROCESSOR_MAPPING._load_attr_from_module,
+                ) as load_attribute:
+                    video_processor = AutoVideoProcessor.from_pretrained(tmpdirname)
+    
+                self.assertIsInstance(video_processor, LlavaOnevisionVideoProcessor)
+>               load_attribute.assert_not_called()
+
+/trusted/test_video_processing_auto.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <MagicMock name='_load_attr_from_module' id='259991127179536'>
+
+    def assert_not_called(self):
+        """assert that the mock was never called.
+        """
+        if self.call_count != 0:
+            msg = ("Expected '%s' to not have been called. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+>           raise AssertionError(msg)
+E           AssertionError: Expected '_load_attr_from_module' to not have been called. Called 47 times.
+E           Calls: [call('cohere_compass', {'torchvision': 'CohereCompassVideoProcessor'}),
+E            call('cosmos3_edge', {'torchvision': 'Cosmos3EdgeVideoProcessor'}),
+E            call('embedding_gemma2', {'torchvision': 'EmbeddingGemma2VideoProcessor'}),
+E            call('ernie4_5_vl_moe', {'torchvision': 'Ernie4_5_VLMoeVideoProcessor'}),
+E            call('gemma4', {'torchvision': 'Gemma4VideoProcessor'}),
+E            call('gemma4_unified', {'torchvision': 'Gemma4UnifiedVideoProcessor'}),
+E            call('glm46v', {'torchvision': 'Glm46VVideoProcessor'}),
+E            call('glm4v', {'torchvision': 'Glm4vVideoProcessor'}),
+E            call('glm5_next', {'torchvision': 'Glm5NextVideoProcessor'}),
+E            call('glmga', {'torchvision': 'GlmgaVideoProcessor'}),
+E            call('instructblipvideo', {'torchvision': 'InstructBlipVideoVideoProcessor'}),
+E            call('internvl', {'torchvision': 'InternVLVideoProcessor'}),
+E            call('kimi_k25', {'torchvision': 'Kimi_K25VideoProcessor'}),
+E            call('llava_next_video', {'torchvision': 'LlavaNextVideoVideoProcessor'}),
+E            call('llava_onevision', {'torchvision': 'LlavaOnevisionVideoProcessor'}),
+E            call('minicpmv4_6', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),
+E            call('minimax_m3_vl', {'torchvision': 'MiniMaxM3VLVideoProcessor'}),
+E            call('molmo2', {'torchvision': 'Molmo2VideoProcessor'}),
+E            call('muse_glimmer', {'torchvision': 'MuseGlimmerVideoProcessor'}),
+E            call('nemotron_h_omni', {'torchvision': 'NemotronH_Omni_Reasoning_V3VideoProcessor'}),
+E            call('pe_video', {'torchvision': 'PeVideoVideoProcessor'}),
+E            call('perception_lm', {'torchvision': 'PerceptionLMVideoProcessor'}),
+E            call('qwen2_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),
+E            call('qwen3_vl', {'torchvision': 'Qwen3VLVideoProcessor'}),
+E            call('sam2_video', {'torchvision': 'Sam2VideoVideoProcessor'}),
+E            call('smolvlm', {'torchvision': 'SmolVLMVideoProcessor'}),
+E            call('timesformer', {'torchvision': 'TimesformerVideoProcessor'}),
+E            call('video_llama_3', {'torchvision': 'VideoLlama3VideoProcessor'}),
+E            call('video_llava', {'torchvision': 'VideoLlavaVideoProcessor'}),
+E            call('videomae', {'torchvision': 'VideoMAEVideoProcessor'}),
+E            call('videomt', {'torchvision': 'VideomtVideoProcessor'}),
+E            call('vivit', {'torchvision': 'VivitVideoProcessor'}),
+E            call('vjepa2', {'torchvision': 'VJEPA2VideoProcessor'}),
+E            call('cosmos3_omni', {'torchvision': 'Qwen3VLVideoProcessor'}),
+E            call('exaone4_5', {'torchvision': 'Qwen2VLVideoProcessor'}),
+E            call('hyperclovax_vision_v2', {'torchvision': 'Qwen2VLVideoProcessor'}),
+E            call('instructblip', {'torchvision': 'InstructBlipVideoVideoProcessor'}),
+E            call('minicpmv4_7', {'torchvision': 'MiniCPMV4_6VideoProcessor'}),
+E            call('pe_audio_video', {'torchvision': 'PeVideoVideoProcessor'}),
+E            call('qwen2_5_omni', {'torchvision': 'Qwen2VLVideoProcessor'}),
+E            call('qwen2_5_vl', {'torchvision': 'Qwen2VLVideoProcessor'}),
+E            call('qwen3_5', {'torchvision': 'Qwen3VLVideoProcessor'}),
+E            call('qwen3_5_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),
+E            call('qwen3_omni_moe', {'torchvision': 'Qwen2VLVideoProcessor'}),
+E            call('qwen3_vl_moe', {'torchvision': 'Qwen3VLVideoProcessor'}),
+E            call('qwen4_exp', {'torchvision': 'Qwen3VLVideoProcessor'}),
+E            call('videoprism', {'torchvision': 'LlavaOnevisionVideoProcessor'})].
+
+/usr/local/lib/python3.12/unittest/mock.py:910: AssertionError
+=========================== short test summary info ============================
+FAILED ../trusted/test_video_processing_auto.py::AutoVideoProcessorTest::test_video_processor_loading_does_not_resolve_other_models
+1 failed in 3.81s

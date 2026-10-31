@@ -205,7 +205,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "03a6e1bf4c1fad012b092ddf5a70876d2367e054",
+    "verified_pr_head_sha_before_checkpoint_changes": "815e0e6571385d0bbe60e4d19de8bc2e6ee110a7",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
@@ -214,9 +214,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Push protocol addendum 1 before any corrected run, then execute exactly one corrected baseline invocation with PYTHONPATH=/source/src:/source:/source/utils. Proceed to mutant/fixed only if baseline fails at the intended assertion.",
-  "last_completed_step": "Pushed frozen source-qualification protocol v1 in commit 03a6e1bf4c1fad012b092ddf5a70876d2367e054. Its first baseline container invocation returned exit 4 during pytest collection with ModuleNotFoundError for test_module; zero test cases were selected and the target assertion did not run. Preserved the log and froze addendum 1 to add /source/utils to PYTHONPATH only; the corrected baseline has not yet run.",
-  "milestone_id": "p8-transformers-49458-collection-path-addendum-frozen",
+  "highest_priority_next_task": "Run the frozen wrong-mutant arm exactly once using the same image/test/limits/isolation and PYTHONPATH correction; proceed to upstream-fixed only if the target regression is rejected at the legacy image-config subcase.",
+  "last_completed_step": "After protocol addendum 1 was pushed, corrected baseline attempt 002 ran once with PYTHONPATH=/source/src:/source:/source/utils. The pinned test collected and failed at the intended load_attribute.assert_not_called assertion (47 eager mapping loads), exit 1, one selected case, zero passes/skips. The legacy-image subcase did not execute because the first loop case failed. Baseline gate is met; wrong-mutant is the next authorized arm.",
+  "milestone_id": "p8-transformers-49458-baseline-gate-met",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -847,6 +847,21 @@
       "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
       "sha256": "b9763deb7f5cd9229da77a001afa38a7a7062d34475a2cf9afa7f0ec3dcdfff5",
       "status": "pre-execution environment-only addendum; adds /source/utils to PYTHONPATH; one corrected baseline invocation authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-002-baseline.json",
+      "sha256": "7f029dfc000548f3e88cdd631194527f1d4dd983eaaeb974fa6cd32cba05cfaf",
+      "status": "corrected baseline arm; expected target assertion failure, 1 selected/1 failed/0 skipped; mutant may run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-002-baseline.log",
+      "sha256": "2a06f0a82d534b970fa5900424b008d28e742aef37f486657dfb906eddcc5a96",
+      "status": "corrected baseline raw pytest log; target assertion failed after 47 mapping loads"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
+      "sha256": "87f9af3961f75d2fe466b6b70a0a45b9a5a55d00cc31bc1f56346ab53f3c1608",
+      "status": "pinned source-tree/test/image identities plus both initial collection failure and corrected baseline receipt"
     }
   ],
   "run_ids": [
@@ -896,7 +911,7 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED; the first source-test launch was inconclusive during collection, and one corrected baseline invocation is authorized by addendum 1."
+    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED pending wrong-mutant rejection and upstream-fixed pass; no inference is authorized."
   ],
-  "updated_at": "2026-10-31T01:47:29Z"
+  "updated_at": "2026-10-31T01:48:40Z"
 }

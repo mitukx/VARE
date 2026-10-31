@@ -2,7 +2,7 @@
 
 ## Current checkpoint
 
-- Milestone: `p8-transformers-49458-collection-path-addendum-frozen`.
+- Milestone: `p8-transformers-49458-baseline-gate-met`.
 - Last verified `origin/main`: `719fbe368816d81addb29a1ba2c451fa7f1bf631` (2026-10-31), integrating PR #154.
 - Last integrated PR: [#154 — Compact stale tool history before context exhaustion](https://github.com/mitukx/VARE/pull/154), merge commit `719fbe368816d81addb29a1ba2c451fa7f1bf631`.
 - PR #154 exact-head CI and CPU evidence passed; the sole review thread was resolved before merge.
@@ -22,7 +22,7 @@ The controller now removes only oldest complete assistant tool-call rounds at th
 - Candidate: Transformers #49458, “Keep AutoVideoProcessor class lookup lazy.”
 - Frozen protocol: `protocols/mlsys_fresh_development_task_family_overlap_v2.json`, SHA-256 `39314381d33e9399e08a7a69053d8f77e49ba5ce2f95934e167e906efee221c8`.
 - Review: `NO_PRIOR_FAMILY_OVERLAP_FOUND` at moderate confidence across eight Development/Train exposure rows. The two same-repository prior families were 4D attention-mask collation and quantized-cache residual flushing.
-- Candidate remains **UNQUALIFIED** and **UNASSIGNED**. After the metadata review, the pinned issue/source/test inputs were inspected and hashed. Source-qualification protocol `protocols/mlsys_transformers_49458_source_qualification_v1.json` is frozen at SHA-256 `b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524`, before any candidate test execution. The first baseline invocation returned exit 4 during test collection because the isolated overlay could not resolve the pinned `utils/test_module` helpers; zero cases were selected and the target assertion did not execute. The retained log is `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-baseline.log`. Addendum 1 adds `/source/utils` to `PYTHONPATH`; one corrected baseline invocation is authorized. No inference has run. Source-level qualification will not establish pretraining independence.
+- Candidate remains **UNQUALIFIED** and **UNASSIGNED**. After the metadata review, the pinned issue/source/test inputs were inspected and hashed. Source-qualification protocol `protocols/mlsys_transformers_49458_source_qualification_v1.json` is frozen at SHA-256 `b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524`, before any candidate test execution. The first baseline launch was inconclusive during pytest collection (exit 4, zero selected), because the isolated test overlay could not resolve pinned `utils/test_module` helpers. Addendum 1 added `/source/utils` to `PYTHONPATH`. Corrected baseline attempt 002 then failed at the intended `load_attribute.assert_not_called` assertion (47 eager mapping loads; one selected, zero skipped). The legacy image-config subcase did not execute because the first case failed. The baseline gate is met; no inference has run. Source-level qualification will not establish pretraining independence.
 
 ## Decisions and blockers
 
@@ -34,4 +34,4 @@ The controller now removes only oldest complete assistant tool-call rounds at th
 
 ## Immediate next action
 
-Push protocol addendum 1, then run exactly one corrected baseline invocation with `/source/utils` added to `PYTHONPATH`. Run wrong-mutant and upstream-fixed only if the corrected baseline fails at the intended assertion. Keep the candidate unassigned; source qualification alone does not authorize model inference.
+Run the frozen wrong-mutant arm once. It must fail at the intended assertion in the legacy image-config subcase before the upstream-fixed arm is authorized. Keep the candidate unassigned; source qualification alone does not authorize model inference.
