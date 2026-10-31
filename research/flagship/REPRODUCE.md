@@ -800,3 +800,15 @@ Diagnostics 002 and 003 have not been run. Do not rerun any consumed protocol. T
 
 - Entries labelled `HISTORICAL SNAPSHOT @ <commit>` refer to mutable files. Verify them with `git show <commit>:<path> | shasum -a 256`.
 - Entries labelled `EXTERNAL` point outside the repository and cannot be checked from a clone.
+
+## Learning pipeline v1 records (PR #165; verification only)
+
+Offline checks; nothing here loads a model or reruns run-001.
+
+```
+git show origin/main:protocols/coding_policy_learning_mlx_4b_v1.json | shasum -a 256   # b004df4e66e3…
+python -c "import json;d=json.load(open('research/flagship/state.json'));import hashlib;[print(e['path'], hashlib.sha256(open(e['path'],'rb').read()).hexdigest()==e['sha256']) for e in d['result_hash_references'] if e['path'].startswith('results/learning-pipeline-v1/')]"
+PYTHONPATH=src python scripts/redact_learning_pipeline_v1_public.py --check
+```
+
+- The `results/learning-pipeline-v1/` entries verify only on a tree that contains the PR #165 merge (`b402c80c`).

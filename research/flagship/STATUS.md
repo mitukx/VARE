@@ -1,12 +1,13 @@
 # VARE Flagship Mission Status
 
-Updated 2026-10-31 12:45 UTC. This is a state-only reconciliation of the files in `research/flagship/` against GitHub and the committed receipts. No experiment, model load, preflight, or grade was run for this update. Earlier status blocks are preserved in Git history; the dated decisions are in `DECISIONS.md`.
+Updated 2026-10-31 17:45 UTC. This is a state-only reconciliation of the files in `research/flagship/` against GitHub and the committed receipts. No experiment, model load, preflight, or grade was run for this update. Earlier status blocks are preserved in Git history; the dated decisions are in `DECISIONS.md`.
 
-## GitHub checkpoint (verified 2026-10-31 12:39 UTC)
+## GitHub checkpoint (verified 2026-10-31 17:45 UTC)
 
 - Repository: `https://github.com/mitukx/VARE`.
-- `main` is `da15797ca6345f73eba8249c9059db3b1a9de41e`, the merge of PR #163.
-- PRs #140, #144, #145, #150, #159, #160, #161, #162, and #163 are merged.
+- `main` is `b402c80cd6576f0c569783e1f97c962b504f49f5`, the merge of PR #165 (learning pipeline v1) at 2026-10-31 17:35:53 UTC. The previous `main` was `da15797ca6345f73eba8249c9059db3b1a9de41e`, the merge of PR #163.
+- PRs #140, #144, #145, #150, #159, #160, #161, #162, #163, and #165 are merged.
+- PR #165 changed no file under `research/flagship/` or `results/mlsys-fresh-vllm-64830-*`, so PR #164 and this reconciliation merge into the new `main` without conflicts. Their exact-head CI below ran on the old base `da15797c`; fresh exact-head CI on a head that contains `b402c80c` is still required before merge.
 - PR #164 (`codex/qwen3-vllm64830-dev-v2` → `main`) is the active **draft**. At this checkpoint its head is `759ac3af1924e5a22b404def05c14839eabd1a8b` ("Record V7 Qwen3 development attempt outcome").
 - Exact-head CI on `759ac3af`: 19/19 check runs succeeded; the last finished at 12:33:54 UTC. These are the 9 required contexts (blob-budget, lint, math500-grader, rvl-inference-cpu, seeded-summary-cpu, test 3.11/3.12/3.13, typecheck), each run on both push and pull_request, plus calibrated-cpu-tasks.
 - The V7 launch head `eb82cb00` passed 19/19 after one rerun of the failed job: `test (3.12)` first timed out in `tests/test_trajectory_workers.py::test_independent_stages_bounded_backlog_and_slow_step_heartbeats` (1,616 passed, 111 skipped) and passed on rerun. The earlier heads `77b8a9b7`, `45df90fc` and `053b25fe` also passed 19/19.
@@ -38,8 +39,17 @@ Totals across all routes: 1 Development prompt delivered (V7), 0 generated token
 
 Memory snapshots recorded by PR #164: before diagnostic-006 (11:58 UTC) 13.27 GiB available, 83% pressure free; after diagnostic-006 13.71 GiB, 79%; before V7 (12:23 UTC) 12.75 GiB, 81%; after V7 (12:25 UTC) 13.69 GiB, 80%. Swap stayed at about 1.57 GiB used. No process was stopped.
 
+## Learning pipeline v1 (PR #165, merged; separate from the vLLM #64830 routes)
+
+- Frozen protocol `protocols/coding_policy_learning_mlx_4b_v1.json` (sha256 `b004df4e66e3…`). Run-001 was one real run, one seed, of Qwen3-4B 4-bit LoRA on MLX: Train 80 / held-out 42 SWE-smith tasks, split by repository (held-out: h11, tinydb, colorlog). It shares no task or repository with the vLLM #64830 Development task or the flagship exposure ledger.
+- Held-out trusted pass (n = 42): no_update 15, sft_reference 14, rft_self 20. Both preregistered comparisons are `no_detectable_change` (exact McNemar, Holm-adjusted: sft_reference p = 1.0, rft_self p = 0.125). This is a **negative / inconclusive result**, not evidence of improvement; `go_no_go.rl_update` stays `NO_GO`.
+- Offline follow-ups on the same run: the independent re-analysis re-derived every number (0 mismatches); the G1/G3 verifier-error pilot was aborted as `inconclusive`; hypothesis A (trusted-verification allocation) is `not_supported` (exploratory, not blind).
+- Grader isolation audit (synthetic probes): the v1 native grader can be made to report false passes; the sandboxed grader quarantines the probed forgeries when the static scan is on, and a canary-aware forgery still passes with the scan off (residual risk). 0/123 Train and 0/106 held-out run-001 applied edits match the blocking patterns.
+- Records: `results/learning-pipeline-v1/run-001/RESULTS.md`, `results/learning-pipeline-v1/grader-isolation-audit/README.md`, `docs/coding-policy-learning-v1.md`. Do not rerun run-001; any follow-up needs a new preregistered protocol.
+
 ## State reconciliation in this update
 
+- Follow-up after the PR #165 merge: the GitHub checkpoint, `state.json` `git_refs`, and the blocker scope were updated, and the learning-pipeline v1 protocol and records were indexed by hash. No ledger or evidence file changed in this follow-up.
 - `state.json` now indexes, with status, every v2–v7 protocol, diagnostics 001–006, and their preflight, sandbox and outcome receipts.
 - The v1 NO_GO is restored as a historical blocker.
 - Result hash references that no longer match the current tree are labelled, not rewritten: six are historical snapshots of mutable files, each tagged with the commit where its hash verifies; two point to external files outside the repository; three (the ledger, its sidecar and `errata/SHA256SUMS`) are labelled as pre-append snapshots at `759ac3af`, with the current hash noted.

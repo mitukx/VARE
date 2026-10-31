@@ -383,15 +383,21 @@
       "protocol_id": "qwen3-4b-current-controller-train-diagnostic-canonical-hf-blobs-v1",
       "sha256": "7c079521100b86f3014935dd8858078e1d236e80ca0c947529f2f6c2c235ad1c",
       "status": "CONSUMED; one run; weights loaded; exposed Train prompt reached the first generation call; FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED; 0 tokens, 0 tool calls, 0 edits, 0 grades; do not retry"
+    },
+    {
+      "path": "protocols/coding_policy_learning_mlx_4b_v1.json",
+      "protocol_id": "coding-policy-learning-mlx-4b-v1",
+      "sha256": "b004df4e66e32d235ceaec011492842271a286bec3ffb126b6af8170de53bb77",
+      "status": "CONSUMED by run-001 (PR #165, merged at b402c80c); raw-bytes sha256; result no_detectable_change; do not rerun"
     }
   ],
   "git_refs": {
     "active_branch": "codex/qwen3-vllm64830-dev-v2",
     "active_pr_state": "open",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/164",
-    "last_integrated_pr_merge_sha": "da15797ca6345f73eba8249c9059db3b1a9de41e",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/163",
-    "last_verified_main_sha": "da15797ca6345f73eba8249c9059db3b1a9de41e",
+    "last_integrated_pr_merge_sha": "b402c80cd6576f0c569783e1f97c962b504f49f5",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/165",
+    "last_verified_main_sha": "b402c80cd6576f0c569783e1f97c962b504f49f5",
     "repository": "mitukx/VARE",
     "verified_pr_head_sha_before_checkpoint_changes": "759ac3af1924e5a22b404def05c14839eabd1a8b"
   },
@@ -401,7 +407,7 @@
     "rl_update": "NO_GO"
   },
   "highest_priority_next_task": "Diagnose why the macOS sandbox denied Metal compiler extension/cache access despite narrowly scoped write rules, using no-model probes only. Do not retry V7. Any future inference requires a separately frozen protocol and a no-model proof of the exact first-generation Metal compiler path; fresh exact-head CI and resource preflight remain mandatory.",
-  "last_completed_step": "main is da15797ca6345f73eba8249c9059db3b1a9de41e (merge of PR #163); PRs #140, #144, #145, #150 and #159-#163 are merged. PR #164 is an open draft; its head 759ac3af passed 19/19 exact-head check runs (last completed 2026-10-31T12:33:54Z); the previous head eb82cb00 also passed 19/19 after one failed-job rerun of test (3.12). Recorded vLLM #64830 outcomes: v1 14B preflight NO_GO; v2 4B launch preflights PASSED and Train diagnostic-001 loaded weights but failed before the first generation; v3 14B preflight NO_GO (stale runner hashes); v4 14B route NO_GO (additional 2 GiB margin short by 1,362,055,641 bytes); v5 4B preflight PASSED and diagnostic-004 failed before model load (sandbox runtime import failure); v6 4B preflights PASSED; diagnostic-005 failed before model load (symlinked model blob outside the sandbox allowlist); diagnostic-006 loaded weights and its exposed Train prompt reached the first generation call, then failed on a Metal JIT cache write denial with 0 tokens; V7 delivered the one Development prompt, loaded weights and started one generation call, then failed with the same Metal JIT sandbox write denial before any token (FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED). Totals: Development prompts delivered 1 (V7), generated tokens 0, native tool calls 0, edits 0, candidates 0, independent grades 0. State reconciliation indexed every v2-v7 protocol, diagnostic and receipt and appended the v2-v6 assignment events and the V7 prompt-delivery event to the exposure ledger.",
+  "last_completed_step": "main is b402c80cd6576f0c569783e1f97c962b504f49f5 (merge of PR #165, learning pipeline v1, 2026-10-31T17:35:53Z; previous main da15797ca6345f73eba8249c9059db3b1a9de41e was the merge of PR #163); PRs #140, #144, #145, #150, #159-#163 and #165 are merged. PR #165 run-001 is a negative / inconclusive result (no_detectable_change for both arms) and changed no flagship or vLLM #64830 file. PR #164 is an open draft; its head 759ac3af passed 19/19 exact-head check runs (last completed 2026-10-31T12:33:54Z); the previous head eb82cb00 also passed 19/19 after one failed-job rerun of test (3.12). Recorded vLLM #64830 outcomes: v1 14B preflight NO_GO; v2 4B launch preflights PASSED and Train diagnostic-001 loaded weights but failed before the first generation; v3 14B preflight NO_GO (stale runner hashes); v4 14B route NO_GO (additional 2 GiB margin short by 1,362,055,641 bytes); v5 4B preflight PASSED and diagnostic-004 failed before model load (sandbox runtime import failure); v6 4B preflights PASSED; diagnostic-005 failed before model load (symlinked model blob outside the sandbox allowlist); diagnostic-006 loaded weights and its exposed Train prompt reached the first generation call, then failed on a Metal JIT cache write denial with 0 tokens; V7 delivered the one Development prompt, loaded weights and started one generation call, then failed with the same Metal JIT sandbox write denial before any token (FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED). Totals: Development prompts delivered 1 (V7), generated tokens 0, native tool calls 0, edits 0, candidates 0, independent grades 0. State reconciliation indexed every v2-v7 protocol, diagnostic and receipt and appended the v2-v6 assignment events and the V7 prompt-delivery event to the exposure ledger.",
   "milestone_id": "p16-vllm-64830-one-shot-development-attempt",
   "result_hash_references": [
     {
@@ -1928,6 +1934,31 @@
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/current-exposure-ledger-supplement-002.json",
       "sha256": "4e3074e601099617fbb409232f2d32cc16849542d00c6c59c33fbf46991f044f",
       "status": "Ledger supplement for the v2-v6 assignment and V7 prompt-delivery append."
+    },
+    {
+      "path": "results/learning-pipeline-v1/run-001/RESULTS.md",
+      "sha256": "b1bf419fa9328759b7ce5fd892615c1eda546d69303207cb4221a2ee79344be0",
+      "status": "verified at main b402c80c (PR #165 merge); present on a branch only after it contains that merge; run-001 results: negative / inconclusive (no_detectable_change)"
+    },
+    {
+      "path": "results/learning-pipeline-v1/run-001/comparison.json",
+      "sha256": "922a8f9af5b66c03546f77455512a85209ae1f7bdf6a18cf849ef4e5666856e9",
+      "status": "verified at main b402c80c (PR #165 merge); present on a branch only after it contains that merge; run-001 preregistered paired comparison"
+    },
+    {
+      "path": "results/learning-pipeline-v1/run-001/SHA256SUMS.txt",
+      "sha256": "7e1cb550bc9fdca0124dc437dd57e076f6e44a8d095797f8ab54cb828f04d7e6",
+      "status": "verified at main b402c80c (PR #165 merge); present on a branch only after it contains that merge; run-001 manifest (large files by sha256 only)"
+    },
+    {
+      "path": "results/learning-pipeline-v1/grader-isolation-audit/probe.json",
+      "sha256": "e5e7b07ffce0d92d822f94d933f97b41740257d941f715b71b5b587f1177ab7a",
+      "status": "verified at main b402c80c (PR #165 merge); present on a branch only after it contains that merge; grader isolation audit, synthetic probes"
+    },
+    {
+      "path": "results/learning-pipeline-v1/grader-isolation-audit/static_scan_run001.json",
+      "sha256": "3e653da00af5beb7f5d695cd9aace4fa2d81923e7d1d058081afaa81614f88fc",
+      "status": "verified at main b402c80c (PR #165 merge); present on a branch only after it contains that merge; static scan of run-001 applied edits: 0 matches"
     }
   ],
   "run_ids": [
@@ -2022,7 +2053,8 @@
     "qwen3-4b-train-diagnostic-004-outcome-001",
     "qwen3-4b-controller-train-diagnostic-attempt-001",
     "vllm-64830-qwen3-4b-sanitized-runtime-v6",
-    "vllm-64830-state-reconcile-2026-10-31"
+    "vllm-64830-state-reconcile-2026-10-31",
+    "learning-pipeline-v1-run-001"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -2034,21 +2066,23 @@
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
     "Qwen3-4B has one independently verified Train #1904 repair (one trajectory, 2/2 grader cases), but its two prior fresh Development attempts produced no edits. Fresh Development repair success remains 0; no generalization or RL improvement is established.",
-    "A narrow verified Train repair exists, but there is no verified Development repair, nondegenerate RL reward signal, actual policy update, or Held-Out evaluation.",
+    "A narrow verified Train repair exists, but on the flagship task ledger there is no verified Development repair, nondegenerate RL reward signal, actual policy update, or Held-Out evaluation (the separate learning-pipeline v1 run-001 is recorded below).",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
     "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Its resource preflight NO-GO remains valid, but the historical runner skipped the task JSON/prompt hashes; a retrospective hash check matches the frozen protocol. Model weights were not loaded. See the append-only integrity erratum; do not retry protocol v1.",
     "The vLLM #64830 source-arm receipts recorded 3,932,160 bytes from 0.5-second RSS samples, not measured process-tree peaks. The 4 GiB resource result is INCONCLUSIVE; see append-only erratum results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.json (SHA-256 0656b5343f613a74d0bd35f93003622f9074130b2d2e662d19e2c00c14ca6877). Do not rerun consumed arms or reuse protocol v1. The original 58-file manifest covers the pre-append snapshot at commit 18f829b4; the live ledger and refreshed sidecar are covered by the separate errata manifest.",
-    "Fresh Development repair success remains zero; no policy update, coding-RL learning, or Held-Out evaluation is established.",
+    "Fresh Development repair success remains zero; on the flagship task ledger no policy update, coding-RL learning, or Held-Out evaluation is established.",
     "Qwen2.5-Coder-14B V4 is NO_GO after its actual no-load preflight failed the additional 2 GiB margin; weights were not loaded and its Development prompt was not delivered.",
     "V7 Qwen3-4B Development attempt failed during first Metal generation before any token despite a passing tiny-tensor smoke; no candidate or independent grade exists. V7 permits no retry. A new one-shot protocol must prove the exact generation-time sandbox extension path with no model before any further inference.",
     "HISTORICAL NO_GO: the vLLM #64830 v1 Qwen2.5-Coder-14B Development preflight returned NO_GO at 2026-10-31T07:05:56Z (11,035,787,264 bytes available, below the 12 GiB gate); weights not loaded, prompt not delivered; do not retry protocol v1.",
     "The #64830 V3 14B NO_GO, V4 14B NO_GO, diagnostic-001 failure (before first generation), diagnostic-004 and diagnostic-005 failures (both before model load), diagnostic-006 failure and V7 Development failure (both during the first generation call, 0 tokens) are immutable and closed; none may be retried. Diagnostics 002 and 003 were never run.",
     "The vLLM #64830 Development task vllm-64830-v1-runner-unsupported-feature-checks was delivered to Qwen3-4B once under V7 (0 generated tokens, no candidate, no grade). It is no longer unexposed to the model; any future Development use needs a new frozen protocol that records this prior exposure.",
     "The V7 no-model Metal runtime smoke passed, but the first-generation Metal JIT path still failed with the same sandbox write denial as diagnostic-006 despite the V7 profile write rules for the two observed cache directories. The cause is not yet diagnosed.",
-    "The committed v5 exposure-assignment.json reuses the v4 event_id and lists the 14B model repository although the V5 route is Qwen3-4B; the file is kept unchanged and the discrepancy is recorded in the ledger event."
+    "The committed v5 exposure-assignment.json reuses the v4 event_id and lists the 14B model repository although the V5 route is Qwen3-4B; the file is kept unchanged and the discrepancy is recorded in the ledger event.",
+    "Learning pipeline v1 run-001 (PR #165, separate SWE-smith Train/held-out split, no overlap with the flagship ledger) trained LoRA arms and evaluated them on its own 42-task held-out set: no_update 15/42, sft_reference 14/42, rft_self 20/42; both preregistered comparisons are no_detectable_change (Holm p 1.0 and 0.125). No improvement is established; do not rerun run-001.",
+    "The learning-pipeline v1 native grader can report false passes on adversarial candidates (synthetic audit). The sandboxed grader quarantines the probed forgeries with the static scan on; a canary-aware forgery still passes with the scan off. 0/123 Train and 0/106 held-out run-001 applied edits match the blocking patterns."
   ],
-  "updated_at": "2026-10-31T12:45:00Z"
+  "updated_at": "2026-10-31T17:45:00Z"
 }
