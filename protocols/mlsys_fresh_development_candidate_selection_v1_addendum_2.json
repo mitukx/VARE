@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-selection-v1-addendum-2",
+  "status": "frozen-before-selection; runtime-key-binding-correction-only",
+  "frozen_at_utc": "2026-10-31T03:45:43Z",
+  "parent_protocol_path": "protocols/mlsys_fresh_development_candidate_selection_v1.json",
+  "parent_protocol_sha256": "19254086ccd3093ed5a85518f4d49088fa9323b171e8ed190e0dd13f5d37ae10",
+  "parent_addendum_path": "protocols/mlsys_fresh_development_candidate_selection_v1_addendum_1.json",
+  "parent_addendum_sha256": "5b0f968fa609bbb971ef3e504697ddc15b92cf0d362109090e1d194bf43453b1",
+  "failed_selector_sha256": "242829e0b2ed9c57b869104f2aba88e4137f4367c27fdcc174d153b35d11d512",
+  "corrected_selector_path": "scripts/select_mlsys_fresh_development_candidate_v1.py",
+  "corrected_selector_sha256": "f54f8a07e258c176a2e36e6cb89f8e44014c989ae9834d3a0ec989f2694fb1b8",
+  "preselection_failure": {
+    "observed": "The selector still read excluded_repository_owners, while the frozen protocol defines exclude_repository_owners. The first addendum corrected source-hash loading but did not correct this runtime key access.",
+    "selection_output_created": false,
+    "source_or_test_content_accessed": false
+  },
+  "correction": "The selector now reads selection_rules.exclude_repository_owners. A deterministic regression passes the actual frozen protocol object through the eligibility function.",
+  "unchanged_selection_rules": [
+    "candidate input hashes",
+    "repository-owner exclusion",
+    "hardware path/title exclusions",
+    "changed-file and line limits",
+    "deterministic SHA-256 ranking",
+    "select one candidate",
+    "no substitution after later overlap/qualification failure"
+  ],
+  "authorization": {
+    "source_or_test_content_fetch": false,
+    "task_family_overlap_review": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "heldout_access": false
+  }
+}
