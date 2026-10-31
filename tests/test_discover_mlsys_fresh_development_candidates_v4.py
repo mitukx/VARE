@@ -40,11 +40,13 @@ def _candidate():
 
 
 def test_precollection_addendum_binds_the_corrected_collector():
-    protocol, addendum = load_frozen_protocol()
+    protocol, addendum, addendum_2 = load_frozen_protocol()
 
     assert protocol["protocol_id"] == "mlsys-fresh-development-candidate-discovery-v4"
     assert addendum["protocol_id"] == "mlsys-fresh-development-candidate-discovery-v4-addendum-1"
+    assert addendum_2["protocol_id"] == "mlsys-fresh-development-candidate-discovery-v4-addendum-2"
     assert addendum["pre_collection_failure"]["metadata_queries_started"] is False
+    assert addendum_2["pre_collection_failure"]["metadata_queries_started"] is False
 
 
 def test_graphql_merged_state_can_enter_metadata_shortlist():

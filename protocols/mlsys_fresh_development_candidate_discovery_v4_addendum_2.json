@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-candidate-discovery-v4-addendum-2",
+  "status": "frozen-before-metadata-collection; implementation-reference-correction-only",
+  "frozen_at_utc": "2026-10-31T03:38:40Z",
+  "parent_protocol_path": "protocols/mlsys_fresh_development_candidate_discovery_v4.json",
+  "parent_protocol_sha256": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+  "parent_addendum_path": "protocols/mlsys_fresh_development_candidate_discovery_v4_addendum_1.json",
+  "parent_addendum_sha256": "b7260d07f87b0b8eda5c03aa281ea629fb23f7deb26e7f59c509c5e14e68fc2f",
+  "failed_collector_sha256": "6d87ba6d480547a9b3eba78e81bc4b9e950064554e740aed993640f14dfcae8b",
+  "corrected_collector_path": "scripts/discover_mlsys_fresh_development_candidates_v4.py",
+  "corrected_collector_sha256": "28550c3e8161aa643f10b520f8753215d3db6c2ea01309938a8527843775049f",
+  "pre_collection_failure": {
+    "observed": "The collector expected prior_candidate_queue_path, prior_qualification_path, and development_exposure_paths at the protocol root, while the frozen protocol correctly stores them under discovery.",
+    "metadata_queries_started": false,
+    "output_directory_created": false
+  },
+  "correction": "The collector now resolves those prior-input references under discovery and verifies their bytes from the frozen source main Git commit.",
+  "unchanged_frozen_fields": [
+    "repositories",
+    "merged date window",
+    "snapshot cutoff",
+    "prior exposure input hashes",
+    "coarse screen",
+    "authorization boundaries",
+    "stop rules",
+    "limitations"
+  ],
+  "authorization": {
+    "source_or_test_content_fetch": false,
+    "heldout_source_or_test_access": false,
+    "task_qualification": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "paid_compute_or_api": false
+  }
+}
