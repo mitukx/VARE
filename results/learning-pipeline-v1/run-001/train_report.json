@@ -1,0 +1,75 @@
+{
+  "rft_self": {
+    "adapter": {
+      "adapters_sha256": "5fb794f69958558c2f346d40d2d312c68c2612883dc70b1cc81d7dcf67de7cb6",
+      "bytes": 14692068,
+      "lora_b_max_abs": 0.017207911238074303,
+      "lora_b_nonzero_tensors": 56,
+      "lora_b_tensors": 56
+    },
+    "dataset": {
+      "train_rows": 12,
+      "train_tasks": 11,
+      "valid_rows": 4
+    },
+    "dataset_sha256": {
+      "train": "600c761d35c41e8fce5217a31cc7eb9ebe8f29fde397b53eb8b20fa652f2d955",
+      "valid": "1a98812405b905b29c381cb4a6613be446b87aebe5643d5ed3e55d7f48fc401d"
+    },
+    "examples": 16,
+    "run": {
+      "config_path": "/Users/user/lisa1-push/artifacts/learning_pipeline_v1/run-001/adapters/rft_self/lora_config.json",
+      "final_train_loss": 0.0159608855843544,
+      "log_path": "/Users/user/lisa1-push/artifacts/learning_pipeline_v1/run-001/train_rft_self.log",
+      "peak_memory_gb": 6.577746378,
+      "resumed_from": null,
+      "returncode": 0,
+      "seconds": 941.5,
+      "trained_tokens": 19087,
+      "val_losses": [
+        0.5574562549591064,
+        0.19561605155467987,
+        0.25383010506629944
+      ]
+    },
+    "status": "trained",
+    "tasks": 12
+  },
+  "sft_reference": {
+    "adapter": {
+      "adapters_sha256": "7e7be1eff10f4ba944f0e979ce38c13d361b5f26754611419a914d1bc1f4a442",
+      "bytes": 14692068,
+      "lora_b_max_abs": 0.013918045908212662,
+      "lora_b_nonzero_tensors": 56,
+      "lora_b_tensors": 56
+    },
+    "dataset": {
+      "train_rows": 74,
+      "train_tasks": 74,
+      "valid_rows": 4
+    },
+    "dataset_sha256": {
+      "train": "61a13fc4354c10c241f3c36fe6055a5129aa0138014ddd04afee9345a813d211",
+      "valid": "1fa6b76f6ff4299e088538ced43fb0f9e3f37d0410404fbeb7afcd376a89d07d"
+    },
+    "examples": 78,
+    "run": {
+      "config_path": "/Users/user/lisa1-push/artifacts/learning_pipeline_v1/run-001/adapters/sft_reference/lora_config.json",
+      "final_train_loss": 0.08788888454437256,
+      "log_path": "/Users/user/lisa1-push/artifacts/learning_pipeline_v1/run-001/train_sft_reference.log",
+      "peak_memory_gb": 7.37242788,
+      "resumed_from": null,
+      "returncode": 0,
+      "seconds": 936.8,
+      "trained_tokens": 30250,
+      "val_losses": [
+        0.788607656955719,
+        0.1701434701681137,
+        0.12087615579366684
+      ]
+    },
+    "status": "trained",
+    "tasks": 78
+  },
+  "synthetic": false
+}
