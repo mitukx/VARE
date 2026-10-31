@@ -13,7 +13,7 @@ Status: the full R7 build and task-validation sweep completed. The held-out free
 
 The 12 admitted repositories are `cool-RR/PySnooper`, `alecthomas/voluptuous`, `mewwts/addict`, `sqlfluff/sqlfluff`, `hukkin/tomli`, `jd/tenacity`, `erikrose/parsimonious`, `weaveworks/grafanalib`, `scrapy/scrapy`, `pudo/dataset`, `tkrajina/gpxpy`, and `pdfminer/pdfminer.six`. `tobymao/sqlglot` had 7 valid tasks and therefore did not qualify.
 
-The report contains the per-repository outcomes, each successfully built environment's installed distribution inventory, and task identifiers, counts, and hashes. It does not contain problem statements, patches, pytest node names, or raw test output. The four environment-install failures are `conan-io/conan`, `iterative/dvc`, `facebookresearch/fvcore`, and `rsalmei/alive-progress`; their sanitized diagnostics are in the report.
+The gzip-compressed report contains the per-repository outcomes, each successfully built environment's installed distribution inventory, and task identifiers, counts, and hashes. It does not contain problem statements, patches, pytest node names, or raw test output. The four environment-install failures are `conan-io/conan`, `iterative/dvc`, `facebookresearch/fvcore`, and `rsalmei/alive-progress`; their sanitized diagnostics are in the report. Decompress `build_check_report.json.gz` before using it with the freeze script.
 
 ## Reproduction record
 
@@ -39,4 +39,4 @@ These results measure environment builds and reference-task validity only. They 
 
 ## Integrity
 
-`refusal.json` records the freeze decision and the SHA-256 of `build_check_report.json` (`b36570ce4e3cc53e3d53eee7623b90b5bf85ccc250d75157e0de87ba9d72c32f`). `SHA256SUMS.txt` covers the report, refusal, and this README.
+`refusal.json` records the freeze decision and the SHA-256 of the uncompressed `build_check_report.json` (`b36570ce4e3cc53e3d53eee7623b90b5bf85ccc250d75157e0de87ba9d72c32f`). Decompress the gzip payload and compare its SHA-256 with that value to verify the freeze input. `SHA256SUMS.txt` covers the compressed report, refusal, and this README.

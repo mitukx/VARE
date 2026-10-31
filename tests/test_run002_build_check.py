@@ -16,7 +16,7 @@ _spec = importlib.util.spec_from_file_location("run002_build_check", ROOT / "scr
 assert _spec and _spec.loader
 bc = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(bc)
-from run002_macos_sandbox import MacosSeatbeltRepoEnv
+from run002_macos_sandbox import MacosSeatbeltRepoEnv  # noqa: E402
 
 
 def test_summarize_drops_test_names_and_output() -> None:
