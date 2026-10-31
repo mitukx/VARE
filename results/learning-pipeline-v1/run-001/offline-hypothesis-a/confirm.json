@@ -1,0 +1,163 @@
+{
+  "budgets": {
+    "0.10": 3,
+    "0.20": 6,
+    "0.40": 12
+  },
+  "cost_all_160": {
+    "cheap_seconds": 53.808,
+    "generation_seconds": 1528.756,
+    "trusted_seconds": 108.038,
+    "trusted_share_of_generation_plus_grading": 0.06390504684130267
+  },
+  "decision": {
+    "best_baseline": "uniform",
+    "best_baseline_recall": 0.215,
+    "bootstrap": {
+      "ci95": [
+        -0.5,
+        0.0
+      ],
+      "reps": 2000,
+      "seeds_per_rep": 40
+    },
+    "delta": -0.014999999999999986,
+    "primary_budget": 0.2,
+    "selective_recall": 0.2,
+    "verdict": "not_supported"
+  },
+  "full_information": {
+    "mixed_groups": 4,
+    "rft": 5,
+    "tasks": 5,
+    "units": 29
+  },
+  "regime_C": {
+    "cheap_trusted_disagreements": 0
+  },
+  "results": {
+    "0.10": {
+      "confidence[short]": {
+        "mixed_resolved": 1,
+        "rft": 1,
+        "rft_recall": 0.2,
+        "tasks": 1
+      },
+      "deterministic": {
+        "mixed_resolved": 0,
+        "rft": 0,
+        "rft_recall": 0.0,
+        "tasks": 0
+      },
+      "random": {
+        "mixed_resolved": 0.1125,
+        "rft": 0.49,
+        "rft_recall": 0.098,
+        "tasks": 0.49
+      },
+      "selective[short,exploit]": {
+        "mixed_resolved": 1,
+        "rft": 1,
+        "rft_recall": 0.2,
+        "tasks": 1
+      },
+      "uncertainty": {
+        "mixed_resolved": 0,
+        "rft": 0.74,
+        "rft_recall": 0.148,
+        "tasks": 0.74
+      },
+      "uniform": {
+        "mixed_resolved": 0.1875,
+        "rft": 0.5425,
+        "rft_recall": 0.1085,
+        "tasks": 0.5425
+      }
+    },
+    "0.20": {
+      "confidence[short]": {
+        "mixed_resolved": 1,
+        "rft": 1,
+        "rft_recall": 0.2,
+        "tasks": 1
+      },
+      "deterministic": {
+        "mixed_resolved": 0,
+        "rft": 1,
+        "rft_recall": 0.2,
+        "tasks": 1
+      },
+      "random": {
+        "mixed_resolved": 0.2725,
+        "rft": 1.02,
+        "rft_recall": 0.20400000000000001,
+        "tasks": 1.02
+      },
+      "selective[short,exploit]": {
+        "mixed_resolved": 1,
+        "rft": 1,
+        "rft_recall": 0.2,
+        "tasks": 1
+      },
+      "uncertainty": {
+        "mixed_resolved": 1,
+        "rft": 1,
+        "rft_recall": 0.2,
+        "tasks": 1
+      },
+      "uniform": {
+        "mixed_resolved": 0.3525,
+        "rft": 1.075,
+        "rft_recall": 0.215,
+        "tasks": 1.075
+      }
+    },
+    "0.40": {
+      "confidence[short]": {
+        "mixed_resolved": 3,
+        "rft": 4,
+        "rft_recall": 0.8,
+        "tasks": 4
+      },
+      "deterministic": {
+        "mixed_resolved": 2,
+        "rft": 2,
+        "rft_recall": 0.4,
+        "tasks": 2
+      },
+      "random": {
+        "mixed_resolved": 0.7525,
+        "rft": 2.0625,
+        "rft_recall": 0.4125,
+        "tasks": 2.0625
+      },
+      "selective[short,exploit]": {
+        "mixed_resolved": 1,
+        "rft": 3,
+        "rft_recall": 0.6,
+        "tasks": 3
+      },
+      "uncertainty": {
+        "mixed_resolved": 1.67,
+        "rft": 1.85,
+        "rft_recall": 0.37,
+        "tasks": 1.85
+      },
+      "uniform": {
+        "mixed_resolved": 0.69,
+        "rft": 2.1125,
+        "rft_recall": 0.4225,
+        "tasks": 2.1125
+      }
+    }
+  },
+  "rollouts_sha256": "cb18ed4af65a4f542008a49b6a42d8c8ee3b848cf0775ea292e47f63a9e121b3",
+  "schema": "hypothesis_a_offline_replay_v1",
+  "seeds": 400,
+  "selected_on_dev": {
+    "proxy": "short",
+    "variant": "exploit"
+  },
+  "stage": "confirm",
+  "tasks": 20
+}
