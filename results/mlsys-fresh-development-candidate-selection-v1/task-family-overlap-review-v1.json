@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "review_id": "mlsys-fresh-development-task-family-overlap-v3",
+  "protocol_path": "protocols/mlsys_fresh_development_task_family_overlap_v3.json",
+  "candidate": {
+    "task_id": "vllm-64675-qwen3-tool-parameter-stream-parse",
+    "repository": "vllm-project/vllm",
+    "upstream_pull_request": 64675,
+    "title": "[Bugfix][Parser] Parse closed Qwen3 tool parameters once while streaming",
+    "changed_paths": [
+      "tests/parser/engine/test_qwen3.py",
+      "vllm/parser/qwen3.py"
+    ],
+    "selection_sha256": "2ba539e52536e37ef47cd3df41171ab6ce1a5368c07ecee0022835e3e1e4cc3d",
+    "selected_row_canonical_sha256": "07f74a4dd79b791b8d5d679e5f496325efbd96fda70d43de5f50aec4494e41f1"
+  },
+  "prior_development_train_family_count": 13,
+  "comparison_scope": {
+    "included_splits": [
+      "development",
+      "train"
+    ],
+    "heldout_accessed": false,
+    "heldout_identifiers_or_metadata_reported": false,
+    "candidate_source_or_test_opened": false,
+    "candidate_pr_body_or_patch_opened": false,
+    "tests_or_graders_run": false,
+    "model_or_agent_inference": false,
+    "development_split_assigned": false
+  },
+  "prior_families": [
+    {
+      "task_id": "mlxlm-1904-tool-arguments",
+      "repository": "ml-explore/mlx-lm",
+      "upstream_pull_request": 1904,
+      "split": "train",
+      "task_family": "tool_call_dict_arguments",
+      "metadata_description": "Handle tool_calls[].function.arguments without assuming arguments are always a string.",
+      "changed_path_metadata": "Two changed files, including one server test path.",
+      "classification": "POSSIBLE_FAMILY_OVERLAP",
+      "rationale": "Both tasks concern parsing tool-call arguments. They are in separate repositories and components, and the prior contract concerns dictionary/string argument handling while the selected task concerns closed Qwen3 parameters during streaming; metadata cannot rule out a shared broader parser/tool-call family.",
+      "evidence": [
+        "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json sha256 08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+        "results/mlsys-task-deep-qualification-v1/qualification.json sha256 2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+      ]
+    },
+    {
+      "task_id": "transformers-45852-4d-mask",
+      "repository": "huggingface/transformers",
+      "upstream_pull_request": 45852,
+      "split": "development",
+      "task_family": "4d_masked_batch_collation",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Metadata describes a Trainer collation/attention-mask issue, with no shared parser component or tool-call contract.",
+      "evidence": [
+        "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json sha256 08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+        "results/mlsys-task-deep-qualification-v1/qualification.json sha256 2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+      ]
+    },
+    {
+      "task_id": "mlx-4662-padding-input-gradient",
+      "repository": "ml-explore/mlx",
+      "upstream_pull_request": 4662,
+      "split": "train",
+      "task_family": "convolution_input_gradient_shape",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Metadata concerns convolution gradient shape, distinct from Qwen3 tool parameter parsing.",
+      "evidence": [
+        "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json sha256 08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+        "results/mlsys-task-deep-qualification-v1/qualification.json sha256 2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+      ]
+    },
+    {
+      "task_id": "mlxlm-1795-moe-routing-gradient",
+      "repository": "ml-explore/mlx-lm",
+      "upstream_pull_request": 1795,
+      "split": "train",
+      "task_family": "moe_router_gradient_indices",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Metadata concerns gradient flow through MoE routing indices, not parser behavior.",
+      "evidence": [
+        "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json sha256 08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+        "results/mlsys-task-deep-qualification-v1/qualification.json sha256 2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+      ]
+    },
+    {
+      "task_id": "mlxlm-1912-top-p-min-token",
+      "repository": "ml-explore/mlx-lm",
+      "upstream_pull_request": 1912,
+      "split": "development",
+      "task_family": "top_p_retains_most_likely_token",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Metadata concerns sampling truncation and token retention, not structured tool-call parsing.",
+      "evidence": [
+        "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json sha256 08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+        "results/mlsys-task-deep-qualification-v1/qualification.json sha256 2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+      ]
+    },
+    {
+      "task_id": "mlxlm-1971-mimo-value-scale",
+      "repository": "ml-explore/mlx-lm",
+      "upstream_pull_request": 1971,
+      "split": "development",
+      "task_family": "mimo_attention_value_scale",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Metadata concerns attention value scaling in a model implementation, not tool parameter parsing.",
+      "evidence": [
+        "results/mlsys-task-deep-qualification-v1/qualification.json sha256 2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+      ]
+    },
+    {
+      "task_id": "transformers-49418-quantized-cache-residual-flush",
+      "repository": "huggingface/transformers",
+      "upstream_pull_request": 49418,
+      "split": "development",
+      "task_family": "quantized_cache_residual_update_boundary",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Metadata concerns quantized cache residual flushing in cache utilities, not parser behavior.",
+      "evidence": [
+        "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json sha256 c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700",
+        "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json sha256 bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5"
+      ]
+    },
+    {
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain",
+      "repository": "ray-project/ray",
+      "upstream_pull_request": 66694,
+      "split": "development",
+      "task_family": "operator_wall_time_multi_node_clock_domain",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Metadata concerns multi-node wall-time calculation in Ray Data, not parser behavior.",
+      "evidence": [
+        "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json sha256 c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700",
+        "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json sha256 bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5"
+      ]
+    },
+    {
+      "task_id": "transformers-49458-lazy-auto-video-processor",
+      "repository": "huggingface/transformers",
+      "upstream_pull_request": 49458,
+      "split": "development",
+      "task_family": "lazy_video_processor_registry_resolution",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Metadata concerns lazy model/processor registry lookup and source localization, not tool argument parsing.",
+      "evidence": [
+        "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json sha256 d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72"
+      ]
+    },
+    {
+      "repository": "huggingface/transformers",
+      "upstream_pull_request": 49752,
+      "split": "development",
+      "task_family": "minicpm_v_stacked_visual_units",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Sprint XIV report describes vision-frame unit handling, distinct from streaming tool parameter parsing.",
+      "evidence": [
+        "origin/pr149-head:docs/sprint-xiv-measurable-learning-report-20261029.md sha256 c3e7aaa25d94b3baf2342cca0fa64356e0246525390b3422abdea96147eb5448"
+      ]
+    },
+    {
+      "repository": "huggingface/transformers",
+      "upstream_pull_request": 49900,
+      "split": "development",
+      "task_family": "numpy_label_dtype",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Sprint XIV report describes NumPy label dtype compatibility, distinct from streaming tool parameter parsing.",
+      "evidence": [
+        "origin/pr149-head:docs/sprint-xiv-measurable-learning-report-20261029.md sha256 c3e7aaa25d94b3baf2342cca0fa64356e0246525390b3422abdea96147eb5448"
+      ]
+    },
+    {
+      "repository": "huggingface/transformers",
+      "upstream_pull_request": 50021,
+      "split": "development",
+      "task_family": "timesfm_fp16_pad_value",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Sprint XIV report describes TimesFM fp16 padding values, distinct from streaming tool parameter parsing.",
+      "evidence": [
+        "origin/pr149-head:docs/sprint-xiv-measurable-learning-report-20261029.md sha256 c3e7aaa25d94b3baf2342cca0fa64356e0246525390b3422abdea96147eb5448"
+      ]
+    },
+    {
+      "repository": "huggingface/transformers",
+      "upstream_pull_request": 50044,
+      "split": "development",
+      "task_family": "janus_string_prompt_input",
+      "classification": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rationale": "Sprint XIV report describes conversion of a Janus text prompt input to a string; metadata does not show the same streamed tool-argument parser contract.",
+      "evidence": [
+        "origin/pr149-head:docs/sprint-xiv-measurable-learning-report-20261029.md sha256 c3e7aaa25d94b3baf2342cca0fa64356e0246525390b3422abdea96147eb5448"
+      ]
+    }
+  ],
+  "overall_classification": "POSSIBLE_FAMILY_OVERLAP",
+  "decision": "NO_GO_FOR_SOURCE_QUALIFICATION_AS_AN_INDEPENDENT_DEVELOPMENT_TASK",
+  "decision_rationale": "No direct identity or same-component defect is present, but the selected candidate and Train #1904 both involve parsing tool-call arguments. Under the frozen rule this is a possible broader family overlap, so this candidate does not clear technical-independence review. Do not open its source or tests under this selection.",
+  "next_action": "Freeze a separate selection protocol for one remaining metadata-only candidate; the original selection's no-substitution rule remains intact.",
+  "heldout_accessed": false,
+  "pretraining_independence_established": false,
+  "source_test_qualification_authorized": false,
+  "model_inference_authorized": false
+}
