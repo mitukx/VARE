@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from discover_mlsys_fresh_development_candidates_v4 import screen_candidate
+from discover_mlsys_fresh_development_candidates_v4 import load_frozen_protocol, screen_candidate
 
 
 def _protocol():
@@ -37,6 +37,14 @@ def _candidate():
         "deletions": 2,
         "changed_file_count": 2,
     }
+
+
+def test_precollection_addendum_binds_the_corrected_collector():
+    protocol, addendum = load_frozen_protocol()
+
+    assert protocol["protocol_id"] == "mlsys-fresh-development-candidate-discovery-v4"
+    assert addendum["protocol_id"] == "mlsys-fresh-development-candidate-discovery-v4-addendum-1"
+    assert addendum["pre_collection_failure"]["metadata_queries_started"] is False
 
 
 def test_graphql_merged_state_can_enter_metadata_shortlist():
