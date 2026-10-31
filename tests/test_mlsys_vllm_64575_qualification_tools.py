@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 import pytest
 
+import scripts.run_mlsys_vllm_64575_qualification_arm as runner
 from scripts.prepare_mlsys_vllm_64575_qualification_overlay import (
     build_overlay,
     extract_source_segment,
@@ -20,6 +21,8 @@ from scripts.run_mlsys_vllm_64575_qualification_arm import (
     main,
     process_tree_rss,
     stop_process_group,
+    wait4_max_rss_bytes,
+    wait_for_child,
 )
 
 
@@ -175,3 +178,30 @@ raise SystemExit(0 if ready.exists() else 1)
             os.kill(child_pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
+
+
+def test_wait4_records_short_lived_child_rss_high_water() -> None:
+    allocation_mib = 64
+    child_code = (
+        f"payload = bytearray({allocation_mib} * 1024 * 1024); "
+        "payload[::4096] = b'x' * (len(payload) // 4096); "
+        "import time; time.sleep(0.05)"
+    )
+    proc = subprocess.Popen([sys.executable, "-c", child_code])
+
+    usage = wait_for_child(proc, block=True)
+
+    assert proc.returncode == 0
+    assert usage is not None
+    assert wait4_max_rss_bytes(usage) >= allocation_mib * 1024**2
+
+
+def test_wait4_rss_units_follow_platform_convention(monkeypatch) -> None:
+    class Usage:
+        ru_maxrss = 128
+
+    monkeypatch.setattr(runner.sys, "platform", "darwin")
+    assert wait4_max_rss_bytes(Usage()) == 128
+
+    monkeypatch.setattr(runner.sys, "platform", "linux")
+    assert wait4_max_rss_bytes(Usage()) == 128 * 1024
