@@ -1,0 +1,20 @@
+diff --git a/edit_format.py b/edit_format.py
+--- a/edit_format.py
++++ b/edit_format.py
+@@ -68,12 +68,11 @@ def _relaxed_replace(text: str, block: Block) -> str | None:
+     lines = text.split("\n")
+     needle = [ln.rstrip() for ln in block.search.split("\n")]
+     stripped = [ln.rstrip() for ln in lines]
+-    hits = [
+-        i for i in range(len(lines) - len(needle) + 1) if stripped[i : i + len(needle)] == needle
+-    ]
+-    if len(hits) != 1:
++    # Stop at the first matching window instead of scanning the whole file.
++    width = len(needle)
++    i = next((j for j in range(len(lines) - width + 1) if stripped[j : j + width] == needle), -1)
++    if i < 0:
+         return None
+-    i = hits[0]
+     return "\n".join(lines[:i] + block.replace.split("\n") + lines[i + len(needle) :])
+ 
+ 

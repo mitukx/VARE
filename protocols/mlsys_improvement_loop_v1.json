@@ -1,0 +1,61 @@
+{
+  "protocol_id": "mlsys_improvement_loop_v1",
+  "status": "frozen before the first recorded trial",
+  "question": "Can a proposed change to a real VARE code path be accepted only when held-out tests pass, outputs are unchanged on fresh inputs, and a parent-measured speedup is statistically above 1.0?",
+  "target": {
+    "path": "src/vare/learning_pipeline/edit_format.py",
+    "functions": [
+      "parse_blocks",
+      "apply_blocks"
+    ],
+    "note": "hash-frozen for learning-pipeline run-001; candidates are applied only to a staged copy"
+  },
+  "workload": {
+    "id": "rollout_edit_apply_v1",
+    "source": "benchmarks/mlsys_improvement_loop_v1/workload.py"
+  },
+  "measurement": {
+    "count": 3000,
+    "profile": "benchmark",
+    "warmup_reps": 2,
+    "measured_reps": 12,
+    "roles_per_rep": [
+      "baseline",
+      "candidate",
+      "overhead"
+    ],
+    "order": "shuffled per rep (SystemRandom)",
+    "seed": "fresh 63-bit per rep, drawn by the parent, passed on sandbox stdin",
+    "primary_metric": "parent perf_counter interval between receipt of the authenticated ready and done frames",
+    "secondary_metric": "parent wall time of the whole sandbox process",
+    "cpu": "parent and sandbox pinned to one CPU during measurement; runs strictly sequential"
+  },
+  "differential": {
+    "count": 3000,
+    "profile": "differential"
+  },
+  "noise_floor": {
+    "method": "A/A: unmodified module against itself with the same schedule, once per session",
+    "valid_if": "speedup 95% CI contains 1.0 and all runs ok"
+  },
+  "acceptance": {
+    "rule": "ACCEPT iff admitted AND policy clean AND static scan clean AND every public and held-out test PASSED (v2 frames) AND differential outputs equal AND every timed baseline/candidate output equals the parent expectation AND workload_covers_startup AND A/A valid AND speedup CI95 low > 1.0 AND speedup point >= 1.05; otherwise REJECT with the first failing reason",
+    "speedup_ci95_low_gt": 1.0,
+    "speedup_point_min": 1.05,
+    "test_timeout_s": 300,
+    "audit_mode": "runs with policy or static layers disabled are recorded but never accepted"
+  },
+  "frozen_sha256": {
+    "src/vare/learning_pipeline/edit_format.py": "4f0ee215d5769b42df3aa83128e947b7259234141678856fba74d98bdc7c1f59",
+    "benchmarks/mlsys_improvement_loop_v1/workload.py": "b7ba959aeb863f0ec6d55b86e4b797e29d42fbf89e9602230adc49811a488afc",
+    "benchmarks/mlsys_improvement_loop_v1/proposer_view/test_public_edit_format.py": "ec3bbbc189a8867a0fcd39c3400b3dddf2467fd8cfea94dfd5df250c562fa6a5",
+    "benchmarks/mlsys_improvement_loop_v1/proposer_view/task.md": "bebd9c5ad30b43a8c6fdb6accf19c9a8b71d209048654eacd8f86d5573197f6e",
+    "benchmarks/mlsys_improvement_loop_v1/hidden/test_hidden_edit_format.py": "a597f9e76a78e298885566be9fc6d03e6009c383e90095cbf6c8e2e9d184c5f8",
+    "scripts/mlsys_improvement_bench_runner.py": "d6bad1822ef2818a1d0f8ede083babe0937dba0c344985d25f6f5539cb13cb46",
+    "scripts/learning_pipeline_trusted_runner.py": "9b2821668d5b08507d110253030b35a2db79a734a6a2c5ab8353eb8766ae5b6b",
+    "scripts/learning_pipeline_trusted_verdict.py": "a6f05eda4fc06baa201e95b049f28572ab7a808192bc97d9845f836cbe85349d",
+    "scripts/learning_pipeline_isolated_grading.py": "6602d97f54fbf1e0f8fb5b6d6ddfdf950fa450b13dd45bec436ac4d33f50e103",
+    "scripts/mlsys_improvement_loop.py": "680c0068597ac72c66f36e8d3d6665fd19e830a55b921fb67814fe2001edc3c1",
+    "benchmarks/mlsys_improvement_loop_v1/proposals/proposals.json": "57b6a6c5311ecab3a2ed186abccc4794b3e42bd664ac80c4ee6732e31e58b001"
+  }
+}
