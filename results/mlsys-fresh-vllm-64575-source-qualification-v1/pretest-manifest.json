@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "manifest_id": "mlsys-fresh-vllm-64575-source-qualification-v1-pretest-manifest",
+  "qualification_scope": "source-level task qualification only",
+  "frozen_before_candidate_test_execution": true,
+  "source_revision_semantics_correction": {
+    "original_protocol_field": "candidate.merge_base_sha",
+    "original_protocol_value": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "correction": "The value is the frozen PR merge commit's direct first parent (the exact pre-merge main tree), not the result of git merge-base(baseRefOid, headSha). The latter is 67d677bdef939cb95b433dfcd43a4eca234aa29b. Baseline remains the direct first parent, 8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59; the upstream-fixed arm remains the merge commit 5829ca82e82ec0b17c3da0100446cbca25cb1149. This clarifies terminology and leaves all arm sources, cases, limits, gates, and order unchanged.",
+    "merge_commit_first_parent": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "true_merge_base_of_frozen_base_ref_and_pr_head": "67d677bdef939cb95b433dfcd43a4eca234aa29b",
+    "pr_head_sha": "46c6391a443952a40c8942abad407bd1587125b0",
+    "merge_commit_sha": "5829ca82e82ec0b17c3da0100446cbca25cb1149"
+  },
+  "candidate_identity": {
+    "repository": "https://github.com/vllm-project/vllm.git",
+    "pull_request": 64575,
+    "title": "[Frontend] Reject Anthropic-defined tools by type in /v1/messages",
+    "url": "https://github.com/vllm-project/vllm/pull/64575",
+    "metadata_artifact": "results/mlsys-fresh-vllm-64575-source-qualification-v1/pr-metadata.json",
+    "metadata_artifact_sha256": "7b7e5066a66f6a1e17df611ac41289dc15bcd8e3a35f2ba717d3f6e487a4d38f",
+    "license": "Apache-2.0",
+    "license_file_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "frozen_changed_paths": [
+      "docs/serving/integrations/claude_code.md",
+      "tests/entrypoints/anthropic/test_anthropic_messages_conversion.py",
+      "tests/entrypoints/anthropic/test_messages.py",
+      "vllm/entrypoints/anthropic/protocol.py"
+    ],
+    "source_relation_check": {
+      "baseline_checkout_head": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+      "fixed_checkout_head": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+      "merge_commit_first_parent": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+      "merge_commit_second_parent": "46c6391a443952a40c8942abad407bd1587125b0",
+      "first_parent_to_merge_changed_paths_match_metadata": true,
+      "working_trees_clean_before_execution": true
+    }
+  },
+  "source_hashes": {
+    "baseline": {
+      "revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+      "vllm/entrypoints/anthropic/protocol.py": "d59e35292a3eaeddea0da3aa71caafe7862214d41ad1d549b78f9ae56218c9c0",
+      "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "wrong_mutant": {
+      "base_revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+      "vllm/entrypoints/anthropic/protocol.py": "4790a22dd3f8dcdd3558f26e8240898b857dc578a785e4ada457d7ee9ce0b9fb",
+      "patch_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/wrong-mutant.patch",
+      "patch_sha256": "8940b13b3a5c916d7cb3f50244d74809dd4088f0cd5e9ca984cb3ffa69565c64",
+      "mutation": "Relax only the new AnthropicTool type validator to allow web_search_20250305, while retaining rejection of bash_20250124; the frozen tests must catch the newly accepted unsupported tool type."
+    },
+    "upstream_fixed": {
+      "revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+      "vllm/entrypoints/anthropic/protocol.py": "cb83d99789f5d543a90c5487ac974821e7f3af9a77df9ceceadad8ba1f7b5560",
+      "docs/serving/integrations/claude_code.md": "bcb2884496e4fc8a8e1683bfd68eccdfcb3229bf22d7bd139d0f75888ca96965",
+      "tests/entrypoints/anthropic/test_anthropic_messages_conversion.py": "1447d1b4b42160b0be5e48a495e5424bd94652fabf28478e17507d8f5bbb66f3",
+      "tests/entrypoints/anthropic/test_messages.py": "1bfbbe0c33152f828f31d3332752bbae98637488d42fbda0ade1394baa36ecb2",
+      "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    }
+  },
+  "test_overlay": {
+    "committed_overlay_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+    "overlay_sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8",
+    "overlay_manifest_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/overlay-manifest.json",
+    "overlay_manifest_sha256": "8e9b7d3d73c7db32993b4ecdff22472613f1b8bf2f35fd256488388ff6d8511d",
+    "full_upstream_test_file_sha256": "1447d1b4b42160b0be5e48a495e5424bd94652fabf28478e17507d8f5bbb66f3",
+    "extracted_helper_sha256": "929012581df1513edb7a4baa62b4c17dfe111f0e8dcd41783d90b4cfcb01fdd6",
+    "extracted_class_sha256": "ac4395a1ab438d32d1f4511c4900b1dc2504a8d496260828a99358886b87efd8",
+    "included_test_methods": [
+      "TestToolDefinitions.test_anthropic_defined_tool_is_rejected_by_type (2 parameter cases)",
+      "TestToolDefinitions.test_custom_tool_is_accepted (2 parameter cases)",
+      "TestToolDefinitions.test_custom_tool_still_requires_input_schema (1 case)"
+    ],
+    "case_count": 5,
+    "excluded_test": "test_anthropic_server_tool_is_rejected; requires the upstream server/client integration fixture and is outside this isolated CPU request-model qualification.",
+    "stubbed_unrelated_dependencies": [
+      "vllm.envs.VLLM_MAX_STOP_STRINGS is supplied as 4 for an unrelated request field.",
+      "MMPayload is stubbed with an unused empty Pydantic model.",
+      "resolve_return_mm_kwargs_alias is a no-op because none of the frozen tests supplies the deprecated alias."
+    ],
+    "candidate_model_or_agent_receives_source_or_tests": false
+  },
+  "runner_and_validation": {
+    "runner_path": "scripts/run_mlsys_vllm_64575_qualification_arm.py",
+    "runner_sha256": "9743cbd9f14d940ef0b881f2390bf18807633ae33d3d823fdf8346e897517e27",
+    "overlay_generator_path": "scripts/prepare_mlsys_vllm_64575_qualification_overlay.py",
+    "overlay_generator_sha256": "aab4742f82c001f4d911ad96ac14ad8f794dd8927e4aa402a795c6e42b61c52b",
+    "runner_tests_path": "tests/test_mlsys_vllm_64575_qualification_tools.py",
+    "runner_tests_sha256": "12ce6bb4db26237e94c3fb85d00a6f7a059f9154b676a851ac26cda3e7c755a1",
+    "runner_test_command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /opt/homebrew/Caskroom/miniforge/base/bin/python -m pytest -q tests/test_mlsys_vllm_64575_qualification_tools.py",
+    "runner_test_outcome": "4 passed; exit code 0",
+    "runner_test_log_sha256": "c4b808d34f4db00b333696dec1f3a43a2887d8bfe0cb7af07a3cb98ff43a7830",
+    "ruff_command": "ruff check scripts/prepare_mlsys_vllm_64575_qualification_overlay.py scripts/run_mlsys_vllm_64575_qualification_arm.py tests/test_mlsys_vllm_64575_qualification_tools.py",
+    "ruff_outcome": "All checks passed; exit code 0",
+    "ruff_log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "py_compile_command": "/opt/homebrew/Caskroom/miniforge/base/bin/python -m py_compile scripts/prepare_mlsys_vllm_64575_qualification_overlay.py scripts/run_mlsys_vllm_64575_qualification_arm.py tests/test_mlsys_vllm_64575_qualification_tools.py",
+    "py_compile_exit_code": 0,
+    "py_compile_empty_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "runtime": {
+    "host": "macOS 27.0.1 (26A434), arm64, 32 GiB RAM",
+    "python": "/opt/homebrew/Caskroom/miniforge/base/bin/python 3.12.12",
+    "pytest": "8.4.2",
+    "pydantic": "2.12.5",
+    "pytest_plugin_autoload": false,
+    "accelerator": "not used",
+    "network": "denied by the exact arm-specific Seatbelt profile",
+    "runner_poll_period_seconds": 0.5,
+    "limits_per_arm": {
+      "invocations": 1,
+      "wall_seconds": 600,
+      "process_tree_resident_memory_bytes": 4294967296,
+      "concurrent_arms": 1,
+      "paid_compute_or_api_spend_usd": 0
+    },
+    "writable_roots": {
+      "baseline": "/private/tmp/vare-vllm-64575-qualification/writable/baseline",
+      "wrong-mutant": "/private/tmp/vare-vllm-64575-qualification/writable/wrong-mutant",
+      "upstream-fixed": "/private/tmp/vare-vllm-64575-qualification/writable/upstream-fixed"
+    }
+  },
+  "sandbox_profiles": {
+    "baseline": {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/baseline.sb",
+      "sha256": "b5abc4c336099e3f9ba9ba5dac06b0cdc3b88ffb623fe6f3f1c3749bf8624623"
+    },
+    "wrong-mutant": {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/wrong-mutant.sb",
+      "sha256": "43d2021c2c1de0372275d50c10687cf3b57de680580a5cbe3b23619a70e00774"
+    },
+    "upstream-fixed": {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/upstream-fixed.sb",
+      "sha256": "7dbab4bd65f05b0719d3881fe728a6d7295a0547cb127337c09278e8bf57c73f"
+    }
+  },
+  "execution_plan": {
+    "order": [
+      "baseline",
+      "wrong-mutant",
+      "upstream-fixed"
+    ],
+    "executable": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+    "runner_invocation_template": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/run_mlsys_vllm_64575_qualification_arm.py",
+      "--arm",
+      "<arm>",
+      "--profile",
+      "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/<arm>.sb",
+      "--source-file",
+      "<arm-specific-immutable-checkout>/vllm/entrypoints/anthropic/protocol.py",
+      "--test-file",
+      "results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+      "--output-dir",
+      "/private/tmp/vare-vllm-64575-qualification/writable/<arm>",
+      "--python",
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+    ],
+    "baseline_expected": {
+      "pytest_cases": 5,
+      "expected_failures": 2,
+      "failure_assertion": "Each unsupported Anthropic tool type is accepted by the baseline, so the frozen pytest.raises(ValidationError) assertion fails with DID NOT RAISE.",
+      "expected_passes": 3,
+      "errors": 0,
+      "skips": 0
+    },
+    "wrong_mutant_expected": {
+      "pytest_cases": 5,
+      "expected_failures": 1,
+      "failure_assertion": "Only web_search_20250305 is intentionally accepted; that parameter case fails at pytest.raises(ValidationError) with DID NOT RAISE.",
+      "expected_passes": 4,
+      "errors": 0,
+      "skips": 0
+    },
+    "upstream_fixed_expected": {
+      "pytest_cases": 5,
+      "expected_failures": 0,
+      "expected_passes": 5,
+      "errors": 0,
+      "skips": 0
+    },
+    "stop_on": [
+      "identity or hash mismatch",
+      "baseline not matching its exact expected assertion outcomes",
+      "wrong-mutant not matching its exact expected assertion outcomes",
+      "fixed arm failure",
+      "import or collection error",
+      "unexpected skip or unrelated failure",
+      "timeout or process-tree memory limit breach",
+      "sandbox denial of an intended read/write or any evidence of network access"
+    ],
+    "candidate_tests_executed_at_freeze": false
+  },
+  "not_authorized": {
+    "development_split_assignment": true,
+    "model_or_agent_inference": true,
+    "training": true,
+    "heldout_access": true,
+    "paid_compute_or_api": true,
+    "full_vllm_test_suite": true,
+    "server_integration_test": true
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1-addendum-1",
+  "schema_version": 1,
+  "frozen_at_utc": "2026-10-31T04:10:41Z",
+  "status": "frozen before any candidate test execution; authorizes exactly one ordered baseline, wrong-mutant, and upstream-fixed source qualification arm",
+  "parent_protocol": {
+    "path": "protocols/mlsys_fresh_vllm_64575_source_qualification_v1.json",
+    "sha256": "c4f482f037e725980c7e46027bad60f7a98d825a8e1b453fb8f05b6e24353da7"
+  },
+  "pretest_manifest": {
+    "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/pretest-manifest.json",
+    "sha256": "a1d3ae2b2065f00ecd274d00610b1a0ece5a9ace884d130dc88281a7a3685225"
+  },
+  "scope": "Clarifies the baseline commit's Git relationship and binds the exact extracted tests, source files, wrong mutant, runner, sandbox profiles, runtime, limits, invocations, and arm outcomes. It does not alter the task selection, arm order, outcome gates, or authorization boundary from the parent protocol.",
+  "git_relationship_correction": {
+    "original_parent_field": "candidate.merge_base_sha",
+    "original_parent_value": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "corrected_interpretation": "This value is the merge commit's direct first parent and the baseline source revision. It is not git merge-base(baseRefOid, prHeadSha). The true merge-base is 67d677bdef939cb95b433dfcd43a4eca234aa29b.",
+    "baseline_sha": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "baseline_role": "exact pre-merge first-parent tree",
+    "upstream_fixed_sha": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+    "merge_first_parent": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "merge_second_parent": "46c6391a443952a40c8942abad407bd1587125b0",
+    "true_merge_base": "67d677bdef939cb95b433dfcd43a4eca234aa29b"
+  },
+  "fixed_test_input": {
+    "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+    "sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8",
+    "overlay_manifest_sha256": "8e9b7d3d73c7db32993b4ecdff22472613f1b8bf2f35fd256488388ff6d8511d",
+    "upstream_test_file_sha256": "1447d1b4b42160b0be5e48a495e5424bd94652fabf28478e17507d8f5bbb66f3",
+    "extracted_helper_sha256": "929012581df1513edb7a4baa62b4c17dfe111f0e8dcd41783d90b4cfcb01fdd6",
+    "extracted_class_sha256": "ac4395a1ab438d32d1f4511c4900b1dc2504a8d496260828a99358886b87efd8",
+    "selected_methods": [
+      "TestToolDefinitions.test_anthropic_defined_tool_is_rejected_by_type (2 cases)",
+      "TestToolDefinitions.test_custom_tool_is_accepted (2 cases)",
+      "TestToolDefinitions.test_custom_tool_still_requires_input_schema (1 case)"
+    ],
+    "total_cases": 5,
+    "excluded_integration_test": "test_anthropic_server_tool_is_rejected"
+  },
+  "source_inputs": {
+    "baseline": {
+      "revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+      "source_path": "/private/tmp/vare-vllm-64575-qualification/baseline/vllm/entrypoints/anthropic/protocol.py",
+      "source_sha256": "d59e35292a3eaeddea0da3aa71caafe7862214d41ad1d549b78f9ae56218c9c0",
+      "expected": "2 unsupported-type cases fail specifically because pytest.raises(ValidationError) reports DID NOT RAISE; 3 accepted/missing-schema controls pass; 0 errors, skips, or unrelated failures."
+    },
+    "wrong_mutant": {
+      "base_revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+      "source_path": "/private/tmp/vare-vllm-64575-qualification/mutant/vllm/entrypoints/anthropic/protocol.py",
+      "source_sha256": "4790a22dd3f8dcdd3558f26e8240898b857dc578a785e4ada457d7ee9ce0b9fb",
+      "patch_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/wrong-mutant.patch",
+      "patch_sha256": "8940b13b3a5c916d7cb3f50244d74809dd4088f0cd5e9ca984cb3ffa69565c64",
+      "mutation": "Allow only web_search_20250305 through the new type guard, leaving bash_20250124 rejected.",
+      "expected": "1 intended DID NOT RAISE failure for web_search_20250305; 4 controls pass; 0 errors, skips, or unrelated failures."
+    },
+    "upstream_fixed": {
+      "revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+      "source_path": "/private/tmp/vare-vllm-64575-qualification/fixed/vllm/entrypoints/anthropic/protocol.py",
+      "source_sha256": "cb83d99789f5d543a90c5487ac974821e7f3af9a77df9ceceadad8ba1f7b5560",
+      "expected": "All 5 cases pass; 0 errors, skips, or unrelated failures."
+    }
+  },
+  "runner": {
+    "path": "scripts/run_mlsys_vllm_64575_qualification_arm.py",
+    "sha256": "9743cbd9f14d940ef0b881f2390bf18807633ae33d3d823fdf8346e897517e27",
+    "nested_pytest_argv": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp",
+      "<arm-output-dir>/pytest-tmp",
+      "results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py"
+    ],
+    "environment": {
+      "VARE_SOURCE_FILE": "<arm-source-path>",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONNOUSERSITE": "1",
+      "HOME": "<arm-output-dir>/home",
+      "TMPDIR": "<arm-output-dir>/tmp",
+      "PIP_NO_INDEX": "1"
+    },
+    "source_or_test_write_access": false,
+    "network": "denied by Seatbelt profile",
+    "wall_seconds_max": 600,
+    "sampled_process_tree_rss_bytes_max": 4294967296,
+    "sample_interval_seconds": 0.5,
+    "concurrency": 1,
+    "invocations_per_arm": 1,
+    "accelerator": false,
+    "paid_compute_or_api_spend_usd": 0
+  },
+  "seatbelt_profiles": {
+    "baseline": {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/baseline.sb",
+      "sha256": "b5abc4c336099e3f9ba9ba5dac06b0cdc3b88ffb623fe6f3f1c3749bf8624623",
+      "only_write_subpath": "/private/tmp/vare-vllm-64575-qualification/writable/baseline"
+    },
+    "wrong-mutant": {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/wrong-mutant.sb",
+      "sha256": "43d2021c2c1de0372275d50c10687cf3b57de680580a5cbe3b23619a70e00774",
+      "only_write_subpath": "/private/tmp/vare-vllm-64575-qualification/writable/wrong-mutant"
+    },
+    "upstream-fixed": {
+      "path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/upstream-fixed.sb",
+      "sha256": "7dbab4bd65f05b0719d3881fe728a6d7295a0547cb127337c09278e8bf57c73f",
+      "only_write_subpath": "/private/tmp/vare-vllm-64575-qualification/writable/upstream-fixed"
+    }
+  },
+  "invocations": [
+    {
+      "order": 1,
+      "arm": "baseline",
+      "argv": [
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "scripts/run_mlsys_vllm_64575_qualification_arm.py",
+        "--arm",
+        "baseline",
+        "--profile",
+        "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/baseline.sb",
+        "--source-file",
+        "/private/tmp/vare-vllm-64575-qualification/baseline/vllm/entrypoints/anthropic/protocol.py",
+        "--test-file",
+        "results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+        "--output-dir",
+        "/private/tmp/vare-vllm-64575-qualification/writable/baseline",
+        "--python",
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      ],
+      "gate": "Proceed to wrong-mutant only if the two exact unsupported-type cases fail with DID NOT RAISE and all three controls pass with no errors/skips/unrelated failures."
+    },
+    {
+      "order": 2,
+      "arm": "wrong-mutant",
+      "argv": [
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "scripts/run_mlsys_vllm_64575_qualification_arm.py",
+        "--arm",
+        "wrong-mutant",
+        "--profile",
+        "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/wrong-mutant.sb",
+        "--source-file",
+        "/private/tmp/vare-vllm-64575-qualification/mutant/vllm/entrypoints/anthropic/protocol.py",
+        "--test-file",
+        "results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+        "--output-dir",
+        "/private/tmp/vare-vllm-64575-qualification/writable/wrong-mutant",
+        "--python",
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      ],
+      "gate": "Proceed to upstream-fixed only if only the web_search_20250305 case fails with DID NOT RAISE and all other four cases pass with no errors/skips/unrelated failures."
+    },
+    {
+      "order": 3,
+      "arm": "upstream-fixed",
+      "argv": [
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "scripts/run_mlsys_vllm_64575_qualification_arm.py",
+        "--arm",
+        "upstream-fixed",
+        "--profile",
+        "results/mlsys-fresh-vllm-64575-source-qualification-v1/sandbox/upstream-fixed.sb",
+        "--source-file",
+        "/private/tmp/vare-vllm-64575-qualification/fixed/vllm/entrypoints/anthropic/protocol.py",
+        "--test-file",
+        "results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py",
+        "--output-dir",
+        "/private/tmp/vare-vllm-64575-qualification/writable/upstream-fixed",
+        "--python",
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      ],
+      "gate": "Pass qualification only if all five cases pass, with no errors/skips/unrelated failures and every input, resource, and isolation check matches this addendum."
+    }
+  ],
+  "stop_rules": [
+    "Any source, test, runner, profile, patch, metadata, or protocol hash mismatch consumes no arm and stops the sequence.",
+    "An arm is invoked at most once. Do not retry or substitute inputs.",
+    "Stop immediately on an unexpected baseline/mutant/fixed outcome, import/collection error, timeout, memory breach, network allowance, or unexpected write outside the arm directory.",
+    "Do not run another vLLM test, full repository tests, the excluded server integration test, model inference, training, split assignment, or Held-Out access."
+  ],
+  "authorization": {
+    "source_level_qualification_only": true,
+    "model_or_agent_inference": false,
+    "training": false,
+    "development_split_assignment": false,
+    "heldout_access": false,
+    "paid_compute_or_api": false
+  }
+}
