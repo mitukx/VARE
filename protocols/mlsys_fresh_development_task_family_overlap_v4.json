@@ -1,0 +1,156 @@
+{
+  "authorization": "METADATA_ONLY_FAMILY_OVERLAP_REVIEW; no source/test qualification, split assignment, or inference authorized",
+  "candidate": {
+    "base_ref_sha_at_capture": "67d677bdef939cb95b433dfcd43a4eca234aa29b",
+    "changed_paths": [
+      "docs/serving/integrations/claude_code.md",
+      "tests/entrypoints/anthropic/test_anthropic_messages_conversion.py",
+      "tests/entrypoints/anthropic/test_messages.py",
+      "vllm/entrypoints/anthropic/protocol.py"
+    ],
+    "head_sha": "46c6391a443952a40c8942abad407bd1587125b0",
+    "merge_base_sha": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "merge_commit_sha": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+    "qualification_status": "UNQUALIFIED",
+    "repository": "vllm-project/vllm",
+    "selection_path": "results/mlsys-fresh-development-candidate-selection-v2/selection.json",
+    "selection_rank_sha256": "96cc4cd83e8dd31282fcedd7288f36c34a8d677563383c35a88430d80801f463",
+    "selection_sha256": "fdf5c2977f8eba36bc31b72057c2eca66923ec2dd1a77a396f30377dcaee5bd8",
+    "split_assignment": "UNASSIGNED",
+    "task_id": "vllm-64575-anthropic-tool-type-validation",
+    "title": "[Frontend] Reject Anthropic-defined tools by type in /v1/messages",
+    "upstream_pull_request": 64575
+  },
+  "comparison_scope": {
+    "candidate_metadata": [
+      "selected task identity, title, merge/base/head metadata, changed-path metadata, selection status"
+    ],
+    "heldout_boundary": "Do not inspect, print, compare, or report Held-Out identifiers or metadata. Filter Held-Out rows before extracting any identity/title/path fields. Do not access any Held-Out source, tests, patches, or grader artifacts.",
+    "historical_metadata": [
+      "task identity",
+      "short issue/task family description",
+      "production/test changed paths",
+      "existing qualification or exposure disposition"
+    ],
+    "source_test_boundary": "Do not fetch or open selected candidate PR body, comments, patch, source, tests, or grader assets during this review.",
+    "splits": [
+      "development",
+      "train"
+    ]
+  },
+  "decision_rules": [
+    {
+      "label": "DIRECT_IDENTITY_OVERLAP",
+      "rule": "Same repository and upstream PR/task identity as an already reviewed or exposed Development/Train task."
+    },
+    {
+      "label": "SAME_TASK_FAMILY",
+      "rule": "Available Development/Train metadata documents the same underlying defect or behavioral contract in the same component; changed-path overlap corroborates but does not alone establish family identity."
+    },
+    {
+      "label": "POSSIBLE_FAMILY_OVERLAP",
+      "rule": "Metadata suggests a shared parser/tool-call contract or subsystem, but evidence is insufficient to conclude the same defect family."
+    },
+    {
+      "label": "NO_PRIOR_FAMILY_OVERLAP_FOUND",
+      "rule": "No direct identity or same-family match is found among the frozen Development/Train metadata; this does not establish public-pretraining independence."
+    },
+    {
+      "label": "INDETERMINATE",
+      "rule": "Frozen prior metadata is incomplete or lacks enough issue/path detail to apply the other criteria."
+    }
+  ],
+  "frozen_at_utc": "2026-10-31T03:54:17Z",
+  "frozen_historical_inputs": [
+    {
+      "path": "results/mlsys-candidate-manual-qualification-queue-exposure-v1.json",
+      "sha256": "08238a0948984e2629523f530bb54c87778520368dd6c325308f7cfee34573c7",
+      "use": "Only candidate rows whose historical_split is development or train may enter semantic comparison; heldout and null rows must be filtered before identity/title/path extraction."
+    },
+    {
+      "path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+      "sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+      "use": "Only tasks with split development or train may enter semantic comparison."
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+      "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700",
+      "use": "Development exposure events only."
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+      "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72",
+      "use": "Development exposure events only."
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json",
+      "sha256": "bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5",
+      "use": "Prior metadata-only Development family assessments; no Held-Out rows are present."
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/trl-7668/qualification.json",
+      "sha256": "f2187cb5d31a6aa5b1bfceb174e220eae5589de91e1ad1e1ce0b1ce95579a47c",
+      "use": "Exact prior source-task identity and qualification disposition metadata."
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/mlx-4778/qualification.json",
+      "sha256": "29eeb28838404a8052ab129b52b547651d65c5bd3e8ea45059e4728718fee7ee",
+      "use": "Exact prior source-task identity and qualification disposition metadata."
+    },
+    {
+      "git_revision": "e68f2785df91327832c31c4ba7a65faab51f135c",
+      "path": "docs/sprint-xiv-measurable-learning-report-20261029.md",
+      "sha256": "c3e7aaa25d94b3baf2342cca0fa64356e0246525390b3422abdea96147eb5448",
+      "use": "PR #149 Development task-family summaries for Transformers #49752, #49900, #50021, and #50044 only. Held-Out discussion, identifiers, and artifacts are outside review scope."
+    }
+  ],
+  "local_frozen_inputs": {
+    "protocols/mlsys_fresh_development_candidate_discovery_v4.json": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+    "protocols/mlsys_fresh_development_candidate_selection_v1.json": "19254086ccd3093ed5a85518f4d49088fa9323b171e8ed190e0dd13f5d37ae10",
+    "protocols/mlsys_fresh_development_candidate_selection_v1_addendum_1.json": "5b0f968fa609bbb971ef3e504697ddc15b92cf0d362109090e1d194bf43453b1",
+    "protocols/mlsys_fresh_development_candidate_selection_v1_addendum_2.json": "5e5459b10018a3c0ca7227560f4138ad160c33bc9bc826e628c671bdce6e9b15",
+    "protocols/mlsys_fresh_development_candidate_selection_v2.json": "e728ebc6dd5fddf930b3d11bab093eab1b601fb3fa596cfbbb55e001dae28359",
+    "protocols/mlsys_fresh_development_candidate_selection_v2_addendum_1.json": "bc185d74541c2b6ed6c72cbf5e92bb56155dd7a9a2db708f4bf729e1a2bf1298",
+    "protocols/mlsys_fresh_development_candidate_selection_v2_addendum_2.json": "e489d47309971ff3ec4725ca326b7de8eb17cd36bd830980cecfc71fe0a6bb7a",
+    "protocols/mlsys_fresh_development_task_family_overlap_v3.json": "a0e52e43c08228057e397023027a53be214f6889955cef80eefb93ab083ada42",
+    "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json": "8c2fd7e519723e27f8b2b5274d03c340d32c5e552191869ddc23f63f46bd0370",
+    "results/mlsys-fresh-development-candidate-discovery-v4/evidence-manifest.json": "39d4ad0957aba7a9360fb5f60cc81bb74788cfe858ce5fac473e98158d91b853",
+    "results/mlsys-fresh-development-candidate-discovery-v4/screen.json": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "results/mlsys-fresh-development-candidate-selection-v1/evidence-manifest.json": "7dcc5cc4f0f82ccd5c4eb5eb9d61154ecf0b20d8aec511c250b49b971f30aa88",
+    "results/mlsys-fresh-development-candidate-selection-v1/selection.json": "2ba539e52536e37ef47cd3df41171ab6ce1a5368c07ecee0022835e3e1e4cc3d",
+    "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-evidence-manifest.json": "5b2c1959cc6825d7c561493efc14115757215c22034af14746ee69d5a5c15017",
+    "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-report.md": "848dffdbdba04b00390763a8772bc5a0b8f4cd45141bc421a7318456d9547377",
+    "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-review-v1.json": "6a2f6bcff7bf58a2d02d0a1f83c23e43fd3f2a5449d683dbbfc495de97df9bb0",
+    "results/mlsys-fresh-development-candidate-selection-v2/evidence-manifest.json": "ccdb0eab0a16feb2ac524547913af1c3e8487827423f40f719dab04293763f07",
+    "results/mlsys-fresh-development-candidate-selection-v2/selection.json": "fdf5c2977f8eba36bc31b72057c2eca66923ec2dd1a77a396f30377dcaee5bd8",
+    "scripts/select_mlsys_fresh_development_candidate_v2.py": "fdcd9e7e7013af4c072d91bb0bde3905d77d96e102bdcade90880213430e859b",
+    "tests/test_select_mlsys_fresh_development_candidate_v2.py": "a497d1ecdb94f72e4e2cdd48dd7863b4298bef822cda7a535e7fd3a869df434f"
+  },
+  "output_path": "results/mlsys-fresh-development-candidate-selection-v2/task-family-overlap-review-v1.json",
+  "prohibited_actions": [
+    "Fetching or opening candidate PR body, comments, patch, source, tests, or grader assets.",
+    "Running candidate or upstream baseline/fixed tests.",
+    "Model or agent inference, training, or optimizer updates.",
+    "Held-Out inspection or access.",
+    "Changing historical exposure ledgers or claiming pretraining independence."
+  ],
+  "protocol_id": "mlsys-fresh-development-task-family-overlap-v4",
+  "protocol_status": "frozen_before_candidate_family_comparison; metadata_only",
+  "purpose": "Assess whether the deterministically selected vLLM Anthropic request tool-type validation task is technically independent of VARE previous Development/Train families before any source/test qualification.",
+  "report_requirements": [
+    "Record one row per relevant prior Development/Train family and the selected candidate.",
+    "Cite frozen input path and hash for every prior-family statement.",
+    "State whether metadata supports proceeding to a separate source/test qualification protocol; do not assign a split.",
+    "Do not report or expose Held-Out identifiers or metadata."
+  ],
+  "schema_version": 1,
+  "selection_v1_overlap_context": {
+    "candidate": "vllm-project/vllm#64675",
+    "classification": "POSSIBLE_FAMILY_OVERLAP",
+    "review_path": "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-review-v1.json",
+    "review_sha256": "6a2f6bcff7bf58a2d02d0a1f83c23e43fd3f2a5449d683dbbfc495de97df9bb0",
+    "use": "Process context only; #64675 remains unqualified/unassigned and is not a prior exposed Development/Train family."
+  },
+  "source_main_commit": "416f35c465712898e8e5764a8e43193ef86e7afb",
+  "work_branch_pre_review_commit": "170cbc30bb41c591b7d702efda2a5dd6e0ee04ad"
+}
