@@ -500,11 +500,12 @@ def test_vertical_slice_task_list_accepts_only_admitted_train_tasks(tmp_path):
         s.train_tasks()
 
 
-def test_smoke_v2_protocol_is_exact_ratio_train_only():
+@pytest.mark.parametrize("name", ["grpo_vertical_slice_smoke_v2.json", "grpo_vertical_slice_smoke_v3.json"])
+def test_smoke_protocols_are_exact_ratio_train_only(name):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1]
-    proto = json.loads((root / "protocols/grpo_vertical_slice_smoke_v2.json").read_text())
+    proto = json.loads((root / "protocols" / name).read_text())
     assert proto["sampling"]["top_p"] == proto["args"]["top_p"] == 1.0
     G.check_exact_ratio_sampling(temperature=proto["args"]["temperature"], top_p=proto["args"]["top_p"])
     train = {json.loads(x)["instance_id"]: json.loads(x)
@@ -518,3 +519,90 @@ def test_smoke_v2_protocol_is_exact_ratio_train_only():
         assert iid in admitted and train[iid]["split"] == "train"
         assert iid not in {t["instance_id"] for t in heldout}
         assert train[iid]["upstream_repo"] not in {t["upstream_repo"] for t in heldout}
+
+
+@needs_mlx
+def test_after_sample_hook_does_not_change_gradient_and_runs_per_microbatch():
+    import numpy as np
+
+    m = _bigram(6)
+    samples = _samples_with_lp(m, [S("a", 0, [3, 4], 1, prompt=[0, 1]), S("a", 1, [2], 0, prompt=[0, 1]),
+                                   S("a", 2, [5, 5, 3], 0, prompt=[0, 1])])
+    adv, _ = G.group_advantages([s.reward for s in samples])
+    work = list(zip(samples, adv))
+    calls = []
+    plain, d0 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6)
+    hooked, d1 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6, after_sample=lambda: calls.append(1))
+    assert len(calls) == len(work) and d0 == d1
+    assert np.array_equal(np.asarray(plain["table"]["weight"]), np.asarray(hooked["table"]["weight"]))
+
+
+@needs_mlx
+def test_after_sample_stop_aborts_step_before_any_update():
+    import mlx.optimizers as optim
+
+    m = _bigram(6)
+    samples = _samples_with_lp(m, [S("a", 0, [3, 4], 1, prompt=[0, 1]), S("a", 1, [2], 0, prompt=[0, 1])])
+    before = G.trainable_digest(m)
+    opt = optim.Adam(learning_rate=0.1)
+
+    def stop():
+        raise RuntimeError("stop rule")
+
+    with pytest.raises(RuntimeError, match="stop rule"):
+        G.train_step(m, opt, samples, G.GRPOConfig(group_size=2), policy_checkpoint_id="c0", policy_step=0,
+                     after_sample=stop)
+    assert G.trainable_digest(m) == before
+
+
+def test_vertical_slice_swap_fraction_reads_macos_swapusage(monkeypatch):
+    vs = _load_vertical_slice()
+
+    class R:
+        stdout = "total = 8192.00M  used = 6963.20M  free = 1228.80M  (encrypted)\n"
+
+    monkeypatch.setattr(vs.platform, "system", lambda: "Darwin")
+    monkeypatch.setattr(vs.subprocess, "run", lambda *a, **k: R())
+    assert vs.swap_fraction() == pytest.approx(0.85)
+
+
+def test_vertical_slice_guard_applies_swap_stop_rule(tmp_path, monkeypatch):
+    vs = _load_vertical_slice()
+    s = vs.Slice(vs.parse(["--run-dir", str(tmp_path / "run"), "--cache", str(tmp_path / "cache"),
+                           "--max-swap-fraction", "0.97"]))
+    monkeypatch.setattr(vs, "swap_fraction", lambda: 0.5)
+    s.guard()
+    monkeypatch.setattr(vs, "swap_fraction", lambda: 0.97)
+    with pytest.raises(vs.ResourceStop):
+        s.guard()
+
+
+@needs_mlx
+def test_vertical_slice_start_gate_refuses_to_load_model_when_swap_is_high(tmp_path, monkeypatch):
+    import json
+
+    vs = _load_vertical_slice()
+    s = vs.Slice(vs.parse(["--run-dir", str(tmp_path / "run"), "--cache", str(tmp_path / "cache"),
+                           "--start-max-swap-fraction", "0.85"]))
+    monkeypatch.setattr(vs, "swap_fraction", lambda: 0.85)
+
+    def must_not_run(*a, **k):
+        raise AssertionError("model work started despite the start gate")
+
+    monkeypatch.setattr(vs.Slice, "train_tasks", must_not_run)
+    monkeypatch.setattr(vs.Slice, "load", must_not_run)
+    s.main()
+    stopped = json.loads((tmp_path / "run" / "STOPPED.json").read_text())
+    assert stopped["reason"] == "start_swap_at_or_above_limit" and stopped["started"] is False
+
+
+def test_smoke_v3_is_matched_to_v2_and_memory_bounded():
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    v2 = json.loads((root / "protocols/grpo_vertical_slice_smoke_v2.json").read_text())
+    v3 = json.loads((root / "protocols/grpo_vertical_slice_smoke_v3.json").read_text())
+    assert v3["experiment_id"] != v2["experiment_id"]
+    assert v3["tasks"] == v2["tasks"] and v3["args"] == v2["args"]
+    assert v3["memory_bounds"]["start_max_swap_fraction"] == 0.85
+    assert "--start-max-swap-fraction 0.85" in v3["command"] and "--clear-cache" in v3["command"]

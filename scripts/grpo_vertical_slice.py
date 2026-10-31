@@ -29,6 +29,8 @@ import hashlib
 import json
 from pathlib import Path
 import platform
+import re
+import resource
 import subprocess
 import sys
 import time
@@ -56,6 +58,26 @@ def append(path: Path, row: dict[str, Any]) -> None:
         fh.write(json.dumps(row, sort_keys=True, default=str) + "\n")
 
 
+class ResourceStop(RuntimeError):
+    """A frozen resource stop rule fired; the run stops before the next unit of work."""
+
+
+def swap_fraction() -> float | None:
+    """Used / total swap (macOS ``vm.swapusage``; Linux /proc/meminfo), or None if unknown."""
+    if platform.system() == "Darwin":
+        out = subprocess.run(["sysctl", "-n", "vm.swapusage"], capture_output=True, text=True).stdout
+        m = re.search(r"total = ([\d.]+)M\s+used = ([\d.]+)M", out)
+        return float(m.group(2)) / float(m.group(1)) if m and float(m.group(1)) > 0 else None
+    info = dict(line.split(":", 1) for line in Path("/proc/meminfo").read_text().splitlines())
+    total = int(info["SwapTotal"].split()[0])
+    return (total - int(info["SwapFree"].split()[0])) / total if total else None
+
+
+def peak_rss_gib() -> float:
+    rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss  # bytes on macOS, KiB on Linux
+    return round(rss / GiB if platform.system() == "Darwin" else rss * 1024 / GiB, 3)
+
+
 def telemetry() -> dict[str, Any]:
     import mlx.core as mx
 
@@ -63,7 +85,8 @@ def telemetry() -> dict[str, Any]:
     out = {"time": round(time.time(), 3), "mlx_active_gib": round(mx.get_active_memory() / GiB, 3),
            "mlx_peak_gib": round(mx.get_peak_memory() / GiB, 3),
            "available_gib": round(snap["available"] / GiB, 2) if snap.get("available") else None,
-           "swap_used_gib": round(snap["swap_used"] / GiB, 3) if snap.get("swap_used") is not None else None}
+           "swap_used_gib": round(snap["swap_used"] / GiB, 3) if snap.get("swap_used") is not None else None,
+           "swap_fraction": swap_fraction(), "peak_rss_gib": peak_rss_gib()}
     if platform.system() == "Darwin":
         mp = subprocess.run(["memory_pressure", "-Q"], capture_output=True, text=True).stdout
         out["memory_free_pct"] = next((ln.split(":")[-1].strip() for ln in mp.splitlines() if "percentage" in ln), None)
@@ -125,6 +148,16 @@ class Slice:
         self.cfg = grpo_mlx.GRPOConfig(clip_eps_low=a.clip, clip_eps_high=a.clip, normalize_std=True,
                                        temperature=a.temperature, max_policy_lag=0, max_grad_norm=1.0,
                                        group_size=a.group_size)
+
+    def guard(self):
+        """Between units of work (one rollout, one microbatch): optionally release
+        MLX's buffer cache, then apply the frozen swap stop rule."""
+        if self.a.clear_cache:
+            import mlx.core as mx
+            mx.clear_cache()
+        frac = swap_fraction()
+        if self.a.max_swap_fraction is not None and frac is not None and frac >= self.a.max_swap_fraction:
+            raise ResourceStop(f"swap_fraction {frac:.4f} >= {self.a.max_swap_fraction}")
 
     def note(self, event, **info):
         row = {"event": event, **info, **telemetry()}
@@ -202,6 +235,7 @@ class Slice:
                                     prompt_ids=g["prompt_ids"], completion_ids=g["completion_ids"],
                                     reward=float(rec["reward"]), verifier=VERIFIER, sample_index=k)
                 out.append((s, g))
+                self.guard()
                 append(self.samples_log, {
                     "stage": stage, "step": step, "group_id": f"{ck}|{t['instance_id']}",
                     "behavior_checkpoint_id": ck, "instance_id": t["instance_id"], "task_group": t["upstream_repo"],
@@ -235,7 +269,6 @@ class Slice:
     # ---------------------------------------------------------------- run
     def main(self):
         import mlx.core as mx
-        import mlx.optimizers as optim
 
         a = self.a
         meta = {"schema": "vare.grpo_vertical_slice.run/v1", "evidence_level": "real RL parameter updates (Train only)",
@@ -254,7 +287,28 @@ class Slice:
                                      if a.task_list else None)}
         jdump(self.run / "run_meta.json", meta)
         t_all = time.time()
-        self.note("start", memory=memory_snapshot())
+        start_swap = swap_fraction()
+        self.note("start", memory=memory_snapshot(), start_swap_fraction=start_swap)
+        if (a.start_max_swap_fraction is not None and start_swap is not None
+                and start_swap >= a.start_max_swap_fraction):
+            jdump(self.run / "STOPPED.json", {"reason": "start_swap_at_or_above_limit", "swap_fraction": start_swap,
+                                              "limit": a.start_max_swap_fraction, "started": False})
+            self.note("not_started", swap_fraction=start_swap)
+            return
+        if a.mlx_cache_limit_gib is not None:
+            mx.set_cache_limit(int(a.mlx_cache_limit_gib * GiB))
+        try:
+            self._run(t_all)
+        except ResourceStop as stop:
+            jdump(self.run / "STOPPED.json", {"reason": "resource_stop_rule", "detail": str(stop), "started": True})
+            self.note("stopped", detail=str(stop))
+            raise SystemExit(3)
+
+    def _run(self, t_all):
+        import mlx.core as mx
+        import mlx.optimizers as optim
+
+        a = self.a
         tasks = self.train_tasks()
         jdump(self.run / "train_tasks.json", [{k: t[k] for k in ("instance_id", "upstream_repo", "split",
                                                                     "target_file", "patch_sha256")} for t in tasks])
@@ -268,6 +322,8 @@ class Slice:
         survey = self.group_stats([s for s, _ in pairs])
         survey["seconds"] = round(time.time() - t0, 1)
         survey["generations"] = len(pairs)
+        gen_tokens, gen_s_total = sum(len(g["completion_ids"]) for _, g in pairs), sum(g["seconds"] for _, g in pairs)
+        survey["generation_tokens_per_s"] = round(gen_tokens / gen_s_total, 2) if gen_s_total else None
         jdump(self.run / "survey.json", survey)
         self.note("survey", **{k: v for k, v in survey.items() if k != "per_task_pass"})
         informative = [t for t in tasks if t["instance_id"] in survey["mixed_tasks"]]
@@ -286,15 +342,25 @@ class Slice:
                 gen_s = time.time() - t_step
             samples = [s for s, _ in cur]
             t_lp = time.time()
+            if a.clear_cache:
+                mx.clear_cache()
             mx.reset_peak_memory()
+            swap_before = telemetry()["swap_used_gib"]
             with grad_checkpointing(model.layers[0]):  # behavior pass on the exact update path
-                grpo_mlx.compute_behavior_logprobs(model, grpo_mlx.informative_samples(samples, self.cfg), self.cfg)
+                grpo_mlx.compute_behavior_logprobs(model, grpo_mlx.informative_samples(samples, self.cfg), self.cfg,
+                                                   after_sample=self.guard)
                 lp_s = time.time() - t_lp
                 mismatch = sampler_forward_mismatch(model, [p for p in cur if p[0].behavior_logprobs][:2])
                 t_upd = time.time()
-                rec = grpo_mlx.train_step(model, opt, samples, self.cfg, policy_checkpoint_id=ck, policy_step=step)
+                rec = grpo_mlx.train_step(model, opt, samples, self.cfg, policy_checkpoint_id=ck, policy_step=step,
+                                          after_sample=self.guard)
                 upd_s = time.time() - t_upd
             rec["update_peak_gib"] = round(mx.get_peak_memory() / GiB, 3)
+            tel = telemetry()
+            rec["memory"] = {"peak_rss_gib": tel["peak_rss_gib"], "swap_used_gib_before_update": swap_before,
+                             "swap_used_gib_after_update": tel["swap_used_gib"], "swap_fraction": tel["swap_fraction"]}
+            if a.clear_cache:
+                mx.clear_cache()
             rec.update(step_stats=self.group_stats(samples), seconds={
                 "generate_and_grade": round(gen_s, 1), "behavior_logprobs": round(lp_s, 1),
                 "update": round(upd_s, 1), "total": round(time.time() - t_step, 1)},
@@ -400,6 +466,14 @@ def parse(argv=None):
     p.add_argument("--top-p", type=float, default=grpo_mlx.EXACT_RATIO_TOP_P,
                    help="must be 1.0: the exact-ratio objective models the untruncated softmax(logits / T)")
     p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--mlx-cache-limit-gib", type=float, default=None,
+                   help="mx.set_cache_limit for the run (default: MLX's own limit)")
+    p.add_argument("--clear-cache", action="store_true",
+                   help="mx.clear_cache() after every rollout and microbatch and between phases")
+    p.add_argument("--max-swap-fraction", type=float, default=None,
+                   help="stop rule: stop before the next rollout/microbatch once swap used/total reaches this")
+    p.add_argument("--start-max-swap-fraction", type=float, default=None,
+                   help="start gate: do not load the model if swap used/total is already at or above this")
     return p.parse_args(argv)
 
 

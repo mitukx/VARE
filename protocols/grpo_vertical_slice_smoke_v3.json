@@ -1,0 +1,146 @@
+{
+ "args": {
+  "clip": 0.2,
+  "group_size": 4,
+  "groups_per_step": 2,
+  "lr": 1e-05,
+  "seed": 20261104,
+  "steps": 3,
+  "temperature": 0.7,
+  "top_p": 1.0
+ },
+ "command": "python scripts/grpo_vertical_slice.py --run-dir ~/grpo-runs/smoke-003 --cache <cache> --task-list protocols/grpo_vertical_slice_smoke_v3.json --group-size 4 --steps 3 --groups-per-step 2 --lr 1e-05 --clip 0.2 --temperature 0.7 --top-p 1.0 --seed 20261104 --mlx-cache-limit-gib 1.0 --clear-cache --max-swap-fraction 0.97 --start-max-swap-fraction 0.85",
+ "derived_from": {
+  "protocol": "protocols/grpo_vertical_slice_smoke_v2.json",
+  "sha256": "609010224b46c7ed2cd8e1c6c736624d891dbc101736dda859a8cffe98615531",
+  "unchanged": "tasks, group size, steps, groups per step, lr, clip, temperature, top_p, seed and max_tokens (matched comparison; seed reuse is deliberate)"
+ },
+ "experiment_id": "grpo-vertical-slice-smoke-003",
+ "heldout_repos_excluded": [
+  "borntyping/python-colorlog",
+  "msiemens/tinydb",
+  "python-hyper/h11"
+ ],
+ "label": "exploratory / diagnostic; Train tasks only; no held-out data; no capability claim",
+ "memory_bounds": {
+  "clear_cache": true,
+  "grad_checkpointing": true,
+  "max_swap_fraction": 0.97,
+  "max_tokens_unchanged": 512,
+  "mlx_cache_limit_gib": 1.0,
+  "start_max_swap_fraction": 0.85
+ },
+ "question": "With bounded MLX memory, does the exact-ratio (top_p = 1.0) GRPO path complete end to end on Qwen3-4B, and how do peak MLX memory, peak RSS, swap growth, tokens/s and s per update step compare with smoke-002 on the same tasks and G?",
+ "sampling": {
+  "max_tokens": "base protocol budgets.inference.max_tokens",
+  "min_p": 0.0,
+  "ratio": "exact (untruncated softmax(logits / T); docs/grpo-exact-ratio-sampling-decision-v1.md)",
+  "temperature": 0.7,
+  "top_k": 0,
+  "top_p": 1.0
+ },
+ "schema": "vare.grpo_vertical_slice.smoke_protocol/v3",
+ "source_sha256": {
+  "scripts/grpo_vertical_slice.py": "8f03fd53c6a3a3942097a4b1ad5b8b14bcdbab8677d86a7e0c02f3972ab4dd16",
+  "src/vare/learning_pipeline/grpo_mlx.py": "168325bca87cbd1ea58e10e762b226ee90006f6e9c93a6a378d8a8e4fcdcbcc6",
+  "src/vare/learning_pipeline/scoring.py": "9480c1a635688846f7aa1d58fea365b037e510c44e60115c5766f32f5572c663"
+ },
+ "start_condition": "measure available memory and swap at start; do not start if swap used/total >= 0.85 (report instead); never stop other processes",
+ "stop_rules": {
+  "action": "in-process swap rule stops before the next rollout or microbatch (no partial update); operator stops only this run's process; partial results reported",
+  "free_disk_gib_min": 8,
+  "memory_free_pct_min": 15,
+  "swap_used_fraction_max": 0.97,
+  "wall_clock_s": 5100
+ },
+ "supersedes_nothing": "smoke-001 and the partial smoke-002 are kept unchanged; v2 is consumed and not rerun",
+ "task_details": [
+  {
+   "instance_id": "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58",
+   "order_key": "33bd7e4e3e55287acabbbd7021496855c63197e5d69e1985afa35ca1ff1bcd73",
+   "pooled_k": 16,
+   "pooled_n": 20,
+   "upstream_repo": "luozhouyang/python-string-similarity"
+  },
+  {
+   "instance_id": "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc",
+   "order_key": "432f352a01a7cc2319a16b6674d75a9a59993452ac6984cd8f7242014510e672",
+   "pooled_k": 3,
+   "pooled_n": 8,
+   "upstream_repo": "luozhouyang/python-string-similarity"
+  },
+  {
+   "instance_id": "Suor__funcy.207a7810.func_basic__yz32me5q",
+   "order_key": "46e58308c29c602436633805d61eb462b271cf800708e3df9afcd4e8baddc172",
+   "pooled_k": 1,
+   "pooled_n": 8,
+   "upstream_repo": "Suor/funcy"
+  },
+  {
+   "instance_id": "andialbrecht__sqlparse.e57923b3.func_basic__5btoqors",
+   "order_key": "493dda66a2eb6b16e23a4c842dfb5a748c43e2b7f21c538eb808a263fb810193",
+   "pooled_k": 7,
+   "pooled_n": 20,
+   "upstream_repo": "andialbrecht/sqlparse"
+  },
+  {
+   "instance_id": "Suor__funcy.207a7810.func_pm_remove_cond__13okbtff",
+   "order_key": "81ff6e989b6fdec517c4a8edecb48cf2f1cbee1589fa1701a95aca7ed81f6255",
+   "pooled_k": 16,
+   "pooled_n": 20,
+   "upstream_repo": "Suor/funcy"
+  },
+  {
+   "instance_id": "Suor__funcy.207a7810.func_basic__395qum1a",
+   "order_key": "adca9295af41c7e2ec7401d84355b28cdb0d10e4603c99220207780965f392ba",
+   "pooled_k": 5,
+   "pooled_n": 20,
+   "upstream_repo": "Suor/funcy"
+  },
+  {
+   "instance_id": "luozhouyang__python-string-similarity.115acaac.func_pm_ctrl_shuffle__jhaaq9av",
+   "order_key": "c68b349d236f9bce4eb8b920ef5c15e6f0d9acafa67dd9c528d8db857b557fad",
+   "pooled_k": 7,
+   "pooled_n": 8,
+   "upstream_repo": "luozhouyang/python-string-similarity"
+  },
+  {
+   "instance_id": "andialbrecht__sqlparse.e57923b3.func_basic__udemjzpx",
+   "order_key": "e48fd7966ae41c45b52c07c774ff4ff5e866131419f1e4f0a9aa3f3521534362",
+   "pooled_k": 14,
+   "pooled_n": 20,
+   "upstream_repo": "andialbrecht/sqlparse"
+  }
+ ],
+ "tasks": [
+  "luozhouyang__python-string-similarity.115acaac.combine_file__jzax0e58",
+  "luozhouyang__python-string-similarity.115acaac.func_basic__rmgx8uxc",
+  "Suor__funcy.207a7810.func_basic__yz32me5q",
+  "andialbrecht__sqlparse.e57923b3.func_basic__5btoqors",
+  "Suor__funcy.207a7810.func_pm_remove_cond__13okbtff",
+  "Suor__funcy.207a7810.func_basic__395qum1a",
+  "luozhouyang__python-string-similarity.115acaac.func_pm_ctrl_shuffle__jhaaq9av",
+  "andialbrecht__sqlparse.e57923b3.func_basic__udemjzpx"
+ ],
+ "train_repos": [
+  "Suor/funcy",
+  "andialbrecht/sqlparse",
+  "luozhouyang/python-string-similarity"
+ ],
+ "verifier": "v1 native grader via scoring.score_candidate; rewards provisional pending trusted-grader requalification (directive D1)",
+ "verify": [
+  "policy-generated completions",
+  "rewards per sample",
+  "behavior checkpoint id per group",
+  "params changed after each update",
+  "loss / approx_kl / max_abs_log_ratio per step",
+  "checkpoint digest equal after reload",
+  "post-update generation and grading",
+  "MLX peak memory and swap",
+  "peak RSS",
+  "swap growth",
+  "generation tokens/s",
+  "s per update step",
+  "before/after table vs smoke-002"
+ ]
+}

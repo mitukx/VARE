@@ -51,7 +51,7 @@ import math
 import os
 from pathlib import Path
 import shutil
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Callable, Iterable, Mapping, Sequence
 
 SCHEMA = "vare.learning_pipeline.grpo_step/v1"
 CHECKPOINT_SCHEMA = "vare.learning_pipeline.grpo_checkpoint/v1"
@@ -288,7 +288,8 @@ def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -
 
 
 def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig | None = None, *,
-                              temperature: float | None = None, pad_id: int = 0) -> None:
+                              temperature: float | None = None, pad_id: int = 0,
+                              after_sample: Callable[[], None] | None = None) -> None:
     """Fill ``behavior_logprobs`` with the current (behavior) parameters using
     the exact traced computation that ``policy_gradient`` differentiates, so a
     lag-0 ratio is exactly 1. Call before any update that uses these samples,
@@ -310,6 +311,8 @@ def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig 
         mx.eval(lp, g)
         del g
         s.behavior_logprobs = [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
+        if after_sample is not None:
+            after_sample()
 
 
 # ------------------------------------------------------------------ update
@@ -339,9 +342,13 @@ def _value_and_grad(model, cfg: GRPOConfig, *, n_tokens: int):
 
 
 def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig, *, n_tokens: int,
-                    pad_id: int = 0) -> tuple[Any, dict[str, float]]:
+                    pad_id: int = 0, after_sample: Callable[[], None] | None = None) -> tuple[Any, dict[str, float]]:
     """Gradient of the step loss w.r.t. trainable parameters, accumulated one
-    sample at a time; equals the gradient of the full-batch token-mean loss."""
+    sample at a time; equals the gradient of the full-batch token-mean loss.
+
+    ``after_sample`` (optional) runs after each microbatch is evaluated, e.g. to
+    release MLX's buffer cache or check a resource limit; it cannot change the
+    gradient, and an exception from it aborts the step before any update."""
     import mlx.core as mx
     from mlx.utils import tree_map
 
@@ -362,6 +369,8 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
         kl_sum += float(st["kl_sum"])
         ratio_max = max(ratio_max, float(st["ratio_max"]))
         max_lr = max(max_lr, float(st["max_abs_log_ratio"]))
+        if after_sample is not None:
+            after_sample()
     diag = {"loss": loss_total, "clip_fraction": clipped / n_tokens, "ratio_mean": ratio_sum / n_tokens,
             "ratio_max": ratio_max, "approx_kl": kl_sum / n_tokens,
             "max_abs_log_ratio": max_lr}
@@ -369,7 +378,7 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
 
 
 def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, policy_checkpoint_id: str,
-               policy_step: int, pad_id: int = 0) -> dict[str, Any]:
+               policy_step: int, pad_id: int = 0, after_sample: Callable[[], None] | None = None) -> dict[str, Any]:
     """One GRPO update on whole groups. Returns a JSON-serializable record."""
     import mlx.core as mx
     import mlx.optimizers as optim
@@ -401,7 +410,7 @@ def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, 
         record.update(update_applied=False, reason="no_informative_group")
         return record
 
-    grads, diag = policy_gradient(model, work, cfg, n_tokens=n_tokens, pad_id=pad_id)
+    grads, diag = policy_gradient(model, work, cfg, n_tokens=n_tokens, pad_id=pad_id, after_sample=after_sample)
     grad_norm = None
     if cfg.max_grad_norm is not None:
         grads, gn = optim.clip_grad_norm(grads, cfg.max_grad_norm)
