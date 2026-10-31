@@ -7,7 +7,7 @@
 - PR #160 is open at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`; its exact-head CI and CPU evidence pass, while GitHub reports merge state `BLOCKED` and no review is recorded.
 - PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`; its exact-head checks pass, and no review is recorded.
 - PR #162 is open and ready for review at `a1bc5dc255e38ad1741f58399504fdaf357eae1a`, based on `codex/freshdev-selection-v3-oct31`. All required exact-head checks pass: Python 3.11/3.12/3.13, lint, typecheck, blob budget, Math500 grader, seeded-summary CPU, RVL inference CPU, and calibrated CPU. No reviews are recorded.
-- PR #163 is open as a draft on child branch `codex/vllm64830-development-attempt-v1`, based on PR #162 head branch `codex/freshdev-qualification-vllm64830-oct31`. The first exact-head CI run found the 1.48 MB uncompressed runtime-file manifest exceeded the 1 MiB blob threshold. The manifest is deterministically compressed to 105,574 bytes with the original uncompressed SHA preserved in commit `7becbff0`. The local blob-budget check passes; fresh exact-head CI is pending. PR #162 remains unchanged.
+- PR #163 is open as a draft on child branch `codex/vllm64830-development-attempt-v1`, based on PR #162 head branch `codex/freshdev-qualification-vllm64830-oct31`. The first exact-head CI run found the 1.48 MB uncompressed runtime-file manifest exceeded the 1 MiB blob threshold. The manifest is deterministically compressed to 105,574 bytes with the original uncompressed SHA preserved in commit `7becbff0`. The local blob-budget check passes; fresh exact-head CI is pending. Review also moved grader scratch output outside `/Users/user` to satisfy the candidate worker read-deny profile, with an explicit durable-copy step. PR #162 remains unchanged.
 
 ## Completed in this checkpoint
 
@@ -15,7 +15,7 @@
 - Calibrated the independent grader on the baseline (target failure), upstream fixed method (pass), and wrong mutant (target failure). Focused local checks pass **7/7**; Ruff and `py_compile` pass. A partial repair is classified as `TARGET_GATE_FAILED`, while worker/runtime errors remain grader errors.
 - Tightened the model Seatbelt profile to deny network access, prior qualification/calibration receipts, hidden tests, and user prompt attachments. The isolation probe confirms the task prompt, allowed source, and model tokenizer remain readable while denied inputs return `PermissionError`.
 - The MLX/Metal smoke passes with MLX 0.32.4 and mlx-lm 0.32.2. No model weights were loaded.
-- Froze one Development assignment protocol at SHA-256 `5d54c9f5853bdc11a8cfd5549903348bff4e28d05f1de7832b394512394ad881`. All 24 declared local frozen inputs pass static hash checks; the protocol records the exact preflight, attempt, and grader commands. Launch preflight has **not** run yet.
+- Froze one Development assignment protocol at SHA-256 `27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9`. All 24 declared local frozen inputs pass static hash checks; the protocol records the exact preflight, attempt, and grader commands. Launch preflight has **not** run yet.
 - The vLLM candidate workspace remains clean at baseline `17550580e932f15e772185847382d3ae4211f5ec` with source SHA-256 `e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738`.
 
 ## Capability and research status

@@ -34,7 +34,7 @@ python -m ruff check scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run
 python -m py_compile scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py tests/test_mlsys_vllm_64830_agent_grader_v1.py
 ```
 
-The exact launch-preflight, one-shot attempt, and independent-grader argv are frozen in `protocol.json`. Run preflight only after the protocol is remotely present. If preflight is `NO_GO`, record `NOT RUN` and do not load weights. If it passes, push its receipt and the prospective exposure append before invoking the single frozen attempt command. Commit and push the attempt record and candidate diff before invoking the grader exactly once.
+The exact launch-preflight, one-shot attempt, and independent-grader argv are frozen in `protocol.json`. Run preflight only after the protocol is remotely present. If preflight is `NO_GO`, record `NOT RUN` and do not load weights. If it passes, push its receipt and the prospective exposure append before invoking the single frozen attempt command. Commit and push the attempt record and candidate diff before invoking the grader exactly once. The grader writes scratch output under `/private/tmp` so the worker policy can read its extracted candidate method; copy that complete receipt directory into `attempt-001/independent-grade-v1/` only after grading completes.
 
 ## Engineering and research claims
 
