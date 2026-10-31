@@ -1,10 +1,23 @@
 # Coding-policy learning v1: Qwen3-4B 4bit LoRA on MLX (one Apple-silicon Mac)
 
-Status: **protocol frozen, no real run yet.** Every number below that comes
-from a run is from the Linux box with a mock policy or a tiny random model.
-Those numbers are labeled *synthetic* and say nothing about any real policy.
-The evidence level is E0/E1: the harness and the real-task graders are
-checked. There is no E4 claim.
+Status: **protocol frozen; run-001 executed, no detectable change.** One real
+run (one seed) on the Mac is recorded in
+[`results/learning-pipeline-v1/run-001/`](../results/learning-pipeline-v1/run-001/RESULTS.md).
+Held-out trusted pass (n = 42): no_update 15, sft_reference 14, rft_self 20.
+Neither arm met the preregistered criterion (exact McNemar, Holm-adjusted:
+sft_reference p = 1.0, rft_self p = 0.125). This is a negative / inconclusive
+result, not evidence of improvement, and there is no E4 claim.
+
+Follow-up records on the same run, all offline:
+
+- [Independent re-analysis](../results/learning-pipeline-v1/run-001/independent-reanalysis/README.md): every reported number re-derived from the raw graded logs, 0 mismatches.
+- [Offline G1/G3 verifier-error pilot](../results/learning-pipeline-v1/run-001/offline-pilot-g1g3/RESULTS.md): aborted, verdict `inconclusive` (negative result).
+- [Offline hypothesis A](../results/learning-pipeline-v1/run-001/offline-hypothesis-a/RESULTS.md): `not_supported` (exploratory, not blind).
+- [Grader isolation audit](../results/learning-pipeline-v1/grader-isolation-audit/README.md) and [docs](learning-pipeline-grader-isolation.md): the v1 grader can be made to report false passes; none of the run-001 applied edits match the blocking patterns.
+
+Numbers in the "Box checks" material below still come from the Linux box
+with a mock policy or a tiny random model. They are labeled *synthetic* and
+say nothing about any real policy.
 
 ## Question
 
@@ -202,5 +215,6 @@ python scripts/learning_pipeline_v1.py run-all            # resumable; re-run th
 ```
 
 Outputs go to `artifacts/learning_pipeline_v1/run-001/`, which is
-git-ignored. The cache is `~/.cache/vare-learning-pipeline-v1/`. If a stop
+git-ignored. The committed record of the executed run-001 is in
+`results/learning-pipeline-v1/run-001/` (large files by sha256 only). The cache is `~/.cache/vare-learning-pipeline-v1/`. If a stop
 rule fires, its reason is in `STOPPED.json`.
