@@ -6,7 +6,7 @@
 - PR #150 is confirmed merged with its exact-head CI, CPU-evidence, and E2E checks passing. Its historical three regressions are closed.
 - PR #160 is open and ready for review at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`. This update fixes both newly posted automated-review findings. The targeted local suite passed **19 tests**; exact-head GitHub CI and CPU evidence are running. Normal review and branch protection remain required.
 - PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`, stacked on #160. It now merges the #160 review fix; exact-head CI and CPU evidence are running. No review or reviewer request is recorded.
-- Active branch: `codex/freshdev-qualification-vllm64830-oct31`, locally based on updated PR #161 at `78d6a0a3cfcd8a9865a688f93046d7b7aa298139`. The qualification checkpoint is to be pushed before running its candidate tests; PR #162 is not open yet.
+- Active branch: `codex/freshdev-qualification-vllm64830-oct31`; draft PR #162 is open and attached at `23f5ea877e2d133f163a1d8c31fc9112391e0d92`, based on PR #161. Exact-head CI is running. The frozen execution addendum is on the pushed branch.
 - Milestone: `p15-fresh-vllm-64830-source-qualification`.
 
 ## Completed in this checkpoint

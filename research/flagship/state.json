@@ -297,13 +297,13 @@
   ],
   "git_refs": {
     "active_branch": "codex/freshdev-qualification-vllm64830-oct31",
-    "active_pr_state": "none",
-    "active_pr_url": null,
+    "active_pr_state": "open",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/162",
     "last_integrated_pr_merge_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
     "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": null
+    "verified_pr_head_sha_before_checkpoint_changes": "23f5ea877e2d133f163a1d8c31fc9112391e0d92"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
@@ -1371,9 +1371,9 @@
     "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Launch preflight failed the estimated working-set-plus-headroom gate by 879,464,921 bytes; model weights were not loaded. Do not retry this frozen protocol.",
     "PR #160 exact head 71aa74ab6a8f6f1625505b68f7f332c49fabff93 contains fixes for both automated review findings; exact-head CI is running and normal review/branch-protection requirements remain outstanding.",
     "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 is a draft stacked on PR #160 and has CI rerunning after merging the #160 review fix; no reviews or reviewer requests are recorded.",
-    "PR #162 has not yet been opened; the #64830 qualification branch checkpoint must be pushed before candidate test execution.",
     "vLLM #64830 remains UNQUALIFIED and UNASSIGNED. Its frozen source test overlay is intentionally scoped to HiSparse and watermarking; modified custom-speculator behavior is excluded from this qualification claim.",
-    "The #64830 baseline, wrong-mutant, and upstream-fixed test arms have not run. The execution addendum must be present on the pushed branch before the baseline invocation."
+    "The #64830 baseline, wrong-mutant, and upstream-fixed test arms have not run. The execution addendum must be present on the pushed branch before the baseline invocation.",
+    "PR #162 is open as a draft at head 23f5ea877e2d133f163a1d8c31fc9112391e0d92, stacked on draft PR #161; its exact-head CI is running."
   ],
-  "updated_at": "2026-10-31T05:42:51Z"
+  "updated_at": "2026-10-31T05:44:14Z"
 }
