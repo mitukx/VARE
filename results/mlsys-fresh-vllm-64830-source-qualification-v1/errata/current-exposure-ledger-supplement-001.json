@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "supplement_id": "vllm-64830-current-exposure-ledger-supplement-001",
+  "recorded_at_utc": "2026-10-31T07:55:14Z",
+  "historical_snapshot": {
+    "commit": "18f829b40cb02b2edf71de6f69f2aafcff27ed6a",
+    "root_manifest_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/SHA256SUMS",
+    "root_manifest_sha256": "0a14a5fe7efe269b2668c1cd0574eeb3af17666bb2fe5ab873ebe19df1824261",
+    "exposure_record_sha256": "e966664a97f80bc5e90c57f5d94140415fdcf17301f0e17c120ee7a49cab857f",
+    "exposure_sidecar_sha256": "261b5205c4eca9fc9fdea7b298b86e2fd2c84ef023c4480c9c0015e29ad45f58",
+    "verification": "The original 58-file root manifest verified against the tracked files at this commit before the append-only Development preflight event was added."
+  },
+  "current_exposure_ledger": {
+    "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
+    "sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed",
+    "sidecar_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json.sha256",
+    "sidecar_sha256": "9d3b472aa441f7f248462b3a50961ac6e60b51668eea3f10dc2272e5c97d8fa0",
+    "appended_event_id": "vllm-64830-development-attempt-001-preflight-no-go",
+    "event_status": "Development assignment recorded; launch preflight NO_GO; no model exposure, prompt delivery, inference, candidate, or grade."
+  },
+  "manifest_interpretation": "The original result root SHA256SUMS remains unchanged and authenticates the pre-append snapshot above. It is expected not to match the two current exposure-ledger paths after their append-only update. The errata SHA256SUMS separately verifies the current exposure record, its current sidecar, and this supplement.",
+  "preservation": "No original attempt receipt, protocol, qualification report, or root manifest was rewritten. The prior exposure event remains available in Git at the historical snapshot commit."
+}

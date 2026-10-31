@@ -8,6 +8,7 @@ import json
 import os
 import signal
 import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -50,6 +51,35 @@ def process_tree_rss(root_pid: int) -> int:
         total += rows.get(pid, 0)
         pending.extend(children.get(pid, []))
     return total
+
+
+def wait_for_child(process: subprocess.Popen, *, block: bool = False):
+    """Reap a child with wait4 so its OS-reported high-water mark is retained."""
+    options = 0 if block else os.WNOHANG
+    while True:
+        try:
+            pid, status, usage = os.wait4(process.pid, options)
+            break
+        except InterruptedError:
+            continue
+    if pid == 0:
+        return None
+    process.returncode = os.waitstatus_to_exitcode(status)
+    return usage
+
+
+def wait4_max_rss_bytes(usage) -> int:
+    """Convert wait4's ru_maxrss to bytes (Darwin reports bytes; Linux KiB)."""
+    if sys.platform == "darwin":
+        return int(usage.ru_maxrss)
+    return int(usage.ru_maxrss) * 1024
+
+
+def kill_process_group(pid: int) -> None:
+    try:
+        os.killpg(pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
 
 
 def build_pytest_command(
@@ -191,13 +221,20 @@ def main() -> int:
         "input_sha256": actual,
         "runtime": runtime,
         "max_wall_seconds": MAX_SECONDS,
-        "max_process_tree_rss_bytes": MAX_RSS_BYTES,
+        "max_sampled_process_tree_rss_bytes": MAX_RSS_BYTES,
+        "max_os_wait4_child_rss_bytes": MAX_RSS_BYTES,
+        "rss_sample_interval_seconds": 0.5,
+        "os_wait4_rss_scope": (
+            "OS-reported high-water mark for the direct waited child; "
+            "not a complete concurrent process-tree high-water mark"
+        ),
     }
     marker.write_text(json.dumps(invocation, indent=2, sort_keys=True) + "\n")
 
     log_path = output_dir / "pytest.log"
     started = time.monotonic()
-    peak_rss = 0
+    sampled_process_tree_rss_max = 0
+    child_usage = None
     timed_out = False
     rss_exceeded = False
     process: subprocess.Popen | None = None
@@ -211,36 +248,56 @@ def main() -> int:
                 env=env,
                 start_new_session=True,
             )
-            while process.poll() is None:
+            while True:
+                child_usage = wait_for_child(process)
+                if child_usage is not None:
+                    break
                 rss = process_tree_rss(process.pid)
-                peak_rss = max(peak_rss, rss)
+                sampled_process_tree_rss_max = max(
+                    sampled_process_tree_rss_max, rss
+                )
                 if time.monotonic() - started > MAX_SECONDS:
                     timed_out = True
-                    os.killpg(process.pid, signal.SIGKILL)
+                    kill_process_group(process.pid)
                     break
                 if rss > MAX_RSS_BYTES:
-                    rss_exceeded = True
-                    os.killpg(process.pid, signal.SIGKILL)
+                    kill_process_group(process.pid)
                     break
                 time.sleep(0.5)
-            try:
-                process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                os.killpg(process.pid, signal.SIGKILL)
-                process.wait()
+            if process.returncode is None:
+                child_usage = wait_for_child(process, block=True)
     except BaseException:
-        if process is not None and process.poll() is None:
-            os.killpg(process.pid, signal.SIGKILL)
-            process.wait()
+        if process is not None and process.returncode is None:
+            kill_process_group(process.pid)
+            wait_for_child(process, block=True)
         raise
+
+    # The command leader can exit while same-session descendants remain alive.
+    kill_process_group(process.pid)
+
+    os_wait4_child_max_rss = (
+        wait4_max_rss_bytes(child_usage) if child_usage is not None else None
+    )
+    rss_exceeded = (
+        sampled_process_tree_rss_max > MAX_RSS_BYTES
+        or (
+            os_wait4_child_max_rss is not None
+            and os_wait4_child_max_rss > MAX_RSS_BYTES
+        )
+    )
 
     record = {
         **invocation,
         "exit_code": process.returncode if process is not None else None,
         "elapsed_seconds": round(time.monotonic() - started, 3),
-        "peak_process_tree_rss_bytes": peak_rss,
-        "timed_out": timed_out,
+        "sampled_process_tree_rss_max_bytes": sampled_process_tree_rss_max,
+        "os_wait4_child_max_rss_bytes": os_wait4_child_max_rss,
         "rss_limit_exceeded": rss_exceeded,
+        "rss_limit_scope": (
+            "sampled process-tree total or OS direct-child high-water; "
+            "transient aggregate peaks across unreported descendants are not excluded"
+        ),
+        "timed_out": timed_out,
         "pytest_log_sha256": sha256_file(log_path),
     }
     result_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")

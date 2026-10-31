@@ -647,3 +647,21 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Preserve the original protocol, receipt, and checksum manifest unchanged. Record this correction in `results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/preflight-integrity-erratum-001.json` and its separate `errata/SHA256SUMS`. The retrospective hash match does not retroactively validate the old preflight flag. Do not retry protocol v1; the NO-GO and no-exposure outcome remain valid.
 - **Correction:** PR #160 commit `71aa74ab6a8f6f1625505b68f7f332c49fabff93` validates task entries before generic filtering and adds regression coverage. Its exact-head checks passed. This verifies the corrected implementation only.
 - **Follow-up:** Correct the PR #160 description and current checkpoint summaries; retain the original receipt for auditability.
+
+
+## 2026-10-31 — Correct the vLLM #64830 RSS evidence interpretation
+
+- **Finding:** Review of the frozen runner showed that `peak_process_tree_rss_bytes` was only the maximum 0.5-second `ps` sample. Each retained arm finished in about 0.53 seconds and recorded 3,932,160 bytes, so the value cannot establish the OS high-water mark or exclude a short-lived limit breach. A local reproduction sampled 2,867,200 bytes before a child touched 91 MiB, then `wait4` reported a 106,774,528-byte direct-child high-water mark after a 0.5-second gap.
+- **Evidence preservation:** The original protocol, receipts, report, and root `SHA256SUMS` remain unchanged. Append-only erratum 001 binds the old bundle and receipt hashes and withdraws only the resource-pass interpretation.
+- **Decision:** Keep the three behavioral outcomes: baseline fails both intended assertions, the wrong mutant is rejected, and upstream-fixed passes both. Reclassify the consumed runs' 4 GiB resource result as **INCONCLUSIVE**. Do not rerun the arms or reuse protocol v1. The corrected runner records sampled process-tree RSS separately from the OS `wait4` direct-child high-water and states that the latter is not a complete concurrent process-tree peak.
+- **Limit:** Neither the old nor corrected runner proves the maximum aggregate RSS of every concurrent descendant. New protocols must bind the measurement scope and cannot claim a full-tree peak from polling alone.
+- **Follow-up:** Run the focused runner regression, lint, and compile checks; push the fix and erratum to PR #162; inspect exact-head CI and resolve the RSS review thread only after the pushed diff is visible.
+
+
+## 2026-10-31 — Preserve the appended #64830 Development preflight ledger
+
+- **Finding:** PR #163 appended event `vllm-64830-development-attempt-001-preflight-no-go` to the existing source-qualification exposure ledger. This changed the live `exposure-record.json` from its original root-manifest hash `e966664a...` to `9375669c...`; the old `.sha256` sidecar still contained the prior value.
+- **Evidence:** The original 58-file bundle verifies at the pre-append Git snapshot `18f829b40cb02b2edf71de6f69f2aafcff27ed6a`. The live record states that the prospective Development launch preflight returned `NO_GO`; model weights were not loaded, no prompt was delivered, and no inference or grade occurred. The current sidecar now matches the appended ledger, and errata `current-exposure-ledger-supplement-001.json` records both historical and current hashes. Errata `SHA256SUMS` verifies the live ledger, sidecar, and supplements.
+- **Decision:** Keep the original root `SHA256SUMS` immutable as the manifest for the pre-append qualification snapshot. Verify the current ledger through the supplemental errata manifest. Report the task as prospectively assigned Development with a preflight NO_GO; do not call it unassigned or infer model capability.
+- **Limit:** The current root bundle manifest intentionally does not authenticate the later mutable ledger append; Git preserves the prior bytes and commit. Do not rewrite the old qualification receipt or pretend the old manifest covers the updated ledger.
+- **Follow-up:** Keep the current ledger hash in `state.json`; retain both append-only corrections and do not retry the frozen protocol.
