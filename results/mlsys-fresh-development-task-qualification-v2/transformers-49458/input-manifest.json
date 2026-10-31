@@ -1,0 +1,44 @@
+{
+  "arms": {
+    "baseline": {
+      "file_count": 6645,
+      "source_file_sha256": "ce6441262488f027de47b1bec8fd3bb7c52b3fa8c182c650b7c3b2cc4881a93d",
+      "source_tree_manifest_sha256": "c66ad86a105cad5d615dc94af1d4abb14d8403b383f751dd9b3513a245c1f705"
+    },
+    "upstream-fixed": {
+      "file_count": 6645,
+      "source_file_sha256": "45b4218af43505c4357f014fd0ce89eb3125d617f913d35e4c11e2b658d3ab23",
+      "source_tree_manifest_sha256": "cab7733639736043ca115ab0cb330d92dcc4ebe4960d17c20fa2d52d861b60b8"
+    },
+    "wrong-mutant": {
+      "file_count": 6645,
+      "source_file_sha256": "1a4201f71701e63001209574aa8b0b5138d7d893cad1d38c0fd255686da0649a",
+      "source_tree_manifest_sha256": "d0ed5e9a8fa22e56eb90a1e521bfe54eea40dea8bc0f423ac684701dc86bfa38"
+    }
+  },
+  "baseline_archive_sha256": "4c50763469886980fb2805209a373f94ffcf7ffbca856eec2aea057a16e7d45f",
+  "baseline_started_at_utc": "2026-10-31T01:46:07Z",
+  "docker_image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+  "expected_tree_differences_from_baseline": {
+    "upstream-fixed": [
+      "src/transformers/models/auto/video_processing_auto.py"
+    ],
+    "wrong-mutant": [
+      "src/transformers/models/auto/video_processing_auto.py"
+    ]
+  },
+  "initial_baseline_attempt": {
+    "classification": "INCONCLUSIVE_TEST_COLLECTION_ENVIRONMENT_ERROR",
+    "exit_code": 4,
+    "log_path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-baseline.log",
+    "log_sha256": "b237bf93972b09aefbaf32e8fa21c5c3051f93ee00a74d2c6878ccda3723008e",
+    "pytest_selected_tests": 0
+  },
+  "model_inference": false,
+  "protocol_path": "protocols/mlsys_transformers_49458_source_qualification_v1.json",
+  "protocol_sha256": "b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524",
+  "test_execution_started": true,
+  "tree_digest_algorithm": "sha256 of newline-joined sorted kind<TAB>relative-path<TAB>content-sha256 rows, with a final newline; symlink payload is its link target",
+  "trusted_test_path": "work/transformers-49458-source-qualification/trusted/test_video_processing_auto.py",
+  "trusted_test_sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3"
+}

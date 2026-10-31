@@ -1,0 +1,59 @@
+{
+  "addendum_id": "mlsys-transformers-49458-source-qualification-v1-addendum-1",
+  "authorization": {
+    "further_retries": "not authorized by this addendum. A further retry requires a new hash-bound addendum committed before execution.",
+    "heldout_access": false,
+    "model_or_agent_inference": false,
+    "new_corrected_baseline_invocation": "exactly one additional invocation, recorded as attempt-002-baseline.log; use the original baseline tree and exact test/image/resource/isolation settings plus the PYTHONPATH correction above.",
+    "prior_attempt": "remains permanently recorded as INCONCLUSIVE; it does not count as passing or failing the semantic baseline gate.",
+    "split_assignment": false,
+    "training": false,
+    "wrong_mutant_and_fixed": "not authorized until corrected baseline reaches the intended load_attribute.assert_not_called assertion and fails; then one invocation each under the same corrected PYTHONPATH."
+  },
+  "cause": "The upstream trusted test appends a path derived from __file__. Because it is mounted at /trusted/test_video_processing_auto.py to preserve test/source separation, that derived path is /utils, while the pinned repository helper package is at /source/utils/test_module.",
+  "claim_boundary": "This addendum changes only import-path setup necessitated by mounting the trusted test outside the source tree. It preserves the test bytes and semantic gates and does not establish task qualification, split assignment, model capability, or pretraining independence.",
+  "diagnosis_inputs": [
+    {
+      "path": "work/transformers-49458-source-qualification/baseline/utils/test_module/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "work/transformers-49458-source-qualification/baseline/utils/test_module/custom_configuration.py",
+      "sha256": "993703cf0d9c8330510382303d7fec33512d00f410bea266d6a4fe18f389a351"
+    },
+    {
+      "path": "work/transformers-49458-source-qualification/baseline/utils/test_module/custom_video_processing.py",
+      "sha256": "3a88790e7945afbe6f82f2983c0ae471c18cb083952a44e0cc20838f14ccecd0"
+    }
+  ],
+  "frozen_at_utc": "2026-10-31T01:47:29Z",
+  "limits_unchanged": {
+    "container_root": "read-only",
+    "maximum_concurrent_arms": 1,
+    "maximum_container_cpus": 2,
+    "maximum_container_memory_bytes": 2621440000,
+    "maximum_wall_seconds_per_invocation": 600,
+    "network": "disabled",
+    "paid_compute_or_api_spend_usd": 0,
+    "writable_mount": "512 MiB /tmp tmpfs only"
+  },
+  "observed_initial_baseline_invocation": {
+    "arm": "baseline-attempt-001",
+    "classification": "INCONCLUSIVE_TEST_COLLECTION_ENVIRONMENT_ERROR; preserve as consumed, do not reinterpret as a baseline assertion failure",
+    "exit_code": 4,
+    "failure": "pytest collection stopped on ModuleNotFoundError: No module named test_module while importing the trusted overlay; the target test method and assertion did not execute.",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-baseline.log",
+    "log_sha256": "b237bf93972b09aefbaf32e8fa21c5c3051f93ee00a74d2c6878ccda3723008e",
+    "pytest_selected_tests": 0
+  },
+  "original_protocol": {
+    "path": "protocols/mlsys_transformers_49458_source_qualification_v1.json",
+    "sha256": "b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524"
+  },
+  "schema_version": 1,
+  "single_environment_correction": {
+    "original": "--env PYTHONPATH=/source/src:/source",
+    "reason": "Expose the hash-pinned upstream test helper package under the separate read-only source mount; do not change source code, test bytes, test selector, image, resources, network, mount boundary, or grading assertions.",
+    "replacement": "--env PYTHONPATH=/source/src:/source:/source/utils"
+  }
+}

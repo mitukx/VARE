@@ -191,6 +191,12 @@
       "path": "protocols/mlsys_transformers_49458_source_qualification_v1.json",
       "sha256": "b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524",
       "status": "frozen and pushed before any candidate test execution; source qualification only; no Development assignment or inference"
+    },
+    {
+      "protocol_id": "mlsys-transformers-49458-source-qualification-v1-addendum-1",
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
+      "sha256": "b9763deb7f5cd9229da77a001afa38a7a7062d34475a2cf9afa7f0ec3dcdfff5",
+      "status": "frozen before corrected baseline invocation; preserves original protocol and limits; authorizes one corrected baseline only"
     }
   ],
   "git_refs": {
@@ -199,7 +205,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "5e8f3589914cefc5831fff7097dc1cf770df5dac",
+    "verified_pr_head_sha_before_checkpoint_changes": "03a6e1bf4c1fad012b092ddf5a70876d2367e054",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
@@ -208,9 +214,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Execute the frozen Transformers #49458 source qualification in order: baseline, wrong-mutant, upstream-fixed; preserve one log and receipt per arm, stop on an inconclusive baseline, keep the candidate unassigned, and do not run model inference.",
-  "last_completed_step": "Fetched origin and verified main at 719fbe368816d81addb29a1ba2c451fa7f1bf631. On PR #155 head 5e8f3589914cefc5831fff7097dc1cf770df5dac, exact-head Python 3.11/3.12/3.13 CI, lint, typecheck, and CPU evidence passed; GitHub reports mergeStateStatus BLOCKED pending review. Verified the frozen Transformers #49458 issue/source/test/archive/image inputs. Froze source-qualification protocol v1 before candidate test execution; no test, split assignment, or inference has run.",
-  "milestone_id": "p8-transformers-49458-source-qualification-protocol-frozen",
+  "highest_priority_next_task": "Push protocol addendum 1 before any corrected run, then execute exactly one corrected baseline invocation with PYTHONPATH=/source/src:/source:/source/utils. Proceed to mutant/fixed only if baseline fails at the intended assertion.",
+  "last_completed_step": "Pushed frozen source-qualification protocol v1 in commit 03a6e1bf4c1fad012b092ddf5a70876d2367e054. Its first baseline container invocation returned exit 4 during pytest collection with ModuleNotFoundError for test_module; zero test cases were selected and the target assertion did not run. Preserved the log and froze addendum 1 to add /source/utils to PYTHONPATH only; the corrected baseline has not yet run.",
+  "milestone_id": "p8-transformers-49458-collection-path-addendum-frozen",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -826,6 +832,21 @@
       "path": "results/mlsys-fresh-development-task-family-overlap-v2/SHA256SUMS",
       "sha256": "d742092399a6203073c7b967f3c445f3f84a715c5ee7589be68da6168a50a385",
       "status": "integrity index for metadata overlap report"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-baseline.log",
+      "sha256": "b237bf93972b09aefbaf32e8fa21c5c3051f93ee00a74d2c6878ccda3723008e",
+      "status": "initial baseline invocation; pytest collection environment error, exit 4, zero tests selected; no semantic baseline result"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
+      "sha256": "2f0b884306f2a76786acf6c1ed5ef6c2d6b7fb4941d328d3b89643daa71c231f",
+      "status": "pinned input and source-tree identities; records initial inconclusive collection attempt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
+      "sha256": "b9763deb7f5cd9229da77a001afa38a7a7062d34475a2cf9afa7f0ec3dcdfff5",
+      "status": "pre-execution environment-only addendum; adds /source/utils to PYTHONPATH; one corrected baseline invocation authorized"
     }
   ],
   "run_ids": [
@@ -875,7 +896,7 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED until its frozen baseline, wrong-mutant, and fixed-source gates complete; no model inference is authorized by source qualification."
+    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED; the first source-test launch was inconclusive during collection, and one corrected baseline invocation is authorized by addendum 1."
   ],
-  "updated_at": "2026-10-31T01:44:15Z"
+  "updated_at": "2026-10-31T01:47:29Z"
 }
