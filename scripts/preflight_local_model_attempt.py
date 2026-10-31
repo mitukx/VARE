@@ -177,8 +177,10 @@ def run_preflight(protocol_path: Path, output_path: Path, root: Path) -> dict[st
     failures = []
     if protocol_sha != expected_protocol_sha:
         failures.append("protocol SHA-256 sidecar mismatch")
-    failures.extend(_check_artifact_hashes(root, protocol))
-    failures.extend(_verify_model_snapshot(root, protocol))
+    artifact_hash_failures = _check_artifact_hashes(root, protocol)
+    failures.extend(artifact_hash_failures)
+    model_snapshot_failures = _verify_model_snapshot(root, protocol)
+    failures.extend(model_snapshot_failures)
 
     assignment = protocol["assignment"]
     workspace = Path(assignment["workspace_path"])
@@ -224,8 +226,8 @@ def run_preflight(protocol_path: Path, output_path: Path, root: Path) -> dict[st
         "runtime_activation_reserve_bytes": reserve_bytes,
         "estimated_weight_kv_reserve_bytes": estimated_bytes,
         "resource_gate_checks": checks,
-        "model_snapshot_hashes_verified": not any("model snapshot" in item for item in failures),
-        "frozen_inputs_verified": not any("hash mismatch" in item for item in failures),
+        "model_snapshot_hashes_verified": not model_snapshot_failures,
+        "frozen_inputs_verified": protocol_sha == expected_protocol_sha and not artifact_hash_failures,
         "model_loaded": False,
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)
