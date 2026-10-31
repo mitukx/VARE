@@ -203,3 +203,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Preserve Addendum 2 unchanged; use the erratum as the authoritative manifest/archive binding. Its only effect is artifact path/hash bookkeeping.
 - **Falsification criteria:** The gzip content hash differs from the original exact four-path diff, or any test/mutant/source hash, selector, or acceptance criterion changed.
 - **Follow-up:** Freeze the runtime image identity before test execution.
+
+
+## 2026-10-31 — Freeze CLI-only retry for Ray runtime build
+
+- **Hypothesis:** The exact pinned Ray runtime can be built unchanged after removing the Docker CLI option unsupported by the installed client.
+- **Evidence:** Attempt 001 log SHA-256 `0a0033a83aaf69fddd35047b16a66734164121ebedf2ca91c57fe16fee286518` shows the CLI rejected `--progress=plain` before the builder started; no image or test ran. Addendum 3 (SHA-256 `07cfef610b9140684f2f50b6bc3e34f3a3fb643882ad98a14904e10edcdb3cec`) keeps every build input and only removes that flag.
+- **Alternative explanations:** The runtime package install could still fail due to platform/dependency incompatibility.
+- **Decision:** Permit one retry with the identical Dockerfile and build context and no `--progress` option. Do not execute any runtime probe or test until the resulting image digest is frozen.
+- **Falsification criteria:** Any build input changes, the second build fails, or tests start before image identity is recorded.
+- **Follow-up:** Build and capture the image digest and raw build log; freeze them before testing.

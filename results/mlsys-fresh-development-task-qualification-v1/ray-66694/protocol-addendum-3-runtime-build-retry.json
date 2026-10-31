@@ -1,0 +1,26 @@
+{
+  "artifact_erratum_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2-erratum.json",
+  "artifact_erratum_sha256": "b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684",
+  "authorized_action": "One Docker image build only; no runtime probe or regression test is authorized until the image digest is bound in a later addendum.",
+  "base_image": "python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "dockerfile_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime",
+  "dockerfile_sha256": "6e91e77be8881ec212185107298439b793134801633a094fd103f4adfd9e1d25",
+  "failed_build_attempt": {
+    "classification": "Docker CLI rejected --progress=plain before contacting the builder; no image layers were built and no container or test ran.",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-build-attempt-001.log",
+    "log_sha256": "0a0033a83aaf69fddd35047b16a66734164121ebedf2ca91c57fe16fee286518"
+  },
+  "frozen_on_utc": "2026-10-31T00:03:00Z",
+  "inference_authorized": false,
+  "network_during_test": false,
+  "paid_compute_or_api": false,
+  "parent_addendum_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2.json",
+  "parent_addendum_sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918",
+  "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-3-runtime-build-retry",
+  "ray_wheel_sha256": "73bfbeed219e33c6521e750c3eeac921fcaaded8eace2698fe29c254e6590946",
+  "retry_delta": "Remove only the unsupported --progress=plain CLI option. Preserve the exact Dockerfile, build context, pinned base image, wheel URL/content SHA, package versions, and target image tag.",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_RUNTIME_BUILD_RETRY",
+  "task_key": "ray-project/ray#66694",
+  "test_execution_authorized": false
+}

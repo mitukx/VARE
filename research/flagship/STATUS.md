@@ -21,7 +21,7 @@ Source-qualified tasks: **2/3**. None is assigned to Development or exposed to a
 
 ## Immediate next action
 
-The frozen metadata-only selector chose **Ray PR #66694**, rank 1 of 12 eligible rows (selection record SHA-256 `716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95`). Addendum 1 limited review to the four metadata-listed paths. Addendum 2 freezes exact source hashes, four adapted test selectors, and one wrong mutant. A pretest artifact-integrity erratum (SHA-256 `b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684`) corrects the compressed-diff manifest pointer without changing any test or acceptance rule. No test has run. Next, build the pinned Ray commit runtime and freeze its image and wheel digests before execution.
+The frozen metadata-only selector chose **Ray PR #66694**, rank 1 of 12 eligible rows (selection record SHA-256 `716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95`). Addendum 1 limited review to the four metadata-listed paths. Addendum 2 freezes exact source hashes, four adapted test selectors, and one wrong mutant. Its artifact-integrity erratum (SHA-256 `b8a74db2ee832ad8f47a070fca5f041dfe9d9515bf4c5f7a2e6a029b7bcdb684`) binds the compressed diff. The first Docker build command was rejected before build startup; the launcher error is preserved, and addendum 3 (SHA-256 `07cfef610b9140684f2f50b6bc3e34f3a3fb643882ad98a14904e10edcdb3cec`) freezes a single CLI-only retry. No test has run.
 
 ## External blockers
 
