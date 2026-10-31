@@ -1,0 +1,78 @@
+{
+  "candidate": {
+    "behavior": "Reject HiSparse and watermarking configurations when the V1 model runner is selected.",
+    "changed_path": "vllm/config/vllm.py",
+    "model": {
+      "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+    },
+    "pull_request": 64830,
+    "repository": "vllm-project/vllm",
+    "task_family": "vllm_v1_model_runner_unsupported_feature_guards",
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks",
+    "test_path": "tests/test_config.py"
+  },
+  "decision": {
+    "broad_domain_overlap": "POSSIBLE: prior VLLM tasks and source qualification share repository domain; the prior #64575 model was never loaded and task behavior/file differ.",
+    "development_assignment_for_one_attempt": "ALLOWED_WITH_LIMITS",
+    "direct_task_identity_overlap_for_qwen3": false,
+    "heldout_access": false,
+    "multi_task_family_independence": "NOT_ESTABLISHED",
+    "public_pretraining_exposure": "UNKNOWN",
+    "same_task_model_exposure": false,
+    "specific_family_overlap_found": false
+  },
+  "limitations": [
+    "The assignment is a single prospective diagnostic, not a statistical generalization estimate.",
+    "The independent grader has two method-level cases and does not establish whole-PR correctness.",
+    "Public pretraining exposure to the upstream task is unknown.",
+    "The model sees source and task prompt only; trusted tests, fixes, prior grades and source-arm logs stay hidden."
+  ],
+  "prior_comparisons": [
+    {
+      "comparison": "Different repository, task family, source file, API surface, and Train split; this is tool-roundtrip evidence only.",
+      "model_exposure": "Qwen3-4B independently repaired one Train task; 2/2 grader cases, 5 tool turns, 302 generated tokens, 31.679 s.",
+      "repository": "ml-explore/mlx-lm",
+      "task_family": "mlx_lm_chat_message_tool_argument_normalization",
+      "task_id": "mlxlm-1904-tool-arguments"
+    },
+    {
+      "comparison": "Different repository and task family.",
+      "model_exposure": "Qwen3-4B Development attempt recorded; no edit or verified repair.",
+      "repository": "huggingface/transformers",
+      "task_family": "quantized_cache_residual_update_boundary",
+      "task_id": "transformers-49418-quantized-cache-residual-flush"
+    },
+    {
+      "comparison": "Different repository and task family.",
+      "model_exposure": "Qwen3-4B Development attempt recorded; no edit or verified repair.",
+      "repository": "ray-project/ray",
+      "task_family": "operator_wall_time_multi_node_clock_domain",
+      "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain"
+    },
+    {
+      "comparison": "Different repository and task family; the known tool-format failure is covered by deterministic controller tests.",
+      "model_exposure": "Qwen3-4B Development attempt recorded; incomplete edit-tool call, no edit or verified repair.",
+      "repository": "huggingface/transformers",
+      "task_family": "lazy_video_processor_registry_resolution",
+      "task_id": "transformers-49458-lazy-auto-video-processor"
+    },
+    {
+      "comparison": "Same broad repository domain, but different file, API, task family, behavior, and model. Family-level independence remains unestablished.",
+      "model_exposure": "Qwen2.5-Coder-14B launch preflight failed before model weights loaded; no task prompt or candidate exposure.",
+      "repository": "vllm-project/vllm",
+      "task_family": "anthropic_request_tool_type_error_precedence",
+      "task_id": "vllm-64575-anthropic-tool-type-validation"
+    },
+    {
+      "comparison": "Same task is unconsumed for Qwen3-4B; a new model-specific prospective assignment is made before inference.",
+      "model_exposure": "Qwen2.5-Coder-14B protocol v1 was frozen, but its launch preflight was NO_GO before weights loaded and before task prompt exposure.",
+      "repository": "vllm-project/vllm",
+      "task_family": "vllm_v1_model_runner_unsupported_feature_guards",
+      "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+    }
+  ],
+  "review_id": "vllm-64830-development-qwen3-4b-overlap-review-v2",
+  "reviewed_at_utc": "2026-10-31T09:06:06+00:00",
+  "schema_version": 1
+}
