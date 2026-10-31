@@ -28,6 +28,7 @@ Verify the frozen protocol and its declared inputs:
 
 ```bash
 shasum -a 256 -c results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.sha256
+gzip -dc results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json.gz | shasum -a 256
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_mlsys_vllm_64830_agent_grader_v1.py
 python -m ruff check scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py tests/test_mlsys_vllm_64830_agent_grader_v1.py
 python -m py_compile scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py tests/test_mlsys_vllm_64830_agent_grader_v1.py

@@ -123,14 +123,20 @@
     },
     {
       "name": "runtime_file_manifest",
-      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json",
-      "sha256": "7e6b84ab45115bf2893a2dbe76e4e891a6ea1fc8dc594ced46822725d6b03ba4",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json.gz",
+      "sha256": "f3c30720549f7b5f1da6aea5bacc0cbcd22b7b6f938ebbfaf9abd0969bd52572",
       "verification": "PASSED"
     },
     {
       "name": "runtime_manifest",
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-manifest.json",
-      "sha256": "cfe46f76baa1792671a631c1545616c9d9f238fcd6ea62736cd49e402579af4d",
+      "sha256": "5e00c0d4de98d51f02351363529cc3890a857ef0f76c56fc8f8ca0eb49973747",
+      "verification": "PASSED"
+    },
+    {
+      "name": "smoke_history",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/smoke-history.json",
+      "sha256": "641f7c9e2134e7c7cd9cece107514154bfd7572b89d73291696e99b3d805ee10",
       "verification": "PASSED"
     },
     {
@@ -158,12 +164,6 @@
       "verification": "PASSED"
     },
     {
-      "name": "smoke_history",
-      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/smoke-history.json",
-      "sha256": "641f7c9e2134e7c7cd9cece107514154bfd7572b89d73291696e99b3d805ee10",
-      "verification": "PASSED"
-    },
-    {
       "name": "prospective_assignment_record",
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/exposure-assignment.json",
       "sha256": "2216ed24547f1c58034c01fa30c3cd388f09654630c88c40a39ab3746c42cc46",
@@ -172,13 +172,13 @@
     {
       "name": "protocol",
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json",
-      "sha256": "9d7a89f8491bdb3096f302ee1349bdcbd0eef6b68abe3967d637cdd76494ae49",
+      "sha256": "5d54c9f5853bdc11a8cfd5549903348bff4e28d05f1de7832b394512394ad881",
       "verification": "PASSED"
     },
     {
       "name": "protocol_sha256_sidecar",
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.sha256",
-      "sha256": "be36b7fe3d33df377481a2efed7106c4565225baec01b99628492968bebdf9be",
+      "sha256": "8a018328c4fa2f395cf743fe4ad765cd5bf87b4458148684a5ef4a87c7587224",
       "verification": "PASSED"
     },
     {
@@ -266,7 +266,7 @@
     "snapshot_hashes_checked_by_launch_preflight": false
   },
   "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v1",
-  "protocol_sha256": "9d7a89f8491bdb3096f302ee1349bdcbd0eef6b68abe3967d637cdd76494ae49",
+  "protocol_sha256": "5d54c9f5853bdc11a8cfd5549903348bff4e28d05f1de7832b394512394ad881",
   "schema_version": 1,
   "status": "ARTIFACT_HASHES_VERIFIED; MODEL PREFLIGHT NOT RUN; MODEL NOT LOADED"
 }

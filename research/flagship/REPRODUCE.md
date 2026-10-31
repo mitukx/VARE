@@ -698,7 +698,7 @@ No split assignment, model inference, training, or Held-Out access is authorized
 
 ## vLLM #64830 — one-shot Development protocol (frozen, not launched)
 
-Protocol: `results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json` (SHA-256 `9d7a89f8491bdb3096f302ee1349bdcbd0eef6b68abe3967d637cdd76494ae49`). It pins the Qwen2.5-Coder-14B 4-bit MLX snapshot, source/test/worker hashes, one allowed source file, no network, a 4,096-token context, 2,048 generated-token total, 600-second wall limit, and a 12-GiB process-tree RSS limit. The launch preflight and attempt commands are stored as argv arrays in the protocol.
+Protocol: `results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json` (SHA-256 `5d54c9f5853bdc11a8cfd5549903348bff4e28d05f1de7832b394512394ad881`). It pins the Qwen2.5-Coder-14B 4-bit MLX snapshot, source/test/worker hashes, one allowed source file, no network, a 4,096-token context, 2,048 generated-token total, 600-second wall limit, and a 12-GiB process-tree RSS limit. The launch preflight and attempt commands are stored as argv arrays in the protocol.
 
 The protocol was locally hash-checked against its sidecar and 24 declared frozen inputs; source qualification and the source-exposure record were independently checked as Git objects at parent revision `a1bc5dc255e38ad1741f58399504fdaf357eae1a`. This static verification did not hash model weights or run launch preflight. The model sandbox isolation probe and Metal smoke passed without loading weights. Independent grader controls are under `results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/`.
 
@@ -706,6 +706,7 @@ Run the focused checks:
 
 ```bash
 shasum -a 256 -c results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.sha256
+gzip -dc results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json.gz | shasum -a 256
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_mlsys_vllm_64830_agent_grader_v1.py
 python -m ruff check scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py tests/test_mlsys_vllm_64830_agent_grader_v1.py
 python -m py_compile scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py tests/test_mlsys_vllm_64830_agent_grader_v1.py
