@@ -1,0 +1,350 @@
+{
+  "analysis_rule": "Task family is the unit (n=1). Attempts, arms, and turns are not independent task observations. Report paired task outcome descriptively; no inferential statistics or general capability claim.",
+  "arms": [
+    {
+      "arm_id": "autonomous_navigation",
+      "available_tools": [
+        "list_files",
+        "read_lines",
+        "search_source",
+        "replace_lines_transactional",
+        "check_syntax",
+        "finish"
+      ],
+      "localization_record": null,
+      "rationale": "Measures a complete autonomous search/read/edit/syntax-check/finish trajectory.",
+      "task_information": "Task prompt and allowlisted candidate source only. The model must navigate the source itself.",
+      "tool_interface": "lease_bound_transactional_navigation_v1"
+    },
+    {
+      "arm_id": "source_localized",
+      "available_tools": [
+        "read_lines",
+        "replace_lines_transactional",
+        "check_syntax",
+        "finish"
+      ],
+      "localization_record": "localization/localization-v2.json",
+      "localization_record_sha256": "8b55fd90cd471589dddccc23473d7cec5466bd35c24e6bc645b7b758888ccef3",
+      "rationale": "Information-advantaged control for measuring source localization value; not an equal-information pure controller comparison.",
+      "task_information": "Same task prompt plus an 80-line class excerpt selected by the frozen task-independent AST entity-window localizer. No known fix/grader was read.",
+      "tool_interface": "lease_bound_transactional_localized_v1"
+    }
+  ],
+  "cheapest_falsification": "One attempt per arm on one independently qualified external Development task. The autonomous feasibility gate fails for this family if it does not yield an in-scope applied patch, an independent grader PASS, explicit model finish, valid runtime identity, and no resource abort.",
+  "claim_limit": "Development-only, one Transformers task family. It is newly selected within VARE records, but public upstream fix pretraining exposure is UNKNOWN. Never held-out; no model learning or broad Coding RL claim.",
+  "code_sha256": {
+    "campaign_driver": "8001a4469d09c3155af5d20a6830a1533f442e2a0e2862ebc7bb6ad4f224b6d2",
+    "campaign_exposure_test": "75314a676e33c8d26503a90fa05111a9f493f33e677879489a7699b12f9f52ad",
+    "grader": "9bf4074e31dc40d7134efa033fb030eb0fa1cf9ff72f0c348c9ef7023c7ad9b2",
+    "localizer": "3ab6535816dcf3467672f81b17519349a5b7b659a02012d245e848c6f48c29a9",
+    "qualification": "30fe8e8e8f55b77cec87d8f0cb88cf5b17b71e489bfe62fd8e44dd318851fb8d",
+    "qualifier": "94636045216de5db7af5f68c0508bd355a8525556b98ad5a3e8cf3f9f9dd2595",
+    "runner": "24f971d63306b9cdab56fddbb7ad8b5ed4ea1024cf0e604c885fb1bb93e1f179",
+    "runtime_auditor": "4462f55276512ba2a30ed21502cc37fe481dd6d3567c8bb85ea96653932ee29d",
+    "runtime_snapshot_module": "0b5e942da81e5b9a34ebbd5f382bf6af09df634774886d308e2396e89ea0f514",
+    "source_scan": "ee75f6aa8a2e95feb18dc301c002cb079727201613444786edda53be954d0579",
+    "task_contract_module": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0"
+  },
+  "controller_source_files_sha256_by_interface": {
+    "lease_bound_transactional_localized_v1": {
+      "scripts/run_local_agent.py": "24f971d63306b9cdab56fddbb7ad8b5ed4ea1024cf0e604c885fb1bb93e1f179",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+      "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+      "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+      "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+      "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+      "src/vare/schema_slot_protocol.py": "9eecc781ceecad58e6a5dc2903db2ae54782fdf614ff583d5a619881d048267c"
+    },
+    "lease_bound_transactional_navigation_v1": {
+      "scripts/run_local_agent.py": "24f971d63306b9cdab56fddbb7ad8b5ed4ea1024cf0e604c885fb1bb93e1f179",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+      "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+      "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+      "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+      "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+      "src/vare/schema_slot_protocol.py": "9eecc781ceecad58e6a5dc2903db2ae54782fdf614ff583d5a619881d048267c",
+      "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+      "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+    }
+  },
+  "decoding": {
+    "do_sample": false,
+    "posthoc_output_repair": "none",
+    "seed": 20261028,
+    "temperature": 0.0,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "evidence_contract": {
+    "development_exposure_record": "Append and fsync an exposure event immediately before each model process invocation. No held-out allocation.",
+    "preserve_final_candidate_patch": true,
+    "preserve_full_tool_trajectory": true,
+    "preserve_independent_grader_receipt": true,
+    "preserve_raw_model_outputs": true,
+    "preserve_rendered_prompts": true,
+    "preserve_resource_samples": true,
+    "preserve_runtime_snapshot_and_independent_audit": true
+  },
+  "frozen_at_utc": "2026-10-28T06:09:40.319446+00:00",
+  "frozen_before_model_inference": true,
+  "go_no_go": {
+    "decision_changed_by_result": "Whether to invest next in autonomous source navigation or source-localization support, and whether this one-family result justifies further feasibility work.",
+    "go": "Run the exact two-arm Development campaign only if integrity and per-arm preflight pass.",
+    "no_go": "Any hash, source, runtime, grading, or resource mismatch; do not retry or alter caps."
+  },
+  "hypothesis": "With the same Qwen2.5-Coder-7B checkpoint, task, seed, and budgets, autonomous bounded source navigation can produce an independently verified repair. The localized arm estimates the value and cost of task-independent source localization; it has an explicit information advantage.",
+  "inference_budget": {
+    "agent_wall_seconds": 240,
+    "attempts_per_arm": 1,
+    "edit_format": "structured_replace",
+    "generation_protocol": "schema_slots_v8",
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 128,
+    "max_no_tool_retries": 1,
+    "max_total_new_tokens": 768,
+    "max_turns": 12,
+    "navigation_guidance": "v2",
+    "task_family_denominator": 1
+  },
+  "model": {
+    "backend": "MLX Metal",
+    "download_during_run": false,
+    "files_sha256": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "README.md": "900637f68349b42803bd0779765ef87bd8ad54e4eba57991336911b3b1655e97",
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+      "model.safetensors.index.json": "23cd562592dd96686d2e799eb02e4b578a4038b6045eaefe860d270cc060e24f",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "pretraining_exposure": "UNKNOWN",
+    "quantization": "4-bit MLX community checkpoint",
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80",
+    "tokenizer_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+  },
+  "preflight_only_validation": {
+    "command_suffix": "--preflight-only",
+    "model_inference_started": false,
+    "must_pass_before_campaign": true,
+    "separate_output_directory": "results/sprint_viii_20261028/external_transformers_49703/preflight_v5"
+  },
+  "preinference_failure_records": [
+    {
+      "protocol_sha256": "1e6c6940815dd9bd7937b5017dfc5f1e3ce2f030ba368ded5322884d35c4ff40",
+      "reason": "controller guidance requested absent public-test tool",
+      "record_sha256": "085ce35726a77ce04f5a0442ffc7eb1dd0a8fcaacc7a92463fb1be9cc557a579"
+    },
+    {
+      "protocol_sha256": "c7d218d855b302311fe32961917371cec3615e12ec81ec1772dc417721ae65aa",
+      "reason": "runner instruction key mismatch before model process launch",
+      "record_sha256": "8d9e0798ca3f334b307366e79dee6525ae3bd6e5bf0c30f0f6b454621897959a"
+    },
+    {
+      "protocol_sha256": "103320a4127db8dad9ac841b78758d1738758dbc295ebec0e408b85e1daccc40",
+      "reason": "campaign runner rejected v4 id before creating output or starting model",
+      "record_sha256": "83676c36d9e4dad44873602f23ae6f1249efeb285ede91f0bc8d5378b529561d"
+    }
+  ],
+  "primary_metric": "Per-family independently verified correct repair at one attempt per arm. A repair requires in-scope source change, successful transactional edit, explicit model finish, independent AST grader PASS, passing runtime-source audit, controller hash match, and no resource abort.",
+  "protocol_id": "vare.sprint-viii.transformers-49703-development.v5",
+  "qualification": {
+    "baseline": "FAIL",
+    "decision": "GO_FOR_ONE_PRE-REGISTERED_DEVELOPMENT_CAMPAIGN",
+    "grader_candidate_execution": "never; AST only",
+    "incorrect_ModuleDict_mutant": "FAIL",
+    "known_upstream_fix": "PASS",
+    "source_family_deduplication": "one upstream issue/fix family, counted once",
+    "status": "QUALIFIED_DEVELOPMENT_NOT_HELDOUT"
+  },
+  "repository": {
+    "branch": "codex/development-navigation-campaign-v1",
+    "head": "fd98fa77e28874a19baa126b5e4d546697037a39",
+    "main_head_at_freeze": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+    "note": "The transactional controller guidance has a tested conditional branch for missing public tests. Per-attempt runtime source snapshots and independent audits bind the exact imported bytes and Git state.",
+    "runtime_sources_clean": false,
+    "url": "https://github.com/mitukx/VARE",
+    "worktree_has_untracked_historical_evidence": true
+  },
+  "resource_abort_rule": "Abort current process on any frozen host memory, free swap, swap growth, disk, process RSS, or wall-time breach. Retain partial evidence and do not launch remaining arm. No retries or cap increases.",
+  "resource_limits": {
+    "attempt_wall_seconds": 300,
+    "max_model_process_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 2147483648,
+    "minimum_disk_free_bytes": 17179869184,
+    "minimum_free_swap_bytes": 536870912,
+    "sample_interval_seconds": 1.0
+  },
+  "resource_preflight_at_freeze": {
+    "available_memory_bytes": 12306202624,
+    "captured_at_utc": "2026-10-28T06:09:42.999880+00:00",
+    "disk_free_bytes": 43899760640,
+    "memory_total_bytes": 34359738368,
+    "swap_free_bytes": 1435828224,
+    "swap_total_bytes": 3221225472,
+    "swap_used_bytes": 1785397248
+  },
+  "runtime": {
+    "HF_HUB_OFFLINE": true,
+    "TRANSFORMERS_OFFLINE": true,
+    "host": "Apple Silicon Mac; MLX Metal",
+    "offline_required": true,
+    "packages": {
+      "huggingface-hub": "2.3.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "mlx-metal": "0.32.4",
+      "psutil": "7.1.3",
+      "tokenizers": "0.23.3",
+      "torch": "2.9.1",
+      "transformers": "5.21.0"
+    },
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python_executable": "/tmp/vare-sprint-vii-mlx/bin/python",
+    "python_version": "3.12.12"
+  },
+  "schema_version": 1,
+  "secondary_metrics": [
+    "strict schema-valid tool actions",
+    "search count and unique queries",
+    "valid source reads",
+    "first edit turn",
+    "edit attempts and applied edits",
+    "syntax-check outcome",
+    "public-test run/outcome (not configured)",
+    "independent grader receipt",
+    "model finish versus controller finalization",
+    "generated tokens",
+    "wall time",
+    "peak process-tree RSS",
+    "swap growth",
+    "resource aborts"
+  ],
+  "shared_controller": {
+    "controller_finalization": false,
+    "generation_protocol": "schema_slots_v8",
+    "navigation_guidance": "v2",
+    "post_edit_completion_guidance": true,
+    "post_edit_navigation_gate": true,
+    "public_test_tool_exposed": false,
+    "require_source_read_before_edit": true,
+    "verification_instruction": "No public tests exist or are exposed. After an applied edit, model must call check_syntax on the edited path and then finish. Independent AST grading is run afterward by the trusted parent."
+  },
+  "source_and_task_sha256": {
+    "baseline_source": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+    "candidate_template_source": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+    "fixed_source": "929838b2bc993c420859aa0722f2f93738517f4609da61de479d618f6a3a8eb8",
+    "license": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+    "localization_record": "8b55fd90cd471589dddccc23473d7cec5466bd35c24e6bc645b7b758888ccef3",
+    "prior_exposure_scan": "ee75f6aa8a2e95feb18dc301c002cb079727201613444786edda53be954d0579",
+    "qualification": "30fe8e8e8f55b77cec87d8f0cb88cf5b17b71e489bfe62fd8e44dd318851fb8d",
+    "task_json": "89065981145a42ffa50a7f82196939489281a909aad63e0ca721cdc750a1d91c",
+    "task_markdown": "bb0e1ec3ef8aa7a0b56de33c9ba9372dd0ffd0c333f6e8fe4457ccd4cd29f7aa"
+  },
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "supersedes_protocol_sha256": "103320a4127db8dad9ac841b78758d1738758dbc295ebec0e408b85e1daccc40",
+  "supersession_reason": "v4 was rejected before model inference because its protocol-id guard still named v3. v5 aligns the runner id and adds a frozen --preflight-only mode so the complete runtime/model/task/resource checks can be executed before any model prompt is sent.",
+  "task": {
+    "actual_source_runtime_controls": {
+      "baseline": {
+        "identity_container_length": 3,
+        "identity_container_type": "list",
+        "identity_projection_parameter_count": 0,
+        "projected_container_length": 3,
+        "projected_container_type": "list",
+        "projected_named_parameter_count": 0,
+        "projected_state_dict_parameter_count": 0,
+        "projected_total_model_parameter_count": 2792,
+        "torch_version": "2.9.1",
+        "trusted_upstream_class_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc"
+      },
+      "known_fix": {
+        "identity_container_length": 3,
+        "identity_container_type": "ModuleList",
+        "identity_projection_parameter_count": 0,
+        "projected_container_length": 3,
+        "projected_container_type": "ModuleList",
+        "projected_named_parameter_count": 6,
+        "projected_state_dict_parameter_count": 6,
+        "projected_total_model_parameter_count": 4424,
+        "torch_version": "2.9.1",
+        "trusted_upstream_class_source_sha256": "929838b2bc993c420859aa0722f2f93738517f4609da61de479d618f6a3a8eb8"
+      }
+    },
+    "baseline_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+    "candidate_template_local_commit": "b777cad66493cba609c0b948b3997bad2e218ae2",
+    "candidate_template_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+    "candidate_visible_source_files": [
+      "src/transformers/models/mask2former/modeling_mask2former.py"
+    ],
+    "candidate_workspace_controls": {
+      "candidate_local_base_commit": "b777cad66493cba609c0b948b3997bad2e218ae2",
+      "candidate_template_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+      "candidate_visible_source_files": [
+        "src/transformers/models/mask2former/modeling_mask2former.py"
+      ],
+      "git_upstream_history_in_candidate_workspace": false,
+      "grader_or_hidden_test_in_candidate_workspace": false,
+      "known_fix_in_candidate_workspace": false,
+      "unexpected_tracked_paths": []
+    },
+    "grader_boundary": "AST-only; candidate source is never imported/executed by grader; grading occurs out-of-workspace after attempt.",
+    "grader_calibration": {
+      "baseline": {
+        "append_call_count": 2,
+        "container_expression": null,
+        "reason": "projection_container_is_not_an_empty_module_list",
+        "source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+        "status": "FAIL"
+      },
+      "incorrect_mutant_module_dict": {
+        "append_call_count": 2,
+        "container_expression": "nn.ModuleDict",
+        "reason": "projection_container_is_not_an_empty_module_list",
+        "source_sha256": "99174f6a2c7069d9b703416480ba7b98a0c19eb005f96464a9d1e5925024f513",
+        "status": "FAIL"
+      },
+      "known_fix": {
+        "append_call_count": 2,
+        "candidate_execution": "never_imported_or_executed",
+        "container_expression": "nn.ModuleList",
+        "reason": "projection_modules_registered_in_both_branches",
+        "source_sha256": "929838b2bc993c420859aa0722f2f93738517f4609da61de479d618f6a3a8eb8",
+        "status": "PASS"
+      }
+    },
+    "heldout_allocation": false,
+    "independent_grader_sha256": "9bf4074e31dc40d7134efa033fb030eb0fa1cf9ff72f0c348c9ef7023c7ad9b2",
+    "known_fix_source_sha256": "929838b2bc993c420859aa0722f2f93738517f4609da61de479d618f6a3a8eb8",
+    "pretraining_exposure": "UNKNOWN",
+    "prior_vare_exposure_scan_sha256": "ee75f6aa8a2e95feb18dc301c002cb079727201613444786edda53be954d0579",
+    "prior_vare_overlap": false,
+    "public_tests": "NOT_CONFIGURED; syntax parser available; no public regression suite is bundled.",
+    "split": "development",
+    "task_family": "transformers-49698-mask2former-module-registration",
+    "task_id": "transformers-49703-mask2former-projection-registration-development-v2",
+    "task_json_sha256": "89065981145a42ffa50a7f82196939489281a909aad63e0ca721cdc750a1d91c",
+    "task_markdown_sha256": "bb0e1ec3ef8aa7a0b56de33c9ba9372dd0ffd0c333f6e8fe4457ccd4cd29f7aa",
+    "task_prompt_sha256": "3207c75dedcfb78676aa6d8b3edbe721eb35ab3ed5767884ee7dcc35683456f3",
+    "upstream_baseline_revision": "8e40ad7bc7019ba19ae8b0e7d98e60376d0fac2a",
+    "upstream_fixed_revision": "094669a133c54bafd2975c11a325140bc93b3459",
+    "upstream_issue": "https://github.com/huggingface/transformers/issues/49698",
+    "upstream_merge_commit": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+    "upstream_pull_request": "https://github.com/huggingface/transformers/pull/49703",
+    "upstream_repository": "huggingface/transformers",
+    "upstream_target_path": "src/transformers/models/mask2former/modeling_mask2former.py",
+    "user_instruction": "Repair the initialization of `Mask2FormerTransformerModule` in Mask2Former. The feature projection layers are stored but not registered as child modules, so their parameters are missing from `state_dict()` and optimizer traversal and may stay on the wrong device. Preserve both the projection and identity branches, public behavior, and signatures. Find and patch the responsible initialization, verify syntax, then finish for independent grading."
+  }
+}

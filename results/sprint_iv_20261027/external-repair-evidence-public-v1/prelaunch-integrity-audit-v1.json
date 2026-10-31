@@ -1,0 +1,10 @@
+{
+  "action": "Preserved protocol and qualification evidence unchanged; created v2 task identities with behavior-only prompts and will rerun baseline/fix/mutant controls before freezing a replacement protocol.",
+  "campaign": "external-mlx-lm-two-family-agent-v1",
+  "finding": "Candidate-visible TASK.md/task.json disclosed the known repair operation (per-layer (None,None) cache initialization for Falcon-H1; forwarding a cache entry to MiniCPM3 mask construction). This violates the frozen rule that known fixes are grader-only and invalidates the protocol for capability evaluation.",
+  "model_attempts_started": 0,
+  "protocol_sha256": "3909cb938df4d87c09060afa6f56dbd3a4c5b392dd7b3d5deedc9d35f50cf98f",
+  "schema_version": 1,
+  "status": "INVALIDATED_BEFORE_GENERATION",
+  "timestamp_utc": "2026-10-27T07:36:02.639661+00:00"
+}

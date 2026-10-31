@@ -1,0 +1,18 @@
+{
+  "created_utc": "2026-10-28T02:34:24.038325+00:00",
+  "summary": [
+    {
+      "run_id": 40621095778,
+      "head": "ec6f37cefb72be0e1d4d9753493eaab448e5a2a7",
+      "returncode": 0,
+      "log": "run-40621095778-failed.log"
+    },
+    {
+      "run_id": 40621102415,
+      "head": "ec6f37cefb72be0e1d4d9753493eaab448e5a2a7",
+      "returncode": 0,
+      "log": "run-40621102415-failed.log"
+    }
+  ],
+  "root_cause": "CI image installed project dev dependencies without NumPy although test_agent_json_eos_v2 imported NumPy; mypy flagged optional value list typing in dynamic_function_slot_choices."
+}

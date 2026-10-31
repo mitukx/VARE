@@ -1,0 +1,16 @@
+{
+  "attempts_consumed": 0,
+  "created_at_utc": "2026-10-28T07:53:59.050010+00:00",
+  "findings": [
+    "campaign runner expected task.instruction but protocol stored candidate_instruction",
+    "campaign runner expected task.candidate_baseline_sha256 but protocol stored baseline_source_sha256",
+    "campaign runner expected source_hashes but protocol stored runtime_source_hashes"
+  ],
+  "generation_started": false,
+  "model_loaded": false,
+  "protocol_id": "vare-sprint-ix-progress-aware-coding-agent-v1",
+  "protocol_sha256": "d441e32ff6aa725ac5b96921ed326b0fc3956ebdf64172e4fa14a70c006d5996",
+  "resolution": "Keep protocol v1 and all records immutable; use dedicated runner-v2 plus a protocol-v2 that matches verified field names.",
+  "schema_version": 1,
+  "status": "INVALIDATED_BEFORE_MODEL_INFERENCE"
+}

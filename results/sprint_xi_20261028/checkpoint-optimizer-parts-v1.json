@@ -1,0 +1,63 @@
+{
+  "checkpoints": [
+    {
+      "original_path": "results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/checkpoints/recovered-v2/optimizer.pt",
+      "original_sha256": "177c4f3a5c320ce1b054245a1e64d04c9b1391c1d84cce1552d52384a4280317",
+      "original_size_bytes": 1218465,
+      "parts": [
+        {
+          "path": "results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/checkpoints/recovered-v2/optimizer.pt.part-000",
+          "sha256": "c157245ae90e24155564532852b7eeb1bbbd941669dcc06dc8ffdc10bbb4883b",
+          "size_bytes": 900000
+        },
+        {
+          "path": "results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/checkpoints/recovered-v2/optimizer.pt.part-001",
+          "sha256": "5b70b5d66760f2cd39fdb470792a0cba2c2d436eed15dadbb6f1e12a066fbfd7",
+          "size_bytes": 318465
+        }
+      ],
+      "reconstruction": "concatenate parts in listed order"
+    },
+    {
+      "original_path": "results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/checkpoints/reference-v2/optimizer.pt",
+      "original_sha256": "177c4f3a5c320ce1b054245a1e64d04c9b1391c1d84cce1552d52384a4280317",
+      "original_size_bytes": 1218465,
+      "parts": [
+        {
+          "path": "results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/checkpoints/reference-v2/optimizer.pt.part-000",
+          "sha256": "c157245ae90e24155564532852b7eeb1bbbd941669dcc06dc8ffdc10bbb4883b",
+          "size_bytes": 900000
+        },
+        {
+          "path": "results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/checkpoints/reference-v2/optimizer.pt.part-001",
+          "sha256": "5b70b5d66760f2cd39fdb470792a0cba2c2d436eed15dadbb6f1e12a066fbfd7",
+          "size_bytes": 318465
+        }
+      ],
+      "reconstruction": "concatenate parts in listed order"
+    },
+    {
+      "original_path": "results/sprint_xi_20261028/model_coupled_qwen025_v1/runs/run-001/checkpoints/candidate-v1/optimizer.pt",
+      "original_sha256": "59d26cb84116088b83847b511f66098d43a5209f1d00b96578ab2ae3e916cdfa",
+      "original_size_bytes": 1218465,
+      "parts": [
+        {
+          "path": "results/sprint_xi_20261028/model_coupled_qwen025_v1/runs/run-001/checkpoints/candidate-v1/optimizer.pt.part-000",
+          "sha256": "025b1c6e818b321b18db0a9db81bf3ea4639c817e7fe111f05683977457d05ad",
+          "size_bytes": 900000
+        },
+        {
+          "path": "results/sprint_xi_20261028/model_coupled_qwen025_v1/runs/run-001/checkpoints/candidate-v1/optimizer.pt.part-001",
+          "sha256": "0aa34dfddd9f1800ce35ddd69e0fd3af11795da12c94535ed9b8d48f322d497e",
+          "size_bytes": 318465
+        }
+      ],
+      "reconstruction": "concatenate parts in listed order"
+    }
+  ],
+  "chunk_size_bytes": 900000,
+  "manifest_id": "vare-sprint-xi-checkpoint-parts-v1",
+  "original_checkpoint_commit": "f990817afeadfb8d331995a43e275625205f2bdd",
+  "purpose": "Lossless split encoding for per-blob repository limit; original checkpoint bytes are unchanged.",
+  "schema_version": 1
+}

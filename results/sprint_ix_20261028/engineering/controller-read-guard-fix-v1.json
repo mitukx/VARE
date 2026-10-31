@@ -1,0 +1,26 @@
+{
+  "campaign_source_commit": "cac34bc5ec2f5580582e5a49825ae3b4a6e5147f",
+  "captured_at_utc": "2026-10-28T08:24:38.644170+00:00",
+  "changed_files": {
+    "scripts/run_local_agent.py": "080c0bda6e5f703a4429870b55f78be1a209e1806126d626b872c27bb288de97",
+    "tests/test_post_edit_navigation_gate.py": "98b83adee662599ced8b3e07553319ed67e37ad24fd2eb1b0425b6babea4cd68"
+  },
+  "exact_head_github_ci": "PENDING_AT_CAPTURE",
+  "finding": "The duplicate read guard required a sha256 field that SourceEditLeaseStoreV1.read_lines intentionally strips from its model-facing response.",
+  "fix": "Hash the exact returned line-range content and include canonical path/bounds/edit-attempt count in the duplicate-read progress key; do not expose the full-file lease hash.",
+  "fix_commit": "79be1cae567bd5c3c63e26292a406b21c22e7233",
+  "post_fix_model_evaluation": "NOT_RUN; the qualified family was already consumed by frozen A/B/C attempts.",
+  "pr": 139,
+  "pr_url": "https://github.com/mitukx/VARE/pull/139",
+  "regression": {
+    "errors": 0,
+    "failures": 0,
+    "junit": "results/sprint_ix_20261028/engineering/controller-regression-v2.junit.xml",
+    "junit_sha256": "48270b6454d99e99499b0706714bb8f550a99faf40c39d38fbc77614c31aeb9a",
+    "log_sha256": "8c81925af95aa4a0c4de96c5bdd6cd9cd1949d9f07b2b8323ef28b8eed608f31",
+    "ruff": "PASS",
+    "skipped": 0,
+    "tests": 128
+  },
+  "schema_version": 1
+}

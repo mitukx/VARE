@@ -1,0 +1,160 @@
+{
+  "cheapest_falsification": "One paired one-attempt comparison on one freshly qualified, unexposed Development family; stop after both arms or a resource abort.",
+  "controller": {
+    "commit": "4c48b8eb71055bdd5d48c879e227526d43112efe",
+    "event_protocol": "vare.schema-slots.v6",
+    "progress_guard": "none",
+    "repository": "mitukx/VARE",
+    "shared_tool_actions": [
+      "read_lines",
+      "replace_lines_transactional",
+      "run_public_tests",
+      "finish"
+    ],
+    "system_navigation_guidance": "v1",
+    "tool_interfaces": [
+      "lease_bound_transactional_navigation_v1",
+      "lease_bound_transactional_localized_v1"
+    ],
+    "working_source_files_sha256": {
+      "scripts/localize_task_source_v2.py": "3ab6535816dcf3467672f81b17519349a5b7b659a02012d245e848c6f48c29a9",
+      "scripts/run_local_agent.py": "3b3f0ee3574b5242c01b95ed8b312901eadaff773aa4dc2aa9e22fbd763ef0cf",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+      "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+      "src/vare/schema_slot_protocol.py": "53ff6ced0fedb264355ad57db76e3e0b6216a933f51e4f6ccaf72b6fef84f2d7",
+      "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+      "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+    }
+  },
+  "created_at_utc": "2026-10-27T16:06:05.041677+00:00",
+  "decision_rule": "A successful candidate requires an applied in-scope source edit, public regression pass, and independent hidden grader pass. With one family, report only the paired task outcome and no general capability claim. If neither arm repairs, do not tune this consumed task.",
+  "experiment_id": "sprint-vi-transformers-49842-qwen25-coder14b-localization-v1",
+  "exposure_policy": "Both arms are Development exposure; record each before generation. Neither task nor prompt may be used as blind held-out evidence.",
+  "hypothesis": "At the same model, seed and generation/tool budgets, a deterministic source-location excerpt improves the rate of independently verified repairs over autonomous source navigation on this Development task.",
+  "matched_design": {
+    "arms": {
+      "A_autonomous": {
+        "localization_record": null,
+        "tool_interface": "lease_bound_transactional_navigation_v1"
+      },
+      "B_localized": {
+        "localization_record_sha256": "3c45e48bd07f327c0e41b4d9e86e07efad13d8624d721f7b9b11198fdf0c5f0d",
+        "tool_interface": "lease_bound_transactional_localized_v1"
+      }
+    },
+    "attempts_per_arm": 1,
+    "localized_arm_information_advantage": "B receives a deterministic 80-line AST excerpt selected from the task text and candidate source only; this is an information-value comparison, not a pure coding-skill comparison.",
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 1024,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "public_test_memory_mib": 1024,
+    "public_test_runs_max": 2,
+    "public_test_timeout_seconds": 180,
+    "require_source_read_before_edit": true,
+    "same_initial_instruction": "Repair the task using the available source navigation and edit tools. Apply a minimal source change to the specified implementation file, run the public tests, and finish only after inspecting their result.",
+    "same_task_prompt": "Repair long-cache incremental positional embedding behavior in the MusicGen Melody implementation. Preserve existing in-range semantics and restrict edits to the specified source file.",
+    "sampling": true,
+    "seed": 2029,
+    "task_families": 1,
+    "temperature": 0.2,
+    "top_k": 20,
+    "top_p": 0.95,
+    "wall_seconds": 1800
+  },
+  "model": {
+    "backend": "MLX",
+    "device": "CPU",
+    "manifest_sha256": "d116c3ac0f51a5cf5565d6f577dbee53cb23b65cd824b252113435b74bbc977f",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "python": "3.12",
+    "quantization": "4-bit (repository identifier; config contents retained by per-file hashes)",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "snapshot_commit": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "weights_bytes": 8321093967
+  },
+  "primary_metric": "independent_hidden_correct_repair_per_task_family_at_one_attempt_per_arm",
+  "protocol_sha256": "b1b2d4e27a92f7a001de1fac874e9e0bd86e545b140271aafa40fb3983db08f3",
+  "reproduction": {
+    "grader_command": "python task/evaluator/grade_candidate.py <candidate target source path>",
+    "model_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "model_python": "/Users/user/.cache/vare-mlx-venv/bin/python",
+    "monitor_script_sha256": "5435a260b67a19c34fbd28a5c8d8f411a665a97354eb0f9d81995ae1307c259d",
+    "public_test_image": "localhost:5000/vare/transformers-50001-grader@sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1"
+  },
+  "resource_gates": {
+    "abort_then_continue_other_arm_if_safe": true,
+    "one_model_process_at_a_time": true,
+    "preflight_min_free_disk_gib": 20,
+    "preflight_min_free_swap_mib": 700,
+    "preflight_min_memory_free_pct": 60,
+    "runtime_max_process_rss_mib": 16384,
+    "runtime_max_swap_growth_mib": 512,
+    "runtime_max_wall_seconds": 1800,
+    "runtime_min_free_swap_mib": 180,
+    "runtime_min_memory_free_pct": 25
+  },
+  "resources_at_protocol_setup": {
+    "disk_free_gib": 49,
+    "memory_pressure_free_pct": 73,
+    "vm_swap_free_mib": 1162.12
+  },
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_MODEL_GENERATION",
+  "task": {
+    "base_revision": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+    "baseline_source_sha256": "5b27dea955c5f5c64c1c16d8564a51ce38be3ac655b73db6f5c7fee100988b82",
+    "calibration_revision": "3a3c3ff20527981fd3934da91526ddd62fed5c49",
+    "candidate_base_commit": "601f081ebf2868fcabeb070a15e43c7e83825795",
+    "candidate_base_tree": "e2909836b1c46fb083761ce9297a64a9dbbdedb4",
+    "candidate_commit_count": 1,
+    "candidate_workspace_contains_fixed_source": false,
+    "candidate_workspace_contains_hidden_grader": false,
+    "candidate_workspace_contains_only_target_and_bounded_public_test": true,
+    "grader_sha256": "4dc2e5e65aa3da5353007f1008ff1f51fe1c46f8c94608348a0585b8082122a8",
+    "hidden_test_sha256": "cd99f1588ed5989668e710a880e9c8a9c7d6192cd451d4bd6ad38c9e97e82cd9",
+    "known_fix_source_sha256": "44f92eff2dd74282ae42c1ec79311dc0448dbd0b230759e5dba1b222df861c7a",
+    "localization_record": {
+      "algorithm": "task_prompt_ast_entity_window_v1",
+      "end_line": 173,
+      "known_fix_or_grader_read": false,
+      "path": "localization-record.json",
+      "sha256": "3c45e48bd07f327c0e41b4d9e86e07efad13d8624d721f7b9b11198fdf0c5f0d",
+      "source_path": "src/transformers/models/musicgen_melody/modeling_musicgen_melody.py",
+      "source_sha256": "5b27dea955c5f5c64c1c16d8564a51ce38be3ac655b73db6f5c7fee100988b82",
+      "start_line": 94
+    },
+    "pretraining_exposure": "UNKNOWN",
+    "prior_vare_model_attempt_found_in_existing_exposure_search": false,
+    "public_test_sha256": "ec141db55c5e3352a448c1d8afcef68a81a22669be6ea9adf3c2f924b0e92ff1",
+    "qualification_controls": {
+      "baseline": {
+        "case_count": 6,
+        "passed": false,
+        "sha256": "8f138f7ee88a3a7fbdde1834a1c336842e9a5cbe68c5b2b260bc96b1855259c1",
+        "source_sha256": "5b27dea955c5f5c64c1c16d8564a51ce38be3ac655b73db6f5c7fee100988b82"
+      },
+      "known-fix": {
+        "case_count": 6,
+        "passed": true,
+        "sha256": "efc4ddef766f3455aa2bd2238c201bd5530858e463611be0eccd5f023339afd5",
+        "source_sha256": "44f92eff2dd74282ae42c1ec79311dc0448dbd0b230759e5dba1b222df861c7a"
+      },
+      "wrong-mutant": {
+        "case_count": 6,
+        "passed": false,
+        "sha256": "d95a080168cb1c0e7dc1bc8a7671bfa7385c961c8453a79bc16b0977151f7a35",
+        "source_sha256": "826fccb3a02c56960d56cac63f8b90305939b89757471b9608f650970b5b4b92"
+      }
+    },
+    "repository": "huggingface/transformers",
+    "split": "development",
+    "target_path": "src/transformers/models/musicgen_melody/modeling_musicgen_melody.py",
+    "task_brief_sha256": "5711409b95370443085a73a7294d18b813ba431ed496a71fe41a492f68707021",
+    "task_id": "transformers-49842-musicgen-melody-long-cache-position-v1",
+    "task_json_sha256": "4b478bb5eedd48f9174fca7b612b6c9cdaa6221e6270929ad4560c94814bbbce",
+    "upstream_pr": "https://github.com/huggingface/transformers/pull/49842"
+  }
+}

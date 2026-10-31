@@ -1,0 +1,127 @@
+{
+  "all_attempts_resource_aborted": false,
+  "arms": {
+    "control": {
+      "accepted_tool_calls": 12,
+      "accepted_tool_names": [
+        "list_files",
+        "read_lines",
+        "search_source",
+        "read_lines",
+        "search_source",
+        "read_lines",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source"
+      ],
+      "agent_json_present": false,
+      "applied_edits": 0,
+      "attempt": "01-autonomous-seed-2027",
+      "attempt_assessment_sha256": "61237aebb04cd2e1f3b6837780506bf28af3b87fe9957eba8f3783850dc1ccf1",
+      "candidate_source_unchanged": true,
+      "edit_attempts": 0,
+      "event_journal_sha256": "8bcd352eb99f2482d19e79f56acfd1158b349b61b0e0190d553d04832fa6afb3",
+      "failure_class_posthoc": "source_localization_navigation_action_selection",
+      "free_swap_after_mib": 978.12,
+      "free_swap_before_mib": 978.12,
+      "generated_tokens": 188,
+      "independent_grade": null,
+      "max_rss_mib": 4355.016,
+      "model_output_count": 12,
+      "posthoc_manifest_sha256": "5a53f38eab8c2aa961c74ae523c98b9a44870dafe239dd636c204e1ae580dd20",
+      "posthoc_review_sha256": "01858ce7b28593a246a18f8d889b2aca0623db4885d6b470cee68a6f90002c11",
+      "process_exit_code": 1,
+      "prompt_tokens": 102649,
+      "protocol_sha256": "8bbaa4717bd6031feef66975f994130d3ca7ee9b74a328b741e5a00ddb4d6a5b",
+      "public_test_calls": 0,
+      "raw_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "read_lines_ranges": [
+        {
+          "end": 100,
+          "start": 1
+        },
+        {
+          "end": 100,
+          "start": 1
+        },
+        {
+          "end": 100,
+          "start": 1
+        }
+      ],
+      "search_count": 8,
+      "status": "process_failed",
+      "swap_growth_mib": 0.0,
+      "tokens_per_second": 0.497,
+      "unique_search_queries": 1,
+      "verified_repair": false,
+      "wall_seconds": 378.455
+    },
+    "intervention": {
+      "accepted_tool_calls": 12,
+      "accepted_tool_names": [
+        "list_files",
+        "read_lines",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source",
+        "search_source"
+      ],
+      "agent_json_present": false,
+      "applied_edits": 0,
+      "attempt": "02-intervention-seed-2027",
+      "attempt_assessment_sha256": "03c9e9d1af172bb35b1481e195becb2d4f0f24ce79f969142e0c76d9f750d750",
+      "candidate_source_unchanged": true,
+      "edit_attempts": 0,
+      "event_journal_sha256": "9e95217188c999045806a2c9b30be6dcf2ee3b31b65e32d862eeb162a0ccf4ee",
+      "failure_class_posthoc": "repeated_search_action_selection",
+      "free_swap_after_mib": 978.12,
+      "free_swap_before_mib": 978.12,
+      "generated_tokens": 195,
+      "independent_grade": null,
+      "max_rss_mib": 4359.703,
+      "model_output_count": 12,
+      "posthoc_manifest_sha256": "834f391bfdfab0a334ea4d4e95055282eaa6e41e19f72b7c32b024a4fc61dcbe",
+      "posthoc_review_sha256": "a695f6f9becdaf13cc4fc7dce4105a8dc2184a695a611582a268897722045bb8",
+      "process_exit_code": 1,
+      "prompt_tokens": 58277,
+      "protocol_sha256": "8bbaa4717bd6031feef66975f994130d3ca7ee9b74a328b741e5a00ddb4d6a5b",
+      "public_test_calls": 0,
+      "raw_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "read_lines_ranges": [
+        {
+          "end": 24,
+          "start": 1
+        }
+      ],
+      "search_count": 10,
+      "status": "process_failed",
+      "swap_growth_mib": 0.0,
+      "tokens_per_second": 0.881,
+      "unique_search_queries": 1,
+      "verified_repair": false,
+      "wall_seconds": 221.406
+    }
+  },
+  "campaign_id": "vare.transformers-49772.qwen7b.bounded-lease-intervention.v7",
+  "matched_model_interface_and_resource_budget": true,
+  "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+  "overall_verified_repairs": 0,
+  "paired_verified_repair_difference_intervention_minus_control": 0,
+  "protocol_sha256": "8bbaa4717bd6031feef66975f994130d3ca7ee9b74a328b741e5a00ddb4d6a5b",
+  "qualification_only": "The task qualification controls are separate from model attempts; do not count their known-fix pass as a model repair.",
+  "schema_version": 1,
+  "seed": 2027,
+  "statistical_inference": "not warranted: one task family and both arms failed; attempts are paired within one family",
+  "task_families": 1,
+  "task_id": "transformers-49772-reverse-capture-literal-semantics-v2"
+}

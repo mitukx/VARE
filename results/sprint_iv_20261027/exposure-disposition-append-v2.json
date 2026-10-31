@@ -1,0 +1,84 @@
+{
+  "previous_record": {
+    "note": "Record v1 is unchanged; this new record adds the separately retained PR #1955 experiment.",
+    "path": "results/sprint_iv_20261027/exposure-disposition-append-v1.json",
+    "sha256": "3018268f0e14ccf75e52234e1f84aa4a90db10cdb993b3f897870b288cdfd66c"
+  },
+  "prior_exposure": {
+    "attempts": {
+      "actual_model_inferences": 1,
+      "autonomous": {
+        "accepted_calls": [
+          "list_functions",
+          "read_function"
+        ],
+        "baseline_free_swap_mib": 908.69,
+        "edit_attempts": 0,
+        "frozen_swap_growth_cap_mib": 332.69,
+        "independent_grading": "NOT_RUN",
+        "last_complete_output_tokens": 1024,
+        "last_free_swap_mib": 385.12,
+        "model_outputs": 3,
+        "no_candidate_patch_or_correct_repair": true,
+        "observed_swap_growth_mib": 523.57,
+        "peak_process_rss_mib": 3365.281,
+        "public_tests": "NOT_RUN",
+        "resource_status": "aborted",
+        "source_unchanged": true,
+        "stop_class": "RESOURCE_ABORT_AFTER_TOOL_FORMAT_AND_REPAIR_REASONING_FAILURE",
+        "task_id": "mlxlm-1955-nvfp4-dequantize-autonomous-development-v1",
+        "wall_seconds": 224.457
+      },
+      "planned_arms": 2,
+      "planned_task_families": 1,
+      "source_localized": {
+        "pre_inference_snapshot_free_swap_mib": 908.69,
+        "pre_inference_snapshot_status": "PRE_INFERENCE_PREFLIGHT_PASS",
+        "reason": "The pre-inference snapshot preceded the autonomous arm. After that arm aborted, free swap was 385.12 MiB, below the frozen 512 MiB minimum, so no second model process was launched.",
+        "status": "NOT_RUN_AFTER_PRIOR_ARM_RESOURCE_ABORT",
+        "task_id": "mlxlm-1955-nvfp4-dequantize-localized-development-v1"
+      }
+    },
+    "baseline_revision": "c39139d70f0798834fc721c28a1aa8e1374ea33c",
+    "counting": {
+      "changes_original_15_family_allocation": false,
+      "changes_prior_prospective_9_of_15_certificate_count": false,
+      "count_as_correct_repair": false,
+      "count_as_new_heldout_certificate": false,
+      "retain_negative_development_record": true
+    },
+    "family_id": "mlx-lm-pr-1955-nvfp4-per-expert-dequantization",
+    "known_fix_behavior": "Use a distinct expert scale per expert during NVFP4 dequantization; code is taken from upstream commit 33fdd16.",
+    "known_fix_revision": "33fdd163aac1d60b7364763cfa1fb568aa3dd84c",
+    "limitations": [
+      "External model pretraining exposure is unknown.",
+      "The autonomous attempt was resource-aborted before edit, public tests, candidate export, or independent grading.",
+      "The localized arm did not run; this is not a completed paired comparison."
+    ],
+    "model": {
+      "backend": "MLX CPU",
+      "mlx_lm_version": "0.32.2",
+      "mlx_version": "0.32.4",
+      "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+      "snapshot_commit": "29efdbab55a161237ab1e432a3abaf6c7ae2b477"
+    },
+    "prospective_disposition": "EXCLUDE_UPSTREAM_PR_1955_REPAIR_FAMILY_FROM_FUTURE_BLIND_HELDOUT",
+    "protocol": {
+      "assessment_correction_sha256": "7a07663ed562a812301f2a01bc6980931fcee8fb68f4b8279a59c48040d297b8",
+      "attempt_record_sha256": "6c1dbaa34456174443ca46cb28351e1e379849590672bd08bcce8e2ce6d4e7f0",
+      "path": "results/sprint_iv_20261027/external-mlx-lm-pr1955-nvfp4-dequantize-v3/protocol.json",
+      "raw_event_trace_sha256": "e24781b6bc3a0c01a364adf6a1d5412db41fd7b408e4258a6035d01f687e5fd9",
+      "raw_evidence_publication_status": "LOCAL_RETAINED_NOT_INCLUDED_IN_PR_142_PUBLIC_BUNDLE",
+      "resource_monitor_sha256": "5d5682bbd8bf94f9d650298e3120571874311ef08df926f64ad30ddc917f784b",
+      "sha256": "dee0e4682faa057bc84618c6c01ebb9a225fdf27acbc0e365e959b980ba41ef8"
+    },
+    "split_used": "development",
+    "target": "mlx_lm/utils.py::dequantize_model",
+    "upstream_pr": 1955,
+    "upstream_repository": "ml-explore/mlx-lm",
+    "upstream_url": "https://github.com/ml-explore/mlx-lm/pull/1955"
+  },
+  "record_kind": "append_only_prior_exposure_reconciliation",
+  "recorded_at_utc": "2026-10-27T09:58:54Z",
+  "schema": "vare.dataset-exposure-disposition.v2"
+}

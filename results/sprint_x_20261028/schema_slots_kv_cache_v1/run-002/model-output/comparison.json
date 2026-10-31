@@ -1,0 +1,63 @@
+{
+  "attempt_count": 4,
+  "claim_boundary": "synthetic controller/prefill systems microbenchmark only; no external task repair or capability estimate",
+  "model_load_seconds": 0.876835,
+  "order": [
+    "schema_slots_v9",
+    "schema_slots_v10",
+    "schema_slots_v10",
+    "schema_slots_v9"
+  ],
+  "outcomes": [
+    "two_turn_tool_interaction_complete",
+    "two_turn_tool_interaction_complete",
+    "two_turn_tool_interaction_complete",
+    "two_turn_tool_interaction_complete"
+  ],
+  "paired_repetitions": [
+    {
+      "raw_turn_outputs_and_token_ids_equal": true,
+      "replicate": 1,
+      "schema_slots_v10_metrics": {
+        "amortized_prefill_tokens_including_shared_prefix": 6637,
+        "cache_build_seconds": 23.707845,
+        "cache_restore_seconds": 0.000832,
+        "full_prompt_tokens_across_stages": 18669,
+        "measured_prefill_seconds_including_shared_prefix_build": 26.771911
+      },
+      "schema_slots_v10_outcome": "two_turn_tool_interaction_complete",
+      "schema_slots_v10_wall_seconds": 27.867637,
+      "schema_slots_v9_metrics": {
+        "amortized_prefill_tokens_including_shared_prefix": 18669,
+        "cache_build_seconds": 0.0,
+        "cache_restore_seconds": 0.0,
+        "full_prompt_tokens_across_stages": 18669,
+        "measured_prefill_seconds_including_shared_prefix_build": 66.96668
+      },
+      "schema_slots_v9_outcome": "two_turn_tool_interaction_complete",
+      "schema_slots_v9_wall_seconds": 67.97674
+    },
+    {
+      "raw_turn_outputs_and_token_ids_equal": true,
+      "replicate": 2,
+      "schema_slots_v10_metrics": {
+        "amortized_prefill_tokens_including_shared_prefix": 6637,
+        "cache_build_seconds": 23.710457,
+        "cache_restore_seconds": 0.000752,
+        "full_prompt_tokens_across_stages": 18669,
+        "measured_prefill_seconds_including_shared_prefix_build": 26.708818
+      },
+      "schema_slots_v10_outcome": "two_turn_tool_interaction_complete",
+      "schema_slots_v10_wall_seconds": 27.83767,
+      "schema_slots_v9_metrics": {
+        "amortized_prefill_tokens_including_shared_prefix": 18669,
+        "cache_build_seconds": 0.0,
+        "cache_restore_seconds": 0.0,
+        "full_prompt_tokens_across_stages": 18669,
+        "measured_prefill_seconds_including_shared_prefix_build": 70.964268
+      },
+      "schema_slots_v9_outcome": "two_turn_tool_interaction_complete",
+      "schema_slots_v9_wall_seconds": 71.942799
+    }
+  ]
+}

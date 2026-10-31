@@ -1,0 +1,76 @@
+{
+  "accepted_tool_result_count": 2,
+  "agent_finished": false,
+  "agent_json_sha256": "13946ecc1460bf3967b9fe2d8d4bcf11410839473988040c744aed6c9af77a74",
+  "applied_edits": 0,
+  "attempt": {
+    "arm": "A_autonomous",
+    "ordinal": 1,
+    "seed": 2028
+  },
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate_source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+  "completed_agent_attempt": false,
+  "duplicate_navigation_guard_triggered": false,
+  "event_journal_sha256": "925592dad76c338363c7a152865c944fc859a6bec747b4671381dabf21d33fe4",
+  "failure_class": "argument_slot_token_budget_exhausted_after_unhelpful_navigation",
+  "generated_model_outputs": 3,
+  "generated_tokens": 541,
+  "independent_grading": "NOT_RUN_NO_PATCH",
+  "model_attempt_executed": true,
+  "model_process_started": true,
+  "prompt_tokens_total_across_turns": 13194,
+  "protocol_sha256": "d499905c3a7dd7f233e03b0594690357d0170739a9c2f45b1e9c04deb7f23d8a",
+  "public_test_tool_calls": 0,
+  "resource_measurements": {
+    "abort_reason": null,
+    "elapsed_seconds": 145.468,
+    "free_swap_mib_after": 1098.12,
+    "free_swap_mib_before": 1098.12,
+    "memory_free_percent_after": 67,
+    "memory_free_percent_before": 77,
+    "minimum_memory_free_percent_seen": 37,
+    "monitor_protocol_sha256": "3965e7df4acd1a5be128d09868c190cc20b2c20911da9438717d722b5b74d412",
+    "peak_process_rss_mib": 2063.344,
+    "poll_interval_seconds": 2,
+    "returncode": 0,
+    "samples": 72,
+    "schema_version": 1,
+    "status": "completed",
+    "stderr_sha256": "2dc2928bf9d0f0825548562e67d1efaf146f324aecbb621ce3c51c5194b29c6c",
+    "stdout_sha256": "2cdcbe6c1ffc85be1bec4185b63676cd9a5b26e249053dd1309ca120525cab51",
+    "swap_after": "vm.swapusage: total = 2048.00M  used = 949.88M  free = 1098.12M  (encrypted)",
+    "swap_before": "vm.swapusage: total = 2048.00M  used = 949.88M  free = 1098.12M  (encrypted)",
+    "swap_growth_mib": 0.0
+  },
+  "resource_monitor_status": "completed",
+  "runner_stop_reason": "argument_slot_token_budget_exhausted",
+  "schema_version": 1,
+  "source_edit_attempts": 0,
+  "source_read_calls": 1,
+  "source_search_calls": 1,
+  "successful_source_reads": 1,
+  "successful_source_searches": 1,
+  "task_completed": false,
+  "tool_calls": [
+    {
+      "arguments": {
+        "query": "\"NumPy integer scalar labels currently become floating-point labels\""
+      },
+      "name": "search_source",
+      "status": "ok",
+      "turn": 1
+    },
+    {
+      "arguments": {
+        "end": 100,
+        "path": "src/transformers/data/data_collator.py",
+        "start": 1
+      },
+      "name": "read_lines",
+      "status": "read_complete",
+      "turn": 2
+    }
+  ],
+  "verified_repair": false
+}

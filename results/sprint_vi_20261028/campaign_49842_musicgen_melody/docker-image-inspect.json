@@ -1,0 +1,64 @@
+[
+    {
+        "Architecture": "arm64",
+        "Config": {
+            "Cmd": [
+                "python3"
+            ],
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+                "PYTHON_VERSION=3.12.15",
+                "PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a",
+                "TRANSFORMERS_OFFLINE=1",
+                "HF_HUB_OFFLINE=1",
+                "HF_DATASETS_OFFLINE=1"
+            ],
+            "Labels": {
+                "org.opencontainers.image.description": "CPU runtime import grader based on pinned VARE Transformers CPU qualification image",
+                "org.opencontainers.image.title": "VARE Transformers 50001 isolated grader"
+            }
+        },
+        "Created": "2026-10-27T20:30:00.654910713+09:00",
+        "Descriptor": {
+            "digest": "sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 1841
+        },
+        "Id": "sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+        "Identity": {
+            "Pull": [
+                {
+                    "Repository": "localhost/vare/transformers-50001-grader"
+                }
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-27T11:34:54.461704486Z"
+        },
+        "Os": "linux",
+        "Parent": "sha256:875bdc46969c8207d559939204a8c4fe0f7a83e07d58c8e76812baffb0ef2e20",
+        "RepoDigests": [
+            "vare-transformers-50001-grader@sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+            "localhost:5000/vare/transformers-50001-grader@sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1"
+        ],
+        "RepoTags": [
+            "vare-transformers-50001-grader:revalidation-v1",
+            "localhost:5000/vare/transformers-50001-grader:revalidation-v1"
+        ],
+        "RootFS": {
+            "Layers": [
+                "sha256:dca69811453d69d10b6c0345a5c49147162abe20a2f77802d66efc60667949ea",
+                "sha256:aa7917539601453a983066ad360b759c92c30002edee05749dfe4baa9fa4dde8",
+                "sha256:54e908385c73b1f7a6708f9807d9da4cc2a1e7f4cc4f17e00e6e90a3d8c5007f",
+                "sha256:0e4e1e69caa145889e7738a6089b168f6c66c26184bba2c41b1c6a3e0bb21ff7",
+                "sha256:1a8fcb15f5a52b99c336fad8be9caa69eb4ffa9e99565056af18384419a79d57",
+                "sha256:e6c37f81fd9a4fb115e66a33b74770b448ac69126f3b63c0cd75959e1d7f4f09",
+                "sha256:5ec4e5933233b46783dcb610c6c6570919df34555b955215492b3dae38afa078"
+            ],
+            "Type": "layers"
+        },
+        "Size": 238535675
+    }
+]

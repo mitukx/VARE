@@ -1,0 +1,12 @@
+{
+  "development_task_consumed": false,
+  "evidence": "campaign_v3/preflight.json passed; campaign_v3/task-exposure.jsonl does not exist; failure preceded command.json and Popen.",
+  "exception": "KeyError: seed",
+  "model_inference_started": false,
+  "preservation": "Keep protocol v3 and campaign_v3 partial artifacts unchanged.",
+  "protocol_sha256": "e8d387ae86c33c5eeb2100665c15fe4a12912a4164024ae71560035790ac1ad0",
+  "record_id": "transformers-49703-campaign-v3-preinference-runner-failure",
+  "recorded_at_utc": "2026-10-28T06:07:02.485737+00:00",
+  "root_cause": "Frozen protocol stores seed and sampling parameters under decoding, while runner read them from inference_budget. The command was being constructed before subprocess launch.",
+  "status": "RUNNER_FAILED_BEFORE_MODEL_INFERENCE"
+}

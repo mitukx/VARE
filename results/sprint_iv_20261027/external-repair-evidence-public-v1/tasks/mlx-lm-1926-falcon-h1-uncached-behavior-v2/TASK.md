@@ -1,0 +1,1 @@
+Regression: Falcon-H1 forward passes without a cache skip decoder work and produce incorrect outputs or gradients. Investigate FalconH1Model.__call__ in mlx_lm/models/falcon_h1.py and repair uncached execution while preserving cached execution.

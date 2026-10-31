@@ -1,0 +1,181 @@
+{
+  "abort_reason": null,
+  "agent_outcome": "wall_time_exhausted",
+  "agent_record_sha256": "51b63f133de774f5e48189aeb8577975d0068200a8bbdfb34f4da61b4d94a0aa",
+  "agent_stop_reason": "wall_time_exhausted",
+  "arm": {
+    "arm_id": "autonomous_navigation",
+    "available_tools": [
+      "list_files",
+      "read_lines",
+      "search_source",
+      "replace_lines_transactional",
+      "check_syntax",
+      "finish"
+    ],
+    "localization_record": null,
+    "rationale": "Measures a complete autonomous search/read/edit/syntax-check/finish trajectory.",
+    "task_information": "Task prompt and allowlisted candidate source only. The model must navigate the source itself.",
+    "tool_interface": "lease_bound_transactional_navigation_v1"
+  },
+  "candidate_changed": false,
+  "candidate_changed_paths": [],
+  "candidate_patch_bytes": 0,
+  "candidate_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate_scope_ok": false,
+  "candidate_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+  "controller_interventions": [],
+  "controller_source_hashes_match_protocol": true,
+  "edit_applied": false,
+  "edit_attempted": false,
+  "exit_code": 0,
+  "generated_tokens": 95,
+  "independent_grade": {
+    "argv": [
+      "/tmp/vare-sprint-vii-mlx/bin/python",
+      "-I",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/sprint_viii_transformers_49703_grader_v1.py",
+      "--workspace-root",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_viii_20261028/external_transformers_49703/campaign_v5/attempts/autonomous_navigation/workspace",
+      "--source",
+      "src/transformers/models/mask2former/modeling_mask2former.py"
+    ],
+    "grader_sha256": "9bf4074e31dc40d7134efa033fb030eb0fa1cf9ff72f0c348c9ef7023c7ad9b2",
+    "receipt": {
+      "append_call_count": 2,
+      "candidate_execution": "never_imported_or_executed",
+      "container_expression": null,
+      "reason": "projection_container_is_not_an_empty_module_list",
+      "source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+      "status": "FAIL"
+    },
+    "returncode": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "ec349e0c97771890331ef25962949de05d444b0d5e987def3d932ceb6f79d21f"
+  },
+  "model_explicitly_finished": false,
+  "peak_process_tree_rss_bytes": 4641210368,
+  "protocol_sha256": "4295dddbbd70648ef003b6246aed4e502d057864463128591ee6ae69c43232a4",
+  "public_test_result": null,
+  "public_test_runs": 0,
+  "resource_after": {
+    "available_memory_bytes": 13530857472,
+    "disk_free_bytes": 43897634816,
+    "memory_total_bytes": 34359738368,
+    "process_tree_rss_bytes": 0,
+    "swap_free_bytes": 1435828224,
+    "swap_total_bytes": 3221225472,
+    "swap_used_bytes": 1785397248,
+    "timestamp_utc": "2026-10-28T06:14:08Z"
+  },
+  "resource_before": {
+    "available_memory_bytes": 12279136256,
+    "disk_free_bytes": 43898257408,
+    "memory_total_bytes": 34359738368,
+    "process_tree_rss_bytes": 0,
+    "swap_free_bytes": 1435828224,
+    "swap_total_bytes": 3221225472,
+    "swap_used_bytes": 1785397248,
+    "timestamp_utc": "2026-10-28T06:09:57Z"
+  },
+  "runtime_snapshot_audit": {
+    "grader_entrypoints": [
+      {
+        "path": "scripts/sprint_viii_transformers_49703_grader_v1.py",
+        "sha256": "9bf4074e31dc40d7134efa033fb030eb0fa1cf9ff72f0c348c9ef7023c7ad9b2"
+      }
+    ],
+    "manifest_sha256": "38af64e499a174af715857c0a8924c063dd4c23098878a72d76e87f8fa01e026",
+    "module_origins": {
+      "vare.agent_edit_format": {
+        "path": "src/vare/agent_edit_format.py",
+        "sha256": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9"
+      },
+      "vare.agent_edit_v2": {
+        "path": "src/vare/agent_edit_v2.py",
+        "sha256": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0"
+      },
+      "vare.agent_function_edit_v1": {
+        "path": "src/vare/agent_function_edit_v1.py",
+        "sha256": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0"
+      },
+      "vare.agent_json_eos_v1": {
+        "path": "src/vare/agent_json_eos_v1.py",
+        "sha256": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad"
+      },
+      "vare.agent_json_eos_v2": {
+        "path": "src/vare/agent_json_eos_v2.py",
+        "sha256": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df"
+      },
+      "vare.agent_json_eos_v3": {
+        "path": "src/vare/agent_json_eos_v3.py",
+        "sha256": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3"
+      },
+      "vare.agent_runtime_snapshot_v1": {
+        "path": "src/vare/agent_runtime_snapshot_v1.py",
+        "sha256": "0b5e942da81e5b9a34ebbd5f382bf6af09df634774886d308e2396e89ea0f514"
+      },
+      "vare.agent_task_contract": {
+        "path": "src/vare/agent_task_contract.py",
+        "sha256": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0"
+      },
+      "vare.schema_slot_protocol": {
+        "path": "src/vare/schema_slot_protocol.py",
+        "sha256": "9eecc781ceecad58e6a5dc2903db2ae54782fdf614ff583d5a619881d048267c"
+      },
+      "vare.source_navigation_v1": {
+        "path": "src/vare/source_navigation_v1.py",
+        "sha256": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79"
+      },
+      "vare.source_navigation_v2": {
+        "path": "src/vare/source_navigation_v2.py",
+        "sha256": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+      }
+    },
+    "repository": {
+      "branch": "codex/development-navigation-campaign-v1",
+      "head": "fd98fa77e28874a19baa126b5e4d546697037a39",
+      "runtime_sources_dirty": true,
+      "runtime_status_sha256": "317898a1a5bbd625cb9485e835683ee5af94bdd2c87d1a0d337fc3356a412853",
+      "worktree_dirty": true,
+      "worktree_status_sha256": "ffe9c82bf4e45fafa2de0ab97de975cd12fe06b73494f30f328b0127817eb188"
+    },
+    "status": "PASS",
+    "verified_source_hashes": {
+      "scripts/run_local_agent.py": "24f971d63306b9cdab56fddbb7ad8b5ed4ea1024cf0e604c885fb1bb93e1f179",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+      "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+      "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+      "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+      "src/vare/agent_runtime_snapshot_v1.py": "0b5e942da81e5b9a34ebbd5f382bf6af09df634774886d308e2396e89ea0f514",
+      "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+      "src/vare/schema_slot_protocol.py": "9eecc781ceecad58e6a5dc2903db2ae54782fdf614ff583d5a619881d048267c",
+      "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+      "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+    }
+  },
+  "runtime_snapshot_audit_exit_code": 0,
+  "source_search_count": 8,
+  "status": "COMPLETED",
+  "tool_call_count": 10,
+  "tool_names": [
+    "search_source",
+    "list_files",
+    "read_lines",
+    "search_source",
+    "search_source",
+    "search_source",
+    "search_source",
+    "search_source",
+    "search_source",
+    "search_source"
+  ],
+  "unique_source_search_queries": [
+    "Mask2FormerTransformerModule initialization"
+  ],
+  "valid_source_read_count": 1,
+  "verified_repair": false,
+  "wall_seconds": 251.001
+}
