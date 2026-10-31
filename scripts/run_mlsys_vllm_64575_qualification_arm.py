@@ -48,6 +48,31 @@ def process_tree_rss(root_pid: int) -> int:
     return total
 
 
+def stop_process_group(proc: subprocess.Popen[bytes]) -> None:
+    """Terminate every process left in this attempt's dedicated session."""
+    try:
+        os.killpg(proc.pid, signal.SIGTERM)
+    except ProcessLookupError:
+        pass
+    try:
+        proc.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        pass
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+    if proc.poll() is None:
+        proc.wait()
+
+
+def create_attempt_output_dir(output_dir: Path) -> Path:
+    """Create a fresh attempt directory without overwriting prior evidence."""
+    output_dir = output_dir.expanduser().resolve()
+    output_dir.mkdir(parents=True, exist_ok=False)
+    return output_dir
+
+
 def build_pytest_command(
     profile: Path,
     python: str,
@@ -82,8 +107,7 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--python", required=True)
     args = parser.parse_args()
-    out = args.output_dir.resolve()
-    out.mkdir(parents=True, exist_ok=True)
+    out = create_attempt_output_dir(args.output_dir)
     log_path = out / "pytest.log"
     result_path = out / "attempt.json"
     tmp = out / "tmp"
@@ -112,25 +136,32 @@ def main() -> int:
     peak_rss = 0
     timed_out = False
     rss_exceeded = False
+    monitor_error = None
     with log_path.open("wb") as log:
         proc = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, env=env, start_new_session=True)
         while proc.poll() is None:
-            rss = process_tree_rss(proc.pid)
+            try:
+                rss = process_tree_rss(proc.pid)
+            except Exception as exc:
+                monitor_error = f"{type(exc).__name__}: {exc}"
+                stop_process_group(proc)
+                break
             peak_rss = max(peak_rss, rss)
             if time.monotonic() - started > MAX_SECONDS:
                 timed_out = True
-                os.killpg(proc.pid, signal.SIGKILL)
+                stop_process_group(proc)
                 break
             if rss > MAX_RSS_BYTES:
                 rss_exceeded = True
-                os.killpg(proc.pid, signal.SIGKILL)
+                stop_process_group(proc)
                 break
             time.sleep(0.5)
         try:
             proc.wait(timeout=5)
         except subprocess.TimeoutExpired:
-            os.killpg(proc.pid, signal.SIGKILL)
+            stop_process_group(proc)
             proc.wait()
+        stop_process_group(proc)
     record = {
         "arm": args.arm,
         "command": command,
@@ -139,6 +170,7 @@ def main() -> int:
         "peak_process_tree_rss_bytes": peak_rss,
         "timed_out": timed_out,
         "rss_limit_exceeded": rss_exceeded,
+        "monitor_error": monitor_error,
         "test_file_sha256": sha256_file(args.test_file.resolve()),
         "source_file_sha256": sha256_file(args.source_file.resolve()),
         "sandbox_profile_sha256": sha256_file(args.profile.resolve()),
@@ -146,7 +178,7 @@ def main() -> int:
     }
     result_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
     print(json.dumps(record, sort_keys=True))
-    return 0 if not timed_out and not rss_exceeded else 2
+    return 0 if not timed_out and not rss_exceeded and monitor_error is None else 2
 
 
 if __name__ == "__main__":
