@@ -1,0 +1,152 @@
+{
+  "aggregate": {
+    "agent_trajectories": 0,
+    "baseline_functional_failure_reproduced": true,
+    "case_count": 5,
+    "container_probe_wall_seconds": 0.122194,
+    "fixed_properties_passed": 3,
+    "host_invocation_wall_seconds": 1.082732,
+    "matched_classifications": 5,
+    "maximum_process_rss_bytes": 18612224,
+    "maximum_python_tracemalloc_peak_bytes": 632198,
+    "model_tokens": 0,
+    "mutants_killed": 3,
+    "ooms": 0,
+    "optimizer_updates": 0,
+    "timeouts": 0,
+    "verified_task_successes": 0
+  },
+  "cases": [
+    {
+      "case": "baseline",
+      "classification": "BASELINE_FAIL_REPRODUCED",
+      "executed_module_sha256": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.334429,
+      "probe_wall_seconds": 0.03873,
+      "process_max_rss_bytes": 18481152,
+      "protocol_property_failures": [
+        {
+          "error": "ValueError: Fusion probe_fusion for model type vare_49412_probe conflicts with an existing conversion mapping for source patterns ('patch_embed.proj.weight',).",
+          "property": "same_fusion_is_idempotent"
+        }
+      ],
+      "python_tracemalloc_peak_bytes": 630471,
+      "timed_out": false,
+      "upstream_source_sha256": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c"
+    },
+    {
+      "case": "fixed",
+      "classification": "PASS",
+      "executed_module_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.237817,
+      "probe_wall_seconds": 0.021783,
+      "process_max_rss_bytes": 18612224,
+      "protocol_property_failures": [],
+      "python_tracemalloc_peak_bytes": 632198,
+      "timed_out": false,
+      "upstream_source_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9"
+    },
+    {
+      "case": "mutant-no-deduplication",
+      "classification": "MUTANT_KILLED",
+      "executed_module_sha256": "397091ed877a3c2c7a2efd7ff81ae5b8dd03533dc5d18da5639e2b99826ea579",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.179183,
+      "probe_wall_seconds": 0.022294,
+      "process_max_rss_bytes": 18481152,
+      "protocol_property_failures": [
+        {
+          "error": "ValueError: Fusion probe_fusion for model type vare_49412_probe conflicts with an existing conversion mapping for source patterns ('patch_embed.proj.weight',).",
+          "property": "same_fusion_is_idempotent"
+        }
+      ],
+      "python_tracemalloc_peak_bytes": 631700,
+      "timed_out": false,
+      "upstream_source_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9"
+    },
+    {
+      "case": "mutant-clear-unrelated-mappings",
+      "classification": "MUTANT_KILLED",
+      "executed_module_sha256": "79e652808c38b8cefbf87024fed8b34a89ab82a891ec7df499dd24779c701697",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.166663,
+      "probe_wall_seconds": 0.019542,
+      "process_max_rss_bytes": 18612224,
+      "protocol_property_failures": [
+        {
+          "error": "AssertionError: expected unrelated and fusion converters, found 1",
+          "property": "unrelated_mapping_survives"
+        }
+      ],
+      "python_tracemalloc_peak_bytes": 631920,
+      "timed_out": false,
+      "upstream_source_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9"
+    },
+    {
+      "case": "mutant-allow-conflict",
+      "classification": "MUTANT_KILLED",
+      "executed_module_sha256": "b71e020beddae69d3ead1b4876b6bf894d5fab14c5eee24136aa85ba3ad5b1a3",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.16464,
+      "probe_wall_seconds": 0.019845,
+      "process_max_rss_bytes": 18481152,
+      "protocol_property_failures": [
+        {
+          "error": "AssertionError: conflicting converter was silently accepted",
+          "property": "unrelated_conflict_is_rejected"
+        }
+      ],
+      "python_tracemalloc_peak_bytes": 631839,
+      "timed_out": false,
+      "upstream_source_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9"
+    }
+  ],
+  "environment": {
+    "cpus_per_container": 1,
+    "host_swap_change_mb": "0.00",
+    "host_swap_free_mb_before": "1385.56",
+    "host_swap_used_mb_before": "3734.44",
+    "image_id": "sha256:5461f5ec9d3022db72d49cf5bcd140c99521eba5b37747257b58a576d4e12e1f",
+    "memory_limit_bytes": 536870912,
+    "network": "disabled",
+    "pids_limit": 64
+  },
+  "evidence_level": "E1 source-level reproduction, narrow function scope; not a certified repository-patch task",
+  "experiment_id": "transformers-49412-source-replay-v2",
+  "freeze_commit": "3b4af77c172af105fe0db9a1b53951ffae172a6d",
+  "historical_v1_audit": "The retained v1 baseline pytest failure is in unittest setUp because its new fixture patches an attribute absent from baseline; the test body never calls the target registration function. The v1 raw log, split, and manifest were not changed.",
+  "limitations": [
+    "The probe executes the pinned upstream fusion_mapping.py implementation with fixed in-memory stubs for discovery and conversion-mapping storage.",
+    "No candidate code, hidden grader, full upstream pytest suite, model, agent, or optimizer was run.",
+    "This result does not establish isolated repository-patch grading, task eligibility, Development success, model capability, or policy improvement.",
+    "The task remains in the frozen v1 heldout source allocation and was not reassigned or shown to a model/agent."
+  ],
+  "main_sha_at_branch_creation": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "next_gate": "Complete the repository-patch candidate/grader isolation audit and establish eligible Development tasks. Do not start model inference or training based on this source replay.",
+  "preflight_failures": [
+    {
+      "artifact": "raw/preflight-bind-mount-private-tmp.json",
+      "classification": "INFRASTRUCTURE_PREFLIGHT_BIND_PATH_UNAVAILABLE",
+      "resolution": "Moved source mount to a user Documents/Codex path; read-only hash preflight then passed before the first case.",
+      "target_case_started": false
+    }
+  ],
+  "protocol_sha256": "dcb554a15c33c8a08a0f4cb26d912cc743bd08af633f097523052d668d028893",
+  "qualification_status": "BLOCKED",
+  "question": "Does repeated _register_module_fusion registration fail at the pinned baseline and pass at the pinned fix, without deleting unrelated mappings or accepting unrelated conflicts?",
+  "result": "The pinned baseline raises the expected ValueError on the second registration. The fixed source passes all three behavioral properties. Three predeclared incorrect mutations are each detected by their targeted property.",
+  "schema_version": 1,
+  "status": "COMPLETED"
+}
