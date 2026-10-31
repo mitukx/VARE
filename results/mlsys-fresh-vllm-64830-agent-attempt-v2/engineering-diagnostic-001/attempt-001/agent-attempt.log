@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 1268, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 930, in main
+    workspace_revision = run_git(workspace, 'rev-parse', 'HEAD')
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/vare-pr160-runner-fix/scripts/run_local_agent.py", line 391, in run_git
+    return pinned_git(root, *args).decode("utf-8").strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/vare-pr160-runner-fix/scripts/pinned_workspace_git.py", line 87, in pinned_git
+    raise PinnedWorkspaceError("pinned Git command failed")
+pinned_workspace_git.PinnedWorkspaceError: pinned Git command failed
