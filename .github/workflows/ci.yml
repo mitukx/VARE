@@ -256,6 +256,22 @@ jobs:
         with:
           python-version: "3.12"
       - run: PYTHONPATH=src python scripts/check_tracked_blob_budget.py
+  commit-authors:
+    # Allowlist: protocols/commit_author_allowlist.txt
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+      - name: Reject commits whose author or committer is not allowlisted
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python scripts/check_commit_authors.py "$BASE_SHA" "$HEAD_SHA"
   math500-grader:
     runs-on: ubuntu-latest
     timeout-minutes: 10
