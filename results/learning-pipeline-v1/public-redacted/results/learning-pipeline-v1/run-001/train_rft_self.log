@@ -1,0 +1,33 @@
+╭─ [1mmlx_lm.lora[0m ────────────────────────────────────────────────────────────────╮
+│    model                                                                     │
+│  [1m<HF_HUB_CACHE>/models--mlx-community--Qwen3-4B-Instruc[0m  │
+│  [1mt-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b[0m              │
+│    type            [1mlora · 8 layers · rank 8[0m                                  │
+│    dataset                                                                   │
+│  [1m<RUN_ROOT>/data/rft_sel[0m  │
+│  [1mf[0m                                                                           │
+│    optimizer       [1madam · lr 5.0e-05[0m                                         │
+│    batch · iters   [1m1 · 100[0m                                                   │
+│    max seq         [1m3,072[0m                                                     │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Trainable parameters: 0.091% (3.670M/4022.468M)
+  [1miter   train_loss     tok/s     tokens[0m
+     1    [1mval[0m [1m0.557[0m    23.76s
+    10    [1m0.268 ▼[0m    [1m   22[0m      2.0k
+    20    [1m0.116 ▼[0m    [1m   22[0m      3.9k
+  [1msave[0m  0000025_adapters.safetensors
+    30    [1m0.058 ▼[0m    [1m   24[0m      6.0k
+    40    [1m0.054 ▼[0m    [1m   21[0m      7.9k
+    50    [1mval[0m [1m0.196[0m    23.69s
+    50    [1m0.049 ▼[0m    [1m   18[0m      9.4k
+  [1msave[0m  0000050_adapters.safetensors
+    60    [1m0.030 ▼[0m    [1m   23[0m     11.4k
+    70    [1m0.018 ▼[0m    [1m   21[0m     13.1k
+  [1msave[0m  0000075_adapters.safetensors
+    80    [1m0.014 ▼[0m    [1m   24[0m     15.3k
+    90    [1m0.012 ▼[0m    [1m   22[0m     17.2k
+   100    [1mval[0m [1m0.254[0m    24.54s
+   100    [1m0.016 ▲[0m    [1m   22[0m     19.1k
+  [1msave[0m  0000100_adapters.safetensors
+[1mtrain[0m ██████████████████████████████ [1m100%[0m · [1m  100[0m/100
+
