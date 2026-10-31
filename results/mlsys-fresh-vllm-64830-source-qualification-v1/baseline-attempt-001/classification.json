@@ -1,0 +1,18 @@
+{
+  "arm": "baseline",
+  "attempt_id": "baseline-attempt-001",
+  "attempt_json": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-001/attempt.json",
+  "attempt_json_sha256": "69e115875fe692ad86dec507eb69c8f5197790b07fb4e5e944ffcd2f2d8075da",
+  "candidate_assertions_executed": 0,
+  "candidate_test_cases_collected": 0,
+  "classification": "STOPPED_BEFORE_TEST_COLLECTION",
+  "decision": "Preserve and consume this invocation. It provides no candidate behavior evidence; do not run mutant or fixed under addendum 2.",
+  "failure": "pytest_configure logging plugin attempted to open /dev/null; the default-deny Seatbelt profile denied that write.",
+  "gate_passed": false,
+  "mutant_or_fixed_arm_authorized_under_addendum_2": false,
+  "pytest_exit_code": 3,
+  "pytest_log": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-001/pytest.log",
+  "pytest_log_sha256": "bf4fc7804c9e92c2adc436d7cf85109f616b8d9126ba0138964864488c0f29b2",
+  "rss_limit_exceeded": false,
+  "timeout": false
+}

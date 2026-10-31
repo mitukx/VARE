@@ -544,6 +544,74 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Follow-up:** Freeze and push source-level qualification for #64830. Require the baseline, wrong-mutant, upstream-fixed, and isolation gates before prospective assignment. If qualification passes, separately assess a resource-feasible local policy and freeze a distinct one-shot attempt before inference.
 
 
+## 2026-10-31 — Freeze scoped vLLM #64830 source qualification and repair PR #160 review findings
+
+- **Hypothesis:** The exact pre-merge VllmConfig method fails the two newly added HiSparse/watermarking assertions, the fixed method passes, and a mutant with only those two guards removed is rejected under the frozen bounded runner.
+- **Evidence:** Frozen source identity, path, license, and ancestry gates matched. The overlay preserves `tests/test_config.py::test_v1_model_runner_rejects_v2_only_config` unchanged, selecting its HiSparse and watermarking cases. Baseline/fixed method hashes, mutant diff, overlay, runtime, profiles, resource caps, and exact commands are bound in execution addendum SHA-256 `96fbf7a9c05373eab6dae43f5ce057f6f686e3766eab3aaae8e360d38da0a856`. No candidate test has run. The modified custom-speculator test is excluded because its full registration and VllmConfig validation fixtures are outside this method-only scope. Separately, PR #160 review findings about skipped task hashes and surviving descendants were corrected in commit `71aa74ab`; the focused suite passed 19 tests and exact-head CI is pending.
+- **Alternative explanations:** A two-case method overlay does not qualify the whole PR, the custom-speculator behavior, model repair, or a task split. Tests could still fail for import, collection, assertion, resource, or sandbox reasons. No evidence supports pretraining independence.
+- **Decision:** Keep #64830 **UNQUALIFIED / UNASSIGNED** and do not claim model capability or RL gain. Preserve the scope and one-invocation gates exactly.
+- **Falsification criteria:** Either baseline case does not fail at the intended assertion, the mutant is not rejected at those assertions, fixed source does not pass both, hashes differ, or any isolation/resource gate fails.
+- **Follow-up:** Push the addendum first; run baseline once. Stop on any unexpected result and retain the receipt. Continue the stack only through the preregistered gates.
+
+
+## 2026-10-31 — Preserve the #64830 pytest setup failure and freeze a corrected runner
+
+- **Hypothesis:** The source-level two-case qualification can execute under the existing default-deny Seatbelt boundary if pytest writes its internal log file beneath the already allowed arm-specific result directory.
+- **Evidence:** Baseline attempt-001 exited 3 during `pytest_configure`; the logging plugin received `PermissionError` opening `/dev/null`. Its receipt and log show no collection or candidate assertion, no timeout, and no RSS breach. The frozen gate therefore stopped and neither mutant nor fixed ran. The trusted runner now passes `-o log_file=<arm-output-dir>/pytest-internal.log`; sandbox profiles and all candidate inputs are unchanged. A runner regression passed (1 test), Ruff passed, and `py_compile` passed. Corrected command hashes and attempt-002 output roots are in execution addendum 3 (SHA-256 `140f25ab7b2ccc1c75100398719f6f72db0e15fb56b16dfe89cdf263cba04546`).
+- **Alternative explanations:** This setup correction may expose a second sandbox/setup defect; a passing baseline result is still required to establish the expected behavior. The method-only overlay does not qualify the excluded custom-speculator test, the entire upstream PR, any task split, or model repair.
+- **Decision:** Preserve and consume baseline attempt-001 as `STOPPED_BEFORE_TEST_COLLECTION`, with zero candidate assertions executed. Do not count it as either a baseline failure or pass. Addendum 3 authorizes one corrected baseline attempt-002 only after it is committed and pushed; continue to wrong-mutant and upstream-fixed only through their exact gates. Keep #64830 **UNQUALIFIED / UNASSIGNED**, public pretraining exposure **UNKNOWN**, and capability/RL **NO-GO**.
+- **Falsification criteria:** Attempt-002 has a collection/import error, any unrelated failure, skip, timeout, resource breach, or does not show exactly the expected two post-override assertion failures; any command/input hash mismatch; or any isolation violation.
+- **Follow-up:** Commit and push the correction plus addendum before executing the corrected baseline. If the baseline gate fails, stop and preserve the result; no retry is authorized by addendum 3.
+
+
+## 2026-10-31 — Correct the #64830 attempt-002 Seatbelt write roots before execution
+
+- **Hypothesis:** An attempt can safely use a fresh arm-specific output directory if the hash-bound Seatbelt profile grants writes only to that exact directory while continuing to deny network access by default.
+- **Evidence:** A pre-execution audit of pushed Addendum 3 found that its attempt-002 commands inherited profiles whose sole write subpaths ended in attempt-001. Addendum 3 was not invoked, no attempt-002 output directory was created, and no candidate assertion ran under it. Three new profiles preserve all policy rules and change only the write subpath to match the respective attempt-002 output. Addendum 4 binds these profile hashes, path matches, command arrays, and the prior Addendum 3 hash. The local audit reconstructed every command from the trusted runner and verified all output roots were unused.
+- **Alternative explanations:** The corrected profiles may still reveal runtime or Seatbelt behavior not caught by path/hash inspection; attempt-002 must still pass collection, behavior, and resource gates.
+- **Decision:** Preserve Addendum 3 unchanged and mark it superseded before execution. Do not execute its commands. Make Addendum 4 the only authoritative attempt-002 plan; commit and push it with the profiles before running baseline. Keep #64830 **UNQUALIFIED / UNASSIGNED**, public pretraining exposure **UNKNOWN**, and coding/RL **NO-GO**.
+- **Falsification criteria:** Any mismatch between the profile’s writable subpath and its output directory, network denial, stored command, or hash; output dir already exists; collection/assertion gate failure; resource breach; or sandbox escape.
+- **Follow-up:** Push Addendum 4 first; verify its remote commit and hashes; run baseline once. Continue only if the exact expected assertion gate passes.
+
+
+## 2026-10-31 — Pass the #64830 baseline gate on attempt-002
+
+- **Hypothesis:** The exact pre-merge `VllmConfig` method omits the newly added HiSparse and watermarking rejection behavior, and the unchanged upstream assertions detect both omissions.
+- **Evidence:** Addendum 4 was pushed before execution at PR #162 head `5d2064a70c697fee3684c6586c50a2329cb8e86d` and its remote JSON hash matched SHA-256 `dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396`. The one stored baseline argv ran once. Both selected nodes collected and failed only at the post-override equality assertion on line 73: `[]` versus `['HiSparse']` and `[]` versus `['watermarking']`. Pytest reported 2 failed, 0 passed, 0 skipped, 0 errors. Exit code 1 was expected; elapsed time was 0.53 s; peak process-tree RSS was 3,932,160 bytes of 4 GiB; no timeout. The matching arm profile denied network and granted writes only to its attempt-002 result directory. The receipt, dispatch record, log, classification, and SHA256SUMS are in the baseline attempt directory.
+- **Alternative explanations:** This result establishes only that the scoped baseline method misses the two frozen behaviors. It says nothing about the wrong mutant, fixed source, excluded custom-speculator case, whole upstream PR, pretraining exposure, model repair, or policy learning.
+- **Decision:** Mark the baseline gate **PASSED**. Under Addendum 4 only, authorize the one wrong-mutant attempt-002. Keep #64830 **UNQUALIFIED / UNASSIGNED** until mutant and fixed gates and isolation review pass; capability and RL remain **NO-GO**.
+- **Falsification criteria:** Any source/test/profile/command mismatch, a failure not at the two frozen assertions, skips/errors, timeout, RSS breach, or write/network isolation failure would invalidate the gate.
+- **Follow-up:** Run the stored mutant argv exactly once. Continue to upstream-fixed only if it is rejected by both same target assertions and no other gate fails.
+
+
+## 2026-10-31 — Reject the #64830 wrong mutant
+
+- **Hypothesis:** The intentionally wrong method, produced by removing only the newly added HiSparse and watermarking checks from upstream-fixed source, is rejected by both unchanged upstream regression cases.
+- **Evidence:** Addendum 4 remained present on the pushed PR branch and its stored wrong-mutant argv ran once. Both selected cases failed only at the frozen post-override equality assertion on line 73, yielding `[]` instead of `['HiSparse']` and `['watermarking']`. Pytest reported 2 failed, 0 passed/skipped/errors; exit code 1 was expected; elapsed time was 0.529 s; peak RSS was 3,932,160 bytes of 4 GiB; no timeout. The attempt's source/test/profile/Python hashes matched and its profile denied network with writes limited to its own output root. The baseline gate had already passed. Receipts and hashes are in the wrong-mutant attempt directory.
+- **Alternative explanations:** This confirms the tests detect the two removed guards in the method-only harness; it does not establish fixed-source success, full upstream integration, model repair, task assignment, or pretraining independence.
+- **Decision:** Mark the wrong-mutant gate **PASSED / REJECTED** and authorize one upstream-fixed attempt-002 under Addendum 4. Keep #64830 **UNQUALIFIED / UNASSIGNED** until fixed and isolation gates pass; capability/RL remain **NO-GO**.
+- **Falsification criteria:** Any hash mismatch, failure outside the intended assertion, skip/error, timeout, memory breach, or sandbox violation would invalidate the mutant gate.
+- **Follow-up:** Run the stored upstream-fixed argv exactly once. Require both identical cases to pass without unrelated failures before finalizing the scoped qualification.
+
+
+## 2026-10-31 — Complete the scoped vLLM #64830 source qualification
+
+- **Hypothesis:** The two unchanged upstream regression cases detect the missing HiSparse and watermarking guards in the pinned pre-merge method, reject a wrong mutant with those guards removed, and pass against the upstream-fixed method under the isolated runner.
+- **Evidence:** Under pushed Addendum 4, baseline attempt-002 failed both target assertions (line 73), wrong-mutant attempt-002 failed the same assertions, and upstream-fixed attempt-002 passed both. Every arm ran once with matching source, test, Python, profile, and command hashes. The three Seatbelt profiles denied by default and denied network access; each allowed writes only to its arm result subtree. All arms completed in about 0.53 seconds, peaked at 3,932,160 bytes process-tree RSS, and stayed within the 600-second/4-GiB limits. There were no skips, errors, timeouts, or unrelated failures. Bundle `SHA256SUMS` verifies all 58 files. Attempt-001's `/dev/null` setup failure and Addendum 3's never-invoked path mismatch remain preserved as non-behavioral history.
+- **Alternative explanations:** This small method-only source comparison does not qualify the full upstream PR, the excluded custom-speculator test, an agent repair, coding capability, RL, or pretraining independence. The cases may be present in public pretraining data.
+- **Decision:** Mark #64830 **QUALIFIED_SOURCE_LEVEL** for only the HiSparse and watermarking method-level cases. Keep it **UNASSIGNED**. Append-only exposure now records that the research agent reviewed/executed public source/test inputs but no model saw them and no model inference, training, Held-Out use, paid compute, or API occurred. Public pretraining exposure remains UNKNOWN. Coding capability and RL remain **NO-GO**.
+- **Falsification criteria:** Any unbound source/test/method/profile/Python/command hash; incorrect case attribution; failed fixed case; skip/error/timeout/resource breach; sandbox/write/network violation; or path outside the frozen overlay would invalidate or narrow the claim.
+- **Follow-up:** Push the complete report and receipts, update PR #162, and inspect exact-head CI/reviews. A possible Development use requires a separate prospective assignment, overlap and resource checks, exposure append, and frozen one-shot model/grader protocol.
+
+
+## 2026-10-31 — Correct the vLLM #64830 RSS evidence interpretation
+
+- **Finding:** Review of the frozen runner showed that `peak_process_tree_rss_bytes` was only the maximum 0.5-second `ps` sample. Each retained arm finished in about 0.53 seconds and recorded 3,932,160 bytes, so the value cannot establish the OS high-water mark or exclude a short-lived limit breach. A local reproduction sampled 2,867,200 bytes before a child touched 91 MiB, then `wait4` reported a 106,774,528-byte direct-child high-water mark after a 0.5-second gap.
+- **Evidence preservation:** The original protocol, receipts, report, and root `SHA256SUMS` remain unchanged. Append-only erratum 001 binds the old bundle and receipt hashes and withdraws only the resource-pass interpretation.
+- **Decision:** Keep the three behavioral outcomes: baseline fails both intended assertions, the wrong mutant is rejected, and upstream-fixed passes both. Reclassify the consumed runs' 4 GiB resource result as **INCONCLUSIVE**. Do not rerun the arms or reuse protocol v1. The corrected runner records sampled process-tree RSS separately from the OS `wait4` direct-child high-water and states that the latter is not a complete concurrent process-tree peak.
+- **Limit:** Neither the old nor corrected runner proves the maximum aggregate RSS of every concurrent descendant. New protocols must bind the measurement scope and cannot claim a full-tree peak from polling alone.
+- **Follow-up:** Run the focused runner regression, lint, and compile checks; push the fix and erratum to PR #162; inspect exact-head CI and resolve the RSS review thread only after the pushed diff is visible.
+
 ## 2026-10-31 — Reclassify vLLM #64575 source-runner RSS evidence
 
 - **Hypothesis:** The 0.5-second process-tree polling loop can establish that every source-qualification arm stayed below its 4 GiB RSS limit.

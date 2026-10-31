@@ -648,6 +648,53 @@ The exact model-attempt argv and independent grader argv are stored in the froze
 
 Pre-protocol resource snapshot: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/pre-protocol-resource-snapshot.json`. Launch receipt: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json` (SHA-256 `d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e`). A later code review found that the historical preflight skipped the task JSON and prompt hash checks: its generic `path`/`sha256` guard ran before the task-specific branch, but the frozen task entry uses `task_json_path`/`task_json_sha256` and `task_prompt_path`/`task_prompt_sha256`. The receipt's `frozen_inputs_verified=true` flag therefore overstates the checks performed. A retrospective hash calculation against the frozen repository content matches both protocol hashes, but those hashes were not checked by that historical preflight. The separate model-snapshot checks remain recorded as verified. The working-set-plus-headroom check independently failed: 11,993,432,064 bytes available versus 12,872,896,985 bytes required. Status remains **NO-GO / NOT RUN**; the model was not loaded, and no task prompt was delivered to it. The original protocol, receipt, and checksum manifest remain unchanged. The append-only correction is `results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/preflight-integrity-erratum-001.json`; verify it with `(cd results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata && shasum -a 256 -c SHA256SUMS)`. Do not retry this frozen protocol.
 
+
+## PR #160 review-fix regression tests
+
+At commit `71aa74ab6a8f6f1625505b68f7f332c49fabff93`, local validation used Python 3.12.12 / pytest 8.4.2:
+
+```bash
+ruff check scripts/preflight_local_model_attempt.py scripts/run_bounded_local_agent_attempt.py tests/test_preflight_local_model_attempt.py tests/test_run_bounded_local_agent_attempt.py
+/opt/homebrew/Caskroom/miniforge/base/bin/python -m py_compile scripts/preflight_local_model_attempt.py scripts/run_bounded_local_agent_attempt.py tests/test_preflight_local_model_attempt.py tests/test_run_bounded_local_agent_attempt.py
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /opt/homebrew/Caskroom/miniforge/base/bin/python -m pytest -o addopts='' -q tests/test_preflight_local_model_attempt.py tests/test_run_bounded_local_agent_attempt.py
+```
+
+Recorded result: 19 passed, Ruff clean, `py_compile` exit 0. Remote exact-head CI was still running when this checkpoint was written. Details: `results/pr160-review-fixes-v1/run-001.json`.
+
+## Fresh vLLM #64830 scoped source qualification
+
+Protocol: `protocols/mlsys_fresh_vllm_64830_source_qualification_v1.json`; ancestry correction: `protocols/mlsys_fresh_vllm_64830_source_qualification_v1_addendum_1.json`. The scope remains the unchanged upstream HiSparse and watermarking cases exercised against extracted baseline, mutant, and fixed `VllmConfig` methods; custom-speculator behavior is excluded.
+
+Overlay preparation on a clean source checkout (the existing evidence directory is immutable and the preparation script refuses to overwrite it):
+
+```bash
+/opt/homebrew/Caskroom/miniforge/base/bin/python scripts/prepare_mlsys_vllm_64830_qualification_overlay.py \
+  --source-repository /private/tmp/vare-vllm-64830-source \
+  --protocol protocols/mlsys_fresh_vllm_64830_source_qualification_v1.json \
+  --output-dir results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest
+```
+
+Before execution, verify the addendum sidecar and reproduce the runner-tooling checks:
+
+```bash
+(cd results/mlsys-fresh-vllm-64830-source-qualification-v1 && shasum -a 256 -c protocol-addendum-3-corrected-logging.json.sha256)
+ruff check scripts/run_mlsys_vllm_64830_qualification_arm.py tests/test_mlsys_vllm_64830_qualification_tools.py
+/opt/homebrew/Caskroom/miniforge/base/bin/python -m py_compile scripts/run_mlsys_vllm_64830_qualification_arm.py tests/test_mlsys_vllm_64830_qualification_tools.py
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /opt/homebrew/Caskroom/miniforge/base/bin/python -m pytest -p no:cacheprovider -o addopts= -q tests/test_mlsys_vllm_64830_qualification_tools.py
+```
+
+After the addendum is committed and pushed, run one arm at a time by selecting the corresponding `runner_argv` array from that JSON and invoking it with the VARE repository as the working directory. Never hand-edit an argv. Do not execute the next arm until the previous gate passes.
+
+The original execution addendum 2 is immutable and consumed by baseline attempt-001. Pytest failed in `pytest_configure` because the logging plugin attempted `/dev/null`, which the deny-by-default Seatbelt profile disallowed. The receipt is `results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-001/attempt.json`; its classification is `STOPPED_BEFORE_TEST_COLLECTION`, with zero candidate assertions executed. No later arm ran under addendum 2.
+
+The trusted runner now sets `-o log_file=<arm-output-dir>/pytest-internal.log`; this file stays inside the existing arm-specific writable boundary. The sandbox profiles, source/test/mutant bytes, exact test IDs, resource caps, and behavioral acceptance gates are unchanged. The runner unit regression, Ruff, and `py_compile` commands and logs are saved under `results/mlsys-fresh-vllm-64830-source-qualification-v1/retry-tooling-001/`.
+
+Execution addendum 3 (`protocol-addendum-3-corrected-logging.json`) is preserved but superseded before execution: its attempt-002 commands pointed to profiles that allowed writes only under attempt-001. It was never invoked. Execution addendum 4 (`protocol-addendum-4-output-profile-binding.json`) is authoritative. Verify its `.sha256` sidecar, parent hash, runner/test/source/test/Python hashes, all exact stored `runner_argv` and `inner_pytest_command` arrays, and that each profile's sole writable subpath equals its arm's attempt-002 output directory. The three profiles retain default-deny and network-deny rules. **Commit and push addendum 4 and those profiles before any candidate test retry.** Then execute only the stored baseline `runner_argv` once. It must produce exactly the two post-override assertion failures, with successful collection/import and no skips, timeout, resource or isolation breach. If this gate passes, execute the stored wrong-mutant argv once and require the same failures. Only then execute upstream-fixed once and require both cases to pass. Any unexpected result stops the sequence; there is no retry under addendum 4.
+
+Baseline attempt-002 failed both intended assertions; the wrong-mutant attempt was rejected by both; upstream-fixed passed both. The original RSS values and the claim that the 4 GiB memory gate passed are superseded by `results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.md` and its JSON checksum manifest. The resource result is **INCONCLUSIVE**. Original receipts and the root bundle `SHA256SUMS` remain unchanged and verifiable; do not treat their sampled RSS field as an OS high-water mark. The result qualifies only the scoped method-level behavior; the task remains unassigned and no inference is authorized by these source-level results.
+
+No split assignment, model inference, training, or Held-Out access is authorized. Public pretraining exposure remains UNKNOWN. A source-level pass cannot establish agent capability or RL improvement.
+
 ## vLLM #64575 source-qualification RSS erratum 001
 
 The original qualification bundle remains immutable. Its root manifest is `results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS` (SHA-256 `7d999d51daf233c2ab84677c35fa0b988019c7160777f2a313a2da2e0b7e60bf`); it covers the original 30 files. The append-only correction is `results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/rss-resource-measurement-erratum-001.json` and its Markdown explanation. Verify both records with:

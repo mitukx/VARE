@@ -1,0 +1,65 @@
+{
+  "extracted_method_sha256": {
+    "baseline": "8e27720d05507ce6596dcc53fb47b858087efb29baa762e44a7aca6526f2c7ba",
+    "fixed": "8963659dedc3900222424438a5d812090e7d3e2839a8ad157a73b0753cf012fa",
+    "wrong_mutant": "70025c1721eed1e3139e6ffd6be72c4c16423d41788db4cabe1cbbd65a4e0ffd"
+  },
+  "extracted_test_function_sha256": "4db921894599a90aeef007bbb5edca0d46f777e04d346b98b20f40dca55906af",
+  "files": {
+    "trusted/pytest.ini": {
+      "bytes": 9,
+      "sha256": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4"
+    },
+    "trusted/test_vllm_config_unsupported_features.py": {
+      "bytes": 2180,
+      "sha256": "c7d87ac08859609e015df3071a10a26ce5d057102d83dd7609a1a61817f0cbcd"
+    },
+    "trusted/upstream_regression_test.py": {
+      "bytes": 1024,
+      "sha256": "4db921894599a90aeef007bbb5edca0d46f777e04d346b98b20f40dca55906af"
+    },
+    "trusted/vllm_config_baseline_method.py": {
+      "bytes": 3200,
+      "sha256": "8e27720d05507ce6596dcc53fb47b858087efb29baa762e44a7aca6526f2c7ba"
+    },
+    "trusted/vllm_config_fixed_method.py": {
+      "bytes": 3634,
+      "sha256": "8963659dedc3900222424438a5d812090e7d3e2839a8ad157a73b0753cf012fa"
+    },
+    "trusted/vllm_config_wrong_mutant_method.py": {
+      "bytes": 3434,
+      "sha256": "70025c1721eed1e3139e6ffd6be72c4c16423d41788db4cabe1cbbd65a4e0ffd"
+    },
+    "wrong-mutant.patch": {
+      "bytes": 289,
+      "sha256": "90d070423534ec53b9c8e513b64fb35bca8da2b66ad3f513632d44844fdc630f"
+    }
+  },
+  "method_artifact_sha256": {
+    "baseline": "8e27720d05507ce6596dcc53fb47b858087efb29baa762e44a7aca6526f2c7ba",
+    "fixed": "8963659dedc3900222424438a5d812090e7d3e2839a8ad157a73b0753cf012fa",
+    "wrong_mutant": "70025c1721eed1e3139e6ffd6be72c4c16423d41788db4cabe1cbbd65a4e0ffd"
+  },
+  "mutant_patch_sha256": "90d070423534ec53b9c8e513b64fb35bca8da2b66ad3f513632d44844fdc630f",
+  "parametrization": [
+    "HiSparse",
+    "watermarking"
+  ],
+  "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1",
+  "protocol_sha256": "6901a8146568354acb4089ae0b82745142a05c49ebdba96f709707221c8eb091",
+  "schema_version": 1,
+  "selected_test": "tests/test_config.py::test_v1_model_runner_rejects_v2_only_config",
+  "source_file_sha256": {
+    "baseline": "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738",
+    "fixed": "9761b7dfbe0704a6136ca05147e3996e372d5c17fa64e5c224f1950ef40a873e"
+  },
+  "source_path": "vllm/config/vllm.py",
+  "source_repository": "https://github.com/vllm-project/vllm.git",
+  "source_revisions": {
+    "baseline": "17550580e932f15e772185847382d3ae4211f5ec",
+    "fixed": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49"
+  },
+  "test_overlay_sha256": "c7d87ac08859609e015df3071a10a26ce5d057102d83dd7609a1a61817f0cbcd",
+  "test_path": "tests/test_config.py",
+  "upstream_test_file_sha256": "5e319fa174857ea617e6aff6b0cf46d0c18a9c2649eb492c8fb819978812b16e"
+}

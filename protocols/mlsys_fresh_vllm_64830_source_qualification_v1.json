@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1",
+  "protocol_status": "frozen_before_source_test_or_patch_access",
+  "frozen_at_utc": "2026-10-31T05:24:11Z",
+  "purpose": "Qualify vLLM #64830 at source level after its separate metadata-only Development/Train overlap review found no direct identity/family overlap. This protocol authorizes no split assignment or model exposure.",
+  "hypothesis": "The exact pre-merge vLLM source fails the regression assertions added by #64830, one incorrect mutant of the fixed source is rejected, and the exact merged source passes the same assertions under an isolated CPU-only harness.",
+  "candidate": {
+    "repository": "vllm-project/vllm",
+    "pull_request": 64830,
+    "url": "https://github.com/vllm-project/vllm/pull/64830",
+    "title_from_frozen_metadata": "[Config] Move V2-only checks into V1 model runner unsupported features",
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks",
+    "family_hypothesis": "V1 model-runner configuration handling for checks described as V2-only unsupported features.",
+    "base_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+    "pr_head_revision": "9800451ab0e78104971592315e5b26546c5e9993",
+    "fixed_merge_revision": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+    "expected_changed_paths": [
+      "tests/test_config.py",
+      "tests/v1/spec_decode/test_custom_speculator.py",
+      "vllm/config/vllm.py"
+    ],
+    "expected_test_paths": [
+      "tests/test_config.py",
+      "tests/v1/spec_decode/test_custom_speculator.py"
+    ],
+    "license_to_verify_after_freeze": "Apache-2.0"
+  },
+  "frozen_inputs": {
+    "protocols/mlsys_fresh_development_candidate_selection_v3.json": "7b0e88d37ed11380bf7d590dfb4484fc63535aa985d72dfb2fe1086c28183148",
+    "results/mlsys-fresh-development-candidate-selection-v3/selection.json": "34dd94a43ea5b8224149fa7edf5351889e77de87bc3c81f04a6c3ac73e6f5735",
+    "protocols/mlsys_fresh_development_task_family_overlap_v5.json": "b35ade831d91f3a404bc5e5e2d72766ff2ce91ae7764764a6fc696c33ab79c36",
+    "protocols/mlsys_fresh_development_task_family_overlap_v5_addendum_1.json": "fb3cb7206ec544296e9313705d9d687b4b340f75bc1b8ed79e84ce76c68cee0f",
+    "results/mlsys-fresh-development-task-family-overlap-v5-correction-001/review.json": "ca3c3c459aea260e2b1737f0ab034c2033bf0e3e19b4a397ae9abc32e6b98986",
+    "results/mlsys-fresh-development-task-family-overlap-v5-correction-001/review-evidence-manifest.json": "9150688a366ee662d641e25c15484c9e776db1f6c69d83e517fca1127ed2ca70",
+    "research/flagship/state.json": "68446809c772dd787fea0a3d2e7da6787f3bb93d58e8b344302f17e3c3f034f0"
+  },
+  "pre_source_access_record": {
+    "candidate_pr_body_or_comments_opened": false,
+    "candidate_source_opened": false,
+    "candidate_tests_opened": false,
+    "candidate_patch_opened": false,
+    "heldout_access": false,
+    "model_or_agent_inference": false
+  },
+  "qualification_plan": {
+    "authorization": {
+      "source_and_test_access_after_protocol_commit_and_push": true,
+      "source_level_task_qualification_only": true,
+      "development_split_assignment": false,
+      "agent_or_model_inference": false,
+      "training": false,
+      "heldout_access": false,
+      "paid_compute_or_api": false
+    },
+    "source_identity_gates": [
+      "Verify repository identity, exact Git commit objects, base ancestry, PR head, merge commit, and license after this protocol is committed and pushed.",
+      "Use only the frozen candidate and test paths; do not inspect PR discussion or unrelated paths.",
+      "If the expected changed paths or revisions do not match the frozen metadata, stop without adapting the candidate selection."
+    ],
+    "test_overlay": "After source access, extract only PR-added or PR-modified regression tests from the two frozen test paths into a trusted overlay. Do not edit assertions. If no targeted regression exists, or it requires accelerator, network, external service, or full-server execution, stop unqualified.",
+    "arms": [
+      {
+        "name": "baseline",
+        "source_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+        "test_overlay": "Exact targeted regression tests and support bytes from the frozen PR merge revision, unchanged."
+      },
+      {
+        "name": "wrong-mutant",
+        "source_revision": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+        "source_mutation": "Construct one minimal incorrect mutation of the specific behavior changed by #64830. Bind the exact diff and hash in a source-access execution addendum before running any candidate test. The mutant must restore at least one baseline failure."
+      },
+      {
+        "name": "upstream-fixed",
+        "source_revision": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+        "test_overlay": "The same exact tests, support files, and harness as baseline and wrong-mutant."
+      }
+    ],
+    "required_outcomes": {
+      "baseline": "Every targeted regression fails at its intended behavioral assertion, with no import/collection error, skip, timeout, or unrelated failure.",
+      "wrong_mutant": "The identical targeted cases reject the incorrect mutant at their intended assertions.",
+      "upstream_fixed": "Every targeted regression passes with no skip or unrelated failure.",
+      "all_arms": "Hashes, repository identity, grader boundary, sandbox, and resource limits match the execution addendum."
+    },
+    "execution_addendum_required_before_any_test": [
+      "exact test IDs and test/support hashes",
+      "runner and test-overlay hashes",
+      "exact source file hashes for each arm",
+      "wrong-mutant diff and hash",
+      "sandbox profile and command hashes",
+      "Python/runtime identity and resource limits"
+    ]
+  },
+  "isolation": {
+    "platform": "macOS Apple Silicon local CPU only; do not use a paid or remote service.",
+    "sandbox": "Default-deny macOS Seatbelt, no network, source checkout read-only, writes restricted to a fresh arm-specific evidence directory.",
+    "maximum_resident_memory_bytes_per_arm": 4294967296,
+    "maximum_wall_seconds_per_arm": 600,
+    "maximum_concurrent_arms": 1,
+    "maximum_invocations_per_arm": 1,
+    "order": ["baseline", "wrong-mutant", "upstream-fixed"],
+    "stop_on": ["unexpected failure", "timeout", "import/collection error", "skip", "resource breach", "network or write-boundary violation"],
+    "retry_rule": "Every arm invocation is consumed. A retry requires a new hash-bound addendum frozen before retry."
+  },
+  "qualification_decision_rule": "QUALIFIED_SOURCE_LEVEL only if all identity, baseline, wrong-mutant, upstream-fixed, isolation, and resource gates pass. Otherwise retain the complete failure and keep the task unqualified.",
+  "output_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/",
+  "limitations": [
+    "A source qualification result is not a model repair or model-capability result.",
+    "Public pretraining exposure remains UNKNOWN even if all source-level gates pass.",
+    "Source qualification does not assign the task to Development and authorizes no inference or training."
+  ],
+  "stop_rules": [
+    "Do not access candidate PR body, discussions, unrelated patches, or any Held-Out task or artifact.",
+    "Do not execute candidate tests until an execution addendum has been committed and pushed.",
+    "Do not continue if the exact source, license, CPU feasibility, or isolation gate fails.",
+    "Do not substitute another task under this protocol.",
+    "Keep #64830 UNQUALIFIED and UNASSIGNED until a separately frozen exposure assignment exists."
+  ]
+}

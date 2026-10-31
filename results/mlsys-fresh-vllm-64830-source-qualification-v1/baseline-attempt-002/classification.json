@@ -1,0 +1,47 @@
+{
+  "arm": "baseline",
+  "attempt_id": "baseline-attempt-002",
+  "attempt_json": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-002/attempt.json",
+  "attempt_json_sha256": "0992a933e64e27d499d92505ea961417c75aab8915e49df8dc0d734e5bb132d8",
+  "cases": [
+    {
+      "assertion_line": 73,
+      "case": "HiSparse",
+      "expected": [
+        "HiSparse"
+      ],
+      "observed": "[]",
+      "outcome": "failed at the frozen post-override assertion"
+    },
+    {
+      "assertion_line": 73,
+      "case": "watermarking",
+      "expected": [
+        "watermarking"
+      ],
+      "observed": "[]",
+      "outcome": "failed at the frozen post-override assertion"
+    }
+  ],
+  "classification": "TARGET_BASELINE_GATE_PASSED",
+  "collection_and_import": "successful; both selected cases collected and ran",
+  "decision": "Baseline gate passed; Addendum 4 authorizes the single wrong-mutant attempt-002. Upstream-fixed remains gated on the mutant result.",
+  "elapsed_seconds": 0.53,
+  "gate_passed": true,
+  "peak_process_tree_rss_bytes": 3932160,
+  "pytest_exit_code": 1,
+  "pytest_log": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-002/pytest.log",
+  "pytest_log_sha256": "ff64d47636c162410629fe67a8f485cf1ae922384d49cdd40d1d71de4cedaa64",
+  "pytest_summary": "2 failed, 0 passed, 0 skipped, 0 errors",
+  "rss_limit_bytes": 4294967296,
+  "rss_limit_exceeded": false,
+  "sandbox_policy": "default deny; network denied; only this arm output directory writable",
+  "sandbox_profile_sha256": "08a0686f6ea32878d5f99a21a2aeea2641fa38f3accfd2f42e1be6cafbad914c",
+  "selected_test_ids": [
+    "test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+    "test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+  ],
+  "source_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+  "timed_out": false,
+  "wrong_mutant_authorized_by_addendum_4": true
+}

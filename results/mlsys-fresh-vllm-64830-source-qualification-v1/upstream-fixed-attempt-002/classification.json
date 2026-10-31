@@ -1,0 +1,37 @@
+{
+  "arm": "upstream-fixed",
+  "attempt_id": "upstream-fixed-attempt-002",
+  "attempt_json": "results/mlsys-fresh-vllm-64830-source-qualification-v1/upstream-fixed-attempt-002/attempt.json",
+  "attempt_json_sha256": "fd739c21b8afed60dd2e25d95dfce57fc385d91262ea3fc30998d783b1fe5a77",
+  "cases": [
+    {
+      "case": "HiSparse",
+      "outcome": "passed"
+    },
+    {
+      "case": "watermarking",
+      "outcome": "passed"
+    }
+  ],
+  "classification": "TARGET_FIXED_GATE_PASSED",
+  "collection_and_import": "successful; both selected cases collected and ran",
+  "decision": "All three preregistered source-level behavioral arms passed their gates; final scope and isolation audit remain required before publishing QUALIFIED_SOURCE_LEVEL.",
+  "elapsed_seconds": 0.529,
+  "gate_passed": true,
+  "peak_process_tree_rss_bytes": 3932160,
+  "pytest_exit_code": 0,
+  "pytest_log": "results/mlsys-fresh-vllm-64830-source-qualification-v1/upstream-fixed-attempt-002/pytest.log",
+  "pytest_log_sha256": "f9991bfc1c7ebd12bb16ce56e1cf3117618ca286795cd280e4f6ac597c67ff48",
+  "pytest_summary": "2 passed, 0 failed, 0 skipped, 0 errors",
+  "qualification_gate_passed": true,
+  "rss_limit_bytes": 4294967296,
+  "rss_limit_exceeded": false,
+  "sandbox_policy": "default deny; network denied; only this arm output directory writable",
+  "sandbox_profile_sha256": "1cb52eb5c3a73051b26b56b8895f470990c0aa35b75f5984d2957644ba7fd60f",
+  "selected_test_ids": [
+    "test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+    "test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+  ],
+  "source_revision": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+  "timed_out": false
+}
