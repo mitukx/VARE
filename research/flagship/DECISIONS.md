@@ -418,3 +418,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Accept the wrong-mutant negative control and authorize the single upstream-fixed arm. The candidate remains unqualified and unassigned until fixed-source passes both cases.
 - **Falsification criteria:** Input/source hash mismatch; missing named case; any error/skip; or either case not failing specifically at the target assertion.
 - **Follow-up:** Run upstream-fixed once under identical image, test, resources, and isolation; require both named subTests to pass with no errors or skips.
+
+
+## 2026-10-31 — Qualify Transformers #49458 as a source-level CPU task
+
+- **Hypothesis:** The pinned baseline reproduces the eager-resolution regression, the one-loop mutant remains incorrect, and the exact upstream fix resolves both explicit-video and legacy-image configuration cases.
+- **Evidence:** Frozen v2 protocol `protocols/mlsys_transformers_49458_source_qualification_v2.json` (SHA-256 `f62f163be8984323c0d237b82fbaef3cf075a80e5bb49d23fd0fd8328141ee9b`) ran once per arm under the same offline Linux ARM64 CPU image. Baseline: both named subTests failed `load_attribute.assert_not_called` (47 and 141 mapping calls). Wrong mutant: both failed the same target assertion (47 each). Upstream-fixed: both named subTests passed, zero errors/skips/timeouts. Input manifest, receipts, raw logs, report, and SHA256SUMS are retained under `results/mlsys-fresh-development-task-qualification-v3/transformers-49458`.
+- **Alternative explanations:** Public issue/test availability and unknown pretraining exposure can explain future model familiarity; the one-method CPU qualification does not represent the full repository or model capability.
+- **Decision:** Mark the candidate **QUALIFIED_SOURCE_LEVEL** only. Keep it **UNASSIGNED** pending a separate prospective model-attempt protocol. No model, training, or Held-Out evaluation is authorized by this qualification result.
+- **Falsification criteria:** Any input/image/protocol hash mismatch; baseline or wrong-mutant fails outside the intended assertion; fixed case fails; missing case; skip/error/timeout; or evidence of prior Development/Train family overlap would invalidate or narrow the qualification.
+- **Follow-up:** Freeze one bounded Development model attempt with exposure logging and an independent grader before inference. Pretraining exposure remains unknown; do not claim capability or RL improvement from this source-level result.

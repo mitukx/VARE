@@ -211,7 +211,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "c22e707d40c2003b3b54f6cbd3968d14c274b129",
+    "verified_pr_head_sha_before_checkpoint_changes": "8058824a0f213946b90b893707619850d3f6681d",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
@@ -220,9 +220,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Commit and push the v2 wrong-mutant receipt/log, then execute upstream-fixed once. Require both named subTests to pass with no errors/skips.",
-  "last_completed_step": "V2 wrong-mutant attempt 001 ran once after the v2 baseline gate. Both named subTests failed at load_attribute.assert_not_called after 47 eager mapping loads each; 2 failures, 0 errors, 0 skips. Wrong-mutant gate is met; upstream-fixed is the sole remaining v2 arm.",
-  "milestone_id": "p8-transformers-49458-v2-wrong-mutant-gate-met",
+  "highest_priority_next_task": "Freeze a separate prospective one-attempt Development protocol for Transformers #49458, including split allocation/exposure event, model/controller/tool budgets, independent grading, resource preflight, and no retries; execute only after that protocol is committed and pushed. Keep RL NO-GO until multiple verified trajectories and a nondegenerate reward signal exist.",
+  "last_completed_step": "V2 source qualification completed with exact case reporting: both baseline and wrong-mutant subTests failed the pinned lazy-resolution assertion, both upstream-fixed subTests passed, and no errors/skips/timeouts occurred. Candidate is QUALIFIED_SOURCE_LEVEL but remains UNASSIGNED; no model inference/training/Held-Out access occurred.",
+  "milestone_id": "p8-transformers-49458-source-qualified-v2",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -923,6 +923,36 @@
       "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
       "sha256": "a2177d7fedd6bb2cfef58bec94097d9f98c6845fc72967be372675c00b92c150",
       "status": "v2 frozen inputs plus baseline and wrong-mutant outcomes"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-upstream-fixed.json",
+      "sha256": "51fd81144e53099241c7e61e88afb53450d5b7b857bfbb9f0d85333aa0149be7",
+      "status": "v2 upstream-fixed receipt; both named subTests passed with no errors/skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-upstream-fixed.log",
+      "sha256": "133a2f9ca1348655b22cadd2b47e6e0dc251f56a2580254ebe344df8a1661736",
+      "status": "v2 upstream-fixed raw log; two named subTests passed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/qualification.json",
+      "sha256": "8be77a994cfc97bdf746d96f7d3660d517b44e077e10b1b1caa83a94029a8fc4",
+      "status": "source-level qualification summary; candidate remains unassigned; no inference"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/report.md",
+      "sha256": "31af764fd58c69331e156d399e496d7d015be4f0965994fef8d6c702d66b9b80",
+      "status": "human-readable v2 source qualification report; limitations explicit"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/SHA256SUMS",
+      "sha256": "9721e3b844b148cfa8ba57d577810468f94a7f8393a1f28dbf37577f107d2ca0",
+      "status": "integrity index for v2 source qualification artifacts"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/input-manifest.json",
+      "sha256": "741c4907b9eb929204cf1235f106cdecbb5685a7d01b0efc3a1dab6352898b51",
+      "status": "v2 frozen inputs and all three ordered arm outcomes"
     }
   ],
   "run_ids": [
@@ -972,7 +1002,7 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED pending the single upstream-fixed v2 arm; no inference is authorized."
+    "Transformers #49458 is source-qualified at CPU level but remains UNASSIGNED; public pretraining exposure is UNKNOWN, and any model attempt requires a separate frozen one-attempt protocol."
   ],
-  "updated_at": "2026-10-31T01:55:47Z"
+  "updated_at": "2026-10-31T01:57:37Z"
 }

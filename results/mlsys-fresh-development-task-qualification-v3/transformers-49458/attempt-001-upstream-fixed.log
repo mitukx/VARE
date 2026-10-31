@@ -1,0 +1,8 @@
+test_video_processor_loading_does_not_resolve_other_models (vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models)
+Image and video processors resolve class names for the requested backend without accessing the lazy mapping. ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+VARE_CASE_RUNNER_RESULT={"error_count": 0, "failure_count": 0, "skip_count": 0, "subtests": [{"exception_type": null, "id": "vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models (filename='video_preprocessor_config.json')", "message": null, "outcome": "passed", "parameters": {"filename": "video_preprocessor_config.json"}}, {"exception_type": null, "id": "vare_pinned_test_module.AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models (filename='preprocessor_config.json')", "message": null, "outcome": "passed", "parameters": {"filename": "preprocessor_config.json"}}], "test_file": "/trusted/test_video_processing_auto.py", "test_id": "AutoVideoProcessorTest.test_video_processor_loading_does_not_resolve_other_models", "tests_run": 1, "was_successful": true}

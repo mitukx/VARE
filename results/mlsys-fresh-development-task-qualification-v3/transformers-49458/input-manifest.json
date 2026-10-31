@@ -47,6 +47,23 @@
     ]
   },
   "v2_candidate_test_execution_started": true,
+  "v2_upstream_fixed": {
+    "gate": "UPSTREAM_FIXED_BOTH_NAMED_SUBTESTS_PASS",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-upstream-fixed.log",
+    "log_sha256": "133a2f9ca1348655b22cadd2b47e6e0dc251f56a2580254ebe344df8a1661736",
+    "receipt_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-upstream-fixed.json",
+    "receipt_sha256": "51fd81144e53099241c7e61e88afb53450d5b7b857bfbb9f0d85333aa0149be7",
+    "subtests": [
+      {
+        "filename": "video_preprocessor_config.json",
+        "outcome": "passed"
+      },
+      {
+        "filename": "preprocessor_config.json",
+        "outcome": "passed"
+      }
+    ]
+  },
   "v2_wrong_mutant": {
     "gate": "EXPECTED_WRONG_MUTANT_REJECTION_BOTH_NAMED_SUBTESTS",
     "log_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.log",

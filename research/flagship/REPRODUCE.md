@@ -440,3 +440,28 @@ V2 baseline attempt 001 is recorded in `results/mlsys-fresh-development-task-qua
 
 
 V2 wrong-mutant attempt 001 is recorded in `results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.json` (SHA-256 76e78ba63938bfc21013868504960df91a9a01fc7fc2d2093b8078ead3be5d4a); raw output is `results/mlsys-fresh-development-task-qualification-v3/transformers-49458/attempt-001-wrong-mutant.log` (SHA-256 5db740dacb7d9406da01e860fae420cf977125504473bfecaeb7f3d472a53f0c). Both named cases failed the target assertion after 47 mapping loads, with no errors or skips. The upstream-fixed v2 arm is now authorized.
+
+
+## Verify Transformers #49458 source qualification v2
+
+From the VARE root, verify every result artifact and check the qualification summary:
+
+```bash
+cd results/mlsys-fresh-development-task-qualification-v3/transformers-49458
+shasum -a 256 -c SHA256SUMS
+python3 - <<'PY'
+import json
+from pathlib import Path
+q=json.loads(Path('qualification.json').read_text())
+assert q['status']=='QUALIFIED_SOURCE_LEVEL'
+assert q['split_assignment']=='NOT_ASSIGNED'
+assert q['model_or_agent_exposure'] is False
+assert q['arms']['baseline']['outcome'].startswith('both named subTests failed')
+assert q['arms']['wrong_mutant']['outcome'].startswith('both named subTests failed')
+assert q['arms']['upstream_fixed']['passed_subtests']==2
+assert q['arms']['upstream_fixed']['skipped_subtests']==0
+print('source qualification and no-inference boundary verified')
+PY
+```
+
+This verifies source/evaluator reproducibility only. For the commands that prepared and ran each arm, see the v2 protocol and preceding section. Do not infer model capability or assign the candidate based solely on this result.
