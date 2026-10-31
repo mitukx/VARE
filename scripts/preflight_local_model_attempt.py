@@ -67,7 +67,36 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 def _check_artifact_hashes(root: Path, protocol: dict[str, Any]) -> list[str]:
     failures = []
-    for name, value in protocol["frozen_inputs"].items():
+    frozen_inputs = protocol.get("frozen_inputs")
+    if not isinstance(frozen_inputs, dict):
+        return ["frozen inputs manifest is malformed"]
+    if "task" not in frozen_inputs:
+        failures.append("frozen task input manifest is missing")
+    for name, value in frozen_inputs.items():
+        if name == "task":
+            if not isinstance(value, dict):
+                failures.append("frozen task input manifest is malformed")
+                continue
+            for path_key, hash_key in (
+                ("task_json_path", "task_json_sha256"),
+                ("task_prompt_path", "task_prompt_sha256"),
+            ):
+                raw_path = value.get(path_key)
+                expected = value.get(hash_key)
+                if not isinstance(raw_path, str) or not raw_path:
+                    failures.append(f"frozen task input manifest missing {path_key}")
+                    continue
+                if not isinstance(expected, str) or not re.fullmatch(
+                    r"[0-9a-f]{64}", expected
+                ):
+                    failures.append(f"frozen task input manifest missing valid {hash_key}")
+                    continue
+                path = Path(raw_path)
+                if not path.is_absolute():
+                    path = root / path
+                if not path.is_file() or sha256_file(path) != expected:
+                    failures.append(f"task input hash mismatch: {path}")
+            continue
         if not isinstance(value, dict) or "path" not in value or "sha256" not in value:
             continue
         if name == "baseline_source":
@@ -82,13 +111,6 @@ def _check_artifact_hashes(root: Path, protocol: dict[str, Any]) -> list[str]:
                 continue
             if hashlib.sha256(completed.stdout).hexdigest() != value["sha256"]:
                 failures.append(f"frozen Git object hash mismatch for {name}")
-            continue
-        elif name == "task":
-            for path_key, hash_key in (("task_json_path", "task_json_sha256"), ("task_prompt_path", "task_prompt_sha256")):
-                path = root / protocol["frozen_inputs"]["task"][path_key]
-                expected = protocol["frozen_inputs"]["task"][hash_key]
-                if not path.is_file() or sha256_file(path) != expected:
-                    failures.append(f"task input hash mismatch: {path}")
             continue
         else:
             candidate = Path(value["path"])

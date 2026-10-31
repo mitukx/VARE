@@ -40,7 +40,7 @@ def process_tree_rss(root_pid: int) -> int:
 
 
 def stop_process_group(proc: subprocess.Popen[bytes]) -> None:
-    """Stop the attempt and reap it after a resource-limit breach."""
+    """Stop every process in the attempt group after a resource-limit breach."""
     try:
         os.killpg(proc.pid, signal.SIGTERM)
     except ProcessLookupError:
@@ -48,11 +48,19 @@ def stop_process_group(proc: subprocess.Popen[bytes]) -> None:
     try:
         proc.wait(timeout=5)
     except subprocess.TimeoutExpired:
+        pass
+    # The leader may exit on SIGTERM while a descendant ignores it. Keep the
+    # process-group ID and kill any survivors even after reaping the leader.
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+    if proc.poll() is None:
         try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
             os.killpg(proc.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        proc.wait()
+            proc.wait()
 
 
 def run_limited(
