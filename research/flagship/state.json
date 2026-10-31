@@ -225,22 +225,22 @@
   ],
   "git_refs": {
     "repository": "mitukx/VARE",
-    "last_verified_main_sha": "96b3cb86046ccde579caa1c65ccde9f8a2c76e65",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/157",
-    "last_integrated_pr_merge_sha": "96b3cb86046ccde579caa1c65ccde9f8a2c76e65",
-    "active_branch": "codex/rvl-training-generation-task-binding",
-    "verified_pr_head_sha_before_checkpoint_changes": "af8508d42c431a54373497d15e53085252202f41",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/158",
-    "active_pr_state": "open"
+    "last_verified_main_sha": "8db1aa78cd13f231d436641280428fccf9121281",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/158",
+    "last_integrated_pr_merge_sha": "8db1aa78cd13f231d436641280428fccf9121281",
+    "active_branch": "codex/rvl-task-identity-integrated-checkpoint",
+    "verified_pr_head_sha_before_checkpoint_changes": "29f8561bfcd44c78bc75b8f5bdf5a5f7923cb8bd",
+    "active_pr_url": null,
+    "active_pr_state": "none"
   },
   "go_no_go": {
-    "integration": "GO_PENDING_REMOTE_CI",
+    "integration": "GO",
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Refresh PR #158 head after this state checkpoint, inspect every exact-head required CI result and review thread, fix failures, merge only when branch protection permits, and verify origin/main. Keep inference, SFT/RL, and Held-Out gated until a distinct fresh Development cohort and frozen protocol exist.",
-  "last_completed_step": "On main 96b3cb86046ccde579caa1c65ccde9f8a2c76e65, the frozen ungrouped RVL generation/task identity regression reproduced both malformed cases reaching train_step; a clean base worktree reproduced 2/2. The adapter check, 79 focused tests, Ruff, and py_compile pass locally. Commit af8508d42c431a54373497d15e53085252202f41 is pushed in PR #158; exact-head CI is pending. No model inference or training occurred.",
-  "milestone_id": "p12-rvl-grpo-training-generation-task-identity-pending-ci",
+  "highest_priority_next_task": "Refresh the fresh-task inventory against current main and identify a technically independent Development candidate from current upstream repositories. Freeze metadata/exposure review before opening source or tests; then qualify baseline failure, known-fix pass, wrong-mutant rejection, and isolation before any new model protocol. Keep inference, SFT/RL, and Held-Out gated until those prerequisites pass.",
+  "last_completed_step": "PR #158 merged at 2026-10-31T03:22:04Z as 8db1aa78cd13f231d436641280428fccf9121281 from exact head 29f8561bfcd44c78bc75b8f5bdf5a5f7923cb8bd. All exact-head required CI and supplemental CPU/optimizer checks passed; reviewThreads unresolved=0. The unconditional RVL generation/task binding is integrated. Local adapter suite: 79 passed; Ruff and py_compile passed. No model inference or training.",
+  "milestone_id": "p12-rvl-grpo-training-generation-task-identity-integrated",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -1099,8 +1099,8 @@
     },
     {
       "path": "research/flagship/STATUS.md",
-      "sha256": "ad799ba91921a200fa22864a1abe2508348d49a785f8b87e5e27eb64751d971e",
-      "status": "current p12 checkpoint; PR #158 open and CI must be refreshed after this branch update"
+      "sha256": "08c405150df11aa45173e96ff97361a4adf773bb3f8bbe420778cc5ccea0f78a",
+      "status": "integrated p12 checkpoint at main 8db1aa78; next task is fresh Development candidate inventory/qualification"
     },
     {
       "path": "research/flagship/REPRODUCE.md",
@@ -1183,8 +1183,7 @@
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
-    "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
-    "PR #158 exact-head CI and review are pending; the RVL task-identity fix is not integrated."
+    "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown."
   ],
-  "updated_at": "2026-10-31T03:13:42Z"
+  "updated_at": "2026-10-31T03:22:33Z"
 }
