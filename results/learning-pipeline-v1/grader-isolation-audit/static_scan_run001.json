@@ -1,0 +1,50 @@
+{
+  "logs": {
+    "eval/no_update/graded.jsonl": {
+      "applied_edits": 37,
+      "flagged": 0,
+      "flagged_and_trusted_pass": 0,
+      "flagged_rows": [],
+      "rows": 42,
+      "sha256": "afb5d597b1f2c832163de69362b1fda0b1fb35c23fa8024cd0f5923ab5f3ae00",
+      "trusted_pass": 15
+    },
+    "eval/rft_self/graded.jsonl": {
+      "applied_edits": 37,
+      "flagged": 0,
+      "flagged_and_trusted_pass": 0,
+      "flagged_rows": [],
+      "rows": 42,
+      "sha256": "061c9eae86dc52859646ca02abd69e73348c1c8146f18a6032739df3e67e0fe0",
+      "trusted_pass": 20
+    },
+    "eval/sft_reference/graded.jsonl": {
+      "applied_edits": 32,
+      "flagged": 0,
+      "flagged_and_trusted_pass": 0,
+      "flagged_rows": [],
+      "rows": 42,
+      "sha256": "167d2937e8622206176228e8dc7042c96e16355b9b4496512b027190268e480b",
+      "trusted_pass": 14
+    },
+    "rollouts/graded.jsonl": {
+      "applied_edits": 123,
+      "flagged": 0,
+      "flagged_and_trusted_pass": 0,
+      "flagged_rows": [],
+      "rows": 160,
+      "sha256": "cb18ed4af65a4f542008a49b6a42d8c8ee3b848cf0775ea292e47f63a9e121b3",
+      "trusted_pass": 32
+    }
+  },
+  "patterns": [
+    "process_exit",
+    "argv_access",
+    "test_runner_access",
+    "process_spawn",
+    "network",
+    "native_code",
+    "dynamic_import",
+    "interpreter_hooks"
+  ]
+}
