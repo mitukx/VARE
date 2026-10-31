@@ -516,3 +516,12 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Record **NO-GO / NOT RUN** for this protocol. Do not load weights and do not retry this frozen attempt. The Development assignment remains unexposed to the model; public pretraining exposure remains UNKNOWN. Coding capability and RL update remain NO-GO.
 - **Falsification criteria:** Any evidence that model weights were loaded or the frozen attempt command started would invalidate this no-run record.
 - **Follow-up:** Complete the PR #160 engineering and exact-head CI work. Any future model attempt must use a distinct fresh task and a separately frozen protocol whose preflight passes.
+
+
+## 2026-10-31 — Recheck the warmup-cosine CI failure on the next exact PR head
+
+- **Hypothesis:** The Python 3.13 warmup-cosine oracle failure on prior head `b12d4913` may be transient or dependent on its execution environment; the updated test assertion should expose per-command output if the failure recurs.
+- **Evidence:** Exact head `a7a2509c4ddc2434053cc23d7a59508cb5b3304d` passed CI run 2035 across all nine jobs, including Python 3.11, 3.12, and 3.13, and CPU-evidence run 743. The same target test also passed locally with Python 3.13.5 when `DOCKER_CONTEXT=colima`. No failure output was generated on the new head.
+- **Decision:** Treat the previous failure as not reproduced, not as a diagnosed or fixed defect. Keep the added assertion detail for a future recurrence. Do not claim this test result establishes model capability or learning.
+- **Falsification criteria:** Any recurrence on a later exact head requires collecting per-command stdout/stderr and return codes, reproducing under a correctly selected Docker daemon, then fixing the evidenced cause.
+- **Follow-up:** Re-run the full workflow on the durable status checkpoint, then await normal PR review. PR #160 has no review submissions or threads and remains draft.

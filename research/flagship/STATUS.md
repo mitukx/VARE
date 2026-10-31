@@ -4,7 +4,7 @@
 
 - Last verified `origin/main`: `416f35c465712898e8e5764a8e43193ef86e7afb`; PR #159 is merged with successful exact-head checks.
 - PR #150 is verified merged; its relevant exact-head checks all passed. The three historical CI failures are no longer open blockers.
-- Active branch: `codex/fresh-task-inventory-oct31`; draft PR #160: https://github.com/mitukx/VARE/pull/160. At the last check, head `b12d4913d37c280390d252d3a9e62ab603b01dde` passed all checks except the Python 3.13 suite. That suite had one failure: the warmup-cosine oracle acceptance test. The exact test passes locally on Python 3.13.5 with the configured Colima Docker context; the CI-specific cause remains unresolved.
+- Active branch: `codex/fresh-task-inventory-oct31`; draft PR #160: https://github.com/mitukx/VARE/pull/160. The last fully verified PR head is `a7a2509c4ddc2434053cc23d7a59508cb5b3304d`: CI run 2035 passed all nine jobs, including Python 3.11–3.13, and CPU-evidence run 743 passed. The earlier Python 3.13 warmup-cosine oracle failure on `b12d4913` was not reproduced; its cause remains unknown. The PR remains draft with no reviews or review threads. The checkpoint below will trigger a fresh exact-head run.
 - Milestone: `p14-vllm-64575-agent-attempt-no-go-resource-gate`.
 
 ## Completed
@@ -23,4 +23,4 @@
 
 ## Immediate next action
 
-Commit and push the frozen protocol, assignment, and preserved **NO-GO** preflight receipt with the engineering changes. Diagnose the remaining Python 3.13 CI failure using the newly added per-command failure details and verify the exact pushed head. Keep this model attempt **NOT RUN**; select a distinct task and freeze a separately resource-feasible protocol before any future inference.
+Commit and push the frozen protocol, assignment, and preserved **NO-GO** preflight receipt with the engineering changes. Commit this CI checkpoint and inspect the new exact-head run. Keep PR #160 draft until normal review, and do not merge without the required review and branch protection. Keep this model attempt **NOT RUN**; select a distinct task and freeze a separately resource-feasible protocol before any future inference.
