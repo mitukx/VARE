@@ -1,0 +1,118 @@
+{
+  "baseline": {
+    "candidate_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+    "cases": [
+      {
+        "case_id": "mimo-value-scale",
+        "failure": "wrong_output",
+        "passed": false,
+        "wall_s": 0.2407383750182433
+      }
+    ],
+    "expected_output_sha256": "00c0450c89622ab93635d6f3ff3d95b016ab8e62a4f11a843b47c961262afd50",
+    "grader_adapter_sha256": "fab26aa6b281719f4a2b0c2366f29a7f086ef602a9cc642d26074a132699c6c5",
+    "grader_source_sha256": "abccc1d483262d17e9a76559e788a3d3738f9311428bbf69ff42af768a1e636a",
+    "passed": false,
+    "task_id": "mlxlm-1971-mimo-value-scale"
+  },
+  "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+  "baseline_export": {
+    "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+    "candidate_patch_sha256": null,
+    "candidate_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+    "changed_files": [],
+    "fixed_source_match": false,
+    "git_history_exported": false,
+    "license_exported": false,
+    "task_id": "mlxlm-1971-mimo-value-scale",
+    "task_prompt_sha256": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+    "tests_exported": false
+  },
+  "calibration_passed": true,
+  "candidate_image": "localhost:5000/vare/mlx-mimo-cpu-mimo@sha256:799f8b9f34fe2caa8fc0c4d0889abac63384606bcf40db28524db3fba07a7cbe",
+  "created_at_utc": "2026-10-21T02:16:41.807908+00:00",
+  "expected_output_sha256": "00c0450c89622ab93635d6f3ff3d95b016ab8e62a4f11a843b47c961262afd50",
+  "fixed_commit": "8fda5e976a2da412d9f8119361edefd405381cf9",
+  "fixed_export": {
+    "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+    "candidate_patch_sha256": "037beaf31ddd66b3bcdd88746b1ad68bda452d0f78c6607392371c9998c06ed8",
+    "candidate_source_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+    "changed_files": [
+      "mlx_lm/models/mimo_v2_flash.py"
+    ],
+    "fixed_source_match": true,
+    "git_history_exported": false,
+    "license_exported": false,
+    "task_id": "mlxlm-1971-mimo-value-scale",
+    "task_prompt_sha256": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+    "tests_exported": false
+  },
+  "implementation_commit": "dfa911b0d317327b1eebad8698f5893ab3ec3cfc",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/Dockerfile": "423ec1fbe2e6e63cf9ff7906e42d0acdc371071511a1078c0b92f0662d5a4eb0",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/expected-output-v1.json": "00c0450c89622ab93635d6f3ff3d95b016ab8e62a4f11a843b47c961262afd50",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter.py": "fab26aa6b281719f4a2b0c2366f29a7f086ef602a9cc642d26074a132699c6c5",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/task.md": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+    "scripts/run_mlxlm_1912_calibration.py": "f5c774a65ad8e422979cd3b4a36f20eb5568fb896ddfa7f0500be120409025dd",
+    "scripts/run_mlxlm_1971_calibration.py": "f4a53b5d2ee7a7e949254554cfce32773cbd6ff88e7a1d9d7a1b8dbeca57f858",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
+    "src/vare/mlxlm_1912_repo_task.py": "5a10440e0facfde59b5966635d075ca9db76d241dc17635425feba93c2a0544c",
+    "src/vare/mlxlm_1971_repo_task.py": "abccc1d483262d17e9a76559e788a3d3738f9311428bbf69ff42af768a1e636a",
+    "tests/test_mlxlm_1971_repo_task.py": "7e6a642c59c2d7496d1dbcbab944920fbc0482d675cda5302f0f62e7ecdb429f"
+  },
+  "implementation_worktree_clean_at_start": true,
+  "known_fix": {
+    "candidate_source_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+    "cases": [
+      {
+        "case_id": "mimo-value-scale",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.13995299905120898
+      }
+    ],
+    "expected_output_sha256": "00c0450c89622ab93635d6f3ff3d95b016ab8e62a4f11a843b47c961262afd50",
+    "grader_adapter_sha256": "fab26aa6b281719f4a2b0c2366f29a7f086ef602a9cc642d26074a132699c6c5",
+    "grader_source_sha256": "abccc1d483262d17e9a76559e788a3d3738f9311428bbf69ff42af768a1e636a",
+    "passed": true,
+    "task_id": "mlxlm-1971-mimo-value-scale"
+  },
+  "known_patch_sha256": "037beaf31ddd66b3bcdd88746b1ad68bda452d0f78c6607392371c9998c06ed8",
+  "limitations": [
+    "One synthetic small-model correctness task; not a Coding-Agent rollout.",
+    "The trusted grader compares candidate outputs to fixed-source golden outputs; hidden pytest files are never given to the candidate.",
+    "The pinned container is CPU-only MLX. This does not measure Metal behavior or pretrained-model behavior.",
+    "This task-specific adapter does not certify arbitrary Python repositories."
+  ],
+  "protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v1",
+  "protocol_sha256": "6909c23aac234623bc7d509c3aa69609a05880d63f482fc2fda9cc553295797c",
+  "red_team_sha256": "676611d77575260fa5df031fecb0cd5f5db8d835ca7bc7ff186d910de192d3e2",
+  "red_team_suite": {
+    "attempts": {
+      "exhaust": {
+        "case_id": "exhaust",
+        "failure": "missing_result",
+        "passed": false,
+        "wall_s": 0.6377404170005067
+      },
+      "spin": {
+        "case_id": "spin",
+        "failure": "missing_result",
+        "passed": false,
+        "wall_s": null
+      },
+      "visibility_and_forgery": {
+        "case_id": "visibility",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.1269064579854533
+      }
+    },
+    "passed": true
+  },
+  "source_repository": "ml-explore/mlx-lm",
+  "source_swap_rejected": true,
+  "task_id": "mlxlm-1971-mimo-value-scale",
+  "wall_seconds": 3.9846130840014666
+}

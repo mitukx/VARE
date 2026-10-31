@@ -1,4 +1,30 @@
+**Update 2026-10-23 — historical v9 Git-object preflight (unmerged PR #99):** A new
+read-only verification path checks the current v9 protocol, lock and complete
+evaluator implementation inventory against the pinned historical Git commit
+with replacement refs disabled. Explicit attested export/grading wrappers and
+a CI regression test require this comparison. The existing direct public
+v9 entrypoints and historical calibration do **not** automatically invoke
+that preflight; provenance-sensitive prospective studies remain **NO-GO**
+until a separately frozen v10 path enforces it at every entrypoint. Frozen
+v9 evidence and protocols are unchanged. No model or optimizer ran.
+
+**Update 2026-10-23 — MLX-LM #1971 v9 current-entrypoint calibration:** v9 binds the public grader dispatch and 20 transitive implementation/input files, checks hidden Git index flags, and passes a fresh pinned Colima CPU calibration: baseline 0/6, exact fix 6/6, constant-scale mutant 2/6 at scale 0.5 only, cache-only mutant 3/3 full-forward and 0/3 cached. Source-swap and red-team controls passed. Historical v1–v8 protocols and results remain unchanged; v7 is a non-pass and v8 does not establish the current public dispatcher. This is synthetic CPU grader calibration only, with no agent rollout, Metal validation, or model improvement. See the [v9 report](mlsys-repository-task-mlxlm-1971-v9-report.md) and [append-only evidence](../results/mlxlm-1971-isolated-v9/run-1/).
+
+**CI update 2026-10-23 — continuation audit inventory:** the #99 final v7 runner added source modules v6 and v7, and the CPU recovery job exposed that the campaign auditor still expected 81 files while the runtime now contains 83. The v7/v6 files are now pinned in the prospective runtime inventory; the frozen prior campaign inventory remains unchanged. The current-tree inventory test requires exact set equality.
+
+**Historical calibration erratum (2026-10-23):** V4 treated any non-pass as mutant rejection, and the retained v5 cache-mutant run also failed full-forward cases. Those records remain unchanged but do not independently establish a cache-specific failure; v8 is the first run with full-forward pass and cached `wrong_output` for the post-cache mutant. See the [v8 report](mlsys-repository-task-mlxlm-1971-v8-report.md).
+
+**Update 2026-10-23 — MLX-LM #1971 v8 calibration:** v7 failed closed because its cache mutant also broke the no-cache rotary path; the raw failure remains preserved. V8 keeps that mutant under a new protocol and requires full-forward pass plus cached `wrong_output`. The pinned CPU/Colima run passed baseline/fix and all exact semantic, source-swap, and red-team gates. This is grader calibration only, not Coding-Agent success or model improvement. See the [v8 report](mlsys-repository-task-mlxlm-1971-v8-report.md), [raw v7 failure](../results/mlxlm-1971-isolated-v7/run-1/), and [v8 evidence](../results/mlxlm-1971-isolated-v8/run-1/).
+
 # Current evidence gaps
+
+**Update 2026-10-22 — MLX-LM #1971 calibration v5 requires semantic failures:** a review found that v4 accepted any non-pass as evidence against a mutant, including crashes and timeouts. V5 pins the expected per-scale `wrong_output`/pass pattern and recalibrates the baseline, exact fix, constant-scale mutant, and post-cache mutant under Colima. All expected decisions, source-swap rejection, and red-team controls pass. This remains synthetic CPU grader calibration, not agent/model success. The asynchronous continuation auditor's runtime inventory also now includes the v2-v4 task modules, fixing a CI regression introduced by those modules. See the [v5 report](mlsys-repository-task-mlxlm-1971-v5-report.md) and [raw record](../results/mlxlm-1971-isolated-v5/run-1/).
+
+**Update 2026-10-22 — MLX-LM #1971 public grader entrypoint now targets the v4 contract:** independent review found the old public API could still invoke the v1 single-scale/cache-free grader. The API now dispatches through v4, which is bound to the integrated Colima staging source and was recalibrated through that public API. Baseline, fix, constant-scale and post-cache mutants, source-swap, and red-team controls produced the frozen expected decisions. This is grader calibration only, not an Agent/model result. See the v4 report (mlsys-repository-task-mlxlm-1971-v4-report.md), protocol (../benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v4.json), and raw evidence (../results/mlxlm-1971-isolated-v4/run-1/).
+
+**Update 2026-10-22 — MLX-LM #1971 grader v3 recalibration after main integration:** PR #98 integration brought the current Colima staging implementation into the grader source identity, so v2 remains immutable historical evidence and is superseded for current-source grading. Prospective v3 binds the integrated source hash and repeats the baseline, exact-fix, constant-scale, post-cache-scale, source-swap, and red-team controls. All pass their expected decisions on the pinned CPU-only image. This remains grader calibration only, with no LLM rollout or Metal/capability evidence. See the [v3 report](mlsys-repository-task-mlxlm-1971-v3-report.md) and [raw evidence](../results/mlxlm-1971-isolated-v3/run-1/).
+
+**Update 2026-10-22 — MLX-LM #1971 grader v2 calibration:** prospective protocol v2 varies `value_scale` across 0.25, 0.5, and 0.8 and checks full-forward output, incremental output, and KV-cache state. On the pinned CPU-only Colima image, the broken baseline failed all three cases; the known fix passed all three; a constant-0.5 mutant and a post-cache scaling mutant were rejected. Source-swap and red-team controls passed. This is narrow grader calibration, not an agent repair, Metal validation, or model-capability result. See the [v2 report](mlsys-repository-task-mlxlm-1971-v2-report.md), [protocol](../benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v2.json), and [raw evidence](../results/mlxlm-1971-isolated-v2/run-1/).
 
 **Update 2026-10-21 — one repository-task grading contract passed:** the
 MLX-LM #1904 Train-task calibration now runs in VARE's separate no-network
