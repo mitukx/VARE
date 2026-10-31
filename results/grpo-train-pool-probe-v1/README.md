@@ -1,7 +1,10 @@
 # Train-pool probe v1 (exploratory / diagnostic)
 
 Protocol: `protocols/grpo_train_pool_probe_v1.json` (sha256 `6e2a95c0…5245`),
-frozen and committed (ada9da30) before the run. Train tasks only; no held-out
+frozen and committed (ce418bde) before the run. `run_meta.json` records the
+pre-rewrite SHA ada9da30 of the same commit; the history rewrite of 2026-11-01
+changed only authorship and the base, and the protocol and probe-script blobs
+are identical in both commits. Train tasks only; no held-out
 data was loaded or evaluated; no capability claim.
 
 **Evidence labels.**
