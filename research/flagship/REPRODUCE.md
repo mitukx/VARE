@@ -338,3 +338,34 @@ PY
 ```
 
 The expected result is exact agreement between reconstructed and recorded token counts on every historical turn, followed by `context_fits: true` at 2,765 tokens for Transformers and 2,795 for Ray under the 4,096-token cap. This replay is not a model capability result; the agent may still fail to use the retained context productively.
+
+## Verify the next Development candidate's metadata-only overlap review
+
+The review is limited to frozen candidate metadata and Development/Train exposure records. It does not open task source or tests, run an environment, allocate a split, or perform inference. The candidate remains unqualified and unassigned.
+
+From the repository root, verify the report checksums and all frozen inputs against the exact main commit bound by the protocol:
+
+```bash
+set -euo pipefail
+python3 -m json.tool protocols/mlsys_fresh_development_task_family_overlap_v2.json >/dev/null
+python3 -m json.tool results/mlsys-fresh-development-task-family-overlap-v2/review.json >/dev/null
+(cd results/mlsys-fresh-development-task-family-overlap-v2 && shasum -a 256 -c SHA256SUMS)
+python3 - <<'PY'
+import hashlib
+import json
+import subprocess
+
+protocol = json.load(open('protocols/mlsys_fresh_development_task_family_overlap_v2.json'))
+for item in protocol['frozen_inputs']:
+    raw = subprocess.check_output(['git', 'show', f"{protocol['frozen_against_main_sha']}:{item['path']}"])
+    assert hashlib.sha256(raw).hexdigest() == item['sha256'], item['path']
+sample_path = 'results/mlsys-fresh-development-metadata-review-sample-v1/review-sample.json'
+sample = json.loads(subprocess.check_output(['git', 'show', f"{protocol['frozen_against_main_sha']}:{sample_path}"]))
+row = next(row for row in sample['candidates'] if row['repository'] == 'huggingface/transformers' and row['number'] == 49458)
+canonical = json.dumps(row, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()
+assert hashlib.sha256(canonical).hexdigest() == protocol['candidate_identity']['candidate_row_canonical_sha256']
+print('nine frozen inputs and the bound candidate row verify; no task content was read')
+PY
+```
+
+The row-level Development/Train comparisons, confidence, and limitations are recorded in `results/mlsys-fresh-development-task-family-overlap-v2/review.json`. A `NO_PRIOR_FAMILY_OVERLAP_FOUND` result supports source qualification only; it is not task qualification, split allocation, or pretraining-independence evidence.
