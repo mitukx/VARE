@@ -167,7 +167,8 @@ class SandboxBackend(Protocol):
 
     def interpreter_dirs(self) -> list[str]: ...
 
-    def run(self, workspace: Path, command: Sequence[str], *, timeout: float) -> RunResult: ...
+    def run(self, workspace: Path, command: Sequence[str], *, timeout: float,
+            stdin: bytes | None = None) -> RunResult: ...
 
     def python(self) -> str: ...
 
@@ -239,13 +240,20 @@ class BwrapBackend:
     def config_digest(self) -> str:
         return _digest({"backend": self.name, "argv": self._argv(Path("/WORKSPACE"), ["CMD"])})
 
-    def run(self, workspace: Path, command: Sequence[str], *, timeout: float) -> RunResult:
+    def run(self, workspace: Path, command: Sequence[str], *, timeout: float,
+            stdin: bytes | None = None) -> RunResult:
+        """``stdin`` (optional) is delivered on the sandbox's standard input only."""
         try:
-            r = subprocess.run(self._argv(workspace, command), capture_output=True, text=True,
-                               timeout=timeout, stdin=subprocess.DEVNULL, start_new_session=True)
+            if stdin is None:
+                r = subprocess.run(self._argv(workspace, command), capture_output=True, timeout=timeout,
+                                   stdin=subprocess.DEVNULL, start_new_session=True)
+            else:
+                r = subprocess.run(self._argv(workspace, command), capture_output=True, timeout=timeout,
+                                   input=stdin, start_new_session=True)
         except FileNotFoundError as exc:
             raise IsolationUnavailable("bwrap not found") from exc
-        return RunResult(r.returncode, r.stdout, r.stderr)
+        return RunResult(r.returncode, r.stdout.decode("utf-8", "replace"),
+                         r.stderr.decode("utf-8", "replace"))
 
 
 @dataclass
@@ -299,17 +307,20 @@ class DockerBackend:
                         "cpus": self.cpus, "pids_limit": self.pids_limit,
                         "import_roots": list(self.import_roots)})
 
-    def run(self, workspace: Path, command: Sequence[str], *, timeout: float) -> RunResult:
+    def run(self, workspace: Path, command: Sequence[str], *, timeout: float,
+            stdin: bytes | None = None) -> RunResult:
         from vare.container_isolation import DockerIsolationRunner, IsolationError
 
         runner = DockerIsolationRunner()
         limits = self._limits(timeout)
         argv = runner.candidate_argv(limits, name=f"vare-grade-{secrets.token_hex(12)}",
                                      allowed_workspace_root=self.workspace_root, workspace=workspace,
-                                     command=self._command(command))
+                                     command=self._command(command), interactive=stdin is not None)
         try:
-            res = asyncio.run(runner.execute(argv, limits))
+            res = asyncio.run(runner.execute(argv, limits, stdin_data=stdin))
         except IsolationError as exc:
+            if "wall-time" in str(exc):  # the container was removed; report as a timeout
+                raise subprocess.TimeoutExpired(argv, timeout) from exc
             raise IsolationUnavailable(str(exc)) from exc
         return RunResult(res.returncode, res.stdout, res.stderr)
 

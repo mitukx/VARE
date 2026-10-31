@@ -119,3 +119,114 @@ From `probe.json` and `tests/test_learning_pipeline_isolated_grading.py` (29 tes
 * Probes check the configured sandbox, not the kernel, the VM or the container runtime.
 * Run-time and memory overhead of a container per candidate are not measured. The v1 trusted grade
   median is 0.74 s per candidate.
+
+## 6. v2: verdict outside the candidate's control, fail-closed `RepoEnv.grade`, A3 calibration
+
+Section 5 records that a candidate running inside the pytest process can forge the v1 verdict.
+v2 separates test *execution* (in the sandbox) from *judging* (in the trusted parent).
+
+Files (all under `scripts/`; `src/vare` is not edited, see "Why not in `src`" below):
+
+| File | Role |
+|---|---|
+| `learning_pipeline_trusted_runner.py` | in-sandbox runner, passed to `python -I -c` |
+| `learning_pipeline_trusted_verdict.py` | `grade_isolated_v2`, frame parser and judge, v2 static patterns |
+| `learning_pipeline_trusted_repo_env.py` | `TrustedRepoEnv`, a `RepoEnv` subclass whose `grade` defaults to `isolation="required"` |
+| `learning_pipeline_grader_calibration.py` | A3.1-A3.10 calibration harness (CLI and library) |
+| `configs/learning_pipeline_grader_v2/Dockerfile` | dependencies-only image for the calibration on Docker/Colima |
+
+### 6.1 Verdict channel `hmac_frames_v1`
+
+1. The parent draws a fresh 32-byte key and a nonce per call. The key goes to the sandbox on
+   stdin only (never argv, environment or files). The runner reads it with `python -I` before any
+   workspace import, then closes stdin and moves its private copy of stdout away from fd 1
+   (fd 1 becomes stderr), so candidate `print`/`sys.stdout` cannot write on the verdict channel.
+2. The runner collects whole test files (a missing test ID cannot abort the session), keeps only
+   the requested IDs plus the two per-call canaries, and executes each test function itself
+   (`tryfirst` `pytest_runtest_protocol`). Pytest report hooks, `pytest_pyfunc_call` and
+   `conftest.py` hook implementations therefore do not decide outcomes. References to pytest's
+   internals are captured before candidate import.
+3. It emits HMAC-SHA256-authenticated JSON frames, `start`, `collected`, one `result` per item,
+   `finish{exit, n_results}`, and terminates with `os._exit(exit)`. Code that runs after the
+   last test (atexit, finalizers) cannot change the exit code.
+4. The parent accepts a pass only if every frame authenticates under the call's key and nonce,
+   sequence numbers are contiguous, results follow the collected order without duplicates,
+   `finish.exit` equals both the exit code implied by the results and the process return code,
+   canary `test_a` PASSED and `test_b` FAILED, and every requested ID PASSED. Plain pytest
+   output carries no authority. Anything else fails closed with a `verdict_integrity_*` reason
+   (`collection_error` when neither canary was collected).
+
+The v1 `BLOCKING_PATTERNS` list is unchanged (it is part of the run-001 scan replay). v2 adds
+`BLOCKING_PATTERNS_V2` (introspection such as `gc`/`inspect`/frames, raw fd access, frame-prefix
+literals, comparison overrides).
+
+### 6.2 Fail-closed `RepoEnv.grade`
+
+`TrustedRepoEnv.grade(..., isolation="required")` is the default. With no attested backend, a
+failed attestation, or an attestation for another backend or configuration digest, it returns
+`passed: False`, `reason: isolation_unverified`, `reward: 0`, `executed: False`, and touches
+neither the clone nor any interpreter. `isolation="legacy_native"` must be passed explicitly. It
+calls the frozen v1 `RepoEnv.grade` and labels the record `backend: native_venv`,
+`attested: false`. Every record carries `isolation` with the mode, backend, configuration digest,
+full attestation, backend selection attempts, verdict channel and runner sha256.
+`select_backend([DockerBackend, BwrapBackend], ...)` returns the first backend whose attestation
+passes, and records each attempt.
+
+### 6.3 Why not in `src`
+
+The v1 protocol freeze hashes `src/vare/learning_pipeline/repo_env.py`, `pipeline.py` and
+`scoring.py`, and the frozen v3/v4 inventories enumerate `src/vare/**/*.py`. Editing or adding
+there would break run-001 verification or silently change an inventory. v2 duck-types the
+interface used by `scoring.score_candidate` and `scoring.calibrate`. A future protocol version
+can move these modules into `src` together with a new inventory (v5) and protocol hash.
+
+### 6.4 A3 calibration (synthetic fixture)
+
+`learning_pipeline_grader_calibration.py` builds a git repository whose HEAD is the reference fix
+and whose tree carries the bug, and then checks:
+
+| Item | Check |
+|---|---|
+| A3.1 | reference fix passes in the sandbox |
+| A3.2 | unrepaired bug fails |
+| A3.3 | every mutant of the reference fails |
+| A3.4 | empty file and whitespace-only edits fail |
+| A3.5 | unknown test ID, empty ID list, and syntax error fail |
+| A3.6 | import-time sleep and busy loop end in `test_timeout`, with no process left |
+| A3.7 | a positive oracle control passes; candidates that read protected paths (host canary, evidence, other task, reference, `.git`) fail |
+| A3.8 | 12 verdict-tampering candidates fail with the static scan on **and** off: the three reproduced audit exploits (argv echo + exit 0, canary-aware exit 1, git restore), forged frames, protocol-hook hijack, report and pyfunc hooks, pytest internals patch, conftest drop, atexit, `sys.exit` at import |
+| A3.9 | no file persists outside the workspace, no detached process survives |
+| A3.10 | evidence tree hash unchanged; evidence directory not visible in the sandbox |
+
+Residual cases, reported separately and not counted as defended: patching the runner's own
+closures through `gc`, and a return value whose `__eq__` is always true (specification gaming,
+not channel forgery). Both pass with the static scan off and are quarantined with it on. v2
+narrows the channel. It does not make in-process forgery impossible: code in the same
+interpreter can, in principle, read the key from memory. The static scan remains a required
+layer, and its patterns can be evaded by obfuscation.
+
+Linux (bubblewrap, this host): all ten items `verified`. This does **not** show that the Docker
+backend works on the Mac.
+
+Mac (Docker on Colima). Not run yet. `DockerBackend` accepts only `name@sha256:<digest>`
+references, and a locally built image has no repository digest until it is pushed, so the image is
+pushed to a loopback-only local registry first. From the repository root, at the commit under test:
+
+```sh
+export DOCKER_CONTEXT=colima
+docker run -d --rm --name vare-registry -p 127.0.0.1:5000:5000 registry:2
+docker build -t localhost:5000/vare-lp-grader:v2 configs/learning_pipeline_grader_v2
+docker push localhost:5000/vare-lp-grader:v2
+IMAGE="$(docker image inspect --format '{{index .RepoDigests 0}}' localhost:5000/vare-lp-grader:v2)"
+echo "$IMAGE"   # localhost:5000/vare-lp-grader@sha256:<64 hex>
+WORK="$HOME/.cache/vare-grader-calibration-$(date +%Y%m%dT%H%M%S)"   # under $HOME: shared with the Colima VM
+PYTHONPATH=src python3.12 scripts/learning_pipeline_grader_calibration.py \
+  --backend docker --image "$IMAGE" --work-root "$WORK" --timeout 120 \
+  --out results/learning-pipeline-grader-calibration-v2/calibration-colima.json
+VARE_GRADER_IMAGE="$IMAGE" PYTHONPATH=src python3.12 -m pytest -q tests/test_learning_pipeline_trusted_grading.py
+docker stop vare-registry
+```
+
+Exit status 0 and `all_verified: True` are required. The report records the backend, image
+digest, attestation and per-item evidence. Before real tasks are used, each repository needs its
+own dependencies-only image, and an attestation and A3 run for that image.
