@@ -188,17 +188,17 @@
     "last_integrated_pr_merge_sha": "5259a721e263baf47a52d4519c7cee949443df12",
     "active_branch": "codex/agent-context-compaction-v1",
     "verified_pr_head_sha_before_checkpoint_changes": "f272c2268d57c11bfc0f7261f9bcfc73c99e710c",
-    "active_pr_url": null,
-    "active_pr_state": "none"
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/154",
+    "active_pr_state": "open"
   },
   "go_no_go": {
     "integration": "GO_PENDING_REMOTE_CI",
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Push the focused context-compaction implementation and retrospective replay in a reviewable PR, verify required checks at its final head, then source-qualify a new Development family and complete metadata overlap review before freezing further inference. Never rerun consumed tasks.",
+  "highest_priority_next_task": "Review and resolve CI on PR #154 at its final pushed head, merge when required checks and review requirements are satisfied, verify remote main, then source-qualify a new Development family before any further inference.",
   "last_completed_step": "Merged PR #153 at 5259a721e263baf47a52d4519c7cee949443df12. Implemented and locally tested fail-closed context compaction plus a tokenizer-only replay that exactly reconstructs all recorded prompts from the two consumed Development attempts; both histories compact below 4096 tokens. No new model generation, grade, task exposure, or policy update occurred.",
-  "milestone_id": "p6-context-compaction-controller-replay-complete",
+  "milestone_id": "p6-context-compaction-pr-154-open",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -707,7 +707,7 @@
     },
     {
       "path": "research/flagship/STATUS.md",
-      "sha256": "9452b89b240644784d6f97a23871b8387ae591e0aa83a1a44fe4d7350689df61",
+      "sha256": "852298efe74065a1c69f1b555176680a6b0db69c6837de3f8ff594b1c9333b78",
       "status": "authoritative current checkpoint after PR #153 integration and context-compaction replay"
     },
     {
@@ -848,7 +848,7 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "The context-compaction follow-on PR has not yet been opened and checked by remote CI."
+    "PR #154 required exact-head CI is running; review and merge readiness remain to be verified."
   ],
-  "updated_at": "2026-10-31T01:08:52Z"
+  "updated_at": "2026-10-31T01:09:30Z"
 }

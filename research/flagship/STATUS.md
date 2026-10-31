@@ -2,10 +2,10 @@
 
 ## Current checkpoint
 
-- Milestone: `p6-context-compaction-implemented-pending-ci`.
+- Milestone: `p6-context-compaction-pr-154-open`.
 - Last verified `origin/main`: `5259a721e263baf47a52d4519c7cee949443df12` (2026-10-31), integrating PR #153.
 - Work branch: `codex/agent-context-compaction-v1`.
-- Active PR: pending creation after local validation; update this checkpoint when GitHub assigns the PR number.
+- Active PR: [#154 — Compact stale tool history before context exhaustion](https://github.com/mitukx/VARE/pull/154), open against main; required CI and review are being checked at the pushed head.
 - PR #153 is merged at `5259a721e263baf47a52d4519c7cee949443df12`; required checks passed at the final pushed head.
 
 ## Task selection and exposure
