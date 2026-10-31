@@ -1162,6 +1162,8 @@ def _parse(argv: Sequence[str] | None) -> argparse.Namespace:
     run.add_argument("--arm", required=True, help="arm name, e.g. base, rft, grpo")
     run.add_argument("--policy-version", type=int, required=True)
     run.add_argument("--model", required=True)
+    run.add_argument("--revision", help="model revision (pin it; recorded in the checkpoint digest)")
+    run.add_argument("--max-prompt-tokens", type=int, default=8192)
     run.add_argument("--adapter", type=Path)
     run.add_argument("--controller", choices=sorted(CONTROLLER_PRESETS), default="full")
     run.add_argument("--manifest", type=Path, required=True, help="a Train manifest; non-Train rows are refused")
@@ -1169,6 +1171,16 @@ def _parse(argv: Sequence[str] | None) -> argparse.Namespace:
     run.add_argument("--limit", type=int, required=True)
     run.add_argument("--seeds", type=int, default=1)
     run.add_argument("--output", type=Path, required=True)
+    run.add_argument("--instances", help="comma-separated Train instance ids (default: first --limit rows)")
+    run.add_argument("--grader", choices=("none", "trusted-v2"), default="none",
+                     help="trusted-v2: isolated v2 grader with per-task admission (needs PR #170 modules)")
+    run.add_argument("--grader-backend", choices=("docker", "bwrap"), default="docker")
+    run.add_argument("--grader-images", type=Path, help="JSON {upstream_repo: image@sha256:...} for docker")
+    run.add_argument("--grader-venv", type=Path, help="dependencies-only venv for bwrap")
+    run.add_argument("--lease-seconds", type=float, default=600.0,
+                     help="must exceed the slowest turn or grade; a killed run resumes after it expires")
+    run.add_argument("--min-available-memory-gib", type=float, default=8.0)
+    run.add_argument("--min-free-disk-gib", type=float, default=4.0)
     run.add_argument("--grader-factory", help="module:function(task_record, env) -> TrustedGrader | None")
     report = sub.add_parser("report", help="audit a run directory and print metrics")
     report.add_argument("run", type=Path)
@@ -1188,11 +1200,31 @@ def _load_factory(spec: str | None) -> Callable[..., Any] | None:
 
 
 def run_learning_pipeline_arm(args: argparse.Namespace) -> Path:
-    from vare.learning_pipeline import curriculum, repo_env
+    from vare.learning_pipeline import curriculum, repo_env, resources
 
-    records = load_train_manifest(args.manifest)[: args.limit]
-    records = curriculum.attach_payloads(records, args.cache)
+    root = args.output / f"{args.arm}-{args.controller}"
+    root.mkdir(parents=True, exist_ok=True)
+    preflight = {"memory_start": resources.check_memory(args.min_available_memory_gib, stage="lh_preflight"),
+                 "free_disk_bytes": resources.check_disk(args.output, args.min_free_disk_gib, stage="lh_preflight"),
+                 "argv": sys.argv[1:]}
+    (root / "preflight.json").write_text(json.dumps(preflight, indent=2, sort_keys=True, default=str) + "\n",
+                                         encoding="utf-8")
+    records = load_train_manifest(args.manifest)
+    if args.instances:
+        wanted = args.instances.split(",")
+        by_id = {r["instance_id"]: r for r in records}
+        missing = [i for i in wanted if i not in by_id]
+        if missing:
+            raise ValueError(f"not in the Train manifest: {missing}")
+        records = [by_id[i] for i in wanted]
+    records = curriculum.attach_payloads(records[: args.limit], args.cache)
     grader_factory = _load_factory(args.grader_factory)
+    if args.grader == "trusted-v2":
+        from scripts.long_horizon_trusted_grader import make_factory
+
+        images = json.loads(args.grader_images.read_text(encoding="utf-8")) if args.grader_images else None
+        grader_factory = make_factory(backend=args.grader_backend, cache=args.cache, images=images,
+                                      venv=args.grader_venv, evidence_dir=root / "grader-admission")
     factories: dict[str, WorkspaceFactory] = {}
     graders: dict[str, TrustedGrader | None] = {}
     tasks = []
@@ -1204,15 +1236,17 @@ def run_learning_pipeline_arm(args: argparse.Namespace) -> Path:
         factories[task.task_id] = repo_workspace_factory(env.path, env.commit, record["_patch"])
         graders[task.task_id] = grader_factory(record, env) if grader_factory else None
         tasks.append(task)
-    digest = sha256_json({"model": args.model,
+    digest = sha256_json({"model": args.model, "revision": args.revision,
                           "adapter": directory_sha256(args.adapter) if args.adapter else None})
-    policy = mlx_policy(args.model, str(args.adapter) if args.adapter else None)
+    policy = mlx_policy(args.model, str(args.adapter) if args.adapter else None, revision=args.revision,
+                        max_prompt_tokens=args.max_prompt_tokens)
     arm = PolicyArm(args.arm, policy, PolicyCheckpoint(args.arm, args.policy_version, digest))
-    root = args.output / f"{args.arm}-{args.controller}"
     harness = EpisodeHarness(root, arm, CONTROLLER_PRESETS[args.controller], factories=factories,
-                             grader_for=lambda t: graders.get(t.task_id))
+                             grader_for=lambda t: graders.get(t.task_id), lease_seconds=args.lease_seconds)
     harness.enroll(EpisodeSpec(task, seed) for task in tasks for seed in range(args.seeds))
     harness.run()
+    (root / "postflight.json").write_text(json.dumps({"memory_end": resources.memory_snapshot()}, indent=2,
+                                                     sort_keys=True, default=str) + "\n", encoding="utf-8")
     return root
 
 
