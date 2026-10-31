@@ -647,3 +647,16 @@ Frozen protocol: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/protocol.json`
 The exact model-attempt argv and independent grader argv are stored in the frozen protocol under `commands`. The attempt command is one-shot, network-denied, and process-tree RSS/time limited. The model workspace contains only the baseline `vllm/entrypoints/anthropic/protocol.py`; the five-case trusted overlay is not exposed to the model. The grader runs once after the agent receipt is durable and never returns feedback to the model.
 
 Pre-protocol resource snapshot: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/pre-protocol-resource-snapshot.json`. Launch receipt: `results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json` (SHA-256 `d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e`). Frozen inputs and every model snapshot hash matched, but the working-set-plus-headroom check failed: 11,993,432,064 bytes available versus 12,872,896,985 bytes required. Status: **NO-GO / NOT RUN**; the model was not loaded. Do not retry this frozen protocol.
+
+## vLLM #64575 source-qualification RSS erratum 001
+
+The original qualification bundle remains immutable. Its root manifest is `results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS` (SHA-256 `7d999d51daf233c2ab84677c35fa0b988019c7160777f2a313a2da2e0b7e60bf`); it covers the original 30 files. The append-only correction is `results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/rss-resource-measurement-erratum-001.json` and its Markdown explanation. Verify both records with:
+
+```bash
+shasum -a 256 -c results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS
+(cd results/mlsys-fresh-vllm-64575-source-qualification-v1/errata && shasum -a 256 -c SHA256SUMS)
+```
+
+The five old arms all completed in about 0.53 seconds, while the runner sampled process-tree RSS every 0.5 seconds. Their identical 3,915,776-byte readings are sample maxima, not OS high-water measurements. In a local reproduction, the first sample was 4,046,848 bytes; after a short-lived child touched 91 MiB, `wait4` reported 107,511,808 bytes. The 4 GiB resource result is therefore **INCONCLUSIVE**. The baseline, wrong-mutant, and upstream-fixed behavioral outcomes are unchanged. Do not rerun any consumed arm.
+
+The corrected runner now records `sampled_process_tree_rss_max_bytes` and `os_wait4_child_max_rss_bytes` separately, reaps the direct child with `wait4`, and cleans up descendants after the leader exits. `wait4` covers the direct waited child; the runner still does not claim a complete concurrent aggregate high-water mark for all descendants. The regression test is `tests/test_mlsys_vllm_64575_qualification_tools.py::test_wait4_records_short_lived_child_rss_high_water`.

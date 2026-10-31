@@ -40,7 +40,7 @@ def process_tree_rss(root_pid: int) -> int:
 
 
 def stop_process_group(proc: subprocess.Popen[bytes]) -> None:
-    """Stop every process in the attempt group after a resource-limit breach."""
+    """Stop every remaining process in the attempt group."""
     try:
         os.killpg(proc.pid, signal.SIGTERM)
     except ProcessLookupError:
@@ -120,6 +120,9 @@ def run_limited(
                     break
                 time.sleep(min(sample_seconds, max(0.01, wall_seconds - elapsed)))
             returncode = proc.wait()
+            # A candidate can exit successfully after leaving a child in the
+            # session. The attempt boundary applies to the whole process group.
+            stop_process_group(proc)
     except OSError as exc:
         if "proc" in locals() and proc.poll() is None:
             stop_process_group(proc)
@@ -171,7 +174,7 @@ def main() -> int:
         record_path=args.record,
     )
     print(json.dumps(result, sort_keys=True))
-    return 0 if result["exit_code"] == 0 and result["limit_reason"] is None else 1
+    return 0 if result.get("status") == "COMPLETED" and result.get("exit_code") == 0 else 1
 
 
 if __name__ == "__main__":

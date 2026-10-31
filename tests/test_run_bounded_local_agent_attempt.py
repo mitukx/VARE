@@ -1,8 +1,10 @@
+import json
 import os
 import signal
 import subprocess
 import sys
 import time
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -146,3 +148,67 @@ def test_run_limited_rejects_invalid_budget(
             sample_seconds=sample_seconds,
             log_path=tmp_path / "attempt.log",
         )
+
+
+def test_run_limited_kills_descendant_after_leader_exits(tmp_path) -> None:
+    ready_file = tmp_path / "child-ready"
+    pid_file = tmp_path / "child.pid"
+    child_code = (
+        "import pathlib,signal,sys,time; "
+        "signal.signal(signal.SIGTERM, signal.SIG_IGN); "
+        "pathlib.Path(sys.argv[1]).write_text('ready'); time.sleep(60)"
+    )
+    parent_code = """\
+import pathlib
+import subprocess
+import sys
+import time
+
+child = subprocess.Popen([sys.executable, "-c", sys.argv[1], sys.argv[2]])
+pathlib.Path(sys.argv[3]).write_text(str(child.pid))
+ready = pathlib.Path(sys.argv[2])
+deadline = time.monotonic() + 5
+while not ready.exists() and time.monotonic() < deadline:
+    time.sleep(0.01)
+raise SystemExit(0 if ready.exists() else 1)
+"""
+    record = run_limited(
+        [sys.executable, "-c", parent_code, child_code, str(ready_file), str(pid_file)],
+        wall_seconds=5,
+        rss_limit_bytes=1024**3,
+        sample_seconds=0.02,
+        log_path=tmp_path / "attempt.log",
+    )
+    child_pid = int(pid_file.read_text(encoding="utf-8"))
+    try:
+        assert record["status"] == "COMPLETED"
+        assert record["exit_code"] == 0
+        deadline = time.monotonic() + 3
+        while _pid_is_running(child_pid) and time.monotonic() < deadline:
+            time.sleep(0.02)
+        assert not _pid_is_running(child_pid)
+    finally:
+        if _pid_is_running(child_pid):
+            os.kill(child_pid, signal.SIGKILL)
+
+
+def test_cli_returns_launch_failure_receipt_without_traceback(tmp_path) -> None:
+    record_path = tmp_path / "record.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(Path(__file__).resolve().parents[1] / "scripts" / "run_bounded_local_agent_attempt.py"),
+            "--wall-seconds", "2",
+            "--max-process-tree-rss-bytes", str(1024**3),
+            "--log", str(tmp_path / "attempt.log"),
+            "--record", str(record_path),
+            "--", str(tmp_path / "missing-command"),
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 1
+    assert "Traceback" not in completed.stderr
+    assert json.loads(completed.stdout)["status"] == "LAUNCH_FAILED"
+    assert json.loads(record_path.read_text(encoding="utf-8"))["status"] == "LAUNCH_FAILED"
