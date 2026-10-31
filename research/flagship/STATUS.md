@@ -3,27 +3,27 @@
 ## Current checkpoint
 
 - Last verified `origin/main`: `416f35c465712898e8e5764a8e43193ef86e7afb`; PR #159 is integrated.
-- PR #150 is confirmed merged with its exact-head CI, CPU-evidence, and E2E checks passing. Its historical three regressions are closed.
-- PR #160 is open and ready for review at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`. This update fixes both newly posted automated-review findings. The targeted local suite passed **19 tests**; exact-head GitHub CI and CPU evidence are running. Normal review and branch protection remain required.
-- PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`, stacked on #160. It now merges the #160 review fix; exact-head CI and CPU evidence are running. No review or reviewer request is recorded.
-- Active branch: `codex/freshdev-qualification-vllm64830-oct31`; draft PR #162 is open and attached at `23f5ea877e2d133f163a1d8c31fc9112391e0d92`, based on PR #161. Exact-head CI is running. The frozen execution addendum is on the pushed branch.
+- PR #150 is confirmed merged with its exact-head CI, CPU-evidence, and E2E checks passing.
+- PR #160 is open at `71aa74ab6a8f6f1625505b68f7f332c49fabff93`. Its Python 3.11/3.12/3.13 CI, lint, typecheck, seeded-summary, RVL inference, Math500 grader, and CPU-evidence checks now pass. GitHub reports merge state BLOCKED; the normal review and branch-protection gate remains.
+- PR #161 is open as a draft at `ade8a0ac3dfe609e67698638faf6eb826101dbc5`, stacked on #160. Its exact-head CI and CPU evidence pass. No review is recorded.
+- Active branch: `codex/freshdev-qualification-vllm64830-oct31`; draft PR #162 is open at `28a198a5d6abf1cf4d881efddc65d597d4ba41cd`, based on PR #161. Its checks are still running.
 - Milestone: `p15-fresh-vllm-64830-source-qualification`.
 
 ## Completed in this checkpoint
 
 - Corrected `_check_artifact_hashes` so `frozen_inputs.task` is validated before generic artifact filtering. Missing task entries, paths, hashes, files, or content mismatches now fail closed.
 - Corrected bounded-attempt cleanup to send `SIGKILL` to surviving process-group members even if the group leader already exited.
-- Added regressions for changed/deleted task JSON and prompt files, malformed manifests, and a SIGTERM-ignoring child. Ruff and `py_compile` passed; the focused tests passed **19/19**. Result record: `results/pr160-review-fixes-v1/run-001.json`.
+- Added regressions for changed/deleted task JSON and prompt files, malformed manifests, and a SIGTERM-ignoring child. Ruff and `py_compile` passed; the focused suite passed **19/19**. Result record: `results/pr160-review-fixes-v1/run-001.json`.
 - Verified the exact #64830 source identity and expected three-file changes. The metadata-only overlap review found no direct identity/family overlap at moderate confidence; pretraining exposure remains unknown.
-- Froze the execution addendum before any candidate test: `results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-2-execution.json`, SHA-256 `96fbf7a9c05373eab6dae43f5ce057f6f686e3766eab3aaae8e360d38da0a856`.
-- Prepared a hash-bound overlay with unchanged upstream assertions for HiSparse and watermarking, exact baseline/fixed method extracts, and a mutant that removes those two checks. The modified custom-speculator behavior is explicitly outside this scoped qualification.
+- Froze and pushed the scoped source qualification and its execution commands before test execution. Baseline attempt-001 reached pytest setup but stopped before test collection because pytest's logging plugin tried to open `/dev/null`, which Seatbelt denied. The attempt and classification are preserved; no candidate assertions executed and no later arm was run.
+- Corrected the runner to direct pytest's internal log to the same arm-specific writable output directory. Added a regression test; Ruff, `py_compile`, and the test (**1 passed**) succeeded. A new addendum binds exact corrected commands, hashes, unchanged sandbox boundaries, and an attempt-002 sequence; it must be committed and pushed before the corrected baseline runs.
+- The modified custom-speculator behavior remains excluded because its full registration and VllmConfig validation fixtures are outside the overlay.
 
 ## Capability and research status
 
-- PR #64830 is **UNQUALIFIED / UNASSIGNED** until its baseline, mutant, fixed, and isolation gates pass.
-- No #64830 candidate test has executed. No model inference, training, or Held-Out access has occurred in this source qualification.
-- Coding capability and RL update remain **NO-GO**. Prior vLLM #64575 model attempt remains **NOT RUN** at its failed memory preflight; do not retry it.
+- PR #64830 is **UNQUALIFIED / UNASSIGNED**. Attempt-001 is an environmental setup failure, not a baseline behavior result. The corrected baseline has not yet run.
+- No model inference, training, or Held-Out access has occurred in this source qualification. Coding capability and RL update remain **NO-GO**.
 
 ## Immediate next action
 
-Push this frozen checkpoint. Then run the baseline arm exactly once using its `runner_argv` in the execution addendum. Continue to the wrong-mutant arm only if both cases fail at the intended post-override assertion; continue to upstream-fixed only if that gate also passes. Keep #64830 unqualified and unassigned on any unexpected outcome.
+Push the runner correction, its regression, attempt-001 receipt/classification, and execution addendum 3. Verify the frozen addendum is on PR #162, validate every stored command/hash, and run baseline attempt-002 exactly once. Proceed to wrong-mutant and upstream-fixed only through the addendum's gates; stop on any unexpected result.

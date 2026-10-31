@@ -663,9 +663,9 @@ Recorded result: 19 passed, Ruff clean, `py_compile` exit 0. Remote exact-head C
 
 ## Fresh vLLM #64830 scoped source qualification
 
-Protocol: `protocols/mlsys_fresh_vllm_64830_source_qualification_v1.json`; ancestry correction: `protocols/mlsys_fresh_vllm_64830_source_qualification_v1_addendum_1.json`. Before any candidate test, execution addendum `results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-2-execution.json` must be present on the pushed branch. Its exact runner argument arrays, per-arm source/test/profile hashes, runtime, expected outcomes, and resource limits are authoritative.
+Protocol: `protocols/mlsys_fresh_vllm_64830_source_qualification_v1.json`; ancestry correction: `protocols/mlsys_fresh_vllm_64830_source_qualification_v1_addendum_1.json`. The scope remains the unchanged upstream HiSparse and watermarking cases exercised against extracted baseline, mutant, and fixed `VllmConfig` methods; custom-speculator behavior is excluded.
 
-Overlay preparation (source checkout used for the frozen commits):
+Overlay preparation on a clean source checkout (the existing evidence directory is immutable and the preparation script refuses to overwrite it):
 
 ```bash
 /opt/homebrew/Caskroom/miniforge/base/bin/python scripts/prepare_mlsys_vllm_64830_qualification_overlay.py \
@@ -674,4 +674,21 @@ Overlay preparation (source checkout used for the frozen commits):
   --output-dir results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest
 ```
 
-This command refuses to overwrite the evidence directory. It prepares the unchanged upstream test function, minimal support stubs, exact baseline/fixed method extracts, and one hash-bound wrong mutant; it does not execute candidate tests. To execute the qualification, run each arm's `runner_argv` from the execution addendum **in order** and stop on any failure. Each arm is one-shot; do not retry.
+Before execution, verify the addendum sidecar and reproduce the runner-tooling checks:
+
+```bash
+(cd results/mlsys-fresh-vllm-64830-source-qualification-v1 && shasum -a 256 -c protocol-addendum-3-corrected-logging.json.sha256)
+ruff check scripts/run_mlsys_vllm_64830_qualification_arm.py tests/test_mlsys_vllm_64830_qualification_tools.py
+/opt/homebrew/Caskroom/miniforge/base/bin/python -m py_compile scripts/run_mlsys_vllm_64830_qualification_arm.py tests/test_mlsys_vllm_64830_qualification_tools.py
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /opt/homebrew/Caskroom/miniforge/base/bin/python -m pytest -p no:cacheprovider -o addopts= -q tests/test_mlsys_vllm_64830_qualification_tools.py
+```
+
+After the addendum is committed and pushed, run one arm at a time by selecting the corresponding `runner_argv` array from that JSON and invoking it with the VARE repository as the working directory. Never hand-edit an argv. Do not execute the next arm until the previous gate passes.
+
+The original execution addendum 2 is immutable and consumed by baseline attempt-001. Pytest failed in `pytest_configure` because the logging plugin attempted `/dev/null`, which the deny-by-default Seatbelt profile disallowed. The receipt is `results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-001/attempt.json`; its classification is `STOPPED_BEFORE_TEST_COLLECTION`, with zero candidate assertions executed. No later arm ran under addendum 2.
+
+The trusted runner now sets `-o log_file=<arm-output-dir>/pytest-internal.log`; this file stays inside the existing arm-specific writable boundary. The sandbox profiles, source/test/mutant bytes, exact test IDs, resource caps, and behavioral acceptance gates are unchanged. The runner unit regression, Ruff, and `py_compile` commands and logs are saved under `results/mlsys-fresh-vllm-64830-source-qualification-v1/retry-tooling-001/`.
+
+Execution addendum 3 is `results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-3-corrected-logging.json`. Verify its `.sha256` sidecar, runner/test/profile/source/test/Python hashes, and all exact stored `runner_argv` and `inner_pytest_command` arrays. **Commit and push addendum 3 before any retry.** Then execute only the stored baseline `runner_argv` once. It must produce exactly the two post-override assertion failures, with successful collection/import and no skips, timeout, resource or isolation breach. If this gate passes, execute the stored wrong-mutant argv once and require the same failures. Only then execute upstream-fixed once and require both cases to pass. Any unexpected result stops the sequence; there is no retry under addendum 3.
+
+No split assignment, model inference, training, or Held-Out access is authorized. Public pretraining exposure remains UNKNOWN. A source-level pass cannot establish agent capability or RL improvement.

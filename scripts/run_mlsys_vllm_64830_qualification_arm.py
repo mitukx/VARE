@@ -58,6 +58,7 @@ def build_pytest_command(
     test_file: Path,
     pytest_config: Path,
     basetemp: Path,
+    log_file: Path,
     test_ids: list[str],
 ) -> list[str]:
     command = [
@@ -72,6 +73,8 @@ def build_pytest_command(
         "-q",
         "-p",
         "no:cacheprovider",
+        "-o",
+        f"log_file={log_file.resolve()}",
         "--basetemp",
         str(basetemp.resolve()),
     ]
@@ -151,6 +154,7 @@ def main() -> int:
         paths["test_file"],
         paths["pytest_config"],
         basetemp,
+        output_dir / "pytest-internal.log",
         args.test_id,
     )
     env = make_environment(output_dir, paths["method_file"])
