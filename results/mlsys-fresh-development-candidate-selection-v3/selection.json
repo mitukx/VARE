@@ -1,0 +1,122 @@
+{
+  "development_split_assignment_performed": false,
+  "eligible_candidate_count_after_exclusions": 9,
+  "eligible_candidate_count_before_exclusions": 11,
+  "excluded_identities": [
+    {
+      "number": 64675,
+      "reason": "Previously selected by v1 and blocked by its frozen overlap review; no reuse.",
+      "repository": "vllm-project/vllm"
+    },
+    {
+      "number": 64575,
+      "reason": "Previously selected by v2 and source-qualified; its distinct 14B attempt was NOT RUN at the resource gate. No reuse under this new-task continuation.",
+      "repository": "vllm-project/vllm"
+    }
+  ],
+  "frozen_inputs": {
+    "protocols/mlsys_fresh_development_candidate_discovery_v4.json": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+    "protocols/mlsys_fresh_development_candidate_selection_v1.json": "19254086ccd3093ed5a85518f4d49088fa9323b171e8ed190e0dd13f5d37ae10",
+    "protocols/mlsys_fresh_development_candidate_selection_v2.json": "e728ebc6dd5fddf930b3d11bab093eab1b601fb3fa596cfbbb55e001dae28359",
+    "research/flagship/state.json": "68446809c772dd787fea0a3d2e7da6787f3bb93d58e8b344302f17e3c3f034f0",
+    "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json": "8c2fd7e519723e27f8b2b5274d03c340d32c5e552191869ddc23f63f46bd0370",
+    "results/mlsys-fresh-development-candidate-discovery-v4/screen.json": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "results/mlsys-fresh-development-candidate-selection-v1/selection.json": "2ba539e52536e37ef47cd3df41171ab6ce1a5368c07ecee0022835e3e1e4cc3d",
+    "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-review-v1.json": "6a2f6bcff7bf58a2d02d0a1f83c23e43fd3f2a5449d683dbbfc495de97df9bb0",
+    "results/mlsys-fresh-development-candidate-selection-v2/selection.json": "fdf5c2977f8eba36bc31b72057c2eca66923ec2dd1a77a396f30377dcaee5bd8",
+    "scripts/select_mlsys_fresh_development_candidate_v1.py": "f54f8a07e258c176a2e36e6cb89f8e44014c989ae9834d3a0ec989f2694fb1b8"
+  },
+  "heldout_access_authorized": false,
+  "model_or_agent_inference_authorized": false,
+  "protocol_sha256": "7b0e88d37ed11380bf7d590dfb4484fc63535aa985d72dfb2fe1086c28183148",
+  "ranked_candidate_identities": [
+    {
+      "number": 64830,
+      "repository": "vllm-project/vllm",
+      "selection_rank_sha256": "211fd7bf59305bd56caf1ab0e0667424de95b0e9aea35133bd1bf658a4c0d140"
+    },
+    {
+      "number": 63297,
+      "repository": "vllm-project/vllm",
+      "selection_rank_sha256": "26869d22b4346c90484cef6b3cca430e1c264d01c4fead165968341fc951ec0d"
+    },
+    {
+      "number": 64674,
+      "repository": "vllm-project/vllm",
+      "selection_rank_sha256": "6c5b192ec50f7e494240f11ac96269dae0f660e2858966fd8e7511a3744f61a5"
+    },
+    {
+      "number": 64269,
+      "repository": "vllm-project/vllm",
+      "selection_rank_sha256": "7209d49ae9c0778d112cab5340bd9c8603bbe2aeb68765dcab8ab2cd4824acd1"
+    },
+    {
+      "number": 30614,
+      "repository": "vllm-project/vllm",
+      "selection_rank_sha256": "ac0483224351c6eba19975138f46bbd5af88559fa707609a2a50ed4b021f12dc"
+    },
+    {
+      "number": 4688,
+      "repository": "ml-explore/mlx",
+      "selection_rank_sha256": "b15c4cefb1521de1aa171b633492d01d1b79804167f9e2d88a92cd2b15fe4910"
+    },
+    {
+      "number": 64673,
+      "repository": "vllm-project/vllm",
+      "selection_rank_sha256": "c3aa3e63bed9a54f2be83e575f0dd20d5387b300e60cbeaaa405414650a11324"
+    },
+    {
+      "number": 63116,
+      "repository": "vllm-project/vllm",
+      "selection_rank_sha256": "d7a3df8fcb7e2dd8bfac7836c0cb47ad592125191d1b6ef9f0b0a8afd77b4855"
+    },
+    {
+      "number": 64094,
+      "repository": "vllm-project/vllm",
+      "selection_rank_sha256": "d8a8b939576e821f2d753618c1d9137fce21d0172143d96463509eab6a24786a"
+    }
+  ],
+  "schema_version": 1,
+  "selected_candidate": {
+    "additions": 43,
+    "base_ref_sha_at_capture": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "changed_file_count": 3,
+    "changed_paths": [
+      "tests/test_config.py",
+      "tests/v1/spec_decode/test_custom_speculator.py",
+      "vllm/config/vllm.py"
+    ],
+    "changed_paths_complete": true,
+    "coarse_screen": "provisional_for_manual_review",
+    "created_at": "2026-10-31T00:15:15Z",
+    "deletions": 61,
+    "head_sha": "9800451ab0e78104971592315e5b26546c5e9993",
+    "is_draft": false,
+    "merge_base_sha": "17550580e932f15e772185847382d3ae4211f5ec",
+    "merge_commit_sha": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+    "merged_at": "2026-10-31T01:25:51Z",
+    "number": 64830,
+    "qualification_status": "UNQUALIFIED",
+    "repository": "vllm-project/vllm",
+    "screen_reasons": [],
+    "selection_rank_sha256": "211fd7bf59305bd56caf1ab0e0667424de95b0e9aea35133bd1bf658a4c0d140",
+    "split_assignment": "UNASSIGNED",
+    "state": "MERGED",
+    "task_family_overlap": "NOT_ASSESSED",
+    "test_paths": [
+      "tests/test_config.py",
+      "tests/v1/spec_decode/test_custom_speculator.py"
+    ],
+    "title": "[Config] Move V2-only checks into V1 model runner unsupported features",
+    "updated_at": "2026-10-31T01:25:51Z",
+    "url": "https://github.com/vllm-project/vllm/pull/64830"
+  },
+  "selected_count": 1,
+  "selection_id": "mlsys-fresh-development-candidate-selection-v3",
+  "selector_sha256": "3d82aa0a927b9b43c06e9765158d296b9f2d8cfc343cf30179841e5078900914",
+  "source_or_test_content_accessed": false,
+  "source_screen_sha256": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+  "task_family_overlap_review_performed": false,
+  "task_qualification_performed": false,
+  "training_authorized": false
+}
