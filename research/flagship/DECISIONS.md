@@ -739,6 +739,11 @@ This file is append-only. New decisions are appended with dated evidence and fal
 
 ## 2026-10-31 — Record the PR #165 merge in the flagship state
 
-- **Evidence:** PR #165 (learning pipeline v1) merged at 2026-10-31 17:35:53 UTC; `main` is `b402c80cd6576f0c569783e1f97c962b504f49f5`. It changed no file under `research/flagship/` or `results/mlsys-fresh-vllm-64830-*`, and its Train/held-out manifests name no vLLM, MLX-LM, Transformers, or Ray task. Run-001 is `no_detectable_change` for both arms (held-out n = 42: no_update 15, sft_reference 14, rft_self 20; Holm p 1.0 and 0.125). The grader isolation audit shows the v1 native grader can report false passes on synthetic forgeries.
-- **Decision:** Update the GitHub checkpoint and `git_refs` to `b402c80c`. Index the learning-pipeline protocol and records by raw-bytes sha256. Scope the two blockers that say no policy update or Held-Out evaluation exists to the flagship task ledger, and add two blockers for the run-001 negative result and the grader false-pass risk. Keep `go_no_go.rl_update` at `NO_GO`. No exposure-ledger, errata, or evidence file changes.
-- **Limit:** The exact-head CI recorded for PR #164 and this reconciliation ran on base `da15797c`. Fresh exact-head CI on a head containing `b402c80c` is required before merge.
+- **Evidence:** PR #165 (learning pipeline v1) merged at 2026-10-31 17:35:53 UTC; `main` is `6cafa37a2ccc14cd250a50e7005a71806e7d81c3`. It changed no file under `research/flagship/` or `results/mlsys-fresh-vllm-64830-*`, and its Train/held-out manifests name no vLLM, MLX-LM, Transformers, or Ray task. Run-001 is `no_detectable_change` for both arms (held-out n = 42: no_update 15, sft_reference 14, rft_self 20; Holm p 1.0 and 0.125). The grader isolation audit shows the v1 native grader can report false passes on synthetic forgeries.
+- **Decision:** Update the GitHub checkpoint and `git_refs` to `6cafa37a`. Index the learning-pipeline protocol and records by raw-bytes sha256. Scope the two blockers that say no policy update or Held-Out evaluation exists to the flagship task ledger, and add two blockers for the run-001 negative result and the grader false-pass risk. Keep `go_no_go.rl_update` at `NO_GO`. No exposure-ledger, errata, or evidence file changes.
+- **Limit:** The exact-head CI recorded for PR #164 and this reconciliation ran on base `da15797c`. Fresh exact-head CI on a head containing `6cafa37a` is required before merge.
+
+## 2026-11-01 — Repoint the PR #165 merge after re-authoring
+
+- **Evidence:** On 2026-11-01 the commits added by PR #165 were re-authored on `main` with identical trees; the #165 merge moved from `b402c80c` to `6cafa37a2ccc14cd250a50e7005a71806e7d81c3` (same merge time, 2026-10-31 17:35:53 UTC). `da15797c` and earlier history are unchanged.
+- **Decision:** Point every reference to the #165 merge at `6cafa37a`. No hash, ledger, errata, or evidence file changes.

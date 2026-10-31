@@ -5,9 +5,9 @@ Updated 2026-10-31 17:45 UTC. This is a state-only reconciliation of the files i
 ## GitHub checkpoint (verified 2026-10-31 17:45 UTC)
 
 - Repository: `https://github.com/mitukx/VARE`.
-- `main` is `b402c80cd6576f0c569783e1f97c962b504f49f5`, the merge of PR #165 (learning pipeline v1) at 2026-10-31 17:35:53 UTC. The previous `main` was `da15797ca6345f73eba8249c9059db3b1a9de41e`, the merge of PR #163.
+- `main` is `6cafa37a2ccc14cd250a50e7005a71806e7d81c3`, the merge of PR #165 (learning pipeline v1) at 2026-10-31 17:35:53 UTC. The previous `main` was `da15797ca6345f73eba8249c9059db3b1a9de41e`, the merge of PR #163.
 - PRs #140, #144, #145, #150, #159, #160, #161, #162, #163, and #165 are merged.
-- PR #165 changed no file under `research/flagship/` or `results/mlsys-fresh-vllm-64830-*`, so PR #164 and this reconciliation merge into the new `main` without conflicts. Their exact-head CI below ran on the old base `da15797c`; fresh exact-head CI on a head that contains `b402c80c` is still required before merge.
+- PR #165 changed no file under `research/flagship/` or `results/mlsys-fresh-vllm-64830-*`, so PR #164 and this reconciliation merge into the new `main` without conflicts. Their exact-head CI below ran on the old base `da15797c`; fresh exact-head CI on a head that contains `6cafa37a` is still required before merge.
 - PR #164 (`codex/qwen3-vllm64830-dev-v2` → `main`) is the active **draft**. At this checkpoint its head is `759ac3af1924e5a22b404def05c14839eabd1a8b` ("Record V7 Qwen3 development attempt outcome").
 - Exact-head CI on `759ac3af`: 19/19 check runs succeeded; the last finished at 12:33:54 UTC. These are the 9 required contexts (blob-budget, lint, math500-grader, rvl-inference-cpu, seeded-summary-cpu, test 3.11/3.12/3.13, typecheck), each run on both push and pull_request, plus calibrated-cpu-tasks.
 - The V7 launch head `eb82cb00` passed 19/19 after one rerun of the failed job: `test (3.12)` first timed out in `tests/test_trajectory_workers.py::test_independent_stages_bounded_backlog_and_slow_step_heartbeats` (1,616 passed, 111 skipped) and passed on rerun. The earlier heads `77b8a9b7`, `45df90fc` and `053b25fe` also passed 19/19.

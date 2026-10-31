@@ -811,4 +811,4 @@ python -c "import json;d=json.load(open('research/flagship/state.json'));import 
 PYTHONPATH=src python scripts/redact_learning_pipeline_v1_public.py --check
 ```
 
-- The `results/learning-pipeline-v1/` entries verify only on a tree that contains the PR #165 merge (`b402c80c`).
+- The `results/learning-pipeline-v1/` entries verify only on a tree that contains the PR #165 merge (`6cafa37a`).
