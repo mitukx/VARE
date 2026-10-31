@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1-addendum-1",
+  "parent_protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1",
+  "parent_protocol_sha256": "6901a8146568354acb4089ae0b82745142a05c49ebdba96f709707221c8eb091",
+  "created_at_utc": "2026-10-31T05:25:29Z",
+  "correction_reason": "The frozen candidate metadata calls 17550580e932f15e772185847382d3ae4211f5ec merge_base_sha, but exact commit metadata shows it is the one parent of the integrated revision and is not an ancestor of the PR-head commit. Keep that exact revision as the pre-merge baseline; clarify the graph checks so the baseline, PR head, and fixed source are not conflated.",
+  "verified_commit_graph_metadata": {
+    "baseline_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+    "integrated_revision": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+    "integrated_revision_parent_count": 1,
+    "integrated_revision_first_parent": "17550580e932f15e772185847382d3ae4211f5ec",
+    "pr_head_revision": "9800451ab0e78104971592315e5b26546c5e9993",
+    "pr_head_first_parent": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "actual_common_ancestor_of_baseline_and_pr_head": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "baseline_is_ancestor_of_pr_head": false,
+    "baseline_is_parent_of_integrated_revision": true
+  },
+  "interpretation": {
+    "baseline_role": "The frozen baseline revision is the first parent of the one-parent integrated commit and therefore represents the VLLM source immediately before #64830 was applied.",
+    "pr_head_role": "Use the exact PR head only to verify PR metadata and derive the changed-path set against its actual common ancestor. Do not require the PR head to be an ancestor of the one-parent integrated commit.",
+    "path_gate": "After this addendum is pushed, compare actual common ancestor d90e35cffa21729ac55bb0477a0d64f5127dbcda to PR head 9800451ab0e78104971592315e5b26546c5e9993; require the changed-path set to match the frozen metadata. Separately compare baseline 17550580e932f15e772185847382d3ae4211f5ec to integrated revision 1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49; require the expected task paths and no unrelated identity drift.",
+    "qualification_arms_unchanged": true,
+    "candidate_identity_unchanged": true,
+    "selection_and_review_unchanged": true
+  },
+  "source_content_or_test_content_opened": false,
+  "patch_opened": false,
+  "pr_body_or_discussion_opened": false,
+  "authorization_changes": {
+    "source_and_test_access_after_parent_protocol_and_this_addendum_are_committed_and_pushed": true,
+    "source_level_qualification_only": true,
+    "development_split_assignment": false,
+    "model_or_agent_inference": false,
+    "training": false,
+    "heldout_access": false,
+    "paid_compute_or_api": false
+  },
+  "stop_rules": [
+    "Verify the parent protocol hash and this addendum's sidecar before any source/test access.",
+    "If the PR-head changed paths differ from frozen metadata or the integrated revision's first parent differs from the frozen baseline, stop without running tests.",
+    "Do not treat the candidate metadata field name merge_base_sha as proof that baseline is the PR head's common ancestor.",
+    "Do not change baseline/fixed revisions, test selection rules, arms, or qualification gates under this addendum."
+  ]
+}
