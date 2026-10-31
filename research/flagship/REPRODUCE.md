@@ -397,3 +397,40 @@ The first corrected baseline attempt is preserved at `results/mlsys-fresh-develo
 
 
 The v1 wrong-mutant log and receipt are preserved at `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.*`. The target assertion failed after 47 mapping lookups, but pytest did not expose the filename for the upstream method's `unittest.subTest` loop. Since v1 required legacy-case attribution, do not run its fixed arm. A new protocol must report subtest parameters explicitly and bind fresh arm outputs before further candidate tests.
+
+
+## Case-aware Transformers #49458 source qualification v2
+
+V1's immutable logs remain unchanged. V2 uses the same upstream test file and method, but a frozen stdlib unittest runner that emits each `subTest` parameter/outcome as `VARE_CASE_RUNNER_RESULT=<JSON>`. Verify the V2 protocol and runner hashes, then execute one container per arm using the v2 `container_template`; mount only `case_runner.py` at `/runner`, the trusted test at `/trusted`, and one arm-specific source tree at `/source`, all read-only. Keep `/source/utils` in `PYTHONPATH` as required by addendum 1.
+
+The v2 schedule is baseline → wrong-mutant → upstream-fixed. Each log must contain records for both `video_preprocessor_config.json` and `preprocessor_config.json`. Baseline and wrong-mutant must report `failed` at the target assertion for both; fixed must report `passed` for both. Any collection error, missing case record, skip, timeout, or different assertion is inconclusive and stops the sequence. V1 results do not substitute for v2 arms. Do not assign a split or run inference.
+
+
+Prepare v2 arm trees with the frozen source archive and overlays:
+
+```bash
+mkdir -p work/transformers-49458-v2/baseline work/transformers-49458-v2/trusted work/transformers-49458-v2/runner
+mkdir -p work/transformers-49458-v2/wrong-mutant work/transformers-49458-v2/upstream-fixed
+tar -xzf work/transformers-49458-inputs/transformers-base-429e6916.tar.gz \
+  -C work/transformers-49458-v2/baseline --strip-components=1
+cp -a work/transformers-49458-v2/baseline/. work/transformers-49458-v2/wrong-mutant/
+cp -a work/transformers-49458-v2/baseline/. work/transformers-49458-v2/upstream-fixed/
+cp work/transformers-49458-inputs/test_video_processing_auto.fixed.py \
+  work/transformers-49458-v2/trusted/test_video_processing_auto.py
+cp results/mlsys-fresh-development-task-qualification-v3/transformers-49458/case_runner.py \
+  work/transformers-49458-v2/runner/case_runner.py
+cp work/transformers-49458-inputs/video_processing_auto.fixed.py \
+  work/transformers-49458-v2/upstream-fixed/src/transformers/models/auto/video_processing_auto.py
+python3 - <<'PY'
+from pathlib import Path
+path=Path('work/transformers-49458-v2/wrong-mutant/src/transformers/models/auto/video_processing_auto.py')
+text=path.read_text()
+old='for model_type, extractors_dict in VIDEO_PROCESSOR_MAPPING.items():'
+new='for model_type, extractors_dict in VIDEO_PROCESSOR_MAPPING_NAMES.items():'
+assert text.count(old)==1
+path.write_text(text.replace(old,new,1))
+PY
+docker --context colima image inspect vare/fresh-qualification-transformers:0.3 --format '{{.Id}} {{.Os}}/{{.Architecture}}'
+```
+
+Verify each generated source-tree digest against `results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json` before execution. Execute the exact per-arm command by substituting its source directory, trusted directory, runner directory, and result log into the v2 `container_template`. Capture stdout and stderr together. Enforce the 600-second ceiling with a monotonic host timer; check at least once per minute and stop the container on expiry. Write one JSON receipt per arm with exact argv, protocol/runner/source/test/image hashes, start/end UTC, elapsed seconds, exit code, timeout flag, named subtest outcomes, and gate classification. Do not retry.

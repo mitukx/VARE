@@ -197,6 +197,12 @@
       "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
       "sha256": "b9763deb7f5cd9229da77a001afa38a7a7062d34475a2cf9afa7f0ec3dcdfff5",
       "status": "frozen before corrected baseline invocation; preserves original protocol and limits; authorizes one corrected baseline only"
+    },
+    {
+      "protocol_id": "mlsys-transformers-49458-source-qualification-v2",
+      "path": "protocols/mlsys_transformers_49458_source_qualification_v2.json",
+      "sha256": "f62f163be8984323c0d237b82fbaef3cf075a80e5bb49d23fd0fd8328141ee9b",
+      "status": "frozen before any v2 Transformers test; case-aware reporting; source qualification only; no split or inference"
     }
   ],
   "git_refs": {
@@ -205,7 +211,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "53c9dd344e299165206a85ad03afb3b1239a8b12",
+    "verified_pr_head_sha_before_checkpoint_changes": "5ded516164fddd471d2af07ecf33c3e372924866",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
@@ -214,9 +220,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Freeze a v2 source-qualification protocol using the same pinned test method under a unittest runner that reports each subTest filename; then re-run the baseline, wrong-mutant, and fixed controls in order with distinct output files. Do not run inference or assign the candidate.",
-  "last_completed_step": "Wrong-mutant attempt 001 used the frozen corrected environment and failed the intended load_attribute.assert_not_called assertion after 47 mapping loads, exit 1, one selected, zero skipped. Pytest reported the unittest subTest loop as one aggregate case without a filename, so the v1-required legacy-image-case attribution is unverified. The upstream-fixed arm was not run. Preserve this result and freeze a more diagnostic runner protocol before any additional task tests.",
-  "milestone_id": "p8-v1-wrong-mutant-case-attribution-incomplete",
+  "highest_priority_next_task": "Execute v2 baseline, wrong-mutant, and upstream-fixed once each in order with the case-aware runner; require named outcomes for both subTests and stop at any gate failure. Candidate remains unassigned; do not run inference.",
+  "last_completed_step": "Pushed v1 source qualification records in PR #155. The baseline met its target assertion gate, but the wrong-mutant pytest output lacked subTest filename attribution, so v1 fixed arm was withheld. Created and smoke-checked a case-aware stdlib unittest runner on a generic two-subTest fixture only, then froze v2 before any v2 Transformers test. V2 binds the same test method, source/image, and a three-arm ordered control with explicit named-subtest results.",
+  "milestone_id": "p8-transformers-49458-source-qualification-v2-frozen",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -877,6 +883,11 @@
       "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
       "sha256": "d51ded43b37e639382ada61e5c9c1b1b901b35adcee92a23bcd5a3ef25c1e1e3",
       "status": "pinned task inputs and baseline/wrong-mutant outcomes; no fixed-source run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/case_runner.py",
+      "sha256": "2ec495123c435fd08a8717a993170edce909f81403eb8dd45074154830c6eff7",
+      "status": "case-aware unittest runner; generic smoke confirmed both subTest parameters/outcomes are reported; no candidate test was run in the smoke"
     }
   ],
   "run_ids": [
@@ -926,7 +937,7 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED; v1 wrong-mutant failed the target assertion but its required legacy-case attribution is unavailable, and no fixed arm ran. Freeze a case-reporting protocol before additional tests."
+    "Transformers #49458 remains UNQUALIFIED and UNASSIGNED; v1 wrong-mutant case attribution was incomplete, and all v2 named-subtest controls remain pending."
   ],
-  "updated_at": "2026-10-31T01:50:45Z"
+  "updated_at": "2026-10-31T01:52:16Z"
 }

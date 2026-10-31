@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-transformers-49458-source-qualification-v2",
+  "frozen_at_utc": "2026-10-31T01:52:16Z",
+  "protocol_status": "frozen_before_any_v2_candidate_test_execution; no v2 source qualification result yet",
+  "purpose": "Repeat source-level CPU qualification with explicit per-subTest outcome reporting. This corrects only the v1 runner attribution gap and authorizes no Development split assignment or model/agent inference.",
+  "candidate": {
+    "task_id": "transformers-49458-lazy-auto-video-processor",
+    "repository": "huggingface/transformers",
+    "license_spdx": "Apache-2.0",
+    "issue": {
+      "number": 49451,
+      "url": "https://github.com/huggingface/transformers/issues/49451",
+      "body_sha256": "c675c9d59f4e8eb6d8948d41134799361f7db34d4957b71bb0afc01cc9ab8fe6"
+    },
+    "pull_request": {
+      "number": 49458,
+      "url": "https://github.com/huggingface/transformers/pull/49458",
+      "merge_base_sha": "429e69162e2944922e45c2cea24887d32e96fbe7",
+      "head_sha": "6afd4e32d7953126ace39b630db675c8ac0b4276",
+      "merge_commit_sha": "927af2f73bd0d53d339f8fc0d4bd8b053f3836bb"
+    }
+  },
+  "prior_protocols_and_results": [
+    {
+      "path": "protocols/mlsys_transformers_49458_source_qualification_v1.json",
+      "sha256": "b4ba593a665828bdbc02b3b383f82423e5e27b3c7abb625dea1e44b0f7e6e524",
+      "status": "immutable v1 protocol; v1 fixed arm did not run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/protocol-addendum-1.json",
+      "sha256": "b9763deb7f5cd9229da77a001afa38a7a7062d34475a2cf9afa7f0ec3dcdfff5",
+      "status": "immutable v1 import-path correction"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/input-manifest.json",
+      "sha256": "d51ded43b37e639382ada61e5c9c1b1b901b35adcee92a23bcd5a3ef25c1e1e3",
+      "status": "prior source tree and v1 attempt hashes; prior ambiguous result retained, not used as v2 gate"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-002-baseline.json",
+      "sha256": "7f029dfc000548f3e88cdd631194527f1d4dd983eaaeb974fa6cd32cba05cfaf",
+      "status": "v1 baseline target assertion observed; not substituted for v2 baseline arm"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v2/transformers-49458/attempt-001-wrong-mutant.json",
+      "sha256": "e6809ac56412ac25e5d74a8947a4539fdec34287be709a5ef1861c27e6c2d6ae",
+      "status": "v1 mutant target assertion observed but subTest case attribution unavailable; not substituted for v2 mutant arm"
+    }
+  ],
+  "frozen_inputs": [
+    {
+      "role": "baseline source tree archive at PR merge base",
+      "path": "https://github.com/huggingface/transformers/archive/429e69162e2944922e45c2cea24887d32e96fbe7.tar.gz",
+      "sha256": "4c50763469886980fb2805209a373f94ffcf7ffbca856eec2aea057a16e7d45f"
+    },
+    {
+      "role": "baseline target source file",
+      "sha256": "ce6441262488f027de47b1bec8fd3bb7c52b3fa8c182c650b7c3b2cc4881a93d"
+    },
+    {
+      "role": "one-loop wrong-mutant target source file",
+      "sha256": "1a4201f71701e63001209574aa8b0b5138d7d893cad1d38c0fd255686da0649a"
+    },
+    {
+      "role": "upstream-fixed target source file",
+      "sha256": "45b4218af43505c4357f014fd0ce89eb3125d617f913d35e4c11e2b658d3ab23"
+    },
+    {
+      "role": "independent upstream regression test overlay",
+      "sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3"
+    },
+    {
+      "role": "case-aware unittest runner",
+      "path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/case_runner.py",
+      "sha256": "2ec495123c435fd08a8717a993170edce909f81403eb8dd45074154830c6eff7"
+    },
+    {
+      "role": "container test image",
+      "image": "vare/fresh-qualification-transformers:0.3",
+      "image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+      "architecture": "linux/arm64",
+      "python": "3.12.15",
+      "pytest": "8.4.2",
+      "torch": "2.9.1+cpu",
+      "torchvision": "0.24.1"
+    },
+    {
+      "role": "test helper module custom_configuration.py",
+      "path": "utils/test_module/custom_configuration.py at 429e69162e2944922e45c2cea24887d32e96fbe7",
+      "sha256": "993703cf0d9c8330510382303d7fec33512d00f410bea266d6a4fe18f389a351"
+    },
+    {
+      "role": "test helper module custom_video_processing.py",
+      "path": "utils/test_module/custom_video_processing.py at 429e69162e2944922e45c2cea24887d32e96fbe7",
+      "sha256": "3a88790e7945afbe6f82f2983c0ae471c18cb083952a44e0cc20838f14ccecd0"
+    }
+  ],
+  "diagnostic_rationale": {
+    "v1_attribution_gap": "Pytest emitted the upstream unittest method as one aggregate case without the filename parameter from its subTest loop; the raw logs therefore cannot establish which config case caused the assertion failure.",
+    "runner_change": "Run the exact same upstream test file/class/method using the frozen stdlib unittest runner. The hash-pinned case_runner.py overrides TextTestResult.addSubTest and emits every subTest parameter/outcome in a JSON marker.",
+    "runner_smoke_validation": "Before protocol freeze, the runner was checked only on a generic temporary unittest method with one passing and one failing subTest; it emitted both filenames and outcomes. No Transformers test was executed by this smoke check.",
+    "source_path_review": "AutoVideoProcessor.from_pretrained invokes _load_backend_class for both explicit video_processor_type and legacy image_processor_type resolution. The one-loop mutant leaves its VIDEO_PROCESSOR_MAPPING.values() traversal unchanged; V2 records each subTest separately rather than presuming the failing case."
+  },
+  "qualification_test": {
+    "test_path": "tests/models/auto/test_video_processing_auto.py at 927af2f73bd0d53d339f8fc0d4bd8b053f3836bb",
+    "test_sha256": "556fa001095ba71df6f86844db42f7e39e361d4e5470dee69d8683d0500a5aa3",
+    "test_class": "AutoVideoProcessorTest",
+    "test_method": "test_video_processor_loading_does_not_resolve_other_models",
+    "subtests": [
+      "video_preprocessor_config.json",
+      "preprocessor_config.json"
+    ],
+    "assertion": "Each public from_pretrained configuration must instantiate LlavaOnevisionVideoProcessor and must not call VIDEO_PROCESSOR_MAPPING._load_attr_from_module."
+  },
+  "arms": [
+    {
+      "name": "baseline",
+      "source": "unmodified exact merge-base tree",
+      "required_outcome": "Both named subTests execute and fail specifically at load_attribute.assert_not_called; no import/test errors or skips."
+    },
+    {
+      "name": "wrong-mutant",
+      "source": "exact merge-base tree with only video_processor_class_from_name changed to VIDEO_PROCESSOR_MAPPING_NAMES.items(); _load_backend_class remains unchanged",
+      "required_outcome": "Both named subTests execute and fail at the target assertion because the incomplete source still eagerly resolves mapping values; no import/test errors or skips."
+    },
+    {
+      "name": "upstream-fixed",
+      "source": "exact merge-base tree with only video_processing_auto.py replaced by the hash-pinned source from merge commit 927af2f73bd0d53d339f8fc0d4bd8b053f3836bb",
+      "required_outcome": "Both named subTests execute and pass; no errors or skips."
+    }
+  ],
+  "run_order_and_attempt_limits": {
+    "order": [
+      "baseline",
+      "wrong-mutant",
+      "upstream-fixed"
+    ],
+    "maximum_invocations_per_arm": 1,
+    "baseline_gate": "Do not run wrong-mutant or fixed unless both named baseline subTests fail at the target assertion with no error or skip.",
+    "mutant_gate": "Do not run fixed unless both named wrong-mutant subTests fail at the target assertion with no error or skip.",
+    "retry_rule": "Any v2 container invocation consumes its arm. Stop on timeout, collection/import error, missing subtest record, unexpected outcome, or resource/isolation violation. No retry without a new hash-bound addendum committed before execution.",
+    "maximum_wall_seconds_per_arm": 600,
+    "maximum_concurrent_arms": 1,
+    "maximum_container_memory_bytes": 2621440000,
+    "maximum_container_cpus": 2,
+    "maximum_paid_compute_or_api_spend_usd": 0
+  },
+  "isolation": {
+    "source_mount": "one arm-specific /source bind mount, read-only",
+    "trusted_test_mount": "only test_video_processing_auto.py under /trusted, read-only and outside /source",
+    "trusted_runner_mount": "only case_runner.py under /runner, read-only and outside /source and /trusted",
+    "container_root": "read-only",
+    "network": "disabled",
+    "writable_mounts": [
+      "512 MiB /tmp tmpfs only"
+    ],
+    "model_or_agent": "none",
+    "grader_feedback_to_model": false,
+    "heldout_access": false
+  },
+  "commands": {
+    "container_template": "docker --context colima run --rm --network none --read-only --memory=2500m --memory-swap=2500m --cpus=2 --pids-limit=128 --tmpfs /tmp:rw,nosuid,nodev,size=512m,mode=1777 --mount type=bind,source=<arm-source>,target=/source,readonly --mount type=bind,source=<trusted-test-dir>,target=/trusted,readonly --mount type=bind,source=<trusted-runner-dir>,target=/runner,readonly --workdir /source --env PYTHONPATH=/source/src:/source:/source/utils --env PYTHONDONTWRITEBYTECODE=1 --env HOME=/tmp --env HF_HOME=/tmp/hf --env HF_HUB_OFFLINE=1 --env TRANSFORMERS_OFFLINE=1 --env HF_DATASETS_OFFLINE=1 vare/fresh-qualification-transformers:0.3 python3 /runner/case_runner.py /trusted/test_video_processing_auto.py AutoVideoProcessorTest test_video_processor_loading_does_not_resolve_other_models",
+    "expected_run_count": 3,
+    "result_marker": "Parse the single VARE_CASE_RUNNER_RESULT=<JSON> line in each log and verify both subtest parameter names and outcomes."
+  },
+  "qualification_gate": "QUALIFIED_SOURCE_LEVEL only if every pinned input matches, both baseline subTests fail at the exact intended assertion, both wrong-mutant subTests fail at that assertion, and both upstream-fixed subTests pass with no errors or skips under identical image, test, limits, and isolation.",
+  "authorization": {
+    "source_task_qualification_only": true,
+    "development_split_assignment": false,
+    "model_or_agent_inference": false,
+    "training": false,
+    "heldout_access": false
+  },
+  "limitations": [
+    "The issue and regression test are public; pretraining exposure remains unknown.",
+    "Only one regression method and two config subTests are covered, not the full Transformers suite.",
+    "A successful result establishes task/evaluator source-level reproducibility only, not model capability, RL improvement, or pretraining independence."
+  ],
+  "output_path": "results/mlsys-fresh-development-task-qualification-v3/transformers-49458/"
+}

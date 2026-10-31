@@ -2,7 +2,7 @@
 
 ## Current checkpoint
 
-- Milestone: `p8-v1-wrong-mutant-case-attribution-incomplete`.
+- Milestone: `p8-transformers-49458-source-qualification-v2-frozen`.
 - Last verified `origin/main`: `719fbe368816d81addb29a1ba2c451fa7f1bf631` (2026-10-31), integrating PR #154.
 - Last integrated PR: [#154 — Compact stale tool history before context exhaustion](https://github.com/mitukx/VARE/pull/154), merge commit `719fbe368816d81addb29a1ba2c451fa7f1bf631`.
 - PR #154 exact-head CI and CPU evidence passed; the sole review thread was resolved before merge.
@@ -34,4 +34,9 @@ The controller now removes only oldest complete assistant tool-call rounds at th
 
 ## Immediate next action
 
-Freeze a v2 protocol using a case-reporting unittest runner over the same pinned method, then re-run baseline, wrong-mutant, and upstream-fixed in order. Keep the candidate unassigned and do not run model inference.
+Execute frozen source-qualification protocol v2 in order: baseline, wrong-mutant, upstream-fixed. Its case-aware unittest runner emits both subTest names and outcomes. Keep the candidate unassigned and do not run model inference.
+
+
+## v1 qualification diagnostic
+
+The v1 baseline produced the expected eager-resolution assertion failure. The v1 wrong-mutant also failed the target assertion, but pytest reported the upstream unittest `subTest` loop as an aggregate case with no filename; v1 required legacy-case attribution, so its fixed arm was withheld. A generic runner smoke check confirmed that the pinned case-aware unittest runner emits each subTest filename/outcome. Protocol v2 is frozen at SHA-256 `f62f163be8984323c0d237b82fbaef3cf075a80e5bb49d23fd0fd8328141ee9b` before any v2 Transformers test. The candidate remains **UNQUALIFIED** and **UNASSIGNED**.
