@@ -64,10 +64,21 @@
   "protocol_id": "qwen3-4b-current-controller-train-diagnostic-v1",
   "purpose": "Validate model loading and the current native tool controller on a previously exposed Train task before the prospective vLLM Development attempt. This diagnostic is not a new capability result.",
   "sandbox": {
+    "denied_reference_paths": [
+      "/private/tmp/vare-pr160-runner-fix/results",
+      "/private/tmp/vare-pr160-runner-fix/benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments",
+      "/private/tmp/vare-vllm-64830-development-attempt-002/workspace",
+      "/private/tmp/vare-sprint-vii-mlx-lm-fixed",
+      "/private/tmp/vare-sprint-vii-mlx-lm-wrong",
+      "/private/tmp/vare-sprint-ix-mlx1777-fixed",
+      "/private/tmp/vare-sprint-x-mutant-debug2",
+      "/private/tmp/vare-sprint-vii-mlx",
+      "/private/tmp/vare-mlx-lm-1912-upstream"
+    ],
     "deny_codex_private_data": true,
     "deny_network": true,
     "profile": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/sandbox/current-controller-diagnostic.sb",
-    "sha256": "849b0c33ef538e4f75e68613af55c24a293d9014ae66848440da380a5ab0ce33",
+    "sha256": "ba4bfda96137e0d769d1b1fe54e1994903ef59462b0d391f9e8a228bacd4f279",
     "source_write_allowlist": [
       "mlx_lm/server.py"
     ]
