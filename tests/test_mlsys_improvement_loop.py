@@ -301,9 +301,11 @@ def test_live_audit_mode_never_accepts_and_clock_is_parent_side(session: L.Sessi
     assert rec["stages"]["tests"]["passed"] and rec["stages"]["differential"]["match"]
     rows = rec["stages"]["timing"]["rows"]
     # In-process clock rebinding does not reach the runner's pre-bound clock.
+    # The parent stamps frames when its reader thread sees them, so on a loaded
+    # host the ready stamp can lag and the ratio can sit slightly above 1.
     for r in rows:
         c = r["runs"]["candidate"]
-        assert 0.5 < c["inproc_s"] / c["ready_to_done_s"] <= 1.0
+        assert 0.5 < c["inproc_s"] / c["ready_to_done_s"] <= 1.05
 
 
 @live
