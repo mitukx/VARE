@@ -4,8 +4,7 @@
 
 - Milestone: `p13-vllm-64575-source-qualified`.
 - Last verified `origin/main`: `416f35c465712898e8e5764a8e43193ef86e7afb`, PR #159 merged at 2026-10-31T03:30:28Z. PR #159 head `493e34339df458fe0fd0e99a7c8d9e1eed78c788`; its exact-head CI checks passed.
-- Active work branch: `codex/fresh-task-inventory-oct31`, based on that main and carrying the fresh-task discovery/selection, overlap review, and vLLM source-qualification evidence. A review PR will be opened after this checkpoint is committed.
-- Active PR: none yet.
+- Active work branch: `codex/fresh-task-inventory-oct31`, based on that main and carrying the fresh-task discovery/selection, overlap review, and vLLM source-qualification evidence. Draft PR #160: https://github.com/mitukx/VARE/pull/160, exact head `4393dac913a2e4c270249b2fea9d0f370b2c0c36`, base `416f35c465712898e8e5764a8e43193ef86e7afb`. Exact-head CI is running; the initial event has partial checks. The PR is draft because the next independent task step remains open.
 
 ## Completed in this checkpoint
 
@@ -23,4 +22,4 @@
 
 ## Immediate next action
 
-Read-only preflight local model snapshots, pinned runtime, memory pressure, swap, and disk for a single bounded attempt on this distinct source-qualified family. If an available local model/runtime clears the prior resource gates, freeze a new Development assignment, exposure event, model attempt, and independent grading protocol before one inference. Otherwise record NO-GO and continue non-inference engineering.
+First inspect PR #160 exact-head checks and fix any failures. Then perform read-only preflight of local model snapshots, pinned runtime, memory pressure, swap, and disk for a single bounded attempt on this distinct source-qualified family. If an available local model/runtime clears the prior resource gates, freeze a new Development assignment, exposure event, model attempt, and independent grading protocol before one inference. Otherwise record NO-GO and continue non-inference engineering.

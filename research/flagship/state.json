@@ -260,8 +260,8 @@
     "last_integrated_pr_merge_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "active_branch": "codex/fresh-task-inventory-oct31",
     "verified_pr_head_sha_before_checkpoint_changes": "493e34339df458fe0fd0e99a7c8d9e1eed78c788",
-    "active_pr_url": null,
-    "active_pr_state": "none"
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/160",
+    "active_pr_state": "open"
   },
   "go_no_go": {
     "integration": "GO",
@@ -269,7 +269,7 @@
     "rl_update": "NO_GO"
   },
   "highest_priority_next_task": "Run a read-only local model/runtime and host-resource preflight for the newly source-qualified vLLM #64575 family. If a cached model and pinned runtime meet the frozen memory/swap/disk gates, append a prospective Development exposure event, freeze one bounded attempt and independent grader protocol, push it, then execute once. If no cached model/runtime satisfies the gates, record a concrete NO-GO and continue non-inference work; do not use paid compute.",
-  "last_completed_step": "VARE main 416f35c465712898e8e5764a8e43193ef86e7afb is PR #159 merged with successful exact-head checks. On branch codex/fresh-task-inventory-oct31, vLLM #64575 was source-qualified under five frozen request-model cases: baseline attempt 002 had 2 intended message-assertion failures and 3 passing controls; corrected wrong-mutant v2 attempt 002 had 1 intended message-assertion failure and 4 passing controls; upstream-fixed attempt 001 had 5 passing case indicators and exit 0. Baseline attempt 001 failed at pytest logging initialization before collection; wrong-mutant v1 did not meet its frozen mutation precondition. All failures are retained. Qualification is source-level only; split remains UNASSIGNED, no model inference/training/Held-Out use occurred, and public pretraining exposure is UNKNOWN. Evidence SHA256SUMS covers 30 files.",
+  "last_completed_step": "VARE main 416f35c465712898e8e5764a8e43193ef86e7afb is PR #159 merged with successful exact-head checks. On branch codex/fresh-task-inventory-oct31, vLLM #64575 was source-qualified under five frozen request-model cases: baseline attempt 002 had 2 intended message-assertion failures and 3 passing controls; corrected wrong-mutant v2 attempt 002 had 1 intended message-assertion failure and 4 passing controls; upstream-fixed attempt 001 had 5 passing case indicators and exit 0. Baseline attempt 001 failed at pytest logging initialization before collection; wrong-mutant v1 did not meet its frozen mutation precondition. All failures are retained. Qualification is source-level only; split remains UNASSIGNED, no model inference/training/Held-Out use occurred, and public pretraining exposure is UNKNOWN. Evidence SHA256SUMS covers 30 files. Draft PR #160 was opened at https://github.com/mitukx/VARE/pull/160 on exact head 4393dac913a2e4c270249b2fea9d0f370b2c0c36, based on 416f35c465712898e8e5764a8e43193ef86e7afb. The first PR event has partial checks; exact-head CI is still running.",
   "milestone_id": "p13-vllm-64575-source-qualified",
   "result_hash_references": [
     {
@@ -1261,5 +1261,5 @@
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
     "vLLM #64575 is source-qualified but remains UNASSIGNED; no local model attempt has run. Pretraining exposure is UNKNOWN, and any attempt requires resource preflight plus a separate frozen prompt, exposure, and independent-grader protocol."
   ],
-  "updated_at": "2026-10-31T04:21:33Z"
+  "updated_at": "2026-10-31T04:23:22Z"
 }
