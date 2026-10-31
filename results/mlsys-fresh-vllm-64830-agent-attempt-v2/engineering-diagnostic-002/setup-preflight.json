@@ -1,0 +1,56 @@
+{
+  "captured_at_utc": "2026-10-31T09:57:33.168442+00:00",
+  "development_inference_started": false,
+  "development_prompt_delivered_to_model": false,
+  "development_protocol_preflight": "NOT RUN; follows exact-head CI for new protocol commit",
+  "model_loaded": false,
+  "model_snapshot": {
+    "full_snapshot_hash_reverification": "required by the new Development preflight before any model load",
+    "manifest_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/model-file-manifest.json",
+    "manifest_sha256": "7089cb874bf7a08c21b32322b9c6a6dd850b8be966268a35c08622112b4da23b",
+    "weights_bytes": 8309494233,
+    "weights_sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+  },
+  "protocol_id": "qwen2.5-coder-14b-current-controller-train-diagnostic-after-cleanup-v1",
+  "protocol_sha256": "7df4d84e4fecd9ba1bb0419ec1eb40c58d99467b7fbb7ac2a2f4bccba96ca911",
+  "runtime": {
+    "packages": {
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "tokenizers": "0.23.3",
+      "transformers": "5.22.1"
+    },
+    "python_path": "/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python",
+    "python_version": "3.12.12",
+    "runtime_manifest_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-manifest.json",
+    "runtime_manifest_sha256": "5e00c0d4de98d51f02351363529cc3890a857ef0f76c56fc8f8ca0eb49973747"
+  },
+  "sandbox_probe": {
+    "checks": {
+      "candidate_source_read_allowed": true,
+      "candidate_source_sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+      "candidate_source_write_allowed_without_content_change": true,
+      "development_hidden_test_denied": true,
+      "development_workspace_denied": true,
+      "model_snapshot_read_allowed": true,
+      "network_denied": true,
+      "pinned_runtime_executable_allowed": true,
+      "train_task_read_allowed": true
+    },
+    "development_prompt_delivered": false,
+    "inference_started": false,
+    "model_loaded": false,
+    "profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-002/sandbox/current-controller-diagnostic.sb",
+    "profile_sha256": "2c63fa484bd69db58a636982a58966dfe7b9184d0e783dcfd2f6cfba70d6c5b6",
+    "status": "PASSED"
+  },
+  "schema_version": 1,
+  "train_fixture": {
+    "baseline_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+    "candidate_source_sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+    "split": "Train",
+    "task_id": "mlxlm-1904-tool-arguments",
+    "workspace": "/private/tmp/vare-vllm-64830-development-attempt-002/controller-diagnostic-002/workspace",
+    "workspace_is_clean_and_exact_upstream_revision": true
+  }
+}
