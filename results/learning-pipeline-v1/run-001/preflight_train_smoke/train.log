@@ -1,0 +1,21 @@
+╭─ [1mmlx_lm.lora[0m ────────────────────────────────────────────────────────────────╮
+│    model                                                                     │
+│  [1m/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruc[0m  │
+│  [1mt-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b[0m              │
+│    type            [1mlora · 8 layers · rank 8[0m                                  │
+│    dataset                                                                   │
+│  [1m/Users/user/lisa1-push/artifacts/learning_pipeline_v1/run-001/preflight_tr[0m  │
+│  [1main_smoke/data[0m                                                              │
+│    optimizer       [1madam · lr 5.0e-05[0m                                         │
+│    batch · iters   [1m1 · 3[0m                                                     │
+│    max seq         [1m3,072[0m                                                     │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Trainable parameters: 0.091% (3.670M/4022.468M)
+  [1miter   train_loss     tok/s     tokens[0m
+     1    [1mval[0m [1m1.296[0m    7.27s
+     1    [1m1.276 ▼[0m    [1m    9[0m      0.1k
+     2    [1m0.788 ▼[0m    [1m   12[0m      0.3k
+     3    [1mval[0m [1m0.355[0m    6.80s
+     3    [1m0.352 ▼[0m    [1m   13[0m      0.4k
+[1mtrain[0m ██████████████████████████████ [1m100%[0m · [1m    3[0m/3
+

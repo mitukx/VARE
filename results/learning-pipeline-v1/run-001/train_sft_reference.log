@@ -1,0 +1,33 @@
+╭─ [1mmlx_lm.lora[0m ────────────────────────────────────────────────────────────────╮
+│    model                                                                     │
+│  [1m/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruc[0m  │
+│  [1mt-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b[0m              │
+│    type            [1mlora · 8 layers · rank 8[0m                                  │
+│    dataset                                                                   │
+│  [1m/Users/user/lisa1-push/artifacts/learning_pipeline_v1/run-001/data/sft_ref[0m  │
+│  [1merence[0m                                                                      │
+│    optimizer       [1madam · lr 5.0e-05[0m                                         │
+│    batch · iters   [1m1 · 100[0m                                                   │
+│    max seq         [1m3,072[0m                                                     │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Trainable parameters: 0.091% (3.670M/4022.468M)
+  [1miter   train_loss     tok/s     tokens[0m
+     1    [1mval[0m [1m0.789[0m    19.68s
+    10    [1m0.416 ▼[0m    [1m   33[0m      3.0k
+    20    [1m0.330 ▼[0m    [1m   26[0m      4.9k
+  [1msave[0m  0000025_adapters.safetensors
+    30    [1m0.196 ▼[0m    [1m   37[0m      7.9k
+    40    [1m0.153 ▼[0m    [1m   34[0m     11.4k
+    50    [1mval[0m [1m0.170[0m    19.00s
+    50    [1m0.188 ▲[0m    [1m   32[0m     13.9k
+  [1msave[0m  0000050_adapters.safetensors
+    60    [1m0.184 ▼[0m    [1m   46[0m     17.9k
+    70    [1m0.157 ▼[0m    [1m   31[0m     21.1k
+  [1msave[0m  0000075_adapters.safetensors
+    80    [1m0.158 ▲[0m    [1m   36[0m     24.5k
+    90    [1m0.129 ▼[0m    [1m   34[0m     27.2k
+   100    [1mval[0m [1m0.121[0m    19.00s
+   100    [1m0.088 ▼[0m    [1m   36[0m     30.2k
+  [1msave[0m  0000100_adapters.safetensors
+[1mtrain[0m ██████████████████████████████ [1m100%[0m · [1m  100[0m/100
+

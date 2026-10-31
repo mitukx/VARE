@@ -1,0 +1,62 @@
+{
+  "alpha": 0.05,
+  "comparisons": {
+    "rft_self": {
+      "arm_only": 5,
+      "arm_pass": 20,
+      "arm_rate": 0.47619047619047616,
+      "base_only": 0,
+      "base_pass": 15,
+      "base_rate": 0.35714285714285715,
+      "bootstrap": {
+        "alpha": 0.05,
+        "high": 0.21428571428571427,
+        "low": 0.023809523809523808,
+        "mean": 0.11904761904761904,
+        "n": 42,
+        "samples": 10000
+      },
+      "holm_p": 0.125,
+      "mcnemar": {
+        "b": 5,
+        "c": 0,
+        "method": "two_times_lower_binomial_tail",
+        "p_value": 0.0625,
+        "statistic": 5.0
+      },
+      "n": 42,
+      "verdict": "no_detectable_change"
+    },
+    "sft_reference": {
+      "arm_only": 4,
+      "arm_pass": 14,
+      "arm_rate": 0.3333333333333333,
+      "base_only": 5,
+      "base_pass": 15,
+      "base_rate": 0.35714285714285715,
+      "bootstrap": {
+        "alpha": 0.05,
+        "high": 0.11904761904761904,
+        "low": -0.16666666666666666,
+        "mean": -0.023809523809523808,
+        "n": 42,
+        "samples": 10000
+      },
+      "holm_p": 1.0,
+      "mcnemar": {
+        "b": 4,
+        "c": 5,
+        "method": "two_times_lower_binomial_tail",
+        "p_value": 1.0,
+        "statistic": 0.1111111111111111
+      },
+      "n": 42,
+      "verdict": "no_detectable_change"
+    }
+  },
+  "label": "measured",
+  "min_absolute_lift": 0.1,
+  "multiplicity": "holm",
+  "n_tasks": 42,
+  "synthetic": false
+}

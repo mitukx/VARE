@@ -1,0 +1,120 @@
+{
+  "arms": {
+    "no_update": {
+      "n": 42,
+      "trusted_pass": 15,
+      "rate": 0.35714285714285715,
+      "wilson95": [
+        0.22989188315618772,
+        0.5083363428054419
+      ],
+      "cheap_pass": 15,
+      "cheap_false_positive": 0,
+      "outcomes": {
+        "edit_applied_but_wrong": 22,
+        "pass": 15,
+        "malformed_or_unapplied_edit": 5
+      },
+      "checkpoint_ids": [
+        "base:mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+      ]
+    },
+    "sft_reference": {
+      "n": 42,
+      "trusted_pass": 14,
+      "rate": 0.3333333333333333,
+      "wilson95": [
+        0.21012467072357258,
+        0.484474926231662
+      ],
+      "cheap_pass": 15,
+      "cheap_false_positive": 1,
+      "outcomes": {
+        "edit_applied_but_wrong": 18,
+        "pass": 14,
+        "malformed_or_unapplied_edit": 10
+      },
+      "checkpoint_ids": [
+        "sft_reference:7e7be1eff10f4ba9:mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+      ]
+    },
+    "rft_self": {
+      "n": 42,
+      "trusted_pass": 20,
+      "rate": 0.47619047619047616,
+      "wilson95": [
+        0.3335960123070547,
+        0.6227753586865502
+      ],
+      "cheap_pass": 20,
+      "cheap_false_positive": 0,
+      "outcomes": {
+        "edit_applied_but_wrong": 17,
+        "pass": 20,
+        "malformed_or_unapplied_edit": 5
+      },
+      "checkpoint_ids": [
+        "rft_self:5fb794f69958558c:mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+      ]
+    }
+  },
+  "paired_vs_no_update": {
+    "sft_reference": {
+      "both_pass": 10,
+      "arm_only": 4,
+      "base_only": 5,
+      "neither": 23,
+      "diff": -0.023809523809523808,
+      "newcombe95_diff": [
+        -0.1665240739587956,
+        0.12038009558123844
+      ],
+      "mcnemar_exact_two_sided_p": 1.0,
+      "mcnemar_mid_p_two_sided": 0.75390625,
+      "exploratory_one_sided_p_arm_better": 0.74609375,
+      "arm_only_tasks": [
+        "borntyping__python-colorlog.dfa10f59.combine_file__hofui8tk",
+        "borntyping__python-colorlog.dfa10f59.func_basic__ehyczsel",
+        "msiemens__tinydb.10644a0e.func_basic__dr9gin5l",
+        "python-hyper__h11.bed0dd4a.func_basic__9n37b8v3"
+      ],
+      "base_only_tasks": [
+        "msiemens__tinydb.10644a0e.func_basic__2e18lkf6",
+        "msiemens__tinydb.10644a0e.func_basic__frecbuo1",
+        "msiemens__tinydb.10644a0e.func_basic__nbsjsuc2",
+        "msiemens__tinydb.10644a0e.func_basic__xewv2osl",
+        "python-hyper__h11.bed0dd4a.func_basic__vmtnm9qk"
+      ],
+      "holm_p": 1.0
+    },
+    "rft_self": {
+      "both_pass": 15,
+      "arm_only": 5,
+      "base_only": 0,
+      "neither": 22,
+      "diff": 0.11904761904761904,
+      "newcombe95_diff": [
+        0.01120409442882049,
+        0.2208918663108354
+      ],
+      "mcnemar_exact_two_sided_p": 0.0625,
+      "mcnemar_mid_p_two_sided": 0.03125,
+      "exploratory_one_sided_p_arm_better": 0.03125,
+      "arm_only_tasks": [
+        "borntyping__python-colorlog.dfa10f59.func_basic__6guw6y6e",
+        "borntyping__python-colorlog.dfa10f59.func_basic__ehyczsel",
+        "msiemens__tinydb.10644a0e.func_basic__dr9gin5l",
+        "msiemens__tinydb.10644a0e.func_basic__epf25mef",
+        "msiemens__tinydb.10644a0e.func_basic__y2z38b1q"
+      ],
+      "base_only_tasks": [],
+      "holm_p": 0.125
+    }
+  },
+  "exploratory_rft_vs_sft": {
+    "rft_only": 8,
+    "sft_only": 2,
+    "mcnemar_exact_two_sided_p": 0.109375
+  },
+  "method": "Pass = trusted_full_v1 (F2P+P2P) verifier passed. Exact McNemar: two-sided binomial test on discordant pairs, p=min(1,2*P(X<=min(b,c))), X~Bin(b+c,0.5). Holm over the two preregistered comparisons. Wilson score 95% CIs; Newcombe method-10 95% CI for paired difference. One-sided and arm-vs-arm values are exploratory, not preregistered."
+}
