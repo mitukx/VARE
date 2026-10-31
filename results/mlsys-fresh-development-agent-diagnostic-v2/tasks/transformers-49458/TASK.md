@@ -1,0 +1,3 @@
+# Task
+
+At the pinned Transformers baseline, loading one built-in video processor through AutoVideoProcessor can resolve unrelated built-in processor modules while searching its registry. Change the lazy lookup so selecting the requested built-in processor does not resolve unrelated built-in processor modules. Preserve explicitly registered classes, backend overrides, and current fallback behavior. Make the smallest source change in `src/transformers/models/auto/video_processing_auto.py`. Do not add dependencies or edit tests. The independent evaluator is hidden. Inspect the source, apply the change, and finish.

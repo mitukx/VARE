@@ -465,3 +465,12 @@ PY
 ```
 
 This verifies source/evaluator reproducibility only. For the commands that prepared and ran each arm, see the v2 protocol and preceding section. Do not infer model capability or assign the candidate based solely on this result.
+
+
+## One-shot Transformers #49458 Development attempt
+
+Protocol: `protocols/mlsys_transformers_49458_agent_attempt_v1.json` (SHA-256 `4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee`). The task contract, prompt, split mapping, source identity, and grader identity are hash-locked under `results/mlsys-fresh-development-agent-diagnostic-v2/tasks/transformers-49458/`. The trusted upstream test bytes are stored separately under `results/mlsys-fresh-development-agent-diagnostic-v2/trusted-test/`; they are not mounted into the agent workspace.
+
+The candidate workspace is a clean sparse checkout of Transformers base `429e69162e2944922e45c2cea24887d32e96fbe7` with only `src/transformers/models/auto/video_processing_auto.py` present. Before model load, revalidate the local model file manifest, check host memory free percentage >= 50, swap used <= 4 GiB, and disk free >= 5 GiB. If any gate fails, do not infer. Then run the exact `controller.command_argv` in the frozen protocol from the VARE root with its offline environment. The agent has no shell, public test, or grader tool. Save the raw result before using the single `independent_grading.command_argv`. That isolated Docker call has network disabled, read-only source/test/runner/root mounts, and no feedback path.
+
+The first Docker preflight checked only mount layout and SHA-256 values; it did not import or execute the test and used zero grader calls. Its receipt is `results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/grader-mount-preflight-001.json`. After the attempt, preserve the transcript, patch, sole grader log/receipt, resource telemetry, exposure append, report, and final `SHA256SUMS`. Do not retry under this protocol. One passing Development family would be a feasibility signal only, not RL or generalization evidence.
