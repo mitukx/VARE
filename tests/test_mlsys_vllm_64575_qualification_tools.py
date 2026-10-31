@@ -7,7 +7,10 @@ from scripts.prepare_mlsys_vllm_64575_qualification_overlay import (
     build_overlay,
     extract_source_segment,
 )
-from scripts.run_mlsys_vllm_64575_qualification_arm import process_tree_rss
+from scripts.run_mlsys_vllm_64575_qualification_arm import (
+    build_pytest_command,
+    process_tree_rss,
+)
 
 
 def test_overlay_extracts_only_frozen_helper_and_regression_class() -> None:
@@ -51,3 +54,15 @@ def test_process_tree_rss_sums_only_root_and_descendants() -> None:
         return_value=ps_output,
     ):
         assert process_tree_rss(10) == (100 + 50 + 25) * 1024
+
+
+def test_pytest_log_file_stays_inside_the_arm_writable_directory(tmp_path) -> None:
+    profile = tmp_path / "arm.sb"
+    test_file = tmp_path / "test_case.py"
+    basetemp = tmp_path / "pytest-tmp"
+    log_file = tmp_path / "pytest-internal.log"
+
+    command = build_pytest_command(profile, "python", test_file, basetemp, log_file)
+
+    assert command[command.index("-o") + 1] == f"log_file={log_file}"
+    assert command[-2] == str(basetemp)

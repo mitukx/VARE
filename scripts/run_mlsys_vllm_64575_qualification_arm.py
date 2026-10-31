@@ -47,6 +47,31 @@ def process_tree_rss(root_pid: int) -> int:
     return total
 
 
+def build_pytest_command(
+    profile: Path,
+    python: str,
+    test_file: Path,
+    basetemp: Path,
+    log_file: Path,
+) -> list[str]:
+    return [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        str(profile.resolve()),
+        python,
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-o",
+        f"log_file={log_file.resolve()}",
+        "--basetemp",
+        str(basetemp.resolve()),
+        str(test_file.resolve()),
+    ]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--arm", required=True, choices=("baseline", "wrong-mutant", "upstream-fixed"))
@@ -65,11 +90,13 @@ def main() -> int:
     basetemp = out / "pytest-tmp"
     for path in (tmp, home, basetemp):
         path.mkdir(parents=True, exist_ok=True)
-    command = [
-        "/usr/bin/sandbox-exec", "-f", str(args.profile.resolve()),
-        args.python, "-m", "pytest", "-q", "-p", "no:cacheprovider",
-        "--basetemp", str(basetemp), str(args.test_file.resolve()),
-    ]
+    command = build_pytest_command(
+        args.profile,
+        args.python,
+        args.test_file,
+        basetemp,
+        out / "pytest-internal.log",
+    )
     env = os.environ.copy()
     env.update({
         "VARE_SOURCE_FILE": str(args.source_file.resolve()),
