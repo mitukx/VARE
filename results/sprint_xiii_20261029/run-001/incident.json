@@ -1,0 +1,19 @@
+{
+  "case": "seed-101-A",
+  "exact_generated_tokens": "UNRECOVERABLE_NOT_RETAINED; sample_batch results were only in child memory and were lost at process exit.",
+  "generation_evidence": "child_rollout calls sample_batch before constructing the persisted group; process log then raises KeyError at online_actor.py line 463 when indexing p[\"run_id\"].",
+  "generation_reached": true,
+  "group_id": "rollout-0",
+  "optimizer_updates": 0,
+  "output_path": "results/sprint_xiii_20261029/run-001",
+  "protocol_path": "protocols/sprint_xiii_online_actor_v2.lock.json",
+  "protocol_sha256": "6bad616f9d0f8fdc0d8bb8ae5021e107ab339c5bdb1a10dcfa3fcd86fa72800b",
+  "raw_group_persisted": false,
+  "raw_sample_count_requested": 16,
+  "record_type": "model_run_failure_incident",
+  "recorded_utc": "2026-10-28T17:54:55.960164Z",
+  "response": "Do not retry protocol v2, this seed, this task prompt, or its unretained generation. Preserve run-001 and use only prospective protocol v3 with disjoint prompt identifiers and seeds.",
+  "root_cause": "Protocol v2 omitted required run_id, and the runner did not validate protocol schema before model sampling.",
+  "run_id": "sprint-xiii-v2-run-001",
+  "status": "STOPPED_PER_FROZEN_RULE_AFTER_CHILD_EXIT_1"
+}

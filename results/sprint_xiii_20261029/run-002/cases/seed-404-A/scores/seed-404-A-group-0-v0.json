@@ -1,0 +1,35 @@
+{
+  "created_unix_ns": 1793210465943051000,
+  "false_trusted_labels_not_disclosed": true,
+  "group_id": "seed-404-A-group-0",
+  "group_sha256": "299f0f72fdebfdc887ade3709f700fc20a419934558e604344152a96b72e00ec",
+  "regraded_from": null,
+  "rewards": [
+    1.0,
+    0.5,
+    1.0,
+    1.0,
+    0.5,
+    0.5,
+    1.0,
+    1.0,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.0,
+    0.5,
+    0.5,
+    0.5
+  ],
+  "schema_version": 1,
+  "scorer_pid": 30696,
+  "scoring_seconds": 0.0002499579859431833,
+  "verifier_config": {
+    "role": "partial stale proxy",
+    "rule": "min(1, count(target first label in first 3 route positions) / 2); ignores pair order and forbidden pair",
+    "version": 0
+  },
+  "verifier_config_sha256": "2feddf67d49a60dab5562af1015c1988a5de1d2c8539d67e705b4e6bf1d36913",
+  "verifier_version": 0
+}

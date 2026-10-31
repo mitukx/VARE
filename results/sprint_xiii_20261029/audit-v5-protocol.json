@@ -1,0 +1,97 @@
+{
+  "audit_id": "vare-sprint-xiii-v4-completed-subset-audit-v5",
+  "audit_implementation": "scripts/sprint_xiii/audit_completed_online_actor_subset_v5.py",
+  "audit_implementation_sha256": "e7dcead067affc82e3f8a24dac4b2e1917b54c2e55a6f043e24f7b84bb1e0ee9",
+  "audit_requirements": [
+    "verify all frozen protocol/run/source/model/RVL hashes",
+    "replay every completed generation token probability including the fresh-policy probe",
+    "recompute proxy and trusted rewards",
+    "independent token-level GRPO gradient and AdamW/RNG/checkpoint replay",
+    "durable journal, VARE freshness/admission, actor refresh and version identity",
+    "all baseline and completed independent evaluations",
+    "D/E adapter/optimizer/RNG exact equality per seed",
+    "all five SIGKILL cutpoints",
+    "case and auditor resource measurements"
+  ],
+  "audit_scope": "Re-audit the exact same frozen protocol and all 13 completed case directories selected by audit v4. Do not modify campaign receipts or run model generation, reward scoring, optimizer updates, or training. This is an append-only correction of an auditor predicate, not a new campaign or a replacement for v4.",
+  "audit_source_commit": "e00d41fab0de40dc1aad50c1f86f78a3b04110e2",
+  "base_audit_helpers": "scripts/sprint_xiii/audit_online_actor.py",
+  "base_audit_helpers_sha256": "9e5a1650a1038a46f8fd5fcd7bff3bc5ff8b13ecebb1829d95bc65939f6f0d41",
+  "campaign_protocol_path": "protocols/sprint_xiii_online_actor_v4.lock.json",
+  "campaign_protocol_sha256": "194433a9fbbfaae9d8968f5c72a1f4cd4c1ca019de3470c35e513edda8a6ed23",
+  "campaign_run_id": "sprint-xiii-20261029-online-actor-v4",
+  "campaign_run_path": "results/sprint_xiii_20261029/run-003",
+  "campaign_stopping_receipt_sha256": "9a7d2c12919feb551ff2a109e9064d8736c3997b853031d73de337fa395e424b",
+  "case_auditor_test": "tests/test_sprint_xiii_audit_v3.py",
+  "case_auditor_test_sha256": "d9a83f7014c9b95e499eee8341f640114a59b07c60619b3a407ae508e9f4c7b9",
+  "completed_case_ids": [
+    "seed-707-A",
+    "seed-707-B",
+    "seed-707-C",
+    "seed-707-D",
+    "seed-707-E",
+    "seed-808-A",
+    "seed-808-B",
+    "seed-808-C",
+    "seed-808-D",
+    "seed-808-E",
+    "seed-909-A",
+    "seed-909-D",
+    "seed-909-E"
+  ],
+  "correction_rationale": "Audit v4 required a pre-publication candidate hash to be absent from all committed checkpoint hashes. The retained seed-909-E attempt-1 checkpoint is durably present, but deterministic retry attempt-2 reproduced and committed the same bytes/hash. V5 verifies the faulted attempt record, candidate file, sidecar manifest, and hash directly; it does not require content-addressed bytes to be unique.",
+  "expected_case_ids": [
+    "seed-707-A",
+    "seed-707-B",
+    "seed-707-C",
+    "seed-707-D",
+    "seed-707-E",
+    "seed-808-C",
+    "seed-808-E",
+    "seed-808-B",
+    "seed-808-D",
+    "seed-808-A",
+    "seed-909-E",
+    "seed-909-D",
+    "seed-909-A",
+    "seed-909-C",
+    "seed-909-B"
+  ],
+  "frozen_utc": "2026-10-28T18:41:27.880920+00:00",
+  "inclusion_rule": "Every case directory with case-result.json, lexical order; no outcome filtering. All three seed baseline evaluations. Partial case directories are excluded from pass scope and explicitly listed.",
+  "independent_case_auditor": "scripts/sprint_xiii/audit_online_actor_v3.py",
+  "independent_case_auditor_sha256": "acf7ff10e0a872a825978db2f8620bf5ef3747d6e3c54f31e922d4564f125a00",
+  "missing_case_ids": [
+    "seed-909-B",
+    "seed-909-C"
+  ],
+  "model_generation_or_optimizer_updates_during_audit": false,
+  "partial_case_directories": [
+    "seed-909-C"
+  ],
+  "previous_audit": {
+    "finding_preserved": "seed-909-E: pre-publication fault failed to retain its orphan candidate",
+    "protocol_path": "results/sprint_xiii_20261029/audit-v4-protocol.json",
+    "protocol_sha256": "55912aeaacfb79ac780ffa5489d300d85b313ff7f2b46a2f555bfba7b9a207cd",
+    "receipt_path": "results/sprint_xiii_20261029/run-003/independent-audit-v4.json",
+    "receipt_sha256": "541c9b118269e7b9445edf2846ae43b9eadd8de1c1021db68cfd7f6fcfb2dbaa",
+    "status": "FAIL_COMPLETED_SUBSET"
+  },
+  "prior_failure_records": {
+    "audit-v2-failure.json": "bb358984bb310b46d09fd79e189d6efc3014fc969494914e13fe8b86b85d1f6d",
+    "audit-v3-failure.json": "d64168d372052769d6cd173c22bea188873d2ab525bd0d39c6d2eb937f788a5c",
+    "independent-audit-v1-failure.json": "ec6f52439f01d4ca94a8ac77beb3fd003fd8b0dd17ffc10680f85ed50f1f1f6e",
+    "independent-audit-v4.json": "541c9b118269e7b9445edf2846ae43b9eadd8de1c1021db68cfd7f6fcfb2dbaa"
+  },
+  "resource_caps": {
+    "audit_wall_seconds": 1200,
+    "hard_available_floor_bytes": 2147483648,
+    "max_auditor_rss_bytes": 17179869184,
+    "max_swap_growth_bytes": 536870912,
+    "preflight_available_bytes": 4294967296
+  },
+  "retention_acceptance_rule": "For checkpoint_before_publication, require a preceding candidate_checkpoint_written journal event for the same transaction, matching durable_unpublished attempt record, candidate artifact and manifest SHA256. A later successful retry may commit the same hash; that does not invalidate retention of the first attempt.",
+  "schema_version": 1,
+  "status": "FROZEN_AUDIT_NOT_STARTED",
+  "whole_campaign_status": "INCOMPLETE: 13/15 cases. Subset PASS cannot upgrade full campaign."
+}

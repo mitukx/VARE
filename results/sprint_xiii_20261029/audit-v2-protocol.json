@@ -1,0 +1,77 @@
+{
+  "audit_id": "vare-sprint-xiii-v4-completed-subset-audit-v2",
+  "audit_implementation": "scripts/sprint_xiii/audit_completed_online_actor_subset.py",
+  "audit_implementation_sha256": "47f5f3a448e50dbce6b5f6bbeeee3a6f08677f03dd84af43ead97f61e0f40323",
+  "audit_requirements": [
+    "verify campaign/protocol/model/VARE/RVL hashes",
+    "independently replay behavior token log-probabilities",
+    "recompute proxy scores and trusted synthetic rewards",
+    "replay gradients and optimizer/Adam/RNG/checkpoint state for every completed case",
+    "check per-case VARE admission and durable journal",
+    "independently replay all baseline and completed post-training evaluations",
+    "compare D/E adapter, optimizer and RNG exactly per seed",
+    "verify all five required SIGKILL cutpoints across completed E arms",
+    "report case-level resources and every missing/partial case"
+  ],
+  "audit_source_commit": "261142ede942abc1ef70faf506a61237a7440986",
+  "bound_v1_audit_sha256": "9e5a1650a1038a46f8fd5fcd7bff3bc5ff8b13ecebb1829d95bc65939f6f0d41",
+  "bound_v1_audit_source": "scripts/sprint_xiii/audit_online_actor.py",
+  "campaign_completeness_rule": "A passing subset audit does not change the campaign outcome: 13 of 15 preregistered cases completed, so whole-campaign PASS is impossible.",
+  "campaign_protocol_path": "protocols/sprint_xiii_online_actor_v4.lock.json",
+  "campaign_protocol_sha256": "194433a9fbbfaae9d8968f5c72a1f4cd4c1ca019de3470c35e513edda8a6ed23",
+  "campaign_run_id": "sprint-xiii-20261029-online-actor-v4",
+  "campaign_run_path": "results/sprint_xiii_20261029/run-003",
+  "campaign_stop": "resource abort at frozen 1200 second wall cap",
+  "campaign_stopping_receipt_sha256": "9a7d2c12919feb551ff2a109e9064d8736c3997b853031d73de337fa395e424b",
+  "completed_case_ids": [
+    "seed-707-A",
+    "seed-707-B",
+    "seed-707-C",
+    "seed-707-D",
+    "seed-707-E",
+    "seed-808-A",
+    "seed-808-B",
+    "seed-808-C",
+    "seed-808-D",
+    "seed-808-E",
+    "seed-909-A",
+    "seed-909-D",
+    "seed-909-E"
+  ],
+  "expected_case_ids": [
+    "seed-707-A",
+    "seed-707-B",
+    "seed-707-C",
+    "seed-707-D",
+    "seed-707-E",
+    "seed-808-C",
+    "seed-808-E",
+    "seed-808-B",
+    "seed-808-D",
+    "seed-808-A",
+    "seed-909-E",
+    "seed-909-D",
+    "seed-909-A",
+    "seed-909-C",
+    "seed-909-B"
+  ],
+  "frozen_utc": "2026-10-28T18:29:21Z",
+  "inclusion_rule": "Include every case directory in this run that has case-result.json at audit time, in lexical order. Do not filter cases by outcome. Include all three baseline evaluations. Exclude raw data in incomplete case directories from the completed-subset PASS and list it separately.",
+  "missing_case_ids": [
+    "seed-909-B",
+    "seed-909-C"
+  ],
+  "no_model_generation_or_optimizer_updates_during_audit": true,
+  "partial_case_directories": [
+    "seed-909-C"
+  ],
+  "resource_caps": {
+    "audit_wall_seconds": 1200,
+    "hard_available_floor_bytes": 2147483648,
+    "max_auditor_rss_bytes": 17179869184,
+    "max_swap_growth_bytes": 536870912,
+    "preflight_available_bytes": 4294967296
+  },
+  "schema_version": 1,
+  "status": "FROZEN_AUDIT_NOT_STARTED"
+}

@@ -1,0 +1,21 @@
+{
+  "audit_id": "vare-sprint-xiii-v4-completed-subset-audit-v3",
+  "audit_protocol_sha256": "49eb99f7670f626f1e50a7f994cb19625679fd7e1cf7a2b207e2de0c2906f96b",
+  "baseline_eval_forward_batches_completed": 12,
+  "campaign_protocol_sha256": "194433a9fbbfaae9d8968f5c72a1f4cd4c1ca019de3470c35e513edda8a6ed23",
+  "case_group_replayed": "seed-707-A-fresh-policy-probe",
+  "case_group_token_probability_replays_completed": 1,
+  "command": "scripts/sprint_xiii/audit_completed_online_actor_subset.py --protocol protocols/sprint_xiii_online_actor_v4.lock.json --output results/sprint_xiii_20261029/run-003/independent-audit-v3.json",
+  "exception": {
+    "message": "verifier_version",
+    "type": "KeyError"
+  },
+  "generation_count": 0,
+  "historical_run_or_receipts_modified": false,
+  "optimizer_replay_count": 0,
+  "outcome": "AUDIT_ABORT_DURING_FIRST_CASE_SCORE_REPLAY",
+  "record_type": "independent_audit_failure",
+  "recorded_utc": "2026-10-28T18:32:09.789892Z",
+  "remediation": "Append audit v4 and filter acknowledgement receipts from both group and score enumerations.",
+  "root_cause": "audit v2 excludes group ack receipts but score enumeration also includes *.ack.json; a score acknowledgement lacks verifier_version and is mistaken for a reward receipt."
+}

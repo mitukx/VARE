@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/sprint_xiii/online_actor.py", line 2000, in <module>
+    main()
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/sprint_xiii/online_actor.py", line 1996, in main
+    child(p, root, args)
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/sprint_xiii/online_actor.py", line 1129, in child
+    child_train(p, root, args)
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-xii/work/VARE-sprint-xiii/scripts/sprint_xiii/online_actor.py", line 741, in child_train
+    p_src = Path(p["vare_source_root"]) / "src"
+                 ~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'vare_source_root'

@@ -1,0 +1,21 @@
+{
+  "command": "/tmp/vare-sprint-xi-cpu/bin/python -c \"load v1 JSON; audit.calibrate(protocol)\"",
+  "exception": {
+    "message": "'tasks'",
+    "type": "KeyError"
+  },
+  "generation_count": 0,
+  "model_forward_count": 0,
+  "optimizer_update_count": 0,
+  "outcome": "FAIL_BEFORE_MODEL_FORWARD_GENERATION_OR_TRAINING",
+  "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v1",
+  "protocol_path": "protocols/sprint_xiii_online_actor_v1.lock.json",
+  "protocol_preserved_byte_for_byte": true,
+  "protocol_sha256": "bb377473db7ce1171403c078dc2f741f3c557d5d75b2450d81c4ab955e3130dd",
+  "record_type": "protocol_freeze_validation_failure",
+  "recorded_utc": "2026-10-28T17:51:03Z",
+  "remediation": "Create a new append-only v2 protocol with canonical top-level tasks and a regression contract; do not overwrite v1.",
+  "root_cause": "v1 froze tasks only at task_manifest.tasks while runner and independent auditor require a top-level tasks array.",
+  "source_commit": "cf8b10fe84975168b7d813d4284b95894126f882",
+  "validation": "independent exhaustive verifier calibration schema preflight"
+}

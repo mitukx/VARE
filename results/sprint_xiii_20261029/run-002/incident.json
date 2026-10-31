@@ -1,0 +1,23 @@
+{
+  "case_id": "seed-404-A",
+  "failure_category": "TRAINER_INITIALIZATION_INTERFACE",
+  "generated_token_count": 62,
+  "generation_persisted": true,
+  "group_id": "seed-404-A-group-0",
+  "group_sha256": "299f0f72fdebfdc887ade3709f700fc20a419934558e604344152a96b72e00ec",
+  "independent_posthoc_trusted_correct": 2.0,
+  "optimizer_updates": 0,
+  "process_log": "results/sprint_xiii_20261029/run-002/process-logs/seed-404-A-learn-0-attempt-1.log",
+  "protocol_id": "vare-sprint-xiii-online-actor-imperfect-verifier-v3",
+  "protocol_sha256": "8ecac1a1e78a95e88acc3bd9918038be25eec9203ad6152f735f81b9c3b80db3",
+  "proxy_group_reward_variation": true,
+  "raw_group_location": "results/sprint_xiii_20261029/run-002/cases/seed-404-A/groups/seed-404-A-group-0.json",
+  "record_type": "model_run_failure_incident",
+  "recorded_unix_ns": 1793210466254529000,
+  "response": "Do not retry v3 or seed 404/task prompt. Preserve run-002 and use an append-only protocol with a new task prompt identity and new seeds.",
+  "root_cause": "child_train indexes protocol key vare_source_root, while frozen protocol provides repository_root as the pinned VARE checkout; KeyError occurs before model load/trainer construction.",
+  "run_id": "sprint-xiii-20261029-online-actor-v3",
+  "sample_count": 16,
+  "score_group_binding_valid": true,
+  "status": "STOPPED_PER_FROZEN_RULE_AFTER_LEARNER_CHILD_EXIT_1"
+}
