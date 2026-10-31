@@ -684,3 +684,66 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Record `sampled_process_tree_rss_max_bytes` and `os_wait4_child_max_rss_bytes` separately, enforce the configured threshold against either signal, and label the aggregate descendant-peak limitation. Keep process-group cleanup after normal leader exit. Do not claim a complete concurrent aggregate high-water mark or retrofit a past model result that never ran.
 - **Falsification criteria:** The regression misses the short-lived child's `wait4` high-water; an over-limit direct-child high-water is recorded as within-limit; or surviving descendants remain after process-group cleanup.
 - **Follow-up:** Push the shared-runner correction and tests with PR #160, verify the full focused suites and exact-head CI. Any future bounded attempt must use the new output fields and retain its runner hash in the frozen protocol.
+
+## 2026-10-31 — Integrate the PR #160–#163 stack
+
+- **Evidence:** PRs #160, #161, #162, and #163 are merged. `main` is `da15797ca6345f73eba8249c9059db3b1a9de41e`, the merge of #163, and all 9 required contexts passed before each merge. PRs #140, #144, #145, #150, and #159 were already merged.
+- **Decision:** Set `go_no_go.integration` to `GO`. Drop the blockers that described the stack as in progress. PR #164 (`codex/qwen3-vllm64830-dev-v2`) is the active draft.
+
+## 2026-10-31 — vLLM #64830 14B V3 NO_GO and 4B route selection
+
+- **Evidence:** The V3 Qwen2.5-Coder-14B launch preflight (`results/mlsys-fresh-vllm-64830-agent-attempt-v3/attempt-001/launch-preflight-after-cleanup-001.json`) returned **NO_GO**. The frozen bounded-runner and preflight-runner hashes were stale. 12.28 GiB was available against an estimate plus explicit headroom of about 11.99 GiB. The model was not loaded and the prompt was not delivered.
+- **Decision:** Close V3 without retry. Use the frozen Qwen3-4B V2 route (`route-selection-after-memory-recovery-001.json`), which passed its no-load launch preflights.
+
+## 2026-10-31 — Qwen3-4B diagnostic-001 failed before first generation
+
+- **Evidence:** The single Train #1904 controller diagnostic loaded the weights. Its sandbox then denied `/dev/null` to the pinned `git -c core.attributesFile=/dev/null` revision check, and the run exited after 3.149 s with `FAILED_BEFORE_FIRST_GENERATION`. It produced 0 tokens, 0 tool calls, 0 edits, and 0 grades.
+- **Decision:** This is a controller/sandbox integration failure, not a capability result. Diagnostic-001 and V2 are closed; do not retry diagnostic-001. Diagnostic-002 (14B) was never run.
+
+## 2026-10-31 — 14B V4 NO_GO on the additional margin gate
+
+- **Evidence:** The V4 no-load preflight after exact-head CI on `053b25fe` passed the hash checks and base gates. The overall route is **NO_GO**: after the estimate and explicit headroom, 785,428,007 bytes remained, which is 1,362,055,641 bytes short of the extra 2 GiB margin.
+- **Decision:** Do not load the 14B model. Diagnostic-003 is superseded and was never run. Select the Qwen3-4B V5 fallback under a new protocol.
+
+## 2026-10-31 — Qwen3-4B diagnostic-004 and diagnostic-005 failed before model load
+
+- **Evidence:** The V5 preflight passed at 13.56 GiB. Diagnostic-004 failed with `ImportError: cannot import name load from mlx_lm` inside the sandbox after 0.539 s (`SANDBOX_RUNTIME_IMPORT_FAILURE`). V6 used a dereferenced runtime copy, and its preflight passed at 15,852,896,256 bytes. Diagnostic-005 then failed with `FAILED_BEFORE_MODEL_LOAD` after 1.565 s, because the snapshot weight file resolves through symlinks to a shared Hugging Face blob outside the allowlist. Neither run loaded weights or produced tokens, tool calls, edits, or grades.
+- **Decision:** Close diagnostic-004, V5, and diagnostic-005 without retry. Keep the V6 assignment for a further diagnostic under a new protocol.
+
+## 2026-10-31 — Qwen3-4B diagnostic-006 failed during the first generation call
+
+- **Evidence:** Diagnostic-006 allowed read access only to the exact canonical weight and tokenizer blobs; its no-model probe passed. After exact-head CI on `77b8a9b7` (19/19) and a passing V6 preflight (13.27 GiB available), the one run loaded the weights and its exposed Train prompt reached the first generation call. MLX then failed to build its Metal library because the sandbox denied writing `monolithic_metal.pcm` under `com.apple.metalfe`. Result `FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED`: 0 tokens, 0 tool calls, 0 edits, 0 grades, 3.432 s.
+- **Decision:** Close diagnostic-006 without retry. V6 is closed; no Development prompt was delivered under V6.
+
+## 2026-10-31 — V7 one-shot Development attempt failed before the first token
+
+- **Evidence:** V7 is a separately frozen protocol that reuses the V6 exposure assignment and adds write rules for the two Metal compiler cache directories observed in diagnostic-006. Its no-model Metal runtime smoke passed. Exact-head CI on `eb82cb00` passed 19/19 after one failed-job rerun of `test (3.12)`. Both no-load preflights passed; the last one reported 13,685,456,896 bytes (12.75 GiB) available and 81% pressure free. The one attempt loaded the weights, delivered the Development prompt and started one generation call. It then failed with the same Metal JIT sandbox write denial as diagnostic-006. Result `FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED`: 0 generated tokens, 0 native tool calls, 0 edits, no candidate (source byte-identical to baseline), 0 independent grades, exit 1 after 3.168 s, sampled process-tree peak 2,569,338,880 bytes.
+- **Observation:** The committed V7 `agent-attempt.log` is byte-identical to the diagnostic-006 log (sha256 `96e2d801…`, 2,480 bytes). The log holds only the sandbox-extension messages, the traceback and the Metal error, with the same cache path in both. The two `bounded-attempt.json` records differ in profile, workspace, task root, seed, timing and RSS.
+- **Decision:** This is a sandbox/runtime failure, not a coding-capability result. Close V7 without retry. The Development task has now been delivered to the model once, so any future Development use must record that prior exposure. Next action as stated on PR #164 (plan, not executed): diagnose the Metal sandbox-extension/cache denial with no-model probes only, then require a separately frozen protocol, a no-model proof of the exact first-generation path, fresh exact-head CI and a fresh resource preflight before any further inference.
+
+## 2026-10-31 — Reconcile flagship state files
+
+- **Finding:** `STATUS.md` held several concatenated, contradictory status blocks. `state.json` had these gaps:
+  - It did not index the v2/v3/v5/v6 protocols, diagnostics 001/002/004/005/006, or their receipts (V7 was indexed on #164 at `759ac3af`; the V7 sandbox and first-preflight files were not).
+  - It had dropped the v1 NO_GO blocker.
+  - It used `active_pr_state: "open_draft"`, which the schema does not allow.
+  - It had eight result hash references that do not verify against the current tree.
+  - The exposure ledger had no events for the v2–v6 assignments or for the V7 Development prompt delivery.
+- **Decision:** Collapse `STATUS.md` into one block, and make the following changes:
+  - Index every protocol and receipt with a status, and restore the v1 NO_GO as a historical blocker.
+  - Label the six mutable-file hashes as historical snapshots, each with the commit where it verifies (DECISIONS/REPRODUCE @ `8db1aa78`, STATUS @ `416f35c4`, preflight script and test @ `a7a2509c`, qualification arm runner @ `ba25adfe`). Label the two `../../outputs/` references as external to the repository. No hash is rewritten.
+  - Document that `development_repository_repair_campaign_v1.json` is hashed as canonical JSON (`sort_keys=True`, `separators=(",", ":")`). The file itself is unchanged.
+  - Append six ledger events: five for the v2–v6 assignments, and one for the V7 prompt delivery, backed by the v6 `exposure-assignment.json` that the V7 protocol freezes (no v7 assignment file exists). Bind the new ledger hash with errata supplement 002. Prior events are unchanged.
+  - The `result_hash_references` entries for the ledger, its sidecar and `errata/SHA256SUMS` keep their pre-append hashes, labelled `HISTORICAL SNAPSHOT @ 759ac3af` with the current hash noted. `task_exposure_ledger.sha256` carries the current ledger hash.
+- **Limit:** The ledger events were recorded retrospectively from committed files. They add no new execution evidence. The v5 assignment file's mismatched `event_id` and model repository are recorded but not edited.
+
+## 2026-10-31 — Record the PR #165 merge in the flagship state
+
+- **Evidence:** PR #165 (learning pipeline v1) merged at 2026-10-31 17:35:53 UTC; `main` is `6cafa37a2ccc14cd250a50e7005a71806e7d81c3`. It changed no file under `research/flagship/` or `results/mlsys-fresh-vllm-64830-*`, and its Train/held-out manifests name no vLLM, MLX-LM, Transformers, or Ray task. Run-001 is `no_detectable_change` for both arms (held-out n = 42: no_update 15, sft_reference 14, rft_self 20; Holm p 1.0 and 0.125). The grader isolation audit shows the v1 native grader can report false passes on synthetic forgeries.
+- **Decision:** Update the GitHub checkpoint and `git_refs` to `6cafa37a`. Index the learning-pipeline protocol and records by raw-bytes sha256. Scope the two blockers that say no policy update or Held-Out evaluation exists to the flagship task ledger, and add two blockers for the run-001 negative result and the grader false-pass risk. Keep `go_no_go.rl_update` at `NO_GO`. No exposure-ledger, errata, or evidence file changes.
+- **Limit:** The exact-head CI recorded for PR #164 and this reconciliation ran on base `da15797c`. Fresh exact-head CI on a head containing `6cafa37a` is required before merge.
+
+## 2026-11-01 — Repoint the PR #165 merge after re-authoring
+
+- **Evidence:** On 2026-11-01 the commits added by PR #165 were re-authored on `main` with identical trees; the #165 merge moved from `b402c80c` to `6cafa37a2ccc14cd250a50e7005a71806e7d81c3` (same merge time, 2026-10-31 17:35:53 UTC). `da15797c` and earlier history are unchanged.
+- **Decision:** Point every reference to the #165 merge at `6cafa37a`. No hash, ledger, errata, or evidence file changes.

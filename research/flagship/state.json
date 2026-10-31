@@ -4,7 +4,7 @@
       "path": "protocols/development_repository_repair_campaign_v1.json",
       "protocol_id": "development-repository-repair-campaign-v1",
       "sha256": "9239406621a3ac68a6977cf341e4debd35278735a91783626ff764c87210c354",
-      "status": "frozen_before_inference; inference_authorized=false"
+      "status": "frozen_before_inference; inference_authorized=false; HASH CONVENTION: sha256 is over canonical JSON (json.dumps(obj, sort_keys=True, separators=(\",\", \":\")), UTF-8), matching the .lock.json; raw-bytes sha256 is f21e661fe424d8921a0734802a92a4b5ee3e924a5c8a48c5d905603617e51532; file unchanged since b1e5882c"
     },
     {
       "path": "protocols/development_repository_repair_campaign_v2.json",
@@ -311,36 +311,114 @@
       "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v1",
       "sha256": "27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9",
       "status": "FROZEN; exact-head CI passed on 4ca735f; launch preflight NO_GO; no weights loaded; no retry under this protocol"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v4-qwen2.5-14b-corrected-sandbox",
+      "sha256": "c59b3a584b9958514b725d9e8d9447a20cb8dbeaa2dbea838415fe96c173e127",
+      "status": "FROZEN; exact-head CI passed on 053b25fe; no-load preflight script PASSED but overall route NO_GO (additional 2 GiB margin short by 1,362,055,641 bytes); weights not loaded; closed, do not retry"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-003/protocol.json",
+      "protocol_id": "qwen25-14b-current-controller-train-diagnostic-after-narrow-null-write-fix-v2",
+      "sha256": "7b1cb5f41c6efe8c555f056a7248e81838e1da5438efbfaa239a2b2c9feba357",
+      "status": "FROZEN; NOT RUN; superseded after the V4 14B NO_GO; do not run without a new protocol"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v7-qwen3-4b-metal-cache-sandbox",
+      "sha256": "e2dcf7bae7719a63fed541444ce6883f5051fe908aa8b8df517212025be2f0f2",
+      "status": "frozen; one Development attempt ran; closed after first-generation Metal JIT sandbox failure; no retry authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v2-qwen3-4b",
+      "sha256": "1bea9fffedee2b7fc495ecf1645bb5c0ecc9cbfa73d08b3fa93b8cfc0e85bb12",
+      "status": "CONSUMED; Qwen3-4B Development route; launch preflights PASSED; required Train diagnostic-001 failed before first generation; Development attempt NOT RUN; closed, do not retry"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/protocol.json",
+      "protocol_id": "qwen3-4b-current-controller-train-diagnostic-v1",
+      "sha256": "0577b46272d18a101009c0bbe033ccfdda6c00f440b199c2c9005cc4b2810955",
+      "status": "CONSUMED; one Qwen3-4B Train diagnostic run; FAILED_BEFORE_FIRST_GENERATION; 0 tokens, 0 tool calls, 0 edits, 0 grades; do not retry"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-002/protocol.json",
+      "protocol_id": "qwen2.5-coder-14b-current-controller-train-diagnostic-after-cleanup-v1",
+      "sha256": "7df4d84e4fecd9ba1bb0419ec1eb40c58d99467b7fbb7ac2a2f4bccba96ca911",
+      "status": "FROZEN; NOT RUN (14B Train diagnostic after cleanup); superseded by the V3 NO_GO"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v3-qwen2.5-14b-after-memory-recovery",
+      "sha256": "473f8867659a5bac499600eebb2d5c8f76f97430efc33dad84612acc10a991e7",
+      "status": "FROZEN; launch preflight NO_GO (stale frozen bounded-runner and preflight-runner hashes); weights not loaded; closed, do not retry"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v5-qwen3-4b-corrected-sandbox-fallback",
+      "sha256": "c5717596f728a97e85cc370a7cea64923a82d62ff34fce2a93a94eeade6c8dca",
+      "status": "CONSUMED; Qwen3-4B fallback; preflight PASSED; diagnostic-004 failed before model load; Development attempt NOT RUN; closed"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/protocol.json",
+      "protocol_id": "qwen3-4b-current-controller-train-diagnostic-after-narrow-null-write-fix-v3",
+      "sha256": "5bac162495485078f4baf94450594996c8863102826fb0bb3e474c8fa58b32c2",
+      "status": "CONSUMED; one run; SANDBOX_RUNTIME_IMPORT_FAILURE before model load; 0 tokens, 0 edits, 0 grades; do not retry"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/protocol.json",
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v6-qwen3-4b-sanitized-runtime-copy",
+      "sha256": "3d0e646f56cb8cb0e0ba5238c951e10345a3f487c4f1ab272a47bcadb298960e",
+      "status": "CLOSED; Qwen3-4B sanitized runtime copy; preflights PASSED before diagnostic-005 and diagnostic-006; both diagnostics failed; no Development prompt delivered under V6; its exposure assignment was reused by the separately frozen V7 protocol"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/protocol.json",
+      "protocol_id": "qwen3-4b-current-controller-train-diagnostic-after-sanitized-runtime-copy-v4",
+      "sha256": "b4d308ed7834222e76c81986bfd12f3ff1afcf6ab4aa307c75632c7046a76c67",
+      "status": "CONSUMED; one run; FAILED_BEFORE_MODEL_LOAD (model blob outside sandbox allowlist); 0 tokens, 0 edits, 0 grades; do not retry"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/protocol.json",
+      "protocol_id": "qwen3-4b-current-controller-train-diagnostic-canonical-hf-blobs-v1",
+      "sha256": "7c079521100b86f3014935dd8858078e1d236e80ca0c947529f2f6c2c235ad1c",
+      "status": "CONSUMED; one run; weights loaded; exposed Train prompt reached the first generation call; FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED; 0 tokens, 0 tool calls, 0 edits, 0 grades; do not retry"
+    },
+    {
+      "path": "protocols/coding_policy_learning_mlx_4b_v1.json",
+      "protocol_id": "coding-policy-learning-mlx-4b-v1",
+      "sha256": "b004df4e66e32d235ceaec011492842271a286bec3ffb126b6af8170de53bb77",
+      "status": "CONSUMED by run-001 (PR #165, merged at 6cafa37a); raw-bytes sha256; result no_detectable_change; do not rerun"
     }
   ],
   "git_refs": {
-    "active_branch": "codex/vllm64830-development-attempt-v1",
+    "active_branch": "codex/qwen3-vllm64830-dev-v2",
     "active_pr_state": "open",
-    "active_pr_url": "https://github.com/mitukx/VARE/pull/163",
-    "last_integrated_pr_merge_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
-    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
-    "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
+    "active_pr_url": "https://github.com/mitukx/VARE/pull/164",
+    "last_integrated_pr_merge_sha": "6cafa37a2ccc14cd250a50e7005a71806e7d81c3",
+    "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/165",
+    "last_verified_main_sha": "6cafa37a2ccc14cd250a50e7005a71806e7d81c3",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "19e835b2a04279d880b82f36cc38534f78c4e79a"
+    "verified_pr_head_sha_before_checkpoint_changes": "759ac3af1924e5a22b404def05c14839eabd1a8b"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
-    "integration": "BLOCKED",
+    "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Integrate PRs #160–#163 in order after exact-head required checks pass. Then execute one prospective Qwen3-4B vLLM #64830 Development repair with a new frozen assignment/protocol and immediate model-specific resource preflight; the existing #1904 Train repair already validates native tool round-trip. Do not spend a fresh task on controller debugging, retry closed 14B protocols, pay for compute/API, train, or access Held-Out.",
-  "last_completed_step": "Synchronized PRs #161–#163 to PR #160 head da625977 and refreshed the mission checkpoint. The verified PR #163 engineering head before this checkpoint is 19e835b2; exact-head CI and calibrated CPU evidence passed on #161 bbca0290 (runs 41184060589/41184057449/41184060600), #162 57b6507b (41184138216/41184134388/41184138294), and #163 19e835b2 (41184300330/41184295425/41184300363). PR #160 scope/integration review found no additional issue. A previous superseded #163 head fb5b72b3 failed one timing-sensitive Python 3.12 SIGKILL fixture; the later full exact-head run passed unchanged code. Focused merged-tree validation passed 23 tests, 69 immutable artifact checks passed, checksums and git diff --check passed. No PR was merged. Current GitHub state was refreshed: main remains 416f35c; #160 integrity erratum is ported to e9a5fc42, #161 is synchronized at f005f8da, #162 at 210a5642, and #163 is being synchronized. #160 CPU evidence passed while fresh CI runs; #161/#162 exact-head checks are running. The resource-feasible model route is Qwen3-4B: cached weights 2,263,022,417 bytes, estimated 4,096-token fp16 KV 603,979,776 bytes, empirical prior MLX peak 3,752,736,344 bytes; prior host snapshot had 11,035,787,264 available bytes. A new immediate preflight is still mandatory. Existing run-19 provides one narrow Train repair (2/2 grader cases); fresh Development repair count remains zero.",
+  "highest_priority_next_task": "Diagnose why the macOS sandbox denied Metal compiler extension/cache access despite narrowly scoped write rules, using no-model probes only. Do not retry V7. Any future inference requires a separately frozen protocol and a no-model proof of the exact first-generation Metal compiler path; fresh exact-head CI and resource preflight remain mandatory.",
+  "last_completed_step": "main is 6cafa37a2ccc14cd250a50e7005a71806e7d81c3 (merge of PR #165, learning pipeline v1, 2026-10-31T17:35:53Z; previous main da15797ca6345f73eba8249c9059db3b1a9de41e was the merge of PR #163); PRs #140, #144, #145, #150, #159-#163 and #165 are merged. PR #165 run-001 is a negative / inconclusive result (no_detectable_change for both arms) and changed no flagship or vLLM #64830 file. PR #164 is an open draft; its head 759ac3af passed 19/19 exact-head check runs (last completed 2026-10-31T12:33:54Z); the previous head eb82cb00 also passed 19/19 after one failed-job rerun of test (3.12). Recorded vLLM #64830 outcomes: v1 14B preflight NO_GO; v2 4B launch preflights PASSED and Train diagnostic-001 loaded weights but failed before the first generation; v3 14B preflight NO_GO (stale runner hashes); v4 14B route NO_GO (additional 2 GiB margin short by 1,362,055,641 bytes); v5 4B preflight PASSED and diagnostic-004 failed before model load (sandbox runtime import failure); v6 4B preflights PASSED; diagnostic-005 failed before model load (symlinked model blob outside the sandbox allowlist); diagnostic-006 loaded weights and its exposed Train prompt reached the first generation call, then failed on a Metal JIT cache write denial with 0 tokens; V7 delivered the one Development prompt, loaded weights and started one generation call, then failed with the same Metal JIT sandbox write denial before any token (FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED). Totals: Development prompts delivered 1 (V7), generated tokens 0, native tool calls 0, edits 0, candidates 0, independent grades 0. State reconciliation indexed every v2-v7 protocol, diagnostic and receipt and appended the v2-v6 assignment events and the V7 prompt-delivery event to the exposure ledger.",
   "milestone_id": "p16-vllm-64830-one-shot-development-attempt",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
       "sha256": "0fef09c05deb27073cbee9e4aa5a1eedad16a8dd3fe7a2c15b0a5722bca2fd77",
-      "status": "verified"
+      "status": "EXTERNAL, outside the repository (not verifiable from a clone): verified"
     },
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/evidence-sha256.txt",
       "sha256": "8266b3a048616ef1f629da23998b083433cbf58a06552f370383bb18ecd7e124",
-      "status": "2,194 listed file hashes matched"
+      "status": "EXTERNAL, outside the repository (not verifiable from a clone): 2,194 listed file hashes matched"
     },
     {
       "path": "results/mlsys-task-deep-qualification-v1-exposure-append-v1.json",
@@ -1115,7 +1193,7 @@
     {
       "path": "research/flagship/DECISIONS.md",
       "sha256": "a988f8caf74b063b233dc563974d5314d853ed700eda26f4c969ae1d755c2f0f",
-      "status": "append-only record of the ungrouped RVL generation identity boundary finding"
+      "status": "HISTORICAL SNAPSHOT @ 8db1aa78cd13f231d436641280428fccf9121281 (mutable file changed later; verify with git show 8db1aa78:research/flagship/DECISIONS.md): append-only record of the ungrouped RVL generation identity boundary finding"
     },
     {
       "path": "results/agent-incomplete-tool-retry-budget-v1/controller-change.json",
@@ -1160,12 +1238,12 @@
     {
       "path": "research/flagship/STATUS.md",
       "sha256": "08c405150df11aa45173e96ff97361a4adf773bb3f8bbe420778cc5ccea0f78a",
-      "status": "integrated p12 checkpoint at main 8db1aa78; next task is fresh Development candidate inventory/qualification"
+      "status": "HISTORICAL SNAPSHOT @ 416f35c465712898e8e5764a8e43193ef86e7afb (mutable file changed later; verify with git show 416f35c4:research/flagship/STATUS.md): integrated p12 checkpoint at main 8db1aa78; next task is fresh Development candidate inventory/qualification"
     },
     {
       "path": "research/flagship/REPRODUCE.md",
       "sha256": "4e98e147254ca631794e763ba360ba50b1dbfae6b674f69cf5205f8449479da1",
-      "status": "reproduction commands for the RVL generation identity regression"
+      "status": "HISTORICAL SNAPSHOT @ 8db1aa78cd13f231d436641280428fccf9121281 (mutable file changed later; verify with git show 8db1aa78:research/flagship/REPRODUCE.md): reproduction commands for the RVL generation identity regression"
     },
     {
       "path": "src/vare/integrations/rvl_grpo.py",
@@ -1250,12 +1328,12 @@
     {
       "path": "scripts/preflight_local_model_attempt.py",
       "sha256": "91f70bec7683d1f82157ee9e8f0cdfad65a5f476461df3ec22233a8f0d9bdd9b",
-      "status": "automatic launch preflight runner; focused tests pending"
+      "status": "HISTORICAL SNAPSHOT @ a7a2509c4ddc2434053cc23d7a59508cb5b3304d (mutable file changed later; verify with git show a7a2509c:scripts/preflight_local_model_attempt.py): automatic launch preflight runner; focused tests pending"
     },
     {
       "path": "tests/test_preflight_local_model_attempt.py",
       "sha256": "a71c066b3e65fe66c2cdeb16b3693214a7ee62edd25ee464216c209bf53a8283",
-      "status": "resource parser tests; focused tests pending"
+      "status": "HISTORICAL SNAPSHOT @ a7a2509c4ddc2434053cc23d7a59508cb5b3304d (mutable file changed later; verify with git show a7a2509c:tests/test_preflight_local_model_attempt.py): resource parser tests; focused tests pending"
     },
     {
       "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/runtime/metal-sandbox-smoke.json",
@@ -1290,7 +1368,7 @@
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
       "sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed",
-      "status": "Current append-only exposure ledger; Development launch preflight NO_GO, no model exposure or inference; current hash is verified by errata supplement 001."
+      "status": "HISTORICAL SNAPSHOT @ 759ac3af1924e5a22b404def05c14839eabd1a8b (pre-append bytes; file changed by the append recorded in errata/current-exposure-ledger-supplement-002.json; current sha256 bc5a35a8313b57708ade7e927f51a3058004dc9a715a717a7e1b83bfb7db4007): Current append-only exposure ledger; Development launch preflight NO_GO, no model exposure or inference; current hash is verified by errata supplement 001."
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-2-execution.json",
@@ -1320,7 +1398,7 @@
     {
       "path": "scripts/run_mlsys_vllm_64830_qualification_arm.py",
       "sha256": "2037f384f8e49a126f9fca5272bac08a6dab3748f50eafc48146876ba5e5e439",
-      "status": "one-shot, hash-checking bounded runner; pytest internal log stays inside each arm-specific writable root"
+      "status": "HISTORICAL SNAPSHOT @ ba25adfe015272455c4baac959cd6de927a54dd5 (mutable file changed later; verify with git show ba25adfe:scripts/run_mlsys_vllm_64830_qualification_arm.py): one-shot, hash-checking bounded runner; pytest internal log stays inside each arm-specific writable root"
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-001/attempt.json",
@@ -1525,12 +1603,12 @@
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/SHA256SUMS",
       "sha256": "69046e5fdadd71a2ac7f6bc0516af44673477c596dc3aae077f6187c7337fb2f",
-      "status": "Supplemental manifest verifies RSS erratum, current exposure ledger, and its refreshed sidecar."
+      "status": "HISTORICAL SNAPSHOT @ 759ac3af1924e5a22b404def05c14839eabd1a8b (pre-append bytes; file changed by the append recorded in errata/current-exposure-ledger-supplement-002.json; current sha256 9492047fcba96af73d295d862ced97fe5b7d7a6a1b61af135253ae927db17076): Supplemental manifest verifies RSS erratum, current exposure ledger, and its refreshed sidecar."
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json.sha256",
       "sha256": "9d3b472aa441f7f248462b3a50961ac6e60b51668eea3f10dc2272e5c97d8fa0",
-      "status": "Refreshed sidecar for the current append-only exposure record; original root manifest retains its pre-append sidecar hash."
+      "status": "HISTORICAL SNAPSHOT @ 759ac3af1924e5a22b404def05c14839eabd1a8b (pre-append bytes; file changed by the append recorded in errata/current-exposure-ledger-supplement-002.json; current sha256 a1a9dfbd814488f1f688685d323ad246746752cc878028e6d90bfe21f5bc3155): Refreshed sidecar for the current append-only exposure record; original root manifest retains its pre-append sidecar hash."
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/current-exposure-ledger-supplement-001.json",
@@ -1556,6 +1634,331 @@
       "path": "results/mlsys-repo-eval-v1/run-19/report.md",
       "sha256": "f5a3b4931ee9898e38afaa58a80aaacc662eb7d98bbfbe1afb3507d2437ba88b",
       "status": "One independently graded Train repair; one trajectory, 2/2 task cases; no Development generalization or policy update."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/protocol.json",
+      "sha256": "c59b3a584b9958514b725d9e8d9447a20cb8dbeaa2dbea838415fe96c173e127",
+      "status": "Frozen V4 14B Development protocol; model not loaded"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/model-sandbox-isolation-probe.json",
+      "sha256": "29c66288adea2bcf9ce5b9e22ea6793811048af0c9b092a2be45a8b0c46f817c",
+      "status": "Passed no-model isolation probes; grader not called"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/route-selection-after-memory-recovery-002.json",
+      "sha256": "dd55ecc399927a51242b35bfe66930914aa5b882414fb937dadab2043802cd20",
+      "status": "14B candidate route; launch conditional on fresh preflight"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/memory-recovery-002.json",
+      "sha256": "a99c0bb4e5e55009b65886e9e1e9cfc994b6cbd6cf67ed04ac3d3362314e2940",
+      "status": "No current-turn processes stopped; Colima already down"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-003/protocol.json",
+      "sha256": "7b1cb5f41c6efe8c555f056a7248e81838e1da5438efbfaa239a2b2c9feba357",
+      "status": "Frozen corrected 14B Train diagnostic; not run"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/preflight-after-exact-head-ci.json",
+      "sha256": "d7c2187094b8ee06e8a832888ff9232be70c93743faee25a3fff9886bade510a",
+      "status": "V4 14B no-load preflight: all frozen input hashes and base resource gates passed; additional operator margin failed; model not loaded."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/operator-route-decision-after-preflight-001.json",
+      "sha256": "45c69caeff79e6666767f68287844ea820b019abac5058ff58bafb3d56ca9e90",
+      "status": "Authoritative overall NO_GO for V4 because extra 2 GiB memory margin was short by 1,362,055,641 bytes."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/protocol.json",
+      "sha256": "c5717596f728a97e85cc370a7cea64923a82d62ff34fce2a93a94eeade6c8dca",
+      "status": "Frozen Qwen3-4B fallback V5 protocol; requires new exact-head CI and fresh preflight."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/runtime/model-sandbox-isolation-probe.json",
+      "sha256": "ee8d349e58b231b78884a9e99c24a5bc8191fdcd2f210aab3d227ae43e58de62",
+      "status": "Final no-model 4B Development/Train sandbox probes passed; no inference or grader call."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/runtime/model-sandbox-isolation-probe-parent-traversal-failure-001.json",
+      "sha256": "4e1687d183753700d6c284de964bdbd6ab81376955109ff7b2c8bd33bcd67e3a",
+      "status": "Append-only initial V5/D4 parent traversal setup failure; preserved before final profile correction."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/protocol.json",
+      "sha256": "5bac162495485078f4baf94450594996c8863102826fb0bb3e474c8fa58b32c2",
+      "status": "Frozen Qwen3-4B exposed Train controller diagnostic-004; one attempt, no grade, no prompt run."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/development-result.json",
+      "sha256": "d6ff3a08b0b0be79c08ba4e3838887437b1956c6d3e23a04d090bf1411d84c97",
+      "status": "V7 one-shot Development attempt; Metal JIT sandbox failure before first token; no candidate or grade."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/preflight-before-development-002.json",
+      "sha256": "f24d7dcb81202307d4994053bba2e7c1142c5594bfc579b6b3d90ed8f2d4cbf4",
+      "status": "Fresh pre-launch V7 no-load preflight passed every resource and frozen-input gate."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/bounded-attempt.json",
+      "sha256": "53380ac71e9862a7eb832ef48b56e8c6ae90923c60c1bf64649399c90e3f941e",
+      "status": "Bounded V7 Development run record; exit 1 before first token; under RSS/time limits."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/agent-attempt.log",
+      "sha256": "96e2d8019f0ed5a3358769c242f8b38872be28e47bb0acc4a3732a0d046918e4",
+      "status": "V7 model log; Metal JIT cache output denied before token emission."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/live-resource-monitor-001.jsonl",
+      "sha256": "89b18c2c68f162a0d14e125da78bb7ce54dd62d5226f3b7aabd852dd7f99c52b",
+      "status": "Live pressure/swap/process-tree monitor for the one V7 attempt."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/SHA256SUMS",
+      "sha256": "d483442dc5d0ef488654ad53d60e91ca7b67904c36a70743efb2a5bd8957d364",
+      "status": "V7 attempt-output SHA-256 manifest."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/protocol.json",
+      "sha256": "1bea9fffedee2b7fc495ecf1645bb5c0ecc9cbfa73d08b3fa93b8cfc0e85bb12",
+      "status": "V2 Qwen3-4B Development protocol; consumed via diagnostic-001; Development attempt NOT RUN."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/exposure-assignment.json",
+      "sha256": "6f866ad6c2d3b23b1dad464a72880623f3ecc239001af2daf4cc02836aa67e3e",
+      "status": "V2 prospective Development assignment (2026-10-31T09:06Z); prompt never delivered."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/launch-preflight-after-cleanup-001.json",
+      "sha256": "d6fef6ad8a864c7093eabab6b06f81297dcfcfc840ea741ef0daa5f687a413bd",
+      "status": "V2 launch preflight PASSED; no model load by preflight."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/launch-preflight-after-14b-resource-check-001.json",
+      "sha256": "6bb408646507c665db1f317caf4767a79b33e71c8e00a7b223ab9fc0b5ed7b2f",
+      "status": "V2 launch preflight PASSED; no model load by preflight."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/route-selection-after-memory-recovery-001.json",
+      "sha256": "0e8609488b8cc00a0f91089fa3b3bbe447a7c148a3515f1cb999f5801344358d",
+      "status": "Route selection after the V3 14B NO_GO; 4B route chosen."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/protocol.json",
+      "sha256": "0577b46272d18a101009c0bbe033ccfdda6c00f440b199c2c9005cc4b2810955",
+      "status": "Diagnostic-001 protocol (Qwen3-4B, exposed Train #1904); consumed."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/attempt-001/controller-diagnostic-preflight.json",
+      "sha256": "37e5214d8c964ce96b7a5352bff1650fa860568fd234b3b0b0f165785e731874",
+      "status": "Diagnostic-001 preflight PASSED (13.43 GiB available)."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/attempt-001/diagnostic-result.json",
+      "sha256": "c5f1896acc3cd1a1699077b53eca75f8e7d2590f0ab8f82d028ae778b6e2c99b",
+      "status": "Diagnostic-001 receipt: FAILED_BEFORE_FIRST_GENERATION; model loaded; 0 tokens/tool calls/edits/grades; no retry."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/attempt-001/bounded-attempt.json",
+      "sha256": "869f1480de8222dc5247080ad8b960341f14dbe0ea6d28ddcd818ab7f4ca446b",
+      "status": "Diagnostic-001 bounded-runner record; exit 1 after 3.149 s."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-002/protocol.json",
+      "sha256": "7df4d84e4fecd9ba1bb0419ec1eb40c58d99467b7fbb7ac2a2f4bccba96ca911",
+      "status": "Diagnostic-002 protocol (14B); NOT RUN."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/protocol.json",
+      "sha256": "473f8867659a5bac499600eebb2d5c8f76f97430efc33dad84612acc10a991e7",
+      "status": "V3 14B protocol; preflight NO_GO; closed."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/exposure-assignment.json",
+      "sha256": "a652f1747860acd0e931ba87f07c57a3d4e10a5f58dcfd5acfdf8bedb563fdd8",
+      "status": "V3 prospective Development assignment (2026-10-31T09:53Z); prompt never delivered."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/attempt-001/launch-preflight-after-cleanup-001.json",
+      "sha256": "47ef0ac7423c22c58660dc3ea4782a7c16f99a084d8fb33fef0f79026f903258",
+      "status": "V3 launch preflight NO_GO: stale frozen runner hashes; model not loaded."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/exposure-assignment.json",
+      "sha256": "11f5ea5a913cb5e435b1d79e76da84657377d8a4acc2ccb67b615f9c216f8c91",
+      "status": "V4 prospective Development assignment (2026-10-31T10:40Z); prompt never delivered."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/exposure-assignment.json",
+      "sha256": "4513211b6c8f36e0ca584b3036ead2391787683ec60f4f047c8a80317b82b04d",
+      "status": "V5 assignment file; reuses the v4 event_id and lists the 14B repository while naming the Qwen3-4B route; kept unchanged."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/attempt-001/preflight-before-diagnostic.json",
+      "sha256": "3c73b43894008aee49a3fa192caf4fe4e92ab770204224b3ea7169fb00a4b17b",
+      "status": "V5 preflight PASSED before diagnostic-004."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/runtime/route-selection-after-v4-no-go-001.json",
+      "sha256": "a4b595c5c3da37e1e77c6953f65f597dd02768079c80a365f00b301c7f96dbdb",
+      "status": "Route selection after the V4 NO_GO; Qwen3-4B fallback."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/attempt-001/diagnostic-result.json",
+      "sha256": "e3695c12afae91a822648e4f6f951ee3ff3c036c6ab44b7399b882e020003561",
+      "status": "Diagnostic-004 receipt: SANDBOX_RUNTIME_IMPORT_FAILURE; weights not loaded; 0 tokens/edits/grades; no retry."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/attempt-001/bounded-attempt.json",
+      "sha256": "cfe286555028fe2954c55675dfc78f7835373efa7572db64b51248b8b79e8486",
+      "status": "Diagnostic-004 bounded-runner record; exit 1 after 0.539 s."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/protocol.json",
+      "sha256": "3d0e646f56cb8cb0e0ba5238c951e10345a3f487c4f1ab272a47bcadb298960e",
+      "status": "V6 Qwen3-4B protocol (sanitized runtime copy); closed; no Development prompt delivered under V6."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/exposure-assignment.json",
+      "sha256": "bbde8b0ffd551cf9a8149e4cad1054fda498fed475c63dc3b45d3920e514611e",
+      "status": "V6 assignment route addendum (2026-10-31T11:30Z); frozen by V7 as its prospective assignment record; the Development prompt was delivered once under V7."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/attempt-001/preflight-before-diagnostic.json",
+      "sha256": "95d008ed22c0934893d00461b76f2b9a3c7f5820ad824fd13768df4c1d31ed5b",
+      "status": "V6 preflight PASSED before diagnostic-005 (2026-10-31T11:43:57Z)."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/runtime/route-selection-after-v5-import-failure-001.json",
+      "sha256": "86fdea01aa1781b11a8318b7513851760c38968ce4ea44b802bde255dfcc1f31",
+      "status": "Route selection after diagnostic-004 import failure."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/protocol.json",
+      "sha256": "b4d308ed7834222e76c81986bfd12f3ff1afcf6ab4aa307c75632c7046a76c67",
+      "status": "Diagnostic-005 protocol; consumed."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/attempt-001/diagnostic-result.json",
+      "sha256": "26f38e4ef128abc2051b225cce8fef4f8c9fdae3cc59e3b898f2689dd9d8b885",
+      "status": "Diagnostic-005 receipt: FAILED_BEFORE_MODEL_LOAD; 0 tokens/tool calls/edits/grades; no retry."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/attempt-001/bounded-attempt.json",
+      "sha256": "1d885d3b5a2f8ffa97d9f4215228b1ba2cfe45678e75a09bf06ef5689a0971d4",
+      "status": "Diagnostic-005 bounded-runner record; exit 1 after 1.565 s."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/attempt-001/diagnostic-005-launch-outcome.json",
+      "sha256": "3d7755ad2ef2939f009013534fc628f5674afcdc3b9647ec33eb1e8d4df7f614",
+      "status": "Diagnostic-005 launch outcome: FAILED."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/protocol.json",
+      "sha256": "7c079521100b86f3014935dd8858078e1d236e80ca0c947529f2f6c2c235ad1c",
+      "status": "Diagnostic-006 protocol; consumed by its one run."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/attempt-001/preflight-before-diagnostic-006.json",
+      "sha256": "72d231c3fd027efb362f82c3c306a45845840469296082e599a65fb5bf3df6c3",
+      "status": "V6 preflight before diagnostic-006 PASSED (13.27 GiB available)."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/attempt-001/diagnostic-result.json",
+      "sha256": "290d086ff098996c972b408422096ad8ed47716f25a48c08455f06e888af0f32",
+      "status": "Diagnostic-006 receipt: FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED; weights loaded; 0 tokens/tool calls/edits/grades; no retry."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/attempt-001/bounded-attempt.json",
+      "sha256": "72d8987fd00e413bdf42400408f99fc66328c06bc102a86c8f5b0a1b42e6de3c",
+      "status": "Diagnostic-006 bounded-runner record; exit 1 after 3.432 s."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/attempt-001/diagnostic-006-launch-outcome.json",
+      "sha256": "81d218b0810019930a2d88e58685f9c3bb0b598792e6ef1d9bdfb1ae300be6c3",
+      "status": "Diagnostic-006 launch outcome record."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/attempt-001/diagnostic-006-live-resource-monitor.jsonl",
+      "sha256": "cdb3745f072cd9d9d8976b143416b5bd5ab51a28ae80fd60ab54dc8f3823b03c",
+      "status": "Diagnostic-006 live resource monitor."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/attempt-001/agent-attempt.log",
+      "sha256": "96e2d8019f0ed5a3358769c242f8b38872be28e47bb0acc4a3732a0d046918e4",
+      "status": "Diagnostic-006 model log; Metal JIT cache write denied before any token. Byte-identical to the V7 attempt log."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/attempt-001/SHA256SUMS",
+      "sha256": "35a16423f2b01e8277fefd69df425aeba420dfd165417ac38150bbcb73a06def",
+      "status": "Diagnostic-006 attempt-output SHA-256 manifest."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/protocol.json",
+      "sha256": "e2dcf7bae7719a63fed541444ce6883f5051fe908aa8b8df517212025be2f0f2",
+      "status": "V7 Qwen3-4B Development protocol (Metal-cache sandbox); consumed by its one attempt; closed, no retry."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/SHA256SUMS",
+      "sha256": "35f6cbc1ec4657e7d2650cfa0c121cc2b700f4d991bfba29c20c0329eb7b5f9f",
+      "status": "V7 protocol and evidence SHA-256 manifest (repo-root-relative)."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/preflight-before-development.json",
+      "sha256": "097dd78269a5a0331d049f5b9f889a8ab88412ae81af275a9d9d4ee5a2ac5ba9",
+      "status": "First V7 no-load preflight."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/sandbox/model-agent.sb",
+      "sha256": "dc64c3117547c4e45a6b8ba9a1f7c612e1c3bac84ad25f8023222c95116e464f",
+      "status": "V7 sandbox profile."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/sandbox/metal-runtime-smoke.json",
+      "sha256": "3f98faf6055c942b67d807c21606aa3e7d581455c83f9bc054944dcaf2b13770",
+      "status": "V7 no-model Metal runtime smoke (passed); did not exercise the first-generation Metal JIT path that later failed."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/sandbox/prior-train-tool-path-audit.json",
+      "sha256": "4ae571a2bf0815ab88e304d303fd77dc8091abc8e12c16d528085a195055eed9",
+      "status": "V7 audit: tool schema/parser/edit helpers unchanged since run-19 (Train evidence only)."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/sandbox/model-blob-open-probe.json",
+      "sha256": "671b87bf7190b4184e70d28fd7509727ad786ceb020b93a0efc877e7fc181849",
+      "status": "Diagnostic-006 no-model probe: one byte read from each canonical blob; hidden grader directory denied."
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/current-exposure-ledger-supplement-002.json",
+      "sha256": "4e3074e601099617fbb409232f2d32cc16849542d00c6c59c33fbf46991f044f",
+      "status": "Ledger supplement for the v2-v6 assignment and V7 prompt-delivery append."
+    },
+    {
+      "path": "results/learning-pipeline-v1/run-001/RESULTS.md",
+      "sha256": "b1bf419fa9328759b7ce5fd892615c1eda546d69303207cb4221a2ee79344be0",
+      "status": "verified at main 6cafa37a (PR #165 merge); present on a branch only after it contains that merge; run-001 results: negative / inconclusive (no_detectable_change)"
+    },
+    {
+      "path": "results/learning-pipeline-v1/run-001/comparison.json",
+      "sha256": "922a8f9af5b66c03546f77455512a85209ae1f7bdf6a18cf849ef4e5666856e9",
+      "status": "verified at main 6cafa37a (PR #165 merge); present on a branch only after it contains that merge; run-001 preregistered paired comparison"
+    },
+    {
+      "path": "results/learning-pipeline-v1/run-001/SHA256SUMS.txt",
+      "sha256": "7e1cb550bc9fdca0124dc437dd57e076f6e44a8d095797f8ab54cb828f04d7e6",
+      "status": "verified at main 6cafa37a (PR #165 merge); present on a branch only after it contains that merge; run-001 manifest (large files by sha256 only)"
+    },
+    {
+      "path": "results/learning-pipeline-v1/grader-isolation-audit/probe.json",
+      "sha256": "e5e7b07ffce0d92d822f94d933f97b41740257d941f715b71b5b587f1177ab7a",
+      "status": "verified at main 6cafa37a (PR #165 merge); present on a branch only after it contains that merge; grader isolation audit, synthetic probes"
+    },
+    {
+      "path": "results/learning-pipeline-v1/grader-isolation-audit/static_scan_run001.json",
+      "sha256": "3e653da00af5beb7f5d695cd9aace4fa2d81923e7d1d058081afaa81614f88fc",
+      "status": "verified at main 6cafa37a (PR #165 merge); present on a branch only after it contains that merge; static scan of run-001 applied edits: 0 matches"
     }
   ],
   "run_ids": [
@@ -1642,30 +2045,44 @@
     "41184138294",
     "41184199790",
     "41184203745",
-    "41184203686"
+    "41184203686",
+    "vllm-64830-post-sweep-model-route-selection-002",
+    "vllm-64830-v4-additional-margin-no-go-001",
+    "vllm-64830-qwen3-4b-fallback-v5",
+    "vllm-64830-qwen3-4b-development-attempt-v7",
+    "qwen3-4b-train-diagnostic-004-outcome-001",
+    "qwen3-4b-controller-train-diagnostic-attempt-001",
+    "vllm-64830-qwen3-4b-sanitized-runtime-v6",
+    "vllm-64830-state-reconcile-2026-10-31",
+    "learning-pipeline-v1-run-001"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
     "fresh_stage3_families_used": 3,
     "historical_heldout_1979_touched": false,
     "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
-    "sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed"
+    "sha256": "bc5a35a8313b57708ade7e927f51a3058004dc9a715a717a7e1b83bfb7db4007"
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
     "Qwen3-4B has one independently verified Train #1904 repair (one trajectory, 2/2 grader cases), but its two prior fresh Development attempts produced no edits. Fresh Development repair success remains 0; no generalization or RL improvement is established.",
-    "A narrow verified Train repair exists, but there is no verified Development repair, nondegenerate RL reward signal, actual policy update, or Held-Out evaluation.",
+    "A narrow verified Train repair exists, but on the flagship task ledger there is no verified Development repair, nondegenerate RL reward signal, actual policy update, or Held-Out evaluation (the separate learning-pipeline v1 run-001 is recorded below).",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
     "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
     "The incomplete-tool retry-cap change is opt-in and has only deterministic controller tests; no model or grader has evaluated it, so improvement in complete tool calls or repair success is unknown.",
     "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Its resource preflight NO-GO remains valid, but the historical runner skipped the task JSON/prompt hashes; a retrospective hash check matches the frozen protocol. Model weights were not loaded. See the append-only integrity erratum; do not retry protocol v1.",
-    "The prospectively assigned vLLM #64830 Development task hit launch-preflight NO_GO: available memory was 11,035,787,264 bytes (<12 GiB) and estimated working-set-plus-headroom failed. Frozen inputs and model snapshot hashes verified, but no weights were loaded, no prompt or candidate was generated, and no grade ran. Do not retry the frozen protocol; any future execution needs a new protocol and a fresh passing resource gate.",
     "The vLLM #64830 source-arm receipts recorded 3,932,160 bytes from 0.5-second RSS samples, not measured process-tree peaks. The 4 GiB resource result is INCONCLUSIVE; see append-only erratum results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.json (SHA-256 0656b5343f613a74d0bd35f93003622f9074130b2d2e662d19e2c00c14ca6877). Do not rerun consumed arms or reuse protocol v1. The original 58-file manifest covers the pre-append snapshot at commit 18f829b4; the live ledger and refreshed sidecar are covered by the separate errata manifest.",
-    "PR #160 is at e9a5fc42a289c5820547977f1eaa18f41f70336c with the #64575 integrity erratum ported; CPU evidence 41185980005 passed and exact-head CI runs 41185980035/41185976417 are in progress. Main requires nine contexts and zero approving reviews.",
-    "PR #161 is synchronized at f005f8da1135e875f498e31e51fc43b811aa17ad with the updated #160 parent; exact-head CI and CPU evidence are in progress.",
-    "PR #162 is synchronized at 210a564248b472343220c1c722cdc89671aa3e02 with the updated #161 parent; exact-head CI and CPU evidence are in progress.",
-    "PR #163 is being synchronized with #162 head 210a5642 and requires fresh exact-head CI before integration."
+    "Fresh Development repair success remains zero; on the flagship task ledger no policy update, coding-RL learning, or Held-Out evaluation is established.",
+    "Qwen2.5-Coder-14B V4 is NO_GO after its actual no-load preflight failed the additional 2 GiB margin; weights were not loaded and its Development prompt was not delivered.",
+    "V7 Qwen3-4B Development attempt failed during first Metal generation before any token despite a passing tiny-tensor smoke; no candidate or independent grade exists. V7 permits no retry. A new one-shot protocol must prove the exact generation-time sandbox extension path with no model before any further inference.",
+    "HISTORICAL NO_GO: the vLLM #64830 v1 Qwen2.5-Coder-14B Development preflight returned NO_GO at 2026-10-31T07:05:56Z (11,035,787,264 bytes available, below the 12 GiB gate); weights not loaded, prompt not delivered; do not retry protocol v1.",
+    "The #64830 V3 14B NO_GO, V4 14B NO_GO, diagnostic-001 failure (before first generation), diagnostic-004 and diagnostic-005 failures (both before model load), diagnostic-006 failure and V7 Development failure (both during the first generation call, 0 tokens) are immutable and closed; none may be retried. Diagnostics 002 and 003 were never run.",
+    "The vLLM #64830 Development task vllm-64830-v1-runner-unsupported-feature-checks was delivered to Qwen3-4B once under V7 (0 generated tokens, no candidate, no grade). It is no longer unexposed to the model; any future Development use needs a new frozen protocol that records this prior exposure.",
+    "The V7 no-model Metal runtime smoke passed, but the first-generation Metal JIT path still failed with the same sandbox write denial as diagnostic-006 despite the V7 profile write rules for the two observed cache directories. The cause is not yet diagnosed.",
+    "The committed v5 exposure-assignment.json reuses the v4 event_id and lists the 14B model repository although the V5 route is Qwen3-4B; the file is kept unchanged and the discrepancy is recorded in the ledger event.",
+    "Learning pipeline v1 run-001 (PR #165, separate SWE-smith Train/held-out split, no overlap with the flagship ledger) trained LoRA arms and evaluated them on its own 42-task held-out set: no_update 15/42, sft_reference 14/42, rft_self 20/42; both preregistered comparisons are no_detectable_change (Holm p 1.0 and 0.125). No improvement is established; do not rerun run-001.",
+    "The learning-pipeline v1 native grader can report false passes on adversarial candidates (synthetic audit). The sandboxed grader quarantines the probed forgeries with the static scan on; a canary-aware forgery still passes with the scan off. 0/123 Train and 0/106 held-out run-001 applied edits match the blocking patterns."
   ],
-  "updated_at": "2026-10-31T08:53:57Z"
+  "updated_at": "2026-10-31T17:45:00Z"
 }

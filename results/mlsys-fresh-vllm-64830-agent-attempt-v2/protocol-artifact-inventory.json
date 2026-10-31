@@ -1,0 +1,318 @@
+{
+  "candidate_workspace": {
+    "clean": true,
+    "path": "/private/tmp/vare-vllm-64830-development-attempt-002/workspace",
+    "revision": "17550580e932f15e772185847382d3ae4211f5ec",
+    "source_path": "vllm/config/vllm.py",
+    "source_sha256": "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738"
+  },
+  "frozen_files": [
+    {
+      "name": "agent_runner",
+      "path": "scripts/run_local_agent.py",
+      "sha256": "9ac2b9af00b1802663f88b600dc1293ccd892451e18bbea0cab77efc227ab19a",
+      "verification": "PASSED"
+    },
+    {
+      "name": "assignment",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/exposure-assignment.json",
+      "sha256": "6f866ad6c2d3b23b1dad464a72880623f3ecc239001af2daf4cc02836aa67e3e",
+      "verification": "PASSED"
+    },
+    {
+      "name": "baseline_source",
+      "path": "vllm/config/vllm.py",
+      "sha256": "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738",
+      "verification": "PASSED"
+    },
+    {
+      "name": "bounded_attempt_runner",
+      "path": "scripts/run_bounded_local_agent_attempt.py",
+      "sha256": "fa3105bbbe1ecbdffba0c6c3886d9d38b38e009db34f96a972b2a030f986e114",
+      "verification": "PASSED"
+    },
+    {
+      "name": "candidate_method_worker",
+      "path": "scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py",
+      "sha256": "bd3686219eab12f3599533b9dfc88a3f7eb4d2b843a6cfaabd70b3745689670a",
+      "verification": "PASSED"
+    },
+    {
+      "name": "controller_tool_format_diagnostic",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/controller-tool-format-check.json",
+      "sha256": "12bf688e35734b868a7c993807f7e3abb288480f1d7bddbd102eb89c312d2fd4",
+      "verification": "PASSED"
+    },
+    {
+      "name": "controller_tool_format_test",
+      "path": "tests/test_run_local_agent_tool_format.py",
+      "sha256": "d33d138fb9fdf090d93af09799a5bf48aee32ee584462f882a5ceefd6299d23f",
+      "verification": "PASSED"
+    },
+    {
+      "name": "edit_formatter",
+      "path": "src/vare/agent_edit_format.py",
+      "sha256": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+      "verification": "PASSED"
+    },
+    {
+      "name": "grader_calibration",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/grader-calibration.json",
+      "sha256": "8857e07256eae5721c08c6895602e1217882c90d95ca041a38d162cae2fa2d20",
+      "verification": "PASSED"
+    },
+    {
+      "name": "independent_grader",
+      "path": "scripts/run_mlsys_vllm_64830_agent_grader_v1.py",
+      "sha256": "246f17b449e38682cd5e16e35de87538190bccec6c08895a11d6d6c1cc5aa0e3",
+      "verification": "PASSED"
+    },
+    {
+      "name": "local_harness_checks",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/local-harness-checks-001/checks.json",
+      "sha256": "a8d3674138790ab6ccc252b376d53dd0079c743b701cd6711e8fced95847f3a4",
+      "verification": "PASSED"
+    },
+    {
+      "name": "metal_sandbox_smoke",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/metal-sandbox-smoke.json",
+      "sha256": "461ac8578a1ac4db289481b5c7babd879f8fe45a59448f83e27f1b16ad841f0a",
+      "verification": "PASSED"
+    },
+    {
+      "name": "metal_sandbox_smoke_correction",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/metal-sandbox-smoke-classification-correction-001.json",
+      "sha256": "b8a02ef6f244f283d653bd29cea96ab0891215b252acc2e6e10bc3ad3b55b042",
+      "verification": "PASSED"
+    },
+    {
+      "name": "model_file_manifest",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/model-file-manifest.json",
+      "sha256": "4019efb52306d0c99d40a471c7f33034ce7fd5d026e0c19616af2069417e3302",
+      "verification": "PASSED"
+    },
+    {
+      "name": "model_sandbox_isolation_probe",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/model-sandbox-isolation-probe.json",
+      "sha256": "3d25923cd0beb958af8aa45e366958c36a6af521316e2d3af27426adae93949c",
+      "verification": "PASSED"
+    },
+    {
+      "name": "model_sandbox_profile",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/sandbox/model-agent.sb",
+      "sha256": "8949a2834b4f8e0f36694a5244f923d66ad1bec46bdf125aae732285b4e32e36",
+      "verification": "PASSED"
+    },
+    {
+      "name": "overlap_review",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/overlap-review.json",
+      "sha256": "3cd82f082a87b93a4c8f23e54fd581bf04e864cc2790f56e36ef0158fdcd633b",
+      "verification": "PASSED"
+    },
+    {
+      "name": "pinned_workspace_git",
+      "path": "scripts/pinned_workspace_git.py",
+      "sha256": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+      "verification": "PASSED"
+    },
+    {
+      "name": "pre_protocol_snapshot",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/pre-protocol-resource-snapshot.json",
+      "sha256": "bf47b478d3b746e6a2cc3e84f5a458ce69019f6272888e885adec55c9ca01f1d",
+      "verification": "PASSED"
+    },
+    {
+      "name": "preflight_runner",
+      "path": "scripts/preflight_local_model_attempt.py",
+      "sha256": "7cda233a71a534f6e22b4e1f3380322ecb86e4c4013b5026bf37a76855401c79",
+      "verification": "PASSED"
+    },
+    {
+      "name": "pytest_configuration",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/trusted/pytest.ini",
+      "sha256": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+      "verification": "PASSED"
+    },
+    {
+      "name": "run19_independent_grade",
+      "path": "results/mlsys-repo-eval-v1/run-19/independent-grade.json",
+      "sha256": "325e5aec5fc781682255f5b6ba3551b35b9bd6a54688c62b982c05b7a0a0dbfd",
+      "verification": "PASSED"
+    },
+    {
+      "name": "run19_train_manifest",
+      "path": "results/mlsys-repo-eval-v1/run-19/manifest.json",
+      "sha256": "620c985f1ddefe38487a8c00c3eb5095638ffcd5c7667e91b39f97e2f5a242d1",
+      "verification": "PASSED"
+    },
+    {
+      "name": "runtime_file_manifest",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json.gz",
+      "sha256": "f3c30720549f7b5f1da6aea5bacc0cbcd22b7b6f938ebbfaf9abd0969bd52572",
+      "verification": "PASSED"
+    },
+    {
+      "name": "runtime_manifest",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/runtime-manifest.json",
+      "sha256": "74be8e5d42fb1ed1c59d425a33b2319f0cf20f8b8135fcf587f42868af7896d0",
+      "verification": "PASSED"
+    },
+    {
+      "name": "source_exposure_supplement",
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/current-exposure-ledger-supplement-001.json",
+      "sha256": "7cbe9683cb76a9542e0e2db6a3b9ef382a42972ea02dc9ebc86bf48e87869a05",
+      "verification": "PASSED"
+    },
+    {
+      "name": "source_qualification",
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/qualification.json",
+      "sha256": "62536b74d4982a073caaf9ed4a3d68f89c1f9b539bdb7669da912a15cbfc958f",
+      "verification": "PASSED"
+    },
+    {
+      "name": "source_qualification_exposure",
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
+      "sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed",
+      "verification": "PASSED"
+    },
+    {
+      "name": "source_resource_erratum",
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.json",
+      "sha256": "0656b5343f613a74d0bd35f93003622f9074130b2d2e662d19e2c00c14ca6877",
+      "verification": "PASSED"
+    },
+    {
+      "name": "task_json",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/task/task.json",
+      "sha256": "52ffcf7e7280320223a0329b1595bf11f63af302be5bd02f0fa80611575f7b62",
+      "verification": "PASSED"
+    },
+    {
+      "name": "task_prompt",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/task/TASK.md",
+      "sha256": "9c48dc637a854400f2afc1b209c81a93371f87ea01822b5749f7df6e2b02eb14",
+      "verification": "PASSED"
+    },
+    {
+      "name": "task_contract",
+      "path": "src/vare/agent_task_contract.py",
+      "sha256": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd",
+      "verification": "PASSED"
+    },
+    {
+      "name": "test_overlay",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/trusted/test_vllm_config_unsupported_features.py",
+      "sha256": "c397c9407f3294460ce939fab3c43835da75844ec0e274e2b9dfc8f44832c28e",
+      "verification": "PASSED"
+    },
+    {
+      "name": "protocol",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/protocol.json",
+      "sha256": "1bea9fffedee2b7fc495ecf1645bb5c0ecc9cbfa73d08b3fa93b8cfc0e85bb12",
+      "verification": "PASSED"
+    },
+    {
+      "name": "protocol_sha256_sidecar",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/protocol.sha256",
+      "sha256": "798e6c0b411491d197260658ddbbf1ad3883b30075a325d7345b7f2135b8bb93",
+      "verification": "PASSED"
+    },
+    {
+      "name": "method_sandbox_profile",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/sandbox/candidate-method-worker.sb",
+      "sha256": "e995dfd0318de8210f7c0c6476d1965612d6cfd652eede30cc11decc1fc1c5d3",
+      "verification": "PASSED"
+    },
+    {
+      "name": "method_sandbox_isolation_probe",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/method-sandbox-isolation-probe.json",
+      "sha256": "6ea581fea019017e5ddd58f31f3c7a54fcec5b4461209e86ff715709705f660b",
+      "verification": "PASSED"
+    },
+    {
+      "name": "smoke_history",
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/smoke-history.json",
+      "sha256": "b92e6a25fad454748843d9f1df51454c0b5e096034b83fb7c9fc5340c2e9e3a6",
+      "verification": "PASSED"
+    }
+  ],
+  "model_snapshot": {
+    "files": [
+      {
+        "path": ".gitattributes",
+        "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+        "size_bytes": 1570
+      },
+      {
+        "path": "README.md",
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+        "size_bytes": 969
+      },
+      {
+        "path": "added_tokens.json",
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+        "size_bytes": 707
+      },
+      {
+        "path": "chat_template.jinja",
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+        "size_bytes": 4040
+      },
+      {
+        "path": "config.json",
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+        "size_bytes": 938
+      },
+      {
+        "path": "generation_config.json",
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+        "size_bytes": 238
+      },
+      {
+        "path": "merges.txt",
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "size_bytes": 1671853
+      },
+      {
+        "path": "model.safetensors",
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+        "size_bytes": 2263022417
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+        "size_bytes": 63964
+      },
+      {
+        "path": "special_tokens_map.json",
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "size_bytes": 613
+      },
+      {
+        "path": "tokenizer.json",
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "size_bytes": 11422654
+      },
+      {
+        "path": "tokenizer_config.json",
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+        "size_bytes": 5440
+      },
+      {
+        "path": "vocab.json",
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "size_bytes": 2776833
+      }
+    ],
+    "manifest_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/model-file-manifest.json",
+    "manifest_sha256": "4019efb52306d0c99d40a471c7f33034ce7fd5d026e0c19616af2069417e3302",
+    "model_weight_bytes": 2263022417,
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "snapshot_hashes_checked_by_launch_preflight": true
+  },
+  "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v2-qwen3-4b",
+  "protocol_sha256": "1bea9fffedee2b7fc495ecf1645bb5c0ecc9cbfa73d08b3fa93b8cfc0e85bb12",
+  "schema_version": 1,
+  "status": "STATIC_INPUTS_VERIFIED; MODEL NOT LOADED; IMMEDIATE LAUNCH PREFLIGHT REQUIRED"
+}

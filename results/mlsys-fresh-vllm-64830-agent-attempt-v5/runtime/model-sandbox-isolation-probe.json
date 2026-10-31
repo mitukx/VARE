@@ -1,0 +1,215 @@
+{
+  "development_model_sandbox": {
+    "checks": [
+      {
+        "bytes": 41,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "dev_git_rev_parse_devnull",
+        "passed": true,
+        "sha256": "53604d5c2971c5b5e00435b9630d8dde163f9d8724dd8f6af04c9776fedaf892",
+        "stderr": ""
+      },
+      {
+        "bytes": 168974,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "dev_source_read_allowed",
+        "passed": true,
+        "sha256": "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738",
+        "stderr": ""
+      },
+      {
+        "bytes": 353,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "dev_task_read_allowed",
+        "passed": true,
+        "sha256": "9c48dc637a854400f2afc1b209c81a93371f87ea01822b5749f7df6e2b02eb14",
+        "stderr": ""
+      },
+      {
+        "bytes": 938,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "4b_model_config_read",
+        "passed": true,
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+        "stderr": ""
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "hidden_test_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py: Operation not permitted\n"
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "codex_private_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "cat: /Users/user/.codex/attachments/45c22656-71c4-4522-8cfd-02ee2bd49ffe/Pasted text.txt: Operation not permitted\n"
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "grader_scratch_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "cat: /private/tmp/vare-vllm-64830-grader-v4/method-worker.py: Operation not permitted\n"
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "grader_script_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "cat: /private/tmp/vare-pr160-runner-fix/scripts/run_mlsys_vllm_64830_agent_grader_v1.py: Operation not permitted\n"
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "network_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/socket.py\", line 841, in create_connection\n    for res in getaddrinfo(host, port, 0, SOCK_STREAM):\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Caskroom/"
+      }
+    ],
+    "profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/sandbox/model-agent.sb",
+    "profile_sha256": "1902e06b454826dee43acc5ef3233a6b2e8eae016fc24c7997ed8067e616c21d"
+  },
+  "grader_called": false,
+  "inference_started": false,
+  "model_loaded": false,
+  "recorded_at_utc": "2026-10-31T11:09:44.221741+00:00",
+  "schema_version": 1,
+  "status": "PASSED",
+  "train_controller_sandbox": {
+    "checks": [
+      {
+        "bytes": 41,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "train_git_rev_parse_devnull",
+        "passed": true,
+        "sha256": "c5e5973a0b0fb1cab3559aa04690b1da08eaefd9b1e2e61f98f64b9d8beba8da",
+        "stderr": ""
+      },
+      {
+        "bytes": 70765,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "train_source_read_allowed",
+        "passed": true,
+        "sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+        "stderr": ""
+      },
+      {
+        "bytes": 750,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "train_task_read_allowed",
+        "passed": true,
+        "sha256": "3855eae179864cddd35af9cb5b6e65812f414ceae7b5affc1a29b7e7d9c67699",
+        "stderr": ""
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "dev_source_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "cat: /private/tmp/vare-vllm-64830-development-attempt-004/workspace-isolated-independent/vllm/config/vllm.py: Operation not permitted\n"
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "hidden_test_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "cat: /private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py: Operation not permitted\n"
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "codex_private_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "cat: /Users/user/.codex/attachments/45c22656-71c4-4522-8cfd-02ee2bd49ffe/Pasted text.txt: Operation not permitted\n"
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "grader_scratch_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "cat: /private/tmp/vare-vllm-64830-grader-v4/method-worker.py: Operation not permitted\n"
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "grader_script_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "cat: /private/tmp/vare-pr160-runner-fix/scripts/run_mlsys_vllm_64830_agent_grader_v1.py: Operation not permitted\n"
+      },
+      {
+        "bytes": 938,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "4b_model_config_read",
+        "passed": true,
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+        "stderr": ""
+      },
+      {
+        "bytes": 0,
+        "exit_code": 1,
+        "expected_success": false,
+        "name": "network_denied",
+        "passed": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/socket.py\", line 841, in create_connection\n    for res in getaddrinfo(host, port, 0, SOCK_STREAM):\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Caskroom/"
+      },
+      {
+        "bytes": 65,
+        "content_unchanged": true,
+        "exit_code": 0,
+        "expected_success": true,
+        "name": "train_allowed_source_write_same_bytes",
+        "passed": true,
+        "sha256": "c08c63aef4194db2275845cf940d802423160a82916ee4db5f00e1017d3bc19f",
+        "source_sha256_after": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+        "source_sha256_before": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+        "stderr": ""
+      }
+    ],
+    "profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/sandbox/current-controller-diagnostic.sb",
+    "profile_sha256": "5fe167bfe227f9906ee8b83ea1911c612a335f23fe995045129d8bce86502399",
+    "source_write_probe": {
+      "bytes": 65,
+      "content_unchanged": true,
+      "exit_code": 0,
+      "expected_success": true,
+      "name": "train_allowed_source_write_same_bytes",
+      "passed": true,
+      "sha256": "c08c63aef4194db2275845cf940d802423160a82916ee4db5f00e1017d3bc19f",
+      "source_sha256_after": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+      "source_sha256_before": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+      "stderr": ""
+    }
+  }
+}

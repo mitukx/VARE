@@ -1,0 +1,272 @@
+{
+  "available_memory_bytes": 14439596032,
+  "colima_status": "not running",
+  "current_turn_estimated_reclaim_bytes": 0,
+  "current_turn_processes_stopped": [],
+  "disk_free_bytes": 21288202240,
+  "docker_ps_error": "failed to connect to the docker API at unix:///var/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /var/run/docker.sock: connect: no such file or directory",
+  "docker_ps_status": "unavailable",
+  "memory_pressure_free_percent": 82,
+  "mission_model_process_found": false,
+  "mission_process_candidates": [],
+  "model_weights_loaded": false,
+  "physical_memory_bytes": 34359738368,
+  "previous_safe_action": "Colima was already stopped in an earlier turn; its container and volume were preserved.",
+  "record_id": "vllm-64830-memory-audit-004-after-diagnostic-004-and-runtime-copy",
+  "rss_interpretation": "RSS is per-process and may include shared memory; top process RSS is not summed as an estimate of reclaimable physical memory.",
+  "schema_version": 1,
+  "swap_free_bytes": 1532032450,
+  "swap_total_bytes": 3221225472,
+  "swap_used_bytes": 1689193021,
+  "task_prompt_loaded_or_delivered": false,
+  "timestamp_utc": "2026-10-31T11:29:07.729649+00:00",
+  "top_30_processes_by_rss": [
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "03-04:35:58",
+      "pid": 54689,
+      "ppid": 97886,
+      "rss_bytes": 3247685632,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "34:47",
+      "pid": 48945,
+      "ppid": 97886,
+      "rss_bytes": 2579611648,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/156.0.8078.48/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)",
+      "elapsed": "01-21:12:46",
+      "pid": 50042,
+      "ppid": 49983,
+      "rss_bytes": 1215873024,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+      "elapsed": "04-13:53:21",
+      "pid": 97886,
+      "ppid": 1,
+      "rss_bytes": 1039417344,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "01:35",
+      "pid": 51434,
+      "ppid": 97886,
+      "rss_bytes": 912572416,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "01:27",
+      "pid": 51438,
+      "ppid": 97886,
+      "rss_bytes": 566296576,
+      "user": "user"
+    },
+    {
+      "command": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds_stores",
+      "elapsed": "05-07:08:24",
+      "pid": 492,
+      "ppid": 1,
+      "rss_bytes": 560807936,
+      "user": "_mds_stores"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "14:52:54",
+      "pid": 60853,
+      "ppid": 97886,
+      "rss_bytes": 535855104,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Grok Bot.app/Contents/Frameworks/Grok Bot Helper (Renderer).app/Contents/MacOS/Grok Bot Helper (Renderer)",
+      "elapsed": "25:34",
+      "pid": 49465,
+      "ppid": 49456,
+      "rss_bytes": 523370496,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT",
+      "elapsed": "01-21:12:54",
+      "pid": 49983,
+      "ppid": 1,
+      "rss_bytes": 326402048,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Grok Bot.app/Contents/MacOS/Grok Bot",
+      "elapsed": "25:36",
+      "pid": 49456,
+      "ppid": 1,
+      "rss_bytes": 311836672,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "01:00",
+      "pid": 51449,
+      "ppid": 97886,
+      "rss_bytes": 297598976,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "23:27",
+      "pid": 49705,
+      "ppid": 97886,
+      "rss_bytes": 282066944,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "04-13:53:18",
+      "pid": 97923,
+      "ppid": 97886,
+      "rss_bytes": 278593536,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/156.0.8078.48/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)",
+      "elapsed": "01-21:12:35",
+      "pid": 50207,
+      "ppid": 49983,
+      "rss_bytes": 259342336,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "31:33",
+      "pid": 49187,
+      "ppid": 97886,
+      "rss_bytes": 239534080,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "04-13:51:43",
+      "pid": 98066,
+      "ppid": 97886,
+      "rss_bytes": 224854016,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+      "elapsed": "01-21:12:46",
+      "pid": 50043,
+      "ppid": 49983,
+      "rss_bytes": 218267648,
+      "user": "user"
+    },
+    {
+      "command": "/System/Library/PrivateFrameworks/MediaAnalysis.framework/Versions/A/mediaanalysisd",
+      "elapsed": "07:34:52",
+      "pid": 13006,
+      "ppid": 1,
+      "rss_bytes": 203440128,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif).app/Contents/MacOS/Google Chrome Helper (Aperitif)",
+      "elapsed": "04-13:53:21",
+      "pid": 97892,
+      "ppid": 97886,
+      "rss_bytes": 195772416,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "04-13:53:20",
+      "pid": 97911,
+      "ppid": 97886,
+      "rss_bytes": 190889984,
+      "user": "user"
+    },
+    {
+      "command": "/System/Library/Input Methods/JapaneseIM-RomajiTyping.app/Contents/PlugIns/JapaneseIM-RomajiTyping.appex/Contents/MacOS/JapaneseIM-RomajiTyping",
+      "elapsed": "05-07:08:17",
+      "pid": 766,
+      "ppid": 1,
+      "rss_bytes": 189775872,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif).app/Contents/MacOS/Google Chrome Helper (Aperitif)",
+      "elapsed": "04-13:53:21",
+      "pid": 97893,
+      "ppid": 97886,
+      "rss_bytes": 179519488,
+      "user": "user"
+    },
+    {
+      "command": "/System/Applications/Siri AI.app/Contents/MacOS/Siri AI",
+      "elapsed": "05-07:08:18",
+      "pid": 721,
+      "ppid": 1,
+      "rss_bytes": 171884544,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "04-13:51:21",
+      "pid": 98113,
+      "ppid": 97886,
+      "rss_bytes": 166051840,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Grok Bot.app/Contents/Frameworks/Grok Bot Helper.app/Contents/MacOS/Grok Bot Helper",
+      "elapsed": "25:30",
+      "pid": 49482,
+      "ppid": 49456,
+      "rss_bytes": 164233216,
+      "user": "user"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "18:27:12",
+      "pid": 47667,
+      "ppid": 97886,
+      "rss_bytes": 154976256,
+      "user": "user"
+    },
+    {
+      "command": "(Google Chrome He)",
+      "elapsed": "06:55",
+      "pid": 51075,
+      "ppid": 97886,
+      "rss_bytes": 150634496,
+      "user": "user"
+    },
+    {
+      "command": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer",
+      "elapsed": "05-07:08:25",
+      "pid": 407,
+      "ppid": 1,
+      "rss_bytes": 134479872,
+      "user": "_windowserver"
+    },
+    {
+      "command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.48/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)",
+      "elapsed": "22:35:52",
+      "pid": 15059,
+      "ppid": 97886,
+      "rss_bytes": 121389056,
+      "user": "user"
+    }
+  ],
+  "user_apps_terminated": false,
+  "vm_stat_pages": {
+    "compressor": 164410,
+    "free": 78357,
+    "inactive": 802966,
+    "wired": 193986
+  }
+}

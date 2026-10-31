@@ -1,0 +1,34 @@
+{
+  "events": [
+    {
+      "id": "qwen3-controller-tool-format-regression-001",
+      "model_attempt_counted": false,
+      "note": "Existing controller regression suite passed; no fresh task prompt was exposed.",
+      "record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/controller-tool-format-check.json",
+      "status": "PASSED"
+    },
+    {
+      "id": "qwen3-model-sandbox-isolation-001",
+      "model_attempt_counted": false,
+      "record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/model-sandbox-isolation-probe.json",
+      "status": "PASSED"
+    },
+    {
+      "correction_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/metal-sandbox-smoke-classification-correction-001.json",
+      "id": "qwen3-metal-runtime-smoke-001",
+      "model_attempt_counted": false,
+      "record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/metal-sandbox-smoke.json",
+      "status": "PASSED_AFTER_CLASSIFICATION_CORRECTION",
+      "weights_loaded": false
+    },
+    {
+      "id": "qwen3-grader-method-sandbox-isolation-001",
+      "model_attempt_counted": false,
+      "record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/runtime/method-sandbox-isolation-probe.json",
+      "status": "PASSED"
+    }
+  ],
+  "model_inference_started": false,
+  "model_weights_loaded": false,
+  "schema_version": 1
+}

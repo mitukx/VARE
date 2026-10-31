@@ -1,0 +1,42 @@
+{
+  "captured_at_utc": "2026-10-31T09:36:07.732357+00:00",
+  "development_prompt_delivered_to_model": false,
+  "frozen_launch_argv_python_path": "/private/tmp/vare-vllm-64830-development-attempt-002/runtime/venv/bin/python",
+  "inference_started": false,
+  "local_alias": {
+    "is_symlink": true,
+    "path": "/private/tmp/vare-vllm-64830-development-attempt-002/runtime/venv",
+    "target": "/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv"
+  },
+  "model_loaded": false,
+  "note": "The frozen argv uses an attempt-002 alias to the exact venv pinned and inventoried under attempt-001. The venv is not copied or modified; packages match the pinned runtime manifest. This append-only record resolves launch-path setup without editing the frozen Development protocol.",
+  "observed_python": {
+    "packages": {
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "tokenizers": "0.23.3",
+      "transformers": "5.22.1"
+    },
+    "python_version": "3.12.12",
+    "sys_executable": "/private/tmp/vare-vllm-64830-development-attempt-002/runtime/venv/bin/python"
+  },
+  "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v2-qwen3-4b",
+  "protocol_sha256": "1bea9fffedee2b7fc495ecf1645bb5c0ecc9cbfa73d08b3fa93b8cfc0e85bb12",
+  "runtime_manifest_declared_python_executable": "/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python",
+  "runtime_manifest_declared_venv_path": "/private/tmp/vare-vllm-64830-development-attempt-001/runtime",
+  "runtime_manifest_sha256": "74be8e5d42fb1ed1c59d425a33b2319f0cf20f8b8135fcf587f42868af7896d0",
+  "sandbox_profile": {
+    "candidate_source_read": true,
+    "denied_development_workspace": true,
+    "denied_hidden_tests": true,
+    "denied_private_codex": true,
+    "denied_reference_fixes": true,
+    "network_denied": true,
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/sandbox/current-controller-diagnostic.sb",
+    "probe_status": "PASSED",
+    "scratch_write": true,
+    "sha256": "ba4bfda96137e0d769d1b1fe54e1994903ef59462b0d391f9e8a228bacd4f279",
+    "task_read": true
+  },
+  "schema_version": 1
+}

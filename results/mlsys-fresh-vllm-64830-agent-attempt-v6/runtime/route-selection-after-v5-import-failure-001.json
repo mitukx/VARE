@@ -1,0 +1,36 @@
+{
+  "14b_route": {
+    "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v4-qwen25-14b-no-go",
+    "reason": "failed additional 2 GiB operator margin by 1,362,055,641 bytes; do not retry under V4",
+    "status": "NO_GO",
+    "weights_loaded": false
+  },
+  "decision": "Keep Qwen3-4B only if the new exact-head V6 preflight passes. Run one no-grade Train controller diagnostic-005 using the materialized runtime. Permit one Development attempt only after diagnostic-005 yields a parsed native tool call plus a nonempty allowed edit and an immediate fresh V6 preflight passes. No retries under either new protocol.",
+  "development_task_id": "vllm-64830-v1-runner-unsupported-feature-checks",
+  "development_task_prompt_delivered": false,
+  "qwen3_4b_route": {
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "v5_diagnostic_004_failure": "SANDBOX_RUNTIME_IMPORT_FAILURE: the venv package file mlx_lm/__init__.py was a symlink into the denied UV archive cache; sandbox resolved mlx_lm as a namespace package.",
+    "v5_diagnostic_004_model_loaded": false,
+    "v5_diagnostic_004_outcome_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/attempt-001/diagnostic-result.json",
+    "v5_diagnostic_004_outcome_sha256": "e3695c12afae91a822648e4f6f951ee3ff3c036c6ab44b7399b882e020003561",
+    "v5_diagnostic_004_prompt_loaded_or_delivered": false,
+    "v5_preflight_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/attempt-001/preflight-before-diagnostic.json",
+    "v5_preflight_sha256": "3c73b43894008aee49a3fa192caf4fe4e92ab770204224b3ea7169fb00a4b17b",
+    "v5_preflight_status": "PASSED"
+  },
+  "record_id": "vllm-64830-qwen3-route-selection-after-v5-import-failure-v1",
+  "runtime_repair": {
+    "all_6289_source_manifest_entries_content_matched": true,
+    "fidelity_record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/runtime/runtime-copy-fidelity.json",
+    "fidelity_record_sha256": "e2459438024bb7421337c3377c8d49ee91b5bd5203f50b62a1cfea1cb227a58b",
+    "method": "materialize the pinned venv with symlinks dereferenced into a dedicated private temporary runtime path",
+    "package_cache_access_granted": false,
+    "runtime_manifest_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/runtime/runtime-copy-manifest.json",
+    "runtime_manifest_sha256": "2d2b1b9ef393b61bf9a4c825b7f2daac6c08d0c19e2141946008fb3c347fe3e4"
+  },
+  "schema_version": 1,
+  "selected_at_utc": "2026-10-31T11:30:33.659157+00:00",
+  "status": "SELECTED_PENDING_EXACT_HEAD_CI_AND_FRESH_PREFLIGHT"
+}

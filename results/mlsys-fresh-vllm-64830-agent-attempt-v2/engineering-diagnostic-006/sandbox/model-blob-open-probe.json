@@ -1,0 +1,29 @@
+{
+  "created_at_utc": "2026-10-31T11:48:22.215274+00:00",
+  "hidden_grader_directory_probe": {
+    "denied": true,
+    "exit_code": 1,
+    "path": "/private/tmp/vare-vllm-64830-grader-v4",
+    "stderr": "ls: /private/tmp/vare-vllm-64830-grader-v4: Operation not permitted"
+  },
+  "model_blob_targets": [
+    {
+      "bytes_read_on_success": 1,
+      "exit_code": 0,
+      "path": "/Users/user/.cache/huggingface/hub/blobs/4a/4ae82815c30780b930535c80899215a15651b182544ed87eda312d596abd6983",
+      "stderr": ""
+    },
+    {
+      "bytes_read_on_success": 1,
+      "exit_code": 0,
+      "path": "/Users/user/.cache/huggingface/hub/blobs/6a/6aec39639a0a2d1ca966356b8c2b8426a484f80ff80731f44fa8482040713bdf",
+      "stderr": ""
+    }
+  ],
+  "model_loaded": false,
+  "protocol_stage": "pre-registration no-model filesystem access probe; no model weights loaded and no task prompt read or delivered",
+  "sandbox_profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/sandbox/current-controller-diagnostic.sb",
+  "sandbox_profile_sha256": "b883386c3f55c8a8bb4bf4ca1961a67eab72a68b6e31c9fa88c000ee2508f7d8",
+  "schema_version": 1,
+  "task_prompt_delivered": false
+}

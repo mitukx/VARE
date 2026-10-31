@@ -1,0 +1,68 @@
+{
+  "changed_tool_components": [],
+  "comparison_base_revision": "0b5a3f091f71aabe005fa09b2c584dc94cf17922",
+  "created_at_utc": "2026-10-31T12:05:30.311503+00:00",
+  "interpretation": "Historical same-model Train evidence validates the unchanged tool schema/parser/edit path. D6 separately confirms weights loaded and its first generation call began; its Metal compiler failure produced zero tokens. This is not fresh Development generalization.",
+  "run19_created_at_utc": "2026-10-30T22:23:33Z",
+  "run19_edit_applied": true,
+  "run19_generated_tokens": 302,
+  "run19_grade": {
+    "candidate_diff_sha256": "e95091b6c6ff482234360c01e59ef8a31cd5fd1ff2956ea8d47872decc5d8419",
+    "candidate_source_sha256": "58facacda929918a0ccb0cd14e22b38d0b80162dea54106b6e023e08679bcbfc",
+    "feedback_to_agent": false,
+    "grader": {
+      "candidate_source_sha256": "58facacda929918a0ccb0cd14e22b38d0b80162dea54106b6e023e08679bcbfc",
+      "cases": [
+        {
+          "case_id": "dict_arguments",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.2865680829971427
+        },
+        {
+          "case_id": "json_string_control",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.19209854199423268
+        }
+      ],
+      "grader_adapter_sha256": "5813b83f446362aca75cd10c10164d864f8d92f6e818df565d5abd4856fb482d",
+      "grader_source_sha256": "6c7bee955b2350812bf49d8195969f62d4e0bf00ec33892a13dc32028588183a",
+      "passed": true,
+      "task_id": "mlxlm-1904-tool-arguments"
+    },
+    "grader_call_count": 1,
+    "protocol_id": "mlsys-task-model-attempt-mlxlm-1904-v1",
+    "protocol_sha256": "7bdef7ee8210dfbd25b3ca811d8bb7c1450b97e4c6015e39d653879aee51ad3d",
+    "run_id": "mlsys-repo-eval-v1-run-19",
+    "schema_version": 1
+  },
+  "run19_model": {
+    "backend": "apple_metal",
+    "max_rss_bytes": 2617196544,
+    "mlx_lm": "0.32.2",
+    "peak_mlx_memory_bytes": 3429948504,
+    "python": "3.12.12",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "weight_sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+  },
+  "run19_parent": null,
+  "run19_task_id": "mlxlm-1904-tool-arguments",
+  "run19_tool_turns": 5,
+  "schema_version": 1,
+  "unchanged_tool_components": [
+    "TOOLS",
+    "_tool_result_fits",
+    "append_tool_interaction",
+    "attempt_configured_edit",
+    "attempt_exact_text_replacement",
+    "bounded_list_page",
+    "bounded_search_results",
+    "bounded_source_page",
+    "bounded_tool_result",
+    "normalize_tool_call_format",
+    "resolve_allowed_path",
+    "tools_for"
+  ]
+}

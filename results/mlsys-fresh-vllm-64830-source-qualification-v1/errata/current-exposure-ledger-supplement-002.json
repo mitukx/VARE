@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "supplement_id": "vllm-64830-current-exposure-ledger-supplement-002",
+  "recorded_at_utc": "2026-10-31T12:45:00Z",
+  "previous_snapshot": {
+    "commit": "759ac3af1924e5a22b404def05c14839eabd1a8b",
+    "exposure_record_sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed",
+    "exposure_sidecar_sha256": "9d3b472aa441f7f248462b3a50961ac6e60b51668eea3f10dc2272e5c97d8fa0",
+    "errata_manifest_sha256": "69046e5fdadd71a2ac7f6bc0516af44673477c596dc3aae077f6187c7337fb2f",
+    "event_count": 4
+  },
+  "current_exposure_ledger": {
+    "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
+    "sha256": "bc5a35a8313b57708ade7e927f51a3058004dc9a715a717a7e1b83bfb7db4007",
+    "sidecar_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json.sha256",
+    "sidecar_sha256": "a1a9dfbd814488f1f688685d323ad246746752cc878028e6d90bfe21f5bc3155",
+    "event_count": 10,
+    "appended_event_ids": [
+      "vllm-64830-qwen3-4b-assignment-v2-ledger-append-001",
+      "vllm-64830-14b-assignment-v3-ledger-append-001",
+      "vllm-64830-14b-assignment-v4-ledger-append-001",
+      "vllm-64830-qwen3-4b-assignment-v5-ledger-append-001",
+      "vllm-64830-qwen3-4b-assignment-v6-ledger-append-001",
+      "vllm-64830-qwen3-4b-development-attempt-v7-prompt-delivery-001"
+    ]
+  },
+  "manifest_interpretation": "The root SHA256SUMS still authenticates the pre-append snapshot at 18f829b4 (supplement-001). The errata SHA256SUMS now verifies the current ledger, its sidecar, and supplements 001 and 002; its previous bytes remain in Git at the previous_snapshot commit. This supplement-002 was first drafted against 77b8a9b7 and rebuilt against 759ac3af; the ledger bytes were unchanged between those commits.",
+  "preservation": "All prior events are byte-identical in content and order; only events were appended and the latest-event pointer fields (event_id, recorded_at_utc, next_event) were advanced, as in the PR #163 append."
+}

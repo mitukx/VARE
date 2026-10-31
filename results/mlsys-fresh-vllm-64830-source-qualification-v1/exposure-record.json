@@ -9,7 +9,7 @@
     "selection_path": "results/mlsys-fresh-development-candidate-selection-v3/selection.json",
     "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
   },
-  "event_id": "vllm-64830-development-attempt-001-preflight-no-go",
+  "event_id": "vllm-64830-qwen3-4b-development-attempt-v7-prompt-delivery-001",
   "events": [
     {
       "event_type": "metadata_selection_and_overlap_review",
@@ -96,15 +96,329 @@
       "split_assignment": "Development",
       "status": "NOT RUN; preflight NO_GO; do not retry under frozen protocol",
       "training": false
+    },
+    {
+      "assigned_at_utc": "2026-10-31T09:06:06+00:00",
+      "assignment_event_id": "vllm-64830-development-qwen3-4b-assignment-v2",
+      "assignment_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/exposure-assignment.json",
+      "assignment_sha256": "6f866ad6c2d3b23b1dad464a72880623f3ecc239001af2daf4cc02836aa67e3e",
+      "candidate_patch_generated": false,
+      "development_prompt_delivered": false,
+      "event_id": "vllm-64830-qwen3-4b-assignment-v2-ledger-append-001",
+      "event_type": "prospective_development_assignment_ledger_append",
+      "heldout_access": false,
+      "independent_grade": false,
+      "launch_preflights": [
+        {
+          "failures": [],
+          "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/launch-preflight-after-cleanup-001.json",
+          "sha256": "d6fef6ad8a864c7093eabab6b06f81297dcfcfc840ea741ef0daa5f687a413bd",
+          "status": "PASSED"
+        },
+        {
+          "failures": [],
+          "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/attempt-001/launch-preflight-after-14b-resource-check-001.json",
+          "sha256": "6bb408646507c665db1f317caf4767a79b33e71c8e00a7b223ab9fc0b5ed7b2f",
+          "status": "PASSED"
+        }
+      ],
+      "model": {
+        "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+        "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+      },
+      "model_exposure": false,
+      "model_or_agent_inference_on_development_task": false,
+      "model_weights_loaded_for_development": false,
+      "paid_compute_or_api": false,
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v2-qwen3-4b",
+      "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/protocol.json",
+      "protocol_sha256": "1bea9fffedee2b7fc495ecf1645bb5c0ecc9cbfa73d08b3fa93b8cfc0e85bb12",
+      "record_basis": "Appended retrospectively during state reconciliation from the committed assignment file and receipts at PR #164 head 759ac3af1924e5a22b404def05c14839eabd1a8b; no new execution, model load, prompt delivery, or grade occurred for this record.",
+      "recorded_at_utc": "2026-10-31T12:45:00Z",
+      "split_assignment": "Development",
+      "status": "Development attempt NOT RUN. Launch preflights PASSED. The required Train diagnostic-001 loaded weights and failed before the first generation; the protocol stop rule ended this route. Do not retry diagnostic-001 or this protocol.",
+      "train_diagnostics": [
+        {
+          "diagnostic": "engineering-diagnostic-001",
+          "generated_tokens": 0,
+          "independent_grades": 0,
+          "model_weights_loaded": true,
+          "native_tool_calls": 0,
+          "result_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-001/attempt-001/diagnostic-result.json",
+          "result_sha256": "c5f1896acc3cd1a1699077b53eca75f8e7d2590f0ab8f82d028ae778b6e2c99b",
+          "retry_authorized": false,
+          "source_edits": 0,
+          "split": "Train (exposed #1904 fixture)",
+          "status": "FAILED_BEFORE_FIRST_GENERATION (sandbox denied /dev/null for the pinned Git revision check)"
+        }
+      ],
+      "training": false
+    },
+    {
+      "assigned_at_utc": "2026-10-31T09:53:32.953736Z",
+      "assignment_event_id": "vllm-64830-development-assignment-after-memory-recovery-v1",
+      "assignment_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/exposure-assignment.json",
+      "assignment_sha256": "a652f1747860acd0e931ba87f07c57a3d4e10a5f58dcfd5acfdf8bedb563fdd8",
+      "candidate_patch_generated": false,
+      "development_prompt_delivered": false,
+      "event_id": "vllm-64830-14b-assignment-v3-ledger-append-001",
+      "event_type": "prospective_development_assignment_ledger_append",
+      "heldout_access": false,
+      "independent_grade": false,
+      "launch_preflights": [
+        {
+          "failures": [
+            "frozen input hash mismatch: bounded_attempt_runner (/private/tmp/vare-pr160-runner-fix/scripts/run_bounded_local_agent_attempt.py)",
+            "frozen input hash mismatch: preflight_runner (/private/tmp/vare-pr160-runner-fix/scripts/preflight_local_model_attempt.py)"
+          ],
+          "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/attempt-001/launch-preflight-after-cleanup-001.json",
+          "sha256": "47ef0ac7423c22c58660dc3ea4782a7c16f99a084d8fb33fef0f79026f903258",
+          "status": "NO_GO"
+        }
+      ],
+      "model": {
+        "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+        "revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477"
+      },
+      "model_exposure": false,
+      "model_or_agent_inference_on_development_task": false,
+      "model_weights_loaded_for_development": false,
+      "paid_compute_or_api": false,
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v3-qwen2.5-14b-after-memory-recovery",
+      "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v3/protocol.json",
+      "protocol_sha256": "473f8867659a5bac499600eebb2d5c8f76f97430efc33dad84612acc10a991e7",
+      "record_basis": "Appended retrospectively during state reconciliation from the committed assignment file and receipts at PR #164 head 759ac3af1924e5a22b404def05c14839eabd1a8b; no new execution, model load, prompt delivery, or grade occurred for this record.",
+      "recorded_at_utc": "2026-10-31T12:45:00Z",
+      "split_assignment": "Development",
+      "status": "Development attempt NOT RUN. Launch preflight NO_GO (stale frozen runner hashes); model weights not loaded. Do not retry protocol v3.",
+      "train_diagnostics": [],
+      "training": false
+    },
+    {
+      "assigned_at_utc": "2026-10-31T10:40:54.159164+00:00",
+      "assignment_event_id": "vllm-64830-development-assignment-after-memory-recovery-v2",
+      "assignment_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/exposure-assignment.json",
+      "assignment_sha256": "11f5ea5a913cb5e435b1d79e76da84657377d8a4acc2ccb67b615f9c216f8c91",
+      "candidate_patch_generated": false,
+      "development_prompt_delivered": false,
+      "event_id": "vllm-64830-14b-assignment-v4-ledger-append-001",
+      "event_type": "prospective_development_assignment_ledger_append",
+      "heldout_access": false,
+      "independent_grade": false,
+      "launch_preflights": [
+        {
+          "failures": [],
+          "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/preflight-after-exact-head-ci.json",
+          "sha256": "d7c2187094b8ee06e8a832888ff9232be70c93743faee25a3fff9886bade510a",
+          "status": "PASSED"
+        },
+        {
+          "failures": [],
+          "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/operator-route-decision-after-preflight-001.json",
+          "sha256": "45c69caeff79e6666767f68287844ea820b019abac5058ff58bafb3d56ca9e90",
+          "status": "NO_GO (overall route; additional 2 GiB operator margin short by 1,362,055,641 bytes)"
+        }
+      ],
+      "model": {
+        "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+        "revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477"
+      },
+      "model_exposure": false,
+      "model_or_agent_inference_on_development_task": false,
+      "model_weights_loaded_for_development": false,
+      "paid_compute_or_api": false,
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v4-qwen2.5-14b-corrected-sandbox",
+      "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/protocol.json",
+      "protocol_sha256": "c59b3a584b9958514b725d9e8d9447a20cb8dbeaa2dbea838415fe96c173e127",
+      "record_basis": "Appended retrospectively during state reconciliation from the committed assignment file and receipts at PR #164 head 759ac3af1924e5a22b404def05c14839eabd1a8b; no new execution, model load, prompt delivery, or grade occurred for this record.",
+      "recorded_at_utc": "2026-10-31T12:45:00Z",
+      "split_assignment": "Development",
+      "status": "Development attempt NOT RUN. Preflight script PASSED but the overall route is NO_GO on the additional margin gate; model weights not loaded. Diagnostic-003 was not run.",
+      "train_diagnostics": [],
+      "training": false
+    },
+    {
+      "assigned_at_utc": "2026-10-31T10:40:54.159164+00:00",
+      "assignment_event_id": "vllm-64830-development-assignment-after-memory-recovery-v2",
+      "assignment_file_note": "The committed v5 assignment file reuses the v4 event_id and lists model.repository mlx-community/Qwen2.5-Coder-14B-Instruct-4bit, while its created_for_protocol and route_after_v4_no_go fields name the Qwen3-4B V5 route. The file is kept unchanged; this event records the V5 protocol and preflight actually run.",
+      "assignment_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/exposure-assignment.json",
+      "assignment_sha256": "4513211b6c8f36e0ca584b3036ead2391787683ec60f4f047c8a80317b82b04d",
+      "candidate_patch_generated": false,
+      "development_prompt_delivered": false,
+      "event_id": "vllm-64830-qwen3-4b-assignment-v5-ledger-append-001",
+      "event_type": "prospective_development_assignment_ledger_append",
+      "heldout_access": false,
+      "independent_grade": false,
+      "launch_preflights": [
+        {
+          "failures": [],
+          "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/attempt-001/preflight-before-diagnostic.json",
+          "sha256": "3c73b43894008aee49a3fa192caf4fe4e92ab770204224b3ea7169fb00a4b17b",
+          "status": "PASSED"
+        }
+      ],
+      "model": {
+        "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+        "revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477"
+      },
+      "model_exposure": false,
+      "model_or_agent_inference_on_development_task": false,
+      "model_weights_loaded_for_development": false,
+      "paid_compute_or_api": false,
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v5-qwen3-4b-corrected-sandbox-fallback",
+      "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v5/protocol.json",
+      "protocol_sha256": "c5717596f728a97e85cc370a7cea64923a82d62ff34fce2a93a94eeade6c8dca",
+      "record_basis": "Appended retrospectively during state reconciliation from the committed assignment file and receipts at PR #164 head 759ac3af1924e5a22b404def05c14839eabd1a8b; no new execution, model load, prompt delivery, or grade occurred for this record.",
+      "recorded_at_utc": "2026-10-31T12:45:00Z",
+      "split_assignment": "Development",
+      "status": "Development attempt NOT RUN. V5 preflight PASSED. Diagnostic-004 failed before model load; protocol closed without retry.",
+      "train_diagnostics": [
+        {
+          "diagnostic": "engineering-diagnostic-004",
+          "generated_tokens": 0,
+          "independent_grades": 0,
+          "model_weights_loaded": false,
+          "native_tool_calls": 0,
+          "result_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-004/attempt-001/diagnostic-result.json",
+          "result_sha256": "e3695c12afae91a822648e4f6f951ee3ff3c036c6ab44b7399b882e020003561",
+          "retry_authorized": false,
+          "source_edits": 0,
+          "split": "Train (exposed #1904 fixture)",
+          "status": "SANDBOX_RUNTIME_IMPORT_FAILURE (mlx_lm.load not importable inside the sandbox)"
+        }
+      ],
+      "training": false
+    },
+    {
+      "assigned_at_utc": "2026-10-31T11:30:33.659157+00:00",
+      "assignment_event_id": "vllm-64830-development-qwen3-4b-assignment-after-runtime-copy-v1",
+      "assignment_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/exposure-assignment.json",
+      "assignment_sha256": "bbde8b0ffd551cf9a8149e4cad1054fda498fed475c63dc3b45d3920e514611e",
+      "candidate_patch_generated": false,
+      "development_prompt_delivered": false,
+      "event_id": "vllm-64830-qwen3-4b-assignment-v6-ledger-append-001",
+      "event_type": "prospective_development_assignment_route_addendum_ledger_append",
+      "heldout_access": false,
+      "independent_grade": false,
+      "launch_preflights": [
+        {
+          "failures": [],
+          "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/attempt-001/preflight-before-diagnostic.json",
+          "sha256": "95d008ed22c0934893d00461b76f2b9a3c7f5820ad824fd13768df4c1d31ed5b",
+          "status": "PASSED"
+        }
+      ],
+      "model": {
+        "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+        "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+      },
+      "model_exposure": false,
+      "model_or_agent_inference_on_development_task": false,
+      "model_weights_loaded_for_development": false,
+      "paid_compute_or_api": false,
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v6-qwen3-4b-sanitized-runtime-copy",
+      "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/protocol.json",
+      "protocol_sha256": "3d0e646f56cb8cb0e0ba5238c951e10345a3f487c4f1ab272a47bcadb298960e",
+      "record_basis": "Appended retrospectively during state reconciliation from the committed assignment file and receipts at PR #164 head 759ac3af1924e5a22b404def05c14839eabd1a8b; no new execution, model load, prompt delivery, or grade occurred for this record.",
+      "recorded_at_utc": "2026-10-31T12:45:00Z",
+      "split_assignment": "Development",
+      "status": "ASSIGNED. Under the V6 protocol no Development prompt was delivered: V6 preflights PASSED; diagnostic-005 failed before model load and diagnostic-006 failed during its first generation call (0 tokens); both are closed. The Development attempt under this assignment record was later made by the separately frozen V7 protocol; see event vllm-64830-qwen3-4b-development-attempt-v7-prompt-delivery-001. The exposure flags in this event cover the V6 protocol only.",
+      "train_diagnostics": [
+        {
+          "diagnostic": "engineering-diagnostic-005",
+          "generated_tokens": 0,
+          "independent_grades": 0,
+          "model_weights_loaded": false,
+          "native_tool_calls": 0,
+          "result_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/attempt-001/diagnostic-result.json",
+          "result_sha256": "26f38e4ef128abc2051b225cce8fef4f8c9fdae3cc59e3b898f2689dd9d8b885",
+          "retry_authorized": false,
+          "source_edits": 0,
+          "split": "Train (exposed #1904 fixture)",
+          "status": "FAILED_BEFORE_MODEL_LOAD (symlinked Hugging Face blob outside the sandbox allowlist)"
+        },
+        {
+          "diagnostic": "engineering-diagnostic-006",
+          "generated_tokens": 0,
+          "generation_calls_started": 1,
+          "independent_grades": 0,
+          "model_weights_loaded": true,
+          "native_tool_calls": 0,
+          "preflight_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/attempt-001/preflight-before-diagnostic-006.json",
+          "preflight_sha256": "72d231c3fd027efb362f82c3c306a45845840469296082e599a65fb5bf3df6c3",
+          "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/protocol.json",
+          "protocol_sha256": "7c079521100b86f3014935dd8858078e1d236e80ca0c947529f2f6c2c235ad1c",
+          "result_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-006/attempt-001/diagnostic-result.json",
+          "result_sha256": "290d086ff098996c972b408422096ad8ed47716f25a48c08455f06e888af0f32",
+          "retry_authorized": false,
+          "source_edits": 0,
+          "split": "Train (exposed #1904 fixture)",
+          "status": "FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED (weights loaded; exposed Train prompt reached the first generation call)"
+        }
+      ],
+      "training": false
+    },
+    {
+      "assignment_event_id": "vllm-64830-development-qwen3-4b-assignment-after-runtime-copy-v1",
+      "assignment_note": "No separate v7 exposure-assignment.json exists. The V7 protocol freezes the v6 exposure-assignment.json (path and sha256 above) as its prospective_assignment_record.",
+      "assignment_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/exposure-assignment.json",
+      "assignment_sha256": "bbde8b0ffd551cf9a8149e4cad1054fda498fed475c63dc3b45d3920e514611e",
+      "candidate_patch_generated": false,
+      "candidate_source_matches_baseline": true,
+      "development_prompt_delivered": true,
+      "event_id": "vllm-64830-qwen3-4b-development-attempt-v7-prompt-delivery-001",
+      "event_type": "development_prompt_delivery_ledger_append",
+      "generated_tokens": 0,
+      "generation_calls_started": 1,
+      "grader_feedback_to_model": false,
+      "heldout_access": false,
+      "independent_grade": false,
+      "launch_preflights": [
+        {
+          "failures": [],
+          "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/preflight-before-development.json",
+          "sha256": "097dd78269a5a0331d049f5b9f889a8ab88412ae81af275a9d9d4ee5a2ac5ba9",
+          "status": "PASSED"
+        },
+        {
+          "failures": [],
+          "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/preflight-before-development-002.json",
+          "sha256": "f24d7dcb81202307d4994053bba2e7c1142c5594bfc579b6b3d90ed8f2d4cbf4",
+          "status": "PASSED"
+        }
+      ],
+      "model": {
+        "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+        "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+      },
+      "model_exposure": true,
+      "model_or_agent_inference_on_development_task": true,
+      "model_weights_loaded_for_development": true,
+      "native_tool_calls": 0,
+      "paid_compute_or_api": false,
+      "permitted_source_edits": 0,
+      "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v7-qwen3-4b-metal-cache-sandbox",
+      "protocol_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/protocol.json",
+      "protocol_sha256": "e2dcf7bae7719a63fed541444ce6883f5051fe908aa8b8df517212025be2f0f2",
+      "record_basis": "Appended retrospectively during state reconciliation from the committed assignment file and receipts at PR #164 head 759ac3af1924e5a22b404def05c14839eabd1a8b; this record adds no new execution, model load, prompt delivery, or grade.",
+      "recorded_at_utc": "2026-10-31T12:45:00Z",
+      "result_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/development-result.json",
+      "result_sha256": "d6ff3a08b0b0be79c08ba4e3838887437b1956c6d3e23a04d090bf1411d84c97",
+      "result_status": "FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED",
+      "retry_authorized": false,
+      "split_assignment": "Development",
+      "status": "DEVELOPMENT PROMPT DELIVERED ONCE; FAILED_DURING_FIRST_GENERATION_METAL_JIT_SANDBOX_WRITE_DENIED before any generated token; no candidate, no independent grade; V7 closed, no retry. The Development task is model-exposed from this event onward.",
+      "task_id": "vllm-64830-v1-runner-unsupported-feature-checks",
+      "training": false
     }
   ],
   "heldout_access": false,
   "model_exposure": false,
-  "next_event": "Do not retry under the frozen protocol. Any future execution requires a new prospectively frozen protocol and a fresh passing resource preflight.",
+  "next_event": "Do not retry any closed protocol (v1, v2/diagnostic-001, v3, v4, v5/diagnostic-004, v6/diagnostic-005, diagnostic-006, v7). As stated on PR #164 at 759ac3af: diagnose the Metal sandbox-extension/cache denial with no-model probes only; any further inference requires a separately frozen protocol, a no-model proof of the exact first-generation path, fresh exact-head CI and a fresh resource preflight. Any new Development use of vllm-64830-v1-runner-unsupported-feature-checks must treat the V7 prompt delivery as prior model exposure.",
   "paid_compute_or_api": false,
   "public_pretraining_exposure": "UNKNOWN",
   "qualification_status": "QUALIFIED_SOURCE_LEVEL",
-  "recorded_at_utc": "2026-10-31T07:05:56.686286Z",
+  "recorded_at_utc": "2026-10-31T12:45:00Z",
   "schema_version": 1,
   "split_assignment": "Development",
   "training": false

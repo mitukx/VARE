@@ -1,0 +1,425 @@
+{
+  "agent_attempt": {
+    "agent_output_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/agent-attempt.json",
+    "backend": "mlx",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/run_bounded_local_agent_attempt.py",
+      "--wall-seconds",
+      "600",
+      "--max-process-tree-rss-bytes",
+      "12884901888",
+      "--log",
+      "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/agent-attempt.log",
+      "--record",
+      "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/bounded-attempt.json",
+      "--",
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "results/mlsys-fresh-vllm-64830-agent-attempt-v4/sandbox/model-agent.sb",
+      "/usr/bin/env",
+      "HF_HUB_OFFLINE=1",
+      "TRANSFORMERS_OFFLINE=1",
+      "PYTHONNOUSERSITE=1",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONHASHSEED=0",
+      "HOME=/private/tmp/vare-vllm-64830-development-attempt-004/home",
+      "TMPDIR=/private/tmp/vare-vllm-64830-development-attempt-004/tmp",
+      "/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/bin/python",
+      "-B",
+      "scripts/run_local_agent.py",
+      "--workspace",
+      "/private/tmp/vare-vllm-64830-development-attempt-004/workspace-isolated-independent",
+      "--model-path",
+      "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+      "--model-repository",
+      "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+      "--backend",
+      "mlx",
+      "--task-root",
+      "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/task",
+      "--output",
+      "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/agent-attempt.json",
+      "--instruction",
+      "Implement the requested code change in the one allowed production file.",
+      "--seed",
+      "64830",
+      "--max-turns",
+      "12",
+      "--max-no-tool-retries",
+      "1",
+      "--max-new-tokens-per-turn",
+      "512",
+      "--incomplete-tool-retry-tokens",
+      "1024",
+      "--max-total-new-tokens",
+      "2048",
+      "--max-context-tokens",
+      "4096",
+      "--wall-seconds",
+      "600",
+      "--temperature",
+      "0.0",
+      "--top-p",
+      "0.0",
+      "--top-k",
+      "0",
+      "--no-do-sample",
+      "--edit-format",
+      "unified_diff"
+    ],
+    "do_sample": false,
+    "edit_format": "unified_diff",
+    "incomplete_tool_retry_tokens": 1024,
+    "instruction": "Implement the requested code change in the one allowed production file.",
+    "max_context_tokens": 4096,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_total_new_tokens": 2048,
+    "max_turns": 12,
+    "outer_log_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/agent-attempt.log",
+    "outer_record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/bounded-attempt.json",
+    "public_test_tool": false,
+    "seed": 64830,
+    "wall_seconds": 600
+  },
+  "artifact_inventory_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/protocol-artifact-inventory.json",
+  "assignment": {
+    "attempts_authorized": 1,
+    "baseline_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+    "family_level_independence": "NOT_ESTABLISHED; same-repository broad configuration adjacency is possible",
+    "model_exposure_before_attempt": false,
+    "model_public_pretraining_exposure": "UNKNOWN",
+    "prospective_assignment_record": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/exposure-assignment.json",
+      "sha256": "11f5ea5a913cb5e435b1d79e76da84657377d8a4acc2ccb67b615f9c216f8c91"
+    },
+    "source_test_researcher_exposure": true,
+    "split": "Development",
+    "workspace_path": "/private/tmp/vare-vllm-64830-development-attempt-004/workspace-isolated-independent"
+  },
+  "created_at_utc": "2026-10-31T10:46:29.186336+00:00",
+  "frozen_inputs": {
+    "agent_runner": {
+      "path": "scripts/run_local_agent.py",
+      "sha256": "9ac2b9af00b1802663f88b600dc1293ccd892451e18bbea0cab77efc227ab19a"
+    },
+    "assignment": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/exposure-assignment.json",
+      "sha256": "11f5ea5a913cb5e435b1d79e76da84657377d8a4acc2ccb67b615f9c216f8c91"
+    },
+    "baseline_source": {
+      "path": "vllm/config/vllm.py",
+      "repository": "https://github.com/vllm-project/vllm.git",
+      "revision": "17550580e932f15e772185847382d3ae4211f5ec",
+      "sha256": "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738"
+    },
+    "bounded_attempt_runner": {
+      "path": "scripts/run_bounded_local_agent_attempt.py",
+      "sha256": "fa3105bbbe1ecbdffba0c6c3886d9d38b38e009db34f96a972b2a030f986e114"
+    },
+    "candidate_method_worker": {
+      "path": "scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py",
+      "sha256": "bd3686219eab12f3599533b9dfc88a3f7eb4d2b843a6cfaabd70b3745689670a"
+    },
+    "edit_formatter": {
+      "path": "src/vare/agent_edit_format.py",
+      "sha256": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4"
+    },
+    "grader_calibration": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/grader-calibration.json",
+      "sha256": "8857e07256eae5721c08c6895602e1217882c90d95ca041a38d162cae2fa2d20"
+    },
+    "grader_method_worker_scratch": {
+      "path": "/private/tmp/vare-vllm-64830-grader-v4/method-worker.py",
+      "sha256": "bd3686219eab12f3599533b9dfc88a3f7eb4d2b843a6cfaabd70b3745689670a"
+    },
+    "independent_grader": {
+      "path": "scripts/run_mlsys_vllm_64830_agent_grader_v1.py",
+      "sha256": "246f17b449e38682cd5e16e35de87538190bccec6c08895a11d6d6c1cc5aa0e3"
+    },
+    "local_harness_checks": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/local-harness-checks-001/checks.json",
+      "sha256": "a8d3674138790ab6ccc252b376d53dd0079c743b701cd6711e8fced95847f3a4"
+    },
+    "memory_recovery_record": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/memory-recovery-002.json",
+      "sha256": "a99c0bb4e5e55009b65886e9e1e9cfc994b6cbd6cf67ed04ac3d3362314e2940"
+    },
+    "metal_sandbox_smoke": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/metal-sandbox-smoke.json",
+      "sha256": "695cdfc7f98b8555616702e98272361b4797292f013cb8d530dabaa30c8deccf"
+    },
+    "method_sandbox_profile": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/sandbox/candidate-method-worker.sb",
+      "sha256": "f60b01ac5003cf05c5743958a80c032695d60b40d8ea8ff47d043c7b7d9f6de9"
+    },
+    "model_file_manifest": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/model-file-manifest.json",
+      "sha256": "7089cb874bf7a08c21b32322b9c6a6dd850b8be966268a35c08622112b4da23b"
+    },
+    "model_sandbox_isolation_probe": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/model-sandbox-isolation-probe.json",
+      "sha256": "29c66288adea2bcf9ce5b9e22ea6793811048af0c9b092a2be45a8b0c46f817c"
+    },
+    "model_sandbox_profile": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/sandbox/model-agent.sb",
+      "sha256": "ac839bc07816d6a3dd8181843e76c34bba86bd00e04583c155331636a249fbca"
+    },
+    "overlap_review": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/overlap-review.json",
+      "sha256": "232a5aa79c2bef1d7fec638a44365d899ae6e59034535910146db67c3861a999"
+    },
+    "pinned_workspace_git": {
+      "path": "scripts/pinned_workspace_git.py",
+      "sha256": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b"
+    },
+    "pre_protocol_snapshot": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/pre-protocol-resource-snapshot.json",
+      "sha256": "9384d230fb28d77cf071c5e7e45707e02dde0bd73a66c4353d762cf21c86ac35"
+    },
+    "preflight_runner": {
+      "path": "scripts/preflight_local_model_attempt.py",
+      "sha256": "7cda233a71a534f6e22b4e1f3380322ecb86e4c4013b5026bf37a76855401c79"
+    },
+    "protocol_artifact_inventory": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/protocol-artifact-inventory.json",
+      "sha256": "455d49e9d69ca1242d17193d1714323f19faa7550b61b925d577446985b9703d"
+    },
+    "pytest_configuration": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/pytest.ini",
+      "sha256": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4"
+    },
+    "route_selection": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/route-selection-after-memory-recovery-002.json",
+      "sha256": "dd55ecc399927a51242b35bfe66930914aa5b882414fb937dadab2043802cd20"
+    },
+    "runtime_file_manifest": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json.gz",
+      "sha256": "f3c30720549f7b5f1da6aea5bacc0cbcd22b7b6f938ebbfaf9abd0969bd52572"
+    },
+    "runtime_manifest": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-manifest.json",
+      "sha256": "5e00c0d4de98d51f02351363529cc3890a857ef0f76c56fc8f8ca0eb49973747"
+    },
+    "smoke_history": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/smoke-history.json",
+      "sha256": "641f7c9e2134e7c7cd9cece107514154bfd7572b89d73291696e99b3d805ee10"
+    },
+    "task": {
+      "task_json_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/task/task.json",
+      "task_json_sha256": "52ffcf7e7280320223a0329b1595bf11f63af302be5bd02f0fa80611575f7b62",
+      "task_prompt_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/task/TASK.md",
+      "task_prompt_sha256": "9c48dc637a854400f2afc1b209c81a93371f87ea01822b5749f7df6e2b02eb14"
+    },
+    "task_contract": {
+      "path": "src/vare/agent_task_contract.py",
+      "sha256": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd"
+    },
+    "test_overlay": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py",
+      "sha256": "c397c9407f3294460ce939fab3c43835da75844ec0e274e2b9dfc8f44832c28e"
+    },
+    "train_fixture_diagnostic_protocol": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-003/protocol.json",
+      "sha256": "7b1cb5f41c6efe8c555f056a7248e81838e1da5438efbfaa239a2b2c9feba357"
+    },
+    "train_fixture_sandbox_profile": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-003/sandbox/current-controller-diagnostic.sb",
+      "sha256": "b498c9751f69917a5361fa157df9fe1360c9e48e045f94dcee599dc71cdcbee7"
+    }
+  },
+  "independent_grader": {
+    "command": [
+      "/usr/bin/env",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/run_mlsys_vllm_64830_agent_grader_v1.py",
+      "--workspace",
+      "/private/tmp/vare-vllm-64830-development-attempt-004/workspace-isolated-independent",
+      "--baseline-revision",
+      "17550580e932f15e772185847382d3ae4211f5ec",
+      "--baseline-source-sha256",
+      "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738",
+      "--source-relative-path",
+      "vllm/config/vllm.py",
+      "--test-file",
+      "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py",
+      "--test-file-sha256",
+      "c397c9407f3294460ce939fab3c43835da75844ec0e274e2b9dfc8f44832c28e",
+      "--pytest-config",
+      "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/pytest.ini",
+      "--pytest-config-sha256",
+      "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+      "--method-worker",
+      "/private/tmp/vare-vllm-64830-grader-v4/method-worker.py",
+      "--method-worker-sha256",
+      "bd3686219eab12f3599533b9dfc88a3f7eb4d2b843a6cfaabd70b3745689670a",
+      "--method-profile",
+      "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v4/sandbox/candidate-method-worker.sb",
+      "--method-profile-sha256",
+      "f60b01ac5003cf05c5743958a80c032695d60b40d8ea8ff47d043c7b7d9f6de9",
+      "--python",
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "--output-dir",
+      "/private/tmp/vare-vllm-64830-grader-v4/final-grader-output-v1",
+      "--timeout-seconds",
+      "120"
+    ],
+    "durable_copy_command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "-c",
+      "import shutil; from pathlib import Path; src=Path('/private/tmp/vare-vllm-64830-grader-v4/final-grader-output-v1'); dst=Path('/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/independent-grade-v1'); assert not dst.exists(); shutil.copytree(src,dst)"
+    ],
+    "durable_receipt_directory": "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/independent-grade-v1",
+    "failure_rule": "all failed cases match the frozen HiSparse/watermarking target assertion diffs; worker/runtime errors are GRADER_ERROR",
+    "feedback_to_model": false,
+    "grade_only_after_attempt_record_committed_and_pushed": true,
+    "max_calls": 1,
+    "method_profile_sha256": "f60b01ac5003cf05c5743958a80c032695d60b40d8ea8ff47d043c7b7d9f6de9",
+    "method_worker": "/private/tmp/vare-vllm-64830-grader-v4/method-worker.py",
+    "method_worker_sha256": "bd3686219eab12f3599533b9dfc88a3f7eb4d2b843a6cfaabd70b3745689670a",
+    "pass_rule": "exactly two passes with no failures/errors/skips and valid isolation/hash checks",
+    "pytest_config": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/pytest.ini",
+    "sandbox_path_rationale": "The one-method worker must read only candidate_method.py from a scratch directory outside the denied model workspace. The model and Train-controller profiles explicitly deny this grader scratch root; the worker profile denies both model workspaces, trusted result overlays, model cache, Codex private data, and network.",
+    "scratch_output_directory": "/private/tmp/vare-vllm-64830-grader-v4/final-grader-output-v1",
+    "script": "scripts/run_mlsys_vllm_64830_agent_grader_v1.py",
+    "test_overlay": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py",
+    "timeout_seconds": 120,
+    "worker": "scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py",
+    "worker_profile": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/sandbox/candidate-method-worker.sb"
+  },
+  "interpretation": {
+    "multi_family_independence": "not established",
+    "no_success": "does not prove all coding-agent capability absent; records a bounded no-go on this pairing",
+    "single_success": "one isolated Development repair feasibility signal only; no generalization, RL gain, or algorithmic novelty claim"
+  },
+  "model": {
+    "backend": "MLX 0.32.4 / mlx-lm 0.32.2 on Apple Silicon Metal",
+    "max_context_tokens": 4096,
+    "max_new_tokens_total": 2048,
+    "max_process_tree_rss_bytes": 12884901888,
+    "max_turns": 12,
+    "max_wall_seconds": 600,
+    "model_hidden_inputs": [
+      "candidate patch before generation",
+      "trusted test overlay",
+      "grader command/output",
+      "source qualification arm logs",
+      "exposure assignment metadata"
+    ],
+    "model_visible_inputs": [
+      "task/TASK.md",
+      "vllm/config/vllm.py",
+      "controller-generated tool schemas and allowed-path boundary"
+    ],
+    "network": "denied; Hugging Face and Transformers offline modes enabled",
+    "python": "3.12.12",
+    "quantization": "4-bit checkpoint as published by mlx-community",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "sampling": "greedy; do_sample=false; MLX sampler temperature=0, top_p=0, top_k=0",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "tokenizers": "0.23.3",
+    "transformers": "5.22.1"
+  },
+  "preflight_command": [
+    "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+    "scripts/preflight_local_model_attempt.py",
+    "--protocol",
+    "results/mlsys-fresh-vllm-64830-agent-attempt-v4/protocol.json",
+    "--output",
+    "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/launch-preflight-after-cleanup-001.json",
+    "--repo-root",
+    "."
+  ],
+  "primary_metric": "One independent grade over the two frozen VLLM method-level cases; TARGET_GATE_PASSED requires HiSparse and watermarking both to pass with valid hash and isolation checks.",
+  "prohibited": {
+    "additional_agent_attempts": true,
+    "grader_feedback_to_model": true,
+    "heldout_access": true,
+    "paid_compute_or_api": true,
+    "retry_after_generation_begins": true,
+    "training_or_policy_update": true
+  },
+  "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v4-qwen2.5-14b-corrected-sandbox",
+  "research_parent_commit": "d9b2ad07405f2f17b90a4b68c83b41074e6630a3",
+  "research_repository": "https://github.com/mitukx/VARE",
+  "resource_policy": {
+    "additional_operator_gate": {
+      "evaluation": "available_memory_bytes - estimated_weight_kv_reserve_bytes - gates.minimum_weight_kv_reserve_headroom_bytes",
+      "minimum_available_bytes_beyond_estimated_weight_kv_runtime_reserve_and_explicit_headroom": 2147483648,
+      "on_failure": "NO_GO; do not load weights. This is stricter than the frozen 1 GiB explicit headroom and is checked from the fresh preflight output."
+    },
+    "gates": {
+      "maximum_process_tree_rss_bytes": 12884901888,
+      "maximum_swap_used_bytes": 2684354560,
+      "minimum_available_memory_bytes": 12884901888,
+      "minimum_disk_free_bytes": 10737418240,
+      "minimum_memory_pressure_free_percent": 60,
+      "minimum_weight_kv_reserve_headroom_bytes": 1073741824
+    },
+    "on_failure": "Record NO_GO and do not load weights if any frozen hash/resource gate fails or if the additional 2 GiB operator margin is not met. No retry under this protocol.",
+    "pre_protocol_snapshot": {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/runtime/pre-protocol-resource-snapshot.json",
+      "sha256": "9384d230fb28d77cf071c5e7e45707e02dde0bd73a66c4353d762cf21c86ac35"
+    },
+    "runtime_activation_reserve_bytes": 2684354560
+  },
+  "schema_version": 1,
+  "source_qualification": {
+    "git_revision": "a1bc5dc255e38ad1741f58399504fdaf357eae1a",
+    "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/qualification.json",
+    "public_pretraining_exposure": "UNKNOWN",
+    "qualification_scope": "source-level method checks only; whole upstream PR and custom-speculator behavior excluded",
+    "qualified_scope": [
+      "HiSparse",
+      "watermarking"
+    ],
+    "sha256": "62536b74d4982a073caaf9ed4a3d68f89c1f9b539bdb7669da912a15cbfc958f",
+    "source_exposure_record_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
+    "source_exposure_record_sha256": "e966664a97f80bc5e90c57f5d94140415fdcf17301f0e17c120ee7a49cab857f",
+    "task_family": "vllm_v1_model_runner_unsupported_feature_guards",
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+  },
+  "staged_execution": {
+    "abort": "If either preflight fails, or the Train fixture does not meet the routing success criteria, do not deliver the Development prompt. No retries after model prompt delivery begins.",
+    "cheaper_route_considered": "The existing Qwen3 4B protocol received a fresh PASSED preflight after cleanup; the 14B route is selected first because the current 14B frozen estimate plus explicit headroom is now below measured available memory with more than 3 GiB spare.",
+    "compute_limit": "One local model diagnostic capped at 600 s and 12 GiB process-tree RSS, then at most one 600 s/12 GiB Development attempt; no paid compute/API and no training.",
+    "dynamic_abort_conditions": [
+      "Stop the bounded model process if process-tree RSS exceeds 12 GiB or wall time exceeds 600 seconds.",
+      "Do not continue to Development if memory-pressure free percentage drops below 60%, swap use exceeds 2.5 GiB, or the post-diagnostic preflight fails."
+    ],
+    "hypothesis": "With idle Colima stopped, Qwen2.5-Coder-14B-Instruct-4bit can fit the frozen MLX context and use the current controller to produce a valid tool-applied patch on one source-qualified Development task.",
+    "post_diagnostic_preflight_command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/preflight_local_model_attempt.py",
+      "--protocol",
+      "results/mlsys-fresh-vllm-64830-agent-attempt-v4/protocol.json",
+      "--output",
+      "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/launch-preflight-after-train-diagnostic-001.json",
+      "--repo-root",
+      "."
+    ],
+    "primary_metric": "Independent grader passes both frozen method-level cases (HiSparse and watermarking) with no grader errors, skips, or isolation failures.",
+    "stage_1": "Run the frozen 14B controller diagnostic exactly once on the already-exposed Train fixture in engineering-diagnostic-002. It is successful for routing only if the 14B model loads, emits a parsed tool call, and applies a nonempty permitted source edit without a runtime/sandbox failure. Do not grade this diagnostic or feed any result back to the model.",
+    "stage_2": "Only after stage_1 routing success, release the model process, confirm resource limits, run the same frozen Development preflight to a new output path immediately before the attempt, and deliver the Development prompt once."
+  },
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE; requires exact-head CI, verified 14B snapshot, passing no-load preflight with >=2 GiB additional margin, and one successful Train controller diagnostic before Development prompt delivery.",
+  "stop_rule": "Do not deliver the Development prompt until exact-head CI and no-load preflight pass, the 14B Train fixture diagnostic completes with a valid native tool call and nonempty allowed edit, and a fresh immediate Development preflight passes every gate including >=2 GiB beyond the estimated working set plus explicit headroom. One Development attempt only; no retry after generation begins. Commit and push the attempt record and candidate diff before one independent grade. Never return grader feedback to the model.",
+  "task": {
+    "agent_public_test_tool_enabled": false,
+    "allowed_source_paths": [
+      "vllm/config/vllm.py"
+    ],
+    "grade_after_attempt_record_is_durable": true,
+    "independent_grade_cases": [
+      "HiSparse",
+      "watermarking"
+    ],
+    "repository": "vllm-project/vllm",
+    "split": "Development",
+    "task_family": "vllm_v1_model_runner_unsupported_feature_guards",
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+  }
+}

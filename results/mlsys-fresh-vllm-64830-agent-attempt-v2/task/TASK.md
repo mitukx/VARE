@@ -1,0 +1,1 @@
+Extend the V1 model-runner unsupported-feature checks in `vllm/config/vllm.py` so configurations that require the V2 model runner are rejected. When HiSparse attention is configured, report `HiSparse`; when watermarking is configured, report `watermarking`. Preserve the existing checks and make the smallest safe change in the allowed production file.

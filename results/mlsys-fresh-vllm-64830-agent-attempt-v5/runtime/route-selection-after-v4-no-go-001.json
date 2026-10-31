@@ -1,0 +1,22 @@
+{
+  "created_at_utc": "2026-10-31T11:07:32.632814+00:00",
+  "development_attempts": 0,
+  "independent_grades": 0,
+  "model_loaded": false,
+  "previous_route": {
+    "available_memory_bytes": 13658324992,
+    "margin_after_estimate_and_explicit_headroom_bytes": 785428007,
+    "model_loaded": false,
+    "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v4-qwen2.5-14b-corrected-sandbox",
+    "record_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v4/attempt-001/operator-route-decision-after-preflight-001.json",
+    "record_sha256": "45c69caeff79e6666767f68287844ea820b019abac5058ff58bafb3d56ca9e90",
+    "required_additional_margin_bytes": 2147483648,
+    "status": "NO_GO"
+  },
+  "record_id": "vllm-64830-model-route-selection-after-v4-no-go-001",
+  "schema_version": 1,
+  "selected_fallback": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "selected_protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v5-qwen3-4b-corrected-sandbox-fallback",
+  "selection_status": "CONDITIONAL; only a fresh exact-head post-CI V5 preflight with all frozen checks and >=2 GiB additional margin authorizes weight load.",
+  "task_prompt_delivered": false
+}
