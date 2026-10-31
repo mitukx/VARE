@@ -1,0 +1,12 @@
+diff --git a/edit_format.py b/edit_format.py
+--- a/edit_format.py
++++ b/edit_format.py
+@@ -65,6 +65,8 @@ def apply_blocks(original: str, blocks: list[Block]) -> ApplyOutcome:
+ 
+ 
+ def _relaxed_replace(text: str, block: Block) -> str | None:
++    # Fallback when the SEARCH text is not found verbatim: compare lines with
++    # trailing whitespace removed and require exactly one matching window.
+     lines = text.split("\n")
+     needle = [ln.rstrip() for ln in block.search.split("\n")]
+     stripped = [ln.rstrip() for ln in lines]
