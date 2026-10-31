@@ -119,6 +119,12 @@
       "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-1",
       "sha256": "9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9",
       "status": "frozen before Ray PR #66694 source/test review; no test execution authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-2",
+      "sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918",
+      "status": "frozen test selectors, adapted tests, source hashes, and wrong mutant before runtime build; test execution awaits image-digest addendum"
     }
   ],
   "git_refs": {
@@ -136,8 +142,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Review only the hash-pinned changed paths for Ray PR #66694 under addendum 1. Freeze exact selectors, input hashes, runtime, and a wrong-mutant diff in a follow-up addendum before any regression test execution.",
-  "last_completed_step": "Ray PR #66694 was selected by the frozen metadata-only rule. Task-specific addendum 1 is frozen before source/test review; it authorizes review only, not test execution or inference.",
+  "highest_priority_next_task": "Build the pinned Ray PR-commit runtime and verify its image/wheel identity, then freeze those digests in a runtime addendum before executing the four exact baseline, wrong-mutant, and fixed selectors.",
+  "last_completed_step": "Reviewed only the selected PR changed paths; froze exact source hashes, four compatibility-adapted test selectors, and a one-change wrong mutant. No test has executed.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -439,6 +445,31 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-1.json",
       "sha256": "9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9",
       "status": "frozen source-review and qualification boundary for Ray PR #66694"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/input-manifest.json",
+      "sha256": "1631baa877ac8e3f0f260ebf6ebfd9e3ce4ea9328c556cf4be31b5dcdd29279a",
+      "status": "Ray #66694 exact base/fix source hashes and test/mutant input identities"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/upstream.patch.gz",
+      "sha256": "b73d872dbd27d1e7ebc719e1ccd0966e2b490089d8a92e038929fdc0835503fb",
+      "status": "gzip-compressed exact four-path upstream diff; decompressed SHA-256 425ba97673e9f90a681a0f30e95b148acd983118893a0012a65d0a326da5b8ae"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/test_ray_66694.py",
+      "sha256": "945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c",
+      "status": "frozen compatibility-adapted four-case qualification suite"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/wrong-mutant.patch",
+      "sha256": "ddbd0679b8b5e6bb0356fd9befd5273ba8d1a9d58b1466eac5e8f90b30b00040",
+      "status": "frozen one-change wrong-clock mutant"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-2.json",
+      "sha256": "22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918",
+      "status": "frozen before runtime image build; test execution remains unauthorized"
     }
   ],
   "run_ids": [
@@ -483,5 +514,5 @@
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T08:55:59+09:00"
+  "updated_at": "2026-10-31T09:08:00+09:00"
 }

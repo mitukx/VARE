@@ -183,3 +183,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Review only the pinned changed paths; freeze exact tests, input hashes, runtime, and one wrong mutant before executing any test. If a gate fails, keep the replacement unqualified and do not select a fallback.
 - **Falsification criteria:** Any unpinned source/test is read, test execution precedes its own freeze, an assertion gate is relaxed after outcome, or resource/inference boundaries are crossed.
 - **Follow-up:** Conduct the authorized path-limited source review and prepare a second addendum before testing.
+
+
+## 2026-10-31 — Freeze Ray #66694 regression suite and wrong mutant
+
+- **Hypothesis:** The multi-node span regression is detected by the four task-changed test cases, including a case that rejects a plausible mixed-clock implementation.
+- **Evidence:** Addendum 2 (SHA-256 `22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918`) pins the selected source hashes, the exact four test node IDs, the compatibility-adapted test file (SHA-256 `945e034c6609bc9cf6cd2ae35704f6a3366bc0598547c16a444c542e784dfe3c`), the upstream patch, and a one-expression wrong-clock mutant (SHA-256 `ddbd0679b8b5e6bb0356fd9befd5273ba8d1a9d58b1466eac5e8f90b30b00040`). The exact Ray PR merge-commit wheel is pinned for runtime construction.
+- **Alternative explanations:** The adapter or dependency runtime could mask source behavior; therefore the same test file, dependencies, and limits are used across all arms, and the runtime digest must be frozen before any run.
+- **Decision:** Build the runtime only. No baseline, mutant, or fixed tests may run until the image identity is recorded in a separate addendum.
+- **Falsification criteria:** Any test/source hash mismatch; the mutant is not rejected by the target assertion; the fixed arm does not pass all four cases; a skip occurs; or network/resource limits are violated.
+- **Follow-up:** Build the exact-commit wheel runtime and freeze its digest before the first test execution.

@@ -21,7 +21,7 @@ Source-qualified tasks: **2/3**. None is assigned to Development or exposed to a
 
 ## Immediate next action
 
-The frozen metadata-only selector chose **Ray PR #66694**, rank 1 of 12 eligible rows (selection record SHA-256 `716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95`). Task-specific addendum 1 is frozen before source/test review (SHA-256 `9d19502e1ef6ac009f95aa986ffdce8cfdb352c8e6216d11f9fdc462567dcda9`); it permits review of only the four metadata-listed changed paths. It does not authorize test execution. Next, freeze exact selectors, hashes, runtime, and wrong mutant before any test run.
+The frozen metadata-only selector chose **Ray PR #66694**, rank 1 of 12 eligible rows (selection record SHA-256 `716ba5ab3ad6820ab933425d54d6de66a153632e4ba71774e4f55a61038a9e95`). Addendum 1 limited review to the four metadata-listed paths. Addendum 2 now freezes exact source hashes, four adapted test selectors, and one wrong mutant (SHA-256 `22f64298f6b05037ca0ac7e61398745294637bb3be4c720402295ff4403d9918`). No test has run. Next, build the pinned Ray commit runtime and freeze its image and wheel digests before execution.
 
 ## External blockers
 
