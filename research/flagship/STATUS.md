@@ -12,7 +12,7 @@
 - vLLM #64575 remains `QUALIFIED_SOURCE_LEVEL` only; its 30-file evidence checksum manifest reverified successfully.
 - Prospectively assigned one fresh Development task-family attempt with no prior Development/Train overlap found.
 - Froze one local greedy attempt using cached Qwen2.5-Coder-14B-Instruct-4bit, MLX-LM 0.32.2 / MLX 0.32.4, one editable file, 2,048 output tokens, 4,096 context, 600 seconds, 12 GiB process-tree RSS cap, and one hidden five-case independent grade. Protocol SHA-256: `18f66455cf111708fde170e784cd0a9a07316eacd9db1d5b5b0baf4fa74d8268`.
-- Launch preflight verified the frozen inputs and all model snapshot hashes, but failed the working-set-plus-headroom gate: 11.99 GB available versus 12.87 GB required, a 0.88 GB shortfall. Model weights were not loaded and inference status is **NOT RUN**; this frozen protocol will not be retried. Receipt SHA-256: `d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e`.
+- The historical launch receipt reports `frozen_inputs_verified=true`, but the pinned preflight skipped the task JSON and prompt hash checks. A retrospective hash calculation matches both protocol declarations; the historical receipt and protocol remain unchanged. Model snapshot hashes were checked separately. The working-set-plus-headroom gate still failed (11,993,432,064 bytes available vs 12,872,896,985 required); weights were not loaded and the attempt remains **NOT RUN**. See the append-only integrity erratum and do not retry protocol v1.
 - Focused runner/grader tests passed: 17 tests; Ruff and `py_compile` passed. The exact Python 3.13 warmup-cosine oracle test passed locally with `DOCKER_CONTEXT=colima` (1 pytest case, all 12 oracle subcases).
 
 ## Current decisions and limits
