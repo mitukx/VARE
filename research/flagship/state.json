@@ -173,6 +173,12 @@
       "protocol_id": "mlsys-fresh-development-agent-capability-v1",
       "sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d",
       "status": "frozen_before_model_inference; exactly one Qwen3-4B greedy attempt and one independent grader call authorized for each of two Development families; not yet executed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/protocol-addendum-1.json",
+      "protocol_id": "mlsys-fresh-development-agent-capability-v1-addendum-1",
+      "sha256": "e36b7b7cfeefd831ed174e25500022ef62f01baa06a11b034ae1118375a83e23",
+      "status": "frozen before model generation; records zero-token pre-inference launch failure and binds clean guard-compatible workspaces; original one-inference slot per family remains"
     }
   ],
   "git_refs": {
@@ -190,9 +196,9 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Immediately repeat the host memory-pressure, swap, and free-disk gates; if they pass, execute one offline greedy Qwen3-4B attempt for each frozen Development family, durably record both transcripts, then grade each candidate once in its pinned offline container without returning feedback.",
-  "last_completed_step": "Verified all 13 cached Qwen3-4B model-file hashes, installed the pinned MLX-LM runtime in an isolated Python 3.12.12 environment, passed import/Metal preflight, and froze a one-attempt Development allocation for Transformers #49418 and Ray #66694 before generation.",
-  "milestone_id": "p4-fresh-development-agent-protocol-frozen",
+  "highest_priority_next_task": "Commit and push workspace-materialization addendum 1. Then repeat the frozen host resource gates and use the replacement real-.git workspaces for exactly one model generation attempt each. Grade the durable candidate outputs once, without feedback.",
+  "last_completed_step": "The first Transformers runner launch loaded model weights but failed the real-.git guard before chat-template rendering, prompt tokenization, or generation. Recorded it as pre-inference infrastructure failure with zero tokens; materialized clean guarded local workspaces for both pinned base revisions and validated clean status plus empty candidate diffs.",
+  "milestone_id": "p4-fresh-development-agent-workspace-preflight-corrected",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -678,6 +684,21 @@
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/runtime/model-file-manifest.json",
       "sha256": "20022d56b6c963d2af5dc0c17ae5f240a277e2f1532417a5db7c1b0cfedfb5b7",
       "status": "13 model files hash-verified against run-19 protocol"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/protocol-addendum-1.json",
+      "sha256": "e36b7b7cfeefd831ed174e25500022ef62f01baa06a11b034ae1118375a83e23",
+      "status": "frozen workspace-materialization addendum; no model generation"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.json",
+      "sha256": "072471e81bf7f1de1683af034c0792c8800fed4aa0c59287d68109c190ad9daf",
+      "status": "runner launch failed before tokenizer prompt encoding or model generation; zero tokens"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.log",
+      "sha256": "3690c62494a5cf40219197603723a94347cc934b1474df1697e5d5090136bf42",
+      "status": "pinned workspace guard traceback for the pre-inference launch"
     }
   ],
   "run_ids": [
@@ -721,11 +742,11 @@
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
-    "No fresh Development model attempt or policy update has run yet. The frozen protocol authorizes two one-shot attempts; coding capability remains NO_GO pending independent results.",
-    "No SFT/RL comparison, policy update, or Held-Out evaluation is authorized by the current protocol.",
+    "No Development model generation or policy update has run. The first Transformers launch is recorded as a pre-inference workspace failure with zero generated tokens; addendum 1 binds a guard-compatible workspace layout and leaves one inference slot per task.",
+    "No SFT/RL comparison, policy update, or Held-Out evaluation is authorized.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "PR #153 has green required checks on head b3ba5fa but still needs review before integration."
+    "PR #153 head 77a5160 has been pushed; its new-head CI must complete and review is still needed."
   ],
-  "updated_at": "2026-10-31T00:32:50Z"
+  "updated_at": "2026-10-31T00:36:36Z"
 }

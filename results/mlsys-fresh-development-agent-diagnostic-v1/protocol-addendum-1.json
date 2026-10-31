@@ -1,0 +1,66 @@
+{
+  "attempt_interpretation": "An inference attempt begins at the first call to generate_turn. The failed runner launch did not reach chat-template rendering, prompt tokenization, or model forward, and consumed zero generated tokens. It is recorded permanently, but it does not consume either task's single authorized inference slot. Do not repeat any launch that reaches generate_turn, emits tokens, or produces an agent result.",
+  "authorization": "The original protocol's single inference slot for each listed task remains available. Execute it once in the replacement workspace after repeating resource gates. No new prompt, model, task, decoding setting, retry after generation, public test, feedback, grading arm, SFT, optimizer update, RL, or Held-Out access is authorized.",
+  "frozen_against_vare_commit": "77a51607fe8481384bde9db9a0a950bf846721f1",
+  "frozen_at_utc": "2026-10-31T00:35:40Z",
+  "observed_pre_inference_failure": {
+    "classification": "INFRASTRUCTURE_PRE_INFERENCE",
+    "generate_turn_called": false,
+    "generated_tokens": 0,
+    "independent_grade_calls": 0,
+    "inference_slot_consumed": false,
+    "log_path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.log",
+    "log_sha256": "3690c62494a5cf40219197603723a94347cc934b1474df1697e5d5090136bf42",
+    "model_weights_loaded": true,
+    "prompt_tokenization": false,
+    "record_path": "results/mlsys-fresh-development-agent-diagnostic-v1/transformers-49418/launch-preflight-001.json",
+    "record_sha256": "072471e81bf7f1de1683af034c0792c8800fed4aa0c59287d68109c190ad9daf",
+    "task_id": "transformers-49418-quantized-cache-residual-flush"
+  },
+  "parent_protocol_path": "protocols/mlsys_fresh_development_agent_capability_v1.json",
+  "parent_protocol_sha256": "e85f4215ac1c2e64916eba373886c9f0cd24a8a7915442dfe24a173b11fc0c0d",
+  "protocol_id": "mlsys-fresh-development-agent-capability-v1-addendum-1",
+  "schema_version": 1,
+  "scope": "Clarify and repair a pre-inference workspace materialization failure. Model, task prompts, task source revisions, source allowlists, controller code, decoding, token/wall budgets, grader images/selectors, one-inference-per-family cap, no-feedback rule, and no-retry-after-generation rule remain unchanged.",
+  "status": "FROZEN_BEFORE_MODEL_GENERATION",
+  "workspace_materialization": {
+    "controller_hashes_unchanged": {
+      "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+      "scripts/run_local_agent.py": "4e4fb0162d7fa12de447f996657a5749ebb8964a600ea6461bfe3f0342b4df0f"
+    },
+    "reason": "scripts/pinned_workspace_git.py requires a real .git directory and rejects a Git worktree .git pointer file.",
+    "remediation": "Use clean source-only local repositories with an actual .git directory, a local alternate object database, the exact pinned base commit in HEAD, only allowlisted implementation files materialized, all other index paths marked skip-worktree, and clean pinned git status.",
+    "replacement_workspaces": [
+      {
+        "base_revision": "bd3f926f52b55a0a59e812376e7624ca9d471ac2",
+        "candidate_source_diff": "EMPTY",
+        "editable_files": [
+          "src/transformers/cache_utils.py"
+        ],
+        "path": "work/agent-workspaces/transformers-49418-real",
+        "pinned_git_rev_parse": "PASSED",
+        "pinned_git_status": "CLEAN",
+        "source_sha256": {
+          "src/transformers/cache_utils.py": "abdcb0ae88aa5b924ef7d76879db680e9af8f3ec1dafbba7ce446ecb521a944b"
+        },
+        "task_id": "transformers-49418-quantized-cache-residual-flush"
+      },
+      {
+        "base_revision": "8374f91cad9e89050368fdbb34ee78f042d73902",
+        "candidate_source_diff": "EMPTY",
+        "editable_files": [
+          "python/ray/data/_internal/stats.py",
+          "python/ray/data/block.py"
+        ],
+        "path": "work/agent-workspaces/ray-66694-real",
+        "pinned_git_rev_parse": "PASSED",
+        "pinned_git_status": "CLEAN",
+        "source_sha256": {
+          "python/ray/data/_internal/stats.py": "03bc1d1af986be18982626dbb8bed64c84330c9304c4e3fe421e1e9f17b3967d",
+          "python/ray/data/block.py": "38d638a9036b02a53666c3d23f65086c0887322d30a526968cc98bb567cb8110"
+        },
+        "task_id": "ray-66694-operator-wall-time-multi-node-clock-domain"
+      }
+    ]
+  }
+}

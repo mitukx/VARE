@@ -312,3 +312,12 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Assign only Transformers #49418 and Ray #66694 to a prospective Development diagnostic. Freeze one greedy attempt per family, 2,048 generated tokens, no public tests, one independent grader call per candidate, no retries, and no grader feedback. Keep MLX #4778 unassigned.
 - **Falsification criteria:** Both attempts produce no independently accepted patch, or either apparent success fails its frozen independent correctness suite.
 - **Follow-up experiment:** Inspect all tool traces and grades. If both fail, identify the largest observed failure stage and change one justified factor before spending another fresh family. Do not start RL without multiple verified trajectories and a nondegenerate reward signal.
+
+## 2026-10-31 — Treat the rejected runner launch as pre-inference infrastructure failure
+
+- **Hypothesis:** The local agent can proceed under the frozen capability protocol after supplying the real .git directory required by its pinned-workspace guard, without changing the source, task, model, controller, or policy.
+- **Evidence:** The Transformers launch loaded model weights, then raised PinnedWorkspaceError at workspace revision validation. It stopped before chat-template rendering, prompt tokenization, generate_turn, model output, or grading. The source remained at its pinned base hash and diff was empty. Both replacement workspaces now pass pinned Git revision/status and empty-diff checks.
+- **Alternative explanations:** The failure could have consumed some model computation during weight loading, but it produced no policy action or task-token forward pass. Its peak memory was not captured.
+- **Decision:** Preserve the failed launch and classify it as infrastructure preflight, with zero generated tokens and the original single inference slot unspent. Addendum 1 binds clean real-.git workspaces. No retry is permitted after any generation begins.
+- **Falsification criteria:** Either replacement workspace fails the pinned source, HEAD, clean-status, or empty-diff checks; or any prompt tokenization/generation occurs before the corresponding frozen run is recorded.
+- **Follow-up experiment:** Repeat resource checks, then execute exactly one generation per task and grade once without feedback.
