@@ -213,3 +213,34 @@ PY
 ```
 
 The focused suite passed 32 tests on Python 3.11. The Ray qualification has a separate per-task checksum index; verify it from the repository root with the command in the preceding section. The CI workflow remains the authoritative full-suite and Python 3.11/3.12/3.13 check.
+
+## Development/Train task-family overlap review
+
+The review is metadata-only. It reads the hash-frozen candidate metadata and Development/Train exposure records; it does not inspect Held-Out task material or change any split. Verify the report and every parent/addendum input:
+
+```bash
+python3 - <<'PY'
+import hashlib
+import json
+from pathlib import Path
+
+root = Path('.')
+state = json.loads((root / 'research/flagship/state.json').read_text())
+report_path = 'results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json'
+ref = next(x for x in state['result_hash_references'] if x['path'] == report_path)
+assert hashlib.sha256((root / report_path).read_bytes()).hexdigest() == ref['sha256']
+report = json.loads((root / report_path).read_text())
+assert report['input_hash_verification'] == 'PASSED_ALL_FROZEN_INPUTS'
+assert report['historical_inventory_count'] == 6
+assert report['decision']['split_assignments_made'] is False
+assert report['decision']['model_inference_authorized'] is False
+assert [x['classification'] for x in report['candidate_assessments']] == [
+    'NO_PRIOR_FAMILY_OVERLAP_FOUND',
+    'POSSIBLE_FAMILY_OVERLAP',
+    'NO_PRIOR_FAMILY_OVERLAP_FOUND',
+]
+print('overlap record hash and frozen review outcome: valid')
+PY
+```
+
+Transformers #49418 and Ray #66694 may proceed to a separately frozen prospective Development protocol. Keep MLX #4778 unassigned pending replacement or explicit risk handling. These are metadata-level judgments, not pretraining-independence findings.

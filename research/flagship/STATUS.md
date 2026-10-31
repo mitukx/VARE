@@ -4,32 +4,29 @@
 
 - Milestone: `p3-fresh-repository-task-qualification-complete`.
 - Last verified `origin/main`: `ce097a5d2c695d4fa7a2e2119e3c25bc3a460578` (fetched 2026-10-31).
-- Work branch: `codex/fresh-dev-candidate-discovery-v1`; Ray qualification checkpoint commit `fa80d35e46c9902fd711b985ec172fa75c8d9879`.
-- Active PR: [#153 — Qualify a fresh three-task MLSys regression cohort](https://github.com/mitukx/VARE/pull/153), open against `main`. Its initial CI run was in progress at the prior PR head; recheck status at the current head before integration.
-- PR #150 is merged. Its latest exact-head check set is green: Python 3.11/3.12/3.13, lint, typecheck, blob budget, math grader, CPU evidence, seeded summary, and optimizer/recovery.
+- Work branch: `codex/fresh-dev-candidate-discovery-v1`.
+- Active PR: [#153 — Qualify a fresh three-task MLSys regression cohort](https://github.com/mitukx/VARE/pull/153), open against `main`; latest head CI must be rechecked before integration.
+- PR #150 is merged. Its exact-head Python 3.11/3.12/3.13, lint, typecheck, blob budget, math grader, CPU evidence, seeded summary, and optimizer/recovery checks were green.
 - PR #152 is the last integrated change at the current `main` SHA. PR #149 remains open and unrelated.
 
-## Fresh task qualification result
+## Fresh task qualification
 
-The frozen metadata sample and source/test qualification protocol selected an initial cohort, then selected Ray #66694 as the replacement for the unqualified TRL task. The replacement cohort is now **3/3 `QUALIFIED_SOURCE_LEVEL`**:
+The frozen replacement cohort is **3/3 `QUALIFIED_SOURCE_LEVEL`**: Transformers #49418, MLX #4778, and Ray #66694. TRL #7668 remains `NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE` because its baseline raised `TypeError` before assertions; the paired fixed result does not change that frozen outcome.
 
-- Transformers #49418: baseline 4/6 expected residual-length assertion failures; fixed 6/6 passed.
-- MLX #4778: baseline complex VJP assertion failed; fixed 1/1 passed.
-- Ray #66694: baseline two target assertions failed and two throughput controls passed; the frozen wrong-clock mutant was rejected by the target assertion (plus one recorded collateral failure); fixed source passed 4/4 with zero skips on the exact frozen image and test overlay.
-- TRL #7668 remains `NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE`: baseline raised a target `TypeError` before assertions, despite the fixed arm passing 2/2. Its outcome is unchanged and it is excluded from the replacement cohort.
+The Ray fixed arm passed all four frozen selectors with zero skips after a valid baseline failure and rejection of the wrong-clock mutant. Its raw log, JSON record, exact commands, runtime identity, and hash index are under `results/mlsys-fresh-development-task-qualification-v1/ray-66694/`. All one-attempt arms are consumed.
 
-The Ray raw output, JSON attempt record, exact commands, runtime identity, and hashes are in `results/mlsys-fresh-development-task-qualification-v1/ray-66694/`. The one-attempt baseline, mutant, and fixed arms are consumed.
+## Task-family overlap review
 
-## Capability and split decision
+The frozen metadata-only review is recorded in `results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json`. It found no prior family overlap for Transformers #49418 or Ray #66694. MLX #4778 has possible broad gradient/autodiff relatedness to prior Train task #4662; its family remains unresolved for split purposes. All three remain `NOT_ASSIGNED`. Historical patch-path metadata is incomplete, so the result does not claim path-level independence. Public pretraining exposure remains `UNKNOWN`.
 
-All tasks remain `NOT_ASSIGNED`; no target coding model or agent received these task prompts or source/test inputs. Public pretraining exposure is `UNKNOWN`. Task-family overlap with prior Development/Train families has not yet been assessed. No new model inference, SFT, policy update, RL, or Held-out evaluation occurred. Coding capability and RL update remain **NO_GO**. This checkpoint establishes only source-level task qualification, not model capability, generalization, or pretraining independence.
+No fresh target-model inference, SFT, policy update, RL, or Held-Out evaluation occurred. Coding capability and RL update remain **NO_GO**. These outcomes establish task-level source regression behavior only.
 
 ## Next executable task
 
-Execute the frozen metadata-only overlap review `protocols/mlsys_fresh_development_task_family_overlap_v1.json` (SHA-256 `6273f27dcb8cba457ecd39c50d916a5a841a29c51066c8039ebd1e5f54d2394d`) against prior Development/Train exposure. If disjointness is supported, freeze prospective Development allocation and a bounded independent model-attempt protocol before any target-policy inference. Leave Held-Out untouched.
+Verify the local Qwen3-4B MLX runtime and clean isolated environments. Then freeze a Development allocation and one-attempt independent-grading protocol for Transformers #49418 and Ray #66694. Keep MLX #4778 unassigned pending replacement or an explicit risk protocol. Do not run inference until the new protocol is committed.
 
 ## External blockers
 
-- Pretraining exposure to the public upstream patches is unknown.
+- Public pretraining exposure is unknown.
 - No fresh Development model inference or policy update has run.
-- PR #149 and other older open branches are unrelated to this task-qualification branch.
+- PR #153 needs CI and review before it can be integrated.

@@ -293,3 +293,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Continue only after verifying every parent/addendum input hash. The Dev/Train-only filter and Held-Out exclusion remain unchanged.
 - **Falsification criteria:** Any hash mismatch or use/output of a Held-Out identifier or content invalidates the review.
 - **Follow-up:** Reconcile the frozen candidate identities and paths with verified Development/Train exposure metadata.
+
+
+## 2026-10-31 — Complete metadata-only Development/Train family overlap review
+
+- **Hypothesis:** The three source-qualified candidates can be compared with prior Development/Train families using frozen identity, family, and changed-path metadata without opening Held-Out material.
+- **Evidence:** Review record `results/mlsys-fresh-development-task-qualification-v1/task-family-overlap-review-v1.json` has SHA-256 `bc1da2611436e354f51013a15ca0b5e856726cfb666ee63d7f33416ab3c24af5`; all parent/addendum input hashes passed. The historical catalog has six Development/Train task families. No direct identity or exact family match was found. Transformers #49418 differs from prior Transformers #45852; Ray #66694 has no same-repository prior. MLX #4778 has possible broad gradient/autodiff relatedness to Train #4662. Historical patch changed paths are incomplete.
+- **Alternative explanations:** MLX gradient tasks may be related at a broad level, or distinct at the operation-specific family level. Public pretraining exposure remains unknown.
+- **Decision:** Do not claim the full cohort is disjoint. Prepare a prospective Development protocol for Transformers #49418 and Ray #66694 only; keep MLX #4778 unassigned pending replacement or explicit risk handling. No split assignment or inference is authorized by this review.
+- **Falsification criteria:** New verified family/identity evidence, any hidden Held-Out access, or input hash mismatch.
+- **Follow-up:** Verify local model/runtime availability, then freeze allocation, prompts, budgets, and independent grading before a bounded target-model attempt.
