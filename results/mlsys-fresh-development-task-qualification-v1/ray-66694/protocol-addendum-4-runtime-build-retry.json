@@ -1,0 +1,25 @@
+{
+  "authorized_action": "One runtime image build only using the corrected Dockerfile and same exact wheel. No runtime test probe or regression test is authorized until a separate image-digest addendum.",
+  "base_image": "python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "corrective_delta": "Use the canonical downloaded wheel basename ray-3.0.0.dev0-cp312-cp312-manylinux2014_aarch64.whl in the build context, COPY destination, and PEP 508 file URL. Wheel bytes/SHA, dependency pins, base image, and source/test inputs are unchanged.",
+  "dockerfile_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime-v2",
+  "dockerfile_sha256": "9da37a8fb8c60e513e895437bced793250284d650ed5634ed298bdda80bc5c3b",
+  "failed_build_attempt": {
+    "classification": "Docker builder started and verified the exact wheel SHA, then pip rejected the scratch filename ray-wheel.whl as an invalid wheel filename; no image completed and no test ran.",
+    "log_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-build-attempt-002.log",
+    "sha256": "69ddf6562d322269f08b6b656c3b3e50a4d71b02d131a6e1a76493a357fc0569"
+  },
+  "frozen_on_utc": "2026-10-31T00:03:35Z",
+  "inference_authorized": false,
+  "paid_compute_or_api": false,
+  "parent_retry_addendum_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-3-runtime-build-retry.json",
+  "parent_retry_addendum_sha256": "07cfef610b9140684f2f50b6bc3e34f3a3fb643882ad98a14904e10edcdb3cec",
+  "previous_dockerfile_path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime",
+  "previous_dockerfile_sha256": "6e91e77be8881ec212185107298439b793134801633a094fd103f4adfd9e1d25",
+  "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-4-runtime-build-retry",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_SECOND_RUNTIME_BUILD_RETRY",
+  "task_key": "ray-project/ray#66694",
+  "test_execution_authorized": false,
+  "wheel_sha256": "73bfbeed219e33c6521e750c3eeac921fcaaded8eace2698fe29c254e6590946"
+}

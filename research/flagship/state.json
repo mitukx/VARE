@@ -137,6 +137,12 @@
       "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-3-runtime-build-retry",
       "sha256": "07cfef610b9140684f2f50b6bc3e34f3a3fb643882ad98a14904e10edcdb3cec",
       "status": "frozen one CLI-only runtime build retry; no tests authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-4-runtime-build-retry.json",
+      "protocol_id": "mlsys-fresh-development-task-qualification-ray-66694-addendum-4-runtime-build-retry",
+      "sha256": "8a161b0a157b970722ce00fded9031e06ba3d91791e2c876ca057343feb75429",
+      "status": "frozen one filename-only runtime-build retry; no tests authorized"
     }
   ],
   "git_refs": {
@@ -154,8 +160,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Execute the single frozen Docker runtime-build retry without --progress, then bind the resulting image digest and build log before any tests.",
-  "last_completed_step": "The initial Ray runtime build command was rejected by the local Docker CLI before contacting the builder. Preserved the error and froze a CLI-only retry; no image or test ran.",
+  "highest_priority_next_task": "Run the one frozen runtime build with the canonical wheel filename. If it succeeds, bind the final image digest and build log before tests; if it fails, stop and record.",
+  "last_completed_step": "The first frozen Ray runtime retry reached pip, verified the exact wheel bytes, and failed only because the copied wheel filename was noncanonical. A filename-only retry is frozen; no test ran.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -502,6 +508,21 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-3-runtime-build-retry.json",
       "sha256": "07cfef610b9140684f2f50b6bc3e34f3a3fb643882ad98a14904e10edcdb3cec",
       "status": "frozen runtime-build retry authorization; no test execution"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/runtime-build-attempt-002.log",
+      "sha256": "69ddf6562d322269f08b6b656c3b3e50a4d71b02d131a6e1a76493a357fc0569",
+      "status": "runtime build failed because scratch wheel basename was invalid; no tests ran"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/Dockerfile.runtime-v2",
+      "sha256": "9da37a8fb8c60e513e895437bced793250284d650ed5634ed298bdda80bc5c3b",
+      "status": "corrected canonical wheel filename in pinned Ray runtime Dockerfile"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/protocol-addendum-4-runtime-build-retry.json",
+      "sha256": "8a161b0a157b970722ce00fded9031e06ba3d91791e2c876ca057343feb75429",
+      "status": "frozen runtime build retry; test execution remains unauthorized"
     }
   ],
   "run_ids": [
@@ -546,5 +567,5 @@
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T09:03:00+09:00"
+  "updated_at": "2026-10-31T09:03:35+09:00"
 }

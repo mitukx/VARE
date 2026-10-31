@@ -213,3 +213,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Permit one retry with the identical Dockerfile and build context and no `--progress` option. Do not execute any runtime probe or test until the resulting image digest is frozen.
 - **Falsification criteria:** Any build input changes, the second build fails, or tests start before image identity is recorded.
 - **Follow-up:** Build and capture the image digest and raw build log; freeze them before testing.
+
+
+## 2026-10-31 — Freeze canonical wheel filename for Ray runtime retry
+
+- **Hypothesis:** Pip will accept the already verified exact Ray wheel when its canonical PEP 427 filename is preserved in the build context.
+- **Evidence:** Build attempt 002 (SHA-256 `69ddf6562d322269f08b6b656c3b3e50a4d71b02d131a6e1a76493a357fc0569`) verified wheel bytes `73bfbeed219e33c6521e750c3eeac921fcaaded8eace2698fe29c254e6590946` and failed only at pip filename validation. Addendum 4 (SHA-256 `8a161b0a157b970722ce00fded9031e06ba3d91791e2c876ca057343feb75429`) changes the copied wheel basename and PEP 508 file URL; it pins the corrected Dockerfile hash `9da37a8fb8c60e513e895437bced793250284d650ed5634ed298bdda80bc5c3b`. No image or test was produced.
+- **Alternative explanations:** Other dependency or platform constraints may still prevent the runtime from building.
+- **Decision:** Permit one build-only retry with this filename correction. Keep the same wheel bytes, base image, package version, source/test inputs, and acceptance rules.
+- **Falsification criteria:** Any wheel/hash change, build failure, or test launch before the image digest is frozen.
+- **Follow-up:** Build once, preserve the log, and freeze the image digest before test execution.
