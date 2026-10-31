@@ -1,0 +1,32 @@
+{
+  "fidelity": {
+    "content_sha256_matches_for_every_entry": true,
+    "manifest_entry_count": 6289,
+    "mismatch_count": 0,
+    "model_weights_loaded": false,
+    "task_prompt_loaded": false
+  },
+  "materialization": "The frozen venv was copied with symlinks dereferenced so runtime package files are within a dedicated /private/tmp runtime path; no cache permission is needed for package import.",
+  "packages": {
+    "mlx": "0.32.4",
+    "mlx-lm": "0.32.2",
+    "tokenizers": "0.23.3",
+    "transformers": "5.22.1"
+  },
+  "python_executable": "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/bin/python",
+  "python_version": "3.12.12",
+  "runtime_copy_file_manifest": {
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/runtime/runtime-copy-file-manifest.json.gz",
+    "sha256": "ad236ce890aec14c52479470dd308c95e3cd77825ffd4fcff4c994dda8791730"
+  },
+  "runtime_path": "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv",
+  "schema_version": 1,
+  "source_runtime_file_manifest": {
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-file-manifest.json.gz",
+    "sha256": "f3c30720549f7b5f1da6aea5bacc0cbcd22b7b6f938ebbfaf9abd0969bd52572"
+  },
+  "source_runtime_manifest": {
+    "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-manifest.json",
+    "sha256": "5e00c0d4de98d51f02351363529cc3890a857ef0f76c56fc8f8ca0eb49973747"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/sandbox/current-controller-diagnostic.sb",
+    "/usr/bin/env",
+    "HF_HUB_OFFLINE=1",
+    "TRANSFORMERS_OFFLINE=1",
+    "PYTHONNOUSERSITE=1",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "PYTHONHASHSEED=0",
+    "HOME=/private/tmp/vare-vllm-64830-development-attempt-004/controller-diagnostic-005/home",
+    "TMPDIR=/private/tmp/vare-vllm-64830-development-attempt-004/controller-diagnostic-005/tmp",
+    "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/bin/python",
+    "-B",
+    "-c",
+    "import json, os, socket, sys\nfrom pathlib import Path\nsys.path.insert(0, \"/private/tmp/vare-pr160-runner-fix/scripts\")\nimport mlx_lm\nfrom mlx_lm import load\nfrom pinned_workspace_git import pinned_git\nworkspace = Path(sys.argv[1])\nrevision = pinned_git(workspace, \"rev-parse\", \"HEAD\").decode().strip()\nstatus = pinned_git(workspace, \"status\", \"--porcelain=v1\").decode().strip()\nchecks = {\"mlx_lm_file\": str(Path(mlx_lm.__file__).resolve()), \"load_callable\": callable(load), \"runtime_path_match\": str(Path(mlx_lm.__file__).resolve()).startswith(\"/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv\"), \"workspace_revision\": revision, \"workspace_clean\": status == \"\"}\nfor label, path in {\"hidden_tests_denied\": \"/private/tmp/vare-pr160-runner-fix/results/mlsys-fresh-vllm-64830-agent-attempt-v1/trusted/test_vllm_config_unsupported_features.py\", \"grader_denied\": \"/private/tmp/vare-pr160-runner-fix/scripts/run_mlsys_vllm_64830_agent_grader_v1.py\", \"original_symlinked_runtime_denied\": \"/private/tmp/vare-vllm-64830-development-attempt-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/__init__.py\", \"uv_cache_package_denied\": \"/Users/user/.cache/uv/archive-v0/yFJalD5mWthaeXYT/mlx_lm/__init__.py\", \"codex_private_denied\": \"/Users/user/.codex/attachments/43e08d43-a48d-4728-90f0-5caa1e58c2a2/Pasted text.txt\"}.items():\n try:\n  with open(path, \"rb\") as f: f.read(1)\n except OSError:\n  checks[label] = True\n else:\n  checks[label] = False\ntry:\n s=socket.socket(socket.AF_INET,socket.SOCK_STREAM); s.settimeout(.2); s.connect((\"1.1.1.1\",443))\nexcept OSError:\n checks[\"network_denied\"] = True\nelse:\n checks[\"network_denied\"] = False; s.close()\nchecks[\"runtime_parent_listing\"]=sorted(os.listdir(\"/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001\"))\nchecks[\"runtime_listing\"]=sorted(os.listdir(\"/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime\"))\nprint(json.dumps(checks,sort_keys=True))\nrequired=(\"load_callable\",\"runtime_path_match\",\"workspace_clean\",\"hidden_tests_denied\",\"grader_denied\",\"original_symlinked_runtime_denied\",\"uv_cache_package_denied\",\"codex_private_denied\",\"network_denied\")\nif not all(checks.get(k) is True for k in required): raise SystemExit(2)\n",
+    "/private/tmp/vare-vllm-64830-development-attempt-004/controller-diagnostic-003/workspace-independent"
+  ],
+  "generation_started": false,
+  "grade_calls": 0,
+  "model_loaded": false,
+  "model_weights_read": false,
+  "probe_id": "qwen3-4b-no-model-sandbox-import-train-diagnostic-005-001",
+  "probe_result": {
+    "codex_private_denied": true,
+    "grader_denied": true,
+    "hidden_tests_denied": true,
+    "load_callable": true,
+    "mlx_lm_file": "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/lib/python3.12/site-packages/mlx_lm/__init__.py",
+    "network_denied": true,
+    "original_symlinked_runtime_denied": true,
+    "runtime_listing": [
+      "venv"
+    ],
+    "runtime_parent_listing": [
+      "runtime"
+    ],
+    "runtime_path_match": true,
+    "uv_cache_package_denied": true,
+    "workspace_clean": true,
+    "workspace_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59"
+  },
+  "profile_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v2/engineering-diagnostic-005/sandbox/current-controller-diagnostic.sb",
+  "profile_sha256": "df275873c420034f9ab39def05c53c38c256b42f651768c4ca59cc15f3ce91ee",
+  "runtime_python": "/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv/bin/python",
+  "schema_version": 1,
+  "status": "PASSED",
+  "task_prompt_loaded_or_delivered": false,
+  "timestamp_utc": "2026-10-31T11:32:21.636365+00:00",
+  "workspace": "/private/tmp/vare-vllm-64830-development-attempt-004/controller-diagnostic-003/workspace-independent"
+}

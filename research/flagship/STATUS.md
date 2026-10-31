@@ -1,5 +1,25 @@
 # VARE Flagship Mission Status
 
+Updated 2026-10-31 11:33 UTC. PR #164 is still a draft at prior head `8ce253c9d20b716e38971157efa7b1c3c32aeb47`; that head had 19/19 exact-head checks pass. The new V6/D5 records below require a fresh exact-head CI run after commit and push.
+
+## Current memory and execution checkpoint
+
+| Snapshot | Available | Pressure free | Swap used / free |
+|---|---:|---:|---:|
+| V5 pre-diagnostic preflight, 11:20 UTC | 13.56 GiB | 82% | 1.57 / 1.42 GiB |
+| Current pre-protocol snapshot | 13.45 GiB | 82% | 1.58 / 1.43 GiB |
+
+At the current snapshot, Chrome renderers and the Codex renderer are the largest user-owned RSS entries; RSS includes shared pages and is not a reclaim estimate. No VARE/MLX inference process or redundant mission-owned worker was found. Colima was already stopped by the earlier safe cleanup, with its container and volume preserved; Docker is unavailable, and the local method-worker grader does not need Docker. No process was stopped in this turn; current-turn reclaim is zero. Chrome, Codex, Grok, and system processes remain running.
+
+- Qwen2.5-Coder-14B V4 remains **NO_GO**: its extra 2 GiB operator margin failed by 1,362,055,641 bytes. No weights or task prompt were loaded.
+- Qwen3-4B V5 no-load preflight passed at 13.56 GiB available. The one V5/diagnostic-004 controller run exited before loading model weights or the Train prompt: `mlx_lm/__init__.py` resolved through a symlink into the denied UV archive cache, so `mlx_lm.load` was unavailable in that sandbox. There were zero generations, edits, or grades. That protocol is closed; no retry is authorized under it.
+- To correct the measured issue, the pinned venv was copied with symlinks dereferenced to `/private/tmp/vare-vllm-64830-runtime-mlxlm-copy-001/runtime/venv`. All 6,289 runtime manifest entries matched resolved source contents; zero differences. The UV cache and original symlinked runtime remain denied. Under both new profiles, a no-model probe imports `mlx_lm.load`, validates pinned Git on the clean exact-head workspaces, and confirms hidden tests, grader scripts, Codex-private data, and network remain denied. Model weights and task prompts were not read.
+- Current 4B estimate: weights 2,263,022,417 bytes + 4,096-token KV 603,979,776 + runtime reserve 3,221,225,472 + explicit headroom 1,073,741,824. The current snapshot is 5,130,142,895 bytes above that total plus the frozen additional 2 GiB operator margin. This is an estimate only; V6 requires a fresh exact-head launch preflight.
+- V6 Development and Train diagnostic-005 protocols are frozen locally. Diagnostic-005 is one no-grade controller check on the already-exposed Train #1904 fixture. It must pass model load, native tool parsing, and a nonempty permitted edit before the single prospective Development attempt can be considered. A new V6 preflight is required immediately before that prompt.
+- New model-generated attempts after diagnostic-004: 0. New Development edits: 0. New independent grader calls: 0. No coding-RL training or policy update. The earlier Qwen3 Train #1904 2/2 result remains only an exposed Train result, not Development generalization.
+
+Next: preserve the D4 failure receipt and V5 preflight, commit/push V6 and diagnostic-005 with the corrected runtime and sandbox evidence, wait for all exact-head CI checks, then run the one fresh V6 preflight. If it passes, run diagnostic-005 once; only on its routing success and a second fresh pass may the one Development prompt be delivered.
+
 Updated 2026-10-31 11:05 UTC. PR #164 commit `053b25fef91cdc0a47a56233fec193531c5811aa` passed all exact-head checks. The 14B V4 no-load preflight failed its additional 2 GiB margin; no model weights or task prompt were loaded. A new Qwen3-4B fallback protocol and corrected Train diagnostic are frozen locally and need a new exact-head CI run before their preflight.
 
 ## Current execution checkpoint

@@ -1,0 +1,36 @@
+{
+  "before_reference": {
+    "available_memory_bytes": 14555021312,
+    "memory_pressure_free_percent": 82,
+    "source": "V5 launch preflight before diagnostic-004",
+    "swap_free_bytes": 1532032451,
+    "swap_used_bytes": 1689193021,
+    "timestamp_utc": "2026-10-31T11:20:08.718355+00:00"
+  },
+  "colima_status": "not running",
+  "current_snapshot_path": "results/mlsys-fresh-vllm-64830-agent-attempt-v6/runtime/pre-protocol-resource-snapshot.json",
+  "current_snapshot_sha256": "3c2a0fa31bc54e73add6cee9880d1638dd8e6e97e8bfd5ccad640bab2c185494",
+  "docker_ps_status": "unavailable",
+  "estimated_memory_reclaimed_bytes": 0,
+  "memory_before_experiment_gib": 13.447921752929688,
+  "memory_pressure_free_percent": 82,
+  "mission_model_process_found": false,
+  "mission_owned_processes_terminated": [],
+  "not_stopped": "No idle VARE inference worker or redundant mission-owned development worker was present. Chrome, Codex, Grok, and system processes were left running.",
+  "record_id": "vllm-64830-memory-recovery-004",
+  "resource_gate_reference": {
+    "additional_operator_margin_bytes": 2147483648,
+    "available_margin_bytes": 5130142895,
+    "combined_minimum_bytes": 9309453137,
+    "explicit_headroom_bytes": 1073741824,
+    "kv_cache_bytes": 603979776,
+    "model": "Qwen3-4B-Instruct-2507-4bit",
+    "runtime_reserve_bytes": 3221225472,
+    "weights_bytes": 2263022417
+  },
+  "schema_version": 1,
+  "status": "NO_SAFE_PROCESS_TO_STOP; copied runtime is disk-only and model weights remain unloaded",
+  "swap_free_bytes": 1532032450,
+  "swap_used_bytes": 1689193021,
+  "timestamp_utc": "2026-10-31T11:29:07.729649+00:00"
+}
