@@ -180,3 +180,36 @@ PY
 ```
 
 This result is a CPU source-level regression qualification only. It does not establish target-model capability, Development generalization, pretraining independence, SFT/RL gains, or algorithmic novelty.
+
+## Fresh candidate pipeline and mission-state validation
+
+Install the repository test/lint tools, then reproduce the focused local checks:
+
+```bash
+python3 -m pip install -e . pytest==8.4.2 ruff==0.15.12 jsonschema==4.25.1
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python3 -m pytest -q -rA \
+  tests/test_flagship.py \
+  tests/test_mlsys_fresh_development_candidate_discovery_v1.py \
+  tests/test_mlsys_fresh_development_candidate_discovery_v2.py \
+  tests/test_mlsys_fresh_development_candidate_discovery_v3.py \
+  tests/test_mlsys_fresh_development_candidate_metadata_sample_v1.py \
+  tests/test_mlsys_fresh_development_candidate_screen_v4.py
+ruff check \
+  scripts/discover_mlsys_fresh_development_candidates_v1.py \
+  scripts/discover_mlsys_fresh_development_candidates_v2.py \
+  scripts/discover_mlsys_fresh_development_candidates_v3.py \
+  scripts/sample_mlsys_fresh_development_candidate_metadata_v1.py \
+  scripts/screen_mlsys_fresh_development_candidate_pool_v4.py
+python3 - <<'PY'
+import json
+from pathlib import Path
+from jsonschema import Draft202012Validator
+
+schema = json.loads(Path('research/flagship/state.schema.json').read_text())
+state = json.loads(Path('research/flagship/state.json').read_text())
+Draft202012Validator(schema).validate(state)
+print('mission state schema: valid')
+PY
+```
+
+The focused suite passed 32 tests on Python 3.11. The Ray qualification has a separate per-task checksum index; verify it from the repository root with the command in the preceding section. The CI workflow remains the authoritative full-suite and Python 3.11/3.12/3.13 check.

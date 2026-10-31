@@ -4,7 +4,8 @@
 
 - Milestone: `p3-fresh-repository-task-qualification-complete`.
 - Last verified `origin/main`: `ce097a5d2c695d4fa7a2e2119e3c25bc3a460578` (fetched 2026-10-31).
-- Work branch: `codex/fresh-dev-candidate-discovery-v1`, currently 26 commits ahead of `origin/main`; no PR exists for this branch yet.
+- Work branch: `codex/fresh-dev-candidate-discovery-v1`; Ray qualification checkpoint commit `fa80d35e46c9902fd711b985ec172fa75c8d9879`.
+- Active PR: [#153 — Qualify a fresh three-task MLSys regression cohort](https://github.com/mitukx/VARE/pull/153), open against `main`. Its initial CI run was in progress at the prior PR head; recheck status at the current head before integration.
 - PR #150 is merged. Its latest exact-head check set is green: Python 3.11/3.12/3.13, lint, typecheck, blob budget, math grader, CPU evidence, seeded summary, and optimizer/recovery.
 - PR #152 is the last integrated change at the current `main` SHA. PR #149 remains open and unrelated.
 
@@ -17,7 +18,7 @@ The frozen metadata sample and source/test qualification protocol selected an in
 - Ray #66694: baseline two target assertions failed and two throughput controls passed; the frozen wrong-clock mutant was rejected by the target assertion (plus one recorded collateral failure); fixed source passed 4/4 with zero skips on the exact frozen image and test overlay.
 - TRL #7668 remains `NOT_QUALIFIED_FROZEN_ACCEPTANCE_GATE`: baseline raised a target `TypeError` before assertions, despite the fixed arm passing 2/2. Its outcome is unchanged and it is excluded from the replacement cohort.
 
-The Ray raw output, JSON attempt record, exact commands, source-level qualification record, runtime identity, and hashes are in `results/mlsys-fresh-development-task-qualification-v1/ray-66694/`. The one-attempt baseline, mutant, and fixed arms are consumed.
+The Ray raw output, JSON attempt record, exact commands, runtime identity, and hashes are in `results/mlsys-fresh-development-task-qualification-v1/ray-66694/`. The one-attempt baseline, mutant, and fixed arms are consumed.
 
 ## Capability and split decision
 
