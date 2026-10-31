@@ -166,8 +166,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Run the frozen one-change wrong-clock mutant on the same four selectors and runtime. If the target assertion rejects it, run the fixed arm once; otherwise stop with Ray unqualified.",
-  "last_completed_step": "Ray #66694 baseline source arm passed the negative-control gate: four selectors ran, two target assertions failed and two throughput controls passed, with zero skips. The image preflight passed. No fixed source has run.",
+  "highest_priority_next_task": "Run the fixed source arm once on the same four selectors, test overlay, image, and resource limits. If all four pass with zero skips, complete Ray source-level qualification; otherwise preserve the result and leave it unqualified.",
+  "last_completed_step": "Ray #66694 wrong-clock mutant was rejected by the targeted multi-node span assertion (10810.0 vs 12.0); four cases ran, two passed, two failed, zero skipped. It also failed the dataset throughput control; this collateral failure is retained. The fixed arm is now authorized.",
   "milestone_id": "p3-fresh-repository-task-qualification",
   "result_hash_references": [
     {
@@ -559,6 +559,16 @@
       "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-baseline.json",
       "sha256": "4e2097a80e4ce3afec5623fe47270d0d4f24541b02815ea81709c09632d8a58f",
       "status": "baseline negative control met the frozen assertion gate; wrong mutant may run"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-wrong-mutant.log",
+      "sha256": "5bbcadd23de887e2daee7d3f2458431ca4d88ea6c2696f6baabfb16c7ad9c57d",
+      "status": "wrong mutant rejected by target multi-node assertion; another throughput case also failed; zero skips"
+    },
+    {
+      "path": "results/mlsys-fresh-development-task-qualification-v1/ray-66694/attempt-001-wrong-mutant.json",
+      "sha256": "5ba305e5cc1643cdaf55c9275182734d2bf335d8309eb67a063a779a1df2ace8",
+      "status": "frozen mutant gate met; fixed arm may run"
     }
   ],
   "run_ids": [
@@ -589,7 +599,8 @@
     "freshdev-qualification-trl-7668-attempt-001-fixed",
     "freshdev-qualification-mlx-4778-attempt-001-baseline",
     "freshdev-qualification-mlx-4778-attempt-001-fixed",
-    "freshdev-qualification-ray-66694-attempt-001-baseline"
+    "freshdev-qualification-ray-66694-attempt-001-baseline",
+    "freshdev-qualification-ray-66694-attempt-001-wrong-mutant"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -604,5 +615,5 @@
     "No fresh Development model inference, SFT, policy update, GRPO/RL comparison, or Held-out evaluation has run.",
     "PR #149 and other older open branches are unrelated to this qualification experiment."
   ],
-  "updated_at": "2026-10-31T09:06:39+09:00"
+  "updated_at": "2026-10-31T09:07:14+09:00"
 }

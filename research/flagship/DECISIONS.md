@@ -243,3 +243,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Count the baseline as a valid target negative control and permit the frozen wrong-mutant arm. Do not run fixed unless the mutant is also rejected.
 - **Falsification criteria:** Baseline hashes or selector set differ, targeted assertions did not execute, or a case was skipped.
 - **Follow-up:** Run the predeclared mixed-clock mutant on the same selectors and runtime.
+
+
+## 2026-10-31 — Wrong-clock mutant rejected by Ray #66694 regression tests
+
+- **Hypothesis:** A plausible implementation that adds the worker-local monotonic end time to the shared Unix start will fail the multi-node correctness case.
+- **Evidence:** Mutant attempt (SHA-256 `5ba305e5cc1643cdaf55c9275182734d2bf335d8309eb67a063a779a1df2ace8`) ran all four selectors on the same pinned image and test overlay. The target multi-node span assertion observed 10810.0 instead of 12.0. Dataset throughput also failed (75 instead of 100); the other two cases passed. Zero skips and no environment errors.
+- **Alternative explanations:** The mutant could be rejected only by an unrelated case or changed test inputs. The predeclared target assertion itself failed; the additional dataset failure is explicitly recorded as collateral.
+- **Decision:** Count the wrong-mutant negative control as rejected under the frozen gate and proceed to the one fixed-source attempt.
+- **Falsification criteria:** Source/test/image hashes disagree, target assertion did not execute, any case is skipped, or the failure is a setup/environment error.
+- **Follow-up:** Run the exact fixed source once using the same image, test overlay, selectors, and limits.
