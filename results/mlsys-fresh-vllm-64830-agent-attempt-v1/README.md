@@ -4,7 +4,7 @@
 
 Freeze one local Qwen2.5-Coder-14B attempt on the already source-qualified vLLM task. The task scope is limited to the HiSparse and watermarking checks in `VllmConfig._get_v1_model_runner_unsupported_features`; whole-PR correctness and the custom-speculator behavior are excluded.
 
-This is a prospective one-attempt protocol. **No model weights have been loaded and no inference has run.** The attempt may start only after the protocol is committed and pushed, the exact-head checks are reviewed, launch preflight passes, and the assignment event is appended to the exposure record. A failed preflight is terminal for this protocol.
+This was a prospective one-attempt protocol. Exact-head CI passed, then launch preflight returned **NO_GO**. **No model weights were loaded, no prompt was delivered, and no inference or independent grade ran.** A failed preflight is terminal for this frozen protocol; do not retry it.
 
 ## Evidence before assignment
 
@@ -22,6 +22,12 @@ This is a prospective one-attempt protocol. **No model weights have been loaded 
 - Network, paid compute/APIs, training, Held-Out access, grader feedback, and retries after generation begins are prohibited.
 - Model-visible task content is `task/TASK.md` plus the single allowlisted source file and controller-generated tool schema/path boundary. The assignment metadata, tests, qualification-arm logs, and grader output are not model inputs.
 
+## Launch outcome
+
+The exact frozen preflight ran at `2026-10-31T07:05:56Z` after both exact-head CI runs passed. It verified all frozen inputs and model snapshot hashes, but returned **NO_GO** because available memory was `11,035,787,264` bytes (below the 12 GiB minimum) and the estimated working-set-plus-headroom gate failed. Disk, swap, and memory-pressure gates passed. The model was not loaded. The attempt status is **NOT RUN**, and the preflight result is in `attempt-001/launch-preflight.json` with a companion no-run receipt and checksum manifest.
+
+The append-only exposure record now records that the prospective Development assignment failed preflight before model exposure. The task remains unexposed to the model; public pretraining exposure remains UNKNOWN. Any future attempt requires a new protocol and a fresh passing resource gate.
+
 ## Reproduction
 
 Verify the frozen protocol and its declared inputs:
@@ -34,7 +40,7 @@ python -m ruff check scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run
 python -m py_compile scripts/run_mlsys_vllm_64830_agent_grader_v1.py scripts/run_mlsys_vllm_64830_agent_method_worker_v1.py tests/test_mlsys_vllm_64830_agent_grader_v1.py
 ```
 
-The exact launch-preflight, one-shot attempt, and independent-grader argv are frozen in `protocol.json`. Run preflight only after the protocol is remotely present. If preflight is `NO_GO`, record `NOT RUN` and do not load weights. If it passes, push its receipt and the prospective exposure append before invoking the single frozen attempt command. Commit and push the attempt record and candidate diff before invoking the grader exactly once. The grader writes scratch output under `/private/tmp` so the worker policy can read its extracted candidate method; copy that complete receipt directory into `attempt-001/independent-grade-v1/` only after grading completes.
+The exact launch-preflight, one-shot attempt, and independent-grader argv remain frozen in `protocol.json`. The preflight was run exactly once and failed closed; the model-attempt and grader commands were not invoked. Verify the no-run receipt with `(cd results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001 && shasum -a 256 -c SHA256SUMS)`. Do not retry this protocol. If a future separately frozen protocol is considered, it must pass a fresh resource preflight first. The grader scratch path remains under `/private/tmp` so the worker can read its extracted candidate method; its durable-copy step is unused.
 
 ## Engineering and research claims
 

@@ -310,7 +310,7 @@
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json",
       "protocol_id": "mlsys-fresh-vllm-64830-agent-attempt-v1",
       "sha256": "27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9",
-      "status": "frozen before inference; pushed on PR #163; grader scratch output moved outside /Users/user to satisfy worker read-deny policy; fresh exact-head CI pending; launch preflight remains gated"
+      "status": "FROZEN; exact-head CI passed on 4ca735f; launch preflight NO_GO; no weights loaded; no retry under this protocol"
     }
   ],
   "git_refs": {
@@ -328,8 +328,8 @@
     "integration": "GO_PENDING_REMOTE_CI",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Push the final scratch-path protocol correction and status, then wait for exact-head CI on PR #163. If every required check passes, run launch preflight; never load weights if it fails.",
-  "last_completed_step": "Implemented and calibrated the scoped #64830 independent grader, added a partial-repair target-failure regression, verified the model sandbox denies hidden inputs, and froze protocol SHA-256 27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9. The protocol and declared local inputs passed static hash checks. Model preflight and inference have not run. Commit 793e076d was pushed on codex/vllm64830-development-attempt-v1 and draft PR #163 was opened against PR #162 head; exact-head CI is pending. Exact-head CI at PR #163 head 5e18a75d passed lint, typecheck, Math500, and seeded-summary but failed blob-budget because the uncompressed runtime file manifest was 1,482,277 bytes (>1 MiB). Deterministic gzip compression to 105,574 bytes was pushed in `7becbff0` and the local tracked-blob-budget check passes; exact-head CI is pending. No model inference or weight load occurred. Protocol review found that the final grader output path would have been unreadable under the candidate worker policy. The frozen grader command now writes scratch output under /private/tmp and records a separate durable-copy step; no model candidate has been graded. Final review also moved the independent grader scratch directory outside the worker read-deny tree and froze a separate durable-copy step; static input hashes pass.",
+  "highest_priority_next_task": "Push the durable NOT RUN/NO_GO checkpoint and verify exact-head CI. Then assess a suitable no-cost memory-sufficient execution host or GPU worker for a separately frozen protocol; do not invoke protocol v1 again.",
+  "last_completed_step": "PR #163 code head 4ca735f9310c40a76a9f2df54c532680acb4edc1 passed both exact-head CI runs and CPU evidence. The frozen vLLM #64830 launch preflight then returned NO_GO: available memory was 11,035,787,264 bytes, below the 12 GiB gate, and estimated working set plus headroom also failed. Frozen inputs and model snapshot hashes verified; model weights were not loaded, the model prompt was not delivered, and the one-shot attempt and independent grade are NOT RUN.",
   "milestone_id": "p16-vllm-64830-one-shot-development-attempt",
   "result_hash_references": [
     {
@@ -1289,8 +1289,8 @@
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
-      "sha256": "e966664a97f80bc5e90c57f5d94140415fdcf17301f0e17c120ee7a49cab857f",
-      "status": "append-only exposure ledger records source/test access by research agent; no model exposure; task remains unassigned"
+      "sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed",
+      "status": "Append-only event records Development preflight NO_GO; model exposure remains false"
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-2-execution.json",
@@ -1450,12 +1450,12 @@
     {
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol.json",
       "sha256": "27cfbd757b67ef4c3905487585c2fdaaae496512c5a82135659fd4e3b2c763c9",
-      "status": "FROZEN; launch preflight not run; no model weights loaded"
+      "status": "FROZEN; launch preflight NO_GO; model not loaded; inference NOT RUN"
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/protocol-artifact-inventory.json",
       "sha256": "9c2178561f6fe19b7c86ae0d1141f09aaba33bcd7610e1056014f09a76b481a3",
-      "status": "Declared input hashes verified statically; model snapshot files deferred to launch preflight"
+      "status": "Declared frozen-input hashes verified; launch preflight verified snapshot hashes; resource NO_GO; model not loaded"
     },
     {
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/calibration/grader-calibration.json",
@@ -1486,6 +1486,21 @@
       "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/runtime/runtime-manifest.json",
       "sha256": "5e00c0d4de98d51f02351363529cc3890a857ef0f76c56fc8f8ca0eb49973747",
       "status": "Runtime/package manifest updated to point to the deterministic gzip file inventory"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/launch-preflight.json",
+      "sha256": "0288c39c811bd129923582ba378e4a609f97ffbe0981b32e6b8a2c264603bdda",
+      "status": "NO_GO: available-memory and working-set-plus-headroom gates failed; snapshot hashes verified; model not loaded"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/attempt.json",
+      "sha256": "e856b5f8f628b055a6664bd880c8c996cf100b5221e5dfe86eb08f2ca66c0c2d",
+      "status": "NOT RUN; no prompt, generation, candidate, independent grade, training, or Held-Out access"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-agent-attempt-v1/attempt-001/SHA256SUMS",
+      "sha256": "d19f385557c9f791266ec6085355ecfd6b9a4d1181bcc4d748b6ac7a3c141323",
+      "status": "Checksums for preflight, no-run receipt, assignment record, and updated exposure ledger"
     }
   ],
   "run_ids": [
@@ -1544,14 +1559,18 @@
     "vllm-64830-agent-grader-controls-v1",
     "vllm-64830-agent-protocol-v1-preflight-not-run",
     "41178261435",
-    "41178265604"
+    "41178265604",
+    "41178695665",
+    "41178698379",
+    "41178698361",
+    "vllm-64830-agent-attempt-001-preflight-no-go"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
     "fresh_stage3_families_used": 3,
     "historical_heldout_1979_touched": false,
     "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/exposure-record.json",
-    "sha256": "e966664a97f80bc5e90c57f5d94140415fdcf17301f0e17c120ee7a49cab857f"
+    "sha256": "9375669c648029b9b9572579ed0af2cc2810b5945d5e0bda9a16fe140e1d46ed"
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
@@ -1564,10 +1583,7 @@
     "The frozen vLLM #64575 Qwen2.5-Coder-14B attempt is NOT RUN. Launch preflight failed the estimated working-set-plus-headroom gate by 879,464,921 bytes; model weights were not loaded. Do not retry this frozen protocol.",
     "PR #160 exact head 71aa74ab6a8f6f1625505b68f7f332c49fabff93 has passing exact-head CI and CPU evidence; GitHub reports merge state BLOCKED and normal review/branch-protection requirements remain.",
     "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 has passing exact-head CI and CPU evidence but remains a draft; no review is recorded.",
-    "vLLM #64830 is source-qualified only for the frozen HiSparse/watermarking method cases and is prospectively assigned for one local Development attempt. The frozen launch preflight is not run; model exposure/inference remain NOT RUN, public pretraining exposure UNKNOWN, and family-level independence NOT ESTABLISHED.",
-    "PR #163 exact-head CI at 5e18a75d failed only the blob-budget job in the runs observed so far; the 1.48 MB raw runtime manifest was replaced locally with a 105,574-byte deterministic gzip artifact preserving the uncompressed SHA. Correction commit and fresh CI are pending; do not run launch preflight yet.",
-    "The deterministic gzip correction for the PR #163 blob-budget failure is pushed in 7becbff0 and passes the local tracked-blob-budget check. Fresh exact-head CI is pending; do not run launch preflight until it passes.",
-    "The grader scratch-output path is now outside /Users/user so the worker can read candidate_method.py without granting access to hidden tests. This protocol correction is pushed only after the current pending CI; the latest exact-head checks must pass before launch preflight."
+    "The prospectively assigned vLLM #64830 Development task hit launch-preflight NO_GO: available memory was 11,035,787,264 bytes (<12 GiB) and estimated working-set-plus-headroom failed. Frozen inputs and model snapshot hashes verified, but no weights were loaded, no prompt or candidate was generated, and no grade ran. Do not retry the frozen protocol; any future execution needs a new protocol and a fresh passing resource gate."
   ],
-  "updated_at": "2026-10-31T06:58:01.509539+00:00"
+  "updated_at": "2026-10-31T07:05:56.686286+00:00"
 }
