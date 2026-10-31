@@ -1,8 +1,15 @@
 import ast
+import json
+import os
+import signal
+import subprocess
+import sys
+import time
 from unittest.mock import patch
 
 import pytest
 
+import scripts.run_mlsys_vllm_64575_qualification_arm as runner
 from scripts.prepare_mlsys_vllm_64575_qualification_overlay import (
     build_overlay,
     extract_source_segment,
@@ -10,7 +17,12 @@ from scripts.prepare_mlsys_vllm_64575_qualification_overlay import (
 from scripts.run_mlsys_vllm_64575_qualification_arm import (
     ARM_CHOICES,
     build_pytest_command,
+    create_attempt_output_dir,
+    main,
     process_tree_rss,
+    stop_process_group,
+    wait4_max_rss_bytes,
+    wait_for_child,
 )
 
 
@@ -72,3 +84,124 @@ def test_pytest_log_file_stays_inside_the_arm_writable_directory(tmp_path) -> No
 def test_candidate_arm_is_recorded_separately_from_qualification_arms() -> None:
     assert "agent-candidate" in ARM_CHOICES
     assert ARM_CHOICES[:3] == ("baseline", "wrong-mutant", "upstream-fixed")
+
+
+def test_attempt_output_dir_refuses_to_overwrite_existing_evidence(tmp_path) -> None:
+    output = tmp_path / "attempt-001"
+    output.mkdir()
+    receipt = output / "attempt.json"
+    receipt.write_text('{"status":"kept"}', encoding="utf-8")
+
+    with pytest.raises(FileExistsError):
+        create_attempt_output_dir(output)
+
+    assert receipt.read_text(encoding="utf-8") == '{"status":"kept"}'
+
+
+def test_main_records_launch_failure_without_running_or_overwriting(tmp_path, monkeypatch, capsys) -> None:
+    profile = tmp_path / "arm.sb"
+    source = tmp_path / "source.py"
+    test_file = tmp_path / "test_case.py"
+    output = tmp_path / "attempt-001"
+    profile.write_text("(version 1)\n", encoding="utf-8")
+    source.write_text("def target(): return 1\n", encoding="utf-8")
+    test_file.write_text("def test_target(): pass\n", encoding="utf-8")
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "run_mlsys_vllm_64575_qualification_arm.py",
+            "--arm", "baseline",
+            "--profile", str(profile),
+            "--source-file", str(source),
+            "--test-file", str(test_file),
+            "--output-dir", str(output),
+            "--python", sys.executable,
+        ],
+    )
+    with patch(
+        "scripts.run_mlsys_vllm_64575_qualification_arm.subprocess.Popen",
+        side_effect=FileNotFoundError("sandbox executable is missing"),
+    ):
+        exit_code = main()
+
+    record = json.loads((output / "attempt.json").read_text(encoding="utf-8"))
+    assert exit_code == 2
+    assert record["status"] == "LAUNCH_FAILED"
+    assert "sandbox executable is missing" in record["launch_error"]
+    assert json.loads(capsys.readouterr().out)["status"] == "LAUNCH_FAILED"
+
+
+def test_stop_process_group_kills_descendant_after_leader_exits(tmp_path) -> None:
+    pid_file = tmp_path / "child.pid"
+    ready_file = tmp_path / "child-ready"
+    child_code = (
+        "import pathlib,signal,sys,time; "
+        "signal.signal(signal.SIGTERM, signal.SIG_IGN); "
+        "pathlib.Path(sys.argv[1]).write_text('ready'); time.sleep(60)"
+    )
+    parent_code = """\
+import pathlib
+import subprocess
+import sys
+import time
+
+child = subprocess.Popen([sys.executable, "-c", sys.argv[1], sys.argv[2]])
+pathlib.Path(sys.argv[3]).write_text(str(child.pid))
+ready = pathlib.Path(sys.argv[2])
+deadline = time.monotonic() + 5
+while not ready.exists() and time.monotonic() < deadline:
+    time.sleep(0.01)
+raise SystemExit(0 if ready.exists() else 1)
+"""
+    proc = subprocess.Popen(
+        [sys.executable, "-c", parent_code, child_code, str(ready_file), str(pid_file)],
+        start_new_session=True,
+    )
+    return_code = proc.wait(timeout=5)
+    child_pid = int(pid_file.read_text(encoding="utf-8"))
+    try:
+        assert return_code == 0
+        stop_process_group(proc)
+        deadline = time.monotonic() + 3
+        while time.monotonic() < deadline:
+            status = subprocess.run(
+                ["ps", "-o", "stat=", "-p", str(child_pid)],
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            if not status or status.startswith("Z"):
+                break
+            time.sleep(0.02)
+        assert not status or status.startswith("Z")
+    finally:
+        try:
+            os.kill(child_pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+
+
+def test_wait4_records_short_lived_child_rss_high_water() -> None:
+    allocation_mib = 64
+    child_code = (
+        f"payload = bytearray({allocation_mib} * 1024 * 1024); "
+        "payload[::4096] = b'x' * (len(payload) // 4096); "
+        "import time; time.sleep(0.05)"
+    )
+    proc = subprocess.Popen([sys.executable, "-c", child_code])
+
+    usage = wait_for_child(proc, block=True)
+
+    assert proc.returncode == 0
+    assert usage is not None
+    assert wait4_max_rss_bytes(usage) >= allocation_mib * 1024**2
+
+
+def test_wait4_rss_units_follow_platform_convention(monkeypatch) -> None:
+    class Usage:
+        ru_maxrss = 128
+
+    monkeypatch.setattr(runner.sys, "platform", "darwin")
+    assert wait4_max_rss_bytes(Usage()) == 128
+
+    monkeypatch.setattr(runner.sys, "platform", "linux")
+    assert wait4_max_rss_bytes(Usage()) == 128 * 1024

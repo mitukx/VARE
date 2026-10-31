@@ -694,3 +694,18 @@ Execution addendum 3 (`protocol-addendum-3-corrected-logging.json`) is preserved
 Baseline attempt-002 failed both intended assertions; the wrong-mutant attempt was rejected by both; upstream-fixed passed both. The original RSS values and the claim that the 4 GiB memory gate passed are superseded by `results/mlsys-fresh-vllm-64830-source-qualification-v1/errata/resource-measurement-erratum-001.md` and its JSON checksum manifest. The resource result is **INCONCLUSIVE**. Original receipts and the root bundle `SHA256SUMS` remain unchanged and verifiable; do not treat their sampled RSS field as an OS high-water mark. The result qualifies only the scoped method-level behavior; the task remains unassigned and no inference is authorized by these source-level results.
 
 No split assignment, model inference, training, or Held-Out access is authorized. Public pretraining exposure remains UNKNOWN. A source-level pass cannot establish agent capability or RL improvement.
+
+## vLLM #64575 source-qualification RSS erratum 001
+
+The original qualification bundle remains immutable. Its root manifest is `results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS` (SHA-256 `7d999d51daf233c2ab84677c35fa0b988019c7160777f2a313a2da2e0b7e60bf`); it covers the original 30 files. The append-only correction is `results/mlsys-fresh-vllm-64575-source-qualification-v1/errata/rss-resource-measurement-erratum-001.json` and its Markdown explanation. Verify both records with:
+
+```bash
+shasum -a 256 -c results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS
+(cd results/mlsys-fresh-vllm-64575-source-qualification-v1/errata && shasum -a 256 -c SHA256SUMS)
+```
+
+The five old arms all completed in about 0.53 seconds, while the runner sampled process-tree RSS every 0.5 seconds. Their identical 3,915,776-byte readings are sample maxima, not OS high-water measurements. In a local reproduction, the first sample was 4,046,848 bytes; after a short-lived child touched 91 MiB, `wait4` reported 107,511,808 bytes. The 4 GiB resource result is therefore **INCONCLUSIVE**. The baseline, wrong-mutant, and upstream-fixed behavioral outcomes are unchanged. Do not rerun any consumed arm.
+
+The corrected runner now records `sampled_process_tree_rss_max_bytes` and `os_wait4_child_max_rss_bytes` separately, reaps the direct child with `wait4`, and cleans up descendants after the leader exits. `wait4` covers the direct waited child; the runner still does not claim a complete concurrent aggregate high-water mark for all descendants. The regression test is `tests/test_mlsys_vllm_64575_qualification_tools.py::test_wait4_records_short_lived_child_rss_high_water`.
+
+The shared one-shot attempt wrapper, `scripts/run_bounded_local_agent_attempt.py`, now records the same two RSS signals and applies the memory threshold to both. Its regression is `tests/test_run_bounded_local_agent_attempt.py::test_run_limited_catches_short_lived_child_rss_high_water`. No completed model attempt used this wrapper in the current branch; this forward-looking correction does not change the #64575 or #64830 source-arm errata.

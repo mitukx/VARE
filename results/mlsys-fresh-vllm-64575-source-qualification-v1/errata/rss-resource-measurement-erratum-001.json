@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "erratum_id": "vllm-64575-source-qualification-rss-resource-measurement-erratum-001",
+  "created_at": "2026-10-31",
+  "applies_to": {
+    "result_id": "vllm-64575-anthropic-tool-type-validation-source-qualification-v1",
+    "root_manifest_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/SHA256SUMS",
+    "root_manifest_sha256": "7d999d51daf233c2ab84677c35fa0b988019c7160777f2a313a2da2e0b7e60bf",
+    "qualification_report_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/qualification-report.json",
+    "qualification_report_sha256": "25076567165285b0bb89fa8341eb56dfb305b369317cee637e9180c096f4df11",
+    "attempt_receipts": {
+      "baseline-attempt-001/attempt.json": "c49de0daabf41423efb12eda26a1f590abff39428fd5ef3d82bdddf6b5dff48d",
+      "baseline-attempt-002/attempt.json": "f5d8b5a2e2fbaf69829084837a5d6e75f8ace59ecc8108f704c27ba229812a0d",
+      "wrong-mutant-attempt-001/attempt.json": "0b08ca5c5c4a3444e8a06edcf75d3937bcd3dde51b592d725f5b6230d3facb78",
+      "wrong-mutant-attempt-002/attempt.json": "a3ed85468fbe07383d3389990bd032e783de0093a36e58dbeadde429013de9e3",
+      "upstream-fixed-attempt-001/attempt.json": "fdd0f6e6e8d2fcb74d3bbbc7032b2a0524b802924383319e8c2acedc81882b9d"
+    },
+    "preservation": "The original protocol, five attempt receipts, qualification report, and 30-file root SHA256SUMS are unchanged. This append-only erratum supersedes only the RSS resource interpretation."
+  },
+  "finding": {
+    "original_field": "peak_process_tree_rss_bytes",
+    "recorded_value_bytes": 3915776,
+    "sampling_interval_seconds": 0.5,
+    "elapsed_seconds_by_attempt": {
+      "baseline-attempt-001": 0.53,
+      "baseline-attempt-002": 0.53,
+      "wrong-mutant-attempt-001": 0.529,
+      "wrong-mutant-attempt-002": 0.53,
+      "upstream-fixed-attempt-001": 0.53
+    },
+    "correct_interpretation": "The field is only the largest live process-tree RSS snapshot observed by the 0.5-second polling loop. Since every arm completed in about 0.53 seconds, the recorded value does not establish an OS-reported high-water mark or a complete process-tree peak.",
+    "superseded_claims": [
+      "3,915,776 bytes is the measured peak process-tree RSS for the arms.",
+      "The 4 GiB resource threshold passed or transient limit breaches were excluded."
+    ]
+  },
+  "independent_reproduction": {
+    "platform": "macOS Darwin 27.0.0",
+    "method": "A child waited 0.15 seconds, touched a 91 MiB allocation, then exited 0.05 seconds later. The first process-tree sample was 4,046,848 bytes; after a 0.5-second gap, wait4 reported a direct-child high-water mark of 107,511,808 bytes.",
+    "result": {
+      "first_process_tree_sample_bytes": 4046848,
+      "wait4_direct_child_high_water_bytes": 107511808,
+      "poll_gap_seconds": 0.5,
+      "exit_code": 0
+    },
+    "future_regression_test": "tests/test_mlsys_vllm_64575_qualification_tools.py::test_wait4_records_short_lived_child_rss_high_water",
+    "future_runner_fields": [
+      "sampled_process_tree_rss_max_bytes",
+      "os_wait4_child_max_rss_bytes"
+    ],
+    "scope_limit": "wait4 supplies the OS high-water mark for the direct waited child. It is not a complete concurrent process-tree high-water mark; transient aggregate peaks across unreported descendants remain unexcluded."
+  },
+  "revised_interpretation": {
+    "behavioral_source_result": "Unchanged: baseline attempt-002 failed the two intended assertions and passed three controls, wrong-mutant v2 was rejected by its intended assertion and passed four controls, and upstream-fixed passed all five cases. The first baseline setup failure and first wrong-mutant design failure remain preserved.",
+    "resource_gate": "INCONCLUSIVE: consumed runs do not establish that peak process-tree RSS stayed below 4 GiB.",
+    "qualification_scope": "The source behavior result remains limited to the five frozen request-model cases. Do not treat the old RSS values as evidence that a future Development attempt is resource-safe.",
+    "retry_policy": "Do not rerun these consumed arms or reuse source qualification protocol v1. Any future execution requires a new protocol and runner hash."
+  }
+}
