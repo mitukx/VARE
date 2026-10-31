@@ -3,7 +3,12 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-from discover_mlsys_fresh_development_candidates_v4 import load_frozen_protocol, screen_candidate
+from discover_mlsys_fresh_development_candidates_v4 import (
+    frozen_inputs,
+    load_frozen_protocol,
+    load_prior_identities,
+    screen_candidate,
+)
 
 
 def _protocol():
@@ -40,13 +45,27 @@ def _candidate():
 
 
 def test_precollection_addendum_binds_the_corrected_collector():
-    protocol, addendum, addendum_2 = load_frozen_protocol()
+    protocol, addendum, addendum_2, addendum_3 = load_frozen_protocol()
 
     assert protocol["protocol_id"] == "mlsys-fresh-development-candidate-discovery-v4"
     assert addendum["protocol_id"] == "mlsys-fresh-development-candidate-discovery-v4-addendum-1"
     assert addendum_2["protocol_id"] == "mlsys-fresh-development-candidate-discovery-v4-addendum-2"
+    assert addendum_3["protocol_id"] == "mlsys-fresh-development-candidate-discovery-v4-addendum-3"
     assert addendum["pre_collection_failure"]["metadata_queries_started"] is False
     assert addendum_2["pre_collection_failure"]["metadata_queries_started"] is False
+    assert addendum_3["pre_collection_failure"]["metadata_queries_started"] is False
+
+
+def test_exposure_inputs_are_hash_verified_from_frozen_main():
+    protocol, _addendum, _addendum_2, addendum_3 = load_frozen_protocol()
+    inputs = frozen_inputs(protocol, addendum_3)
+    prior = load_prior_identities(protocol, inputs, addendum_3)
+
+    assert ("huggingface/transformers", 49418) in prior
+    assert ("huggingface/transformers", 49458) in prior
+    assert ("ray-project/ray", 66694) in prior
+    assert ("huggingface/trl", 7668) in prior
+    assert ("ml-explore/mlx", 4778) in prior
 
 
 def test_graphql_merged_state_can_enter_metadata_shortlist():

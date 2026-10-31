@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_discovery_v4.json"
 ADDENDUM_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_discovery_v4_addendum_1.json"
 ADDENDUM_2_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_discovery_v4_addendum_2.json"
+ADDENDUM_3_PATH = ROOT / "protocols/mlsys_fresh_development_candidate_discovery_v4_addendum_3.json"
 SPECIALIZED_TITLE_MARKERS = (
     "gpu", "metal", "cuda", "fsdp", "distributed", "expert parallel",
     "neuron", "architecture", "support ", "add ", "integration test",
@@ -194,10 +195,11 @@ def screen_candidate(
     }
 
 
-def load_frozen_protocol() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+def load_frozen_protocol() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
     protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
     addendum = json.loads(ADDENDUM_PATH.read_text(encoding="utf-8"))
     addendum_2 = json.loads(ADDENDUM_2_PATH.read_text(encoding="utf-8"))
+    addendum_3 = json.loads(ADDENDUM_3_PATH.read_text(encoding="utf-8"))
     if protocol.get("protocol_id") != "mlsys-fresh-development-candidate-discovery-v4":
         raise ValueError("unexpected discovery protocol ID")
     if sha256_file(PROTOCOL_PATH) != addendum.get("parent_protocol_sha256"):
@@ -206,14 +208,19 @@ def load_frozen_protocol() -> tuple[dict[str, Any], dict[str, Any], dict[str, An
         raise ValueError("first pre-collection addendum differs from addendum 2")
     if addendum_2.get("parent_protocol_sha256") != sha256_file(PROTOCOL_PATH):
         raise ValueError("frozen parent protocol differs from addendum 2")
-    if sha256_file(Path(__file__)) != addendum_2.get("corrected_collector_sha256"):
-        raise ValueError("collector differs from pre-collection addendum 2")
-    return protocol, addendum, addendum_2
+    if sha256_file(ADDENDUM_2_PATH) != addendum_3.get("parent_addendum_sha256"):
+        raise ValueError("second pre-collection addendum differs from addendum 3")
+    if addendum_3.get("parent_protocol_sha256") != sha256_file(PROTOCOL_PATH):
+        raise ValueError("frozen parent protocol differs from addendum 3")
+    if sha256_file(Path(__file__)) != addendum_3.get("corrected_collector_sha256"):
+        raise ValueError("collector differs from pre-collection addendum 3")
+    return protocol, addendum, addendum_2, addendum_3
 
 
-def frozen_inputs(protocol: dict[str, Any], addendum_2: dict[str, Any]) -> dict[str, bytes]:
+def frozen_inputs(protocol: dict[str, Any], addendum_3: dict[str, Any]) -> dict[str, bytes]:
     payloads: dict[str, bytes] = {}
-    for row in protocol["prior_exposure_inputs"]:
+    input_rows = [*protocol["prior_exposure_inputs"], *addendum_3["additional_exposure_inputs"]]
+    for row in input_rows:
         result = subprocess.run(
             ["git", "show", f"{protocol['source_main_commit']}:{row['path']}"],
             check=True,
@@ -227,12 +234,14 @@ def frozen_inputs(protocol: dict[str, Any], addendum_2: dict[str, Any]) -> dict[
         check=False, capture_output=True,
     ).returncode:
         raise ValueError("frozen source main commit is unavailable")
-    if sha256_file(Path(__file__)) != addendum_2["corrected_collector_sha256"]:
-        raise ValueError("collector differs from pre-collection addendum 2")
+    if sha256_file(Path(__file__)) != addendum_3["corrected_collector_sha256"]:
+        raise ValueError("collector differs from pre-collection addendum 3")
     return payloads
 
 
-def load_prior_identities(protocol: dict[str, Any], inputs: dict[str, bytes]) -> set[tuple[str, int]]:
+def load_prior_identities(
+    protocol: dict[str, Any], inputs: dict[str, bytes], addendum_3: dict[str, Any],
+) -> set[tuple[str, int]]:
     prior: set[tuple[str, int]] = set()
     discovery = protocol["discovery"]
     queue_bytes = inputs.get(discovery["prior_candidate_queue_path"])
@@ -270,20 +279,20 @@ def load_prior_identities(protocol: dict[str, Any], inputs: dict[str, bytes]) ->
             repo, number = event.get("source_repository"), event.get("source_pull_request")
             if event.get("split") == "development" and type(repo) is str and type(number) is int:
                 prior.add((repo, number))
-    for row in protocol["additional_prior_identities"]:
+    for row in addendum_3["additional_prior_identities"]:
         prior.add((row["repository"], row["number"]))
     return prior
 
 
 def collect(
     protocol: dict[str, Any], addendum: dict[str, Any], addendum_2: dict[str, Any],
-    output_dir: Path,
+    addendum_3: dict[str, Any], output_dir: Path,
 ) -> dict[str, Any]:
     output_dir = output_dir.expanduser().resolve()
     if output_dir.exists():
         raise FileExistsError(f"refusing to overwrite {output_dir}")
-    inputs = frozen_inputs(protocol, addendum_2)
-    prior = load_prior_identities(protocol, inputs)
+    inputs = frozen_inputs(protocol, addendum_3)
+    prior = load_prior_identities(protocol, inputs, addendum_3)
     discovery = protocol["discovery"]
     searches: list[dict[str, Any]] = []
     search_rows: list[tuple[str, dict[str, Any]]] = []
@@ -358,6 +367,7 @@ def collect(
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
         "protocol_addendum_sha256": sha256_file(ADDENDUM_PATH),
         "protocol_addendum_2_sha256": sha256_file(ADDENDUM_2_PATH),
+        "protocol_addendum_3_sha256": sha256_file(ADDENDUM_3_PATH),
         "candidate_pool_sha256": sha256_bytes(pool_bytes),
         "candidate_count": len(screen_rows),
         "provisional_count": provisional,
@@ -382,6 +392,7 @@ def collect(
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
         "protocol_addendum_sha256": sha256_file(ADDENDUM_PATH),
         "protocol_addendum_2_sha256": sha256_file(ADDENDUM_2_PATH),
+        "protocol_addendum_3_sha256": sha256_file(ADDENDUM_3_PATH),
         "collector_sha256": sha256_file(Path(__file__)),
         "prior_exposure_input_hashes": {
             input_path: sha256_bytes(payload) for input_path, payload in inputs.items()
@@ -406,8 +417,8 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    protocol, addendum, addendum_2 = load_frozen_protocol()
-    result = collect(protocol, addendum, addendum_2, args.output)
+    protocol, addendum, addendum_2, addendum_3 = load_frozen_protocol()
+    result = collect(protocol, addendum, addendum_2, addendum_3, args.output)
     print(json.dumps(result, sort_keys=True))
     return 0 if result["failure_count"] == 0 else 1
 
