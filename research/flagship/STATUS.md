@@ -2,24 +2,30 @@
 
 ## Current checkpoint
 
-- Milestone: `p9-transformers-49458-one-shot-protocol-frozen`.
-- Last verified `origin/main`: `719fbe368816d81addb29a1ba2c451fa7f1bf631`, integrating PR #154.
+- Milestone: `p10-transformers-49458-agent-interaction-failure-diagnosed`.
+- Last verified `origin/main`: `719fbe368816d81addb29a1ba2c451fa7f1bf631`, integrating PR #154. PR #150 is already merged; the earlier mission prompt’s stale #150 blocker is resolved.
 - Work branch: `codex/fresh-development-family-overlap-v1`.
-- Active PR: [#155 — Qualify fresh Transformers #49458 candidate](https://github.com/mitukx/VARE/pull/155), open against main. At the pre-checkpoint head `2a118d714b4f223135ee543b76af45b64b7d1c9c`, all shown CI checks passed. The protocol checkpoint will trigger a fresh exact-head run. GitHub showed the PR open and mergeable, with no review decision or reviews recorded.
+- Active PR: [#155 — Qualify fresh Transformers #49458 candidate](https://github.com/mitukx/VARE/pull/155), open against main. The protocol commit `f3ff08e6d4e4b69adac534d61b6406804d7dffe5` was pushed before inference. Exact-head CI for the subsequent checkpoint changes must be checked after push.
 
-## Candidate #49458
+## Transformers #49458 one-shot outcome
 
-- Metadata overlap review v2: `NO_PRIOR_FAMILY_OVERLAP_FOUND`, moderate confidence over eight Development/Train rows.
-- Source qualification v2: **QUALIFIED_SOURCE_LEVEL**. Baseline and incomplete mutant failed both named cases; upstream-fixed source passed both, with no errors/skips/timeouts. Artifacts are under `results/mlsys-fresh-development-task-qualification-v3/transformers-49458/`.
-- The distinct lazy video-processor registry family is now assigned prospectively to Development. Frozen protocol `protocols/mlsys_transformers_49458_agent_attempt_v1.json` (SHA-256 `4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee`) authorizes exactly one local Qwen3-4B-4bit attempt and one isolated independent grade, only after the protocol is pushed and immediate resource gates pass.
-- At this checkpoint no model generation or candidate grade has occurred. Pretraining exposure is **UNKNOWN**.
+- Source qualification v2 remains **QUALIFIED_SOURCE_LEVEL** only. It proves the pinned CPU regression is reproducible, not model capability.
+- Frozen protocol `protocols/mlsys_transformers_49458_agent_attempt_v1.json` (SHA-256 `4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee`) was executed exactly once after its hash and resource gates passed.
+- The Qwen3-4B attempt produced 849 tokens in six turns. It searched for `AutoVideoProcessor`, read the legacy image-processor fallback at lines 360–400, then emitted three incomplete edit-tool outputs. Two re-encoded to the 256-token cap and one to 255/256. No edit call was dispatched and the diff remained empty.
+- The one independent grade ran against that unchanged baseline. Both pinned cases failed the expected `load_attribute.assert_not_called` assertion (47 and 141 mapping loads), with zero errors/skips. This confirms the baseline control; it is not a candidate patch rejection. Agent, grade, wrapper, logs, resource snapshots, diagnosis, and checksums are retained under `results/mlsys-fresh-development-agent-diagnostic-v2/`.
+- Failure class: **agent interaction failure from incomplete tool-call output, with off-target source localization**. The task family is consumed; do not retry or provide grader feedback. Public pretraining exposure remains unknown.
 
-## Prior capability and RL state
+## Engineering response
 
-The two earlier Qwen3-4B Development attempts on Transformers #49418 and Ray #66694 produced no source edit and exhausted the 4,096-token context; both tasks remain consumed. This one-shot candidate is a separate, independently source-qualified one-file family, not a retry of either prompt. It is still only a feasibility diagnostic.
+The runner now records incomplete tool-call outputs and their turn numbers, distinguishes outputs ending at the configured cap from other unterminated calls, and gives a more concrete reminder for a single small edit. Added deterministic unit coverage for the classifier and reminder. `ruff check scripts/run_local_agent.py tests/test_run_local_agent_tool_format.py`, `work/ci-py311/bin/pytest -q tests/test_run_local_agent_tool_format.py` (47 passed), and `git diff --check` passed locally. This narrows diagnosis and improves the correction prompt; it does not claim to fix model capability. The consumed task was not rerun.
 
-RL, SFT, and Held-out evaluation remain **NO-GO**: no verified fresh repair trajectory or nondegenerate reward signal exists. No policy update occurred.
+## GO/NO-GO
+
+- Coding capability: **NO-GO**. There is no independently verified model-generated repair.
+- SFT/RL update: **NO-GO**. No positive repair trajectory or nondegenerate reward signal exists.
+- Held-Out: not opened or used.
+- Integration: **GO_PENDING_REMOTE_CI** until the current PR head’s required checks are verified; no branch-protection bypass or merge is permitted.
 
 ## Immediate next action
 
-Verify the protocol is on `origin`, recheck memory-pressure, swap, and disk thresholds immediately before model load, then run the pinned attempt once. Persist its output before the one offline independent grade. Give no grader feedback and do not retry.
+Commit and push the run diagnosis, append-only exposure record, and tested controller telemetry/reminder change to PR #155. Inspect exact-head GitHub checks, reproduce any failures, and push corrections. If CI passes, review the complete diff and remaining PR blockers. Do not retry #49458 or start RL. A future attempt requires a distinct qualified Development family and a new frozen protocol after a material feasibility change.

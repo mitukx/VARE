@@ -21,7 +21,9 @@ from scripts.run_local_agent import (
     bounded_search_results,
     bounded_source_page,
     bounded_tool_result,
+    classify_incomplete_tool_call,
     compact_tool_context,
+    no_tool_retry_reminder,
     normalize_tool_call_format,
     render_chat_prompt,
     refresh_public_tests_after_edit,
@@ -448,6 +450,38 @@ def test_tool_result_final_cap_and_native_template_keep_multiturn_continuity():
     assert recording.messages[1]['tool_calls'][0]['id'] == recording.messages[2]['tool_call_id']
     assert recording.messages[1]['tool_calls'][1]['id'] == recording.messages[3]['tool_call_id']
     assert recording.kwargs['tools'] == tools_for('unified_diff')
+
+
+def test_incomplete_tool_call_is_classified_at_the_generation_cap():
+    truncated = '<tool_call>\n{"name":"apply_patch","arguments":{"patch":"--- a/file.py'
+    complete = '<tool_call>{"name":"finish","arguments":{"summary":"done"}}</tool_call>'
+
+    assert classify_incomplete_tool_call(
+        truncated, generated_tokens=256, token_limit=256,
+    ) == 'truncated_at_token_limit'
+    assert classify_incomplete_tool_call(
+        truncated, generated_tokens=255, token_limit=256,
+    ) == 'unterminated_tool_call'
+    assert classify_incomplete_tool_call(
+        complete, generated_tokens=18, token_limit=256,
+    ) is None
+    assert classify_incomplete_tool_call(
+        'I should inspect the source first.', generated_tokens=8, token_limit=256,
+    ) is None
+
+
+def test_unified_diff_truncation_reminder_requests_a_small_edit_payload():
+    reminder = no_tool_retry_reminder(
+        '<tool_call>{"name":"apply_patch"', edit_format='unified_diff',
+        allowed_paths=['src/module.py'], token_limit=256,
+    )
+
+    assert 'replace_text' in reminder
+    assert 'Your previous tool call was incomplete' in reminder
+    assert 'limited to 256 tokens' in reminder
+    assert 'short exact old_text snippet' in reminder
+    assert 'Do not include unchanged function bodies' in reminder
+    assert 'src/module.py' in reminder
 
 
 def test_context_compaction_preserves_task_and_latest_complete_tool_round():

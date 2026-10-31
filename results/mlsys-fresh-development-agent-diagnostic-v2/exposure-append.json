@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "append_id": "mlsys-fresh-development-agent-diagnostic-v2-transformers-49458",
+  "created_at_utc": "2026-10-31T02:13:11Z",
+  "parent_append": {
+    "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
+    "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700",
+    "events_preserved": 2
+  },
+  "protocol": {
+    "path": "protocols/mlsys_transformers_49458_agent_attempt_v1.json",
+    "sha256": "4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee"
+  },
+  "model": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "pretraining_exposure": "UNKNOWN",
+    "training_or_update": false
+  },
+  "decision": {
+    "cumulative_fresh_development_families_attempted": 3,
+    "cumulative_independently_verified_repairs": 0,
+    "heldout_tasks_executed_or_graded": false,
+    "model_inference_or_training_by_append": true,
+    "claim_limit": "Three one-shot Development family attempts in the cumulative exposure record have yielded zero independently verified repairs. The Transformers #49458 output failure involved three incomplete edit-tool payloads, with off-target source localization; it does not establish general coding-model incapability, pretraining independence, learning, or generalization."
+  },
+  "events": [
+    {
+      "attempt_id": "freshdev-agent-transformers-49458-attempt-001",
+      "run_id": "freshdev-agent-transformers-49458-attempt-001",
+      "attempt_count": 1,
+      "task_id": "transformers-49458-lazy-auto-video-processor",
+      "task_family": "lazy_video_processor_registry_resolution",
+      "source_repository": "huggingface/transformers",
+      "source_pull_request": 49458,
+      "split": "development",
+      "stage": "local base-model coding-agent inference",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "pretraining_exposure": "unknown",
+      "generated_tokens": 849,
+      "tool_turns": 6,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "agent_attempt_path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/agent-attempt-001.json",
+      "agent_attempt_sha256": "6c79ef7d093875bffb59bcb9db3e8d6e254fefb9467e5c4bc4eba41e127f0bfe",
+      "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "edit_attempted": false,
+      "edit_applied": false,
+      "independent_grade_path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/independent-grade-001.json",
+      "independent_grade_sha256": "c04451a97a486c4c28e27baa18ad24128fd19942f0e2d9e3deef29fa349a2e0e",
+      "independent_grade_passed": false,
+      "correctness_cases_passed": 0,
+      "correctness_cases_total": 2,
+      "case_outcomes": {
+        "video_preprocessor_config.json": "failed",
+        "preprocessor_config.json": "failed"
+      },
+      "feedback_to_agent": false,
+      "public_tests_visible_or_run": false,
+      "heldout_opened_or_used": false,
+      "model_training_or_update": false,
+      "task_consumed": true,
+      "retry_authorized": false,
+      "agent_interaction_failure": "three capped tool-call generations lacked closing </tool_call>; no edit tool was dispatched after source read",
+      "failure_classification": "incomplete_tool_call_output_with_off_target_localization",
+      "tool_call_diagnostics": {
+        "incomplete_turns": [
+          4,
+          5,
+          6
+        ],
+        "exact_token_cap_turns": [
+          4,
+          6
+        ],
+        "near_cap_turns": [
+          {
+            "turn": 5,
+            "generated_tokens_reencoded": 255,
+            "per_turn_cap": 256
+          }
+        ],
+        "edit_tool_dispatch_count_after_source_read": 0
+      },
+      "source_localization": "Searched AutoVideoProcessor and read lines 360-400 in the legacy image-processor fallback; emitted edit payloads targeted that fallback rather than the lazy registry lookup helpers.",
+      "independent_grade_interpretation": "The candidate diff was empty, so the single grade confirms the unchanged baseline fails both pinned cases; it is not a candidate-patch rejection."
+    }
+  ],
+  "disposition": "Append the consumed Transformers #49458 Development family and preserve v1 unchanged. Three incomplete model edit-tool outputs were not dispatched, and the independent grade confirms the unchanged baseline fails both cases. Do not retry this task or feed grader output to the model."
+}

@@ -208,7 +208,7 @@
       "protocol_id": "mlsys-transformers-49458-agent-attempt-v1",
       "path": "protocols/mlsys_transformers_49458_agent_attempt_v1.json",
       "sha256": "4d6561c9d3abe5c85174deca56e77e34f8338d3da3832d4418d82f74e45007ee",
-      "status": "frozen before model inference; one prospective Development attempt; one independent grade; inference may run only after protocol push and passing immediate host preflight"
+      "status": "frozen before inference; executed exactly once; no retry, grader feedback, training, or Held-Out use; incomplete tool-call output produced no candidate edit"
     }
   ],
   "git_refs": {
@@ -217,7 +217,7 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/154",
     "last_integrated_pr_merge_sha": "719fbe368816d81addb29a1ba2c451fa7f1bf631",
     "active_branch": "codex/fresh-development-family-overlap-v1",
-    "verified_pr_head_sha_before_checkpoint_changes": "2a118d714b4f223135ee543b76af45b64b7d1c9c",
+    "verified_pr_head_sha_before_checkpoint_changes": "f3ff08e6d4e4b69adac534d61b6406804d7dffe5",
     "active_pr_url": "https://github.com/mitukx/VARE/pull/155",
     "active_pr_state": "open"
   },
@@ -226,9 +226,9 @@
     "coding_capability": "NO_GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "After the frozen protocol commit is present on origin, record an immediate resource preflight. If all thresholds pass, run freshdev-agent-transformers-49458-attempt-001 once with the pinned command, persist the agent result, then call the independent offline grader once with no feedback or retry.",
-  "last_completed_step": "A distinct one-file Transformers Development family was assigned prospectively after source qualification. The exact local-model attempt protocol, task contract, hidden trusted evaluator inputs, resource gates, and Docker mount preflight were frozen and are being pushed before any model inference; no model generation or grader call has occurred.",
-  "milestone_id": "p9-transformers-49458-one-shot-protocol-frozen",
+  "highest_priority_next_task": "Commit and push the run evidence, append-only exposure record, and tested incomplete-tool-call telemetry/reminder change to PR #155; verify exact-head required checks, read and fix any failures, and keep coding capability, SFT/RL, and Held-Out decisions NO-GO unless new independent repair evidence meets their gates.",
+  "last_completed_step": "Executed the frozen Transformers #49458 Development attempt once, preserved its incomplete-tool-call/off-target-localization failure and unchanged-baseline grade, appended exposure event 3, and added tested runner diagnostics; PR #155 exact-head checks on the preceding protocol commit passed, new changes are not yet pushed.",
+  "milestone_id": "p10-transformers-49458-agent-interaction-failure-diagnosed",
   "result_hash_references": [
     {
       "path": "../../outputs/VARE-stage3-2026-10-31/stage3-final-report-ja.md",
@@ -732,13 +732,13 @@
     },
     {
       "path": "research/flagship/REPRODUCE.md",
-      "sha256": "6d7cca47a3ddf52d26e7d587050b1f4a23f01319afbcb7612a3a4e757e0fd700",
-      "status": "reproduction and hash-verification commands through candidate metadata review"
+      "sha256": "d67ff2115016cd345b0dba13061194decc85a8bc8b1cd7ffa80077145c8911b1",
+      "status": "authoritative checkpoint updated after one-shot Transformers #49458 result and controller diagnostics"
     },
     {
       "path": "research/flagship/STATUS.md",
-      "sha256": "d142131223f0cfd7b2f2fb492c862882af053774085647d1fdb50dfa130974f9",
-      "status": "authoritative checkpoint after PR #154 integration and PR #155 opening"
+      "sha256": "c9067ac872a386e7911b25177e49c411c4cf90883323e5ad0e4b7fa5c3445176",
+      "status": "authoritative checkpoint updated after one-shot Transformers #49458 result and controller diagnostics"
     },
     {
       "path": "results/mlsys-fresh-development-agent-diagnostic-v1/SHA256SUMS",
@@ -792,13 +792,13 @@
     },
     {
       "path": "research/flagship/DECISIONS.md",
-      "sha256": "c9461722a511286ac0aca0d223e8df4b30f755e3221cf609e4e9187ba456b2aa",
-      "status": "append-only mission decision log through candidate metadata review"
+      "sha256": "05d0af272b59f7f1979d9c36312ebb9a15cdfeb5767ba774c51075f4d530ccbe",
+      "status": "authoritative checkpoint updated after one-shot Transformers #49458 result and controller diagnostics"
     },
     {
       "path": "scripts/run_local_agent.py",
-      "sha256": "4d1ebc3d6bb6b861c83e669cbff9244ec22e183cc60e6bd97d9e4c764686328d",
-      "status": "context-compaction controller implementation; not model capability evidence"
+      "sha256": "83ad013ae1038ecfe7600d75237ef7aa6a833174964fc240919209c985ada873",
+      "status": "post-run incomplete tool-call telemetry/reminder implementation; not model capability evidence"
     },
     {
       "path": "scripts/replay_agent_context_compaction.py",
@@ -807,8 +807,8 @@
     },
     {
       "path": "tests/test_run_local_agent_tool_format.py",
-      "sha256": "e6faeb5ae82facb82c45f48249df627cc3f737cb7204d0f2715e1aeb5bcbd7e9",
-      "status": "focused compaction and replay tests"
+      "sha256": "4479920f5babc151b0b51f772388c8845021328fa2acd4f354f623c053ba0f75",
+      "status": "focused regression tests for incomplete tool-call classification and reminder"
     },
     {
       "path": "results/agent-context-compaction-replay-v1/README.md",
@@ -1004,6 +1004,61 @@
       "path": "results/mlsys-fresh-development-agent-diagnostic-v2/pre-inference-SHA256SUMS",
       "sha256": "7c70b1e11574abda409904a8362d9e5d0d8345ac0070f8e1c40c0e0d87249ea0",
       "status": "pre-inference integrity manifest"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/agent-attempt-001.json",
+      "sha256": "6c79ef7d093875bffb59bcb9db3e8d6e254fefb9467e5c4bc4eba41e127f0bfe",
+      "status": "raw one-shot Development attempt; empty candidate diff; incomplete edit-tool outputs"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/agent-attempt-001.log",
+      "sha256": "acb9dbf97304b2396fa9be9f0e6d0b259ed8d8927a4e10452dfec6ced48a5ad5",
+      "status": "raw local model attempt log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/agent-attempt-wrapper-001.json",
+      "sha256": "6f537dfedad346d5b6ff0ef8df06476a3af4793cf215ada05104b070e4b2208e",
+      "status": "durable wrapper receipt for the sole attempt"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/independent-grade-001.json",
+      "sha256": "c04451a97a486c4c28e27baa18ad24128fd19942f0e2d9e3deef29fa349a2e0e",
+      "status": "sole independent grade of unchanged baseline; both expected cases failed"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/independent-grade-001.log",
+      "sha256": "c4fc8f78a443efdfc1302bb7d2ece285ef1ca7267482edbd48d5c8bd75114aff",
+      "status": "raw isolated independent grade log"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/agent-outcome-summary.json",
+      "sha256": "4f385d319baf1a050edb76caa57bd633a76da5a2c24db03c27e84dd2e23d1063",
+      "status": "transcript-derived failure classification and localization diagnosis"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/post-run-resource-telemetry.json",
+      "sha256": "1e5efc1cf3cc440c63f3dced98520cfe5d7d3cdf4b7f73e8247317b1c164d92e",
+      "status": "post-run host and model memory telemetry"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/report.md",
+      "sha256": "576e5a1e37e6790f795eb715027932ea1d58d26b1d40a1f5ad9df5742a581229",
+      "status": "one-shot result, limits, and engineering response"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/run-manifest.json",
+      "sha256": "b00f73b78bab3586bce17b216e9812746e18f7d3b85f691348b6327756062066",
+      "status": "hash-bound experiment inputs, attempt, grade, and post-run checks"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+      "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72",
+      "status": "append-only third Development family exposure; v1 preserved"
+    },
+    {
+      "path": "results/mlsys-fresh-development-agent-diagnostic-v2/SHA256SUMS",
+      "sha256": "c256d55a7369e50eed2a2642ee8995fb16387dcf64441f66c2b36144ceda1ad2",
+      "status": "integrity index over v2 input and output artifacts"
     }
   ],
   "run_ids": [
@@ -1038,14 +1093,15 @@
     "freshdev-qualification-ray-66694-attempt-001-wrong-mutant",
     "freshdev-qualification-ray-66694-attempt-001-fixed",
     "freshdev-agent-transformers-49418-attempt-001",
-    "freshdev-agent-ray-66694-attempt-001"
+    "freshdev-agent-ray-66694-attempt-001",
+    "freshdev-agent-transformers-49458-attempt-001"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
-    "fresh_stage3_families_used": 0,
-    "historical_heldout_1979_touched": false,
-    "path": "results/mlsys-fresh-development-agent-diagnostic-v1/exposure-append.json",
-    "sha256": "c76d868fcd54b4bad6e5a8de7b831155286afdb20b7e128d8adfecb4d3ba1700"
+    "path": "results/mlsys-fresh-development-agent-diagnostic-v2/exposure-append.json",
+    "sha256": "d36ca9830f8f59d25c88502b2e7586c9e624a2f2e47daf71ea9bb2fea1543f72",
+    "fresh_stage3_families_used": 3,
+    "historical_heldout_1979_touched": false
   },
   "unresolved_blockers": [
     "Public pretraining exposure remains UNKNOWN; no pretraining-independence claim is supported.",
@@ -1053,7 +1109,8 @@
     "No verified repair trajectory or nondegenerate reward signal exists; no SFT/RL update or Held-Out evaluation is authorized or supported.",
     "MLX #4778 remains unassigned because of possible broad gradient/autodiff relatedness to Train #4662.",
     "The historical TRL #7668 pair remains unqualified under its frozen baseline-assertion gate and is excluded.",
-    "Transformers #49458 is assigned prospectively to Development under a frozen one-shot protocol; no inference or independent candidate grade has occurred yet. Public pretraining exposure is UNKNOWN."
+    "The consumed Transformers #49458 one-shot attempt produced three incomplete edit-tool outputs, no edit, and no verified repair; do not retry it. The single grade confirms the unchanged baseline fails both expected cases; public pretraining exposure remains UNKNOWN.",
+    "The runner telemetry/reminder fix is locally linted and its focused 47-test suite passes, but the change is not yet on the remote PR head and exact-head CI is pending."
   ],
-  "updated_at": "2026-10-31T02:08:28Z"
+  "updated_at": "2026-10-31T02:19:51Z"
 }

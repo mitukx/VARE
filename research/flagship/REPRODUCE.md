@@ -474,3 +474,28 @@ Protocol: `protocols/mlsys_transformers_49458_agent_attempt_v1.json` (SHA-256 `4
 The candidate workspace is a clean sparse checkout of Transformers base `429e69162e2944922e45c2cea24887d32e96fbe7` with only `src/transformers/models/auto/video_processing_auto.py` present. Before model load, revalidate the local model file manifest, check host memory free percentage >= 50, swap used <= 4 GiB, and disk free >= 5 GiB. If any gate fails, do not infer. Then run the exact `controller.command_argv` in the frozen protocol from the VARE root with its offline environment. The agent has no shell, public test, or grader tool. Save the raw result before using the single `independent_grading.command_argv`. That isolated Docker call has network disabled, read-only source/test/runner/root mounts, and no feedback path.
 
 The first Docker preflight checked only mount layout and SHA-256 values; it did not import or execute the test and used zero grader calls. Its receipt is `results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/grader-mount-preflight-001.json`. After the attempt, preserve the transcript, patch, sole grader log/receipt, resource telemetry, exposure append, report, and final `SHA256SUMS`. Do not retry under this protocol. One passing Development family would be a feasibility signal only, not RL or generalization evidence.
+
+### Recorded outcome and post-run controller validation
+
+The one authorized attempt is consumed. Its transcript ends with three incomplete, undispatched edit-tool calls (turns 4–6); there is no candidate patch. After listing and searching, the model's third tool turn read lines 360–400 in the legacy image-processor fallback, an off-target area for the lazy registry lookup. The single independent grade ran on the unchanged baseline and failed both named cases at the expected assertion, so it confirms the negative control and does not grade a model patch. See `results/mlsys-fresh-development-agent-diagnostic-v2/transformers-49458/report.md` and `agent-outcome-summary.json`.
+
+The follow-up runner records unclosed tool calls as `truncated_at_token_limit` or `unterminated_tool_call` and includes their turn numbers. The reminder now favors a short exact `replace_text` call for one contiguous change or a minimal changed hunk. This follow-up has no inference path and must not be used to retry #49458. After checkout, validate it with:
+
+```bash
+ruff check scripts/run_local_agent.py tests/test_run_local_agent_tool_format.py
+work/ci-py311/bin/pytest -q tests/test_run_local_agent_tool_format.py
+git diff --check
+python3 - <<'PY'
+import json
+from pathlib import Path
+from jsonschema import Draft202012Validator
+
+schema = json.loads(Path('research/flagship/state.schema.json').read_text())
+state = json.loads(Path('research/flagship/state.json').read_text())
+Draft202012Validator(schema).validate(state)
+print('mission state schema: valid')
+PY
+(cd results/mlsys-fresh-development-agent-diagnostic-v2 && shasum -a 256 -c SHA256SUMS)
+```
+
+The local controller test result recorded for this checkpoint is 47 passed, and Ruff plus whitespace validation passed. These checks cover the runner instrumentation only. They do not change the NO-GO capability or RL decision.
