@@ -1,0 +1,47 @@
+{
+  "arm": "wrong-mutant",
+  "attempt_id": "wrong-mutant-attempt-002",
+  "attempt_json": "results/mlsys-fresh-vllm-64830-source-qualification-v1/wrong-mutant-attempt-002/attempt.json",
+  "attempt_json_sha256": "6470cfec7d50c775055a1487c8fe15ca1387ca1d6bdeaf5d1fe029e6add3db58",
+  "cases": [
+    {
+      "assertion_line": 73,
+      "case": "HiSparse",
+      "expected": [
+        "HiSparse"
+      ],
+      "observed": "[]",
+      "outcome": "failed at the same frozen post-override assertion"
+    },
+    {
+      "assertion_line": 73,
+      "case": "watermarking",
+      "expected": [
+        "watermarking"
+      ],
+      "observed": "[]",
+      "outcome": "failed at the same frozen post-override assertion"
+    }
+  ],
+  "classification": "TARGET_MUTANT_REJECTED",
+  "collection_and_import": "successful; both selected cases collected and ran",
+  "decision": "Mutant gate passed: the deliberately wrong method was rejected by both frozen cases. Addendum 4 authorizes the single upstream-fixed attempt-002.",
+  "elapsed_seconds": 0.529,
+  "gate_passed": true,
+  "peak_process_tree_rss_bytes": 3932160,
+  "pytest_exit_code": 1,
+  "pytest_log": "results/mlsys-fresh-vllm-64830-source-qualification-v1/wrong-mutant-attempt-002/pytest.log",
+  "pytest_log_sha256": "b6d042d2fb51195fe8e1ec8041bb5977b5a49d7cc85f5873cea6d04c72904e23",
+  "pytest_summary": "2 failed, 0 passed, 0 skipped, 0 errors",
+  "rss_limit_bytes": 4294967296,
+  "rss_limit_exceeded": false,
+  "sandbox_policy": "default deny; network denied; only this arm output directory writable",
+  "sandbox_profile_sha256": "66c4bcff27ca6735c62da6bffc7700f81f8b7ee3a32171162ab240c00d4900ed",
+  "selected_test_ids": [
+    "test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+    "test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+  ],
+  "source_revision": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+  "timed_out": false,
+  "upstream_fixed_authorized_by_addendum_4": true
+}

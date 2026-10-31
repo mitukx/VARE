@@ -1,0 +1,80 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______ test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse] _______
+
+overrides = {'attention_config': <test_vllm_config_unsupported_features.AttentionConfig object at 0x105fb5400>}
+feature = 'HiSparse'
+
+    @pytest.mark.parametrize(
+        ("overrides", "feature"),
+        [
+            (
+                {"attention_config": AttentionConfig(hisparse_config=HiSparseConfig())},
+                "HiSparse",
+            ),
+            ({"watermark_config": WatermarkConfig(key=42)}, "watermarking"),
+        ],
+    )
+    def test_v1_model_runner_rejects_v2_only_config(overrides, feature):
+        config = SimpleNamespace(
+            parallel_config=ParallelConfig(distributed_executor_backend="mp"),
+            scheduler_config=SchedulerConfig.default_factory(async_scheduling=False),
+            attention_config=AttentionConfig(),
+            watermark_config=None,
+            speculative_config=None,
+            model_config=None,
+        )
+        config._dflash_needs_multi_kv_group = lambda: False
+        config._is_dflash_candidate_draft = lambda: False
+        assert VllmConfig._get_v1_model_runner_unsupported_features(config) == []
+    
+        for name, value in overrides.items():
+            setattr(config, name, value)
+>       assert VllmConfig._get_v1_model_runner_unsupported_features(config) == [feature]
+E       AssertionError: assert [] == ['HiSparse']
+E         
+E         Right contains one more item: 'HiSparse'
+E         Use -v to get more diff
+
+../pretest/trusted/test_vllm_config_unsupported_features.py:73: AssertionError
+_____ test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking] _____
+
+overrides = {'watermark_config': <test_vllm_config_unsupported_features.WatermarkConfig object at 0x105f9eab0>}
+feature = 'watermarking'
+
+    @pytest.mark.parametrize(
+        ("overrides", "feature"),
+        [
+            (
+                {"attention_config": AttentionConfig(hisparse_config=HiSparseConfig())},
+                "HiSparse",
+            ),
+            ({"watermark_config": WatermarkConfig(key=42)}, "watermarking"),
+        ],
+    )
+    def test_v1_model_runner_rejects_v2_only_config(overrides, feature):
+        config = SimpleNamespace(
+            parallel_config=ParallelConfig(distributed_executor_backend="mp"),
+            scheduler_config=SchedulerConfig.default_factory(async_scheduling=False),
+            attention_config=AttentionConfig(),
+            watermark_config=None,
+            speculative_config=None,
+            model_config=None,
+        )
+        config._dflash_needs_multi_kv_group = lambda: False
+        config._is_dflash_candidate_draft = lambda: False
+        assert VllmConfig._get_v1_model_runner_unsupported_features(config) == []
+    
+        for name, value in overrides.items():
+            setattr(config, name, value)
+>       assert VllmConfig._get_v1_model_runner_unsupported_features(config) == [feature]
+E       AssertionError: assert [] == ['watermarking']
+E         
+E         Right contains one more item: 'watermarking'
+E         Use -v to get more diff
+
+../pretest/trusted/test_vllm_config_unsupported_features.py:73: AssertionError
+=========================== short test summary info ============================
+FAILED ../pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]
+FAILED ../pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]
+2 failed in 0.02s

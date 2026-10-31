@@ -582,3 +582,13 @@ This file is append-only. New decisions are appended with dated evidence and fal
 - **Decision:** Mark the baseline gate **PASSED**. Under Addendum 4 only, authorize the one wrong-mutant attempt-002. Keep #64830 **UNQUALIFIED / UNASSIGNED** until mutant and fixed gates and isolation review pass; capability and RL remain **NO-GO**.
 - **Falsification criteria:** Any source/test/profile/command mismatch, a failure not at the two frozen assertions, skips/errors, timeout, RSS breach, or write/network isolation failure would invalidate the gate.
 - **Follow-up:** Run the stored mutant argv exactly once. Continue to upstream-fixed only if it is rejected by both same target assertions and no other gate fails.
+
+
+## 2026-10-31 — Reject the #64830 wrong mutant
+
+- **Hypothesis:** The intentionally wrong method, produced by removing only the newly added HiSparse and watermarking checks from upstream-fixed source, is rejected by both unchanged upstream regression cases.
+- **Evidence:** Addendum 4 remained present on the pushed PR branch and its stored wrong-mutant argv ran once. Both selected cases failed only at the frozen post-override equality assertion on line 73, yielding `[]` instead of `['HiSparse']` and `['watermarking']`. Pytest reported 2 failed, 0 passed/skipped/errors; exit code 1 was expected; elapsed time was 0.529 s; peak RSS was 3,932,160 bytes of 4 GiB; no timeout. The attempt's source/test/profile/Python hashes matched and its profile denied network with writes limited to its own output root. The baseline gate had already passed. Receipts and hashes are in the wrong-mutant attempt directory.
+- **Alternative explanations:** This confirms the tests detect the two removed guards in the method-only harness; it does not establish fixed-source success, full upstream integration, model repair, task assignment, or pretraining independence.
+- **Decision:** Mark the wrong-mutant gate **PASSED / REJECTED** and authorize one upstream-fixed attempt-002 under Addendum 4. Keep #64830 **UNQUALIFIED / UNASSIGNED** until fixed and isolation gates pass; capability/RL remain **NO-GO**.
+- **Falsification criteria:** Any hash mismatch, failure outside the intended assertion, skip/error, timeout, memory breach, or sandbox violation would invalidate the mutant gate.
+- **Follow-up:** Run the stored upstream-fixed argv exactly once. Require both identical cases to pass without unrelated failures before finalizing the scoped qualification.

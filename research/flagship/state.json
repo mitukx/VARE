@@ -304,7 +304,7 @@
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-4-output-profile-binding.json",
       "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1-addendum-4-output-profile-binding",
       "sha256": "dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396",
-      "status": "pushed at 5d2064a; exact baseline attempt-002 gate passed; authorizes one wrong-mutant attempt-002; upstream-fixed remains conditionally gated"
+      "status": "pushed at 5d2064a; baseline attempt-002 gate passed; wrong-mutant attempt-002 rejected at both target assertions; authorizes one upstream-fixed attempt-002"
     }
   ],
   "git_refs": {
@@ -315,15 +315,15 @@
     "last_integrated_pr_url": "https://github.com/mitukx/VARE/pull/159",
     "last_verified_main_sha": "416f35c465712898e8e5764a8e43193ef86e7afb",
     "repository": "mitukx/VARE",
-    "verified_pr_head_sha_before_checkpoint_changes": "5d2064a70c697fee3684c6586c50a2329cb8e86d"
+    "verified_pr_head_sha_before_checkpoint_changes": "a1ecc14a384931c3af9f642b33aef1ea60a0549b"
   },
   "go_no_go": {
     "coding_capability": "NO_GO",
     "integration": "GO",
     "rl_update": "NO_GO"
   },
-  "highest_priority_next_task": "Run the stored wrong-mutant attempt-002 argv from pushed Addendum 4 exactly once. Continue to upstream-fixed only if both cases fail at the same post-override assertion with no unrelated failures, skips, resource breach, or isolation issue.",
-  "last_completed_step": "Pushed Addendum 4 and matching per-arm attempt-002 Seatbelt profiles at PR #162 head 5d2064a70c697fee3684c6586c50a2329cb8e86d. Remote Addendum 4 hash matched. Baseline attempt-002 ran once with exact frozen inputs and command; both HiSparse and watermarking cases failed at the intended post-override assertion (line 73), with successful collection, zero skips/errors, no timeout/RSS breach, and profile-bound writes/network denial. The machine classification and checksums are saved. The wrong-mutant arm is now conditionally authorized; upstream-fixed still depends on its result. No model, training, split assignment, or Held-Out access occurred.",
+  "highest_priority_next_task": "Run the stored upstream-fixed attempt-002 argv from pushed Addendum 4 exactly once. Require both cases to pass with no skips, errors, timeout, resource breach, or isolation issue; then finalize the source-only qualification report and update the PR/checkpoint.",
+  "last_completed_step": "Baseline attempt-002 passed and wrong-mutant attempt-002 was run once under pushed Addendum 4. Both mutant cases failed at the same post-override assertion as baseline; collection/import succeeded, 0 skips/errors, no timeout/RSS breach, and the arm profile matched its output boundary. The classification and raw artifacts are checksummed. Upstream-fixed is now the only remaining qualification arm. No model, training, split assignment, or Held-Out access occurred.",
   "milestone_id": "p15-fresh-vllm-64830-source-qualification",
   "result_hash_references": [
     {
@@ -1395,6 +1395,26 @@
       "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-002/SHA256SUMS",
       "sha256": "ed457ac135ab9fbf4efce62d931783668282beb77df9e5428dc2cfb5647ba186",
       "status": "all baseline invocation, runner, log, internal log, and classification hashes match"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/wrong-mutant-attempt-002/attempt.json",
+      "sha256": "6470cfec7d50c775055a1487c8fe15ca1387ca1d6bdeaf5d1fe029e6add3db58",
+      "status": "both wrong-mutant cases failed at the expected post-override assertions; no resource breach"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/wrong-mutant-attempt-002/pytest.log",
+      "sha256": "b6d042d2fb51195fe8e1ec8041bb5977b5a49d7cc85f5873cea6d04c72904e23",
+      "status": "both target cases rejected the mutant at line 73; 0 errors/skips"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/wrong-mutant-attempt-002/classification.json",
+      "sha256": "1d263371a06a824a419f8a6b4157ff4db8045f67c6bf99a67e39b674a2081cef",
+      "status": "mutant gate passed; upstream-fixed authorized"
+    },
+    {
+      "path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/wrong-mutant-attempt-002/SHA256SUMS",
+      "sha256": "d5b0af40993f1865788f6de0b24366a342eef8e5808a572fb36d44fc67001ed3",
+      "status": "all wrong-mutant invocation, runner, log, internal log, and classification hashes match"
     }
   ],
   "run_ids": [
@@ -1447,7 +1467,8 @@
     "vllm-64830-source-baseline-attempt-001-setup-failure",
     "vllm-64830-qualification-runner-tooling-001",
     "vllm-64830-addendum3-profile-binding-audit-preexec",
-    "vllm-64830-source-baseline-attempt-002"
+    "vllm-64830-source-baseline-attempt-002",
+    "vllm-64830-source-wrong-mutant-attempt-002"
   ],
   "schema_version": 2,
   "task_exposure_ledger": {
@@ -1468,8 +1489,8 @@
     "vLLM #64830 remains UNQUALIFIED and UNASSIGNED. Its frozen source test overlay is intentionally scoped to HiSparse and watermarking; modified custom-speculator behavior is excluded from this qualification claim.",
     "PR #160 exact head 71aa74ab6a8f6f1625505b68f7f332c49fabff93 has passing exact-head CI and CPU evidence; GitHub reports merge state BLOCKED and normal review/branch-protection requirements remain.",
     "PR #161 exact head ade8a0ac3dfe609e67698638faf6eb826101dbc5 has passing exact-head CI and CPU evidence but remains a draft; no review is recorded.",
-    "vLLM #64830 remains UNQUALIFIED / UNASSIGNED. Baseline attempt-002 passed the exact source-level behavioral gate. The wrong-mutant arm is authorized but not run; upstream-fixed is gated on mutant rejection. No split assignment, inference, training, or Held-Out use is authorized.",
-    "PR #162 is open as a draft at head 5d2064a70c697fee3684c6586c50a2329cb8e86d; CI is running on this head and will rerun after the baseline evidence checkpoint."
+    "vLLM #64830 remains UNQUALIFIED / UNASSIGNED. Baseline and wrong-mutant attempt-002 passed their exact gates. The upstream-fixed arm remains unrun; all three arms and isolation review are required before source qualification. No split assignment, inference, training, or Held-Out use is authorized.",
+    "PR #162 is open as a draft at head a1ecc14a384931c3af9f642b33aef1ea60a0549b; exact-head CI is running and will rerun after the mutant evidence checkpoint."
   ],
-  "updated_at": "2026-10-31T05:51:53Z"
+  "updated_at": "2026-10-31T05:53:10Z"
 }
