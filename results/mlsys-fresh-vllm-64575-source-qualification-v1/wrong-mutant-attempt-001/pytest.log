@@ -1,0 +1,26 @@
+F....                                                                    [100%]
+=================================== FAILURES ===================================
+__ TestToolDefinitions.test_anthropic_defined_tool_is_rejected_by_type[tool0] __
+
+self = <test_anthropic_tool_definitions.TestToolDefinitions object at 0x105e2e3c0>
+tool = {'max_uses': 8, 'name': 'web_search', 'type': 'web_search_20250305'}
+
+    @pytest.mark.parametrize(
+        "tool",
+        [
+            {"type": "web_search_20250305", "name": "web_search", "max_uses": 8},
+            {"type": "bash_20250124", "name": "bash"},
+        ],
+    )
+    def test_anthropic_defined_tool_is_rejected_by_type(self, tool):
+        with pytest.raises(ValidationError) as exc_info:
+            _make_request([{"role": "user", "content": "Hi"}], tools=[tool])
+    
+        errors = exc_info.value.errors()
+>       assert len(errors) == 1
+E       assert 2 == 1
+E        +  where 2 = len([{'ctx': {'expected': "'custom'"}, 'input': 'web_search_20250305', 'loc': ('tools', 0, 'type'), 'msg': "Input should b... 'type': 'web_search_20250305'}, 'loc': ('tools', 0, 'input_schema'), 'msg': 'Field required', 'type': 'missing', ...}])
+
+results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py:77: AssertionError
+=========================== short test summary info ============================
+FAILED results/mlsys-fresh-vllm-64575-source-qualification-v1/trusted/test_anthropic_tool_definitions.py::TestToolDefinitions::test_anthropic_defined_tool_is_rejected_by_type[tool0]
