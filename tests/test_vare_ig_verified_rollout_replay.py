@@ -167,3 +167,36 @@ def test_invalid_group_preflight_is_failure_atomic_and_retryable(tmp_path: Path,
     assert record["replay_admitted"] is True
     assert len(bridge.store.group(group_id)) == 4
     assert audit_trajectory_store(tmp_path / "trajectory-store.sqlite3")["pass"] is True
+
+
+def test_row_reward_mismatch_cannot_fabricate_an_informative_group(tmp_path: Path):
+    """A forged persisted reward must not create a nonzero GRPO advantage."""
+    from vare.grpo_mlx import group_advantages
+
+    task = TRAIN_TASKS[0]
+    samples, rows = _group_rows(task, "b" * 64)
+    for sample, row in zip(samples, rows, strict=True):
+        sample.reward = 0.0
+        row["reward"] = 0.0
+        row["reward_detail"]["passed"] = False
+    assert group_advantages([sample.reward for sample in samples])[1] is False
+    rows[3]["reward"] = 1.0
+    assert group_advantages([float(row["reward"]) for row in rows])[1] is True
+
+    bridge = VerifiedGroupReplay(
+        tmp_path, run_id="forged-informative-group",
+        group_budget=1, group_size=4, replay_seed=0,
+    )
+    group_id = "vareig:forged-reward:train-step-0:0:task"
+    with pytest.raises(ValueError, match="persisted reward and sample reward disagree"):
+        bridge.add_group(
+            task=task,
+            family=FAMILY_BY_TASK[task.task_id],
+            prompt_messages=[{"role": "user", "content": task.prompt}],
+            samples=samples, rows=rows,
+            policy_id="qwen3-4b:test-policy", policy_version=0,
+            policy_checkpoint_sha256="c" * 64,
+            group_id=group_id,
+        )
+    assert bridge.store.group(group_id) == []
+    assert len(bridge.replay) == 0
