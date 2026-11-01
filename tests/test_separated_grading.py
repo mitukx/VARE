@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from vare.agent_task_contract import assert_train_only, load_agent_task
+from vare.agent_task_contract import assert_split_member, assert_train_only, load_agent_task
 from vare.container_isolation import (
     DockerIsolationRunner,
     IsolationError,
@@ -571,6 +571,31 @@ def test_engineering_contract_hides_evaluator_and_refuses_heldout(tmp_path):
     }), encoding="utf-8")
     with pytest.raises(ValueError, match="escapes"):
         load_agent_task(task)
+
+
+def test_development_contract_is_explicit_and_distinct_from_heldout(tmp_path):
+    development = load_agent_task(_engineering_fixture(tmp_path / "development", split="development"))
+    assert development.split == "development"
+    assert_split_member(development, {
+        "train": [], "development": [development.task_id], "heldout": [],
+    }, "development")
+    with pytest.raises(ValueError, match="outside the frozen heldout split"):
+        assert_split_member(development, {
+            "train": [], "development": [], "heldout": [development.task_id],
+        }, "heldout")
+    with pytest.raises(ValueError, match="development"):
+        assert_split_member(development, {"train": [], "heldout": []}, "unknown")
+
+
+def test_local_agent_cli_exposes_development_as_a_split():
+    completed = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "run_local_agent.py"), "--help"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert "--require-split {train,development,heldout}" in completed.stdout
 
 
 def test_repository_grader_argv_is_not_a_candidate_sandbox(tmp_path):

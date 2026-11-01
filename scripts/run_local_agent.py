@@ -852,7 +852,7 @@ def main() -> int:
     parser.add_argument('--top-k', type=int, default=20)
     parser.add_argument('--do-sample', action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file'), default='unified_diff')
-    parser.add_argument('--require-split', choices=('train', 'heldout'))
+    parser.add_argument('--require-split', choices=('train', 'development', 'heldout'))
     args = parser.parse_args()
 
     if args.max_new_tokens_per_turn < 1 or args.max_total_new_tokens < 1:
