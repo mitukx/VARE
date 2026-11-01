@@ -60,8 +60,8 @@ and [`mutable-batch-reproduction.json`](../results/rvl-direct-trainer-freshness-
   documented by the repository quick-start.
 - `ruff check src/vare tests scripts/reproduce_rvl_direct_trainer_stale_source_v1.py`: passed.
 - `mypy src/vare`: passed.
-- No model training, accelerator run, external reproduction, or MTS evaluation
-  was performed.
+- No model training, accelerator run, external reproduction, or agent capability
+  evaluation was performed.
 
 The command-level record is [`validation.json`](../results/rvl-direct-trainer-freshness-v1/validation.json).
 
