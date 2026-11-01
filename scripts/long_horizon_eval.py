@@ -556,6 +556,7 @@ def trusted_final_success(
     verification: Mapping[str, Any] | None,
     expected_trajectory_sha256: str,
     expected_verifier_config_sha256: str | None,
+    initial_source_hashes: Mapping[str, str],
     final_source_hashes: Mapping[str, str],
     public_tests_configured: bool,
     public_tests_passed: Any,
@@ -564,8 +565,15 @@ def trusted_final_success(
     expected_workspace_patch_sha256: str | None = None,
     require_task_binding: bool = False,
 ) -> bool:
-    """Require a complete, source-bound grade and configured public success."""
+    """Require a complete, source-bound grade, an edit, and public success."""
     if store_state not in TERMINAL_STORE_STATES or committed_steps != expected_steps:
+        return False
+    if (not isinstance(initial_source_hashes, Mapping)
+            or not isinstance(final_source_hashes, Mapping)
+            or not initial_source_hashes
+            or set(initial_source_hashes) != set(final_source_hashes)
+            or not any(initial_source_hashes[path] != final_source_hashes[path]
+                       for path in final_source_hashes)):
         return False
     if not isinstance(verification, Mapping) or verification.get("trusted") is not True:
         return False
@@ -897,8 +905,10 @@ class EpisodeHarness:
         ]
         for step in steps:
             messages.extend(messages_for_step(step["action"]))
+        baseline_hashes = runtime.file_hashes()
         state: dict[str, Any] = dict(steps[-1]["state"]) if steps else {
-            "file_sha256": runtime.file_hashes(), "edit_applied": False, "public_passed": None,
+            "file_sha256": baseline_hashes, "initial_file_sha256": baseline_hashes,
+            "edit_applied": False, "public_passed": None,
             "tokens_total": 0, "no_tool_retries": 0, "stop_reason": None}
         wall_used = sum(float(s["action"].get("timing", {}).get("step_seconds", 0.0)) for s in steps)
         for index in range(len(steps), controller.max_turns):
@@ -1198,6 +1208,7 @@ def episode_metrics(store: TrajectoryStore, ident: str) -> dict[str, Any]:
         verification=verification,
         expected_trajectory_sha256=row["head"],
         expected_verifier_config_sha256=verifier_config_sha256,
+        initial_source_hashes=(steps[0]["state"].get("initial_file_sha256", {}) if steps else {}),
         final_source_hashes=last_state.get("file_sha256", {}),
         public_tests_configured=bool(meta.get("public_tests")),
         public_tests_passed=last_state.get("public_passed"),

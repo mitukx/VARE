@@ -168,6 +168,7 @@ def _final_success_fixture(**overrides):
         "verification": verification,
         "expected_trajectory_sha256": "a" * 64,
         "expected_verifier_config_sha256": "b" * 64,
+        "initial_source_hashes": {"calc/ops.py": "0" * 64},
         "final_source_hashes": {"calc/ops.py": "f" * 64},
         "public_tests_configured": True,
         "public_tests_passed": True,
@@ -194,6 +195,8 @@ def _final_success_fixture(**overrides):
         ({"committed_steps": 7}, False),
         ({"expected_verifier_config_sha256": "9" * 64}, False),
         ({"expected_source_revision": "9" * 40}, False),
+        ({"initial_source_hashes": {"calc/ops.py": "f" * 64}}, False),
+        ({"initial_source_hashes": {}}, False),
         ({"final_source_hashes": {"calc/ops.py": "9" * 64}}, False),
         ({"verification": {**_final_success_fixture()["verification"], "metadata": {
             **_final_success_fixture()["verification"]["metadata"], "graded_files": [],

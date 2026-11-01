@@ -1,0 +1,58 @@
+{
+  "family_review": {
+    "confidence": "moderate",
+    "decision": "NO_DIRECT_IDENTITY_OR_FAMILY_OVERLAP",
+    "review_sha256": "c113289fb19481d240e4503e4fd8d225b434b3c6720aace66863c230cfbea3c5"
+  },
+  "independent_grader_calibration": {
+    "baseline": {
+      "final_success": false,
+      "hidden_prefix_pass": true,
+      "hidden_reparse_pass": false,
+      "public_test_pass": false,
+      "raw_grade_sha256": "9aaebffb9d808b2df88595bdc1db394f001d664680c1fae1ac1762b491d37300",
+      "terminal_gate_fixture": "synthetic calibration record; not a model trajectory",
+      "terminal_state_fixture_valid": true
+    },
+    "upstream-fixed": {
+      "final_success": true,
+      "hidden_prefix_pass": true,
+      "hidden_reparse_pass": true,
+      "public_test_pass": true,
+      "raw_grade_sha256": "880ebddfe7a987891af07593e372abe3218d89103d62dc95189092005bc7340b",
+      "terminal_gate_fixture": "synthetic calibration record; not a model trajectory",
+      "terminal_state_fixture_valid": true
+    },
+    "wrong-mutant": {
+      "final_success": false,
+      "hidden_prefix_pass": true,
+      "hidden_reparse_pass": false,
+      "public_test_pass": false,
+      "raw_grade_sha256": "0b9f6ea6a8ce0de69912e0ad214cc54fd3c5bdcc45b370ded1808983c7bfe4d4",
+      "terminal_gate_fixture": "synthetic calibration record; not a model trajectory",
+      "terminal_state_fixture_valid": true
+    }
+  },
+  "independent_grader_identity": {
+    "adapter_sha256": "2cb54a8f5277ee49c6e0543a395e8fe9f9a091609240771fa6618394dab91018",
+    "image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "script_sha256": "ea6775c20df5369512f9ead14848675a0ab3bfa30bc6dbeeaaec497a9b1c2771"
+  },
+  "limitations": [
+    "one Development task only",
+    "public pretraining exposure unknown",
+    "narrow source-level contracts; not the full vLLM test suite",
+    "terminal-state calibration used synthetic fixtures and is not model evidence",
+    "no capability or generalization claim"
+  ],
+  "schema_version": 1,
+  "source_qualification": {
+    "baseline_control_rejected": true,
+    "protocol_sha256": "0eb9f555352301389871ce4f4c1cbc964e534529bc678e306375d8a98edbdbda",
+    "status": "SOURCE_REGRESSION_QUALIFIED_FOR_DEVELOPMENT_CANDIDATE_ONLY",
+    "summary_sha256": "ca243d0be8fa2f2e8be23c88601f6a897f9516a0d686437c4f498e0e858478f3",
+    "upstream_fixed_control_passed": true,
+    "wrong_mutant_control_rejected": true
+  },
+  "task_id": "vllm-64674-responses-custom-tool-stream-decode"
+}

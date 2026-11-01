@@ -1,0 +1,311 @@
+{
+  "agent_attempt": {
+    "attempts_authorized": 1,
+    "backend": "mlx",
+    "command_template": [
+      "scripts/run_bounded_local_agent_attempt.py",
+      "--wall-seconds",
+      "900",
+      "--max-process-tree-rss-bytes",
+      "8589934592",
+      "--log",
+      "<LOCAL_ATTEMPT_LOG>",
+      "--record",
+      "<LOCAL_BOUNDED_RECORD>",
+      "--",
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "<LOCAL_PROFILE>",
+      "/usr/bin/env",
+      "HF_HUB_OFFLINE=1",
+      "TRANSFORMERS_OFFLINE=1",
+      "PYTHONNOUSERSITE=1",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONHASHSEED=0",
+      "DOCKER_HOST=unix://<COLIMA_DOCKER_SOCKET>",
+      "HOME=<LOCAL_HOME>",
+      "TMPDIR=<LOCAL_TMP>",
+      "<PINNED_RUNTIME_PYTHON>",
+      "-B",
+      "scripts/run_local_agent.py",
+      "--workspace",
+      "work/vare-trace-64674-agent-attempt-v1/workspace",
+      "--model-path",
+      "<CACHED_MODEL_SNAPSHOT>",
+      "--model-repository",
+      "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "--backend",
+      "mlx",
+      "--task-root",
+      "results/mlsys-fresh-vllm-64674-agent-attempt-v1/task",
+      "--output",
+      "<LOCAL_ATTEMPT_OUTPUT>",
+      "--instruction",
+      "<FROZEN_INSTRUCTION>",
+      "--seed",
+      "64674",
+      "--max-turns",
+      "12",
+      "--max-no-tool-retries",
+      "1",
+      "--max-new-tokens-per-turn",
+      "512",
+      "--incomplete-tool-retry-tokens",
+      "1024",
+      "--max-total-new-tokens",
+      "4096",
+      "--max-context-tokens",
+      "6144",
+      "--wall-seconds",
+      "900",
+      "--temperature",
+      "0.0",
+      "--top-p",
+      "1.0",
+      "--top-k",
+      "0",
+      "--no-do-sample",
+      "--edit-format",
+      "unified_diff",
+      "--require-split",
+      "development",
+      "--public-test-image",
+      "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1"
+    ],
+    "do_sample": false,
+    "edit_format": "unified_diff",
+    "incomplete_tool_retry_tokens": 1024,
+    "instruction": "Trace the incremental streaming decode path, make the smallest correct source change, run the immutable public regression, inspect its output, and finish only when the public test passes.",
+    "max_context_tokens": 6144,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_process_tree_rss_bytes": 8589934592,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "public_test_image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "public_test_tool": true,
+    "raw_attempt_log_local_only": "work/vare-trace-64674-agent-attempt-v1/attempt-001/agent-attempt.log",
+    "raw_attempt_output_local_only": "work/vare-trace-64674-agent-attempt-v1/attempt-001/agent-attempt.json",
+    "seed": 64674,
+    "task_root": "results/mlsys-fresh-vllm-64674-agent-attempt-v1/task",
+    "temperature": 0.0,
+    "top_k": 0,
+    "top_p": 1.0,
+    "wall_seconds": 900,
+    "workspace_path": "work/vare-trace-64674-agent-attempt-v1/workspace"
+  },
+  "artifact_policy": {
+    "committed_to_vare": [
+      "task prompt",
+      "public regression",
+      "baseline source hashes",
+      "calibration summary",
+      "frozen protocol",
+      "redacted outcome summary"
+    ],
+    "local_only": [
+      "machine-specific sandbox profile",
+      "absolute-path model/runtime manifests",
+      "raw model transcript and output",
+      "raw local grader report containing host paths",
+      "candidate workspace and runtime smoke log"
+    ],
+    "local_only_artifact_hashes_are_recorded": true
+  },
+  "assignment": {
+    "baseline_revision": "898b55ffcb8a8d4d3ba7c11c68dbefcae993057c",
+    "prospective_assignment_record": {
+      "path": "results/mlsys-fresh-vllm-64674-agent-attempt-v1/exposure-assignment.json",
+      "sha256": "72988fdf2ffbf829fe95ad657ce04a3231a13f6cc8b4d0df7722f3f62a4a3e45"
+    },
+    "split": "Development",
+    "task_id": "vllm-64674-responses-custom-tool-stream-decode",
+    "workspace_path": "work/vare-trace-64674-agent-attempt-v1/workspace"
+  },
+  "authorization": {
+    "comments_or_pull_requests_to_other_repositories": false,
+    "external_repository_writes": false,
+    "heldout_access": false,
+    "one_development_attempt": true,
+    "paid_compute_or_api": false,
+    "training": false
+  },
+  "candidate": {
+    "production_files": [
+      "vllm/entrypoints/openai/responses/streaming_events.py",
+      "vllm/entrypoints/openai/responses/utils.py"
+    ],
+    "pull_request": 64674,
+    "repository": "vllm-project/vllm",
+    "scope": "minimal task snapshot containing exact upstream baseline production blobs, VARE immutable public regression file, and pinned parser dependency; not a full vLLM checkout or full upstream test suite",
+    "task_id": "vllm-64674-responses-custom-tool-stream-decode",
+    "upstream_base_revision": "7495e9e5a4b705a16bec8ecba43ed7c317067db1",
+    "upstream_fixed_revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "workspace_snapshot_revision": "898b55ffcb8a8d4d3ba7c11c68dbefcae993057c"
+  },
+  "eligibility": {
+    "independent_grader_controls": "baseline and mutant fail hidden reparse contract; exact upstream fix passes public and hidden contracts",
+    "metadata_family_review": {
+      "confidence": "moderate",
+      "path": "results/mlsys-fresh-development-family-review-64674-v1/review.json",
+      "result": "NO_DIRECT_IDENTITY_OR_FAMILY_OVERLAP"
+    },
+    "model_task_pretraining_exposure": "UNKNOWN",
+    "public_regression_controls": "baseline and reparse mutant fail; exact upstream fix passes",
+    "source_qualification": "SOURCE_REGRESSION_QUALIFIED_FOR_DEVELOPMENT_CANDIDATE_ONLY"
+  },
+  "exposure": {
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "model_exposure_to_this_task_before_assignment": false,
+    "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "prior_same_repository_attempt_sha256": "d6ff3a08b0b0be79c08ba4e3838887437b1956c6d3e23a04d090bf1411d84c97",
+    "prior_same_repository_exposure": "A prior #64830 attempt loaded these same weights and received a distinct V1 configuration prompt; zero generated tokens, no edits, no grade. The #64674 family review found no direct identity/family overlap.",
+    "public_pretraining_exposure": "UNKNOWN",
+    "researcher_source_test_exposure": true,
+    "split": "Development"
+  },
+  "final_success_contract": {
+    "hidden_grade_feedback_to_model": false,
+    "model_self_report_is_success": false,
+    "requires_all": [
+      "candidate source changed in the two-file allowlist and all source/task/model identities match the frozen manifest",
+      "agent persisted stop_reason=agent_finished with a real applied edit and public test pass in terminal state",
+      "independent post-attempt public regression passes in pinned networkless Docker with candidate workspace mounted read-only",
+      "parent-owned hidden randomized stream-prefix oracle passes in the isolated candidate container",
+      "parent-owned hidden input-size reparse-invariance check passes in the isolated candidate container"
+    ]
+  },
+  "frozen_at_utc": "2026-11-01T19:00:55.749501+00:00",
+  "frozen_inputs": {
+    "agent_runner": {
+      "path": "scripts/run_local_agent.py",
+      "sha256": "4b776cb320e05001e0540f254ef541287e1c0b646f0aa6e68602c404c75708ff"
+    },
+    "baseline_manifest": {
+      "path": "results/mlsys-fresh-vllm-64674-agent-attempt-v1/baseline-manifest.json",
+      "sha256": "6b956f13c5e9b6ea2b385801328b0de689579775e6184d2f0bafcc1c97191237"
+    },
+    "baseline_source": {
+      "path": "vllm/entrypoints/openai/responses/streaming_events.py",
+      "sha256": "e453596259b61881b5fda0e489e0953803284ca8a81a3900c90e7570c961785b"
+    },
+    "baseline_source_utils": {
+      "path": "work/vare-trace-64674-agent-attempt-v1/workspace/vllm/entrypoints/openai/responses/utils.py",
+      "sha256": "f9e87ed884b620f69a6d22d41cb030ba57eda211d4f1751a0b4efa6cf36c7828"
+    },
+    "bounded_attempt_runner": {
+      "path": "scripts/run_bounded_local_agent_attempt.py",
+      "sha256": "fa3105bbbe1ecbdffba0c6c3886d9d38b38e009db34f96a972b2a030f986e114"
+    },
+    "calibration_summary": {
+      "path": "results/mlsys-fresh-vllm-64674-agent-attempt-v1/calibration-summary.json",
+      "sha256": "b4f7e86c75acb17f9fd804ccbadae44650f11a1de29cb073f2e03ae98bcc4c2e"
+    },
+    "candidate_adapter": {
+      "path": "results/mlsys-fresh-vllm-64674-agent-attempt-v1/trusted/eval_adapter.py",
+      "sha256": "2cb54a8f5277ee49c6e0543a395e8fe9f9a091609240771fa6618394dab91018"
+    },
+    "candidate_task": {
+      "path": "results/mlsys-fresh-vllm-64674-agent-attempt-v1/task/task.json",
+      "sha256": "d1d38dae24e897f5ac862c15bcbefb769ce29427b41e45b322315724129ee9c1"
+    },
+    "independent_grader": {
+      "path": "scripts/run_mlsys_vllm_64674_agent_grader_v1.py",
+      "sha256": "ea6775c20df5369512f9ead14848675a0ab3bfa30bc6dbeeaaec497a9b1c2771"
+    },
+    "local_expected_model_file_hashes": {
+      "path": "work/vare-trace-64674-agent-attempt-v1/runtime/model-files.json",
+      "sha256": "e2d58c27c103b377252e87237ef1d174ff1c40dbc21e6538680df02fe6a65a7d"
+    },
+    "local_expected_source_hashes": {
+      "path": "work/vare-trace-64674-agent-attempt-v1/runtime/source-hashes.json",
+      "sha256": "1f56374c7e097cbcafbccedd079b4af7b9da343e8ade4e16aeb92f1dfb401009"
+    },
+    "local_model_profile": {
+      "path": "work/vare-trace-64674-agent-attempt-v1/runtime/model-agent.sb",
+      "sha256": "650578b82e77e36a7ac683392a77db4264ae55922e6ec16fc2ba1f712c574979"
+    },
+    "local_runtime_smoke": {
+      "path": "work/vare-trace-64674-agent-attempt-v1/runtime/runtime-smoke.py",
+      "sha256": "45c8260d3830d78a3aa1c57716bc6a12b48e2270e6147c6605f8459ad21a0be2"
+    },
+    "long_horizon_success_metric": {
+      "path": "scripts/long_horizon_eval.py",
+      "sha256": "187723340fb9f22bc826cca965d88cee2bcc8c68f0b1a484e3243e9ba7950a0a"
+    },
+    "long_horizon_success_metric_test": {
+      "path": "tests/test_long_horizon_eval.py",
+      "sha256": "2c2a4d70b1297295727b87f7c79f1cdfa52dd3db364b5c85d4d4afc969c38428"
+    },
+    "model_file_manifest": {
+      "path": "work/vare-trace-64674-agent-attempt-v1/runtime/model-file-manifest.json",
+      "sha256": "4019efb52306d0c99d40a471c7f33034ce7fd5d026e0c19616af2069417e3302"
+    },
+    "model_runtime_manifest": {
+      "path": "work/vare-trace-64674-agent-attempt-v1/runtime/runtime-manifest.json",
+      "sha256": "74be8e5d42fb1ed1c59d425a33b2319f0cf20f8b8135fcf587f42868af7896d0"
+    },
+    "preflight_runner": {
+      "path": "scripts/preflight_local_model_attempt.py",
+      "sha256": "44382177f4e95c381430d3e6f5d83b2c0d88d8f6df6878b3a4ede46a2aa09ca2"
+    },
+    "preflight_test": {
+      "path": "tests/test_preflight_local_model_attempt.py",
+      "sha256": "d60d626cfa07f359ff069613a454f7c179f469885fe6bb05541c0d1f1edc1cd5"
+    },
+    "public_test": {
+      "path": "work/vare-trace-64674-agent-attempt-v1/workspace/test_public.py",
+      "sha256": "943f74399f770a456efbb9f37cd3cee8266abe94ca48a5f51a4bd66215d836b3"
+    },
+    "source_qualification_summary": {
+      "path": "results/mlsys-fresh-vllm-64674-source-qualification-v2/qualification-summary.json",
+      "sha256": "ca243d0be8fa2f2e8be23c88601f6a897f9516a0d686437c4f498e0e858478f3"
+    },
+    "task_family_review": {
+      "path": "results/mlsys-fresh-development-family-review-64674-v1/review.json",
+      "sha256": "c113289fb19481d240e4503e4fd8d225b434b3c6720aace66863c230cfbea3c5"
+    },
+    "task_workspace_git": {
+      "path": "work/vare-trace-64674-agent-attempt-v1/workspace/.git/HEAD",
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80"
+    }
+  },
+  "learning_gate": {
+    "policy_update_authorized": false,
+    "reason": "The runner stores text/tool events but no exact generated token IDs or behavior log probabilities; these trajectories are not eligible for GRPO policy-gradient training."
+  },
+  "pre_protocol_vare_head": "4060760820f23ea0ed0225f205a29678b86d4d53",
+  "preflight": {
+    "docker_socket_policy": "deny all network; allow only the local Colima Docker Unix socket; Docker candidate containers use network=none",
+    "fresh_gate_required_after_exact_head_ci": true,
+    "no_task_runtime_smoke": {
+      "allowed": true,
+      "max_new_tokens": 1,
+      "prompt": "Reply with one character only.",
+      "purpose": "verify local Qwen/MLX/Metal JIT works under the frozen sandbox before the Development task prompt",
+      "task_prompt_delivered": false
+    },
+    "sandbox_profile_sha256": "650578b82e77e36a7ac683392a77db4264ae55922e6ec16fc2ba1f712c574979"
+  },
+  "protocol_id": "mlsys-fresh-vllm-64674-agent-attempt-v1-qwen3-4b-development",
+  "purpose": "One Qwen3-4B multi-turn Development evaluation on the VARE-qualified narrow vLLM #64674 source task; no held-out access and no RL update.",
+  "resource_policy": {
+    "additional_operator_margin_bytes": 2147483648,
+    "gates": {
+      "maximum_process_tree_rss_bytes": 8589934592,
+      "maximum_swap_used_bytes": 2684354560,
+      "minimum_available_memory_bytes": 8589934592,
+      "minimum_disk_free_bytes": 10737418240,
+      "minimum_memory_pressure_free_percent": 60,
+      "minimum_weight_kv_reserve_headroom_bytes": 1073741824
+    },
+    "on_failure": "Record NO_GO before delivering the #64674 task prompt; do not load model weights or start task generation.",
+    "runtime_activation_reserve_bytes": 3221225472
+  },
+  "schema_version": 1,
+  "source_identity": {
+    "vllm/entrypoints/openai/responses/streaming_events.py": "e453596259b61881b5fda0e489e0953803284ca8a81a3900c90e7570c961785b",
+    "vllm/entrypoints/openai/responses/utils.py": "f9e87ed884b620f69a6d22d41cb030ba57eda211d4f1751a0b4efa6cf36c7828"
+  },
+  "status": "FROZEN_BEFORE_64674_MODEL_PROMPT_OR_GENERATION"
+}
