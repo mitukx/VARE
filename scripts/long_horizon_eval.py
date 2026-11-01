@@ -607,7 +607,7 @@ class FunctionOracleGrader:
         # The store binds one verifier name/version to one immutable config.
         # A digest suffix lets a run safely grade multiple task-specific oracle
         # contracts without rebinding the same verifier identity.
-        self.name = f"vare_function_oracle:{self._config_sha256[:16]}"
+        self.name = f"vare_function_oracle:{self._config_sha256}"
 
     def config_sha256(self) -> str:
         return self._config_sha256
