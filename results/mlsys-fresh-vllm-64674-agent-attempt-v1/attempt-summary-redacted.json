@@ -1,0 +1,127 @@
+{
+  "agent_attempt": {
+    "agent_public_test_result": "not_run",
+    "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "duration_seconds": 197.553,
+    "incomplete_tool_retry_turns": [
+      8
+    ],
+    "independent_grade": "pending",
+    "max_metal_memory_bytes": 3975429184,
+    "max_rss_bytes": 2519203840,
+    "new_tokens": 1434,
+    "process_tree_rss_peak_bytes": 2484682752,
+    "prompt_delivered": true,
+    "public_test_tool_invoked": false,
+    "rejection_reason": "expected_source_sha256 was absent from each replace_text call",
+    "replace_text_calls_rejected": 3,
+    "source_changed": false,
+    "started_utc": "2026-11-01T20:13:47.535607+00:00",
+    "stop_reason": "no_tool_call_retries_exhausted",
+    "tool_turns": 12,
+    "training_eligibility": false,
+    "training_gate_reason": "The runner does not capture exact generated token IDs or behavior log probabilities.",
+    "training_performed": false,
+    "truncated_tool_output_turns": [
+      7,
+      12
+    ]
+  },
+  "artifact_policy": {
+    "absolute_host_paths_included": false,
+    "artifacts": [
+      {
+        "artifact_class": "local_only",
+        "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/agent-attempt.json",
+        "sha256": "8a41cf3b9a40752b71e640cb8070feae9e5e123c37eb8d57979a1b26283318c6"
+      },
+      {
+        "artifact_class": "local_only",
+        "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/agent-attempt.log",
+        "sha256": "5a5b2ffda4664c5b40ed4f93774d6d232d2ef41502f30b4c2960c977d9b3f94e"
+      },
+      {
+        "artifact_class": "local_only",
+        "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/agent-attempt-bounded.json",
+        "sha256": "42839a64354cd0b1ef0f84c391e8b9fd6d97d674054fe0286ec1cca106388493"
+      },
+      {
+        "artifact_class": "local_only",
+        "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/launch-preflight-scoped-extension.json",
+        "sha256": "3d217c4ad3450952e88f89b1f5d85684f8ed276d33a0070b0b318bfe11b6efea"
+      },
+      {
+        "artifact_class": "local_only",
+        "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/launch-preflight-post-smoke.json",
+        "sha256": "4dd96e5b41d36842df3f4d37acad13a3be19b194fa848553461011787bb88cf4"
+      },
+      {
+        "artifact_class": "local_only",
+        "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/runtime-smoke-scoped-extension.log",
+        "sha256": "492a86fb7a1135452f153261ab69f46688f7772eac504f96cc132ab160919114"
+      },
+      {
+        "artifact_class": "local_only",
+        "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/runtime-smoke-scoped-extension-bounded.json",
+        "sha256": "794e7ff08549d229f2c8761a8e0f53f72ba659605c07a5c2348ca8ae0085c446"
+      }
+    ],
+    "local_artifact_hashes_are_recorded": true,
+    "raw_transcript_included": false
+  },
+  "attempt_id": "attempt-001",
+  "branch": "research/vare-trace-2026-11-02",
+  "claim_limit": "One Development attempt on the frozen narrow vLLM #64674 task. No source repair or capability gain is established; independent grading is pending.",
+  "exact_head_ci": "20/20 success",
+  "model": {
+    "backend": "MLX/Metal",
+    "hardware": "macOS-27.0.1-arm64-arm-64bit",
+    "mlx_lm_version": "0.32.2",
+    "model_peak_memory_bytes": 3975429184,
+    "python_version": "3.12.12",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "seed": 64674
+  },
+  "protocol_id": "mlsys-fresh-vllm-64674-agent-attempt-v1-qwen3-4b-development",
+  "protocol_sha256": "64371677fa9830d913cd4a612869577a3c9a76eda3f9b8c06e87758379334a0f",
+  "pull_request": 181,
+  "repository": "VARE",
+  "resource_preflight": {
+    "after_smoke_before_agent_status": "PASSED",
+    "before_smoke_status": "PASSED",
+    "protocol_sha256": "64371677fa9830d913cd4a612869577a3c9a76eda3f9b8c06e87758379334a0f",
+    "rss_cap_bytes": 8589934592,
+    "sandbox_profile_sha256": "2bf056571fcab49c22066676c2d4c210c2a1742227ee807bf9d94c0ec023100e",
+    "wall_cap_seconds": 900
+  },
+  "runtime_smoke": {
+    "duration_seconds": 4.4,
+    "exit_code": 0,
+    "generated_chars": 1,
+    "model_loaded": true,
+    "note": "The exact cache-scoped extension rules enabled Metal JIT. A separate venv/bin extension request remained denied and did not prevent generation.",
+    "output_sha256": "83d544ccc223c057d2bf80d3f2a32982c32c3c0db8e2674820da5064783fb097",
+    "rss_peak_bytes": 2413871104,
+    "task_independent": true
+  },
+  "schema_version": 1,
+  "status": "PRE_GRADE_ATTEMPT_RECORDED",
+  "summary_id": "mlsys-fresh-vllm-64674-agent-attempt-001-redacted",
+  "task": {
+    "candidate_workspace_revision": "898b55ffcb8a8d4d3ba7c11c68dbefcae993057c",
+    "source_sha256_after": {
+      "vllm/entrypoints/openai/responses/streaming_events.py": "e453596259b61881b5fda0e489e0953803284ca8a81a3900c90e7570c961785b",
+      "vllm/entrypoints/openai/responses/utils.py": "f9e87ed884b620f69a6d22d41cb030ba57eda211d4f1751a0b4efa6cf36c7828"
+    },
+    "source_sha256_before": {
+      "vllm/entrypoints/openai/responses/streaming_events.py": "e453596259b61881b5fda0e489e0953803284ca8a81a3900c90e7570c961785b",
+      "vllm/entrypoints/openai/responses/utils.py": "f9e87ed884b620f69a6d22d41cb030ba57eda211d4f1751a0b4efa6cf36c7828"
+    },
+    "split": "Development",
+    "task_id": "vllm-64674-responses-custom-tool-stream-decode",
+    "task_json_sha256": "d1d38dae24e897f5ac862c15bcbefb769ce29427b41e45b322315724129ee9c1",
+    "task_prompt_sha256": "2ef648ce94ce42c2cfb9fc25d0278cee40032fe53468c8987072b1f0ab280972"
+  },
+  "vare_head_sha": "bd0496df86f1549ccbde3e635618848efbecd917"
+}
