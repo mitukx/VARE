@@ -53,7 +53,7 @@ Passed for the current PR #181 head `414904e333d53b733abc26c3f4c21125a8e2fe3a`:
 
 - Focused local pytest coverage for agent tool formatting, exact edit handling, separated grading, and the full runner lifecycle fixture passed with the pinned Colima test image.
 - GitHub checks passed for Python 3.11, 3.12, and 3.13, lint, typecheck, blob budget, CPU evidence, and optimizer/recovery.
-- `ruff`, `py_compile`, and `git diff --check` passed locally.
+- `ruff` and `py_compile` passed locally. The new report and protocol files pass `git diff --check`. The full PR range still reports one extra blank line at EOF in frozen vendored `entry_points.txt` and three trailing-whitespace lines in the frozen wrong-mutant patch; both are retained byte-for-byte to preserve package and mutation evidence.
 - The bounded source-handle diagnostic passed frozen-input and resource preflight. It ran for 211.5 seconds, generated 1,535 tokens over 12 tool turns, stayed below its wall and RSS caps, and made no source change.
 
 The engineering tests validate controller behavior and protocol compatibility. The model diagnostic is a negative edit result, not a coding-capability or policy-improvement result.
