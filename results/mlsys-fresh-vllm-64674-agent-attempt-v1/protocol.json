@@ -261,6 +261,12 @@
       "path": "results/mlsys-fresh-vllm-64674-source-qualification-v2/qualification-summary.json",
       "sha256": "ca243d0be8fa2f2e8be23c88601f6a897f9516a0d686437c4f498e0e858478f3"
     },
+    "task": {
+      "task_json_path": "results/mlsys-fresh-vllm-64674-agent-attempt-v1/task/task.json",
+      "task_json_sha256": "d1d38dae24e897f5ac862c15bcbefb769ce29427b41e45b322315724129ee9c1",
+      "task_prompt_path": "results/mlsys-fresh-vllm-64674-agent-attempt-v1/task/TASK.md",
+      "task_prompt_sha256": "2ef648ce94ce42c2cfb9fc25d0278cee40032fe53468c8987072b1f0ab280972"
+    },
     "task_family_review": {
       "path": "results/mlsys-fresh-development-family-review-64674-v1/review.json",
       "sha256": "c113289fb19481d240e4503e4fd8d225b434b3c6720aace66863c230cfbea3c5"
@@ -287,6 +293,24 @@
     },
     "sandbox_profile_sha256": "650578b82e77e36a7ac683392a77db4264ae55922e6ec16fc2ba1f712c574979"
   },
+  "protocol_amendments": [
+    {
+      "at_utc": "2026-11-01T19:14:14Z",
+      "changes": [
+        "Added the exact task contract prompt as task/TASK.md.",
+        "Added SHA-256 bindings for task/task.json and task/TASK.md to frozen_inputs.task."
+      ],
+      "model_loaded": false,
+      "preflight_failure_record": {
+        "artifact_class": "local_only",
+        "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/launch-preflight.json",
+        "sha256": "fdfe2e9cc3b5d3c007a4e55e2ba5a1d4f562e07c2ab9b83b837cd5460905d3c2"
+      },
+      "reason": "The first post-CI launch preflight correctly failed closed because the frozen task input manifest had been omitted.",
+      "task_assignment_or_generation_budgets_changed": false,
+      "task_prompt_delivered": false
+    }
+  ],
   "protocol_id": "mlsys-fresh-vllm-64674-agent-attempt-v1-qwen3-4b-development",
   "purpose": "One Qwen3-4B multi-turn Development evaluation on the VARE-qualified narrow vLLM #64674 source task; no held-out access and no RL update.",
   "resource_policy": {
