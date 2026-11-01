@@ -1,0 +1,48 @@
+{
+  "amendment_reason": "Corrected the locked Development generation cap to the existing runner constant of 256; the invalid v1 lock was rejected before any model load or evaluation.",
+  "development_task_hashes": {
+    "vare_ig.dev.deep_lookup.v1": "786ae55bd4aec6cc36da39343449e85ec044d84bef27ca6be8a0e75fd2593b29",
+    "vare_ig.dev.first_event_ids.v1": "1ab3ea912a9ada85b70a72e4310b8fc4f8de3f2ce229a726c1146ee7c6013f69",
+    "vare_ig.dev.lexical_course_order.v1": "845abfa224e3f6e136f892cde4fa79a69a5b17d5e0a8719f0dac0d43811ad946",
+    "vare_ig.dev.parse_duration_pair.v1": "90042e6939d73014c9a92a444d8b71acc1bd15fbd688f39ea0ad3b39c9bf1463"
+  },
+  "evaluation_helper_path": "${VARE_ROOT}/scripts/evaluate_vare_ig_update1.py",
+  "evaluation_helper_sha256": "1b1e492da304ca317ec2a95d52c5529f60af1dcaa4ca1a2e896065afa19e69df",
+  "evaluation_scope": "Paired base-versus-update-0001 comparison on the frozen Development cohort; exploratory, not held-out.",
+  "evaluation_settings": {
+    "decode": "greedy",
+    "max_new_tokens": 256,
+    "metric": "task-level binary pass@1, four fixed Development tasks; exploratory only",
+    "paired_seed_schedule": "seed_for(run_seed, 'paired-step1', task_id, task_index)",
+    "temperature": 0.0
+  },
+  "frozen_at_utc": "2026-11-01T13:29:20+00:00",
+  "input_artifact_sha256": {
+    "adapters.safetensors": "46bfc9a194c4705237b8de094671eee58e51dfcbdd3201abb599f70840eedbef",
+    "base-policy.json": "5facbe8636503134f8f6e6fc436ace1678f4c3cb7f997646fca796f9645366e0",
+    "checkpoint-state.json": "ae944d89a30b3e1775dd166215730bd7dc56279366511a9c347ff8088b0dc699",
+    "checkpoint.json": "69f76c3246a65fdaa6c8f322296285fd67b2ad815c9127f86280d0cf38f22861",
+    "development-pre.jsonl": "a1ea63767183560b3783d14fef2912edb0cf137a3f348eed925ee81e201ea8de",
+    "learner-events.json": "1d5bde5c42bed8528f896c2b38be9f465ae90e4ef7b7d5b77c736cdbb664aeef",
+    "optimizer.safetensors": "30c81b4b9a6a7cf4fe5715011b026873b8f93f89718e44f36005105eaf0e2163",
+    "run_meta.json": "28999faf86c59cc4ae4e92e179fc909868aeb6046a0e1a06b46a5a0ce7b26b85",
+    "training-result.json": "8b6fea6d2d78f3c14a6f83e3775878ab4d4c4a205f5ef6b4493c836a1c27583f"
+  },
+  "non_actions": [
+    "no new training samples",
+    "no optimizer update",
+    "no task selection based on outcomes",
+    "no test-set claim"
+  ],
+  "output_directory": "paired-evaluation-update-0001-v1",
+  "preregistered_before_post_update_evaluation": true,
+  "protocol_id": "vare-ig-uniform-seed-20261114-update1-paired-eval-v2",
+  "recovery_protocol_path": "${VARE_ROOT}/protocols/vare_ig_qwen3_mlx_dev_v2/uniform-seed-20261114-preupdate-recovery-v4.json",
+  "recovery_protocol_sha256": "c7887a15095f372cb537d0a6da4a0ca8db3d00febd13148e1c1646bc78e95de5",
+  "run_protocol_path": "${VARE_ROOT}/protocols/vare_ig_qwen3_mlx_dev_v2/uniform-seed-20261114.json",
+  "run_protocol_sha256": "ecc0ff9bed033b375241ff90d8e97cd32474d12c011cc641701ddb1bf69dc29a",
+  "schema": "vare_ig_paired_development_evaluation_v1",
+  "seed": 20261114,
+  "supersedes_invalid_lock_path": "${VARE_ROOT}/protocols/vare_ig_qwen3_mlx_dev_v2/uniform-seed-20261114-update1-paired-eval.json",
+  "supersedes_invalid_lock_sha256": "589a94e42776698c8f35247c8fe7977a6999a7965df4355b81611ca8ec60b5ae"
+}

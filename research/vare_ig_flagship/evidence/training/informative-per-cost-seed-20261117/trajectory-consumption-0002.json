@@ -1,0 +1,40 @@
+{
+  "acknowledgment_path": "recovered-update-0002.json",
+  "acknowledgment_sha256": "ce6d9ae1399b7fb5eed7a671cb62376f03b13c76f0e449cf70fca9d194654879",
+  "claim_boundary": "trajectory consumer acknowledgment follows the durable learner decision; it is not the optimizer transaction itself",
+  "groups": [
+    {
+      "group_id": "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1",
+      "heads": {
+        "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1:member:0": "2e5c94c09b16a9a96dd4db17bbfb8c453515e6e5305e1f9ef04b4035e50929c7",
+        "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1:member:1": "5646ae3d1b5882633d042e027225d04abb204984c53c75a051b912f0552ff98c",
+        "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1:member:2": "906aebd87b5df66ec3422ac74c11858b18b18c5219673000bcb97f147b48b67d",
+        "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1:member:3": "378f4fcfa406e65743f210ae77e4535220a0aef02f76e0ac654b9c3527d68e6e"
+      },
+      "state": "consumed_now"
+    },
+    {
+      "group_id": "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1",
+      "heads": {
+        "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1:member:0": "8714052d2fe02e327ed47db1739b3dac356a91a0bd8cfa5bb26984d62d2eea58",
+        "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1:member:1": "33fa50dd2aae3c3fe978bc93c9a4095c6387b243dae325a1580dadd51048df06",
+        "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1:member:2": "06505e48241dca8408cd1b8ba017b152c77ee24e3e4bd7d2fb97cc650ffba2fe",
+        "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1:member:3": "7fa53f699a85397617272b1ec958d1a29724e012e1141b789ee70731c42e464a"
+      },
+      "state": "consumed_now"
+    },
+    {
+      "group_id": "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1",
+      "heads": {
+        "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:0": "5ca2d9d9cf2a3bc543081416558abd2f4b468c2b728d56984c9477820bfd3999",
+        "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:1": "5f7d20555b9dc01908a560df22db1df6adf65082edacd6474dc8e95c05dc060b",
+        "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:2": "04b1a62ee732a54de48144843818b78010c371bc5e2b4501fce5c6c2a44aab54",
+        "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:3": "b1d45f278990cb062ef51963aa45940b6f1a8d3413312a6745c600bcd52604de"
+      },
+      "state": "consumed_now"
+    }
+  ],
+  "optimizer_commit_claim": true,
+  "schema": "vare_ig_trajectory_consumer_ack_v1",
+  "update_step": 2
+}

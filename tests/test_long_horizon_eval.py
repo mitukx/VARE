@@ -119,6 +119,29 @@ def test_protocol_digest_is_bound_to_episode_and_metrics(tmp_path):
     assert result["episodes"][0]["protocol_sha256"] == protocol_sha
 
 
+def test_development_enrollment_requires_a_frozen_protocol(tmp_path):
+    base = lh.fixture_task()
+    task = lh.EpisodeTask(
+        task_id="fixture-development", repository=base.repository, split="development",
+        issue=base.issue, readable_files=base.readable_files,
+        editable_files=base.editable_files, target_files=base.target_files, synthetic=True,
+    )
+    without_lock = lh.EpisodeHarness(
+        tmp_path / "unlocked", stub_arm(), lh.CONTROLLER_PRESETS["full"],
+        factories={task.task_id: lh.write_fixture},
+    )
+    with pytest.raises(ValueError, match="Development episodes require a validated frozen protocol"):
+        without_lock.enroll([lh.EpisodeSpec(task, 1)])
+
+    locked = lh.EpisodeHarness(
+        tmp_path / "locked", stub_arm(), lh.CONTROLLER_PRESETS["full"],
+        factories={task.task_id: lh.write_fixture}, protocol_sha256="d" * 64,
+    )
+    assert locked.enroll([lh.EpisodeSpec(task, 1)])
+    metadata = json.loads(locked.store.trajectory("stub:full:fixture-development:s1")["task"])["task"]["metadata"]
+    assert metadata["task_split"] == "development"
+
+
 def test_controller_ablation_changes_outcome_with_same_policy(tmp_path):
     grader = FakeGrader()
     full = run_once(tmp_path / "full", grader=grader)

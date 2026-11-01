@@ -1,0 +1,70 @@
+{
+  "behavior_step": 1,
+  "freshness_policy_lag": 0,
+  "group_provenance_homogeneous": true,
+  "policy_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u1:a234004cfc4d02e57637",
+  "policy_checkpoint_sha256": "a234004cfc4d02e5763798b05fc3441d9b9644a633611888d82b41e0f2f0d885",
+  "prefix_cache_benchmark_sha256": "ffb24291af7530795179da7aec92b65e0f4ac26563ea7426e23d81336b0a52c4",
+  "prefix_cache_enabled": true,
+  "schema": "vare_ig_recovery_trajectory_replay_v1",
+  "trajectory_groups": [
+    {
+      "freshness_checked_at_policy_version": 1,
+      "group_id": "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1",
+      "group_size": 4,
+      "phase": "train-step-1",
+      "policy_checkpoint_sha256": "a234004cfc4d02e5763798b05fc3441d9b9644a633611888d82b41e0f2f0d885",
+      "policy_id": "qwen3-4b-mlx:50d427756c6b:u1:a234004cfc4d02e57637",
+      "policy_version": 1,
+      "replay_admitted": true,
+      "task_id": "vare_ig.train.csv_record.v1",
+      "trajectory_heads": {
+        "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1:member:0": "2e5c94c09b16a9a96dd4db17bbfb8c453515e6e5305e1f9ef04b4035e50929c7",
+        "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1:member:1": "5646ae3d1b5882633d042e027225d04abb204984c53c75a051b912f0552ff98c",
+        "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1:member:2": "906aebd87b5df66ec3422ac74c11858b18b18c5219673000bcb97f147b48b67d",
+        "vareig:informative_per_cost:20261117:train-step-1:0:vare_ig.train.csv_record.v1:member:3": "378f4fcfa406e65743f210ae77e4535220a0aef02f76e0ac654b9c3527d68e6e"
+      },
+      "verifier_config_sha256": "6f25ec0e72e0e5e11dcc28ed478c1cc1e64d0728ee8fb6ff85f0a895fabda2c0",
+      "verifier_id": "6f25ec0e72e0e5e11dcc28ed478c1cc1e64d0728ee8fb6ff85f0a895fabda2c0"
+    },
+    {
+      "freshness_checked_at_policy_version": 1,
+      "group_id": "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1",
+      "group_size": 4,
+      "phase": "train-step-1",
+      "policy_checkpoint_sha256": "a234004cfc4d02e5763798b05fc3441d9b9644a633611888d82b41e0f2f0d885",
+      "policy_id": "qwen3-4b-mlx:50d427756c6b:u1:a234004cfc4d02e57637",
+      "policy_version": 1,
+      "replay_admitted": true,
+      "task_id": "vare_ig.train.stable_toposort.v1",
+      "trajectory_heads": {
+        "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1:member:0": "8714052d2fe02e327ed47db1739b3dac356a91a0bd8cfa5bb26984d62d2eea58",
+        "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1:member:1": "33fa50dd2aae3c3fe978bc93c9a4095c6387b243dae325a1580dadd51048df06",
+        "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1:member:2": "06505e48241dca8408cd1b8ba017b152c77ee24e3e4bd7d2fb97cc650ffba2fe",
+        "vareig:informative_per_cost:20261117:train-step-1:1:vare_ig.train.stable_toposort.v1:member:3": "7fa53f699a85397617272b1ec958d1a29724e012e1141b789ee70731c42e464a"
+      },
+      "verifier_config_sha256": "503410f2d4232b346aa249ce2eaa444ec1e7308b12c33d6e45bbf46ba2feeda1",
+      "verifier_id": "503410f2d4232b346aa249ce2eaa444ec1e7308b12c33d6e45bbf46ba2feeda1"
+    },
+    {
+      "freshness_checked_at_policy_version": 1,
+      "group_id": "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1",
+      "group_size": 4,
+      "phase": "train-step-1",
+      "policy_checkpoint_sha256": "a234004cfc4d02e5763798b05fc3441d9b9644a633611888d82b41e0f2f0d885",
+      "policy_id": "qwen3-4b-mlx:50d427756c6b:u1:a234004cfc4d02e57637",
+      "policy_version": 1,
+      "replay_admitted": true,
+      "task_id": "vare_ig.train.deep_merge_defaults.v1",
+      "trajectory_heads": {
+        "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:0": "5ca2d9d9cf2a3bc543081416558abd2f4b468c2b728d56984c9477820bfd3999",
+        "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:1": "5f7d20555b9dc01908a560df22db1df6adf65082edacd6474dc8e95c05dc060b",
+        "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:2": "04b1a62ee732a54de48144843818b78010c371bc5e2b4501fce5c6c2a44aab54",
+        "vareig:informative_per_cost:20261117:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:3": "b1d45f278990cb062ef51963aa45940b6f1a8d3413312a6745c600bcd52604de"
+      },
+      "verifier_config_sha256": "e3b5aad7ad7ba00e9bfc05a5503a3b47e5bac538bb8a957c4cf80b22180e2be7",
+      "verifier_id": "e3b5aad7ad7ba00e9bfc05a5503a3b47e5bac538bb8a957c4cf80b22180e2be7"
+    }
+  ],
+  "trajectory_replay_sample_count": 12
+}

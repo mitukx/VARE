@@ -1,0 +1,168 @@
+{
+  "approx_kl": 0.0,
+  "checkpoint": {
+    "checkpoint": "checkpoints/update-0001",
+    "checkpoint_manifest_sha256": "54d600f9e6f9142b2aea85ae416bce3de6630e799aab856cd1b4425b32f3bda6",
+    "files": {
+      "adapters.safetensors": "ebc2fe15823cca6e87ae88bd0bc000141506bb52b1da7cd32af62412fa870be5",
+      "optimizer.safetensors": "f8421fb896208fc7db1dd97750182d00169cb2a372bc5f7c2093e6683a14fbcb"
+    },
+    "optimizer": {
+      "learning_rate": 1e-05,
+      "name": "mlx.optimizers.Adam"
+    },
+    "optimizer_state_sha256": "6439c27c87d561e0af0c01a2515f27e0b2febfeab7a716239e6ac37dda686ea6",
+    "optimizer_step": 1,
+    "rng_base_seed": 20261116,
+    "rng_probe": [
+      0.5587031245231628,
+      0.20082001388072968,
+      0.04063061997294426,
+      0.6200918555259705,
+      0.014720086939632893,
+      0.5786521434783936,
+      0.4955011010169983,
+      0.6270148158073425
+    ],
+    "rng_probe_sha256": "d9039062919a29765b3005ee4e8c03f68b9f2faa4ed703e9efeb9cedfec219c8",
+    "rng_step": 1,
+    "schema": "vare_qwen3_function_repair_checkpoint_state_v1",
+    "trainable_parameters_sha256": "10d5b1f7accc046551c127fec4920289e63352a417bd181c1da0984bb692876e",
+    "update_step": 1
+  },
+  "clip_fraction": 0.0,
+  "config": {
+    "clip_eps_high": 0.2,
+    "clip_eps_low": 0.2,
+    "group_size": 4,
+    "max_grad_norm": 1.0,
+    "max_policy_lag": 0,
+    "normalize_std": true,
+    "temperature": 0.7
+  },
+  "development_pre": {
+    "n": 4,
+    "passed": 2
+  },
+  "generation_count": 24,
+  "grad_norm_preclip": 2.0726099014282227,
+  "groups": {
+    "groups": [
+      {
+        "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:45de7562ba3da3611203",
+        "informative": false,
+        "rewards": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "task_id": "vare_ig.train.cli_overrides.v1"
+      },
+      {
+        "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:45de7562ba3da3611203",
+        "informative": false,
+        "rewards": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "task_id": "vare_ig.train.csv_record.v1"
+      },
+      {
+        "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:45de7562ba3da3611203",
+        "informative": false,
+        "rewards": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "task_id": "vare_ig.train.graph_reachable.v1"
+      },
+      {
+        "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:45de7562ba3da3611203",
+        "informative": true,
+        "rewards": [
+          0.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "task_id": "vare_ig.train.merge_busy_windows.v1"
+      },
+      {
+        "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:45de7562ba3da3611203",
+        "informative": false,
+        "rewards": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "task_id": "vare_ig.train.running_key_totals.v1"
+      },
+      {
+        "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:45de7562ba3da3611203",
+        "informative": false,
+        "rewards": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "task_id": "vare_ig.train.undirected_components.v1"
+      }
+    ],
+    "n_groups": 6,
+    "n_informative_groups": 1,
+    "n_zero_variance_groups": 5
+  },
+  "loss": 0.05773502588272095,
+  "max_abs_log_ratio": 0.0,
+  "max_observed_lag": 0,
+  "n_groups": 6,
+  "n_informative_groups": 1,
+  "n_samples": 24,
+  "n_tokens": 720,
+  "n_trained_samples": 4,
+  "optimizer_step": 1,
+  "optimizer_step_after": 1,
+  "params_changed": true,
+  "params_digest_after": "10d5b1f7accc046551c127fec4920289e63352a417bd181c1da0984bb692876e",
+  "params_digest_before": "45de7562ba3da36112031848e92d8072109139266d61e5a863e1fa25617d0626",
+  "policy_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:45de7562ba3da3611203",
+  "policy_step": 0,
+  "ratio_max": 1.0,
+  "ratio_mean": 1.0,
+  "resource": {
+    "behavior_seconds": 201.95473408303224,
+    "cpu_seconds": 1.2803109999999975,
+    "end_snapshot": {
+      "available_memory_gib": 10.237014770507812,
+      "disk_free_gib": 19.10802459716797,
+      "machine": "arm64",
+      "memory_free_pct": 62.0,
+      "peak_rss_gib": 2.4510345458984375,
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "process_cpu_seconds": 78.315846,
+      "swap": {
+        "fraction": 0.66455078125,
+        "total_gib": 3.0,
+        "used_gib": 1.99365234375
+      },
+      "time": 1793540806.508854
+    },
+    "peak_mlx_generation_gib": 2.741164319217205,
+    "peak_mlx_gib": 3.243055120110512,
+    "peak_mlx_update_gib": 3.243055120110512,
+    "peak_rss_gib": 2.4510345458984375,
+    "phase_cpu_seconds": 77.003865,
+    "update_seconds": 6.327127084019594,
+    "wall_seconds": 208.28186116705183
+  },
+  "schema": "vare.learning_pipeline.grpo_step/v1",
+  "training_task_count": 12,
+  "update_applied": true
+}

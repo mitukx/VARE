@@ -1,0 +1,502 @@
+{
+  "adapter_sha256": null,
+  "arm": "base",
+  "claim_boundary": "Four synthetic Development repository-repair tasks; descriptive agent-behavior measurement, not held-out capability evidence.",
+  "controller": {
+    "auto_public_tests_after_edit": true,
+    "finish_gate": true,
+    "max_calls_per_turn": 4,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 2,
+    "max_total_new_tokens": 4096,
+    "max_turns": 14,
+    "name": "vare-ig-long-horizon-full-v1",
+    "normalize_tool_calls": true,
+    "recover_bare_edits": true,
+    "reveal_target": false,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "wall_seconds": 1800.0
+  },
+  "metrics": {
+    "aggregate": {
+      "completion_rate": 1.0,
+      "controller_assists": {
+        "automatic_public_tests": 2,
+        "finish_refusals": 2,
+        "normalized_tool_calls": 0,
+        "recovered_bare_edits": 2,
+        "reminders": 0
+      },
+      "edit_application_rate_mean": 0.5,
+      "episodes": 4,
+      "final_success_rate": 0.25,
+      "generated_tokens": 6588,
+      "navigation_correct_rate": 0.5,
+      "prompt_tokens": 87205,
+      "recovery_rate_mean": 0.0,
+      "resumed_episodes": 0,
+      "step_seconds": 400.141589,
+      "stop_reasons": {
+        "malformed_edit": 2,
+        "turn_budget_exhausted": 2
+      },
+      "synthetic": true,
+      "tool_call_validity_mean": 1.0,
+      "tool_invocations": 41,
+      "trusted_graded_rate": 0.5,
+      "ungraded": 0,
+      "untrusted_grades": 2
+    },
+    "audit": {
+      "completions": 4,
+      "database_sha256": "094374d656ba83eb4930ea61e3716630c6dfb14138a8b863922fb5a6426ff36e",
+      "effective_duplicates": 0,
+      "events": 81,
+      "ledger_head_sha256": "a60693e21faf4cbac01a4712f2ce6ed841ea3d3aa44478403a8fea7f243c0401",
+      "pass": true,
+      "steps": 56
+    },
+    "episodes": [
+      {
+        "arm": "base",
+        "calls_dropped": 0,
+        "completed": true,
+        "compute": {
+          "generated_tokens": 3590,
+          "generation_seconds": 185.28523,
+          "grading_seconds": 5e-06,
+          "peak_policy_memory_bytes": 3732944312,
+          "prompt_tokens": 36077,
+          "step_seconds": 190.728511,
+          "tool_seconds": 5.43804
+        },
+        "controller": "vare-ig-long-horizon-full-v1",
+        "controller_assists": {
+          "automatic_public_tests": 0,
+          "finish_refusals": 1,
+          "normalized_tool_calls": 0,
+          "recovered_bare_edits": 0,
+          "reminders": 0
+        },
+        "controller_sha256": "da727bfe2928d8a512e604f23d74c0b7e2136d8ecb9eb920485036d03313405d",
+        "edits": {
+          "application_rate": null,
+          "applied": 0,
+          "attempted": 0,
+          "final_source_changed": false
+        },
+        "episode_id": "base:vare-ig-long-horizon-full-v1:vare_ig.lh_dev.json_pointer_lookup.v1:s20261109",
+        "execute_attempts": 1,
+        "final_success": false,
+        "grade_reason": "no_source_change_not_graded",
+        "grade_recorded": true,
+        "graded": false,
+        "navigation": {
+          "calls_before_target_read": 1,
+          "correct": false,
+          "edits_only_targets": false,
+          "nontarget_reads": 1,
+          "target_read": true,
+          "target_read_before_first_edit": true
+        },
+        "no_tool_turns": 0,
+        "padding_steps": 0,
+        "protocol_sha256": "19313fbd702707fa4888cb1f6004787f9bc6e151b46c18be7500dd7076b3c34c",
+        "public_tests": {
+          "automatic_runs": 0,
+          "available": true,
+          "explicit_runs": 8,
+          "final_passed": false,
+          "finished_while_failing": false
+        },
+        "raw_grade": {},
+        "recovery": {
+          "failed_actions": 9,
+          "rate": 0.0,
+          "recovered": 0
+        },
+        "repository": "synthetic/json_pointer_lookup",
+        "resumed": false,
+        "seed": 20261109,
+        "stop_reason": "turn_budget_exhausted",
+        "store_state": "verified",
+        "synthetic_policy": false,
+        "synthetic_task": true,
+        "task_id": "vare_ig.lh_dev.json_pointer_lookup.v1",
+        "tool_call_validity": 1.0,
+        "tool_invocations": 14,
+        "trajectory_head": "dc2b12d7cd2b462761bce745808bbcd495c624ee520cedc585e2abc052442a03",
+        "trusted_grade": false,
+        "turns": 14,
+        "valid_tool_calls": 14
+      },
+      {
+        "arm": "base",
+        "calls_dropped": 0,
+        "completed": true,
+        "compute": {
+          "generated_tokens": 831,
+          "generation_seconds": 44.537116,
+          "grading_seconds": 0.960254,
+          "peak_policy_memory_bytes": 3732944312,
+          "prompt_tokens": 10193,
+          "step_seconds": 45.169417,
+          "tool_seconds": 0.629736
+        },
+        "controller": "vare-ig-long-horizon-full-v1",
+        "controller_assists": {
+          "automatic_public_tests": 1,
+          "finish_refusals": 0,
+          "normalized_tool_calls": 0,
+          "recovered_bare_edits": 1,
+          "reminders": 0
+        },
+        "controller_sha256": "da727bfe2928d8a512e604f23d74c0b7e2136d8ecb9eb920485036d03313405d",
+        "edits": {
+          "application_rate": 0.5,
+          "applied": 1,
+          "attempted": 2,
+          "final_source_changed": true
+        },
+        "episode_id": "base:vare-ig-long-horizon-full-v1:vare_ig.lh_dev.layered_option_lookup.v1:s20261106",
+        "execute_attempts": 1,
+        "final_success": false,
+        "grade_reason": "case_failed",
+        "grade_recorded": true,
+        "graded": true,
+        "navigation": {
+          "calls_before_target_read": 4,
+          "correct": true,
+          "edits_only_targets": true,
+          "nontarget_reads": 2,
+          "target_read": true,
+          "target_read_before_first_edit": true
+        },
+        "no_tool_turns": 0,
+        "padding_steps": 7,
+        "protocol_sha256": "19313fbd702707fa4888cb1f6004787f9bc6e151b46c18be7500dd7076b3c34c",
+        "public_tests": {
+          "automatic_runs": 1,
+          "available": true,
+          "explicit_runs": 0,
+          "final_passed": false,
+          "finished_while_failing": false
+        },
+        "raw_grade": {
+          "call_report": {
+            "cases": [
+              {
+                "case_id": "missing_higher_falls_back",
+                "failure": null,
+                "passed": true,
+                "wall_s": 0.14944958289342375
+              },
+              {
+                "case_id": "missing_everywhere",
+                "failure": null,
+                "passed": true,
+                "wall_s": 0.13667108293839114
+              },
+              {
+                "case_id": "empty_path",
+                "failure": "wrong_output",
+                "passed": false,
+                "wall_s": 0.1353443750255555
+              }
+            ],
+            "passed": false,
+            "task_kind": "correctness"
+          },
+          "candidate_sha256": "7b43b6be9fa6c4276cb9b0a70ac6ed9b2d0469979928133e3d5196b09e8b19c9",
+          "case_set_sha256": "84f717b7c5097c61b38553f6496cd9d04acc6fe215c4d8309bb89468590e9f66",
+          "executed": true,
+          "isolation": {
+            "candidate_isolated": true,
+            "expected_values_parent_owned": true,
+            "mode": "docker_function_call"
+          },
+          "passed": false,
+          "reason": "case_failed",
+          "schema": "vare_function_oracle_v1",
+          "source_identity": {
+            "additional_sources_sha256": {},
+            "candidate_harness_sha256": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+            "grader_sha256": "cfe4a54f85108b42d29f9ea2e84f4ec2e16514f1674a834a0ece09c04784f45f",
+            "isolation_runner_sha256": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+            "support_files_sha256": {},
+            "wrapper_sha256": null
+          }
+        },
+        "recovery": {
+          "failed_actions": 1,
+          "rate": 0.0,
+          "recovered": 0
+        },
+        "repository": "synthetic/layered_option_lookup",
+        "resumed": false,
+        "seed": 20261106,
+        "stop_reason": "malformed_edit",
+        "store_state": "verified",
+        "synthetic_policy": false,
+        "synthetic_task": true,
+        "task_id": "vare_ig.lh_dev.layered_option_lookup.v1",
+        "tool_call_validity": 1.0,
+        "tool_invocations": 7,
+        "trajectory_head": "3a99b9e48d9035fa5c061e361c1a0d0571c6f058f15b37057c52e2da4a5afbed",
+        "trusted_grade": true,
+        "turns": 7,
+        "valid_tool_calls": 7
+      },
+      {
+        "arm": "base",
+        "calls_dropped": 0,
+        "completed": true,
+        "compute": {
+          "generated_tokens": 1552,
+          "generation_seconds": 129.070959,
+          "grading_seconds": 1.286588,
+          "peak_policy_memory_bytes": 3732944312,
+          "prompt_tokens": 33183,
+          "step_seconds": 130.975716,
+          "tool_seconds": 1.90049
+        },
+        "controller": "vare-ig-long-horizon-full-v1",
+        "controller_assists": {
+          "automatic_public_tests": 1,
+          "finish_refusals": 1,
+          "normalized_tool_calls": 0,
+          "recovered_bare_edits": 0,
+          "reminders": 0
+        },
+        "controller_sha256": "da727bfe2928d8a512e604f23d74c0b7e2136d8ecb9eb920485036d03313405d",
+        "edits": {
+          "application_rate": 1.0,
+          "applied": 1,
+          "attempted": 1,
+          "final_source_changed": true
+        },
+        "episode_id": "base:vare-ig-long-horizon-full-v1:vare_ig.lh_dev.lexical_course_planner.v1:s20261107",
+        "execute_attempts": 1,
+        "final_success": true,
+        "grade_reason": "all_cases_passed",
+        "grade_recorded": true,
+        "graded": true,
+        "navigation": {
+          "calls_before_target_read": 1,
+          "correct": true,
+          "edits_only_targets": true,
+          "nontarget_reads": 3,
+          "target_read": true,
+          "target_read_before_first_edit": true
+        },
+        "no_tool_turns": 0,
+        "padding_steps": 0,
+        "protocol_sha256": "19313fbd702707fa4888cb1f6004787f9bc6e151b46c18be7500dd7076b3c34c",
+        "public_tests": {
+          "automatic_runs": 1,
+          "available": true,
+          "explicit_runs": 2,
+          "final_passed": false,
+          "finished_while_failing": false
+        },
+        "raw_grade": {
+          "call_report": {
+            "cases": [
+              {
+                "case_id": "duplicate_course_and_edge",
+                "failure": null,
+                "passed": true,
+                "wall_s": 0.1377151669647407
+              },
+              {
+                "case_id": "duplicate_edge",
+                "failure": null,
+                "passed": true,
+                "wall_s": 0.13292445799962432
+              },
+              {
+                "case_id": "cycle",
+                "failure": null,
+                "passed": true,
+                "wall_s": 0.13178750003724862
+              },
+              {
+                "case_id": "unknown",
+                "failure": null,
+                "passed": true,
+                "wall_s": 0.1495079180135291
+              }
+            ],
+            "passed": true,
+            "task_kind": "correctness"
+          },
+          "candidate_sha256": "add134a68e702daed67ad7cceaaef9a43e7bfe55cd03da68c6dd8130e30be9bd",
+          "case_set_sha256": "189ee6236704904bdc5f5fac66f0712f43f3c633d53a743a77029a002357a2ed",
+          "executed": true,
+          "isolation": {
+            "candidate_isolated": true,
+            "expected_values_parent_owned": true,
+            "mode": "docker_function_call"
+          },
+          "passed": true,
+          "reason": "all_cases_passed",
+          "schema": "vare_function_oracle_v1",
+          "source_identity": {
+            "additional_sources_sha256": {},
+            "candidate_harness_sha256": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+            "grader_sha256": "cfe4a54f85108b42d29f9ea2e84f4ec2e16514f1674a834a0ece09c04784f45f",
+            "isolation_runner_sha256": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+            "support_files_sha256": {},
+            "wrapper_sha256": null
+          }
+        },
+        "recovery": {
+          "failed_actions": 3,
+          "rate": 0.0,
+          "recovered": 0
+        },
+        "repository": "synthetic/lexical_course_planner",
+        "resumed": false,
+        "seed": 20261107,
+        "stop_reason": "turn_budget_exhausted",
+        "store_state": "verified",
+        "synthetic_policy": false,
+        "synthetic_task": true,
+        "task_id": "vare_ig.lh_dev.lexical_course_planner.v1",
+        "tool_call_validity": 1.0,
+        "tool_invocations": 14,
+        "trajectory_head": "6a2d437509f6723bdc669e32800115a7f2b9b329afda9cab2704045ca638045b",
+        "trusted_grade": true,
+        "turns": 14,
+        "valid_tool_calls": 14
+      },
+      {
+        "arm": "base",
+        "calls_dropped": 0,
+        "completed": true,
+        "compute": {
+          "generated_tokens": 615,
+          "generation_seconds": 33.262985,
+          "grading_seconds": 3e-06,
+          "peak_policy_memory_bytes": 3732944312,
+          "prompt_tokens": 7752,
+          "step_seconds": 33.267945,
+          "tool_seconds": 0.003003
+        },
+        "controller": "vare-ig-long-horizon-full-v1",
+        "controller_assists": {
+          "automatic_public_tests": 0,
+          "finish_refusals": 0,
+          "normalized_tool_calls": 0,
+          "recovered_bare_edits": 1,
+          "reminders": 0
+        },
+        "controller_sha256": "da727bfe2928d8a512e604f23d74c0b7e2136d8ecb9eb920485036d03313405d",
+        "edits": {
+          "application_rate": 0.0,
+          "applied": 0,
+          "attempted": 1,
+          "final_source_changed": false
+        },
+        "episode_id": "base:vare-ig-long-horizon-full-v1:vare_ig.lh_dev.resource_window_coalescer.v1:s20261108",
+        "execute_attempts": 1,
+        "final_success": false,
+        "grade_reason": "no_source_change_not_graded",
+        "grade_recorded": true,
+        "graded": false,
+        "navigation": {
+          "calls_before_target_read": 1,
+          "correct": false,
+          "edits_only_targets": false,
+          "nontarget_reads": 0,
+          "target_read": true,
+          "target_read_before_first_edit": true
+        },
+        "no_tool_turns": 0,
+        "padding_steps": 8,
+        "protocol_sha256": "19313fbd702707fa4888cb1f6004787f9bc6e151b46c18be7500dd7076b3c34c",
+        "public_tests": {
+          "automatic_runs": 0,
+          "available": true,
+          "explicit_runs": 0,
+          "final_passed": null,
+          "finished_while_failing": false
+        },
+        "raw_grade": {},
+        "recovery": {
+          "failed_actions": 1,
+          "rate": 0.0,
+          "recovered": 0
+        },
+        "repository": "synthetic/resource_window_coalescer",
+        "resumed": false,
+        "seed": 20261108,
+        "stop_reason": "malformed_edit",
+        "store_state": "verified",
+        "synthetic_policy": false,
+        "synthetic_task": true,
+        "task_id": "vare_ig.lh_dev.resource_window_coalescer.v1",
+        "tool_call_validity": 1.0,
+        "tool_invocations": 6,
+        "trajectory_head": "5d99bf36feca1273ae2b03cc2e85fcd9e65377298db5c8b651b3f323d96b12ad",
+        "trusted_grade": false,
+        "turns": 6,
+        "valid_tool_calls": 6
+      }
+    ]
+  },
+  "model": {
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "inference": "MLX/Metal",
+    "local_only": true,
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "policy_checkpoint": {
+    "checkpoint_sha256": "a023786a7369a9fdc4a3278ec8c0028cb506e7a206c517a7c34e493cb54943cd",
+    "policy_id": "base",
+    "version": 0
+  },
+  "protocol_id": "vare-ig-qwen3-4b-long-horizon-development-v1",
+  "protocol_sha256": "19313fbd702707fa4888cb1f6004787f9bc6e151b46c18be7500dd7076b3c34c",
+  "resource_end": {
+    "available_memory_gib": 11.85211181640625,
+    "disk_free_gib": 18.75145721435547,
+    "machine": "arm64",
+    "memory_free_pct": 73.0,
+    "peak_rss_gib": 2.4519195556640625,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "process_cpu_seconds": 82.480381,
+    "swap": {
+      "fraction": 0.66455078125,
+      "total_gib": 3.0,
+      "used_gib": 1.99365234375
+    },
+    "time": 1793542477.162015
+  },
+  "resource_start": {
+    "available_memory_gib": 12.6015625,
+    "disk_free_gib": 18.75726318359375,
+    "machine": "arm64",
+    "memory_free_pct": 72.0,
+    "peak_rss_gib": 0.028839111328125,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "process_cpu_seconds": 0.13039599999999998,
+    "swap": {
+      "fraction": 0.66455078125,
+      "total_gib": 3.0,
+      "used_gib": 1.99365234375
+    },
+    "time": 1793542071.757215
+  },
+  "schema": "vare_ig_long_horizon_run_summary_v1",
+  "task_count": 4,
+  "task_ids": [
+    "vare_ig.lh_dev.layered_option_lookup.v1",
+    "vare_ig.lh_dev.lexical_course_planner.v1",
+    "vare_ig.lh_dev.resource_window_coalescer.v1",
+    "vare_ig.lh_dev.json_pointer_lookup.v1"
+  ],
+  "training_run_summary_sha256": null,
+  "wall_seconds": 405.417
+}

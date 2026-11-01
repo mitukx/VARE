@@ -162,10 +162,11 @@ class EpisodeTask:
     workspace_patch_sha256: str | None = None
 
     def __post_init__(self) -> None:
-        if self.split != "train":
-            # Held-out execution is deliberately unavailable until a frozen
-            # protocol supplies a disjoint, pre-registered task set.
-            raise ValueError("only Train-split tasks may run through this harness")
+        if self.split not in {"train", "development"}:
+            # Exploration is not an execution split. Development is accepted
+            # here only so a separately frozen cohort can use the harness;
+            # enrollment below requires its protocol digest.
+            raise ValueError("episode tasks must use the Train or Development split")
         if not self.editable_files or not set(self.editable_files) <= set(self.readable_files):
             raise ValueError("editable files must be a non-empty subset of readable files")
         if not set(self.target_files) <= set(self.editable_files):
@@ -703,10 +704,13 @@ class EpisodeHarness:
     def enroll(self, specs: Iterable[EpisodeSpec]) -> list[str]:
         ids = []
         for spec in specs:
+            if spec.task.split == "development" and self.protocol_sha256 is None:
+                raise ValueError("Development episodes require a validated frozen protocol")
             ident = spec.episode_id(self.arm.name, self.controller)
             meta = {"schema": SCHEMA, "arm": self.arm.name, "seed": spec.seed,
                     "controller": self.controller.to_dict(), "controller_sha256": self.controller.sha256(),
                     "task_sha256": spec.task.sha256(), "repository": spec.task.repository,
+                    "task_split": spec.task.split,
                     "source_revision": spec.task.source_revision,
                     "workspace_patch_sha256": spec.task.workspace_patch_sha256,
                     "protocol_sha256": self.protocol_sha256,

@@ -1,0 +1,215 @@
+{
+  "cache_ownership_verified": true,
+  "cached_generations": 8,
+  "claim_boundary": "Two predeclared Exploration prompts; exact output and sampling-logprob check; task-group timing includes tokenization, shared prefill, cache cloning, and generation. This is a workload-specific measurement.",
+  "completion_pairs": 8,
+  "independent_generations": 8,
+  "mean_task_group_speedup": 1.0337127431799262,
+  "minimum_speedup_required_for_training_enablement": 1.02,
+  "model": {
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "model_load_seconds": 3.336259917006828,
+  "outputs_and_probabilities_equal": true,
+  "policy_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:5c72778221be1180b41f",
+  "policy_checkpoint_sha256": "5c72778221be1180b41fb5775d98a9f75013fc7c21b721c894b62481fe3ad86a",
+  "preflight": {
+    "available_memory_gib": 12.334381103515625,
+    "disk_free_gib": 19.253623962402344,
+    "machine": "arm64",
+    "memory_free_pct": 77.0,
+    "peak_rss_gib": 0.0316925048828125,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "process_cpu_seconds": 0.136734,
+    "swap": {
+      "fraction": 0.6671549479166666,
+      "total_gib": 3.0,
+      "used_gib": 2.00146484375
+    },
+    "time": 1793535192.09675
+  },
+  "profiled_completion_tokens_per_second": {
+    "cached": [
+      39.43918538044368,
+      39.83955973627567,
+      39.682445043952725,
+      39.59495694358205,
+      39.847529690721466,
+      39.81191592580882,
+      39.81106259737986,
+      39.68004655622716
+    ],
+    "independent": [
+      39.75253762348123,
+      39.78351194781662,
+      39.239350664418524,
+      39.67233751791193,
+      39.87955354210112,
+      39.82331056214978,
+      39.608327007156994,
+      39.95573421401832
+    ]
+  },
+  "protocol_id": "vare-ig-qwen3-4b-mlx-development-v1",
+  "protocol_sha256": "0e2ffe76a333e107cf2fef7af3422730c9dc6e162b8de86fac51042b77ff8e19",
+  "resource_end": {
+    "available_memory_gib": 10.578445434570312,
+    "disk_free_gib": 19.26019287109375,
+    "machine": "arm64",
+    "memory_free_pct": 65.0,
+    "peak_rss_gib": 2.22698974609375,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "process_cpu_seconds": 70.93486200000001,
+    "swap": {
+      "fraction": 0.6671549479166666,
+      "total_gib": 3.0,
+      "used_gib": 2.00146484375
+    },
+    "time": 1793535341.465197
+  },
+  "run_seed": 20261103,
+  "schema": "vare_ig_mlx_prefix_cache_benchmark_v1",
+  "tasks": [
+    {
+      "base_cache_cursor_unchanged": true,
+      "cached_group_seconds": 35.61128212581389,
+      "completion_tokens": [
+        304,
+        355,
+        382,
+        341
+      ],
+      "decode_tokens_per_second": {
+        "cached": [
+          39.43918538044368,
+          39.83955973627567,
+          39.682445043952725,
+          39.59495694358205
+        ],
+        "independent": [
+          39.75253762348123,
+          39.78351194781662,
+          39.239350664418524,
+          39.67233751791193
+        ]
+      },
+      "first_token_measurements": {
+        "cached_first_yield_seconds": [
+          0.040457500028423965,
+          0.0391018750378862,
+          0.03860970807727426,
+          0.04034708300605416
+        ],
+        "cached_tail_prefill_and_first_sample_seconds": [
+          0.039495416916906834,
+          0.03768654202576727,
+          0.0377252500038594,
+          0.03883295797277242
+        ],
+        "independent_first_yield_seconds": [
+          0.5227440829621628,
+          0.4999877919908613,
+          0.49464099993929267,
+          0.49594304198399186
+        ],
+        "independent_prompt_prefill_and_first_sample_seconds": [
+          0.5203122911043465,
+          0.4989163330756128,
+          0.49328037502709776,
+          0.4950413329061121
+        ]
+      },
+      "group_speedup_independent_over_cached": 1.0378126959113778,
+      "independent_group_seconds": 36.957840707851574,
+      "outputs_and_probabilities_equal": true,
+      "prompt_tokens": 137,
+      "samples_per_mode": 4,
+      "shared_prefix_cache_bytes": 37748736,
+      "shared_prefix_prefill_seconds": 0.540047041955404,
+      "shared_prompt_tokenization_seconds": 0.013990166946314275,
+      "task_id": "vare_ig.explore.parse_csv_header.v1",
+      "task_sha256": "262488bbd52623b09a7bdea7e01a42e417e40bfb99dff197a113aa5126cf1f52"
+    },
+    {
+      "base_cache_cursor_unchanged": true,
+      "cached_group_seconds": 35.8860402519349,
+      "completion_tokens": [
+        319,
+        407,
+        360,
+        317
+      ],
+      "decode_tokens_per_second": {
+        "cached": [
+          39.847529690721466,
+          39.81191592580882,
+          39.81106259737986,
+          39.68004655622716
+        ],
+        "independent": [
+          39.87955354210112,
+          39.82331056214978,
+          39.608327007156994,
+          39.95573421401832
+        ]
+      },
+      "first_token_measurements": {
+        "cached_first_yield_seconds": [
+          0.03865050000604242,
+          0.03987295797560364,
+          0.03861112496815622,
+          0.040274291997775435
+        ],
+        "cached_tail_prefill_and_first_sample_seconds": [
+          0.03769270901102573,
+          0.038444583071395755,
+          0.037662125076167285,
+          0.03883533296175301
+        ],
+        "independent_first_yield_seconds": [
+          0.41530912497546524,
+          0.414875749964267,
+          0.41670124989468604,
+          0.4166404160205275
+        ],
+        "independent_prompt_prefill_and_first_sample_seconds": [
+          0.4138870829483494,
+          0.4139033330138773,
+          0.41517187491990626,
+          0.41566479206085205
+        ]
+      },
+      "group_speedup_independent_over_cached": 1.0296127904484746,
+      "independent_group_seconds": 36.94872604194097,
+      "outputs_and_probabilities_equal": true,
+      "prompt_tokens": 126,
+      "samples_per_mode": 4,
+      "shared_prefix_cache_bytes": 37748736,
+      "shared_prefix_prefill_seconds": 0.42546954203862697,
+      "shared_prompt_tokenization_seconds": 0.0008579170098528266,
+      "task_id": "vare_ig.explore.graph_course_order.v1",
+      "task_sha256": "53570f8b5ca2e38d0e94ffe2ce79fdbb9b57b7c2f9d10089ac2eee21e8e8ea9e"
+    }
+  ],
+  "training_enablement_criteria_passed": true,
+  "vare_ig_source_hashes": {
+    "scripts/audit_vare_ig_task_oracles.py": "9661d8bf8178de14dda95a02ee0da734f54e331fce44fda62699376ab49b45b0",
+    "scripts/freeze_vare_ig_protocol.py": "68f3d36fcc256f9aac38e4b4e5a6cebe86b93e98e96a24796b05f881d3e2af7a",
+    "scripts/qwen3_function_repair_grpo.py": "a74fd87651efed5eb1be85738c5714bd8029ed431aa4f029ab61b14d7b480975",
+    "scripts/qwen3_vare_ig_experiment.py": "198c1f205f878e15d53ebea2548b528ae71365da53fbcf5bb68043c09a82f4d1",
+    "src/vare/config.py": "3ddcb32df475e9e1d2a1aa3689ba5955494a67971cad03aa5a88e045ba4b7051",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/function_repair_tasks.py": "43c6d27a269359e1ba903ed56446df58092ca5397e8336d4f79b663387d910f2",
+    "src/vare/grpo_mlx.py": "1044eab634b85d54729c576bed90da0bd56c7566b88e96ea8264d3f638752cf8",
+    "src/vare/isolated_candidate.py": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+    "src/vare/learning_pipeline/informative_curriculum.py": "6744d1c2347a830f9a1b5dead3001d7d943da833361feaa9c52b2fac6eb49594",
+    "src/vare/learning_pipeline/vare_ig_tasks.py": "950e7be4eec9cfe1c6b8c531d0b4947ad0c66310f586e67b77ca385c53aa23e9",
+    "src/vare/learning_pipeline/verified_rollout_replay.py": "39c15675a5796747fa9a5cb4c867106439a31ac4d6177e46bf12d1c26133d47d",
+    "src/vare/mlx_prefix_reuse.py": "626dfa7899a3a20f77413aed99b13abd5d13c7fa9a4cf25ee2fbba5cd145709f",
+    "src/vare/promotion.py": "73f2fcbd3358d1f9153a53012f49ebe41ca0d65f555ed6457c8b98ccc708474b",
+    "src/vare/replay.py": "8d22b821380ddfb221df4ddc9dec8f987f74faebfe6492e7316e7b0d8ee472ff",
+    "src/vare/trajectory_store.py": "2a41ea328d733635919e0782f7fb212c591cd20f6ebb7731c6252d45b0af8f74",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca"
+  }
+}

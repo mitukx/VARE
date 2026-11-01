@@ -1,0 +1,103 @@
+{
+  "docker_host": "${DOCKER_HOST}",
+  "docker_server": "29.5.2 linux aarch64",
+  "experiment_id": "vare-ig-qwen3-4b-mlx-exploration-v1",
+  "generation_reused_without_resampling": true,
+  "model": {
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "policy_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:5c72778221be1180b41f",
+  "preflight": {
+    "available_memory_gib": 13.4149169921875,
+    "disk_free_gib": 19.260025024414062,
+    "machine": "arm64",
+    "memory_free_pct": 74.0,
+    "peak_rss_gib": 0.03143310546875,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "process_cpu_seconds": 0.135778,
+    "swap": {
+      "fraction": 0.6671549479166666,
+      "total_gib": 3.0,
+      "used_gib": 2.00146484375
+    },
+    "time": 1793535348.693919
+  },
+  "protocol_sha256": "0e2ffe76a333e107cf2fef7af3422730c9dc6e162b8de86fac51042b77ff8e19",
+  "regrade_manifest_sha256": "8ac6dd71dc9f215c8a2d7866ca7d2ce33fef9cedc535afdd56b160659ac44d84",
+  "sampling": {
+    "distribution": "untruncated temperature-softmax; exact behavior log-probabilities",
+    "generation_seed_schedule": "sha256(base_seed:phase:task_id:sample_index)[:8]",
+    "group_size": 4,
+    "matched_seed_across_arms": true,
+    "max_new_tokens": 512,
+    "max_prompt_tokens": 2048,
+    "min_p": 0.0,
+    "research_seeds": [
+      20261104,
+      20261105
+    ],
+    "samples_per_exploration_task": 4,
+    "seed": 20261103,
+    "temperature": 0.7,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "schema": "vare_ig_base_exploration_regraded_meta_v1",
+  "seed": 20261103,
+  "source_rollouts_sha256": "ea64755f3e1da632d0c673dc22e8d2a85031be8deb6a1d03f66cfa800f234125",
+  "starting_git_sha": "f1be908b29fb943fb5c64f84bc42c6450b8d8fd2",
+  "task_hashes": {
+    "development": {
+      "vare_ig.dev.deep_lookup.v1": "786ae55bd4aec6cc36da39343449e85ec044d84bef27ca6be8a0e75fd2593b29",
+      "vare_ig.dev.first_event_ids.v1": "1ab3ea912a9ada85b70a72e4310b8fc4f8de3f2ce229a726c1146ee7c6013f69",
+      "vare_ig.dev.lexical_course_order.v1": "845abfa224e3f6e136f892cde4fa79a69a5b17d5e0a8719f0dac0d43811ad946",
+      "vare_ig.dev.parse_duration_pair.v1": "90042e6939d73014c9a92a444d8b71acc1bd15fbd688f39ea0ad3b39c9bf1463"
+    },
+    "exploration": {
+      "vare_ig.explore.dedupe_event_ids.v1": "54f91709c63326c832afa0afe27950c611b808882a43f04de455a3365b6f9c3c",
+      "vare_ig.explore.deep_defaults_config.v1": "62d8699809617818631d3326ab778296bd7822389015f0bc3c5c9aeea447f063",
+      "vare_ig.explore.duration_ms.v1": "e93d064517f5fa3d8a5028ec47cdf7f9d3eb91c20d687d79e7d78c7f691130e7",
+      "vare_ig.explore.graph_course_order.v1": "53570f8b5ca2e38d0e94ffe2ce79fdbb9b57b7c2f9d10089ac2eee21e8e8ea9e",
+      "vare_ig.explore.ini_overrides.v1": "a9759e14ddecb355b95b74d56bdacfacc168fbb4e88176cb62cc8c93819d21c5",
+      "vare_ig.explore.merge_event_ranges.v1": "c33f70d7988969610686454f829e393b985387457b2486bbd969391d09761ea8",
+      "vare_ig.explore.parse_csv_header.v1": "262488bbd52623b09a7bdea7e01a42e417e40bfb99dff197a113aa5126cf1f52",
+      "vare_ig.explore.relative_path.v1": "a9d4616efcfa9e47f966333471442558c748521e5714386503cf41002d6b20d9",
+      "vare_ig.explore.running_event_counts.v1": "2d03671b3b460e1cf9db4221639d1716fd0885818232f99e82972071c34c768d",
+      "vare_ig.explore.shortest_unweighted_path.v1": "28c2cd6a4cb49565f9f26f7fa2a474cd9d87935f818c8e0673c59f0e9914bf51"
+    },
+    "train": {
+      "vare_ig.train.cli_overrides.v1": "bbf2eac59d5b49fe47d3b7fea6af526c35b95d47bb69758dd102d00f96334aee",
+      "vare_ig.train.csv_record.v1": "424bd0de9a66f4f53586c0683eaf1ac6eab513c7bf38e5c0f25c5dbdf4170f27",
+      "vare_ig.train.deep_merge_defaults.v1": "f8a346a3f6b48543f45e1606de6c1ac6e6be437c5b3f32405bdedfe7c94e1806",
+      "vare_ig.train.graph_reachable.v1": "0b6271dad32fdf9b940c76eedf33a24f80d01ca26f85e44fa9a4d80783562cf6",
+      "vare_ig.train.ini_sections.v1": "a9c2408d3e436b3d66bfdb266279b2ee01c9dc9058c43f85d6ad00658d8163e4",
+      "vare_ig.train.latest_record_by_key.v1": "9b2d541748cabca9f57d405958e169a52969c1fb42722140de9029957143ad87",
+      "vare_ig.train.merge_busy_windows.v1": "2673d06ba1d384876c8767d73ca3b7cc3d219e8427a8d487f0b943ee687b76f8",
+      "vare_ig.train.normalize_relative_path.v1": "6671102aaf10047ec125caed9a54e9a82d92ec7cd86124611840e5aaf478439e",
+      "vare_ig.train.parse_duration_ms.v1": "78483b66d676a02eba40c2979c7f0ad4a7128505c5c677504fed5e6c07a607f3",
+      "vare_ig.train.running_key_totals.v1": "3c3449991253bb3d138e7be1cecb293e2f73bdf3453e810fb48e40b0db39f9aa",
+      "vare_ig.train.stable_toposort.v1": "dba5ab24a46e1d02ae172958289d85471ed5ad367d63232b14736d383338c813",
+      "vare_ig.train.undirected_components.v1": "b219241d57ac186d6f206af9cc4fca5df8f85d0df968b4dfb6b1c9611af09a0d"
+    }
+  },
+  "vare_ig_source_hashes": {
+    "scripts/audit_vare_ig_task_oracles.py": "9661d8bf8178de14dda95a02ee0da734f54e331fce44fda62699376ab49b45b0",
+    "scripts/freeze_vare_ig_protocol.py": "68f3d36fcc256f9aac38e4b4e5a6cebe86b93e98e96a24796b05f881d3e2af7a",
+    "scripts/qwen3_function_repair_grpo.py": "a74fd87651efed5eb1be85738c5714bd8029ed431aa4f029ab61b14d7b480975",
+    "scripts/qwen3_vare_ig_experiment.py": "198c1f205f878e15d53ebea2548b528ae71365da53fbcf5bb68043c09a82f4d1",
+    "src/vare/config.py": "3ddcb32df475e9e1d2a1aa3689ba5955494a67971cad03aa5a88e045ba4b7051",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/function_repair_tasks.py": "43c6d27a269359e1ba903ed56446df58092ca5397e8336d4f79b663387d910f2",
+    "src/vare/grpo_mlx.py": "1044eab634b85d54729c576bed90da0bd56c7566b88e96ea8264d3f638752cf8",
+    "src/vare/isolated_candidate.py": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+    "src/vare/learning_pipeline/informative_curriculum.py": "6744d1c2347a830f9a1b5dead3001d7d943da833361feaa9c52b2fac6eb49594",
+    "src/vare/learning_pipeline/vare_ig_tasks.py": "950e7be4eec9cfe1c6b8c531d0b4947ad0c66310f586e67b77ca385c53aa23e9",
+    "src/vare/learning_pipeline/verified_rollout_replay.py": "39c15675a5796747fa9a5cb4c867106439a31ac4d6177e46bf12d1c26133d47d",
+    "src/vare/mlx_prefix_reuse.py": "626dfa7899a3a20f77413aed99b13abd5d13c7fa9a4cf25ee2fbba5cd145709f",
+    "src/vare/promotion.py": "73f2fcbd3358d1f9153a53012f49ebe41ca0d65f555ed6457c8b98ccc708474b",
+    "src/vare/replay.py": "8d22b821380ddfb221df4ddc9dec8f987f74faebfe6492e7316e7b0d8ee472ff",
+    "src/vare/trajectory_store.py": "2a41ea328d733635919e0782f7fb212c591cd20f6ebb7731c6252d45b0af8f74",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca"
+  }
+}

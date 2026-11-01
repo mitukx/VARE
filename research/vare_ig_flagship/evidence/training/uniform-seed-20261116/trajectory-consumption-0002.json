@@ -1,0 +1,40 @@
+{
+  "acknowledgment_path": "recovered-update-0002.json",
+  "acknowledgment_sha256": "cee5e51148ac3c48d7c6d2c2d8e59961ed642fddafc83267294e1d4938e8ebc8",
+  "claim_boundary": "trajectory consumer acknowledgment follows the durable learner decision; it is not the optimizer transaction itself",
+  "groups": [
+    {
+      "group_id": "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1",
+      "heads": {
+        "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1:member:0": "450597fbea23dd23032242b9277c0f472a18d7a9494ee14435c643f75c48d0a7",
+        "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1:member:1": "97495d78a468b7dc241ecfea45ef3bc8f8762a0de38df31f00aabfcbeaae1031",
+        "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1:member:2": "a9f1199c6db8124c09c8cd35364e88634dcb14d6eb26f33f73390598b2a34052",
+        "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1:member:3": "ac5b9da8b31ef5c3b38f4669c29451f57f8f555e6cac8e925e67c5efa229f2f5"
+      },
+      "state": "consumed_now"
+    },
+    {
+      "group_id": "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1",
+      "heads": {
+        "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1:member:0": "a27e98d5750deae96ef0a67c6eefe5b053a010a0837a9f6be94c9603496387cb",
+        "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1:member:1": "0e35422f98015d9e0ca61cf850b4fa6e6c991b84fbdcace8d19040eba401beb0",
+        "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1:member:2": "db11bd7ed4a0af065252d6d9c73e8071e8cf58037695fea29b14b45406b3a18f",
+        "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1:member:3": "29779870f7c8d347403abb2bb419e0901e67b607b6d3784f6897e47418e72a8b"
+      },
+      "state": "consumed_now"
+    },
+    {
+      "group_id": "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1",
+      "heads": {
+        "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:0": "9a49e92aa3bcb1c7585d704ca5fefad99f56cd2bf5a45408bb4ec4818a0897de",
+        "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:1": "d2a259f218692f7959c63d4730236e566ccd88291901b8435410785598ba63f9",
+        "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:2": "35cdfa1bd6ce88aa51a0dd5e68d6fdbcf13c1378681cfd176a90b731fe3254dc",
+        "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:3": "c199374aee035af57ceed3cb9fa259ced5c3846c99197cf358a945037902a6f7"
+      },
+      "state": "consumed_now"
+    }
+  ],
+  "optimizer_commit_claim": false,
+  "schema": "vare_ig_trajectory_consumer_ack_v1",
+  "update_step": 2
+}
