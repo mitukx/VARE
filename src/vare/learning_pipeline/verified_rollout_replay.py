@@ -103,6 +103,12 @@ class VerifiedGroupReplay:
         prompt_json = _json(list(prompt_messages))
         task_digest = task.sha256()
         for sample, row in zip(samples, rows, strict=True):
+            if not isinstance(row, Mapping):
+                raise ValueError("rollout rows must be mappings")
+            try:
+                json.dumps(dict(row), sort_keys=True, separators=(",", ":"), allow_nan=False)
+            except (TypeError, ValueError) as exc:
+                raise ValueError("rollout rows must contain only finite JSON values") from exc
             if (row.get("instance_id") != task.task_id
                     or int(row.get("sample_index", -1)) != sample.sample_index):
                 raise ValueError("sample and persisted row identities differ")

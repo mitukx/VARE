@@ -122,6 +122,8 @@ def test_real_rollout_bridge_persists_verifies_replays_and_acknowledges(tmp_path
     "nonfinite_logprob",
     "untrusted_reward",
     "row_reward_disagreement",
+    "non_json_metadata",
+    "nonfinite_nested_metadata",
 ])
 def test_invalid_group_preflight_is_failure_atomic_and_retryable(tmp_path: Path, invalid_kind: str):
     """Malformed generation evidence must not enroll any durable trajectory."""
@@ -143,6 +145,10 @@ def test_invalid_group_preflight_is_failure_atomic_and_retryable(tmp_path: Path,
         rows[2]["reward_detail"]["trusted_contract"] = False
     elif invalid_kind == "row_reward_disagreement":
         rows[2]["reward"] = 0.0
+    elif invalid_kind == "non_json_metadata":
+        rows[2]["sampling_distribution"] = object()
+    elif invalid_kind == "nonfinite_nested_metadata":
+        rows[2]["inference_profile"] = {"prefill_seconds": float("nan")}
 
     def submit(current_samples, current_rows):
         return bridge.add_group(
