@@ -431,21 +431,30 @@ class PrioritizedReplay:
         remaining = dict(complete_groups)
         selected: list[Experience] = []
         if len(remaining) >= 128 and n >= 32:
-            order = self._weighted_group_order([
+            group_draw_order = self._weighted_group_order([
                 (key, max(priority for priority, _ in members))
                 for key, members in remaining.items()
             ])
-            for chosen_key in order:
-                ranked = sorted(remaining[chosen_key], key=lambda z: z[0], reverse=True)
+            for group_id in group_draw_order:
+                ranked = sorted(remaining[group_id], key=lambda z: z[0], reverse=True)
                 selected.extend(item.experience for _, item in ranked)
                 if len(selected) >= n:
                     break
         else:
             while remaining and len(selected) < n:
-                keys = list(remaining)
-                weights = [max(priority for priority, _ in remaining[k]) for k in keys]
-                chosen_key = self._rng.choices(keys, weights=weights, k=1)[0]
-                ranked = sorted(remaining.pop(chosen_key), key=lambda z: z[0], reverse=True)
+                candidate_group_keys = list(remaining)
+                weights = [
+                    max(priority for priority, _ in remaining[k])
+                    for k in candidate_group_keys
+                ]
+                sampled_group_id = self._rng.choices(
+                    candidate_group_keys, weights=weights, k=1
+                )[0]
+                ranked = sorted(
+                    remaining.pop(sampled_group_id),
+                    key=lambda z: z[0],
+                    reverse=True,
+                )
                 selected.extend(item.experience for _, item in ranked)
         return selected
 
