@@ -17,6 +17,7 @@ from scripts.run_local_agent import (
     append_tool_interaction,
     attempt_configured_edit,
     attempt_exact_text_replacement,
+    malformed_edit_retry_feedback,
     bounded_list_page,
     bounded_search_results,
     bounded_source_page,
@@ -33,6 +34,7 @@ from scripts.run_local_agent import (
     tools_for,
 )
 from scripts.run_local_agent import candidate_source_diff, snapshot_allowed_sources
+from vare.agent_navigation import SearchLoopGuard, list_python_symbols
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
@@ -347,12 +349,109 @@ def test_read_file_schema_exposes_bounded_inclusive_line_ranges():
     assert '12,000-byte' in read_file['description']
 
 
+def test_navigation_schema_is_opt_in_and_preserves_frozen_tool_contracts():
+    frozen = tools_for('unified_diff')
+    frozen_by_name = {item['function']['name']: item['function'] for item in frozen}
+    current = tools_for('unified_diff', include_navigation=True)
+    current_by_name = {item['function']['name']: item['function'] for item in current}
+
+    assert 'list_symbols' not in frozen_by_name
+    assert 'path' not in frozen_by_name['search_text']['parameters']['properties']
+    assert frozen_by_name['replace_text']['parameters']['required'] == [
+        'path', 'old_text', 'new_text',
+    ]
+    assert 'list_symbols' in current_by_name
+    assert 'path' in current_by_name['search_text']['parameters']['properties']
+    assert current_by_name['replace_text']['parameters']['required'] == [
+        'path', 'old_text', 'new_text', 'expected_source_sha256',
+    ]
+
+
 def test_replace_text_schema_requires_exact_source_context():
-    tools = tools_for('unified_diff')
+    tools = tools_for('unified_diff', include_navigation=True)
     replace = next(item['function'] for item in tools if item['function']['name'] == 'replace_text')
 
-    assert replace['parameters']['required'] == ['path', 'old_text', 'new_text']
-    assert 'exactly once' in replace['description']
+    assert replace['parameters']['required'] == [
+        'path', 'old_text', 'new_text', 'expected_source_sha256',
+    ]
+    assert 'source_sha256' in replace['description']
+    assert all(item['function']['name'] != 'replace_text' for item in tools_for('whole_file'))
+
+
+def test_list_symbols_schema_and_ast_index_ground_request_model_fields():
+    tool = next(
+        item['function'] for item in tools_for('unified_diff', include_navigation=True)
+        if item['function']['name'] == 'list_symbols'
+    )
+    assert tool['parameters']['required'] == ['path', 'query']
+
+    source = (
+        'class AnthropicContentBlock:\n'
+        '    type: str\n'
+        '\n'
+        'class AnthropicMessagesRequest:\n'
+        '    messages: list[str]\n'
+        '    tools: list[AnthropicTool]\n'
+        '    def validate_tools(self) -> None:\n'
+        '        return None\n'
+    )
+    result = list_python_symbols(source, query='request')
+
+    assert result['total_symbols'] == 2  # request class and its qualified method
+    request = next(item for item in result['symbols'] if item['kind'] == 'class')
+    assert request['name'] == 'AnthropicMessagesRequest'
+    assert request['line'] == 4
+    assert {'name': 'tools', 'annotation': 'list[AnthropicTool]', 'line': 6} in request['fields']
+    assert request['methods'] == ['validate_tools']
+
+
+def test_search_loop_guard_redirects_exact_recorded_repeated_empty_queries():
+    root = Path(__file__).resolve().parents[1]
+    attempt = json.loads((root / (
+        'results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2/'
+        'attempt-001/agent-attempt-002.json'
+    )).read_text(encoding='utf-8'))
+    empty_queries = [
+        call['arguments']['query']
+        for turn in attempt['transcript']
+        for call in turn.get('tool_calls', [])
+        if call.get('name') == 'search_text'
+        and call.get('result', {}).get(
+            'match_count', len(call.get('result', {}).get('matches', [])),
+        ) == 0
+    ]
+    assert len(empty_queries) == 7
+
+    guard = SearchLoopGuard(empty_search_limit=3)
+    assert guard.observe('tool_use', 5) is None
+    executed = 0
+    intercepted = 0
+    third_miss = None
+    for query in empty_queries:
+        if guard.intercept(query) is not None:
+            intercepted += 1
+            continue
+        executed += 1
+        third_miss = guard.observe(query, 0)
+
+    assert executed == 3
+    assert intercepted == 4
+    assert third_miss is not None
+    assert third_miss['related_empty_searches'] == 3
+    assert any('list_symbols' in item for item in third_miss['alternatives'])
+    assert guard.intercept('tool_use with another longer query') is not None
+
+
+def test_search_loop_guard_resets_after_new_source_context_or_positive_result():
+    guard = SearchLoopGuard(empty_search_limit=2)
+    guard.observe('missing_symbol', 0)
+    guard.reset()
+    assert guard.intercept('missing_symbol') is None
+    guard.observe('missing_symbol', 0)
+    hint = guard.observe('missing_symbol in source', 0)
+    assert hint is not None
+    guard.observe('missing_symbol', 1)
+    assert guard.intercept('missing_symbol') is None
     assert all(item['function']['name'] != 'replace_text' for item in tools_for('whole_file'))
 
 
@@ -720,9 +819,11 @@ def test_malformed_diff_returns_actionable_format_feedback(tmp_path):
 
 def test_exact_text_replacement_applies_one_allowlisted_unique_snippet(tmp_path):
     source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\nother = 3\n')
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
 
     result = attempt_exact_text_replacement(
         tmp_path, 'pkg/source.py', 'value = 1', 'value = 2', {'pkg/source.py'},
+        expected_source_sha256=source_hash,
     )
 
     assert result == {
@@ -730,21 +831,28 @@ def test_exact_text_replacement_applies_one_allowlisted_unique_snippet(tmp_path)
         'paths': ['pkg/source.py'],
         'format_parse_failure': None,
         'edit_mode': 'exact_text_replacement',
+        'source_sha256_before': source_hash,
+        'source_sha256_after': hashlib.sha256(b'value = 2\nother = 3\n').hexdigest(),
+        'postimage_matches_replacement': True,
     }
     assert source.read_text() == 'value = 2\nother = 3\n'
 
 
 def test_exact_text_replacement_rejects_missing_ambiguous_and_unallowlisted_context(tmp_path):
     source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\nvalue = 1\n')
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
 
     ambiguous = attempt_exact_text_replacement(
         tmp_path, 'pkg/source.py', 'value = 1', 'value = 2', {'pkg/source.py'},
+        expected_source_sha256=source_hash,
     )
     missing = attempt_exact_text_replacement(
         tmp_path, 'pkg/source.py', 'value = 9', 'value = 2', {'pkg/source.py'},
+        expected_source_sha256=source_hash,
     )
     unallowlisted = attempt_exact_text_replacement(
         tmp_path, 'other.py', 'value = 1', 'value = 2', {'pkg/source.py'},
+        expected_source_sha256=source_hash,
     )
 
     assert ambiguous['match_count'] == 2
@@ -753,6 +861,93 @@ def test_exact_text_replacement_rejects_missing_ambiguous_and_unallowlisted_cont
     assert 'exactly once' in missing['error']
     assert 'allowlisted' in unallowlisted['error']
     assert source.read_text() == 'value = 1\nvalue = 1\n'
+
+
+def test_exact_text_replacement_rejects_stale_read_hash(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\n')
+    stale_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    source.write_text('value = 9\n', encoding='utf-8')
+
+    result = attempt_exact_text_replacement(
+        tmp_path, 'pkg/source.py', 'value = 1', 'value = 2', {'pkg/source.py'},
+        expected_source_sha256=stale_hash,
+    )
+
+    assert result['applied'] is False
+    assert result['stale_source'] is True
+    assert result['actual_source_sha256'] == hashlib.sha256(source.read_bytes()).hexdigest()
+    assert source.read_text() == 'value = 9\n'
+
+
+def test_malformed_edit_recovery_feedback_preserves_exact_error_and_source_state(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'vllm/entrypoints/anthropic/protocol.py', b'value = 1\n')
+    root = Path(__file__).resolve().parents[1]
+    attempt = json.loads((root / (
+        'results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2/'
+        'attempt-001/agent-attempt-002.json'
+    )).read_text(encoding='utf-8'))
+    malformed = next(
+        turn['model_output'] for turn in attempt['transcript']
+        if turn['turn'] == 11
+    )
+    before = hashlib.sha256(source.read_bytes()).hexdigest()
+    result = attempt_configured_edit(
+        tmp_path, malformed, 'unified_diff', {'vllm/entrypoints/anthropic/protocol.py'},
+    )
+    after = hashlib.sha256(source.read_bytes()).hexdigest()
+    feedback = malformed_edit_retry_feedback(
+        result,
+        allowed_paths=['vllm/entrypoints/anthropic/protocol.py'],
+        source_hashes_before={'vllm/entrypoints/anthropic/protocol.py': before},
+        source_hashes_after={'vllm/entrypoints/anthropic/protocol.py': after},
+    )
+
+    assert result['applied'] is False
+    assert result['error'] == 'error: corrupt patch at <stdin>:17'
+    assert before == after
+    assert 'The source bytes are unchanged.' in feedback
+    assert result['error'] in feedback
+    assert 'no grader ran' in feedback
+    assert 'expected_source_sha256' in feedback
+
+
+def test_saved_malformed_edit_retry_replays_controller_feedback_without_a_fake_tool_call():
+    tokenizer = _CharacterTokenizer()
+    tools = []
+    initial_messages = [
+        {'role': 'system', 'content': 'Allowed source paths: src/module.py. First call list_files.'},
+        {'role': 'user', 'content': 'solve task'},
+    ]
+    raw = '--- a/src/module.py\n+++ b/src/module.py\n@@ malformed'
+    feedback = 'The controller rejected the edit. The source bytes are unchanged.'
+    prompt_tokens = len(tokenizer.encode(render_chat_prompt(tokenizer, initial_messages, tools)))
+    attempt = {
+        'edit_attempted': True,
+        'edit_applied': False,
+        'initial_messages': initial_messages,
+        'budgets': {'max_new_tokens_per_turn': 256},
+        'no_tool_retries': 0,
+        'edit_format': 'unified_diff',
+        'transcript': [{
+            'turn': 1,
+            'prompt_tokens': prompt_tokens,
+            'model_output': raw,
+            'tool_calls': [],
+            'controller_interventions': [{
+                'type': 'malformed_edit_retry',
+                'source_unchanged': True,
+                'feedback': feedback,
+            }],
+        }],
+    }
+
+    messages, checks = reconstruct_attempt_messages(attempt, tokenizer, tools)
+
+    assert messages[-2:] == [
+        {'role': 'assistant', 'content': raw},
+        {'role': 'user', 'content': feedback},
+    ]
+    assert checks[0]['recorded_tokens'] == checks[0]['reconstructed_tokens']
 
 
 @pytest.mark.parametrize(

@@ -44,10 +44,15 @@ class FakeGrader:
         self.calls.append(dict(files))
         if self.error is not None:
             raise self.error
+        source = files.get("calc/ops.py") or next(iter(files.values()), "")
+        candidate_sha256 = hashlib.sha256(source.encode("utf-8")).hexdigest()
         if self.result is not None:
-            return self.result
+            result = dict(self.result)
+            if result.get("candidate_sha256") == "a" * 64:
+                result["candidate_sha256"] = candidate_sha256
+            return result
         passed = "return a + b" in files.get("calc/ops.py", "")
-        return trusted_result(passed)
+        return trusted_result(passed, candidate_sha256=candidate_sha256)
 
 
 def trusted_result(passed: bool, **overrides):
@@ -115,11 +120,12 @@ def test_full_controller_metrics_on_fixture(tmp_path):
 
 def test_budget_stop_requires_public_and_trusted_grade_for_success(tmp_path):
     task = lh.fixture_task()
+    source_sha256 = hashlib.sha256(lh.FIXTURE_SOURCE["calc/ops.py"].encode()).hexdigest()
     script = (
-        "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
-        "<tool_call>{\"name\":\"read_file\",\"arguments\":{\"path\":\"calc/ops.py\"}}</tool_call>",
-        "<tool_call>{\"name\":\"replace_text\",\"arguments\":{\"path\":\"calc/ops.py\","
-        "\"old_text\":\"return a - b\",\"new_text\":\"return a * b\"}}</tool_call>",
+        lh._call("list_files"),
+        lh._call("read_file", path="calc/ops.py"),
+        lh._call("replace_text", path="calc/ops.py", old_text="return a - b",
+                 new_text="return a * b", expected_source_sha256=source_sha256),
     )
     arm = stub_arm(script=script)
     controller = lh.ControllerConfig(name="public-gate-budget", max_turns=3)
@@ -139,6 +145,69 @@ def test_budget_stop_requires_public_and_trusted_grade_for_success(tmp_path):
     assert episode["trusted_grade"] is True  # the hidden grader passes the intentionally bad edit
     assert episode["public_tests"]["final_passed"] is False
     assert episode["final_success"] is False
+
+
+def _final_success_fixture(**overrides):
+    verification = {
+        "trusted": True,
+        "passed": True,
+        "metadata": {
+            "trajectory_sha256": "a" * 64,
+            "verifier_config_sha256": "b" * 64,
+            "task_sha256": "c" * 64,
+            "source_revision": "d" * 40,
+            "workspace_patch_sha256": "e" * 64,
+            "raw_grade": {"candidate_sha256": "f" * 64},
+            "graded_files": ["calc/ops.py"],
+        },
+    }
+    values = {
+        "store_state": "verified",
+        "expected_steps": 8,
+        "committed_steps": 8,
+        "verification": verification,
+        "expected_trajectory_sha256": "a" * 64,
+        "expected_verifier_config_sha256": "b" * 64,
+        "final_source_hashes": {"calc/ops.py": "f" * 64},
+        "public_tests_configured": True,
+        "public_tests_passed": True,
+        "expected_task_sha256": "c" * 64,
+        "expected_source_revision": "d" * 40,
+        "expected_workspace_patch_sha256": "e" * 64,
+        "require_task_binding": True,
+    }
+    values.update(overrides)
+    return values
+
+
+@pytest.mark.parametrize(
+    ("overrides", "expected"),
+    [
+        ({}, True),
+        ({"public_tests_passed": False}, False),  # hidden pass, public fail
+        ({"public_tests_passed": None}, False),  # public execution missing or unfinished
+        ({"public_tests_configured": False, "public_tests_passed": None}, True),
+        ({"verification": {**_final_success_fixture()["verification"], "passed": False}}, False),
+        ({"verification": {**_final_success_fixture()["verification"], "trusted": False}}, False),
+        ({"verification": None}, False),  # timeout or missing grade
+        ({"store_state": "running"}, False),  # partial/uncommitted episode
+        ({"committed_steps": 7}, False),
+        ({"expected_verifier_config_sha256": "9" * 64}, False),
+        ({"expected_source_revision": "9" * 40}, False),
+        ({"final_source_hashes": {"calc/ops.py": "9" * 64}}, False),
+        ({"verification": {**_final_success_fixture()["verification"], "metadata": {
+            **_final_success_fixture()["verification"]["metadata"], "graded_files": [],
+        }}}, False),
+    ],
+)
+def test_final_success_fails_closed_on_public_grade_provenance_and_completion(
+    overrides, expected,
+):
+    assert lh.trusted_final_success(**_final_success_fixture(**overrides)) is expected
+
+
+def test_recovered_complete_episode_can_succeed_after_provenance_replay():
+    assert lh.trusted_final_success(**_final_success_fixture(store_state="verified")) is True
 
 
 def test_protocol_digest_is_bound_to_episode_and_metrics(tmp_path):

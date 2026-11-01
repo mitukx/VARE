@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "src"))
 from pinned_workspace_git import pinned_git, read_regular_source  # noqa: E402
+from vare.agent_navigation import SearchLoopGuard, list_python_symbols  # noqa: E402
 from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submission, require_edit_format  # noqa: E402
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
@@ -38,9 +39,10 @@ CONTEXT_COMPACTION_NOTE = (
 TOOLS = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List exact source paths available in this task workspace. Results are paginated; use next_offset as offset to continue.', 'parameters': {'type': 'object', 'properties': {'offset': {'type': 'integer', 'minimum': 0}}, 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns at most 180 lines. Pass inclusive start_line/end_line to inspect an exact range; a completed explicit range has no next_cursor even when later file lines exist. Follow next_cursor only when the returned page was truncated by a line or response limit. The result includes the resolved path and full-file SHA-256.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in allowed task source files. Returns at most 80 matches in a hard 12,000-byte and 2,048-token response; use offset from next_offset to continue.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}}, 'required': ['query'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a case-sensitive literal in allowed task source files, optionally restricted to one exact allowed path. Zero matches means the literal is absent; do not retry longer variants. Returns at most 80 matches in a hard 12,000-byte and 2,048-token response; use offset from next_offset to continue.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}, 'path': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}}, 'required': ['query'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'list_symbols', 'description': 'Parse one allowlisted Python source file without executing it. Return classes, functions, annotated class fields and method names matching a focused query; results are paginated.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'query': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}, 'limit': {'type': 'integer', 'minimum': 1, 'maximum': 60}}, 'required': ['path', 'query'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a complete unified diff, not replacement source code. The patch must start with --- a/<exact allowed path> and +++ b/<exact allowed path>, then include @@ hunk headers and -old/+new lines. Keep it minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'replace_text', 'description': 'Safely replace one exact source snippet in one allowlisted file. Copy old_text exactly from read_file and provide the full new_text. It applies only when old_text occurs exactly once; ambiguous or missing context is rejected. Use this for one focused change; use apply_patch for multi-hunk edits.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'old_text': {'type': 'string'}, 'new_text': {'type': 'string'}}, 'required': ['path', 'old_text', 'new_text'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'replace_text', 'description': 'Safely replace one exact source snippet in one allowlisted file. Copy old_text and source_sha256 exactly from the same read_file result, then provide full new_text. A stale source hash, ambiguous or missing snippet is rejected. Use apply_patch for multi-hunk edits.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'old_text': {'type': 'string'}, 'new_text': {'type': 'string'}, 'expected_source_sha256': {'type': 'string', 'pattern': '^[0-9a-f]{64}$'}}, 'required': ['path', 'old_text', 'new_text', 'expected_source_sha256'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'finish', 'description': 'Finish the attempt when you believe the task is complete. The evaluator will judge the workspace.', 'parameters': {'type': 'object', 'properties': {'summary': {'type': 'string'}}, 'required': ['summary'], 'additionalProperties': False}}},
 ]
@@ -70,15 +72,53 @@ WRITE_FILE_TOOL = {
 }
 
 
-def tools_for(edit_format: str, *, public_tests: bool = False) -> list[dict[str, Any]]:
+LEGACY_SEARCH_TEXT_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'search_text',
+        'description': 'Search a literal string in allowed task source files. Returns at most 80 matches in a hard 12,000-byte and 2,048-token response; use offset from next_offset to continue.',
+        'parameters': {
+            'type': 'object',
+            'properties': {'query': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}},
+            'required': ['query'],
+            'additionalProperties': False,
+        },
+    },
+}
+LEGACY_REPLACE_TEXT_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'replace_text',
+        'description': 'Safely replace one exact source snippet in one allowlisted file. Copy old_text exactly from read_file and provide the full new_text. It applies only when old_text occurs exactly once; ambiguous or missing context is rejected. Use this for one focused change; use apply_patch for multi-hunk edits.',
+        'parameters': {
+            'type': 'object',
+            'properties': {'path': {'type': 'string'}, 'old_text': {'type': 'string'}, 'new_text': {'type': 'string'}},
+            'required': ['path', 'old_text', 'new_text'],
+            'additionalProperties': False,
+        },
+    },
+}
+
+
+def tools_for(
+    edit_format: str, *, public_tests: bool = False, include_navigation: bool = False,
+) -> list[dict[str, Any]]:
     require_edit_format(edit_format)
-    if edit_format == 'unified_diff':
-        tools = list(TOOLS)
-    else:
-        tools = [
-            WRITE_FILE_TOOL if item['function']['name'] == 'apply_patch' else item
-            for item in TOOLS if item['function']['name'] != 'replace_text'
-        ]
+    tools = []
+    for item in TOOLS:
+        name = item['function']['name']
+        if not include_navigation and name == 'list_symbols':
+            continue
+        if not include_navigation and name == 'search_text':
+            item = LEGACY_SEARCH_TEXT_TOOL
+        elif not include_navigation and name == 'replace_text':
+            item = LEGACY_REPLACE_TEXT_TOOL
+        if edit_format == 'whole_file':
+            if name == 'replace_text':
+                continue
+            if name == 'apply_patch':
+                item = WRITE_FILE_TOOL
+        tools.append(item)
     if public_tests:
         tools.insert(-1, PUBLIC_TEST_TOOL)
     return tools
@@ -332,12 +372,15 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
 
 def attempt_exact_text_replacement(
     workspace: Path, path: str, old_text: str, new_text: str, allowed: set[str],
-    *, max_snippet_chars: int = 6_000,
+    *, expected_source_sha256: str, max_snippet_chars: int = 6_000,
 ) -> dict[str, Any]:
-    """Apply an exact, unique snippet replacement through the normal diff guard."""
+    """Apply a unique snippet only to the exact file version the agent read."""
     resolved = resolve_allowed_path(path, allowed)
     if resolved is None:
         return {'applied': False, 'error': 'path is not an exact allowlisted source file'}
+    if (not isinstance(expected_source_sha256, str)
+            or re.fullmatch(r'[0-9a-f]{64}', expected_source_sha256) is None):
+        return {'applied': False, 'error': 'expected_source_sha256 must be a lowercase SHA-256 from read_file'}
     if not isinstance(old_text, str) or not isinstance(new_text, str):
         return {'applied': False, 'error': 'old_text and new_text must be strings'}
     if not old_text:
@@ -345,9 +388,19 @@ def attempt_exact_text_replacement(
     if len(old_text) > max_snippet_chars or len(new_text) > max_snippet_chars:
         return {'applied': False, 'error': f'snippets exceed the {max_snippet_chars}-character limit'}
     try:
-        original = read_regular_source(workspace, resolved).decode('utf-8')
+        original_bytes = read_regular_source(workspace, resolved)
+        original = original_bytes.decode('utf-8')
     except (OSError, UnicodeDecodeError, ValueError) as exc:
         return {'applied': False, 'error': f'could not read allowlisted source: {type(exc).__name__}'}
+    actual_source_sha256 = hashlib.sha256(original_bytes).hexdigest()
+    if actual_source_sha256 != expected_source_sha256:
+        return {
+            'applied': False,
+            'stale_source': True,
+            'expected_source_sha256': expected_source_sha256,
+            'actual_source_sha256': actual_source_sha256,
+            'error': 'source changed since read_file; reread the current file and rebuild the edit',
+        }
     count = original.count(old_text)
     if count != 1:
         return {
@@ -364,7 +417,49 @@ def attempt_exact_text_replacement(
         return {'applied': False, 'error': 'replacement does not change the source'}
     result = attempt_configured_edit(workspace, patch, 'unified_diff', allowed)
     result['edit_mode'] = 'exact_text_replacement'
+    if result.get('applied') is True:
+        try:
+            actual_after = read_regular_source(workspace, resolved)
+        except (OSError, ValueError) as exc:
+            result.update({
+                'applied': False,
+                'error': f'could not verify replacement postimage: {type(exc).__name__}',
+            })
+            return result
+        expected_after = updated.encode('utf-8')
+        result['source_sha256_before'] = actual_source_sha256
+        result['source_sha256_after'] = hashlib.sha256(actual_after).hexdigest()
+        if actual_after != expected_after:
+            result.update({
+                'applied': False,
+                'postimage_matches_replacement': False,
+                'error': 'workspace source changed while applying the replacement; inspect current source',
+            })
+        else:
+            result['postimage_matches_replacement'] = True
     return result
+
+
+def malformed_edit_retry_feedback(
+    edit_result: dict[str, Any], *, allowed_paths: list[str],
+    source_hashes_before: dict[str, str], source_hashes_after: dict[str, str],
+) -> str:
+    """Build bounded controller feedback after a rejected model-authored edit."""
+    parser_error = str(
+        edit_result.get('error') or edit_result.get('format_parse_failure') or 'edit rejected'
+    )[:1_000]
+    unchanged = source_hashes_before == source_hashes_after
+    source_status = 'The source bytes are unchanged.' if unchanged else (
+        'The source changed during the rejected edit; stop and inspect the current source before another edit.'
+    )
+    return (
+        'The controller rejected your previous edit, and no grader ran. '
+        f'{source_status} Parser result: {parser_error}\n'
+        'For a focused Python change, call read_file again, copy its current source_sha256 and exact old_text, '
+        'then use replace_text with expected_source_sha256. For a multi-line change, call apply_patch with a '
+        'complete unified diff and exact current source context. Then call check_syntax and finish only after '
+        f'a source edit. Allowed files: {", ".join(allowed_paths)}.'
+    )
 
 
 def sha256(path: Path) -> str:
@@ -916,7 +1011,9 @@ def main() -> int:
     editable = allowed - test_files
     if args.public_test_image and len(test_files) != 1:
         parser.error('isolated public-test execution requires exactly one test_public.py in the task')
-    tools = tools_for(args.edit_format, public_tests=bool(args.public_test_image))
+    tools = tools_for(
+        args.edit_format, public_tests=bool(args.public_test_image), include_navigation=True,
+    )
     tool_names = {item['function']['name'] for item in tools}
     if args.edit_format == 'whole_file':
         edit_sentence = (
@@ -937,7 +1034,9 @@ def main() -> int:
         + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then read the exact source path named in the task. '
         + f'read_file and search_text results have hard {MAX_TOOL_RESULT_BYTES}-byte and {MAX_TOOL_RESULT_TOKENS}-token limits. '
         + 'read_file returns at most 180 lines by default and 200 lines per call; follow next_cursor.start_line and next_cursor.char_offset exactly, including when a source line is unusually long. '
-        + 'The full-file SHA-256 and resolved path identify the source used for each page. Search first, then read only the matching line range and nearby context. '
+        + 'The full-file SHA-256 and resolved path identify the source used for each page. replace_text requires that exact current SHA-256. '
+        + 'search_text is a case-sensitive literal search. If it returns no matches, do not try longer variants of the same phrase; use list_symbols on Python files to locate definitions and annotated fields, or read a bounded nearby range. '
+        + 'After an edit, call check_syntax on each changed Python file before finish. '
         + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
         + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
         + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
@@ -960,6 +1059,8 @@ def main() -> int:
     stop_reason = 'turn_budget_exhausted'
     final_summary = ''
     no_tool_retries = 0
+    controller_retry_count = 0
+    search_guard = SearchLoopGuard(empty_search_limit=3)
     edit_attempted = False
     edit_applied = False
     public_test_hash = sha256(workspace / next(iter(test_files))) if test_files else None
@@ -1042,6 +1143,7 @@ def main() -> int:
         if not calls:
             recovered = parse_submission(raw, edit_format=args.edit_format)
             if not isinstance(recovered, ParseFailure) or recovered.reason != 'no_edit':
+                edit_source_hashes_before = digest_tree(workspace, sorted(allowed))
                 edit_result = attempt_configured_edit(workspace, raw, args.edit_format, editable)
                 note_edit(edit_result)
                 if edit_result.get('applied') is True:
@@ -1051,21 +1153,53 @@ def main() -> int:
                     if public_test_result is not None:
                         entry['automatic_public_test'] = public_test_result
                         edit_result = {**edit_result, 'automatic_public_test': public_test_result}
-                entry['tool_calls'].append({'name': 'recovered_edit', 'result': edit_result})
                 messages.append({'role': 'assistant', 'content': raw})
-                messages.append({
-                    'role': 'tool', 'name': 'recovered_edit',
-                    'content': json.dumps(edit_result, ensure_ascii=False),
-                })
-                transcript.append(entry)
                 if edit_result.get('applied') is True:
+                    search_guard.reset()
+                    entry['controller_interventions'] = [{
+                        'type': 'recovered_edit_applied',
+                        'source_hashes_before': edit_source_hashes_before,
+                        'source_hashes_after': digest_tree(workspace, sorted(allowed)),
+                    }]
+                    transcript.append(entry)
                     continue
+                edit_source_hashes_after = digest_tree(workspace, sorted(allowed))
+                unchanged = edit_source_hashes_before == edit_source_hashes_after
+                if unchanged and controller_retry_count < args.max_no_tool_retries:
+                    controller_retry_count += 1
+                    feedback = malformed_edit_retry_feedback(
+                        edit_result,
+                        allowed_paths=sorted(editable),
+                        source_hashes_before=edit_source_hashes_before,
+                        source_hashes_after=edit_source_hashes_after,
+                    )
+                    entry['controller_interventions'] = [{
+                        'type': 'malformed_edit_retry',
+                        'retry_index': controller_retry_count,
+                        'edit_result': edit_result,
+                        'source_unchanged': True,
+                        'source_hashes_before': edit_source_hashes_before,
+                        'source_hashes_after': edit_source_hashes_after,
+                        'feedback': feedback,
+                    }]
+                    transcript.append(entry)
+                    messages.append({'role': 'user', 'content': feedback})
+                    continue
+                entry['controller_interventions'] = [{
+                    'type': 'malformed_edit_stopped',
+                    'edit_result': edit_result,
+                    'source_unchanged': unchanged,
+                    'source_hashes_before': edit_source_hashes_before,
+                    'source_hashes_after': edit_source_hashes_after,
+                }]
+                transcript.append(entry)
                 stop_reason = 'malformed_edit'
                 break
             messages.append({'role': 'assistant', 'content': raw})
             transcript.append(entry)
             current_hashes = digest_tree(workspace, sorted(allowed))
-            if current_hashes == before and no_tool_retries < args.max_no_tool_retries:
+            if current_hashes == before and controller_retry_count < args.max_no_tool_retries:
+                controller_retry_count += 1
                 no_tool_retries += 1
                 next_token_limit = (
                     args.incomplete_tool_retry_tokens
@@ -1119,25 +1253,91 @@ def main() -> int:
                             },
                             tokenizer=tokenizer,
                         )
+                        search_guard.reset()
                 elif name == 'search_text':
                     query = arguments.get('query', '')
                     if not query:
                         result = {'error': 'query must not be empty'}
+                    elif not isinstance(query, str):
+                        result = {'error': 'query must be a string'}
                     else:
-                        matches = []
-                        for path in sorted(allowed):
-                            for line_no, line in enumerate((workspace / path).read_text(encoding='utf-8').splitlines(), 1):
-                                if query in line:
-                                    matches.append({'path': path, 'line': line_no, 'text': line})
-                        result = bounded_search_results(
-                            matches, offset=arguments.get('offset', 0), tokenizer=tokenizer,
+                        raw_search_path = arguments.get('path')
+                        search_path = None
+                        if raw_search_path is not None:
+                            search_path = resolve_allowed_path(raw_search_path, allowed)
+                            if search_path is None:
+                                result = {'error': 'path is not an exact allowlisted source file'}
+                        redirect = (
+                            search_guard.intercept(query, search_path)
+                            if raw_search_path is None or search_path is not None else None
                         )
+                        if redirect is not None:
+                            result = redirect
+                            entry.setdefault('controller_interventions', []).append({
+                                'type': 'repeated_search_redirect',
+                                'query': query,
+                                'path': search_path,
+                                'executed': False,
+                                'reason': redirect['reason'],
+                            })
+                        elif raw_search_path is not None and search_path is None:
+                            pass
+                        else:
+                            matches = []
+                            search_paths = [search_path] if search_path is not None else sorted(allowed)
+                            for source_path in search_paths:
+                                source_bytes = read_regular_source(workspace, source_path)
+                                source_text = source_bytes.decode('utf-8')
+                                for line_no, line in enumerate(source_text.splitlines(), 1):
+                                    if query in line:
+                                        matches.append({
+                                            'path': source_path, 'line': line_no, 'text': line,
+                                        })
+                            result = bounded_search_results(
+                                matches, offset=arguments.get('offset', 0), tokenizer=tokenizer,
+                            )
+                            result.update({
+                                'query': query,
+                                'match_mode': 'case_sensitive_literal',
+                                'match_count': len(matches),
+                            })
+                            redirect_hint = search_guard.observe(query, len(matches), search_path)
+                            if redirect_hint is not None:
+                                result['controller_redirect'] = redirect_hint
+                                entry.setdefault('controller_interventions', []).append({
+                                    'type': 'repeated_search_redirect_hint',
+                                    'query': query,
+                                    'path': search_path,
+                                    'executed': True,
+                                    'related_empty_searches': redirect_hint['related_empty_searches'],
+                                })
+                elif name == 'list_symbols':
+                    raw_path = arguments.get('path', '')
+                    path = resolve_allowed_path(raw_path, allowed)
+                    query = arguments.get('query', '')
+                    if path is None:
+                        result = {'error': 'path is not an exact allowlisted source file'}
+                    elif not isinstance(query, str):
+                        result = {'error': 'query must be a string'}
+                    else:
+                        source = read_regular_source(workspace, path, max_bytes=1024 * 1024)
+                        source_text = source.decode('utf-8')
+                        result = list_python_symbols(
+                            source_text,
+                            query=query,
+                            offset=arguments.get('offset', 0),
+                            limit=arguments.get('limit', 20),
+                        )
+                        result['path'] = path
+                        result['source_sha256'] = hashlib.sha256(source).hexdigest()
+                        search_guard.reset()
                 elif name == 'apply_patch':
                     result = attempt_configured_edit(
                         workspace, str(arguments.get('patch', '')), args.edit_format, editable,
                     )
                     note_edit(result)
                     if result.get('applied') is True:
+                        search_guard.reset()
                         public_test_result = refresh_public_tests_after_edit(
                             result, workspace, args.public_test_image, public_test_hash,
                         )
@@ -1151,9 +1351,11 @@ def main() -> int:
                         arguments.get('old_text', ''),
                         arguments.get('new_text', ''),
                         editable,
+                        expected_source_sha256=arguments.get('expected_source_sha256', ''),
                     )
                     note_edit(result)
                     if result.get('applied') is True:
+                        search_guard.reset()
                         public_test_result = refresh_public_tests_after_edit(
                             result, workspace, args.public_test_image, public_test_hash,
                         )
@@ -1172,6 +1374,7 @@ def main() -> int:
                     )
                     note_edit(result)
                     if result.get('applied') is True:
+                        search_guard.reset()
                         public_test_result = refresh_public_tests_after_edit(
                             result, workspace, args.public_test_image, public_test_hash,
                         )
@@ -1228,7 +1431,8 @@ def main() -> int:
         runtime['mlx_active_memory_bytes'] = int(mx.metal.get_active_memory())
         runtime['mlx_peak_memory_bytes'] = int(mx.metal.get_peak_memory())
     result = {
-        'schema_version': 1, 'task_id': contract.task_id, 'task_schema': contract.schema,
+        'schema_version': 1, 'navigation_tools_enabled': True,
+        'task_id': contract.task_id, 'task_schema': contract.schema,
         'seed': args.seed,
         'task_revisions': {'base': contract.base_revision,
                            'calibration': contract.calibration_revision},
@@ -1264,7 +1468,8 @@ def main() -> int:
         'candidate_diff': diff,
         'candidate_diff_sha256': hashlib.sha256(diff.encode()).hexdigest(),
         'source_hashes_before': before, 'source_hashes_after': after,
-        'tool_turns': len(transcript), 'no_tool_retries': no_tool_retries, 'transcript': transcript,
+        'tool_turns': len(transcript), 'no_tool_retries': no_tool_retries,
+        'controller_retry_count': controller_retry_count, 'transcript': transcript,
         'context_compaction_events': context_compaction_events,
         'offline_environment_required': True,
         'wall_budget_checked_between_generations': True,
