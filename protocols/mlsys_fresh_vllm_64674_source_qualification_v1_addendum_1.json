@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-vllm-64674-source-qualification-v1-addendum-1",
+  "frozen_at_utc": "2026-11-01T18:23:00Z",
+  "parent_protocol_path": "protocols/mlsys_fresh_vllm_64674_source_qualification_v1.json",
+  "parent_protocol_sha256": "b0b24ea2547ddf51567ec0896cfb75914700baf92cd1efccdf912845af4c6e70",
+  "scope": "Dependency and license provenance needed to run the frozen target regression without importing or executing the full vLLM server.",
+  "newly_permitted_read_only_inputs": [
+    "vLLM LICENSE file at the frozen baseline/fixed revisions",
+    "the exact vLLM dependency declaration for partial-json-parser, and only the lines required to identify its version constraint",
+    "the exact target source and regression-test paths already named in the parent protocol"
+  ],
+  "prohibited": [
+    "all other source, tests, PR discussion, task prompts, graders, or evaluator assets",
+    "any held-out task identity, source, test, grader, or outcome",
+    "network access during candidate or grader execution"
+  ],
+  "execution_precondition": "No candidate code or test has been executed. Before the first execution, bind exact source/test/runner/package/image hashes and all commands in a separate VARE execution addendum committed and pushed to this VARE branch.",
+  "authorization": {
+    "read_license_and_dependency_metadata": true,
+    "source_qualification_only": true,
+    "development_assignment": false,
+    "model_or_agent_inference": false,
+    "training": false,
+    "heldout_access": false,
+    "external_repository_writes": false
+  },
+  "stop_rule": "If the relevant dependency cannot be pinned from frozen repository metadata and an immutable package artifact, stop without executing candidate code."
+}
