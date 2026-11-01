@@ -223,7 +223,7 @@
     },
     "local_model_profile": {
       "path": "work/vare-trace-64674-agent-attempt-v1/runtime/model-agent.sb",
-      "sha256": "650578b82e77e36a7ac683392a77db4264ae55922e6ec16fc2ba1f712c574979"
+      "sha256": "d1647eaeffadaa59e59b16db2bdb02462cbdc03ba25dfb83c29d91dae3057952"
     },
     "local_runtime_smoke": {
       "path": "work/vare-trace-64674-agent-attempt-v1/runtime/runtime-smoke.py",
@@ -291,7 +291,7 @@
       "purpose": "verify local Qwen/MLX/Metal JIT works under the frozen sandbox before the Development task prompt",
       "task_prompt_delivered": false
     },
-    "sandbox_profile_sha256": "650578b82e77e36a7ac683392a77db4264ae55922e6ec16fc2ba1f712c574979"
+    "sandbox_profile_sha256": "d1647eaeffadaa59e59b16db2bdb02462cbdc03ba25dfb83c29d91dae3057952"
   },
   "protocol_amendments": [
     {
@@ -308,6 +308,59 @@
       },
       "reason": "The first post-CI launch preflight correctly failed closed because the frozen task input manifest had been omitted.",
       "task_assignment_or_generation_budgets_changed": false,
+      "task_prompt_delivered": false
+    },
+    {
+      "at_utc": "2026-11-01T19:25:56Z",
+      "changes": [
+        "Added read-only access for the exact model.safetensors and tokenizer.json alias paths belonging to the frozen model revision.",
+        "Updated both protocol bindings to the corrected sandbox profile SHA-256."
+      ],
+      "corrected_access_diagnostic": {
+        "artifacts": [
+          {
+            "artifact_class": "local_only",
+            "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/model-file-open-diagnostic-corrected.log",
+            "sha256": "1a70199152b47dc746539571c37d3d8df0514ea6120d6409e31f0f8181e961a7"
+          },
+          {
+            "artifact_class": "local_only",
+            "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/model-file-open-diagnostic-corrected.json",
+            "sha256": "4913b2e2bd41923b8876a430f805046a72d3582f124984186f60817b05bdd34b"
+          }
+        ],
+        "scope": "read-only 8-byte prefix from the frozen model weight and tokenizer files; no model inference",
+        "status": "PASSED"
+      },
+      "failure_artifacts": [
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/runtime-smoke.log",
+          "sha256": "1655a54013084116d8dc0420558cd40a6dbaa4e5370a7d77c791dc204dbb4420"
+        },
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/runtime-smoke-bounded.json",
+          "sha256": "cac7cb994ee8ebd02ea45bde9fbb5445c6941445602593f29a2a8d7d8da8aef4"
+        },
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/model-file-open-diagnostic.log",
+          "sha256": "f5383b7839e24e3370449807bce2da33f3bd561c1b31dae773949f3ea86e46e9"
+        },
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/model-file-open-diagnostic.json",
+          "sha256": "269fe1b8a765cf706c8611e2d532bcc6dd150291740a1a85a2ffd25afc51dee9"
+        }
+      ],
+      "generated_tokens": 0,
+      "model_loaded": false,
+      "model_loading_attempted": true,
+      "model_weight_bytes_read": 0,
+      "prior_launch_preflight_invalidated": true,
+      "reason": "The protocol-authorized task-independent one-token runtime smoke failed before opening model weights because the sandbox omitted two exact Hugging Face blob symlink aliases.",
+      "smoke_exit_code": 1,
       "task_prompt_delivered": false
     }
   ],
