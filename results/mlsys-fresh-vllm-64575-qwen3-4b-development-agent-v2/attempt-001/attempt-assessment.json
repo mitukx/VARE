@@ -1,0 +1,115 @@
+{
+  "attempt_id": "vllm-64575-qwen3-4b-development-agent-attempt-002",
+  "budgets": {
+    "do_sample": false,
+    "edit_format": "unified_diff",
+    "incomplete_tool_retry_tokens": 512,
+    "max_context_tokens": 6144,
+    "max_new_tokens_per_turn": 384,
+    "max_no_tool_retries": 2,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "temperature": 0.0,
+    "top_k": 0,
+    "top_p": 1.0,
+    "wall_seconds": 600
+  },
+  "classification": "The model loaded and received the Development task. It navigated source, then emitted an unrelated malformed patch that the VARE edit parser rejected; the source remained byte-identical to baseline.",
+  "evidence": {
+    "agent_record": {
+      "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2/attempt-001/agent-attempt-002.json",
+      "sha256": "be6c96c8c5939b0c274f9e719eedf85995ab1326e385b1938793b7781760ba10"
+    },
+    "assignment": {
+      "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2/exposure-assignment.json",
+      "sha256": "68d4363a67af324dc091078423bed2de7985dfb443f4a5f5e13e2aa81e052b00"
+    },
+    "launch_log": {
+      "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2/attempt-001/model-launch.log",
+      "sha256": "5f602229549a92613bf39813deb143fde91f1d87ca4fe2b4692a4d0f858ae838"
+    },
+    "launch_preflight": {
+      "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2/attempt-001/launch-preflight.json",
+      "sha256": "4358089f83a44b06427fa6de8ea954aad99612b8460e053b6d2cd3d40f11ae7d"
+    },
+    "launch_receipt": {
+      "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2/attempt-001/launch-receipt.json",
+      "sha256": "2ebe9a0b7a362da03eb4f634b841006784a079d8c57fa1122898db30541d6fc6"
+    }
+  },
+  "failure_analysis": "The final recovered edit proposal targeted Anthropic content-block Literal values instead of request tool-definition validation and was rejected as a corrupt unified diff. No candidate patch was applied. The independent five-case grader was not run because the prospective protocol grades only non-empty applied candidate edits.",
+  "limitations": [
+    "One public task is a Development feasibility screen only.",
+    "No candidate was graded, no model update or RL run occurred, and no held-out or generalization evidence exists.",
+    "Pretraining exposure remains unknown.",
+    "The source qualification tests cover only five narrow Pydantic request-model cases, not full vLLM integration."
+  ],
+  "metrics": {
+    "candidate_diff_nonempty": false,
+    "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "edit_applied": false,
+    "edit_attempted": true,
+    "generated_tokens": 742,
+    "independent_grade_run": false,
+    "model_loaded": true,
+    "public_tests_run": false,
+    "source_hashes_after": {
+      "vllm/entrypoints/anthropic/protocol.py": "d59e35292a3eaeddea0da3aa71caafe7862214d41ad1d549b78f9ae56218c9c0"
+    },
+    "source_hashes_before": {
+      "vllm/entrypoints/anthropic/protocol.py": "d59e35292a3eaeddea0da3aa71caafe7862214d41ad1d549b78f9ae56218c9c0"
+    },
+    "stop_reason": "malformed_edit",
+    "task_prompt_delivered": true,
+    "tool_turns": 11,
+    "training_steps": 0
+  },
+  "model": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "runtime": {
+      "device": "apple_metal",
+      "mlx": "unknown",
+      "mlx_active_memory_bytes": 2264693768,
+      "mlx_lm": "0.32.0",
+      "mlx_peak_memory_bytes": 3746182688,
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "python": "3.12.12",
+      "seed": 64575
+    },
+    "weights_verified_by_preflight": true
+  },
+  "protocol_id": "mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2",
+  "protocol_sha256": "436efef8b50d68d15a7c2cd9b3533734881209a8d212c66ba6b3bd05baa9d421",
+  "resources": {
+    "limit_reason": null,
+    "mlx_active_memory_bytes": 2264693768,
+    "mlx_peak_memory_bytes": 3746182688,
+    "os_wait4_child_max_rss_bytes": 2069643264,
+    "preflight_resource_snapshot": {
+      "available_memory_bytes": 13647872000,
+      "disk_free_bytes": 19745570816,
+      "free_bytes": 1105723392,
+      "host": "macOS-27.0.1-arm64-arm-64bit",
+      "memory_pressure_free_percent": 79,
+      "physical_memory_bytes": 34359738368,
+      "timestamp_utc": "2026-11-01T16:42:24.551265+00:00",
+      "total_bytes": 3221225472,
+      "used_bytes": 2115502080
+    },
+    "process_tree_rss_limit_bytes": 8589934592,
+    "rss_limit_exceeded": false,
+    "sampled_process_tree_rss_max_bytes": 2028437504,
+    "wall_seconds_limit": 600
+  },
+  "schema_version": 1,
+  "split": "DEVELOPMENT",
+  "status": "COMPLETED_NO_VALID_PATCH",
+  "task_id": "vllm-64575-anthropic-tool-type-validation",
+  "timing": {
+    "agent_elapsed_seconds": 126.457,
+    "bounded_runner_wall_seconds": 128.089,
+    "finished_utc": "2026-11-01T16:44:40.568890+00:00",
+    "started_utc": "2026-11-01T16:42:32.479890+00:00"
+  }
+}
