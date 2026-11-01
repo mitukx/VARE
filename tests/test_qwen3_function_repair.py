@@ -47,6 +47,48 @@ def test_rollout_seed_is_stable_and_task_specific():
     assert a != runner.seed_for(20261101, "train-step-0", "task-a", 1)
 
 
+def test_followup_protocol_locks_seed_sources_and_task_contracts(tmp_path: Path):
+    train = {task.task_id: task.sha256() for task in tasks.TRAIN_TASKS}
+    development = {task.task_id: task.sha256() for task in tasks.DEVELOPMENT_TASKS}
+    protocol = tmp_path / "followup.json"
+    payload = {
+        "planned_run_id": "seed-followup",
+        "preregistered_before_model_inference": True,
+        "sampling": {"seed": 20261102},
+        "source_hashes": runner.source_hashes(),
+        "task_contracts": {
+            "train": {"task_hashes": train},
+            "development": {"task_hashes": development},
+        },
+    }
+    protocol.write_text(json.dumps(payload), encoding="utf-8")
+    assert runner.protocol_payload(protocol, seed=20261102)["planned_run_id"] == "seed-followup"
+    assert runner.protocol_hash(protocol) == runner.sha256_file(protocol)
+    try:
+        runner.protocol_payload(protocol, seed=20261101)
+    except RuntimeError as exc:
+        assert "seed" in str(exc)
+    else:
+        raise AssertionError("a CLI seed outside the frozen protocol must fail closed")
+
+
+def test_followup_protocol_rejects_changed_source_hashes(tmp_path: Path):
+    protocol = tmp_path / "changed-source.json"
+    protocol.write_text(json.dumps({
+        "planned_run_id": "seed-followup",
+        "preregistered_before_model_inference": True,
+        "sampling": {"seed": 20261102},
+        "source_hashes": {"scripts/qwen3_function_repair_grpo.py": "0" * 64},
+        "task_contracts": {},
+    }), encoding="utf-8")
+    try:
+        runner.protocol_payload(protocol, seed=20261102)
+    except RuntimeError as exc:
+        assert "source hashes" in str(exc)
+    else:
+        raise AssertionError("changed source hashes must fail closed")
+
+
 def test_sampler_configuration_matches_exact_ratio_objective():
     runner.grpo_mlx.check_exact_ratio_sampling(temperature=runner.GRPO_CONFIG.temperature, top_p=1.0,
                                                top_k=0, min_p=0.0)

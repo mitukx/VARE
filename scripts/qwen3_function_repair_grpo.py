@@ -73,6 +73,7 @@ MAX_RUN_SECONDS = 7200.0
 EVAL_TIMEOUT_SECONDS = 5.0
 EVAL_MEMORY_MB = 512
 GIB = 1024**3
+DEFAULT_PROTOCOL = ROOT / "protocols/qwen3_function_repair_grpo_dev_v1.json"
 
 
 class ResourceStop(RuntimeError):
@@ -437,22 +438,46 @@ def make_policy_id(model: Any, update_step: int) -> str:
     return f"qwen3-4b-mlx:{MODEL_REVISION[:12]}:u{update_step}:{grpo_mlx.trainable_digest(model)[:20]}"
 
 
-def protocol_hash() -> str:
-    path = ROOT / "protocols/qwen3_function_repair_grpo_dev_v1.json"
+def protocol_payload(path: Path, *, seed: int) -> dict[str, Any]:
+    path = path.expanduser().resolve()
+    if not path.is_file():
+        raise FileNotFoundError(f"frozen experiment protocol is required before model execution: {path}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("sampling", {}).get("seed") != seed:
+        raise RuntimeError("CLI seed differs from the frozen protocol seed")
+    if payload.get("source_hashes") != source_hashes():
+        raise RuntimeError("experiment source hashes differ from the frozen protocol")
+    contracts = payload.get("task_contracts", {})
+    contracted_tasks = {
+        **contracts.get("train", {}).get("task_hashes", {}),
+        **contracts.get("development", {}).get("task_hashes", {}),
+    }
+    if contracted_tasks != task_hashes():
+        raise RuntimeError("task contracts differ from the frozen protocol")
+    if not payload.get("preregistered_before_model_inference"):
+        raise RuntimeError("model execution requires a preregistered protocol")
+    return payload
+
+
+def protocol_hash(path: Path = DEFAULT_PROTOCOL) -> str:
+    path = path.expanduser().resolve()
     if not path.is_file():
         raise FileNotFoundError(f"frozen experiment protocol is required before model execution: {path}")
     return sha256_file(path)
 
 
-def run_identity(run: Path, phase: str) -> dict[str, Any]:
+def run_identity(run: Path, phase: str, *, protocol_path: Path = DEFAULT_PROTOCOL) -> dict[str, Any]:
     meta_path = run / "run_meta.json"
     if not meta_path.is_file():
         raise FileNotFoundError("run metadata is missing; start with phase=train")
     meta = json.loads(meta_path.read_text(encoding="utf-8"))
     if meta.get("source_hashes") != source_hashes():
         raise RuntimeError("experiment source changed since the run was frozen")
-    if meta.get("protocol_sha256") != protocol_hash():
+    protocol = protocol_payload(protocol_path, seed=int(meta["seed"]))
+    if meta.get("protocol_sha256") != protocol_hash(protocol_path):
         raise RuntimeError("protocol changed since the run was frozen")
+    if meta.get("experiment_id") != protocol.get("planned_run_id"):
+        raise RuntimeError("run identifier differs from the frozen protocol")
     if meta.get("task_hashes") != task_hashes():
         raise RuntimeError("task contracts changed since the run was frozen")
     return meta
@@ -633,19 +658,21 @@ def write_checkpoint_state(run: Path, *, manifest: Mapping[str, Any], optimizer:
     return checkpoint
 
 
-def prepare_run(run: Path, *, seed: int) -> dict[str, Any]:
+def prepare_run(run: Path, *, seed: int, protocol_path: Path = DEFAULT_PROTOCOL) -> dict[str, Any]:
+    protocol = protocol_payload(protocol_path, seed=seed)
     if run.exists() and any(run.iterdir()):
         raise FileExistsError(f"run directory is not empty: {run}")
     run.mkdir(parents=True, exist_ok=True)
     snap = preflight(run, "train")
     meta = {
         "schema": "vare_qwen3_function_repair_run_v1",
-        "experiment_id": "qwen3-function-repair-grpo-dev-v1-run-001",
+        "experiment_id": protocol["planned_run_id"],
         "starting_git_sha": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, check=True,
                                              capture_output=True, text=True).stdout.strip(),
         "source_hashes": source_hashes(),
         "task_hashes": task_hashes(),
-        "protocol_sha256": protocol_hash(),
+        "protocol_path": str(protocol_path.expanduser().resolve().relative_to(ROOT)),
+        "protocol_sha256": protocol_hash(protocol_path),
         "model": {"id": MODEL_ID, "revision": MODEL_REVISION},
         "python": sys.version,
         "platform": platform.platform(),
@@ -697,7 +724,7 @@ def phase_train(args: argparse.Namespace) -> int:
     import mlx.optimizers as optim
 
     run = args.run_dir.expanduser().resolve()
-    meta = prepare_run(run, seed=args.seed)
+    meta = prepare_run(run, seed=args.seed, protocol_path=args.protocol)
     phase_started = time.monotonic()
     phase_cpu_before = process_cpu_seconds()
     mx.reset_peak_memory()
@@ -800,9 +827,10 @@ def phase_train(args: argparse.Namespace) -> int:
     return 0
 
 
-def restore_and_verify(run: Path, *, seed: int, phase: str) -> tuple[dict[str, Any], Any, Any, dict[str, Any], Any]:
+def restore_and_verify(run: Path, *, seed: int, phase: str,
+                       protocol_path: Path = DEFAULT_PROTOCOL) -> tuple[dict[str, Any], Any, Any, dict[str, Any], Any]:
     preflight(run, phase)
-    meta = run_identity(run, phase)
+    meta = run_identity(run, phase, protocol_path=protocol_path)
     if int(meta.get("seed", -1)) != seed:
         raise RuntimeError("run seed differs from the frozen experiment seed")
     checkpoint = checkpoint_path(run, "update-0001")
@@ -833,7 +861,7 @@ def phase_prepare_recovery(args: argparse.Namespace) -> int:
 
     run = args.run_dir.expanduser().resolve()
     meta, model, optimizer, saved_state, tokenizer = restore_and_verify(
-        run, seed=args.seed, phase="prepare-recovery")
+        run, seed=args.seed, phase="prepare-recovery", protocol_path=args.protocol)
     phase_started = time.monotonic()
     current_policy_id = make_policy_id(model, 1)
     recovery_tasks = [task for task in task_pack.TRAIN_TASKS if task.task_id in RECOVERY_TASK_IDS]
@@ -919,7 +947,7 @@ def train_pending_on_checkpoint(run: Path, *, seed: int, checkpoint_name: str,
     if update["update_applied"]:
         update_manifest = grpo_mlx.save_checkpoint(
             checkpoint_path(run, checkpoint_name), model, optimizer, step=2, base_seed=seed,
-            extra={"experiment_id": "qwen3-function-repair-grpo-dev-v1-run-001",
+            extra={"experiment_id": json.loads((run / "run_meta.json").read_text(encoding="utf-8"))["experiment_id"],
                    "starting_checkpoint": "checkpoints/update-0001",
                    "pending_update_sha256": sha256_json(list(pending)),
                    "optimizer": OPTIMIZER_CONFIG, "branch": branch},
@@ -946,7 +974,7 @@ def train_pending_on_checkpoint(run: Path, *, seed: int, checkpoint_name: str,
 def phase_resume(args: argparse.Namespace) -> int:
     run = args.run_dir.expanduser().resolve()
     meta, model, optimizer, saved_state, _tokenizer = restore_and_verify(
-        run, seed=args.seed, phase="resume")
+        run, seed=args.seed, phase="resume", protocol_path=args.protocol)
     del model, optimizer, _tokenizer
     gc.collect()
     try:
@@ -1070,16 +1098,19 @@ def parser() -> argparse.ArgumentParser:
     sub = root.add_subparsers(dest="phase", required=True)
     train = sub.add_parser("train", help="baseline Development, Train rollouts, and first GRPO update")
     train.add_argument("--run-dir", type=Path, required=True)
+    train.add_argument("--protocol", type=Path, default=DEFAULT_PROTOCOL)
     train.add_argument("--seed", type=int, default=20261101)
     train.add_argument("--sigkill-after-update", action="store_true",
                        help="send SIGKILL after the first optimizer update and its checkpoint are durable")
     prepare = sub.add_parser("prepare-recovery", help="restore update 1 and durably prepare fresh on-policy rollouts")
     prepare.add_argument("--run-dir", type=Path, required=True)
+    prepare.add_argument("--protocol", type=Path, default=DEFAULT_PROTOCOL)
     prepare.add_argument("--seed", type=int, default=20261101)
     prepare.add_argument("--sigkill-after-pending", action="store_true",
                           help="send SIGKILL after the next rollout batch and behavior log-probs are durable")
     resume = sub.add_parser("resume", help="restore pending update and replay it from the same checkpoint")
     resume.add_argument("--run-dir", type=Path, required=True)
+    resume.add_argument("--protocol", type=Path, default=DEFAULT_PROTOCOL)
     resume.add_argument("--seed", type=int, default=20261101)
     return root
 
