@@ -1,0 +1,94 @@
+{
+  "arm_commands": {
+    "baseline": "DOCKER_CONTEXT=colima PYTHONPATH=src python scripts/run_vllm_64674_source_qualification_arm.py --arm baseline --workspace work/mlsys-fresh-vllm-64674-source-qualification/qualification/baseline",
+    "upstream-fixed": "DOCKER_CONTEXT=colima PYTHONPATH=src python scripts/run_vllm_64674_source_qualification_arm.py --arm upstream-fixed --workspace work/mlsys-fresh-vllm-64674-source-qualification/qualification/upstream-fixed",
+    "wrong-mutant": "DOCKER_CONTEXT=colima PYTHONPATH=src python scripts/run_vllm_64674_source_qualification_arm.py --arm wrong-mutant --workspace work/mlsys-fresh-vllm-64674-source-qualification/qualification/wrong-mutant"
+  },
+  "attempt_rule": "Exactly one candidate-code invocation per arm under v2. The preserved v1 setup failure is not a candidate-code invocation. Any failure or unexpected output consumes that v2 arm and stops the protocol; a further attempt requires a new VARE protocol committed before execution.",
+  "authorization": {
+    "development_assignment": false,
+    "external_repository_writes": false,
+    "heldout_access": false,
+    "model_or_agent_inference": false,
+    "source_qualification_only": true,
+    "training": false
+  },
+  "candidate": {
+    "base_revision": "7495e9e5a4b705a16bec8ecba43ed7c317067db1",
+    "fixed_revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "license": "Apache-2.0",
+    "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "pr_head_revision": "c545121bf2589d1bb5161a89a794fb35e7bbc955",
+    "pull_request": 64674,
+    "repository": "vllm-project/vllm",
+    "task_id": "vllm-64674-responses-custom-tool-stream-decode"
+  },
+  "container": {
+    "candidate_workspace_mount": "read-only",
+    "capabilities": "all dropped",
+    "concurrent_arms": 1,
+    "cpus": 1,
+    "grader_mount": "none",
+    "image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "max_output_bytes": 20000,
+    "memory_mb": 512,
+    "network": "none",
+    "no_new_privileges": true,
+    "pids_limit": 32,
+    "rootfs": "read-only",
+    "timeout_seconds": 45,
+    "uid_gid": "65534:65534"
+  },
+  "execution_order": [
+    "baseline",
+    "wrong-mutant",
+    "upstream-fixed"
+  ],
+  "expected_outcomes": {
+    "baseline": "The first regression contract completes; the second fails with exactly one traceback at the frozen repeated-reparse assertion. No import/collection error, timeout, unrelated failure, or isolation violation.",
+    "upstream-fixed": "Both frozen regression contracts pass, the exact success marker is emitted, stderr is empty, and there is no skip, timeout, unrelated failure, or isolation violation.",
+    "wrong-mutant": "The first regression contract completes; the second fails with exactly one traceback at the same frozen repeated-reparse assertion. No import/collection error, timeout, unrelated failure, or isolation violation."
+  },
+  "frozen_at_utc": "2026-11-01T18:37:04Z",
+  "frozen_inputs": {
+    "family_review_path": "results/mlsys-fresh-development-family-review-64674-v1/review.json",
+    "family_review_sha256": "c113289fb19481d240e4503e4fd8d225b434b3c6720aace66863c230cfbea3c5",
+    "input_manifest_path": "results/mlsys-fresh-vllm-64674-source-qualification-v1/input-manifest.json",
+    "input_manifest_sha256": "fabb07c0d6c8aa499448ff1d8b596e67f49af0a9849e9866871ae5799c82927a",
+    "preflight_path": "results/mlsys-fresh-vllm-64674-source-qualification-v2/preflight.json",
+    "preflight_sha256": "52412f1ba51735aa2b7e5f6b12379b947ddb1ef8b1b9bfd9cc5d762d90fe6b23",
+    "public_test_path": "results/mlsys-fresh-vllm-64674-source-qualification-v1/trusted/test_public.py",
+    "public_test_sha256": "943f74399f770a456efbb9f37cd3cee8266abe94ca48a5f51a4bd66215d836b3",
+    "qualification_runner_path": "scripts/run_vllm_64674_source_qualification_arm.py",
+    "qualification_runner_sha256": "c7b79708df55bbdc4053a0b49afe1f67977b078fe828471eaa76cd50da9ede6f",
+    "source_file_sha256_by_arm": {
+      "baseline": {
+        "vllm/entrypoints/openai/responses/streaming_events.py": "e453596259b61881b5fda0e489e0953803284ca8a81a3900c90e7570c961785b",
+        "vllm/entrypoints/openai/responses/utils.py": "f9e87ed884b620f69a6d22d41cb030ba57eda211d4f1751a0b4efa6cf36c7828"
+      },
+      "upstream-fixed": {
+        "vllm/entrypoints/openai/responses/streaming_events.py": "547c2b0d18c70c2c4c362fd6152073e54411959f029d9b101c55301d328f1320",
+        "vllm/entrypoints/openai/responses/utils.py": "45a981addf3bdc5a8e9cd531a37ec8d2ba15faf31ed91e90b00f843fcae8309e"
+      },
+      "wrong-mutant": {
+        "vllm/entrypoints/openai/responses/streaming_events.py": "df7ad08f5ac8b44a58bd9d85e837b5dd3542e57de47535076330d483430bcc1c",
+        "vllm/entrypoints/openai/responses/utils.py": "45a981addf3bdc5a8e9cd531a37ec8d2ba15faf31ed91e90b00f843fcae8309e"
+      }
+    }
+  },
+  "limitation": "Passing these narrow upstream-derived contracts would qualify only this source regression as a Development candidate; it does not establish a secure full-repository grader, real-model repair success, coding capability, or generalization.",
+  "output_root": "results/mlsys-fresh-vllm-64674-source-qualification-v2/arms/",
+  "previous_protocol": {
+    "execution_addendum_path": "protocols/mlsys_fresh_vllm_64674_source_qualification_v1_addendum_2.json",
+    "execution_addendum_sha256": "f7d0a434671616c5b5a025e081a78724677c2cd0126fc1367e7809c0f66bb30a",
+    "interpretation": "The v1 baseline command failed before Docker invocation and before candidate/test code execution. V1 remains unqualified and unchanged. This v2 protocol authorizes one new candidate execution for each arm; it does not overwrite or relabel the v1 setup failure.",
+    "path": "protocols/mlsys_fresh_vllm_64674_source_qualification_v1.json",
+    "preserved_setup_failure_path": "results/mlsys-fresh-vllm-64674-source-qualification-v2/attempts/v1-runner-key-error.json",
+    "preserved_setup_failure_sha256": "4bde49d9f11c38fd457634fd778e0d513735fdc87cb82a23ee59a3574c817a71",
+    "sha256": "b0b24ea2547ddf51567ec0896cfb75914700baf92cd1efccdf912845af4c6e70"
+  },
+  "protocol_id": "mlsys-fresh-vllm-64674-source-qualification-v2",
+  "purpose": "Re-run the unchanged, bounded source qualification for vLLM #64674 after preserving a VARE harness failure that occurred before the test overlay was loaded or any candidate code was executed.",
+  "schema_version": 1,
+  "status": "frozen_before_candidate_source_or_test_execution"
+}
