@@ -218,16 +218,43 @@ def _existing_behavior_logprobs(run: Path, seed: int, protocol_sha: str,
     recorded = payload.pop("payload_sha256", None)
     if recorded != sha256_json(payload) or payload.get("run_protocol_sha256") != protocol_sha:
         raise RuntimeError("persisted behavior-logprob continuation is corrupt or belongs to another lock")
-    if int(payload.get("seed", -1)) != seed or len(payload.get("samples", [])) != len(samples):
+    rows = payload.get("samples")
+    if int(payload.get("seed", -1)) != seed or not isinstance(rows, list) or len(rows) != len(samples):
         raise RuntimeError("persisted behavior-logprob sample count or seed changed")
-    by_key = {(row["instance_id"], int(row["sample_index"])): row for row in payload["samples"]}
+    by_key: dict[tuple[str, int], dict[str, Any]] = {}
+    for row in rows:
+        if not isinstance(row, dict) or not isinstance(row.get("instance_id"), str):
+            raise RuntimeError("persisted behavior-logprob sample identity is invalid")
+        try:
+            key = (row["instance_id"], int(row["sample_index"]))
+        except (KeyError, TypeError, ValueError) as exc:
+            raise RuntimeError("persisted behavior-logprob sample identity is invalid") from exc
+        if key in by_key:
+            raise RuntimeError("persisted behavior-logprob samples contain duplicate identities")
+        by_key[key] = row
+
+    informative_keys = {
+        (sample.instance_id, sample.sample_index)
+        for sample in grpo_mlx.informative_samples(samples, runner.GRPO_CONFIG)
+    }
     for sample in samples:
-        row = by_key.get((sample.instance_id, sample.sample_index))
-        if row is None or row.get("behavior_checkpoint_id") != sample.behavior_checkpoint_id \
-                or row.get("behavior_logprobs") is None \
-                or len(row["behavior_logprobs"]) != len(sample.completion_ids):
-            raise RuntimeError("persisted behavior log-probabilities do not cover the exact saved samples")
-        sample.behavior_logprobs = [float(value) for value in row["behavior_logprobs"]]
+        key = (sample.instance_id, sample.sample_index)
+        row = by_key.get(key)
+        if row is None or row.get("behavior_checkpoint_id") != sample.behavior_checkpoint_id:
+            raise RuntimeError("persisted behavior-logprob identities do not cover the exact saved samples")
+        logprobs = row.get("behavior_logprobs")
+        if logprobs is None:
+            if key in informative_keys:
+                raise RuntimeError("persisted behavior log-probabilities are missing for an informative sample")
+            continue
+        if not isinstance(logprobs, list) or len(logprobs) != len(sample.completion_ids):
+            raise RuntimeError("persisted behavior log-probabilities do not align with the saved completion")
+        try:
+            sample.behavior_logprobs = [float(value) for value in logprobs]
+        except (TypeError, ValueError) as exc:
+            raise RuntimeError("persisted behavior log-probabilities are invalid") from exc
+    if set(by_key) != {(sample.instance_id, sample.sample_index) for sample in samples}:
+        raise RuntimeError("persisted behavior-logprob identities differ from the complete saved batch")
     return True
 
 

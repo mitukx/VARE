@@ -10,7 +10,7 @@
 
 This milestone moved VARE past the prior zero-update result. A prospective, synthetic coding task pack produced naturally mixed rewards; the MLX trainer applied real GRPO updates to Qwen weights; durable recovery replayed and reconciled updates exactly; and a two-arm long-horizon cohort compared the base policy with a real two-update adapter.
 
-The principal experimental result is neutral: the family-level, cost-aware scheduler found **3 informative groups in 18** in each arm, the same count as uniform sampling. It used slightly more generated tokens and measured generation-plus-verification time per informative group. The resulting policies remained at **2/4** on the small Development set, and both policies passed the same **1/4** long-horizon tasks. The promotion gate rejected all four runs. These outcomes do not support a capability-improvement claim.
+The principal experimental result is neutral: the family-level, cost-aware scheduler found **3 informative groups in 18** in each arm, the same count as uniform sampling. It used slightly more generated tokens and measured generation-plus-verification time per informative group. The resulting policies remained at **2/4** on the small Development set, and both policies achieved **0/4** long-horizon successes when success requires both public checks and the trusted final grade. The promotion gate rejected all four runs. These outcomes do not support a capability-improvement claim.
 
 The engineering result is stronger: a real model completion was linked to parent-verified rewards, exact behavior log probabilities, trajectory provenance, optimizer state, and a durable adapter. Both an after-publication acknowledgment failure and a pending-update SIGKILL boundary were recovered or replayed without a duplicate effective update. The project now has auditable evidence for the entire path, including hash-checked source and full long-horizon event exports.
 
@@ -83,15 +83,15 @@ The experiment did not inject SIGKILL during the optimizer kernel, stale-verifie
 
 ## 6. Long-horizon transfer cohort
 
-The prospective Development cohort contained four synthetic repository-repair tasks and a fixed 14-turn ceiling, with the same controller and task seeds for the unchanged base policy and the two-update seed-20261117 adapter.
+The prospective Development cohort contained four synthetic repository-repair tasks and a fixed 14-turn ceiling, with the same controller and task seeds for the unchanged base policy and the two-update seed-20261117 adapter. A post-hoc review found that the original primary metric counted a trusted hidden-grade pass even when the recorded public tests failed and the episode stopped at its budget. The controller's `finish` gate does not cover budget-stopped episodes. The metric and committed summaries now require both public-test success, when public tests are configured, and a passing trusted grade. This correction uses the public-test and grade outcomes already recorded in the event ledgers; no model inference or grading was rerun. The original locked runner is retained byte-for-byte in the run-source snapshot, and the correction is documented in [the public-gate correction record](../research/vare_ig_flagship/evidence/long_horizon/public-gate-correction.json).
 
-| Task | Base | Trained adapter |
-|---|---:|---:|
-| JSON pointer lookup | Fail | Fail |
-| Layered option lookup | Fail | Fail |
-| Lexical course planner | Pass | Pass |
-| Resource window coalescer | Fail | Fail |
-| **Trusted task success** | **1/4** | **1/4** |
+| Task | Base final success | Trained adapter final success | Trusted grade only |
+|---|---:|---:|---:|
+| JSON pointer lookup | Fail | Fail | Fail / ungraded |
+| Layered option lookup | Fail | Fail | Fail |
+| Lexical course planner | Fail | Fail | Pass |
+| Resource window coalescer | Fail | Fail | Ungraded |
+| **Public + trusted task success** | **0/4** | **0/4** | **1/4** |
 
 Both runs retained 81 hash-chained events and 56 committed agent steps. The base generated 6,588 output tokens, consumed 87,205 prompt tokens, made 41 tool calls, and took 405.417 seconds overall; generation time was 392.156 seconds. The trained arm generated 4,649 output tokens, consumed 63,901 prompt tokens, made 33 tool calls, and took 312.958 seconds overall; generation time was 302.316 seconds. Generation represented about 96.7% of each run's wall time. These are descriptive trajectory differences on four tasks, not a speedup claim.
 
@@ -113,13 +113,13 @@ The branch adds:
 - A version 6 continuation inventory that adds the four new learning/cache source files while preserving the recorded v1–v5 inventories and hashes.
 - A promotion-gate accounting fix for null or invalid verifier timings, plus a portable evidence verifier that checks file hashes, source snapshots, protocol copies, and both event ledgers.
 
-The exact 14 source files in the training run locks are retained under [run_source_snapshot](../research/vare_ig_flagship/run_source_snapshot/). The four runs used commits `243cac18c0c8d9cd9065065a1ab52f732302c0a0` and `a4f7d44f2750098b648df545d914ca43136c0953`; those locked file bytes are identical across the two commits. Subsequent type/lint maintenance is in the mainline tree and does not rewrite the run-source snapshot or historical protocol hashes.
+The exact 14 source files in the training run locks are retained under [run_source_snapshot](../research/vare_ig_flagship/run_source_snapshot/). The four runs used commits `243cac18c0c8d9cd9065065a1ab52f732302c0a0` and `a4f7d44f2750098b648df545d914ca43136c0953`; those locked file bytes are identical across the two commits. The post-hoc public-gate correction changes current metric code but does not rewrite the run-source snapshot or historical protocol hashes.
 
 ## 9. Research contribution and relation to prior work
 
 This is an engineering and empirical contribution, not a new GRPO or difficulty-sampling algorithm. [DeepSeekMath](https://arxiv.org/abs/2402.03300) introduced GRPO's group-relative baseline. [DAPO](https://arxiv.org/abs/2503.14476) already filters zero-variance prompt groups and adds dynamic sampling. [Online Difficulty Filtering for Reasoning-Oriented RL](https://aclanthology.org/2026.eacl-long.30/) studies intermediate-difficulty selection and reward sparsity directly. VARE-IG applies a family-level, verifier-cost-aware selection heuristic to a small synthetic coding distribution and integrates it with actual MLX rollouts and durable recovery.
 
-The most useful result is a negative one: **having a scheduler that targets informative groups does not guarantee a better learning-signal yield or capability outcome.** Under this task pack and small budget, it tied uniform sampling on informative groups, produced no Development improvement, and did not change long-horizon task successes. The run also shows why task selection needs to be evaluated on matched cost and policy outcomes—not just the raw count of passes or whether an optimizer step happened.
+The most useful result is a negative one: **having a scheduler that targets informative groups does not guarantee a better learning-signal yield or capability outcome.** Under this task pack and small budget, it tied uniform sampling on informative groups, produced no Development improvement, and both policies failed every long-horizon task under the public-plus-trusted success rule. The run also shows why task selection needs to be evaluated on matched cost and policy outcomes—not just the raw count of passes or whether an optimizer step happened.
 
 ## 10. Limits and next experiments
 

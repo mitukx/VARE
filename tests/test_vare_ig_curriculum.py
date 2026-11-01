@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 import pytest
@@ -14,7 +15,10 @@ from scripts.qwen3_vare_ig_experiment import (
 from scripts.resume_vare_ig_preupdate_batch import (
     _assert_saved_response_matches_rollout,
     _clear_mlx_cache_then_guard,
+    _existing_behavior_logprobs,
+    sha256_json,
 )
+from vare.grpo_mlx import Sample
 from scripts.run_vare_ig_durable_training import make_training_sample_record
 
 
@@ -62,6 +66,48 @@ def test_preupdate_recovery_clears_evaluated_cache_before_resource_guard():
 
     _clear_mlx_cache_then_guard(FakeMx(), lambda: events.append("guard"))
     assert events == ["clear", "guard"]
+
+
+def test_preupdate_resume_accepts_missing_logprobs_for_zero_variance_groups(tmp_path: Path):
+    protocol_sha = "a" * 64
+    samples = []
+    for instance_id, rewards in (("zero-variance", [1.0] * 4), ("informative", [1.0, 0.0, 0.0, 0.0])):
+        for sample_index, reward in enumerate(rewards):
+            samples.append(Sample(
+                instance_id=instance_id,
+                behavior_checkpoint_id="base-policy",
+                behavior_step=0,
+                prompt_ids=[11, 12],
+                completion_ids=[13, 14, 15],
+                reward=reward,
+                verifier="parent-oracle-v1",
+                sample_index=sample_index,
+            ))
+
+    def write_payload(logprobs_by_key):
+        rows = [{
+            "instance_id": sample.instance_id,
+            "sample_index": sample.sample_index,
+            "behavior_checkpoint_id": sample.behavior_checkpoint_id,
+            "behavior_logprobs": logprobs_by_key.get((sample.instance_id, sample.sample_index)),
+        } for sample in samples]
+        payload = {"run_protocol_sha256": protocol_sha, "seed": 17, "samples": rows}
+        payload["payload_sha256"] = sha256_json(payload)
+        (tmp_path / "preupdate-behavior-logprobs.json").write_text(json.dumps(payload), encoding="utf-8")
+
+    informative_probs = {
+        ("informative", sample_index): [-0.1, -0.2, -0.3]
+        for sample_index in range(4)
+    }
+    write_payload(informative_probs)
+    assert _existing_behavior_logprobs(tmp_path, 17, protocol_sha, samples) is True
+    assert all(sample.behavior_logprobs is None for sample in samples if sample.instance_id == "zero-variance")
+    assert all(sample.behavior_logprobs == [-0.1, -0.2, -0.3]
+               for sample in samples if sample.instance_id == "informative")
+
+    write_payload({("informative", 0): [-0.1, -0.2, -0.3]})
+    with pytest.raises(RuntimeError, match="missing for an informative sample"):
+        _existing_behavior_logprobs(tmp_path, 17, protocol_sha, samples)
 
 
 def test_durable_training_launcher_persists_exact_token_ids_and_reward_provenance():

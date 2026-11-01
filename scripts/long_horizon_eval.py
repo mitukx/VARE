@@ -24,9 +24,10 @@ under a different controller. ``CONTROLLER_PRESETS["minimal"]`` turns every
 assist off with the same budgets; comparing ``full`` with ``minimal`` under
 one policy measures what the controller, not the model, contributes.
 
-Final task success comes only from a ``TrustedGrader`` whose result passes
-``trusted_verdict``. A missing grader, a grader error, or a result without
-attested isolation is recorded as not trusted and never counts as success.
+Final task success requires a passing ``TrustedGrader`` result and, when public
+tests are configured for the episode, passing public tests. A missing grader,
+a grader error, or a result without attested isolation is recorded as not
+trusted and never counts as success.
 
 The ``ScriptedPolicy`` stub replays fixed text; it is synthetic plumbing for
 CPU tests, not model behavior. Nothing here establishes a capability claim.
@@ -1141,8 +1142,13 @@ def episode_metrics(store: TrajectoryStore, ident: str) -> dict[str, Any]:
         "trusted_grade": trusted,
         "grade_reason": (verification or {}).get("metadata", {}).get("verdict", {}).get("reason", "ungraded"),
         "raw_grade": (verification or {}).get("metadata", {}).get("raw_grade"),
-        # Primary outcome. Ungraded or untrusted is never success.
-        "final_success": bool(verification and verification["trusted"] and verification["passed"]),
+        # Primary outcome requires both the independent parent grade and the
+        # public checks when the episode has them. The finish-tool gate cannot
+        # enforce this on episodes that stop at a turn or token budget.
+        "final_success": bool(
+            verification and verification["trusted"] and verification["passed"]
+            and (not meta.get("public_tests") or last_state.get("public_passed") is True)
+        ),
         "trajectory_head": row["head"],
     }
 

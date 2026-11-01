@@ -1,0 +1,91 @@
+{
+  "arms": {
+    "base": {
+      "corrected_successes": 0,
+      "episodes": 4,
+      "outcomes": [
+        {
+          "corrected_final_success": false,
+          "previous_final_success": false,
+          "public_tests_available": true,
+          "public_tests_passed": false,
+          "task_id": "vare_ig.lh_dev.json_pointer_lookup.v1",
+          "trusted_grade_passed": false
+        },
+        {
+          "corrected_final_success": false,
+          "previous_final_success": false,
+          "public_tests_available": true,
+          "public_tests_passed": false,
+          "task_id": "vare_ig.lh_dev.layered_option_lookup.v1",
+          "trusted_grade_passed": false
+        },
+        {
+          "corrected_final_success": false,
+          "previous_final_success": true,
+          "public_tests_available": true,
+          "public_tests_passed": false,
+          "task_id": "vare_ig.lh_dev.lexical_course_planner.v1",
+          "trusted_grade_passed": true
+        },
+        {
+          "corrected_final_success": false,
+          "previous_final_success": false,
+          "public_tests_available": true,
+          "public_tests_passed": null,
+          "task_id": "vare_ig.lh_dev.resource_window_coalescer.v1",
+          "trusted_grade_passed": false
+        }
+      ],
+      "previous_successes": 1,
+      "trusted_grade_passes": 1
+    },
+    "trained": {
+      "corrected_successes": 0,
+      "episodes": 4,
+      "outcomes": [
+        {
+          "corrected_final_success": false,
+          "previous_final_success": false,
+          "public_tests_available": true,
+          "public_tests_passed": null,
+          "task_id": "vare_ig.lh_dev.json_pointer_lookup.v1",
+          "trusted_grade_passed": false
+        },
+        {
+          "corrected_final_success": false,
+          "previous_final_success": false,
+          "public_tests_available": true,
+          "public_tests_passed": false,
+          "task_id": "vare_ig.lh_dev.layered_option_lookup.v1",
+          "trusted_grade_passed": false
+        },
+        {
+          "corrected_final_success": false,
+          "previous_final_success": true,
+          "public_tests_available": true,
+          "public_tests_passed": false,
+          "task_id": "vare_ig.lh_dev.lexical_course_planner.v1",
+          "trusted_grade_passed": true
+        },
+        {
+          "corrected_final_success": false,
+          "previous_final_success": false,
+          "public_tests_available": true,
+          "public_tests_passed": null,
+          "task_id": "vare_ig.lh_dev.resource_window_coalescer.v1",
+          "trusted_grade_passed": false
+        }
+      ],
+      "previous_successes": 1,
+      "trusted_grade_passes": 1
+    }
+  },
+  "corrected_on": "2026-11-02",
+  "metric_rule": "trusted parent grade passes AND (public tests are unavailable OR recorded final public tests pass)",
+  "pre_correction_pr_head": "08b7a90b196ca15f0a1f7e9321ac713c8e927445",
+  "reason": "The prior metric counted trusted hidden-grade success even when public checks failed after an episode exhausted its budget without successfully calling finish.",
+  "recalculation": "Uses only public-test and trusted-grade outcomes already recorded in the long-horizon episode summaries. No model inference, candidate execution, or grading was rerun.",
+  "run_protocol_sha256": "19313fbd702707fa4888cb1f6004787f9bc6e151b46c18be7500dd7076b3c34c",
+  "schema": "vare_long_horizon_public_gate_correction_v1"
+}

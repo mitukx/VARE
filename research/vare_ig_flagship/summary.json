@@ -2,7 +2,7 @@
   "evidence": {
     "directory": "evidence/",
     "file_manifest": "evidence/evidence-file-manifest.json",
-    "file_manifest_sha256": "c1981fba0649baae454bc84e8af58b262665b4da456d5ea45d5ad6c1082bea8e",
+    "file_manifest_sha256": "e39c77cfb711e46707834db39ba4dc26a8ead15fc27dc7cecdc32adb32513758",
     "local_only_weight_database_inventory": "evidence/local-only-artifacts.json",
     "protocol_redacted_copy_notice": "Machine-specific paths are represented by ${VARE_ROOT} and ${DOCKER_HOST}; original and public copy hashes are recorded.",
     "protocol_redaction_manifest": "evidence/protocol-redaction-manifest.json",
@@ -465,7 +465,7 @@
           },
           "edit_application_rate_mean": 0.5,
           "episodes": 4,
-          "final_success_rate": 0.25,
+          "final_success_rate": 0.0,
           "generated_tokens": 6588,
           "navigation_correct_rate": 0.5,
           "prompt_tokens": 87205,
@@ -553,7 +553,7 @@
               "recovered_bare_edits": 0,
               "reminders": 0
             },
-            "final_success": true,
+            "final_success": false,
             "generated_tokens": 1552,
             "generation_seconds": 129.070959,
             "grade_reason": "all_cases_passed",
@@ -619,7 +619,7 @@
           },
           "edit_application_rate_mean": 0.5,
           "episodes": 4,
-          "final_success_rate": 0.25,
+          "final_success_rate": 0.0,
           "generated_tokens": 4649,
           "navigation_correct_rate": 0.5,
           "prompt_tokens": 63901,
@@ -708,7 +708,7 @@
               "recovered_bare_edits": 0,
               "reminders": 0
             },
-            "final_success": true,
+            "final_success": false,
             "generated_tokens": 882,
             "generation_seconds": 57.842677,
             "grade_reason": "all_cases_passed",
@@ -764,6 +764,7 @@
     },
     "claim_boundary": "Four synthetic Development tasks; descriptive comparison only, not held-out capability or transfer evidence.",
     "controller_sha256": "da727bfe2928d8a512e604f23d74c0b7e2136d8ecb9eb920485036d03313405d",
+    "outcome_definition": "trusted parent grade passes AND (public tests are unavailable OR recorded final public tests pass)",
     "paired_outcome_difference": 0,
     "paired_task_results": [
       {
@@ -779,10 +780,10 @@
         "trained_success": false
       },
       {
-        "base_success": true,
+        "base_success": false,
         "same_outcome": true,
         "task_id": "vare_ig.lh_dev.lexical_course_planner.v1",
-        "trained_success": true
+        "trained_success": false
       },
       {
         "base_success": false,
@@ -793,6 +794,12 @@
     ],
     "protocol_id": "vare-ig-qwen3-4b-long-horizon-development-v1",
     "protocol_sha256": "19313fbd702707fa4888cb1f6004787f9bc6e151b46c18be7500dd7076b3c34c",
+    "review_correction": {
+      "base_successes": 0,
+      "file": "evidence/long_horizon/public-gate-correction.json",
+      "public_gate_correction_sha256": "c3a3009499468a52d54202e267e2eef27bc6f185c616a135b8cb7c60b8db109e",
+      "trained_successes": 0
+    },
     "task_count_per_arm": 4
   },
   "mainline_tests_at_packaging": {

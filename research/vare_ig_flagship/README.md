@@ -4,6 +4,7 @@ This package records the VARE-IG reward-informativeness pilot, real Qwen3-4B MLX
 
 - [Research summary](summary.json): machine-readable per-task, per-seed, scheduler, recovery, and long-horizon outcomes.
 - [Evidence files](evidence/): saved completions, verifier results, behavior-sample records, scheduler selections, checkpoint JSON manifests, recovery decisions, and event-ledger exports. Large tables and full traces are gzip-compressed; source and uncompressed content hashes are recorded.
+- [Long-horizon public-gate correction](evidence/long_horizon/public-gate-correction.json): post-hoc corrected success counts from already recorded public-test and trusted-grade outcomes; the original event ledgers and locked run source are preserved.
 - [Evidence verifier](../../scripts/verify_vare_ig_evidence.py): checks published hashes and both hash-chained event exports.
 - [Run source snapshot](run_source_snapshot/): exact 14-file source set named by the real training locks.
 - [Protocol redaction manifest](evidence/protocol-redaction-manifest.json): original and portable-copy hashes for machine-specific protocol paths.

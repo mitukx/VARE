@@ -48,9 +48,18 @@
     {
       "bytes": 17161,
       "path": "evidence/long_horizon/base-summary.json",
-      "public_sha256": "bf0945eb8d22765b91c233404291ae4103c5a4cdad20ab09fda6190f5c2ce0c7",
+      "posthoc_correction_from_sha256": "bf0945eb8d22765b91c233404291ae4103c5a4cdad20ab09fda6190f5c2ce0c7",
+      "public_sha256": "64ef46bd56bb0ef5eaac896cf95011a901d7ab5d75261378291779c750b8863b",
       "redacted": false,
       "source_sha256": "bf0945eb8d22765b91c233404291ae4103c5a4cdad20ab09fda6190f5c2ce0c7"
+    },
+    {
+      "bytes": 3443,
+      "derived_artifact": "post-hoc recomputation of final success from recorded outcomes",
+      "path": "evidence/long_horizon/public-gate-correction.json",
+      "public_sha256": "c3a3009499468a52d54202e267e2eef27bc6f185c616a135b8cb7c60b8db109e",
+      "redacted": false,
+      "source_sha256": "c3a3009499468a52d54202e267e2eef27bc6f185c616a135b8cb7c60b8db109e"
     },
     {
       "bytes": 20827,
@@ -69,7 +78,8 @@
     {
       "bytes": 17347,
       "path": "evidence/long_horizon/trained-summary.json",
-      "public_sha256": "8a5d1a89b2087ec04c34fc289059f9ac65f4203e385940f010b1bb4916553db2",
+      "posthoc_correction_from_sha256": "8a5d1a89b2087ec04c34fc289059f9ac65f4203e385940f010b1bb4916553db2",
+      "public_sha256": "506ac043ad334973c96e81e429ae62610c2a9e1461b256185c801f2c91af4eb1",
       "redacted": false,
       "source_sha256": "8a5d1a89b2087ec04c34fc289059f9ac65f4203e385940f010b1bb4916553db2"
     },
@@ -926,6 +936,6 @@
       "source_sha256": "0cac84ddd46176daaa2dabcd649429f4f63fc914e557f6c0364a24bad77a3ce2"
     }
   ],
-  "note": "Source SHA256 identifies the exact local source artifact. Public SHA256 identifies the committed copy. Copies containing machine-specific root paths replace them with ${VARE_ROOT}; Docker socket paths use ${DOCKER_HOST}.",
+  "note": "Source SHA256 identifies the exact local source artifact. Public SHA256 identifies the committed copy. Copies containing machine-specific root paths replace them with ${VARE_ROOT}; Docker socket paths use ${DOCKER_HOST}. Long-horizon metric summaries contain an explicitly recorded post-hoc correction requiring public-test success alongside the trusted final grade; the event ledgers are unchanged.",
   "schema": "vare_ig_evidence_file_manifest_v1"
 }
