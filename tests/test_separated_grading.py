@@ -42,7 +42,7 @@ from vare.trusted_scoring import JSONIOCase, _encode
 
 ROOT = Path(__file__).resolve().parents[1]
 IMAGE = "local/test@sha256:" + "a" * 64
-DOCKER_IMAGE = "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
+DOCKER_IMAGE = "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
 PROTOCOL = ROOT / "protocols/separated_coding_eval_cpu_v1.lock.json"
 
 

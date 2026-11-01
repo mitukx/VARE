@@ -1,0 +1,138 @@
+{
+  "budgets": {
+    "lease_seconds": 120,
+    "max_attempts": 5,
+    "max_calls_per_turn": 4,
+    "max_new_tokens_per_turn": 512,
+    "max_total_new_tokens": 4096,
+    "max_turns": 16,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "wall_seconds": 1800.0
+  },
+  "claim_boundary": "This already-exposed Train task is not held-out evidence. A task is successful only when the parent-owned isolated function oracle passes all four cases. No repository pytest grader is trusted.",
+  "controller": {
+    "config": {
+      "auto_public_tests_after_edit": true,
+      "finish_gate": true,
+      "max_calls_per_turn": 4,
+      "max_new_tokens_per_turn": 512,
+      "max_no_tool_retries": 2,
+      "max_total_new_tokens": 4096,
+      "max_turns": 16,
+      "name": "full",
+      "normalize_tool_calls": true,
+      "recover_bare_edits": true,
+      "reveal_target": true,
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "wall_seconds": 1800.0
+    },
+    "name": "full",
+    "public_test_runner": "none",
+    "sha256": "e8db4cf122106be9a4d89b64a3d53433c4a88e1d68df81824c3ee7d065885749",
+    "target_revealed": true,
+    "tool_calls_per_turn": 4,
+    "trajectory": "SQLite append-only hash chain; committed edits replayed into fresh source workspace on resume"
+  },
+  "episodes": {
+    "base_uninterrupted": {
+      "adapter": null,
+      "arm": "base",
+      "seed": 1
+    },
+    "comparison": "compare uninterrupted and fault-injected trajectories for the same arm; require identical committed action sequence, operation IDs, and final file hashes; no duplicated or lost committed steps",
+    "learned_sigkill_recovery": {
+      "adapter_rule": "same latest committed update as learned_uninterrupted; run only if update count >= 1",
+      "arm": "grpo",
+      "fault": {
+        "signal": "SIGKILL",
+        "stage": "after_commit",
+        "zero_based_step_index": 1
+      },
+      "resume": "rerun identical command and arguments; do not change worker, task, policy, controller, or seed",
+      "seed": 1
+    },
+    "learned_uninterrupted": {
+      "adapter_rule": "latest committed update; run only if update count >= 1",
+      "arm": "grpo",
+      "seed": 1
+    }
+  },
+  "frozen_date": "2026-11-01",
+  "grader": {
+    "all_cases_required": true,
+    "candidate_isolation": "Docker function-call harness, pinned image, 5-second case timeout, 512 MiB; wrapper and pinned support module are hashed",
+    "case_ids": [
+      "scalar_root",
+      "nested_lists",
+      "false_and_none_leaves",
+      "empty_tree"
+    ],
+    "class": "FunctionOracleGrader",
+    "config_sha256": "0d6332d6e9f56e3dc9021cca4f345ca6f8f193dc7ae45d940694aa430aec92bb",
+    "expected_values": "parent-owned in the grader factory; never rendered to the model",
+    "factory": "scripts.funcy_tree_oracle:grader_factory",
+    "repository_pytest": "not used as trusted reward",
+    "source_identity": {
+      "additional_sources_sha256": {
+        "scripts/funcy_tree_oracle.py": "0d02f98778a40b9b193a3c9c37ba4bb7783a1de83a16a14f5e402b0e46ee618e"
+      },
+      "candidate_harness_sha256": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+      "grader_sha256": "327462bf3c4d97d56e9a5ca086267435f147af9628cf58796f69ac145cddc7a9",
+      "isolation_runner_sha256": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+      "support_files_sha256": {
+        "funcy/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "funcy/types.py": "bf44df1be7a5390e70c1578de1066f78e14c469ad57c1d608e23c0b4d2744ae3"
+      },
+      "wrapper_sha256": "74180a1ecc0626cef65d678c8d67844a48444cdf0571a34c4e86c443dbfe39b3"
+    }
+  },
+  "metrics": [
+    "generated and prompt tokens",
+    "wall time",
+    "generation time",
+    "tool call count and validity",
+    "valid edits",
+    "navigation order",
+    "stop reason",
+    "trusted grade and case outcomes",
+    "episode attempts and resumed status",
+    "trajectory hash",
+    "peak policy memory"
+  ],
+  "model": {
+    "adapter_rule": "if and only if a real optimizer update is committed, use the latest committed adapter; otherwise execute the base arm only",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "local_only": true,
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "planned_run_id": "qwen3-long-horizon-train-v1-run-001",
+  "preregistered_before_model_inference": true,
+  "protocol_id": "qwen3-long-horizon-train-v1-run-001",
+  "resources": {
+    "MLX_and_Docker": "serial execution",
+    "min_available_memory_gib": 8,
+    "min_free_disk_gib": 4,
+    "preflight": "before each episode; stop if existing host checks fail"
+  },
+  "schema": "vare_qwen3_long_horizon_train_protocol_v1",
+  "study_type": "single-task real-model Train-split systems and recovery demonstration; exploratory",
+  "task": {
+    "bug_patch_sha256": "7d5aa609bb2302d39bbcb157a5cc19b109a2506f9bfab886e0c701a6ad28b233",
+    "dataset_revision": "77cab9055d42ab4a5c25c89a8f937096db13558e",
+    "dataset_source": "swe-smith-py",
+    "episode_task_sha256": "6f55ac7a26a508a4731a6991646f035146aa0ca9ce6d2bbd910a1c2aca4fc536",
+    "exposure": "Train task from the existing curriculum; only the issue and candidate-visible repository source enter model context",
+    "issue_sha256": "f5b32099c280a08919616cf061480227b2920a1f2fff5cca443962a3ca0b9b3a",
+    "readable_file_count": 18,
+    "reference_patch_and_repository_tests": "not provided to the policy",
+    "repository": "Suor/funcy",
+    "source_revision": "4895f919dfd83e24f0334421c5bac104b69d8946",
+    "split": "train",
+    "target_base_sha256": "48df6aec601171de7fa7291c1ccae51f88259271d974c822ffff009f62302a8a",
+    "target_file": "funcy/tree.py",
+    "task_id": "Suor__funcy.207a7810.func_basic__jtj6rhfx",
+    "train_manifest_sha256": "9e2c8197124091f23a1e2f5c2f7cfacd74abbe577928c294bf52469cc92775d1"
+  }
+}

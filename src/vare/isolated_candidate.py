@@ -375,6 +375,8 @@ def values_close(
     bool_as_number: bool = False,
 ) -> bool:
     """Compare JSON values. Numbers use ``math.isclose``; other values are exact."""
+    if actual is None or expected is None:
+        return actual is None and expected is None
     if (type(actual) is bool or type(expected) is bool) and not bool_as_number:
         return type(actual) is type(expected) and actual == expected
     if type(actual) is bool:

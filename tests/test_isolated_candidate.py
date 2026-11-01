@@ -32,7 +32,7 @@ from vare.isolated_candidate import (
 )
 from vare import isolated_candidate
 
-IMAGE = "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
+IMAGE = "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
 
 
 def test_macos_candidate_temp_path_is_canonical_and_home_shared(monkeypatch, tmp_path):
@@ -81,6 +81,12 @@ def test_student_t_matches_pack_constant() -> None:
 def test_numeric_checker_can_match_frozen_bool_as_number_semantics() -> None:
     assert values_close(True, 1.0, rtol=0, atol=0, bool_as_number=True)
     assert not values_close(True, 1.0, rtol=0, atol=0)
+
+
+def test_json_null_values_compare_exactly() -> None:
+    assert values_close(None, None, rtol=0, atol=0)
+    assert not values_close(None, [], rtol=0, atol=0)
+    assert not values_close(False, None, rtol=0, atol=0)
 
 
 def test_task_kind_comes_from_the_caller(tmp_path: Path) -> None:
