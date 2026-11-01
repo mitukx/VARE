@@ -1,0 +1,176 @@
+{
+  "adapter": {
+    "format": "mlx-lm standard adapter_config.json plus adapters.safetensors",
+    "reload_check": "greedy Development response SHA-256 must match checkpoint-loaded policy",
+    "selection": "latest applied update; if no update is warranted, no learned arm is run"
+  },
+  "amendment_reason": "The preregistered seed-20261101 run generated 24 real Train samples but all six four-sample groups had zero reward variance, so the optimizer correctly skipped the update. This follow-up changes only the predeclared seed to 20261102 and uses a new run directory. Task contracts, model revision, temperature, group size, reward threshold, budgets, optimizer, Development set, and recovery boundaries are unchanged. The follow-up is prospective before its first model inference; zero-variance groups still produce no update.",
+  "claim_boundary": "Development performance is descriptive and is not independent held-out improvement; a parameter update alone is not capability improvement.",
+  "execution": {
+    "condition": "If no informative Train group exists, keep pre-update results and do not claim an update, adapter, or learner recovery.",
+    "pre_update_fault": "SIGKILL after update 1 and atomic checkpoint-state are durable; recover via prepare-recovery",
+    "run_dir": "outputs/qwen3-function-repair-dev-v1-seed-20261102",
+    "same_seed_replay": "On resume, run the persisted pending batch from the exact update-1 checkpoint on both recovered and replay-control branches; compare parameter, optimizer, RNG, update-count, adapter reload, and Development outcomes.",
+    "second_fault": "SIGKILL after on-policy update-2 rollouts/rewards/log-probabilities are atomically persisted and before optimizer update 2; recover via resume",
+    "seed": 20261102
+  },
+  "frozen_date": "2026-11-01",
+  "learner": {
+    "behavior_logprobs": "captured from the exact traced current-policy objective computation",
+    "completion_mask": "completion tokens only; prompt and padding excluded",
+    "config": {
+      "clip_eps_high": 0.2,
+      "clip_eps_low": 0.2,
+      "group_size": 4,
+      "max_grad_norm": 1.0,
+      "max_policy_lag": 0,
+      "normalize_std": true,
+      "temperature": 0.7
+    },
+    "lora": {
+      "dropout": 0.0,
+      "num_layers": 8,
+      "rank": 8,
+      "scale": 20.0
+    },
+    "objective": "group-relative clipped policy objective (GRPO)",
+    "optimizer": {
+      "learning_rate": 1e-05,
+      "name": "mlx.optimizers.Adam"
+    },
+    "stale_policy": "max policy lag 0",
+    "update": "one first update on informative groups, then one preregistered pending update batch if informative"
+  },
+  "model": {
+    "cached_snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "local_only": true,
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "snapshot_sha256_manifest": {
+      "bytes": 2278972236,
+      "files": 13
+    }
+  },
+  "parent_protocol": {
+    "path": "protocols/qwen3_function_repair_grpo_dev_v1.json",
+    "sha256": "3fd79045426ec19c9eb892d3ad519aff831e863cdfb3dfaf4339af0b5533ed62"
+  },
+  "planned_run_id": "qwen3-function-repair-grpo-dev-v1-seed-20261102",
+  "preregistered_before_model_inference": true,
+  "preregistration_scope": "Prospective for this seed-20261102 follow-up only; the parent seed-20261101 run is completed and unchanged.",
+  "primary_outcomes": {
+    "development_pre_post": "four deterministic tasks; pass only if all parent-owned cases pass",
+    "interpretation": "descriptive Development result; no confirmatory or held-out claim",
+    "optimizer": "actual update count and trainable parameter digest changes",
+    "recovery": "exact hash equality where numerics permit; report exact/tolerance evidence separately"
+  },
+  "protocol_id": "qwen3-function-repair-grpo-dev-v1-seed-20261102",
+  "recovery": {
+    "control": "replay the exact same pending rollouts twice from the same update-1 checkpoint; compare parameter, optimizer, RNG, and update-count identities",
+    "first_boundary": "SIGKILL after optimizer update 1 and atomic checkpoint/state are durable",
+    "if_no_informative_first_group": "retain pre-update results; no update or update-boundary recovery is claimed",
+    "recovery_group_size": 4,
+    "recovery_tasks": [
+      "train.maximum_fixed_window.v1",
+      "train.parse_env_lines.v1",
+      "train.valid_brackets.v1"
+    ],
+    "required_checks": [
+      "optimizer step",
+      "adapter parameter digest",
+      "optimizer state digest",
+      "RNG probe",
+      "pending payload digest",
+      "recovered versus replayed checkpoint identity"
+    ],
+    "second_boundary": "SIGKILL after fresh on-policy rollout rewards and behavior logprobs are atomically persisted, before update 2"
+  },
+  "research_question": "Can one real on-policy MLX LoRA/GRPO update from trusted, parent-owned function outcomes change deterministic performance on four Development contracts?",
+  "resources": {
+    "available_memory_gib_min": 8.0,
+    "disk_free_gib_min": 8.0,
+    "execution": "one model workload at a time",
+    "max_phase_wall_seconds": 7200.0,
+    "memory_free_percent_min": 15.0,
+    "preflight_before_each_phase": true,
+    "start_swap_fraction_max_exclusive": 0.94,
+    "stop_swap_fraction": 0.97
+  },
+  "reward": {
+    "all_cases_required": true,
+    "candidate_execution": "Docker isolated function-call harness; network disabled; digest-pinned Python image",
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "expected_values": "held in function_repair_tasks.py; never included in model prompts",
+    "memory_mb": 512,
+    "schema": "vare_parent_owned_function_oracle_v1",
+    "timeout_seconds": 5.0,
+    "update_trigger": "binary 1 only if every parent-owned case passes; otherwise 0",
+    "zero_variance": "record group; exclude it from learning; never force an optimizer update"
+  },
+  "runtime": {
+    "huggingface_hub": "2.2.0",
+    "inference": "MLX/Metal",
+    "mlx": "0.32.3",
+    "mlx_lm": "0.32.0",
+    "numpy": "2.5.4",
+    "platform": "macOS arm64 / Apple Silicon M1 Pro",
+    "python": "3.12.12"
+  },
+  "sampling": {
+    "development_max_new_tokens_each": 256,
+    "development_temperature": 0.0,
+    "distribution": "untruncated softmax(logits / temperature)",
+    "group_size": 4,
+    "max_prompt_tokens": 2048,
+    "min_p": 0.0,
+    "seed": 20261102,
+    "seed_schedule": "sha256(base_seed:phase:task_id:sample_index)[:8]",
+    "top_k": 0,
+    "top_p": 1.0,
+    "train_max_new_tokens_each": 512,
+    "train_samples_per_task": 4,
+    "train_temperature": 0.7
+  },
+  "schema": "vare_qwen3_function_repair_grpo_dev_protocol_v1_seed_followup_addendum",
+  "source_commit": "494cdbf0fb31ef24f5ee083eb634f5479ee0ed82",
+  "source_hashes": {
+    "scripts/funcy_tree_oracle.py": "0d02f98778a40b9b193a3c9c37ba4bb7783a1de83a16a14f5e402b0e46ee618e",
+    "scripts/long_horizon_eval.py": "41a441a5107b43261f379e538d2a3cf19109c05cf7cc52d614ecbd828f514fd2",
+    "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+    "scripts/qwen3_function_repair_grpo.py": "0e78815b930b5ed25cbcffcea5a596cebddc51d15fdfdb1d60b4d5973b2d6324",
+    "scripts/run_local_agent.py": "754c0b25e44ee7ba12b9c955b4cf54d959e66872c50c31ab5dd45e37cef71443",
+    "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/eval_stats.py": "9ba1f27421f721200f2596df3c595b6a5622852eb18950953093cddddbfd8f06",
+    "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+    "src/vare/isolated_candidate.py": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+    "src/vare/learning_pipeline/function_repair_tasks.py": "cf0683f86a71c4f2f8ba84c68a2e64b6bc1d700d7d8a6d7e2d197024645818ce",
+    "src/vare/learning_pipeline/grpo_mlx.py": "1044eab634b85d54729c576bed90da0bd56c7566b88e96ea8264d3f638752cf8",
+    "src/vare/learning_pipeline/policy.py": "f3bc25da7cbc7337c5e05e5fc9570513548f5474cceaa79df68836d412d1101c",
+    "src/vare/trajectory_store.py": "f915cbb6f7ee11dc7812084a5f09807eb182268dd9320fcc68a2fa2e47696db8"
+  },
+  "study_type": "prospective exploratory Development-only GRPO seed follow-up",
+  "task_contracts": {
+    "development": {
+      "count": 4,
+      "task_hashes": {
+        "development.decode_rle.v1": "069705cb974a3c951c0886c8b9ca1f634267f35c40caf26e60fac6458ba9d041",
+        "development.longest_common_prefix.v1": "ad297bd9c6f17afc044f6791a310cb0a5b16bd464fefd43961a946721abf793f",
+        "development.maximum_subarray.v1": "e53193ea3ba9766277f44d8872a6f810a94518013449274af56246a910499a84",
+        "development.stable_anagram_groups.v1": "9236a3db60fa3c9c78472c59e573dfdcd0af09e5e894218aa6a2b63b4878c6a9"
+      }
+    },
+    "heldout_access": "prohibited; no held-out manifest or task content loaded",
+    "train": {
+      "count": 6,
+      "task_hashes": {
+        "train.maximum_fixed_window.v1": "3c5c7ca7e98d3eecd83214666fb6fff0bd894721a9be7ee30bbcc0aa60f59fd0",
+        "train.merge_closed_intervals.v1": "050029505e27e22a3ec2ccb76404adb826ab4d9dbd6d79d4d8eb5ee4e107d869",
+        "train.parse_env_lines.v1": "fb79e46f6626db42d0298be215041be7532cfd8222dcd5f6b6ba75f23f0bad3c",
+        "train.rotate_matrix_clockwise.v1": "354b79be236a08f7a153d20150d962269a6c83e66f7a905da491ba1bd072483f",
+        "train.top_k_words.v1": "3bd41ce1541b90ed20f532bb220165b144b6b3195115b009b71fa16ded95a0ec",
+        "train.valid_brackets.v1": "6b957482d8a6ff6881d198227286a1b1d726b1d607e2945d2c2282ede61813ca"
+      }
+    }
+  }
+}
