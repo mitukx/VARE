@@ -211,7 +211,7 @@
     },
     "independent_grader": {
       "path": "scripts/run_mlsys_vllm_64674_agent_grader_v1.py",
-      "sha256": "ea6775c20df5369512f9ead14848675a0ab3bfa30bc6dbeeaaec497a9b1c2771"
+      "sha256": "cad0cad524305d7771b308b52c535f7466937b37d9dd4533bcca02ec32903aa6"
     },
     "local_expected_model_file_hashes": {
       "path": "work/vare-trace-64674-agent-attempt-v1/runtime/model-files.json",
@@ -274,6 +274,10 @@
     "task_workspace_git": {
       "path": "work/vare-trace-64674-agent-attempt-v1/workspace/.git/HEAD",
       "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80"
+    },
+    "independent_grader_regression_test": {
+      "path": "tests/test_mlsys_vllm_64674_agent_grader_v1.py",
+      "sha256": "39b998880ec8ca35dafd0df5563e76911c7c76f09e076577dea5b23995435dca"
     }
   },
   "learning_gate": {
@@ -495,6 +499,32 @@
       "reason": "The task-independent smoke loaded the pinned model but Metal JIT could not write monolithic_metal.pcm because Python could not issue the required scoped read-write sandbox extension to the separate MTLCompilerService process. The new profile allows extension issuance only for the two exact JIT cache subtrees; direct API probes passed for those targets, denied the parent directory, and accepted the double-slash forms from the log.",
       "smoke_exit_code": 1,
       "task_prompt_delivered": false
+    },
+    {
+      "at_utc": "2026-11-01T20:21:43Z",
+      "prior_protocol_sha256": "64371677fa9830d913cd4a612869577a3c9a76eda3f9b8c06e87758379334a0f",
+      "changes": [
+        "Made the independent grader treat a missing or null agent public_test_result as not passed instead of raising during report construction.",
+        "Added a focused regression test for absent, null, false, true, and non-mapping public-test results.",
+        "Updated the independent grader and its new regression test SHA-256 bindings."
+      ],
+      "first_grading_attempt": {
+        "attempt_id": "grader-attempt-001",
+        "grader_sha256_before_fix": "ea6775c20df5369512f9ead14848675a0ab3bfa30bc6dbeeaaec497a9b1c2771",
+        "failure_record": {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/grader-attempt-001-failure.json",
+          "sha256": "77610609be03af19212cdc09c017a040504f02399f7373f541cd036d13cd7300"
+        },
+        "report_persisted": false,
+        "hidden_or_public_outcome_values_persisted": false,
+        "model_feedback": false,
+        "model_attempt_repeated": false,
+        "status": "HARNESS_ERROR_NO_GRADE_RESULT"
+      },
+      "scope": "Prospective independent grading rerun only. Frozen task assignment, task inputs, candidate source, model prompt, model generation and attempt record are unchanged.",
+      "reason": "The first grader call reached report construction after hidden randomized-prefix, hidden reparse-invariance and public-test calls returned, then raised AttributeError because the agent record correctly used null for an unrun public test. The grader wrote no report, so the first grading attempt yields no outcome.",
+      "rerun_gate": "Commit the redacted failure record and grader fix, then pass exact-head CI before rerunning the independent grader under a new report path."
     }
   ],
   "protocol_id": "mlsys-fresh-vllm-64674-agent-attempt-v1-qwen3-4b-development",

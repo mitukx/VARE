@@ -61,6 +61,11 @@ def file_sha(path: Path) -> str:
     return sha256(path.read_bytes())
 
 
+def agent_public_test_passed(agent_attempt: dict[str, Any]) -> bool:
+    result = agent_attempt.get("public_test_result")
+    return isinstance(result, dict) and result.get("passed") is True
+
+
 def definitions(source: str, wanted: set[str]) -> str:
     tree = ast.parse(source)
     bindings: dict[str, ast.AST] = {}
@@ -242,7 +247,7 @@ def grade_candidate(
     terminal_state_valid = (
         agent_attempt.get("stop_reason") == "agent_finished"
         and agent_attempt.get("edit_applied") is True
-        and agent_attempt.get("public_test_result", {}).get("passed") is True
+        and agent_public_test_passed(agent_attempt)
         and agent_identity_valid
     )
     outcome = (
@@ -272,7 +277,7 @@ def grade_candidate(
             "model_identity_matches": agent_attempt.get("model_repository") == expected_model_repository and agent_attempt.get("model_snapshot") == expected_model_revision and agent_attempt.get("model_files") == expected_model_files,
             "stop_reason": agent_attempt.get("stop_reason"),
             "edit_applied": agent_attempt.get("edit_applied") is True,
-            "public_test_pass_in_terminal_record": agent_attempt.get("public_test_result", {}).get("passed") is True,
+            "public_test_pass_in_terminal_record": agent_public_test_passed(agent_attempt),
             "source_hashes_match": agent_identity_valid,
             "terminal_state_valid": terminal_state_valid,
             "tool_turns": agent_attempt.get("tool_turns"),
