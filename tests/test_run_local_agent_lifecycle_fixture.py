@@ -30,7 +30,7 @@ class _FixtureTokenizer:
         return "\n".join(str(message.get("content", "")) for message in messages)
 
     def encode(self, text, **_kwargs):
-        return [0] * max(1, len(text) // 4)
+        return [0] * max(1, len(text) // 8)
 
 
 class _FixtureModel:
@@ -92,7 +92,7 @@ def test_scripted_agent_edit_is_snapshotted_and_independently_graded(tmp_path, m
         "import json, sys\n"
         "request = json.load(sys.stdin)\n"
         "print(json.dumps({'value': request['n']}))\n"
-    )
+    ) + "# " + "x" * 12_500 + "\n"
     (workspace / "solve.py").write_text(source, encoding="utf-8")
     public_test = (
         "import json, subprocess, sys\n"
@@ -155,6 +155,7 @@ def test_scripted_agent_edit_is_snapshotted_and_independently_graded(tmp_path, m
         ("run_public_tests", {}),
         ("finish", {"summary": "Square request.n."}),
     ))
+    observed_read_results = []
 
     def scripted_generate(_backend, _model, _tokenizer, messages, _tools, *, limit, args):
         name, arguments = next(generation)
@@ -164,6 +165,7 @@ def test_scripted_agent_edit_is_snapshotted_and_independently_graded(tmp_path, m
                 for message in reversed(messages)
                 if message.get("role") == "tool" and message.get("name") == "read_file"
             )
+            observed_read_results.append(read_result)
             arguments = {
                 "path": "solve.py",
                 "source_handle": read_result["source_handle"],
@@ -217,6 +219,11 @@ def test_scripted_agent_edit_is_snapshotted_and_independently_graded(tmp_path, m
     assert record["stop_reason"] == "agent_finished"
     assert record["edit_applied"] is True
     assert record["source_read_handles_enabled"] is True
+    assert len(observed_read_results) == 1
+    assert observed_read_results[0]["source_handle"].startswith("source-")
+    assert "response_truncated" not in observed_read_results[0]
+    assert observed_read_results[0]["next_cursor"] is not None
+    assert len(observed_read_results[0]["content"]) > 10_000
     assert record["candidate_diff"]
     assert "request['n'] ** 2" in record["candidate_diff"]
     assert record["source_hashes_before"] != record["source_hashes_after"]

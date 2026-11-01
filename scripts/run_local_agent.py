@@ -1358,23 +1358,26 @@ def main() -> int:
                         source = read_regular_source(workspace, path)
                         text = source.decode('utf-8')
                         source_sha256 = hashlib.sha256(source).hexdigest()
+                        source_identity = {
+                            'resolved_path': path,
+                            'source_sha256': source_sha256,
+                        }
+                        source_handle = None
+                        if args.source_read_handles:
+                            source_handle = f'source-{secrets.token_hex(8)}'
+                            while source_handle in source_read_receipts:
+                                source_handle = f'source-{secrets.token_hex(8)}'
+                            source_identity['source_handle'] = source_handle
                         result = bounded_source_page(
                             text,
                             start_line=arguments.get('start_line', 1),
                             end_line=arguments.get('end_line'),
                             char_offset=arguments.get('char_offset', 0),
-                            source_identity={
-                                'resolved_path': path,
-                                'source_sha256': source_sha256,
-                            },
+                            source_identity=source_identity,
                             tokenizer=tokenizer,
                         )
-                        if args.source_read_handles:
-                            source_handle = f'source-{secrets.token_hex(8)}'
-                            while source_handle in source_read_receipts:
-                                source_handle = f'source-{secrets.token_hex(8)}'
+                        if source_handle is not None:
                             source_read_receipts[source_handle] = (path, source_sha256)
-                            result['source_handle'] = source_handle
                         search_guard.reset()
                 elif name == 'search_text':
                     query = arguments.get('query', '')
