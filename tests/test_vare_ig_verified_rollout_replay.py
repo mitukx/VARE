@@ -114,3 +114,56 @@ def test_real_rollout_bridge_persists_verifies_replays_and_acknowledges(tmp_path
     assert first == second
     assert {row["state"] for row in bridge.store.group(record["group_id"])} == {"consumed"}
     assert audit_trajectory_store(tmp_path / "trajectory-store.sqlite3")["pass"] is True
+
+
+@pytest.mark.parametrize("invalid_kind", [
+    "mixed_prompt_ids",
+    "logprob_length",
+    "nonfinite_logprob",
+    "untrusted_reward",
+    "row_reward_disagreement",
+])
+def test_invalid_group_preflight_is_failure_atomic_and_retryable(tmp_path: Path, invalid_kind: str):
+    """Malformed generation evidence must not enroll any durable trajectory."""
+    task = TRAIN_TASKS[0]
+    verifier = "b" * 64
+    samples, rows = _group_rows(task, verifier)
+    group_id = f"vareig:negative:{invalid_kind}:train-step-0:0:task"
+    bridge = VerifiedGroupReplay(
+        tmp_path, run_id=f"negative-{invalid_kind}", group_budget=1,
+        group_size=4, replay_seed=0,
+    )
+    if invalid_kind == "mixed_prompt_ids":
+        samples[2].prompt_ids = [999, 998]
+    elif invalid_kind == "logprob_length":
+        rows[2]["sampler_logprobs"] = [-0.2]
+    elif invalid_kind == "nonfinite_logprob":
+        rows[2]["sampler_logprobs"] = [float("nan"), -0.5]
+    elif invalid_kind == "untrusted_reward":
+        rows[2]["reward_detail"]["trusted_contract"] = False
+    elif invalid_kind == "row_reward_disagreement":
+        rows[2]["reward"] = 0.0
+
+    def submit(current_samples, current_rows):
+        return bridge.add_group(
+            task=task,
+            family=FAMILY_BY_TASK[task.task_id],
+            prompt_messages=[{"role": "user", "content": task.prompt}],
+            samples=current_samples,
+            rows=current_rows,
+            policy_id="qwen3-4b:test-policy",
+            policy_version=0,
+            policy_checkpoint_sha256="c" * 64,
+            group_id=group_id,
+        )
+
+    with pytest.raises(ValueError):
+        submit(samples, rows)
+    assert bridge.store.group(group_id) == []
+    assert len(bridge.replay) == 0
+
+    clean_samples, clean_rows = _group_rows(task, verifier)
+    record = submit(clean_samples, clean_rows)
+    assert record["replay_admitted"] is True
+    assert len(bridge.store.group(group_id)) == 4
+    assert audit_trajectory_store(tmp_path / "trajectory-store.sqlite3")["pass"] is True
