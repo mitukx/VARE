@@ -39,19 +39,32 @@ def python_version(python: str) -> str:
 
 
 def run_case(label: str, python: str, report_dir: Path) -> dict[str, object]:
-    fixture = FIXTURES / label
+    fixture_name = {"no_tests_collected": "no_tests", "supervisor_timeout": "timeout"}.get(label, label)
+    fixture = FIXTURES / fixture_name
+    case_workspace = report_dir / label
+    case_workspace.mkdir()
     junit = report_dir / f"{label}.xml"
     if label == "requested_node_absent":
-        target = str(FIXTURES / "passed" / "test_case.py") + "::test_missing"
+        source_file = FIXTURES / "passed" / "case_source.txt"
+        staged_source = case_workspace / "test_case.py"
+        staged_source.write_bytes(source_file.read_bytes())
+        target = str(staged_source) + "::test_missing"
         requested = 1
     elif label == "no_tests_collected":
-        target = str(FIXTURES / "no_tests")
+        source_file = fixture / "case_source.txt"
+        target = str(case_workspace)
         requested = 0
     elif label == "supervisor_timeout":
-        target = str(FIXTURES / "timeout")
+        source_file = fixture / "case_source.txt"
+        staged_source = case_workspace / "test_case.py"
+        staged_source.write_bytes(source_file.read_bytes())
+        target = str(staged_source)
         requested = 1
     else:
-        target = str(fixture)
+        source_file = fixture / "case_source.txt"
+        staged_source = case_workspace / "test_case.py"
+        staged_source.write_bytes(source_file.read_bytes())
+        target = str(staged_source)
         requested = 1
     command = [python, "-m", "pytest", "-q", "-p", "no:cacheprovider",
                "--junitxml", str(junit), target]
@@ -100,14 +113,6 @@ def run_case(label: str, python: str, report_dir: Path) -> dict[str, object]:
     )
     record = ff.sanitized_record(observation, legacy_reason=None,
                                  junit_sha256=summary.sha256 if summary else None)
-    if label == "requested_node_absent":
-        source_file = FIXTURES / "passed" / "test_case.py"
-    elif label == "no_tests_collected":
-        source_file = FIXTURES / "no_tests" / "test_placeholder.py"
-    elif label == "supervisor_timeout":
-        source_file = FIXTURES / "timeout" / "test_case.py"
-    else:
-        source_file = next(iter(fixture.glob("test_*.py")), None)
     record.update({
         "fixture": label,
         "wall_s": round(elapsed, 3),

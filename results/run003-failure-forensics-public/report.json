@@ -15,8 +15,8 @@
     },
     "schema": "vare.run003.failure_forensics.aggregate.v1"
   },
-  "created_utc": "2026-11-01T07:17:26Z",
-  "diagnostic_source_sha256": "edb867089e1b82d8c526a9deac074556511ca32d58174f3ca16365074a1d3d73",
+  "created_utc": "2026-11-01T07:43:42Z",
+  "diagnostic_source_sha256": "1480797463b57fff7bba8e9a569cc11cc4849a190f247d64676cb82b64bc0036",
   "eligibility_effect": "none",
   "environment": {
     "machine": "arm64",
@@ -25,7 +25,7 @@
     "python_executable_name": "python3.12",
     "system": "Darwin"
   },
-  "fixture_runner_sha256": "43ca4028db0a759394d24213f5243464a6681fb01221af1fe2cfc2d2d1a93011",
+  "fixture_runner_sha256": "de3570b42cf8ac84b0b7b72aeda6f46263921a12122cb729473d9efec7b6fdf4",
   "purpose": "public synthetic fixtures validate diagnostic distinctions; no repository or held-out tasks were read",
   "records": [
     {
@@ -35,7 +35,7 @@
       "failed_count": 0,
       "fixture": "passed",
       "fixture_source_sha256": "d09affaccc41af1738639f3817eba3de14b806f93a57cc89d8d7e916ac1a0181",
-      "junit_sha256": "8e52ee16647a59c32bad301d5590f8487d63cc7b7454c65ca699dd9b2c2a8eff",
+      "junit_sha256": "016557a5bb1220722824053d8ac46995506bebd064f676e375d8b257bf63e0a8",
       "legacy_reason": null,
       "passed_count": 1,
       "pytest_exit": 0,
@@ -43,8 +43,8 @@
       "requested_count": 1,
       "schema": "vare.run003.failure_forensics.observation.v1",
       "skipped_count": 0,
-      "stdout_sha256": "4e07e51bb3fd7bd7a4c6d7fe05144163a033c738b56cc70d23e0f8637540dd3a",
-      "wall_s": 0.208
+      "stdout_sha256": "adcd38f1e2c6a33fb2466f3e107aabfa528083e0189f67194b21cb6fcf596bc5",
+      "wall_s": 0.161
     },
     {
       "classification": "executed_test_failure",
@@ -53,7 +53,7 @@
       "failed_count": 1,
       "fixture": "failed",
       "fixture_source_sha256": "9918b4857e52a0b869fccc23badc32ca9955da4af009a2ac70bf1609ca5b4e7d",
-      "junit_sha256": "d19be1e967829fa7eb8d1d57ca8edeb6f305a0708178e52ce260d290cd2769f7",
+      "junit_sha256": "c52d800d0bee6c97ede0beab5cdeddef8591a7f112e74bb3fd26f49a686728fa",
       "legacy_reason": null,
       "passed_count": 0,
       "pytest_exit": 1,
@@ -61,8 +61,8 @@
       "requested_count": 1,
       "schema": "vare.run003.failure_forensics.observation.v1",
       "skipped_count": 0,
-      "stdout_sha256": "41909a595f645f2d6c854d248d151b6410bf157c461ff8bcd75b65f1d56d25b6",
-      "wall_s": 0.205
+      "stdout_sha256": "5f5aa436b35227f4c0021d07e049f0887c65cdff41a9cc5c5d99054353845446",
+      "wall_s": 0.171
     },
     {
       "classification": "collection_import_failure",
@@ -71,7 +71,7 @@
       "failed_count": 0,
       "fixture": "import_error",
       "fixture_source_sha256": "c7b5eefcaeb2cb8804e604f5f75986321b34a36a59e827988c9f584bc14e481e",
-      "junit_sha256": "09be8723267e5b201e9ae5e968a977a71031e1d83f41afe4a8514ca2c79f9d6e",
+      "junit_sha256": "d71a0438a6016121c48e8ed0c1f2269949fc219b13fc0d1c2211ba22d940aa24",
       "legacy_reason": null,
       "passed_count": 0,
       "pytest_exit": 2,
@@ -79,8 +79,8 @@
       "requested_count": 1,
       "schema": "vare.run003.failure_forensics.observation.v1",
       "skipped_count": 0,
-      "stdout_sha256": "59e256246ca3c13089e9ab80731827c9d4991d401e52b2829524e283328267da",
-      "wall_s": 0.264
+      "stdout_sha256": "cc7c6c5fe1266fc48d626d7e1b82368d93d1c4ae52456a6d68f3aa16dc50a974",
+      "wall_s": 0.215
     },
     {
       "classification": "no_tests_collected",
@@ -89,7 +89,7 @@
       "failed_count": 0,
       "fixture": "no_tests_collected",
       "fixture_source_sha256": "4c0575d9dd15e963d0583894e7e762df85ab7371f96310448258845fb43b4700",
-      "junit_sha256": "e6fa1f5b2995e8e3f07e976bbd66f4589f2632d7fe837071ee3339184d29dad2",
+      "junit_sha256": "3fc4bc090f86b3cf26ada584544aa1ec98416a4112aeae3e9fc8e475f200b094",
       "legacy_reason": null,
       "passed_count": 0,
       "pytest_exit": 5,
@@ -97,8 +97,8 @@
       "requested_count": 0,
       "schema": "vare.run003.failure_forensics.observation.v1",
       "skipped_count": 0,
-      "stdout_sha256": "05e956d2b437d5a06729f6764f4c828ef722fe8d1faa77df214490bd695bf7a4",
-      "wall_s": 0.19
+      "stdout_sha256": "b0634af54e51219e825ffa4ce69ac606ea05555535c5e3a3c8c35cbf5a9641d3",
+      "wall_s": 0.155
     },
     {
       "classification": "requested_node_absent",
@@ -107,7 +107,7 @@
       "failed_count": 0,
       "fixture": "requested_node_absent",
       "fixture_source_sha256": "d09affaccc41af1738639f3817eba3de14b806f93a57cc89d8d7e916ac1a0181",
-      "junit_sha256": "25958a1faa46fa4e264cc823b41bdb16171c5d517886a7d9be9bcfa56dc6771c",
+      "junit_sha256": "1d6cbdcf7acb59b9e145100f1a7e710724b7a43009303ea9c7ab19356a4ef1e8",
       "legacy_reason": null,
       "passed_count": 0,
       "pytest_exit": 4,
@@ -115,8 +115,8 @@
       "requested_count": 1,
       "schema": "vare.run003.failure_forensics.observation.v1",
       "skipped_count": 0,
-      "stdout_sha256": "b3a99283f18259d8cc37c96a26be2156634eede99566bc5f1c4dcf8fd6ec8af9",
-      "wall_s": 0.182
+      "stdout_sha256": "406b5b923d7f4f8a87cb8a97cb3f992a686523b9cafc142b7575567706c896c8",
+      "wall_s": 0.153
     },
     {
       "classification": "timeout",
@@ -134,7 +134,7 @@
       "schema": "vare.run003.failure_forensics.observation.v1",
       "skipped_count": 0,
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "wall_s": 0.254
+      "wall_s": 0.256
     }
   ],
   "schema": "vare.run003.public_fixture_report.v1"
