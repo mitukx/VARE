@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import platform
 from pathlib import Path
 import random
 import subprocess
@@ -32,7 +33,15 @@ from vare.isolated_candidate import (
 )
 from vare import isolated_candidate
 
-IMAGE = "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
+_IMAGES_BY_MACHINE = {
+    "aarch64": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "arm64": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "amd64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+    "x86_64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+}
+IMAGE = _IMAGES_BY_MACHINE.get(platform.machine().lower())
+if IMAGE is None:
+    raise RuntimeError(f"no pinned candidate image for {platform.machine()}")
 
 
 def test_macos_candidate_temp_path_is_canonical_and_home_shared(monkeypatch, tmp_path):

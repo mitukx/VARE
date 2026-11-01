@@ -1,0 +1,91 @@
+{
+  "audits": {
+    "after_edit_recovery": {
+      "completions": 1,
+      "database_sha256": "144776af153a8ea3bd576e2377731faa965eebbd14e5cdfb2ae6a9744afc8085",
+      "effective_duplicates": 0,
+      "events": 25,
+      "ledger_head_sha256": "9ef4a701d8f3e22c716bae3ac4564eb931cf9e5e97fd4734cf0610909ae25bf8",
+      "pass": true,
+      "steps": 16
+    },
+    "baseline": {
+      "completions": 1,
+      "database_sha256": "2a08e6b0721b28864da611e3eb98028a9474a5bca93b806de755f3cd0d418435",
+      "effective_duplicates": 0,
+      "events": 23,
+      "ledger_head_sha256": "3a59aa7cea159b8834861485673531be80930a8b05312aa2fb192787e07641a8",
+      "pass": true,
+      "steps": 16
+    },
+    "first_recovery": {
+      "completions": 1,
+      "database_sha256": "c28b35c5f50b0daa67b9b492a8b9ecf20f87c241121fcbcb557d8eb6371e0743",
+      "effective_duplicates": 0,
+      "events": 25,
+      "ledger_head_sha256": "8ae85876056bc9b8b2e3be28cb1ee21919ed3abf5deedce81522c4464ad31d9c",
+      "pass": true,
+      "steps": 16
+    }
+  },
+  "baseline_vs_first_recovery_semantic_trace_equal": true,
+  "baseline_vs_post_edit_recovery_semantic_trace_equal": true,
+  "excluded_from_semantic_equality": [
+    "timing.*",
+    "calls[].seconds",
+    "generation.policy_peak_memory_bytes"
+  ],
+  "execution_attempt_generation": {
+    "after_edit_recovery": 2,
+    "baseline": 1,
+    "first_recovery": 2
+  },
+  "fault_boundary_step3": {
+    "edit_applied": true,
+    "file_sha256": {
+      "funcy/tree.py": "afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2"
+    },
+    "operation_id": "base:full:Suor__funcy.207a7810.func_basic__jtj6rhfx:s0:op:3",
+    "tool": "replace_text"
+  },
+  "final_files": {
+    "baseline": {
+      "funcy/tree.py": "afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2"
+    },
+    "identical": true,
+    "recovered": {
+      "funcy/tree.py": "afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2"
+    }
+  },
+  "operation_ids_identical": true,
+  "states": {
+    "after_edit_recovery": [
+      "verified",
+      "{\"confidence\":1.0,\"disagreement\":0.0,\"metadata\":{\"grade_sha256\":\"d8db3325766289d874f749a01639de7691cdcdfb519a3e6aea6bc08b61861cd9\",\"grade_summary\":{\"candidate_sha256\":\"afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2\",\"executed\":true,\"reason\":\"case_failed\",\"schema\":\"vare_function_oracle_v1\"},\"graded_files\":[\"funcy/tree.py\"],\"grading_seconds\":1.391121,\"trajectory_sha256\":\"41bcc7ea16d4a5c9562975e5953fd4c2e36feac8ee01e621263132054e2768c1\",\"verdict\":{\"passed\":false,\"reason\":\"case_failed\",\"trusted\":true},\"verifier_config_sha256\":\"3cc35d7f513a4e78209a02c67f707cdd0defaab32421a018af7f5e48f3e82bb3\"},\"passed\":false,\"score\":0.0,\"trusted\":true,\"verifier_name\":\"vare_function_oracle\",\"verifier_version\":1}",
+      null
+    ],
+    "baseline": [
+      "verified",
+      "{\"confidence\":1.0,\"disagreement\":0.0,\"metadata\":{\"grade_sha256\":\"f44eafabcbdb5460985487ed995a3e0ef125473ee48d5499efe8f73fae12a7a6\",\"grade_summary\":{\"candidate_sha256\":\"afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2\",\"executed\":true,\"reason\":\"case_failed\",\"schema\":\"vare_function_oracle_v1\"},\"graded_files\":[\"funcy/tree.py\"],\"grading_seconds\":1.410546,\"trajectory_sha256\":\"394235f43c0bb67b8b8421571643cb1a311e901f3a308996a43918f861e98120\",\"verdict\":{\"passed\":false,\"reason\":\"case_failed\",\"trusted\":true},\"verifier_config_sha256\":\"3cc35d7f513a4e78209a02c67f707cdd0defaab32421a018af7f5e48f3e82bb3\"},\"passed\":false,\"score\":0.0,\"trusted\":true,\"verifier_name\":\"vare_function_oracle\",\"verifier_version\":1}",
+      null
+    ],
+    "first_recovery": [
+      "verified",
+      "{\"confidence\":1.0,\"disagreement\":0.0,\"metadata\":{\"grade_sha256\":\"2ea176a508c0d69bbae521ccd9b484bf5af9a57c9643b99a68283c78b1646d3b\",\"grade_summary\":{\"candidate_sha256\":\"afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2\",\"executed\":true,\"reason\":\"case_failed\",\"schema\":\"vare_function_oracle_v1\"},\"graded_files\":[\"funcy/tree.py\"],\"grading_seconds\":1.322017,\"trajectory_sha256\":\"aed9828a004c08caf0dc8934bb1f0a74575d9117617d7275a0511bae12be412c\",\"verdict\":{\"passed\":false,\"reason\":\"case_failed\",\"trusted\":true},\"verifier_config_sha256\":\"3cc35d7f513a4e78209a02c67f707cdd0defaab32421a018af7f5e48f3e82bb3\"},\"passed\":false,\"score\":0.0,\"trusted\":true,\"verifier_name\":\"vare_function_oracle\",\"verifier_version\":1}",
+      null
+    ]
+  },
+  "steps": {
+    "after_edit_fault_recovered": 16,
+    "baseline": 16
+  },
+  "tool_names": [
+    "list_files",
+    "read_file",
+    "search_text",
+    "replace_text",
+    "check_syntax",
+    "finish"
+  ],
+  "trace_sha256": "33f48f41ea29738abb20fd10bbe916a69066861165f8404d3f1c78ed39678a8c"
+}

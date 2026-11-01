@@ -436,6 +436,30 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     return matches[0] if len(matches) == 1 else None
 
 
+def check_syntax_source(workspace: Path, raw_path: str, allowed: set[str]) -> dict[str, Any]:
+    """Parse an allowlisted Python source without following workspace symlinks."""
+    path = resolve_allowed_path(raw_path, allowed)
+    if path is None:
+        return {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
+    try:
+        source = read_regular_source(workspace, path, max_bytes=1024 * 1024).decode('utf-8')
+        import ast
+        ast.parse(source, filename=path)
+        return {'syntax_valid': True, 'path': path}
+    except SyntaxError as exc:
+        return {
+            'syntax_valid': False,
+            'path': path,
+            'error': {
+                'message': str(exc.msg)[:160],
+                'lineno': exc.lineno,
+                'offset': exc.offset,
+            },
+        }
+    except (OSError, UnicodeError, ValueError) as exc:
+        return {'error': 'source read failed', 'reason': str(exc)[:160]}
+
+
 def _tool_result_fits(result: Any, tokenizer: Any | None, *,
                       max_bytes: int, max_tokens: int) -> bool:
     serialized = json.dumps(result, ensure_ascii=False, separators=(',', ':'))
@@ -1166,17 +1190,9 @@ def main() -> int:
                         }
                     result = public_test_result
                 elif name == 'check_syntax':
-                    raw_path = arguments.get('path', '')
-                    path = resolve_allowed_path(raw_path, allowed)
-                    if path is None:
-                        result = {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
-                    else:
-                        import ast
-                        try:
-                            ast.parse((workspace / path).read_text(encoding='utf-8'), filename=path)
-                            result = {'syntax_valid': True, 'path': path}
-                        except SyntaxError as exc:
-                            result = {'syntax_valid': False, 'path': path, 'error': str(exc)}
+                    result = check_syntax_source(
+                        workspace, arguments.get('path', ''), allowed,
+                    )
                 else:
                     if digest_tree(workspace, sorted(allowed)) == before:
                         result = {'finished': False, 'error': 'source is unchanged; inspect and edit before finishing'}

@@ -21,6 +21,7 @@ from scripts.run_local_agent import (
     bounded_search_results,
     bounded_source_page,
     bounded_tool_result,
+    check_syntax_source,
     classify_incomplete_tool_call,
     compact_tool_context,
     generation_limit_for_turn,
@@ -78,6 +79,39 @@ def _write_executable(path, body):
     path.write_text("#!/bin/sh\n" + body, encoding="utf-8")
     path.chmod(0o700)
     return path
+
+
+def test_check_syntax_source_reads_regular_allowlisted_files_without_following_symlinks(tmp_path):
+    (tmp_path / '.git').mkdir()
+    source = tmp_path / 'src' / 'good.py'
+    source.parent.mkdir()
+    source.write_text('answer = 42\n', encoding='utf-8')
+    assert check_syntax_source(tmp_path, 'src/good.py', {'src/good.py'}) == {
+        'syntax_valid': True, 'path': 'src/good.py',
+    }
+
+    invalid = tmp_path / 'src' / 'invalid.py'
+    invalid.write_text('def broken(:\n    pass\n', encoding='utf-8')
+    result = check_syntax_source(tmp_path, 'src/invalid.py', {'src/invalid.py'})
+    assert result['syntax_valid'] is False
+    assert result['error']['lineno'] == 1
+    assert 'def broken' not in str(result)
+
+    outside = tmp_path.parent / 'outside.py'
+    outside.write_text('answer = 99\n', encoding='utf-8')
+    linked = tmp_path / 'src' / 'linked.py'
+    linked.symlink_to(outside)
+    rejected = check_syntax_source(tmp_path, 'src/linked.py', {'src/linked.py'})
+    assert rejected['error'] == 'source read failed'
+    assert '99' not in str(rejected)
+
+
+def test_check_syntax_source_enforces_source_byte_limit(tmp_path):
+    (tmp_path / '.git').mkdir()
+    source = tmp_path / 'large.py'
+    source.write_bytes(b'x' * (1024 * 1024 + 1))
+    result = check_syntax_source(tmp_path, 'large.py', {'large.py'})
+    assert result['error'] == 'source read failed'
 
 
 def test_candidate_diff_is_canonical_and_accepted_by_evidence_consumers(tmp_path):

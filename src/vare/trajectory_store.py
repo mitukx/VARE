@@ -524,6 +524,19 @@ class TrajectoryStore:
         with self.connection() as db:
             return {row[0]: row[1] for row in db.execute("SELECT state,count(*) FROM trajectories GROUP BY state")}
 
+    def work_counts(self, stage):
+        """Count queued and leased work for one stage, including non-running trajectories.
+
+        Verification leases intentionally leave the trajectory row in ``complete``
+        until the verifier commits. Callers recovering an interrupted verifier
+        therefore need stage-level counts rather than ``counts()['running']``.
+        """
+        if stage not in {"execute", "verify"}:
+            raise ValueError("unsupported work stage")
+        with self.connection() as db:
+            return {row[0]: row[1] for row in db.execute(
+                "SELECT state,count(*) FROM work WHERE stage=? GROUP BY state", (stage,))}
+
     def group(self, group_id):
         with self.connection() as db:
             return [dict(row) for row in db.execute("SELECT * FROM trajectories WHERE group_id=? ORDER BY member LIMIT 1025", (group_id,))]
