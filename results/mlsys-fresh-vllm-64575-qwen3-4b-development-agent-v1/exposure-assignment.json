@@ -1,0 +1,38 @@
+{
+  "heldout_access": false,
+  "model": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "model_attempts_authorized": 1,
+  "model_attempts_started": 0,
+  "no_grader_feedback": true,
+  "previous_assignment": {
+    "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/exposure-assignment.json",
+    "retired_reservation": "The one Qwen2.5-Coder-14B attempt remained unstarted; the immutable launch receipt says model_loaded=false, and erratum says task_prompt_delivered_to_model=false. This Qwen3-4B prospective assignment supersedes only that unused reservation.",
+    "sha256": "74592200276818ab6778113057041bf9c6aa8c64f5bdee0aca366b5a7ccd445c"
+  },
+  "previous_launch_receipt": {
+    "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/attempt-001/launch-preflight.json",
+    "sha256": "d33f329af4268f431e7e21bc7aceb81afe7b179a39af79ce44a98e65dc306a2e",
+    "status": "NO_GO_BEFORE_MODEL_LOAD"
+  },
+  "prior_integrity_erratum": {
+    "path": "results/mlsys-fresh-vllm-64575-agent-attempt-v1/errata/preflight-integrity-erratum-001.json",
+    "sha256": "c16cb7514187d6a5e19c7e780c6dba220217389f42ba78d694a70d1fbb2f09b0"
+  },
+  "public_pretraining_exposure": "UNKNOWN",
+  "record_id": "vllm-64575-development-qwen3-4b-assignment-v1",
+  "record_status": "FROZEN_PROSPECTIVE_ASSIGNMENT",
+  "schema_version": 1,
+  "split_assignment": "DEVELOPMENT",
+  "task": {
+    "baseline_revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "known_fixed_revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+    "pull_request": 64575,
+    "repository": "vllm-project/vllm",
+    "task_family": "anthropic_request_tool_type_error_precedence",
+    "task_id": "vllm-64575-anthropic-tool-type-validation"
+  },
+  "training_attempts": 0
+}

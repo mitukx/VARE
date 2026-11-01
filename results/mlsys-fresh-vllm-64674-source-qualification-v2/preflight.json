@@ -1,0 +1,38 @@
+{
+  "container_runtime": {
+    "colima_architecture": "aarch64",
+    "colima_vm_memory_bytes": 3040333824,
+    "container_image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "container_image_id": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "container_image_size_bytes": 131750301,
+    "docker_context": "colima",
+    "docker_server": "29.5.2",
+    "docker_server_cpus": 4,
+    "operating_system": "Ubuntu 24.04.4 LTS"
+  },
+  "decision": "Proceed with one bounded candidate-code execution per arm. Abort if free memory pressure drops below 70%, free swap below 512 MiB, runtime identity changes, any run exceeds 45 seconds, or any unexpected output, test result, or isolation/resource failure occurs.",
+  "execution_budget": {
+    "arm_cpus": 1,
+    "arm_memory_mb": 512,
+    "arm_pids_limit": 32,
+    "arm_timeout_seconds": 45,
+    "concurrent_arms": 1,
+    "max_output_bytes": 20000,
+    "network": "none",
+    "qualification_arms": 3,
+    "read_only_candidate_workspace": true,
+    "read_only_root": true
+  },
+  "host": {
+    "architecture": "arm64",
+    "disk_free_gib": 17,
+    "memory_pressure_free_percent": 81,
+    "physical_memory_bytes": 34359738368,
+    "platform": "macOS 27.0.1",
+    "swap_free_mib": 1054.5,
+    "swap_total_mib": 3072.0,
+    "swap_used_mib": 2017.5
+  },
+  "observed_at_utc": "2026-11-01T18:37:04Z",
+  "schema_version": 1
+}

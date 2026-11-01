@@ -108,7 +108,7 @@ def test_artifact_hashes_reject_absent_task_entry(tmp_path) -> None:
     assert failures == ["frozen task input manifest is missing"]
 
 
-def _write_preflight_fixture(tmp_path, *, include_task):
+def _write_preflight_fixture(tmp_path, *, include_task, operator_margin_bytes=0):
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     snapshot = tmp_path / "snapshot"
@@ -158,6 +158,7 @@ def _write_preflight_fixture(tmp_path, *, include_task):
         "agent_attempt": {"max_context_tokens": 1},
         "resource_policy": {
             "runtime_activation_reserve_bytes": 0,
+            "additional_operator_margin_bytes": operator_margin_bytes,
             "gates": {
                 "minimum_memory_pressure_free_percent": 0,
                 "minimum_available_memory_bytes": 0,
@@ -212,6 +213,23 @@ def test_preflight_does_not_report_manifest_hash_failure_as_snapshot_verified(tm
         result = run_preflight(protocol_path, tmp_path / "receipt.json", tmp_path)
 
     assert result["model_snapshot_hashes_verified"] is False
+
+
+def test_preflight_enforces_additional_operator_memory_margin(tmp_path) -> None:
+    protocol_path = _write_preflight_fixture(
+        tmp_path, include_task=True, operator_margin_bytes=2 * 1024**3,
+    )
+    resources = _fake_resources(tmp_path)
+    resources["available_memory_bytes"] = 1024**3
+    with patch("scripts.preflight_local_model_attempt.collect_host_resources", return_value=resources), patch(
+        "scripts.preflight_local_model_attempt._verify_model_snapshot", return_value=[]
+    ):
+        result = run_preflight(protocol_path, tmp_path / "receipt.json", tmp_path)
+
+    assert result["status"] == "NO_GO"
+    assert result["resource_gate_checks"]["estimated_working_set_and_headroom"] is True
+    assert result["resource_gate_checks"]["additional_operator_margin"] is False
+    assert "launch resource gate failed: additional_operator_margin" in result["failures"]
 
 
 def test_available_memory_uses_free_and_inactive_pages() -> None:

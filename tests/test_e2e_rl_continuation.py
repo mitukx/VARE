@@ -477,6 +477,7 @@ def test_historical_source_inventory_versions_stay_frozen():
         "v3":(83,"7c6a454ce817c4cc4874825bff032cb6589604af4767732efd4b77bd052f0a00"),
         "v4":(98,"123b90fd2e899493f4dff524be7ae56f88e0937f5f30f1208b13cf04fc484d95"),
         "v5":(100,"d7fecdd126292481921ca31777df2a2a8b680c4926b40210b3867e604d810d7e"),
+        "v6":(104,"c9b0da42f6919a95ba9b76ee31cb112b5e5285ac8514e24f87b5b5ac390243db"),
     }
     for version,(count,expected) in frozen.items():
         names=auditor.SOURCE_INVENTORIES[version]
@@ -485,7 +486,7 @@ def test_historical_source_inventory_versions_stay_frozen():
     assert len(set(auditor.SOURCE_INVENTORIES.values()))==len(auditor.SOURCE_INVENTORIES)
     assert auditor.EXPECTED_SOURCES==auditor.SOURCE_INVENTORIES[auditor.CURRENT_SOURCE_INVENTORY]
     # Inventories that predate exact recovery endpoints keep the interval check.
-    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4","v5","v6"}
+    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4","v5","v6","v7"}
 
 
 def test_v4_inventory_adds_only_reachable_learning_pipeline_modules():
@@ -549,8 +550,15 @@ def test_v6_adds_vare_ig_modules_without_rewriting_v5():
     assert auditor.INVENTORY_V5_SOURCES<=auditor.INVENTORY_V6_SOURCES
 
 
-def test_v3_through_v6_source_inventories_are_accepted_by_version():
-    for version in ("v3","v4","v5","v6"):
+def test_v7_adds_vare_trace_navigation_without_rewriting_v6():
+    assert auditor.INVENTORY_V7_SOURCES-auditor.INVENTORY_V6_SOURCES=={
+        "src/vare/agent_navigation.py",
+    }
+    assert auditor.INVENTORY_V6_SOURCES<=auditor.INVENTORY_V7_SOURCES
+
+
+def test_v3_through_v7_source_inventories_are_accepted_by_version():
+    for version in ("v3","v4","v5","v6","v7"):
         names=auditor.SOURCE_INVENTORIES[version]
         assert auditor.source_inventory_version(set(names))==version
         auditor.validate_source_inventory(committed_manifest(names),set(names),True)

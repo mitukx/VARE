@@ -1,0 +1,89 @@
+{
+  "arms": {
+    "baseline": {
+      "elapsed_seconds": 0.463528,
+      "expected_outcome_observed": true,
+      "isolation": "docker-network-none-read-only-root-read-only-workspace-no-grader-mount",
+      "result_path": "results/mlsys-fresh-vllm-64674-source-qualification-v2/arms/baseline/result.json",
+      "result_sha256": "44b1e76be35330558a89e274b364ed3ee50aa2b5601818478d660c4cc63ad1d1",
+      "returncode": 1,
+      "source_file_sha256": {
+        "vllm/entrypoints/openai/responses/streaming_events.py": "e453596259b61881b5fda0e489e0953803284ca8a81a3900c90e7570c961785b",
+        "vllm/entrypoints/openai/responses/utils.py": "f9e87ed884b620f69a6d22d41cb030ba57eda211d4f1751a0b4efa6cf36c7828"
+      },
+      "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 166, in <module>\n    test_payload_deltas_do_not_reparse_the_input()\n  File \"/workspace/test_public.py\", line 159, in test_payload_deltas_do_not_reparse_the_input\n    assert full_decodes(lines=10) == full_decodes(lines=100)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "stdout": ""
+    },
+    "upstream-fixed": {
+      "elapsed_seconds": 0.353426,
+      "expected_outcome_observed": true,
+      "isolation": "docker-network-none-read-only-root-read-only-workspace-no-grader-mount",
+      "result_path": "results/mlsys-fresh-vllm-64674-source-qualification-v2/arms/upstream-fixed/result.json",
+      "result_sha256": "e7a5750377ffdfe0ff20e2d4dd2f03bcff7c24b144e6cef0649df229b2237547",
+      "returncode": 0,
+      "source_file_sha256": {
+        "vllm/entrypoints/openai/responses/streaming_events.py": "547c2b0d18c70c2c4c362fd6152073e54411959f029d9b101c55301d328f1320",
+        "vllm/entrypoints/openai/responses/utils.py": "45a981addf3bdc5a8e9cd531a37ec8d2ba15faf31ed91e90b00f843fcae8309e"
+      },
+      "stderr": "",
+      "stdout": "2 vLLM #64674 public regression contracts passed\n"
+    },
+    "wrong-mutant": {
+      "elapsed_seconds": 0.452607,
+      "expected_outcome_observed": true,
+      "isolation": "docker-network-none-read-only-root-read-only-workspace-no-grader-mount",
+      "result_path": "results/mlsys-fresh-vllm-64674-source-qualification-v2/arms/wrong-mutant/result.json",
+      "result_sha256": "9b43b9c994e8ff777ebf8a16abf0009f8e050ba967d69a1fcd27540c9041e940",
+      "returncode": 1,
+      "source_file_sha256": {
+        "vllm/entrypoints/openai/responses/streaming_events.py": "df7ad08f5ac8b44a58bd9d85e837b5dd3542e57de47535076330d483430bcc1c",
+        "vllm/entrypoints/openai/responses/utils.py": "45a981addf3bdc5a8e9cd531a37ec8d2ba15faf31ed91e90b00f843fcae8309e"
+      },
+      "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 166, in <module>\n    test_payload_deltas_do_not_reparse_the_input()\n  File \"/workspace/test_public.py\", line 159, in test_payload_deltas_do_not_reparse_the_input\n    assert full_decodes(lines=10) == full_decodes(lines=100)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "stdout": ""
+    }
+  },
+  "authorization": {
+    "external_repository_writes": false,
+    "heldout_access": false,
+    "model_or_agent_inference": false,
+    "training": false
+  },
+  "candidate": {
+    "base_revision": "7495e9e5a4b705a16bec8ecba43ed7c317067db1",
+    "fixed_revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "license": "Apache-2.0",
+    "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "pr_head_revision": "c545121bf2589d1bb5161a89a794fb35e7bbc955",
+    "pull_request": 64674,
+    "repository": "vllm-project/vllm",
+    "task_id": "vllm-64674-responses-custom-tool-stream-decode"
+  },
+  "conclusion": "The baseline implementation and the declared reparse mutant fail the exact repeated-reparse assertion; the upstream fixed merge passes both narrow upstream-derived regression contracts. This establishes only this source-level regression under the recorded isolated CPU path. It does not qualify a general vLLM task grader, demonstrate Qwen repair success, coding capability, or generalization.",
+  "input_manifest_path": "results/mlsys-fresh-vllm-64674-source-qualification-v1/input-manifest.json",
+  "input_manifest_sha256": "fabb07c0d6c8aa499448ff1d8b596e67f49af0a9849e9866871ae5799c82927a",
+  "post_execution_integrity": {
+    "all_arm_workspace_files_match_frozen_manifest": true,
+    "candidate_workspaces_mount_was_read_only": true,
+    "container_cleanup_verified": true
+  },
+  "prior_attempt": {
+    "candidate_source_or_test_executed": false,
+    "path": "results/mlsys-fresh-vllm-64674-source-qualification-v2/attempts/v1-runner-key-error.json",
+    "sha256": "4bde49d9f11c38fd457634fd778e0d513735fdc87cb82a23ee59a3574c817a71"
+  },
+  "protocol_path": "protocols/mlsys_fresh_vllm_64674_source_qualification_v2.json",
+  "protocol_sha256": "0eb9f555352301389871ce4f4c1cbc964e534529bc678e306375d8a98edbdbda",
+  "report_id": "mlsys-fresh-vllm-64674-source-qualification-v2-results",
+  "schema_version": 1,
+  "status": "SOURCE_REGRESSION_QUALIFIED_FOR_DEVELOPMENT_CANDIDATE_ONLY",
+  "test_contracts": [
+    "test_streamed_payload_matches_prefix_decode",
+    "test_payload_deltas_do_not_reparse_the_input"
+  ],
+  "test_overlay": {
+    "path": "results/mlsys-fresh-vllm-64674-source-qualification-v1/trusted/test_public.py",
+    "scope": "VARE-owned narrow AST-based harness invoking exact target definitions; not the complete upstream test suite or a full-repository grader",
+    "sha256": "943f74399f770a456efbb9f37cd3cee8266abe94ca48a5f51a4bd66215d836b3"
+  }
+}

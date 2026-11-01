@@ -207,12 +207,21 @@ def run_preflight(protocol_path: Path, output_path: Path, root: Path) -> dict[st
     reserve_bytes = policy["runtime_activation_reserve_bytes"]
     weight_bytes = model_manifest["model_weight_bytes"]
     estimated_bytes = weight_bytes + kv_bytes + reserve_bytes
+    operator_margin_bytes = policy.get("additional_operator_margin_bytes", 0)
+    if type(operator_margin_bytes) is not int or operator_margin_bytes < 0:
+        operator_margin_bytes = 0
+        failures.append("resource policy additional operator margin is invalid")
+    required_headroom_bytes = gates["minimum_weight_kv_reserve_headroom_bytes"]
     checks = {
         "memory_pressure_free_percent": resources["memory_pressure_free_percent"] >= gates["minimum_memory_pressure_free_percent"],
         "available_memory_bytes": resources["available_memory_bytes"] >= gates["minimum_available_memory_bytes"],
         "swap_used_bytes": resources["used_bytes"] <= gates["maximum_swap_used_bytes"],
         "disk_free_bytes": resources["disk_free_bytes"] >= gates["minimum_disk_free_bytes"],
-        "estimated_working_set_and_headroom": estimated_bytes + gates["minimum_weight_kv_reserve_headroom_bytes"] <= resources["available_memory_bytes"],
+        "estimated_working_set_and_headroom": estimated_bytes + required_headroom_bytes <= resources["available_memory_bytes"],
+        "additional_operator_margin": (
+            estimated_bytes + required_headroom_bytes + operator_margin_bytes
+            <= resources["available_memory_bytes"]
+        ),
     }
     failures.extend(f"launch resource gate failed: {name}" for name, passed in checks.items() if not passed)
     result = {
@@ -225,6 +234,8 @@ def run_preflight(protocol_path: Path, output_path: Path, root: Path) -> dict[st
         "estimated_fp16_kv_cache_bytes": kv_bytes,
         "runtime_activation_reserve_bytes": reserve_bytes,
         "estimated_weight_kv_reserve_bytes": estimated_bytes,
+        "additional_operator_margin_bytes": operator_margin_bytes,
+        "available_after_reserves_bytes": resources["available_memory_bytes"] - estimated_bytes - required_headroom_bytes,
         "resource_gate_checks": checks,
         "model_snapshot_hashes_verified": not model_snapshot_failures,
         "frozen_inputs_verified": protocol_sha == expected_protocol_sha and not artifact_hash_failures,

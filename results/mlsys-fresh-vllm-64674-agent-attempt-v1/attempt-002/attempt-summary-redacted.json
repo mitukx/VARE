@@ -1,0 +1,138 @@
+{
+  "agent_attempt": {
+    "agent_elapsed_seconds": 209.694,
+    "bounded_wall_seconds": 211.496,
+    "candidate_diff_bytes": 0,
+    "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "edit_applied": false,
+    "generated_tokens": 1535,
+    "handles_referenced_by_edit_calls": 3,
+    "independent_grade": "not_run; unchanged candidate is ineligible under the frozen grading rule",
+    "os_direct_child_max_rss_bytes": 2625454080,
+    "public_test": "not_run; no source edit was applied",
+    "replacement_attempts": [
+      {
+        "applied": false,
+        "match_count": 0,
+        "path_matches_read_receipt": true,
+        "rejection": "old_text must match exactly once; narrow the source context and retry",
+        "source_handle_issued_by_read": true,
+        "turn": 5
+      },
+      {
+        "applied": false,
+        "match_count": 0,
+        "path_matches_read_receipt": true,
+        "rejection": "old_text must match exactly once; narrow the source context and retry",
+        "source_handle_issued_by_read": true,
+        "turn": 7
+      },
+      {
+        "applied": false,
+        "match_count": 0,
+        "path_matches_read_receipt": true,
+        "rejection": "old_text must match exactly once; narrow the source context and retry",
+        "source_handle_issued_by_read": true,
+        "turn": 9
+      }
+    ],
+    "rss_cap_bytes": 8589934592,
+    "sampled_process_tree_rss_peak_bytes": 2577121280,
+    "source_hashes_before": {
+      "test_public.py": "943f74399f770a456efbb9f37cd3cee8266abe94ca48a5f51a4bd66215d836b3",
+      "vllm/entrypoints/openai/responses/streaming_events.py": "e453596259b61881b5fda0e489e0953803284ca8a81a3900c90e7570c961785b",
+      "vllm/entrypoints/openai/responses/utils.py": "f9e87ed884b620f69a6d22d41cb030ba57eda211d4f1751a0b4efa6cf36c7828"
+    },
+    "source_hashes_unchanged": true,
+    "source_read_handles_enabled": true,
+    "source_reads": 5,
+    "stop_reason": "no_tool_call_retries_exhausted",
+    "task_prompt_delivered": true,
+    "tool_call_output_truncated_turns": [
+      11,
+      12
+    ],
+    "tool_calls": {
+      "list_files": 1,
+      "read_file": 5,
+      "replace_from_read": 3,
+      "search_text": 1
+    },
+    "tool_turns": 12,
+    "wall_cap_seconds": 900,
+    "wrapper_exit_code": 0,
+    "wrapper_status": "COMPLETED"
+  },
+  "artifact_policy": {
+    "absolute_host_paths_included": false,
+    "local_artifact_hashes_recorded": true,
+    "raw_transcript_included": false
+  },
+  "claim_limit": "The source-handle interface issued path- and hash-bound handles and correctly rejected three nonmatching exact snippets. This attempt did not produce an applied source edit, a public test result, an independent grade, or evidence of coding capability improvement.",
+  "exposure_classification": "Previously exposed task; this is a diagnostic repeat, not held-out or fresh-task evidence.",
+  "local_artifacts": [
+    {
+      "artifact_class": "local_only",
+      "relative_path": "work/vare-trace-64674-source-handles-diagnostic-v2/attempt-001/agent-attempt.json",
+      "sha256": "dad81a109068c0dd2571923c191a98f8e47282f777f07b9c59c8a7d25e33ca6b"
+    },
+    {
+      "artifact_class": "local_only",
+      "relative_path": "work/vare-trace-64674-source-handles-diagnostic-v2/attempt-001/agent-attempt.log",
+      "sha256": "98684588f3b05172948b505676c071d00851401a3da78cb9773e182d0ba07043"
+    },
+    {
+      "artifact_class": "local_only",
+      "relative_path": "work/vare-trace-64674-source-handles-diagnostic-v2/attempt-001/bounded-record.json",
+      "sha256": "68cc1894237279c8aad4c5baf45fb489fc3ef54b6d2c4442fc676edd32c1d843"
+    },
+    {
+      "artifact_class": "local_only",
+      "relative_path": "work/vare-trace-64674-source-handles-diagnostic-v2/attempt-001/launch-preflight-amended.json",
+      "sha256": "8a7f6a6a0436d93adfffe488a80f51a2366f2e9fbf544420632df0b35c7830b0"
+    },
+    {
+      "artifact_class": "local_only",
+      "relative_path": "work/vare-trace-64674-source-handles-diagnostic-v2/attempt-001/launcher-invocation-failure.json",
+      "sha256": "7251278826ed2b65c9c3d6c5d5583cde770dac198399066a22df0abdcae83f47"
+    },
+    {
+      "artifact_class": "local_only",
+      "relative_path": "work/vare-trace-64674-source-handles-diagnostic-v2/attempt-001/protocol-amended.json",
+      "sha256": "fc037b58f7cb3cd080cd25c6a963901f8e9b929b79b0e44f994cc42cc83e472b"
+    }
+  ],
+  "local_protocol_sha256": "fc037b58f7cb3cd080cd25c6a963901f8e9b929b79b0e44f994cc42cc83e472b",
+  "model": {
+    "backend": "MLX/Metal",
+    "hardware": "Apple Silicon arm64, 32 GiB unified memory",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "runtime_packages": {
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "tokenizers": "0.23.3",
+      "transformers": "5.22.1"
+    }
+  },
+  "protocol_id": "vare-pr181-source-handle-development-diagnostic-v1-amended-launcher",
+  "public_protocol_sha256": "ee6e4f09a520a7219927e00eff5334ed2d71d59389cc196557a3801d0198152f",
+  "pull_request": 181,
+  "resource_preflight": {
+    "all_resource_gates_passed": true,
+    "available_memory_bytes": 12822347776,
+    "disk_free_bytes": 12812857344,
+    "frozen_inputs_verified": true,
+    "memory_pressure_free_percent": 76,
+    "model_snapshot_hashes_verified": true,
+    "protocol_sha256": "fc037b58f7cb3cd080cd25c6a963901f8e9b929b79b0e44f994cc42cc83e472b",
+    "status": "PASSED",
+    "swap_used_bytes": 2081947648
+  },
+  "schema_version": 1,
+  "split": "Development",
+  "status": "NO_SOURCE_EDIT_APPLIED",
+  "summary_id": "mlsys-fresh-vllm-64674-agent-attempt-002-redacted",
+  "task_id": "vllm-64674-responses-custom-tool-stream-decode",
+  "vare_head_sha": "414904e333d53b733abc26c3f4c21125a8e2fe3a"
+}

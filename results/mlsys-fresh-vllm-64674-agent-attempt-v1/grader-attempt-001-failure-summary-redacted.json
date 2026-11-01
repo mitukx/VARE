@@ -1,0 +1,39 @@
+{
+  "attempt_summary_sha256": "f015254f0194e22c0cd7ac9339fa6dfde15c3ade713e764ef097b4c598e8c5f8",
+  "candidate_workspace_modified": false,
+  "claim_limit": "No independent grading outcome is available from the first invocation; a corrected grader rerun is required.",
+  "failure": {
+    "cause": "The agent record uses null for a public test that was never run; report generation incorrectly treated null as a mapping.",
+    "exception": "AttributeError: NoneType has no attribute get",
+    "impact": "This grading attempt produced no usable independent pass/fail result. The hidden outcomes were not captured, so they cannot be reported."
+  },
+  "grade_report_written": false,
+  "grader_sha256_before_fix": "ea6775c20df5369512f9ead14848675a0ab3bfa30bc6dbeeaaec497a9b1c2771",
+  "grader_version": "mlsys-vllm-64674-agent-independent-grader-v1",
+  "grading_attempt_id": "grader-attempt-001",
+  "hidden_and_public_grade_calls_returned_before_report_construction": true,
+  "local_artifacts": [
+    {
+      "artifact_class": "local_only",
+      "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/grader-attempt-001-failure.json",
+      "sha256": "77610609be03af19212cdc09c017a040504f02399f7373f541cd036d13cd7300"
+    }
+  ],
+  "model_attempt_id": "attempt-001",
+  "model_attempt_repeated": false,
+  "model_feedback": false,
+  "outcome_values_saved": false,
+  "protocol_used_for_model_attempt_sha256": "64371677fa9830d913cd4a612869577a3c9a76eda3f9b8c06e87758379334a0f",
+  "repair": {
+    "focused_local_result": "5 passed with pytest plugin autoload disabled",
+    "grader_code_path": "scripts/run_mlsys_vllm_64674_agent_grader_v1.py",
+    "grader_sha256_after_fix": "cad0cad524305d7771b308b52c535f7466937b37d9dd4533bcca02ec32903aa6",
+    "independent_grade_rerun": "pending exact-head CI",
+    "protocol_sha256_after_amendment": "15af55dab6246ff22554cbd88ae26b9419ba5de742ad89c432b93162c2c3e533",
+    "regression_test_path": "tests/test_mlsys_vllm_64674_agent_grader_v1.py",
+    "regression_test_sha256": "39b998880ec8ca35dafd0df5563e76911c7c76f09e076577dea5b23995435dca"
+  },
+  "schema_version": 1,
+  "status": "HARNESS_ERROR_NO_GRADE_RESULT",
+  "summary_id": "mlsys-vllm-64674-grader-attempt-001-failure-redacted"
+}

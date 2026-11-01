@@ -1,0 +1,16 @@
+{
+  "device": "Device(gpu, 0)",
+  "imports": [
+    "mlx.core",
+    "mlx_lm.load",
+    "mlx_lm.models.qwen3"
+  ],
+  "mlx": "0.32.3",
+  "mlx_lm": "0.32.0",
+  "model_prompt_delivered": false,
+  "model_weights_loaded": false,
+  "purpose": "Verify the venv-compatible private interpreter alias imports the pinned MLX and Qwen3 runtime before the prospective model attempt.",
+  "python": "3.12.12",
+  "status": "PASSED",
+  "timestamp_utc": "2026-11-01T16:42:03.570359+00:00"
+}

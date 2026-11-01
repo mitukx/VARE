@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-development-family-review-64674-v1",
+  "protocol_status": "frozen_before_review_decision_and_candidate_source_or_test_access",
+  "frozen_at_utc": "2026-11-01T18:22:07Z",
+  "purpose": "Determine whether vLLM #64674 is identity- or task-family-overlapping with previously exposed Development/Train tasks, using only frozen public metadata and the already recorded exposure ledger. This review does not qualify source behavior or authorize model inference.",
+  "candidate": {
+    "repository": "vllm-project/vllm",
+    "pull_request": 64674,
+    "task_id": "vllm-64674-responses-custom-tool-stream-decode",
+    "title": "[Perf][Frontend] Decode streamed custom-tool input incrementally",
+    "merge_base_sha": "7495e9e5a4b705a16bec8ecba43ed7c317067db1",
+    "head_sha": "c545121bf2589d1bb5161a89a794fb35e7bbc955",
+    "merge_commit_sha": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "changed_paths": [
+      "tests/entrypoints/openai/responses/test_streaming_events.py",
+      "vllm/entrypoints/openai/responses/streaming_events.py",
+      "vllm/entrypoints/openai/responses/utils.py"
+    ],
+    "metadata_source": "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json and screen.json only"
+  },
+  "frozen_inputs": {
+    "protocols/mlsys_fresh_development_candidate_discovery_v4.json": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+    "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json": "8c2fd7e519723e27f8b2b5274d03c340d32c5e552191869ddc23f63f46bd0370",
+    "results/mlsys-fresh-development-candidate-discovery-v4/screen.json": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "protocols/mlsys_fresh_development_candidate_selection_v3.json": "7b0e88d37ed11380bf7d590dfb4484fc63535aa985d72dfb2fe1086c28183148",
+    "results/mlsys-fresh-development-candidate-selection-v3/selection.json": "34dd94a43ea5b8224149fa7edf5351889e77de87bc3c81f04a6c3ac73e6f5735",
+    "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2/attempt-001/attempt-assessment.json": "c3bffd4e829d8b89e3b104d3f29027c006dffbe48ce76496fba4859030804b5d"
+  },
+  "review_scope": {
+    "allowed_inputs": [
+      "candidate identity, title, changed-path metadata, and immutable revision metadata",
+      "recorded Development and Train task-family descriptions and exposure classifications",
+      "prior overlap-review rationales for vLLM #64575 and #64830"
+    ],
+    "prohibited_inputs": [
+      "candidate PR body or issue discussion",
+      "candidate patch, source, tests, task prompt, or grader assets",
+      "any Held-Out task identity, source, test, grader, or outcome"
+    ],
+    "no_model_or_agent_inference": true,
+    "no_candidate_test_execution": true
+  },
+  "decision_rule": {
+    "overlap_requires_at_least_one": [
+      "same repository task identity",
+      "a shared changed source component or directly shared test target",
+      "the same underlying behavior contract or defect mechanism based on frozen task-family descriptions"
+    ],
+    "insufficient_for_overlap": [
+      "shared words such as tool, parser, validation, or streaming without a shared contract or component",
+      "same repository alone",
+      "unknown pretraining exposure alone"
+    ],
+    "outcomes": ["DIRECT_OVERLAP", "NO_DIRECT_IDENTITY_OR_FAMILY_OVERLAP", "AMBIGUOUS_EXCLUDE"]
+  },
+  "authorization": {
+    "metadata_only_overlap_review": true,
+    "candidate_source_or_test_access": false,
+    "source_qualification": false,
+    "development_assignment": false,
+    "model_or_agent_inference": false,
+    "training": false,
+    "heldout_access": false,
+    "external_repository_writes": false
+  },
+  "limitations": [
+    "A no-overlap decision is not a source qualification and does not establish upstream regression validity.",
+    "Source-level freshness does not establish model pretraining non-exposure.",
+    "The review cannot establish performance generalization across repositories."
+  ]
+}

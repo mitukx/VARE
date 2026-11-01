@@ -1,0 +1,20 @@
+{
+  "arm_result_created": false,
+  "arm_result_directory_created": false,
+  "candidate_source_checks_completed": "Manifest workspace file-set and hash checks completed successfully before the key error.",
+  "candidate_source_executed": false,
+  "command": "DOCKER_CONTEXT=colima PYTHONPATH=src python scripts/run_vllm_64674_source_qualification_arm.py --arm baseline --workspace work/mlsys-fresh-vllm-64674-source-qualification/qualification/baseline",
+  "disposition": "Preserved without retry. The v1 baseline invocation ended before candidate or test code execution. A new frozen VARE protocol version is required before any candidate execution.",
+  "docker_container_invoked": false,
+  "exit_code": 2,
+  "failure_class": "VARE_runner_manifest_schema_key_error",
+  "input_manifest_sha256": "fabb07c0d6c8aa499448ff1d8b596e67f49af0a9849e9866871ae5799c82927a",
+  "record_id": "mlsys-fresh-vllm-64674-source-qualification-v1-runner-key-error",
+  "recorded_at_utc": "2026-11-01T18:37:04Z",
+  "runner_sha256_at_failure": "3a23c67206ff6f99f3250db04ffa6fc86711506ce220d42619b0810c7ee93189",
+  "schema_version": 1,
+  "stderr": "",
+  "stdout": "{\"arm\": \"baseline\", \"error\": \"KeyError: 'public_test_sha256'\"}\n",
+  "test_overlay_executed": false,
+  "test_overlay_read_by_runner": false
+}

@@ -46,4 +46,4 @@ Both commands are offline and use CPU only. `vare_revision` names the VARE sourc
 - Result: `outputs/rvl_trajectory_gradient_parity_v6.json`
 - Audit: `outputs/rvl_trajectory_gradient_parity_v6.audit.json`
 
-The audit checks the recorded result and lock; rerunning the runner performs the numerical reproduction. This is local engineering evidence, not an external evaluation or an xAI/SpaceXAI MTS Eval result.
+The audit checks the recorded result and lock; rerunning the runner performs the numerical reproduction. This is local engineering evidence only; it does not evaluate model capability or external task performance.
