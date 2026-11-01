@@ -227,7 +227,7 @@
     },
     "local_runtime_smoke": {
       "path": "work/vare-trace-64674-agent-attempt-v1/runtime/runtime-smoke.py",
-      "sha256": "45c8260d3830d78a3aa1c57716bc6a12b48e2270e6147c6605f8459ad21a0be2"
+      "sha256": "33929642aa30ed977bede29cff8e95723937cde95e2de6730b46dd7a1c407a8d"
     },
     "long_horizon_success_metric": {
       "path": "scripts/long_horizon_eval.py",
@@ -361,6 +361,33 @@
       "prior_launch_preflight_invalidated": true,
       "reason": "The protocol-authorized task-independent one-token runtime smoke failed before opening model weights because the sandbox omitted two exact Hugging Face blob symlink aliases.",
       "smoke_exit_code": 1,
+      "task_prompt_delivered": false
+    },
+    {
+      "at_utc": "2026-11-01T19:36:15Z",
+      "attempt_artifacts": [
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/runtime-smoke-corrected.log",
+          "sha256": "14b622dd2b8a43edfa192c9dbb872e6863122c1de92c94558915ace8cfb0330e"
+        },
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/runtime-smoke-corrected-bounded.json",
+          "sha256": "9bf7c055954a71fb5fca55bffd6f48c22bfccaf06a5e1d54d2e1385fa0f0d939"
+        }
+      ],
+      "changes": [
+        "Updated the local runtime smoke to use make_sampler(temp=0.0, top_p=0.0, top_k=0), matching the frozen VARE MLX runner path.",
+        "Updated the frozen local_runtime_smoke SHA-256 binding."
+      ],
+      "generated_tokens": 0,
+      "generation_api_called": true,
+      "generation_api_error": "TypeError: generate_step() got an unexpected keyword argument temp",
+      "model_loaded": true,
+      "model_loading_attempted": true,
+      "model_weight_file_size_bytes": 2263022417,
+      "reason": "After the corrected sandbox allowed model files, the task-independent smoke loaded the pinned model but its generation call used an obsolete temp keyword unsupported by MLX-LM 0.32.2.",
       "task_prompt_delivered": false
     }
   ],
