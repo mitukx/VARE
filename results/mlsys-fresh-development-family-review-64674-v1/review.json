@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "review_id": "mlsys-fresh-development-family-review-64674-v1",
+  "review_protocol_path": "protocols/mlsys_fresh_development_family_review_64674_v1.json",
+  "review_protocol_sha256": "149dae859d33f5658de3130780470ae5f5c7b0be134ba30614621b4b5b92e152",
+  "protocol_frozen_commit": "0a1b17e19e3e3c8884e8c678dec35ca1fe2431e4",
+  "candidate": {
+    "repository": "vllm-project/vllm",
+    "pull_request": 64674,
+    "task_id": "vllm-64674-responses-custom-tool-stream-decode",
+    "title": "[Perf][Frontend] Decode streamed custom-tool input incrementally",
+    "merge_base_sha": "7495e9e5a4b705a16bec8ecba43ed7c317067db1",
+    "merge_commit_sha": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "changed_paths": [
+      "tests/entrypoints/openai/responses/test_streaming_events.py",
+      "vllm/entrypoints/openai/responses/streaming_events.py",
+      "vllm/entrypoints/openai/responses/utils.py"
+    ]
+  },
+  "result": "NO_DIRECT_IDENTITY_OR_FAMILY_OVERLAP",
+  "confidence": "moderate",
+  "comparison_scope": "Frozen public metadata and prior Development/Train task-family records only. No held-out identity, source, tests, or outcomes were accessed.",
+  "input_hashes": {
+    "protocols/mlsys_fresh_development_family_review_64674_v1.json": "149dae859d33f5658de3130780470ae5f5c7b0be134ba30614621b4b5b92e152",
+    "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json": "8c2fd7e519723e27f8b2b5274d03c340d32c5e552191869ddc23f63f46bd0370",
+    "results/mlsys-fresh-development-candidate-discovery-v4/screen.json": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "results/mlsys-fresh-development-candidate-selection-v2/task-family-overlap-review-v1.json": "cf32ccc984744ed074b938ef3ab10f39c4a0486159ae73665f59c8d09b8279e2",
+    "results/mlsys-fresh-development-task-family-overlap-v5-correction-001/review.json": "ca3c3c459aea260e2b1737f0ab034c2033bf0e3e19b4a397ae9abc32e6b98986",
+    "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v2/attempt-001/attempt-assessment.json": "c3bffd4e829d8b89e3b104d3f29027c006dffbe48ce76496fba4859030804b5d"
+  },
+  "rationale": [
+    "The candidate is not the same repository task identity as vLLM #64575 or #64830.",
+    "Its source and regression-test paths are disjoint from #64575's Anthropic request-protocol validation paths and #64830's V1 model-runner configuration paths.",
+    "#64575 concerns rejecting inbound Anthropic tool-definition types during request validation. #64674's frozen title and changed-path metadata concern incremental decoding in the OpenAI Responses streaming event path. These are different API surfaces, processing stages, source components, and behavior contracts.",
+    "The nearest recorded MLX-LM tool-call task (#1904) concerns outbound argument representation (dictionary versus string). Its behavior contract and repository/component differ from stream decoding.",
+    "Shared words such as tool or parser alone do not satisfy the frozen direct-family overlap rule."
+  ],
+  "exposure_audit": {
+    "prior_model_or_agent_attempt_found": false,
+    "source_or_test_content_accessed_before_review": false,
+    "candidate_patch_accessed": false,
+    "heldout_accessed": false,
+    "external_repository_written": false
+  },
+  "limitations": [
+    "This metadata-only review does not qualify the source-level task or establish that the upstream test is a valid independent grader.",
+    "Pretraining exposure is unknown.",
+    "The result authorizes only proceeding to a separate source-qualification protocol; it does not assign the task to Development or authorize inference or training."
+  ],
+  "authorization": {
+    "source_qualification_may_be_frozen": true,
+    "candidate_source_or_test_access_under_existing_protocol": false,
+    "development_assignment": false,
+    "model_or_agent_inference": false,
+    "training": false,
+    "heldout_access": false
+  }
+}

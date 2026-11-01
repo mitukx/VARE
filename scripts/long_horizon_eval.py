@@ -71,9 +71,9 @@ from vare.types import Task, Verification  # noqa: E402
 
 read_regular_source = rla.read_regular_source
 
-SCHEMA = "vare_long_horizon_episode_v1"
+SCHEMA = "vare_long_horizon_episode_v2"
 EDIT_TOOLS = frozenset({"apply_patch", "replace_text", "recovered_edit"})
-READ_TOOLS = frozenset({"list_files", "read_file", "search_text"})
+READ_TOOLS = frozenset({"list_files", "read_file", "search_text", "list_symbols"})
 TOOL_CALL = re.compile(r"<tool_call>\s*(\{.*?\})\s*</tool_call>", re.DOTALL)
 TRUSTED_GRADE_SCHEMAS = frozenset({"vare_function_oracle_v1"})
 TERMINAL_STORE_STATES = frozenset({"complete", "verified"})
@@ -246,8 +246,11 @@ class ToolRuntime:
         self.editable = set(task.editable_files)
         self.public_tests = public_tests
         self.base_hashes = dict(base_hashes)
-        self.tools = rla.tools_for("unified_diff", public_tests=public_tests is not None)
+        self.tools = rla.tools_for(
+            "unified_diff", public_tests=public_tests is not None, include_navigation=True,
+        )
         self.schemas = {item["function"]["name"]: item["function"]["parameters"] for item in self.tools}
+        self.search_guard = rla.SearchLoopGuard(empty_search_limit=3)
 
     @property
     def tool_names(self) -> set[str]:
@@ -272,7 +275,8 @@ class ToolRuntime:
         if name == "replace_text":
             return rla.attempt_exact_text_replacement(
                 self.workspace, arguments["path"], arguments["old_text"], arguments["new_text"],
-                self.editable)
+                self.editable,
+                expected_source_sha256=arguments.get("expected_source_sha256", ""))
         if name == "recovered_edit":
             return rla.attempt_configured_edit(self.workspace, str(arguments["text"]), "unified_diff",
                                                self.editable)
@@ -294,20 +298,58 @@ class ToolRuntime:
                     end_line=arguments.get("end_line"), char_offset=arguments.get("char_offset", 0),
                     source_identity={"resolved_path": path,
                                      "source_sha256": hashlib.sha256(source).hexdigest()})
+                self.search_guard.reset()
         elif name == "search_text":
             query = arguments["query"]
             if not query:
                 result = {"error": "query must not be empty"}
+            elif not isinstance(query, str):
+                result = {"error": "query must be a string"}
             else:
-                matches = []
-                for path in sorted(self.readable):
-                    text = read_regular_source(self.workspace, path).decode("utf-8")
-                    for line_no, line in enumerate(text.splitlines(), 1):
-                        if query in line:
-                            matches.append({"path": path, "line": line_no, "text": line})
-                result = rla.bounded_search_results(matches, offset=arguments.get("offset", 0))
+                raw_path = arguments.get("path")
+                path = None
+                if raw_path is not None:
+                    path = rla.resolve_allowed_path(raw_path, self.readable)
+                    if path is None:
+                        result = {"error": "path is not an exact allowlisted source file"}
+                redirect = (self.search_guard.intercept(query, path)
+                            if raw_path is None or path is not None else None)
+                if redirect is not None:
+                    result = redirect
+                elif raw_path is not None and path is None:
+                    pass
+                else:
+                    matches = []
+                    for source_path in ([path] if path is not None else sorted(self.readable)):
+                        text = read_regular_source(self.workspace, source_path).decode("utf-8")
+                        for line_no, line in enumerate(text.splitlines(), 1):
+                            if query in line:
+                                matches.append({"path": source_path, "line": line_no, "text": line})
+                    result = rla.bounded_search_results(matches, offset=arguments.get("offset", 0))
+                    result.update({"query": query, "match_mode": "case_sensitive_literal",
+                                   "match_count": len(matches)})
+                    redirect_hint = self.search_guard.observe(query, len(matches), path)
+                    if redirect_hint is not None:
+                        result["controller_redirect"] = redirect_hint
+        elif name == "list_symbols":
+            path = rla.resolve_allowed_path(arguments.get("path", ""), self.readable)
+            query = arguments.get("query", "")
+            if path is None:
+                result = {"error": "path is not an exact allowlisted source file"}
+            elif not isinstance(query, str):
+                result = {"error": "query must be a string"}
+            else:
+                source = read_regular_source(self.workspace, path, max_bytes=1024 * 1024)
+                result = rla.list_python_symbols(source.decode("utf-8"), query=query,
+                                                 offset=arguments.get("offset", 0),
+                                                 limit=arguments.get("limit", 20))
+                result["path"] = path
+                result["source_sha256"] = hashlib.sha256(source).hexdigest()
+                self.search_guard.reset()
         elif name in ("apply_patch", "replace_text"):
             result = self.edit(name, arguments)
+            if result.get("applied") is True:
+                self.search_guard.reset()
         elif name == "run_public_tests":
             result = self.run_public_tests()
         elif name == "check_syntax":
@@ -358,6 +400,8 @@ def system_prompt(task: EpisodeTask, runtime: ToolRuntime, controller: Controlle
         f"Tools (JSON schema): {tools}\n"
         "Readable paths are returned by list_files; only these are editable: "
         f"{', '.join(sorted(task.editable_files))}. {target}{public}"
+        "search_text is case-sensitive literal search; after related empty searches, use list_symbols or read a bounded source range. "
+        "replace_text requires the current source_sha256 returned by read_file. "
         "Call finish when the fix is complete. The operator may run an independent grader after the episode; "
         "you will only see grader feedback if it is configured as a tool.\n\n"
         f"Repository: {task.repository}\nIssue:\n{task.issue.strip()}"
@@ -502,6 +546,62 @@ def trusted_verdict(result: Any) -> dict[str, Any]:
             return {"trusted": False, "passed": False, "reason": reason,
                     "grader_reason": str(result.get("reason"))[:200]}
     return {"trusted": True, "passed": bool(result["passed"]), "reason": str(result.get("reason"))[:200]}
+
+
+def trusted_final_success(
+    *,
+    store_state: str,
+    expected_steps: int,
+    committed_steps: int,
+    verification: Mapping[str, Any] | None,
+    expected_trajectory_sha256: str,
+    expected_verifier_config_sha256: str | None,
+    initial_source_hashes: Mapping[str, str],
+    final_source_hashes: Mapping[str, str],
+    public_tests_configured: bool,
+    public_tests_passed: Any,
+    expected_task_sha256: str | None = None,
+    expected_source_revision: str | None = None,
+    expected_workspace_patch_sha256: str | None = None,
+    require_task_binding: bool = False,
+) -> bool:
+    """Require a complete, source-bound grade, an edit, and public success."""
+    if store_state not in TERMINAL_STORE_STATES or committed_steps != expected_steps:
+        return False
+    if (not isinstance(initial_source_hashes, Mapping)
+            or not isinstance(final_source_hashes, Mapping)
+            or not initial_source_hashes
+            or set(initial_source_hashes) != set(final_source_hashes)
+            or not any(initial_source_hashes[path] != final_source_hashes[path]
+                       for path in final_source_hashes)):
+        return False
+    if not isinstance(verification, Mapping) or verification.get("trusted") is not True:
+        return False
+    if verification.get("passed") is not True:
+        return False
+    metadata = verification.get("metadata")
+    if not isinstance(metadata, Mapping):
+        return False
+    if metadata.get("trajectory_sha256") != expected_trajectory_sha256:
+        return False
+    if (not expected_verifier_config_sha256
+            or metadata.get("verifier_config_sha256") != expected_verifier_config_sha256):
+        return False
+    raw_grade = metadata.get("raw_grade")
+    graded_files = metadata.get("graded_files")
+    if not isinstance(raw_grade, Mapping) or not isinstance(graded_files, list) or len(graded_files) != 1:
+        return False
+    graded_path = graded_files[0]
+    if (not isinstance(graded_path, str)
+            or raw_grade.get("candidate_sha256") != final_source_hashes.get(graded_path)):
+        return False
+    if require_task_binding and (
+        metadata.get("task_sha256") != expected_task_sha256
+        or metadata.get("source_revision") != expected_source_revision
+        or metadata.get("workspace_patch_sha256") != expected_workspace_patch_sha256
+    ):
+        return False
+    return not public_tests_configured or public_tests_passed is True
 
 
 class UnavailableGrader:
@@ -805,8 +905,10 @@ class EpisodeHarness:
         ]
         for step in steps:
             messages.extend(messages_for_step(step["action"]))
+        baseline_hashes = runtime.file_hashes()
         state: dict[str, Any] = dict(steps[-1]["state"]) if steps else {
-            "file_sha256": runtime.file_hashes(), "edit_applied": False, "public_passed": None,
+            "file_sha256": baseline_hashes, "initial_file_sha256": baseline_hashes,
+            "edit_applied": False, "public_passed": None,
             "tokens_total": 0, "no_tool_retries": 0, "stop_reason": None}
         wall_used = sum(float(s["action"].get("timing", {}).get("step_seconds", 0.0)) for s in steps)
         for index in range(len(steps), controller.max_turns):
@@ -946,7 +1048,9 @@ class EpisodeHarness:
     def _verify(self, lease: TrajectoryLease) -> None:
         ident = lease.trajectory_id
         task = self.tasks[ident]
-        head = self.store.trajectory(ident)["head"]
+        trajectory = self.store.trajectory(ident)
+        head = trajectory["head"]
+        task_metadata = json.loads(trajectory["task"])["task"]["metadata"]
         assert self.grader_for is not None
         grader: TrustedGrader = self.grader_for(task) or UnavailableGrader()
         self.store.register_verifier(grader.name, grader.version, grader.config_sha256())
@@ -976,6 +1080,9 @@ class EpisodeHarness:
                              verifier_version=grader.version, verifier_name=grader.name,
                              trusted=bool(verdict["trusted"]),
                              metadata={"trajectory_sha256": head, "verifier_config_sha256": grader.config_sha256(),
+                                       "task_sha256": task_metadata["task_sha256"],
+                                       "source_revision": task_metadata.get("source_revision"),
+                                       "workspace_patch_sha256": task_metadata.get("workspace_patch_sha256"),
                                        "verdict": verdict, "grade_summary": summary,
                                        "raw_grade": dict(raw) if isinstance(raw, Mapping) else {},
                                        "grade_sha256": _grade_digest(raw),
@@ -1086,6 +1193,30 @@ def episode_metrics(store: TrajectoryStore, ident: str) -> dict[str, Any]:
     auto_public = sum(s["action"]["controller"].get("auto_public_tests", 0) for s in real)
     verification = json.loads(row["verification"]) if row["verification"] else None
     trusted = bool(verification and verification["trusted"])
+    verifier_config_sha256 = None
+    if verification is not None:
+        with store.connection() as db:
+            verifier_row = db.execute(
+                "SELECT config FROM verifiers WHERE name=? AND version=?",
+                (verification["verifier_name"], verification["verifier_version"]),
+            ).fetchone()
+        verifier_config_sha256 = verifier_row[0] if verifier_row is not None else None
+    final_success = trusted_final_success(
+        store_state=row["state"],
+        expected_steps=row["expected_steps"],
+        committed_steps=len(steps),
+        verification=verification,
+        expected_trajectory_sha256=row["head"],
+        expected_verifier_config_sha256=verifier_config_sha256,
+        initial_source_hashes=(steps[0]["state"].get("initial_file_sha256", {}) if steps else {}),
+        final_source_hashes=last_state.get("file_sha256", {}),
+        public_tests_configured=bool(meta.get("public_tests")),
+        public_tests_passed=last_state.get("public_passed"),
+        expected_task_sha256=meta.get("task_sha256"),
+        expected_source_revision=meta.get("source_revision"),
+        expected_workspace_patch_sha256=meta.get("workspace_patch_sha256"),
+        require_task_binding=meta.get("schema") == SCHEMA,
+    )
     attempts = _execute_claims(store, ident)
     return {
         "episode_id": ident, "task_id": spec["task"]["id"], "repository": meta["repository"],
@@ -1145,10 +1276,7 @@ def episode_metrics(store: TrajectoryStore, ident: str) -> dict[str, Any]:
         # Primary outcome requires both the independent parent grade and the
         # public checks when the episode has them. The finish-tool gate cannot
         # enforce this on episodes that stop at a turn or token budget.
-        "final_success": bool(
-            verification and verification["trusted"] and verification["passed"]
-            and (not meta.get("public_tests") or last_state.get("public_passed") is True)
-        ),
+        "final_success": final_success,
         "trajectory_head": row["head"],
     }
 
@@ -1265,6 +1393,7 @@ FIXTURE_SOURCE = {
     "calc/util.py": "def clamp(x, lo, hi):\n    return max(lo, min(hi, x))\n",
     "tests/test_ops.py": "from calc import add\n\n\ndef test_add():\n    assert add(2, 3) == 5\n",
 }
+FIXTURE_OPS_SHA256 = hashlib.sha256(FIXTURE_SOURCE["calc/ops.py"].encode("utf-8")).hexdigest()
 
 
 def write_fixture(target: Path) -> None:
@@ -1298,11 +1427,13 @@ FIXTURE_SCRIPT = (
     _call("list_files"),
     _call("search_text", query="def add"),
     _call("read_file", path="calc/ops.py"),
-    _call("replace_text", path="calc/ops.py", old_text="return a + b", new_text="return a - b"),
+    _call("replace_text", path="calc/ops.py", old_text="return a + b", new_text="return a - b",
+          expected_source_sha256=FIXTURE_OPS_SHA256),
     "<tool_call>{not json}</tool_call>",
     # Bare JSON: only a controller with tool-call normalization executes it.
     json.dumps({"name": "replace_text", "arguments": {"path": "calc/ops.py", "old_text": "return a - b",
-                                                       "new_text": "return a + b"}}),
+                                                       "new_text": "return a + b",
+                                                       "expected_source_sha256": FIXTURE_OPS_SHA256}}),
     _call("run_public_tests"),
     _call("finish", summary="fixed add"),
 )

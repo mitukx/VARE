@@ -1,0 +1,7 @@
+(version 1)
+(deny default)
+(allow file-read*)
+(allow process*)
+(allow sysctl-read)
+(allow file-write* (subpath "/private/tmp/vare-trace-vllm-64575-qwen3-4b-development-v1/grader-writable"))
+(deny network*)

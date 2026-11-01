@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "<VARE_ROOT>/scripts/run_local_agent.py", line 1284, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "<VARE_ROOT>/scripts/run_local_agent.py", line 888, in main
+    import mlx.core as mx
+ModuleNotFoundError: No module named 'mlx'

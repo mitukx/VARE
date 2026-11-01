@@ -1,0 +1,88 @@
+{
+  "agent_attempt": {
+    "do_sample": false,
+    "edit_format": "unified_diff",
+    "incomplete_tool_retry_tokens": 1024,
+    "max_context_tokens": 6144,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "process_tree_rss_cap_bytes": 8589934592,
+    "public_test_image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "seed": 64674,
+    "temperature": 0.0,
+    "top_k": 0,
+    "top_p": 1.0,
+    "wall_seconds": 900
+  },
+  "claim_limits": [
+    "not held-out evidence",
+    "not a fresh-task result",
+    "not a capability-improvement or generalization estimate",
+    "not eligible RL training data"
+  ],
+  "frozen_at_utc": "2026-11-01T21:37:54.338444+00:00",
+  "grading_policy": {
+    "hidden_grader_feedback_to_model": false,
+    "no_rl_update": true,
+    "run_independent_grader_only_if_nonempty_source_edit_was_applied": true
+  },
+  "launch_correction": {
+    "correction": "Invoke the bounded Python runner through python3; create a new protocol hash and repeat preflight before the single model run.",
+    "fresh_preflight_required_before_model_prompt": true,
+    "prior_invocation_failed_before_model_start": true,
+    "prior_model_loaded": false,
+    "prior_task_prompt_delivered": false
+  },
+  "model": {
+    "backend": "MLX/Metal",
+    "hardware": "Apple Silicon arm64, 32 GiB unified memory",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "runtime_packages": {
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "tokenizers": "0.23.3",
+      "transformers": "5.22.1"
+    }
+  },
+  "protocol_id": "vare-pr181-source-handle-development-diagnostic-v1-amended-launcher",
+  "purpose": "One bounded diagnostic on an already exposed Development task: determine whether Qwen3-4B can reference a source-read handle and have the VARE runner apply and record a source-bound edit.",
+  "resource_policy": {
+    "additional_operator_margin_bytes": 2147483648,
+    "maximum_swap_used_bytes": 2684354560,
+    "minimum_available_memory_bytes": 8589934592,
+    "minimum_disk_free_bytes": 10737418240,
+    "minimum_memory_pressure_free_percent": 60,
+    "runtime_activation_reserve_bytes": 3221225472
+  },
+  "schema_version": 1,
+  "source_handle_interface": {
+    "cli_flag": "--source-read-handles",
+    "edit_tool": "replace_from_read",
+    "enabled": true,
+    "handle_binding": "permitted read path plus full-file SHA-256; exact unique replacement; postimage verification"
+  },
+  "source_protocol_sha256_local_only": "fc037b58f7cb3cd080cd25c6a963901f8e9b929b79b0e44f994cc42cc83e472b",
+  "status": "FROZEN_BEFORE_MODEL_PROMPT_OR_GENERATION",
+  "task": {
+    "baseline_revision": "898b55ffcb8a8d4d3ba7c11c68dbefcae993057c",
+    "exposure": "repeat of a previously exposed Development task; not independent or held-out",
+    "prospective_assignment_record_sha256": "72988fdf2ffbf829fe95ad657ce04a3231a13f6cc8b4d0df7722f3f62a4a3e45",
+    "public_regression_sha256": "943f74399f770a456efbb9f37cd3cee8266abe94ca48a5f51a4bd66215d836b3",
+    "source_identity": {
+      "vllm/entrypoints/openai/responses/streaming_events.py": "e453596259b61881b5fda0e489e0953803284ca8a81a3900c90e7570c961785b",
+      "vllm/entrypoints/openai/responses/utils.py": "f9e87ed884b620f69a6d22d41cb030ba57eda211d4f1751a0b4efa6cf36c7828"
+    },
+    "split": "Development",
+    "task_id": "vllm-64674-responses-custom-tool-stream-decode",
+    "task_json_sha256": "d1d38dae24e897f5ac862c15bcbefb769ce29427b41e45b322315724129ee9c1"
+  },
+  "vare": {
+    "head_sha": "414904e333d53b733abc26c3f4c21125a8e2fe3a",
+    "pull_request": 181,
+    "repository": "https://github.com/mitukx/VARE.git",
+    "runner_sha256": "8738c29f84f87a14366f695126b91d533e3fbd213218c684366a9cd1bc017c3a"
+  }
+}

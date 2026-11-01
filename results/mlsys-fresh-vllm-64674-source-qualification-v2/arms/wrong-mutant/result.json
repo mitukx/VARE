@@ -1,0 +1,40 @@
+{
+  "arm": "wrong-mutant",
+  "candidate": "vllm-64674-responses-custom-tool-stream-decode",
+  "container_image": "vare-mlsys-agent-cpu:0.1@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+  "elapsed_seconds": 0.452607,
+  "expected_outcome": "baseline/mutant fails only the frozen reparse-count assertion",
+  "expected_outcome_observed": true,
+  "finished_at_utc": "2026-11-01T18:37:44.697726+00:00",
+  "public_test_result": {
+    "elapsed_seconds": 0.452,
+    "isolation": "docker-network-none-read-only-root-read-only-workspace-no-grader-mount",
+    "passed": false,
+    "returncode": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 166, in <module>\n    test_payload_deltas_do_not_reparse_the_input()\n  File \"/workspace/test_public.py\", line 159, in test_payload_deltas_do_not_reparse_the_input\n    assert full_decodes(lines=10) == full_decodes(lines=100)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+    "stdout": ""
+  },
+  "schema_version": 1,
+  "started_at_utc": "2026-11-01T18:37:44.244900+00:00",
+  "test_public_sha256": "943f74399f770a456efbb9f37cd3cee8266abe94ca48a5f51a4bd66215d836b3",
+  "workspace_file_hashes": {
+    "test_public.py": "943f74399f770a456efbb9f37cd3cee8266abe94ca48a5f51a4bd66215d836b3",
+    "vendor/partial_json_parser-0.2.1.1.post7.dist-info/METADATA": "138cea9c54eacf4ab2b6cfcdd017a5de60a9b73df5c7412dcf77e58e19a76448",
+    "vendor/partial_json_parser-0.2.1.1.post7.dist-info/RECORD": "332d9028108e81fe4fc0a720469069323b8f36fc69b7f9fc84a0dd2af9317fa0",
+    "vendor/partial_json_parser-0.2.1.1.post7.dist-info/WHEEL": "b6c52ffedec10de25e447692adccdb19eb8af93b43a46b168bf25fa730f6e792",
+    "vendor/partial_json_parser-0.2.1.1.post7.dist-info/entry_points.txt": "87195b320c49af4614656a21295b3633b0b9d5656be9997ee274b6c5a114cba2",
+    "vendor/partial_json_parser-0.2.1.1.post7.dist-info/licenses/LICENSE": "f2ca3ffaa3b670c484f52b512edce67e018858071da5a6b0b5e5bdbcb17c21dc",
+    "vendor/partial_json_parser/__init__.py": "124630a74a07129628894aab76888a26726395cc5156c426db49756d74312ee2",
+    "vendor/partial_json_parser/core/api.py": "28b50285899cf5bd3fcb3209fb2e9d7444ebc3ee1a373566540b1d3d0a256501",
+    "vendor/partial_json_parser/core/complete.py": "84bb847878b21357a8775fe7e17f61a3b5cab4b9f7b55f1f87547091eafa438e",
+    "vendor/partial_json_parser/core/exceptions.py": "9a6eb1d6eba0151bdeb1d0540eaf947e76ab8578dbbb09d1095ca80b3658474b",
+    "vendor/partial_json_parser/core/myelin.py": "5a2f7b36eb6a9bdd204d7917fd775f3f463ebe2300e9067c4e31e40de0440146",
+    "vendor/partial_json_parser/core/options.py": "ad76c27e6a8ffee38dbdf0a972bc5cf4166837f3242eb1169668a8c1d146fac6",
+    "vendor/partial_json_parser/options.py": "815d636915eb4545224b5150777c1f9d794b2e150100d0d1f9f8efd84ae1eb1a",
+    "vendor/partial_json_parser/playground.py": "eeb39c49601c7cdcbb95f47b9576dcad0859d3eef192823991520913fad79894",
+    "vendor/partial_json_parser/version.py": "88c4c15f2990007c7bb933c7bff2e670f5b1e0ac88a07edb1b4a358df3bdbe8c",
+    "vllm/entrypoints/openai/responses/streaming_events.py": "df7ad08f5ac8b44a58bd9d85e837b5dd3542e57de47535076330d483430bcc1c",
+    "vllm/entrypoints/openai/responses/utils.py": "45a981addf3bdc5a8e9cd531a37ec8d2ba15faf31ed91e90b00f843fcae8309e"
+  },
+  "workspace_path": "/Users/user/Documents/Codex/2026-11-01/files-pasted-by-the-user-vare/work/VARE-TRACE-main/work/mlsys-fresh-vllm-64674-source-qualification/qualification/wrong-mutant"
+}

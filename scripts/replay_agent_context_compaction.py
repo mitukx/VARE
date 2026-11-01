@@ -23,8 +23,19 @@ def reconstruct_attempt_messages(
     attempt: dict[str, Any], tokenizer: Any, tools: list[dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, int]]]:
     """Rebuild the unabridged prompt history and verify every recorded prompt length."""
-    if attempt.get('edit_attempted') or attempt.get('edit_applied'):
-        raise ValueError('retrospective replay only supports attempts without edit actions')
+    if attempt.get('edit_applied'):
+        raise ValueError('retrospective replay only supports attempts without applied edits')
+    interventions = [
+        item
+        for turn in attempt.get('transcript', [])
+        for item in turn.get('controller_interventions', [])
+    ]
+    if attempt.get('edit_attempted') and not any(
+        item.get('type') in {'malformed_edit_retry', 'malformed_edit_stopped'}
+        and item.get('source_unchanged') is True
+        for item in interventions
+    ):
+        raise ValueError('unapplied edit attempt lacks a recorded unchanged-source controller outcome')
     messages = [dict(message) for message in attempt['initial_messages']]
     if len(messages) != 2 or messages[0].get('role') != 'system' or messages[1].get('role') != 'user':
         raise ValueError('attempt must contain the original system and task messages')
@@ -63,6 +74,16 @@ def reconstruct_attempt_messages(
             continue
 
         messages.append({'role': 'assistant', 'content': turn['model_output']})
+        recovery = next((
+            item for item in turn.get('controller_interventions', [])
+            if item.get('type') == 'malformed_edit_retry'
+        ), None)
+        if recovery is not None:
+            feedback = recovery.get('feedback')
+            if not isinstance(feedback, str) or not feedback:
+                raise ValueError(f"turn {turn['turn']} malformed-edit retry lacks controller feedback")
+            messages.append({'role': 'user', 'content': feedback})
+            continue
         no_tool_turns += 1
         if no_tool_turns <= no_tool_retries:
             messages.append({
@@ -71,6 +92,7 @@ def reconstruct_attempt_messages(
                     turn['model_output'], edit_format=attempt['edit_format'],
                     allowed_paths=allowed_paths,
                     token_limit=budgets['max_new_tokens_per_turn'],
+                    source_read_handles=attempt.get('source_read_handles_enabled') is True,
                 ),
             })
 
@@ -93,7 +115,11 @@ def main() -> int:
     from transformers import AutoTokenizer
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, local_files_only=True)
-    tools = tools_for(attempt['edit_format'])
+    tools = tools_for(
+        attempt['edit_format'],
+        include_navigation=attempt.get('navigation_tools_enabled') is True,
+        include_read_handles=attempt.get('source_read_handles_enabled') is True,
+    )
     messages, prompt_checks = reconstruct_attempt_messages(attempt, tokenizer, tools)
     before_tokens = len(tokenizer.encode(
         render_chat_prompt(tokenizer, messages, tools), add_special_tokens=False,

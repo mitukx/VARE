@@ -1,0 +1,33 @@
+{
+  "agent_runner": "scripts/run_local_agent.py",
+  "bounded_runner": "scripts/run_bounded_local_agent_attempt.py",
+  "device": "Apple Metal through MLX",
+  "interpreter": "Pre-existing local VARE MLX environment exposed through a private venv-compatible alias; host path is intentionally not recorded.",
+  "interpreter_alias_fix": "Private alias includes its own copied pyvenv.cfg and a symlink to the pre-existing VARE environment lib directory, so sys.prefix points to the alias and MLX imports resolve.",
+  "machine": "arm64",
+  "model_config": {
+    "architectures": [
+      "Qwen3ForCausalLM"
+    ],
+    "head_dim": 128,
+    "hidden_size": 2560,
+    "max_position_embeddings": 262144,
+    "model_type": "qwen3",
+    "num_attention_heads": 32,
+    "num_hidden_layers": 36,
+    "num_key_value_heads": 8
+  },
+  "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "packages": {
+    "huggingface-hub": "0.36.0",
+    "mlx": null,
+    "mlx-lm": null,
+    "numpy": "2.4.4",
+    "pydantic": "2.12.5",
+    "pytest": "8.4.2",
+    "tokenizers": "0.22.1",
+    "transformers": "4.57.3"
+  },
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "python": "3.12.12"
+}
