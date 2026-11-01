@@ -1,0 +1,91 @@
+{
+  "evaluator": {
+    "classification_rule": "explicit supervisor evidence only; ambiguous exit statuses classify unknown",
+    "eligibility_effect": "none; diagnostics do not turn invalid attempts into valid tasks",
+    "fixture_runner": "scripts/run003_fixture_diagnostics.py",
+    "fixture_runner_sha256": "43ca4028db0a759394d24213f5243464a6681fb01221af1fe2cfc2d2d1a93011",
+    "frozen_reference_sources": {
+      "protocols/coding_policy_learning_mlx_4b_v1.json": "b004df4e66e32d235ceaec011492842271a286bec3ffb126b6af8170de53bb77",
+      "scripts/run002_build_check.py": "f4e4d7103e4496c00144e4f26212b134d3b82f6379d5188d3e4e1aa551b9e338",
+      "src/vare/learning_pipeline/repo_env.py": "bc9c8858f39769d6a42d44da0659680ac50b7b5f8cb03573652fac60da2a8d09"
+    },
+    "implementation": "scripts/run003_failure_forensics.py",
+    "implementation_sha256": "edb867089e1b82d8c526a9deac074556511ca32d58174f3ca16365074a1d3d73",
+    "junit": "bounded XML count extraction; raw test names, tracebacks, and XML text are not emitted",
+    "reference_main_sha": "e93469d10ad21cefa16396c343407e07c1c529ec",
+    "schema": "vare.run003.failure_forensics.observation.v1",
+    "unit_test": "tests/test_run003_failure_forensics.py",
+    "unit_test_sha256": "de5bbda3494b9c7a1f94a3f1ebef1b4da61c96cdfc281e8d046d165e92cf7ab0"
+  },
+  "historical_baseline": {
+    "diagnostic_limit": "Run-002 retained counts and stdout hashes for these attempts, not collection reports or raw pytest evidence. The cause distribution of the 769 missing cases cannot be reconstructed from the retained aggregate.",
+    "gate": "26 repositories x 8 valid tasks; Run-002 refusal remains in force",
+    "known_aggregate": {
+      "attempts": 903,
+      "reference_fails": 31,
+      "reference_tests_missing": 769,
+      "valid": 103
+    },
+    "reason_codes_immutable": true,
+    "refusal": {
+      "criteria_changed": false,
+      "eligible_repositories": 12,
+      "exit_code": 3,
+      "heldout_manifest_created": false,
+      "required_repositories": 26,
+      "required_tasks_per_repository": 8
+    },
+    "run": "Run-002 R7",
+    "run002_report_sha256": "b36570ce4e3cc53e3d53eee7623b90b5bf85ccc250d75157e0de87ba9d72c32f"
+  },
+  "prospective_target_validation": {
+    "candidate_source": "Run-002 frozen v1 RepoEnv remains byte-identical; any diagnostic runner is outside its frozen source inventory",
+    "dataset_revision": "SWE-bench/SWE-smith-py@77cab9055d42ab4a5c25c89a8f937096db13558e",
+    "dependencies": "must be pinned in a new immutable lock before target validation; Run-002's EXTRA_TEST_DEPS list is not a complete lock",
+    "eligibility_effect": "any dependency, node-selection, or environment correction is prospective and may change the eligible task population",
+    "exposure_exclusions": "reserved task data must be segregated from model prompting; publish count-only diagnostics and hashes",
+    "node_id_contract": "pytest node IDs only; absent-node classification requires exact parent-side collection evidence",
+    "qualification": "preserve 26 x 8; no reduction",
+    "sampling": "not defined until a complete candidate/dependency/sandbox manifest is frozen",
+    "sandbox": "pinned Seatbelt profile or Colima image digest with recorded identity and live attestation; no unrestricted host execution",
+    "status": "not_triggered_no_validated_correction",
+    "stopping_rules": [
+      "integrity mismatch",
+      "sandbox escape or unconfirmed cleanup",
+      "timeout",
+      "disk below 4 GiB",
+      "memory pressure exceeds preflight limit"
+    ],
+    "target_machine": "Apple M1 Pro macOS with Colima/Seatbelt isolation",
+    "target_repositories": "none selected; no per-attempt Run-002 collection artifacts were retained"
+  },
+  "protocol_id": "run003_failure_forensics_v1",
+  "public_fixture_campaign": {
+    "actual_root_cause_sample": false,
+    "cases": [
+      "passed",
+      "executed_test_failure",
+      "collection_import_failure",
+      "no_tests_collected",
+      "requested_node_absent",
+      "supervisor_timeout"
+    ],
+    "fixture_sources": {
+      "failed/test_case.py": "9918b4857e52a0b869fccc23badc32ca9955da4af009a2ac70bf1609ca5b4e7d",
+      "import_error/test_case.py": "c7b5eefcaeb2cb8804e604f5f75986321b34a36a59e827988c9f584bc14e481e",
+      "no_tests/test_placeholder.py": "4c0575d9dd15e963d0583894e7e762df85ab7371f96310448258845fb43b4700",
+      "passed/test_case.py": "d09affaccc41af1738639f3817eba3de14b806f93a57cc89d8d7e916ac1a0181",
+      "timeout/test_case.py": "791a1472c672d9081e19d1406a3039e911817d94bd4637f8fb284ad12c2c869c"
+    },
+    "purpose": "validate distinct observable outcomes and fail-closed ambiguity handling",
+    "pytest": "8.4.2",
+    "python": "3.12.12",
+    "report": "results/run003-failure-forensics-public/report.json",
+    "report_sha256": "9c2c444cab48dff162074b61e8622194b74b5fd27fc1364ff2d74f83416db95a",
+    "reserved_data_access": false,
+    "split": "synthetic public fixtures only"
+  },
+  "question": "Which failure classes can be distinguished prospectively without changing Run-002 eligibility or exposing test content?",
+  "schema": "vare.protocol/run003_failure_forensics/v1",
+  "status": "diagnostic_layer_and_public_fixture_validation_only"
+}
