@@ -1,0 +1,24 @@
+{
+  "experiment_time": {
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "container_runtime": "Colima Docker, 4 vCPU, 3 GiB memory",
+    "hardware": "Apple M1 Pro, 32 GiB unified memory",
+    "inference_device": "Metal/GPU",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "peak_mlx_allocation_bytes": 3374097128,
+    "platform": "macOS arm64",
+    "python": "3.12.12"
+  },
+  "reproduction_probe": {
+    "colima": "running, 4 vCPU, 3040333824 bytes configured memory",
+    "free_disk_bytes": 20001189888,
+    "host": "macOS 27.0.1 arm64",
+    "note": "This later probe is environment availability, not a measurement from proposal generation.",
+    "python_312_mlx_env": "3.12.12 / mlx 0.32.4 / mlx-lm 0.32.2",
+    "python_on_default_shell": "3.9.6"
+  },
+  "reproduction_probe_utc": "2026-11-01T07:35:27Z",
+  "schema": "vare.mlsys_edit_format_local_environment.v1"
+}

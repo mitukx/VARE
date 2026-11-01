@@ -1,0 +1,58 @@
+{
+  "schema": "vare.protocol/mlsys_edit_format_local_benchmark/v1",
+  "protocol_id": "mlsys_edit_format_local_benchmark_v1",
+  "status": "control_measurement_rule_frozen_before_scripted_control_timing",
+  "proposal_outcomes_known_before_lock": true,
+  "question": "Does the PR-173 scripted first-line precheck reduce latency in the VARE edit-apply path while preserving every observed output?",
+  "task": {
+    "target": "src/vare/learning_pipeline/edit_format.py::_relaxed_replace",
+    "task_statement": "benchmarks/mlsys_edit_format_local_v1/task.md",
+    "workload": "benchmarks/mlsys_edit_format_local_v1/workload.py",
+    "profile": "benchmark",
+    "cases_per_session": 128,
+    "generator": "deterministic seeded public generator; 800-2500 line source files; 1-3 edit blocks; varied exact/relaxed/missing/ambiguous cases"
+  },
+  "arms": {
+    "baseline": "unchanged edit_format.py",
+    "scripted_known_good": "PR-173 known_good.patch, independently verified through vare.isolated_candidate",
+    "scripted_incorrect": "relaxed matcher returns None for every call; correctness control only",
+    "model_attempt_1": "Qwen3-4B local proposal; rejected on correctness before timing",
+    "model_attempt_2": "AST-equivalent duplicate of attempt 1; rejected without a second execution"
+  },
+  "control": {
+    "candidate_source_sha256": "d2945f9c5c5a69d239efb3346891da7655f888ad6235645131d3b98014bda6a1"
+  },
+  "evaluation_boundary": {
+    "runner": "vare.isolated_candidate.grade_calls",
+    "runner_source_sha256": "e26017bbb942514bc7c131fa511b9e28ddc4a7dbb9c1f152371e4994ab3a2e10",
+    "sandbox_source_sha256": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "container_controls": ["Colima", "network=none", "read-only root", "cap-drop=ALL", "no-new-privileges", "uid=65534", "read-only subject-only mount"],
+    "expected_outputs": "computed by the unchanged parent module; candidate never receives expected values or grader files",
+    "null_transport": "represent optional new_text as has_new_text plus a string field because frozen isolated_candidate.values_close does not compare JSON null values"
+  },
+  "measurement": {
+    "primary": "geometric mean of five paired ratios of per-call parent-clock request-response means; lower two-sided 95% Student-t interval must exceed 1.0 and point estimate must be >=1.05",
+    "per_call_interval": "parent request write to trusted response frame receipt inside a warmed session container; subject import and container startup are excluded",
+    "secondary": "outer wall time per session, including worker and container startup",
+    "paired_seeds": [780520261201, 780520261202, 780520261203, 780520261204, 780520261205],
+    "aa_seeds": [780520261301, 780520261302, 780520261303],
+    "cases_per_session": 128,
+    "aa_cases_per_session": 64,
+    "order": [["baseline", "known_good"], ["known_good", "baseline"], ["baseline", "known_good"], ["known_good", "baseline"], ["baseline", "known_good"]],
+    "noise_floor_rule": "A/A mean-difference 95% interval must contain zero; otherwise report measurement invalid",
+    "stopping_rules": ["any baseline or candidate output mismatch", "sandbox error or unconfirmed cleanup", "timeout", "resource pressure event"]
+  },
+  "frozen_sha256": {
+    "baseline_source": "4f0ee215d5769b42df3aa83128e947b7259234141678856fba74d98bdc7c1f59",
+    "workload": "b7ba959aeb863f0ec6d55b86e4b797e29d42fbf89e9602230adc49811a488afc",
+    "task": "bebd9c5ad30b43a8c6fdb6accf19c9a8b71d209048654eacd8f86d5573197f6e",
+    "public_tests": "ec3bbbc189a8867a0fcd39c3400b3dddf2467fd8cfea94dfd5df250c562fa6a5",
+    "known_good_patch": "339451b7bba7b261a3576e5a81d63961de08f14c7a846d3c8719eaafdb340fa1"
+  },
+  "exposure": {
+    "split": "public synthetic generated workload",
+    "reserved_heldout_access": false,
+    "model_prompt": "only the target source and public task/tests; no control patch, generated inputs, expected outputs, or held-out tests"
+  }
+}

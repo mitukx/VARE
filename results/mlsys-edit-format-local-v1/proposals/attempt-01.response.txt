@@ -1,0 +1,25 @@
+HYPOTHESIS: Replace the line-by-line split and comparison with a single regex-based match to avoid Python list slicing and reduce overhead in the common case of single, non-overlapping block matches.
+
+```diff
+@@ -108,23 +108,20 @@
+ def _relaxed_replace(text: str, block: Block) -> str | None:
+     lines = text.split("\n")
+     needle = [ln.rstrip() for ln in block.search.split("\n")]
+-    stripped = [ln.rstrip() for ln in lines]
+-    hits = [
+-        i for i in range(len(lines) - len(needle) + 1) if stripped[i : i + len(needle)] == needle
+-    ]
+-    if len(hits) != 1:
+-        return None
+-    i = hits[0]
+-    return "\n".join(lines[:i] + block.replace.split("\n") + lines[i + len(needle) :])
++
++    # Use regex to find the first match of the needle (stripped) in the text
++    pattern = re.compile(r"\n".join(re.escape(ln.rstrip()) for ln in block.search.split("\n")), re.DOTALL)
++    match = pattern.search(text)
++    if not match:
++        return None
++    start = match.start()
++    end = start + len(match.group(0))
++    return text[:start] + "\n".join(block.replace.split("\n")) + text[end:]
+```

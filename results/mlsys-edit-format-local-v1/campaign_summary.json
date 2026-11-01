@@ -1,0 +1,148 @@
+{
+  "baseline_source_sha256": "4f0ee215d5769b42df3aa83128e947b7259234141678856fba74d98bdc7c1f59",
+  "code_paths": {
+    "benchmark": "scripts/benchmark_mlsys_edit_format_local_v1.py",
+    "container_isolation": "src/vare/container_isolation.py",
+    "evaluator": "scripts/evaluate_mlsys_edit_format_local_v1.py",
+    "isolation_runner": "src/vare/isolated_candidate.py",
+    "proposer": "scripts/propose_mlsys_edit_format_local_v1.py",
+    "protocol": "protocols/mlsys_edit_format_local_benchmark_v1.json",
+    "public_tests": "benchmarks/mlsys_edit_format_local_v1/test_public_edit_format.py",
+    "workload": "benchmarks/mlsys_edit_format_local_v1/workload.py"
+  },
+  "code_sha256": {
+    "benchmark": "6d045b7014b24fb0caf9107dd6db27ef2a53ae7a1ccf7a377633d0a71abf697c",
+    "container_isolation": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "evaluator": "4ea4ec530f3808f4d15bda1004c9d1ecc6ca161826b77a6bb73b80a640576277",
+    "isolation_runner": "e26017bbb942514bc7c131fa511b9e28ddc4a7dbb9c1f152371e4994ab3a2e10",
+    "proposer": "b0a5a516eb36c960f24d63852c0f251308f158410a4f05695f8f1ab77280ff19",
+    "protocol": "53a9914324d60a1b553b9b7921d3c4727053bab8874c4f17e935133392eed8d1",
+    "public_tests": "ec3bbbc189a8867a0fcd39c3400b3dddf2467fd8cfea94dfd5df250c562fa6a5",
+    "workload": "b7ba959aeb863f0ec6d55b86e4b797e29d42fbf89e9602230adc49811a488afc"
+  },
+  "evaluator_replay": {
+    "baseline": "31/31",
+    "incorrect_control": "21/31",
+    "model_attempt_1": "25/31",
+    "scripted_known_good": "31/31"
+  },
+  "evaluator_replays": [
+    {
+      "attempt_id": "attempt-01",
+      "correct": false,
+      "pass_count": 25,
+      "wall_s": 1.112431
+    },
+    {
+      "attempt_id": "baseline",
+      "correct": true,
+      "pass_count": 31,
+      "wall_s": 1.015223
+    },
+    {
+      "attempt_id": "incorrect",
+      "correct": false,
+      "pass_count": 21,
+      "wall_s": 1.023034
+    },
+    {
+      "attempt_id": "known-good",
+      "correct": true,
+      "pass_count": 31,
+      "wall_s": 0.97131
+    }
+  ],
+  "functional_controls": {
+    "baseline": "31/31",
+    "deliberately_incorrect": "21/31; rejected on 10",
+    "false_acceptance_or_rejection_rates": "not estimable from one simple negative control and one known-good control; controls only validate this finite case set",
+    "model_correct": "0/2",
+    "model_independently_accepted": "0/2",
+    "scripted_known_good": "31/31"
+  },
+  "main_reference_sha": "e93469d10ad21cefa16396c343407e07c1c529ec",
+  "proposals": [
+    {
+      "attempt": 1,
+      "candidate_sha256": "65feec1639fc85a80e45ca8b6b28df1fba9250c4c3daae54b7cc5bf0fbe52960",
+      "case_count": 31,
+      "completion_tokens": 320,
+      "decision": "rejected_correctness",
+      "differential_cases": 24,
+      "generation_seconds": 12.07,
+      "generation_tokens_per_second": 53.140465548986235,
+      "load_seconds": 1.422,
+      "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "pass_count": 25,
+      "peak_memory_bytes": 3294338088,
+      "prompt_sha256": "e2c1680b30546fddde49c7aee1e6b2295c1814a94b307d146d086bd1a15f9e4e",
+      "prompt_tokens": 2042,
+      "public_cases": 7,
+      "response_sha256": "da45a3810f1131a1e55a2acf8656e5d9b5af502d0b978cc2cc8027b8d1c3753f",
+      "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+    },
+    {
+      "ast_equal_to_attempt_1": true,
+      "ast_sha256": "1c80cc5c49c95829807b3a17e72c315a83ccef2028910a4d04ff6151fb2e2d2d",
+      "attempt": 2,
+      "candidate_sha256": "75f8bcbbb7631aa5a34f091ef3e06358ab7ac778598879deef863b991251cf20",
+      "completion_tokens": 331,
+      "decision": "duplicate_rejected_without_rerun",
+      "generation_seconds": 15.533,
+      "generation_tokens_per_second": 51.08367022903922,
+      "load_seconds": 0.678,
+      "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "peak_memory_bytes": 3374097128,
+      "prompt_sha256": "d2899cd52999cc4be8f51ca0d8438bf5e7d59ac0dbdac02a18063f2b0ea350b3",
+      "prompt_tokens": 2479,
+      "response_sha256": "bf815c1e9f1dc5520a227b63f4314550ed209f2d0adb86cce8d44551313c3919",
+      "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+    }
+  ],
+  "protocol_sha256": "53a9914324d60a1b553b9b7921d3c4727053bab8874c4f17e935133392eed8d1",
+  "question": "Can a real local model produce a correctness-preserving edit-format optimization that improves measured VARE rollout latency?",
+  "research_loop_cost": {
+    "evaluator_replay_seconds": 4.121998,
+    "initial_correctness_evaluation_seconds": 1.824,
+    "model_attempts": 2,
+    "model_generation_seconds": 27.603,
+    "model_load_seconds": 2.1,
+    "model_tool_calls": 0,
+    "note": "The proposal acceptance loop did not accept or time a model patch. Independent candidate runs use one black-box batch per candidate; this cost is separate from model generation.",
+    "paired_timing_outer_session_seconds": 44.39021016692277,
+    "proposals_timed": 0,
+    "total_completion_tokens": 651,
+    "total_prompt_tokens": 4521
+  },
+  "schema": "vare.mlsys_edit_format_local_campaign_summary.v1",
+  "scope": "Public task and public behavioral tests plus a seeded generated differential workload; real VARE code path, synthetic inputs; no reserved data or hidden tests were used.",
+  "second_target_investigation": {
+    "candidate": "queue-inclusive latency in the durable trajectory worker/store path",
+    "decision": "investigated but no proposal attempt; lacks a frozen real-model task workload and task-specific independent recovery evaluator; do not claim an optimization result",
+    "existing_evidence": "docs/async-trajectory-runtime.md reports synthetic async throughput 54.53 \u00b1 1.85 vs sync 36.16 \u00b1 2.68 trajectories/s and async p95 44.04\u201346.45 s vs sync 0.240\u20130.290 s"
+  },
+  "status": "negative_model_proposals_and_null_scripted_speedup",
+  "timing": {
+    "aa_mean_difference_ci95_seconds": [
+      -0.0027915934664164174,
+      0.003628920315363783
+    ],
+    "aa_noise_floor_valid": true,
+    "baseline_cases": 640,
+    "control_cases": 640,
+    "decision": "not_accepted",
+    "mean_difference_ci95_seconds": [
+      -0.00016719661980538588,
+      0.0005982887301805612
+    ],
+    "mean_paired_difference_seconds": 0.00021554605518758763,
+    "outer_session_seconds_sum": 44.39021016692277,
+    "paired_batches": 5,
+    "rule": "accept only if A/A CI contains zero, lower speedup CI > 1, and point speedup >= 1.05",
+    "scripted_control_geomean_speedup": 1.0105508893014858,
+    "speedup_ci95": [
+      0.9924773456020435,
+      1.0289535619057875
+    ]
+  }
+}
