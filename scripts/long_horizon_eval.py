@@ -678,12 +678,16 @@ class EpisodeHarness:
     lease_seconds: float = 600.0
     max_attempts: int = 5
     worker_id: str = "lh-worker"
+    protocol_sha256: str | None = None
     crash_hook: CrashHook | None = None
     fault_injection: Mapping[str, Any] = field(default_factory=dict)
     clock: Callable[[], float] = time.time
 
     def __post_init__(self) -> None:
         self.root = Path(self.root)
+        if (self.protocol_sha256 is not None
+                and re.fullmatch(r"[0-9a-f]{64}", self.protocol_sha256) is None):
+            raise ValueError("protocol_sha256 must be a SHA-256 digest")
         path = self.root / "trajectories.sqlite"
         self.store = (TrajectoryStore(path) if path.exists() else
                       TrajectoryStore.create(path, run_id=f"lh-{self.arm.name}-{self.controller.name}"[:160],
@@ -701,6 +705,7 @@ class EpisodeHarness:
                     "task_sha256": spec.task.sha256(), "repository": spec.task.repository,
                     "source_revision": spec.task.source_revision,
                     "workspace_patch_sha256": spec.task.workspace_patch_sha256,
+                    "protocol_sha256": self.protocol_sha256,
                     "target_files": list(spec.task.target_files),
                     "policy": dataclasses.asdict(self.arm.checkpoint),
                     "fault_injection": dict(self.fault_injection),
@@ -1068,6 +1073,7 @@ def episode_metrics(store: TrajectoryStore, ident: str) -> dict[str, Any]:
     return {
         "episode_id": ident, "task_id": spec["task"]["id"], "repository": meta["repository"],
         "arm": meta["arm"], "controller": meta["controller"]["name"], "controller_sha256": meta["controller_sha256"],
+        "protocol_sha256": meta.get("protocol_sha256"),
         "seed": meta["seed"], "synthetic_policy": meta["synthetic_policy"], "synthetic_task": meta["synthetic_task"],
         "store_state": row["state"], "completed": row["state"] in TERMINAL_STORE_STATES,
         "stop_reason": stop_reason, "turns": len(real), "padding_steps": len(steps) - len(real) - len(terminal),
@@ -1303,6 +1309,8 @@ def _parse(argv: Sequence[str] | None) -> argparse.Namespace:
     run.add_argument("--limit", type=int, required=True)
     run.add_argument("--seeds", type=int, default=1)
     run.add_argument("--output", type=Path, required=True)
+    run.add_argument("--protocol", type=Path,
+                     help="copy and bind a preregistered protocol into each episode root")
     run.add_argument("--instances", help="comma-separated Train instance ids (default: first --limit rows)")
     run.add_argument("--lease-seconds", type=float, default=600.0,
                      help="must exceed the slowest turn or grade; a killed run resumes after it expires")
@@ -1334,9 +1342,26 @@ def run_learning_pipeline_arm(args: argparse.Namespace) -> Path:
 
     root = args.output / f"{args.arm}-{args.controller}"
     root.mkdir(parents=True, exist_ok=True)
+    protocol_sha256 = None
+    protocol_id = None
+    if args.protocol is not None:
+        protocol_path = args.protocol.expanduser().resolve()
+        protocol_bytes = protocol_path.read_bytes()
+        protocol = json.loads(protocol_bytes)
+        if (protocol.get("preregistered_before_model_inference") is not True
+                or not isinstance(protocol.get("protocol_id"), str)):
+            raise ValueError("--protocol must identify a frozen pre-inference protocol")
+        protocol_sha256 = hashlib.sha256(protocol_bytes).hexdigest()
+        protocol_id = protocol["protocol_id"]
+        saved_protocol = root / "protocol.json"
+        if saved_protocol.exists() and saved_protocol.read_bytes() != protocol_bytes:
+            raise ValueError("episode root already contains a different frozen protocol")
+        if not saved_protocol.exists():
+            saved_protocol.write_bytes(protocol_bytes)
     preflight = {"memory_start": resources.check_memory(args.min_available_memory_gib, stage="lh_preflight"),
                  "free_disk_bytes": resources.check_disk(args.output, args.min_free_disk_gib, stage="lh_preflight"),
-                 "argv": sys.argv[1:]}
+                 "argv": sys.argv[1:], "protocol_id": protocol_id,
+                 "protocol_sha256": protocol_sha256}
     (root / "preflight.json").write_text(json.dumps(preflight, indent=2, sort_keys=True, default=str) + "\n",
                                          encoding="utf-8")
     records = load_train_manifest(args.manifest)
@@ -1380,6 +1405,7 @@ def run_learning_pipeline_arm(args: argparse.Namespace) -> Path:
 
     harness = EpisodeHarness(root, arm, CONTROLLER_PRESETS[args.controller], factories=factories,
                              grader_for=lambda t: graders.get(t.task_id), lease_seconds=args.lease_seconds,
+                             protocol_sha256=protocol_sha256,
                              crash_hook=crash_hook, fault_injection=fault_injection)
     harness.enroll(EpisodeSpec(task, seed) for task in tasks for seed in range(args.seeds))
     harness.run()

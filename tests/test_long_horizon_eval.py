@@ -111,6 +111,12 @@ def test_full_controller_metrics_on_fixture(tmp_path):
     assert agg["synthetic"] is True
 
 
+def test_protocol_digest_is_bound_to_episode_and_metrics(tmp_path):
+    protocol_sha = "c" * 64
+    result = run_once(tmp_path / "run", grader=FakeGrader(), protocol_sha256=protocol_sha)
+    assert result["episodes"][0]["protocol_sha256"] == protocol_sha
+
+
 def test_controller_ablation_changes_outcome_with_same_policy(tmp_path):
     grader = FakeGrader()
     full = run_once(tmp_path / "full", grader=grader)
