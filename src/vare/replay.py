@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import heapq
+import math
 import random
 from dataclasses import dataclass, field
 from itertools import count
@@ -32,6 +33,21 @@ class PrioritizedReplay:
         signal = max(0.05, abs(exp.verification.score - 0.5) * 2.0)
         p = failure * uncertainty * signal * max(self.config.freshness_floor, freshness)
         return max(self.config.min_priority, p)
+
+    def _weighted_group_order(self, keys_and_weights: Sequence[tuple[str, float]]) -> list[str]:
+        """Exact weighted ordering without replacement, via exponential races.
+
+        Drawing one Exp(weight) key per group yields the same Plackett-Luce
+        order distribution as repeatedly calling random.choices on survivors.
+        Old seeded selection sequences are not preserved by this fast path.
+        """
+        keys = []
+        for index, (group_id, weight) in enumerate(keys_and_weights):
+            if not math.isfinite(weight) or weight <= 0.0:
+                raise ValueError("group sampling weights must be finite and positive")
+            keys.append((self._rng.expovariate(weight), index, group_id))
+        keys.sort()
+        return [group_id for _, _, group_id in keys]
 
     @staticmethod
     def group_has_homogeneous_provenance(experiences: Sequence[Experience]) -> bool:
@@ -317,12 +333,25 @@ class PrioritizedReplay:
                   if self._group_is_complete(members)}
         remaining = dict(groups)
         out: list[Experience] = []
-        while remaining and len(out) < n:
-            keys = list(remaining)
-            weights = [max(x.priority for x in remaining[k]) for k in keys]
-            chosen_key = self._rng.choices(keys, weights=weights, k=1)[0]
-            items = sorted(remaining.pop(chosen_key), reverse=True)
-            out.extend(x.experience for x in items)
+        # Large batches avoid rebuilding O(G) weights for every group draw.
+        # Retain the old path for small pools and preserve their seeded draws.
+        if len(remaining) >= 128 and n >= 32:
+            order = self._weighted_group_order([
+                (key, max(x.priority for x in members))
+                for key, members in remaining.items()
+            ])
+            for chosen_key in order:
+                items = sorted(remaining[chosen_key], reverse=True)
+                out.extend(x.experience for x in items)
+                if len(out) >= n:
+                    break
+        else:
+            while remaining and len(out) < n:
+                keys = list(remaining)
+                weights = [max(x.priority for x in remaining[k]) for k in keys]
+                chosen_key = self._rng.choices(keys, weights=weights, k=1)[0]
+                items = sorted(remaining.pop(chosen_key), reverse=True)
+                out.extend(x.experience for x in items)
         return out
 
 
@@ -401,12 +430,23 @@ class PrioritizedReplay:
             return []
         remaining = dict(complete_groups)
         selected: list[Experience] = []
-        while remaining and len(selected) < n:
-            keys = list(remaining)
-            weights = [max(priority for priority, _ in remaining[k]) for k in keys]
-            chosen_key = self._rng.choices(keys, weights=weights, k=1)[0]
-            ranked = sorted(remaining.pop(chosen_key), key=lambda z: z[0], reverse=True)
-            selected.extend(item.experience for _, item in ranked)
+        if len(remaining) >= 128 and n >= 32:
+            order = self._weighted_group_order([
+                (key, max(priority for priority, _ in members))
+                for key, members in remaining.items()
+            ])
+            for chosen_key in order:
+                ranked = sorted(remaining[chosen_key], key=lambda z: z[0], reverse=True)
+                selected.extend(item.experience for _, item in ranked)
+                if len(selected) >= n:
+                    break
+        else:
+            while remaining and len(selected) < n:
+                keys = list(remaining)
+                weights = [max(priority for priority, _ in remaining[k]) for k in keys]
+                chosen_key = self._rng.choices(keys, weights=weights, k=1)[0]
+                ranked = sorted(remaining.pop(chosen_key), key=lambda z: z[0], reverse=True)
+                selected.extend(item.experience for _, item in ranked)
         return selected
 
     def __len__(self) -> int:
