@@ -1,0 +1,40 @@
+{
+  "artifact_policy": {
+    "absolute_host_paths_included": false,
+    "hidden_seed_or_expected_values_included": false,
+    "raw_grader_output_included": false
+  },
+  "candidate": {
+    "changed_paths": [],
+    "diff_bytes": 0,
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model_identity_matches": true,
+    "source_hashes_match": true,
+    "task_identity_matches": true,
+    "workspace_clean": true
+  },
+  "claim_limit": "The model produced no source edit. This attempt did not establish a verified repair or coding capability gain. The independent grader passed the hidden randomized-prefix check and failed the hidden reparse-invariance check and public regression test.",
+  "feedback_to_model": false,
+  "grader_id": "mlsys-vllm-64674-agent-independent-grader-v1",
+  "grades": {
+    "final_success": false,
+    "hidden_randomized_prefix_passed": true,
+    "hidden_reparse_invariance_passed": false,
+    "public_test_passed": false,
+    "trusted_grade_passed": false
+  },
+  "local_artifacts": [
+    {
+      "artifact_class": "local_only",
+      "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/independent-grader-rerun.json",
+      "sha256": "4a318a178dd2a951c043f4da3099fc7ecaeb8ba1c5a512972fa55fdd170713da"
+    }
+  ],
+  "model_attempt_repeated": false,
+  "protocol_id": "mlsys-fresh-vllm-64674-agent-attempt-v1-qwen3-4b-development",
+  "protocol_sha256_used_for_grading": "15af55dab6246ff22554cbd88ae26b9419ba5de742ad89c432b93162c2c3e533",
+  "schema_version": 1,
+  "status": "INDEPENDENT_GRADE_COMPLETE_NO_REPAIR",
+  "summary_id": "mlsys-fresh-vllm-64674-agent-attempt-001-grading-redacted",
+  "task_id": "vllm-64674-responses-custom-tool-stream-decode"
+}

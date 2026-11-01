@@ -230,6 +230,12 @@ INVENTORY_V6_SOURCES = INVENTORY_V5_SOURCES | frozenset({
     "src/vare/learning_pipeline/verified_rollout_replay.py",
     "src/vare/mlx_prefix_reuse.py",
 })
+# VARE-TRACE adds AST-only repository navigation to the full runtime snapshot.
+# Keep v1-v6 immutable so existing continuation evidence retains its exact
+# source identity.
+INVENTORY_V7_SOURCES = INVENTORY_V6_SOURCES | frozenset({
+    "src/vare/agent_navigation.py",
+})
 # Exact-match registry; a campaign is identified by its complete source set.
 SOURCE_INVENTORIES = {
     "v1-pinned": LEGACY_EXPECTED_SOURCES,
@@ -238,11 +244,12 @@ SOURCE_INVENTORIES = {
     "v4": INVENTORY_V4_SOURCES,
     "v5": INVENTORY_V5_SOURCES,
     "v6": INVENTORY_V6_SOURCES,
+    "v7": INVENTORY_V7_SOURCES,
 }
-CURRENT_SOURCE_INVENTORY = "v6"
+CURRENT_SOURCE_INVENTORY = "v7"
 EXPECTED_SOURCES = SOURCE_INVENTORIES[CURRENT_SOURCE_INVENTORY]
 # Versions whose campaigns record the recovery endpoint at the resumed-round end.
-EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5", "v6"})
+EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5", "v6", "v7"})
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.

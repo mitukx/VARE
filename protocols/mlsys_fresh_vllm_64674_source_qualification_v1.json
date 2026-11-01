@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-vllm-64674-source-qualification-v1",
+  "protocol_status": "frozen_before_candidate_source_test_or_patch_access",
+  "frozen_at_utc": "2026-11-01T18:22:49Z",
+  "purpose": "Qualify the exact vLLM #64674 source-level regression under a bounded isolated CPU evaluator. This protocol does not assign a split, authorize model inference, or authorize training.",
+  "hypothesis": "The exact merge-base implementation fails the added streamed custom-tool decoding regression at its intended behavioral assertion, one incorrect mutant of the fixed source is rejected, and the exact merged source passes the same cases within the declared isolation boundary.",
+  "candidate": {
+    "repository": "vllm-project/vllm",
+    "pull_request": 64674,
+    "url": "https://github.com/vllm-project/vllm/pull/64674",
+    "title": "[Perf][Frontend] Decode streamed custom-tool input incrementally",
+    "task_id": "vllm-64674-responses-custom-tool-stream-decode",
+    "family": "openai_responses_custom_tool_stream_decode",
+    "license_to_verify": "Apache-2.0",
+    "base_revision": "7495e9e5a4b705a16bec8ecba43ed7c317067db1",
+    "pr_head_revision": "c545121bf2589d1bb5161a89a794fb35e7bbc955",
+    "fixed_merge_revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "expected_changed_paths": [
+      "tests/entrypoints/openai/responses/test_streaming_events.py",
+      "vllm/entrypoints/openai/responses/streaming_events.py",
+      "vllm/entrypoints/openai/responses/utils.py"
+    ],
+    "expected_test_paths": [
+      "tests/entrypoints/openai/responses/test_streaming_events.py"
+    ],
+    "metadata_selection_path": "results/mlsys-fresh-development-candidate-discovery-v4/screen.json",
+    "metadata_selection_sha256": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+    "family_review_path": "results/mlsys-fresh-development-family-review-64674-v1/review.json",
+    "family_review_sha256": "c113289fb19481d240e4503e4fd8d225b434b3c6720aace66863c230cfbea3c5"
+  },
+  "pre_source_access_record": {
+    "candidate_pr_body_or_comments_opened": false,
+    "candidate_source_opened": false,
+    "candidate_tests_opened": false,
+    "candidate_patch_opened": false,
+    "model_or_agent_inference": false,
+    "heldout_access": false
+  },
+  "qualification_gates": [
+    "After this protocol is committed and pushed to VARE, retrieve only the exact repository objects by frozen commit SHA. Verify repository identity, commit ancestry, pull-request head and merge revisions, license, and expected changed paths.",
+    "Inspect only the exact changed source and test paths needed for qualification. Do not inspect PR discussion, unrelated repository content, held-out tasks, or held-out assets.",
+    "Extract unchanged upstream regression assertions and only the minimal required support into a VARE-owned test overlay. If tests require an accelerator, network, external service, or full server, stop and mark unqualified.",
+    "Before executing any candidate code, freeze an execution addendum with exact test IDs and hashes, source hashes for each arm, overlay and runner hashes, incorrect-mutant diff/hash, container image digest, commands, and resource limits.",
+    "The baseline arm uses exact source revision 7495e9e5a4b705a16bec8ecba43ed7c317067db1 and must fail every targeted regression at its intended behavioral assertion with no import or collection error, skip, timeout, unrelated failure, or boundary breach.",
+    "The wrong-mutant arm uses the fixed source plus one minimal predeclared incorrect mutation that restores the baseline behavior; the identical targeted tests must reject it at the intended assertion.",
+    "The upstream-fixed arm uses exact revision 8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59 and the same overlay/runner; every targeted test must pass with no skip or unrelated failure.",
+    "Source qualification passes only if source identities, baseline, wrong mutant, fixed source, isolation, and resource gates all pass."
+  ],
+  "isolation": {
+    "platform": "Apple Silicon Mac with Colima Docker VM; local CPU only",
+    "boundary": "VARE-owned DockerIsolationRunner or an equivalent exact-command container wrapper; network none, read-only root, cap-drop ALL, no-new-privileges, non-root uid/gid, bounded memory/CPU/pids/output/time; no Docker socket or grader secrets in candidate container",
+    "image_policy": "Use only an already-cached image pinned by immutable sha256 digest; no pull or network access during execution.",
+    "maximum_memory_mb_per_arm": 2048,
+    "maximum_cpus_per_arm": 1,
+    "maximum_pids_per_arm": 64,
+    "maximum_wall_seconds_per_arm": 300,
+    "maximum_concurrent_arms": 1,
+    "order": ["baseline", "wrong-mutant", "upstream-fixed"],
+    "no_network": true,
+    "candidate_source_read_only": true,
+    "grader_unmounted": true
+  },
+  "run_rules": {
+    "maximum_invocations_per_arm": 1,
+    "stop_on": ["identity mismatch", "unexpected failure", "import or collection error", "skip", "timeout", "resource breach", "network access", "write-boundary violation"],
+    "retry_rule": "An invocation is consumed. Any retry requires a new VARE addendum committed before retry.",
+    "preserve_failed_artifacts": true
+  },
+  "authorization": {
+    "source_and_test_access_after_protocol_commit_and_push": true,
+    "source_level_task_qualification_only": true,
+    "development_split_assignment": false,
+    "model_or_agent_inference": false,
+    "training": false,
+    "heldout_access": false,
+    "external_repository_writes": false,
+    "paid_compute_or_api": false
+  },
+  "output_path": "results/mlsys-fresh-vllm-64674-source-qualification-v1/",
+  "limitations": [
+    "A source-qualified task is a Development candidate, not a held-out benchmark.",
+    "The source-level test does not establish real-model repair success or generalization.",
+    "Public training-data or pretraining exposure remains unknown even if all source gates pass.",
+    "A task-family review is not a task source qualification."
+  ],
+  "stop_rules": [
+    "Do not access the candidate patch, source, or tests until this protocol is committed and pushed to the VARE repository.",
+    "Do not use any held-out task or artifact.",
+    "Keep the task unqualified and unassigned unless all three arms and trust gates pass.",
+    "Do not substitute another task under this protocol."
+  ]
+}

@@ -59,7 +59,10 @@ def build_step(index, state, total, ident, delay=0.):
 
 def killed_worker(path, pipe):
     store = TrajectoryStore(path)
-    lease = store.claim("execute", "sigkill-worker", lease_seconds=.1)
+    # Allow process startup and its first durable append to finish on loaded CI
+    # runners. Recovery still waits for this lease after SIGKILL, and that wait
+    # is included in the campaign timing.
+    lease = store.claim("execute", "sigkill-worker", lease_seconds=5)
     resumed = store.resume_state(lease.trajectory_id)
     store.append_step(lease, build_step(0, {}, resumed["spec"]["expected_steps"], lease.trajectory_id))
     pipe.send(asdict(lease))

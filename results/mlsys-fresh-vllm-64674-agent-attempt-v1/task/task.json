@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "editable_files": [
+      "vllm/entrypoints/openai/responses/streaming_events.py",
+      "vllm/entrypoints/openai/responses/utils.py",
+      "test_public.py"
+    ],
+    "source_snapshot_kind": "minimal tracked task snapshot; production file blobs match exact upstream base revision",
+    "split": "development",
+    "task_family": "vllm_openai_responses_custom_tool_incremental_stream_decode",
+    "upstream_repository": "https://github.com/vllm-project/vllm.git",
+    "upstream_source_revision": "7495e9e5a4b705a16bec8ecba43ed7c317067db1"
+  },
+  "prompt": "In the OpenAI Responses streaming path, custom-tool input arrives as incremental JSON text chunks. Update the streaming state and helper logic so each chunk extends the decoded input without reparsing the entire accumulated prefix on every update. Preserve the existing streamed payload semantics for partial JSON, escapes, Unicode, and completed input. Make the focused change in the two editable production files; use the immutable public regression test to check behavior and scaling.",
+  "schema_version": 1,
+  "source": {
+    "base_revision": "898b55ffcb8a8d4d3ba7c11c68dbefcae993057c",
+    "repository": "https://github.com/vllm-project/vllm.git"
+  },
+  "task_id": "vllm-64674-responses-custom-tool-stream-decode"
+}

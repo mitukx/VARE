@@ -1,0 +1,34 @@
+{
+  "heldout_access": false,
+  "model": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "model_attempts_authorized": 1,
+  "model_attempts_started": 0,
+  "no_grader_feedback": true,
+  "prior_launch_failure": {
+    "classification": "No model import, prompt composition, or inference; do not erase or relabel the first launch.",
+    "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v1/attempt-001/launch-diagnostic.json",
+    "sha256": "9a374eb80eb8dcfd86d685155b6a7c07595fdfda42c56adcc1749497ca02707c"
+  },
+  "prior_protocol": {
+    "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v1/protocol.json",
+    "sha256": "e6aed00337567afa0c313a2ef278151bb6c7bc1716669df390a2d507ea0bc9ec"
+  },
+  "public_pretraining_exposure": "UNKNOWN",
+  "record_id": "vllm-64575-development-qwen3-4b-assignment-v2",
+  "record_status": "FROZEN_PROSPECTIVE_ASSIGNMENT",
+  "replacement_rationale": "The prior Qwen3 process exited before importing MLX because its private interpreter alias resolved to the system Python. The captured failure confirms no model load, prompt construction, or generation. This new protocol binds a venv-compatible alias and authorizes one inference attempt.",
+  "schema_version": 1,
+  "split_assignment": "DEVELOPMENT",
+  "task": {
+    "baseline_revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "known_fixed_revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+    "pull_request": 64575,
+    "repository": "vllm-project/vllm",
+    "task_family": "anthropic_request_tool_type_error_precedence",
+    "task_id": "vllm-64575-anthropic-tool-type-validation"
+  },
+  "training_attempts": 0
+}

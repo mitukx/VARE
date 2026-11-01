@@ -1,0 +1,52 @@
+{
+  "assigned_at_utc": "2026-11-01T18:57:08.746970+00:00",
+  "authorization": {
+    "comments_or_pull_requests_to_any_other_repository": false,
+    "external_repository_writes": false,
+    "feedback_from_hidden_grader_to_model": false,
+    "heldout_access": false,
+    "one_independent_public_and_hidden_grade_after_attempt_record_is_durable_and_pushed": true,
+    "one_local_development_attempt_after_protocol_commit_push_exact_head_ci_and_fresh_preflight": true,
+    "paid_compute_or_api": false,
+    "public_tests_during_attempt": true,
+    "retry_after_generation_starts": false,
+    "training_or_policy_update": false
+  },
+  "cohort_status": "SINGLE_TASK_DEVELOPMENT_DIAGNOSTIC_ONLY; no family-level or pretraining-independence claim",
+  "event_id": "vllm-64674-development-qwen3-4b-assignment-v1",
+  "event_type": "prospective_development_assignment",
+  "model": {
+    "exposure_to_this_task_before_assignment": "NOT_EXPOSED",
+    "public_pretraining_exposure": "UNKNOWN",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "model_hidden_inputs": [
+    "independent hidden expected values",
+    "candidate grading outcomes",
+    "reference fix and mutant source"
+  ],
+  "model_visible_inputs": [
+    "task/task.json",
+    "two frozen vLLM production source files",
+    "immutable test_public.py"
+  ],
+  "prior_same_repository_model_exposure": {
+    "exposure_record": "results/mlsys-fresh-vllm-64830-agent-attempt-v7/attempt-001/development-result.json",
+    "family_review_for_64674": "NO_DIRECT_IDENTITY_OR_FAMILY_OVERLAP, moderate confidence, metadata-only review frozen before source access",
+    "status": "PROMPT_DELIVERED; model loaded; zero generated tokens; no edits; no grade",
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+  },
+  "repository": "vllm-project/vllm",
+  "schema_version": 1,
+  "source_and_test_researcher_exposure": true,
+  "source_file_sha256": {
+    "vllm/entrypoints/openai/responses/streaming_events.py": "e453596259b61881b5fda0e489e0953803284ca8a81a3900c90e7570c961785b",
+    "vllm/entrypoints/openai/responses/utils.py": "f9e87ed884b620f69a6d22d41cb030ba57eda211d4f1751a0b4efa6cf36c7828"
+  },
+  "source_revision": "7495e9e5a4b705a16bec8ecba43ed7c317067db1",
+  "split": "Development",
+  "task_family": "vllm_openai_responses_custom_tool_incremental_stream_decode",
+  "task_id": "vllm-64674-responses-custom-tool-stream-decode",
+  "workspace_snapshot_revision": "898b55ffcb8a8d4d3ba7c11c68dbefcae993057c"
+}
