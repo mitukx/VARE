@@ -2,10 +2,18 @@
 from __future__ import annotations
 
 import json
+import platform
 from pathlib import Path
 
 from scripts import qwen3_function_repair_grpo as runner
 from vare import function_repair_tasks as tasks
+
+_TEST_IMAGE_BY_MACHINE = {
+    "aarch64": runner.CONTAINER_IMAGE,
+    "arm64": runner.CONTAINER_IMAGE,
+    "amd64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+    "x86_64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+}
 
 
 def test_task_ids_and_splits_are_unique_and_frozen():
@@ -42,7 +50,9 @@ def test_parent_oracle_scores_json_null_through_the_isolated_worker():
             best_sum, best_start = current, end - k + 1
     return [best_sum, best_start]
 """
-    report = runner.score_source(tasks.TRAIN_TASKS[1], source)
+    report = runner.score_source(
+        tasks.TRAIN_TASKS[1], source, image=_TEST_IMAGE_BY_MACHINE[platform.machine().lower()]
+    )
     assert report["trusted_contract"] is True
     assert report["passed"] is True
     assert report["reward"] == 1.0

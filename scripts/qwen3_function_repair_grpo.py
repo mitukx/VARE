@@ -263,7 +263,9 @@ def source_hashes() -> dict[str, str]:
     return {str(path.relative_to(ROOT)): sha256_file(path) for path in paths}
 
 
-def verifier_id(task: task_pack.FunctionRepairTask) -> str:
+def verifier_id(
+    task: task_pack.FunctionRepairTask, *, image: str = CONTAINER_IMAGE,
+) -> str:
     return sha256_json({
         "schema": "vare_parent_owned_function_oracle_v1",
         "task_id": task.task_id,
@@ -271,7 +273,7 @@ def verifier_id(task: task_pack.FunctionRepairTask) -> str:
         "scorer_sha256": sha256_file(ROOT / "scripts/qwen3_function_repair_grpo.py"),
         "candidate_worker_sha256": sha256_file(ROOT / "src/vare/isolated_candidate.py"),
         "isolation_sha256": sha256_file(ROOT / "src/vare/container_isolation.py"),
-        "container_image": CONTAINER_IMAGE,
+        "container_image": image,
         "timeout_s": EVAL_TIMEOUT_SECONDS,
         "memory_mb": EVAL_MEMORY_MB,
         "all_cases_required": True,
@@ -333,7 +335,9 @@ def _json_value_matches(actual: Any, expected: Any) -> bool:
     return False
 
 
-def score_source(task: task_pack.FunctionRepairTask, text: str) -> dict[str, Any]:
+def score_source(
+    task: task_pack.FunctionRepairTask, text: str, *, image: str = CONTAINER_IMAGE,
+) -> dict[str, Any]:
     source, extraction = extract_source(text)
     if source is None:
         return {"reward": 0.0, "grade_status": extraction, "trusted_contract": True,
@@ -346,7 +350,7 @@ def score_source(task: task_pack.FunctionRepairTask, text: str) -> dict[str, Any
         for case in task.cases:
             value, wall_s, failure = _one_call(
                 subject, "solution", "solve", list(case.args), {},
-                EVAL_TIMEOUT_SECONDS, CONTAINER_IMAGE, isolation, (), EVAL_MEMORY_MB,
+                EVAL_TIMEOUT_SECONDS, image, isolation, (), EVAL_MEMORY_MB,
                 True, None,
             )
             if failure is None and not _json_value_matches(value, case.expected):
@@ -365,7 +369,7 @@ def score_source(task: task_pack.FunctionRepairTask, text: str) -> dict[str, Any
         "passed": passed,
         "candidate_source": source,
         "candidate_source_sha256": hashlib.sha256(source.encode("utf-8")).hexdigest(),
-        "case_set_sha256": verifier_id(task),
+        "case_set_sha256": verifier_id(task, image=image),
         "cases": case_results,
     }
 
