@@ -11,6 +11,7 @@ import os
 import platform
 import re
 import resource
+import secrets
 import sys
 import tempfile
 import time
@@ -70,6 +71,29 @@ WRITE_FILE_TOOL = {
         },
     },
 }
+SOURCE_BOUND_REPLACE_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'replace_from_read',
+        'description': (
+            'Safely replace one exact source snippet in one allowlisted file. Copy the short '
+            'source_handle and old_text from the same read_file result, then provide full new_text. '
+            'The controller binds the handle to the exact file path and SHA-256 read at that time; '
+            'a stale file or missing/ambiguous snippet is rejected. Use apply_patch for multi-hunk edits.'
+        ),
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'path': {'type': 'string'},
+                'source_handle': {'type': 'string', 'pattern': '^source-[0-9a-f]{16}$'},
+                'old_text': {'type': 'string'},
+                'new_text': {'type': 'string'},
+            },
+            'required': ['path', 'source_handle', 'old_text', 'new_text'],
+            'additionalProperties': False,
+        },
+    },
+}
 
 
 LEGACY_SEARCH_TEXT_TOOL = {
@@ -102,8 +126,13 @@ LEGACY_REPLACE_TEXT_TOOL = {
 
 def tools_for(
     edit_format: str, *, public_tests: bool = False, include_navigation: bool = False,
+    include_read_handles: bool = False,
 ) -> list[dict[str, Any]]:
     require_edit_format(edit_format)
+    if include_read_handles and not include_navigation:
+        raise ValueError('source read handles require navigation tools')
+    if include_read_handles and edit_format != 'unified_diff':
+        raise ValueError('source read handles require unified-diff edit mode')
     tools = []
     for item in TOOLS:
         name = item['function']['name']
@@ -113,8 +142,21 @@ def tools_for(
             item = LEGACY_SEARCH_TEXT_TOOL
         elif not include_navigation and name == 'replace_text':
             item = LEGACY_REPLACE_TEXT_TOOL
+        elif include_read_handles and name == 'replace_text':
+            item = SOURCE_BOUND_REPLACE_TOOL
+        elif include_read_handles and name == 'read_file':
+            item = {
+                **item,
+                'function': {
+                    **item['function'],
+                    'description': item['function']['description'] + (
+                        ' When source-read handles are enabled, the result also includes a short '
+                        'source_handle bound to this exact path and full-file SHA-256.'
+                    ),
+                },
+            }
         if edit_format == 'whole_file':
-            if name == 'replace_text':
+            if name in {'replace_text', 'replace_from_read'}:
                 continue
             if name == 'apply_patch':
                 item = WRITE_FILE_TOOL
@@ -441,9 +483,37 @@ def attempt_exact_text_replacement(
     return result
 
 
+def attempt_read_bound_text_replacement(
+    workspace: Path, path: str, source_handle: str, old_text: str, new_text: str,
+    allowed: set[str], source_reads: dict[str, tuple[str, str]],
+) -> dict[str, Any]:
+    """Replace an exact snippet using a short handle for a previously read file hash."""
+    resolved = resolve_allowed_path(path, allowed)
+    if resolved is None:
+        return {'applied': False, 'error': 'path is not an exact allowlisted source file'}
+    if not isinstance(source_handle, str):
+        return {'applied': False, 'error': 'source_handle must come from a read_file result'}
+    receipt = source_reads.get(source_handle)
+    if receipt is None:
+        return {'applied': False, 'error': 'source_handle is unknown; read the file before editing'}
+    read_path, read_sha256 = receipt
+    if read_path != resolved:
+        return {
+            'applied': False,
+            'error': 'source_handle belongs to a different path; read the exact file before editing',
+        }
+    result = attempt_exact_text_replacement(
+        workspace, resolved, old_text, new_text, allowed,
+        expected_source_sha256=read_sha256,
+    )
+    result['source_handle'] = source_handle
+    return result
+
+
 def malformed_edit_retry_feedback(
     edit_result: dict[str, Any], *, allowed_paths: list[str],
     source_hashes_before: dict[str, str], source_hashes_after: dict[str, str],
+    source_read_handles: bool = False,
 ) -> str:
     """Build bounded controller feedback after a rejected model-authored edit."""
     parser_error = str(
@@ -453,11 +523,18 @@ def malformed_edit_retry_feedback(
     source_status = 'The source bytes are unchanged.' if unchanged else (
         'The source changed during the rejected edit; stop and inspect the current source before another edit.'
     )
+    focused_edit_instruction = (
+        'call read_file again, copy its current source_handle and exact old_text, then use '
+        'replace_from_read. The controller binds that handle to the source hash from the read. '
+        if source_read_handles else
+        'call read_file again, copy its current source_sha256 and exact old_text, '
+        'then use replace_text with expected_source_sha256. '
+    )
     return (
         'The controller rejected your previous edit, and no grader ran. '
         f'{source_status} Parser result: {parser_error}\n'
-        'For a focused Python change, call read_file again, copy its current source_sha256 and exact old_text, '
-        'then use replace_text with expected_source_sha256. For a multi-line change, call apply_patch with a '
+        'For a focused Python change, ' + focused_edit_instruction
+        + 'For a multi-line change, call apply_patch with a '
         'complete unified diff and exact current source context. Then call check_syntax and finish only after '
         f'a source edit. Allowed files: {", ".join(allowed_paths)}.'
     )
@@ -840,7 +917,8 @@ def bounded_tool_result(result: Any, tokenizer: Any) -> Any:
 
 
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
-                           token_limit: int, next_token_limit: int | None = None) -> str:
+                           token_limit: int, next_token_limit: int | None = None,
+                           source_read_handles: bool = False) -> str:
     """Give the agent actionable feedback when a bounded response has no tool call."""
     if '<tool_call>' in raw and '</tool_call>' not in raw:
         path_list = ', '.join(allowed_paths)
@@ -857,9 +935,14 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
                 f'allowed path ({path_list}) and the complete updated source file. Keep it concise enough '
                 'to end with </tool_call>.'
             )
+        focused_edit_instruction = (
+            'replace_from_read with the short source_handle and old_text from the same read_file result. '
+            if source_read_handles else
+            'replace_text with a short exact old_text snippet and its complete new_text. '
+        )
         return budget_note + (
             'Do not reread the source or rewrite a whole function. For one contiguous change, prefer '
-            'replace_text with a short exact old_text snippet and its complete new_text. Otherwise use '
+            + focused_edit_instruction + 'Otherwise use '
             'apply_patch with only the smallest changed hunk. Do not include unchanged function bodies. '
             f'Use exact allowed paths ({path_list}) and end the complete call with </tool_call>.'
         )
@@ -949,6 +1032,10 @@ def main() -> int:
     parser.add_argument('--do-sample', action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file'), default='unified_diff')
     parser.add_argument('--require-split', choices=('train', 'development', 'heldout'))
+    parser.add_argument(
+        '--source-read-handles', action='store_true',
+        help='Use short read receipts for source-hash-bound exact replacements',
+    )
     args = parser.parse_args()
 
     if args.max_new_tokens_per_turn < 1 or args.max_total_new_tokens < 1:
@@ -958,6 +1045,8 @@ def main() -> int:
             parser.error('--incomplete-tool-retry-tokens must exceed --max-new-tokens-per-turn')
         if args.incomplete_tool_retry_tokens > args.max_total_new_tokens:
             parser.error('--incomplete-tool-retry-tokens cannot exceed --max-total-new-tokens')
+    if args.source_read_handles and args.edit_format != 'unified_diff':
+        parser.error('--source-read-handles requires --edit-format unified_diff')
 
     model_dir = args.model_path.resolve()
     if not model_dir.is_dir():
@@ -1014,6 +1103,7 @@ def main() -> int:
         parser.error('isolated public-test execution requires exactly one test_public.py in the task')
     tools = tools_for(
         args.edit_format, public_tests=bool(args.public_test_image), include_navigation=True,
+        include_read_handles=args.source_read_handles,
     )
     tool_names = {item['function']['name'] for item in tools}
     if args.edit_format == 'whole_file':
@@ -1022,6 +1112,18 @@ def main() -> int:
             'Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. '
             'Keep the replacement concise enough to fit within the per-turn output budget. '
         )
+    elif args.source_read_handles:
+        edit_sentence = (
+            'Read the source path named in the user instruction, then use tools to inspect and edit. '
+            'For one focused change, prefer replace_from_read: copy the short source_handle and exact '
+            'old_text from the same read_file result, then provide the full new_text. The controller '
+            'binds the handle to the current source hash and requires a unique exact snippet. Use apply_patch '
+            'for multi-hunk changes; never rewrite a whole file. '
+            'The apply_patch patch argument must be a complete unified diff, not replacement source code. '
+            'Use exact headers and hunk syntax, with no Markdown fence: '
+            '--- a/<exact allowed path> newline +++ b/<same exact path> newline @@ -10,1 +10,1 @@ newline -old line newline +new line. '
+            'Replace example lines with exact source context; do not send only the replacement function body. '
+        )
     else:
         edit_sentence = (
             'Read the source path named in the user instruction, then use tools to inspect and edit. For one focused change, prefer replace_text: copy an exact old_text snippet from the source and provide its full new_text. It succeeds only when old_text matches exactly once. Use apply_patch for multi-hunk changes; never rewrite a whole file. '
@@ -1029,13 +1131,22 @@ def main() -> int:
             '--- a/<exact allowed path> newline +++ b/<same exact path> newline @@ -10,1 +10,1 @@ newline -old line newline +new line. '
             'Replace example lines with exact source context; do not send only the replacement function body. '
         )
+    source_identity_instruction = (
+        'read_file results include a short source_handle bound by the controller to that exact path and '
+        'full-file SHA-256. For one focused change, use replace_from_read with the handle and exact old_text '
+        'from the same read result; do not copy a long hash into an edit call. A changed file makes an old '
+        'handle stale, so reread before another exact replacement. '
+        if args.source_read_handles else
+        'The full-file SHA-256 and resolved path identify the source used for each page. '
+        'replace_text requires that exact current SHA-256. '
+    )
     system = (
         'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
         + edit_sentence
         + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then read the exact source path named in the task. '
         + f'read_file and search_text results have hard {MAX_TOOL_RESULT_BYTES}-byte and {MAX_TOOL_RESULT_TOKENS}-token limits. '
         + 'read_file returns at most 180 lines by default and 200 lines per call; follow next_cursor.start_line and next_cursor.char_offset exactly, including when a source line is unusually long. '
-        + 'The full-file SHA-256 and resolved path identify the source used for each page. replace_text requires that exact current SHA-256. '
+        + source_identity_instruction
         + 'search_text is a case-sensitive literal search. If it returns no matches, do not try longer variants of the same phrase; use list_symbols on Python files to locate definitions and annotated fields, or read a bounded nearby range. '
         + 'After an edit, call check_syntax on each changed Python file before finish. '
         + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
@@ -1062,6 +1173,7 @@ def main() -> int:
     no_tool_retries = 0
     controller_retry_count = 0
     search_guard = SearchLoopGuard(empty_search_limit=3)
+    source_read_receipts: dict[str, tuple[str, str]] = {}
     edit_attempted = False
     edit_applied = False
     public_test_hash = sha256(workspace / next(iter(test_files))) if test_files else None
@@ -1173,6 +1285,7 @@ def main() -> int:
                         allowed_paths=sorted(editable),
                         source_hashes_before=edit_source_hashes_before,
                         source_hashes_after=edit_source_hashes_after,
+                        source_read_handles=args.source_read_handles,
                     )
                     entry['controller_interventions'] = [{
                         'type': 'malformed_edit_retry',
@@ -1209,6 +1322,7 @@ def main() -> int:
                 messages.append({'role': 'user', 'content': no_tool_retry_reminder(
                     raw, edit_format=args.edit_format, allowed_paths=sorted(editable),
                     token_limit=limit, next_token_limit=next_token_limit,
+                    source_read_handles=args.source_read_handles,
                 )})
                 entry['automatic_reminder'] = no_tool_retries
                 incomplete_tool_retry_pending = tool_call_status is not None
@@ -1243,6 +1357,7 @@ def main() -> int:
                     else:
                         source = read_regular_source(workspace, path)
                         text = source.decode('utf-8')
+                        source_sha256 = hashlib.sha256(source).hexdigest()
                         result = bounded_source_page(
                             text,
                             start_line=arguments.get('start_line', 1),
@@ -1250,10 +1365,16 @@ def main() -> int:
                             char_offset=arguments.get('char_offset', 0),
                             source_identity={
                                 'resolved_path': path,
-                                'source_sha256': hashlib.sha256(source).hexdigest(),
+                                'source_sha256': source_sha256,
                             },
                             tokenizer=tokenizer,
                         )
+                        if args.source_read_handles:
+                            source_handle = f'source-{secrets.token_hex(8)}'
+                            while source_handle in source_read_receipts:
+                                source_handle = f'source-{secrets.token_hex(8)}'
+                            source_read_receipts[source_handle] = (path, source_sha256)
+                            result['source_handle'] = source_handle
                         search_guard.reset()
                 elif name == 'search_text':
                     query = arguments.get('query', '')
@@ -1363,6 +1484,25 @@ def main() -> int:
                         if public_test_result is not None:
                             entry['automatic_public_test'] = public_test_result
                             result = {**result, 'automatic_public_test': public_test_result}
+                elif name == 'replace_from_read':
+                    result = attempt_read_bound_text_replacement(
+                        workspace,
+                        arguments.get('path', ''),
+                        arguments.get('source_handle', ''),
+                        arguments.get('old_text', ''),
+                        arguments.get('new_text', ''),
+                        editable,
+                        source_read_receipts,
+                    )
+                    note_edit(result)
+                    if result.get('applied') is True:
+                        search_guard.reset()
+                        public_test_result = refresh_public_tests_after_edit(
+                            result, workspace, args.public_test_image, public_test_hash,
+                        )
+                        if public_test_result is not None:
+                            entry['automatic_public_test'] = public_test_result
+                            result = {**result, 'automatic_public_test': public_test_result}
                 elif name == 'write_file':
                     result = attempt_configured_edit(
                         workspace,
@@ -1433,6 +1573,11 @@ def main() -> int:
         runtime['mlx_peak_memory_bytes'] = int(mx.metal.get_peak_memory())
     result = {
         'schema_version': 1, 'navigation_tools_enabled': True,
+        'source_read_handles_enabled': args.source_read_handles,
+        'source_read_receipts': {
+            handle: {'path': path, 'source_sha256': source_sha256}
+            for handle, (path, source_sha256) in source_read_receipts.items()
+        },
         'task_id': contract.task_id, 'task_schema': contract.schema,
         'seed': args.seed,
         'task_revisions': {'base': contract.base_revision,
@@ -1448,7 +1593,8 @@ def main() -> int:
                     'max_context_tokens': args.max_context_tokens, 'wall_seconds': args.wall_seconds,
                     'max_no_tool_retries': args.max_no_tool_retries,
                     'temperature': args.temperature, 'top_p': args.top_p, 'top_k': args.top_k,
-                    'do_sample': args.do_sample, 'edit_format': args.edit_format},
+                    'do_sample': args.do_sample, 'edit_format': args.edit_format,
+                    'source_read_handles': args.source_read_handles},
         'edit_format': args.edit_format,
         'edit_attempted': edit_attempted,
         'edit_applied': edit_applied,

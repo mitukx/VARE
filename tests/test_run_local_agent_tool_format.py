@@ -17,6 +17,7 @@ from scripts.run_local_agent import (
     append_tool_interaction,
     attempt_configured_edit,
     attempt_exact_text_replacement,
+    attempt_read_bound_text_replacement,
     malformed_edit_retry_feedback,
     bounded_list_page,
     bounded_search_results,
@@ -380,6 +381,31 @@ def test_replace_text_schema_requires_exact_source_context():
     assert all(item['function']['name'] != 'replace_text' for item in tools_for('whole_file'))
 
 
+def test_read_bound_replacement_tool_is_opt_in_and_uses_a_short_handle():
+    with pytest.raises(ValueError, match='require navigation tools'):
+        tools_for('unified_diff', include_read_handles=True)
+
+    legacy_names = {item['function']['name'] for item in tools_for('unified_diff')}
+    handle_tools = tools_for(
+        'unified_diff', include_navigation=True, include_read_handles=True,
+    )
+    handle_by_name = {item['function']['name']: item['function'] for item in handle_tools}
+    read_tool = handle_by_name['read_file']
+    replace_tool = handle_by_name['replace_from_read']
+
+    assert 'replace_from_read' not in legacy_names
+    assert 'replace_text' not in handle_by_name
+    assert replace_tool['parameters']['required'] == [
+        'path', 'source_handle', 'old_text', 'new_text',
+    ]
+    assert replace_tool['parameters']['properties']['source_handle']['pattern'] == (
+        '^source-[0-9a-f]{16}$'
+    )
+    assert 'source_handle' in read_tool['description']
+    with pytest.raises(ValueError, match='unified-diff edit mode'):
+        tools_for('whole_file', include_navigation=True, include_read_handles=True)
+
+
 def test_list_symbols_schema_and_ast_index_ground_request_model_fields():
     tool = next(
         item['function'] for item in tools_for('unified_diff', include_navigation=True)
@@ -651,6 +677,19 @@ def test_unified_diff_truncation_reminder_requests_a_small_edit_payload():
     assert 'src/module.py' in reminder
 
 
+def test_source_handle_retry_reminder_avoids_copying_full_source_hashes():
+    reminder = no_tool_retry_reminder(
+        '<tool_call>{"name":"replace_from_read"', edit_format='unified_diff',
+        allowed_paths=['src/module.py'], token_limit=256,
+        source_read_handles=True,
+    )
+
+    assert 'replace_from_read' in reminder
+    assert 'source_handle' in reminder
+    assert 'expected_source_sha256' not in reminder
+    assert 'replace_text' not in reminder
+
+
 def test_truncation_reminder_reports_the_opt_in_retry_cap():
     reminder = no_tool_retry_reminder(
         '<tool_call>{"name":"apply_patch"', edit_format='unified_diff',
@@ -881,6 +920,55 @@ def test_exact_text_replacement_rejects_stale_read_hash(tmp_path):
     assert source.read_text() == 'value = 9\n'
 
 
+def test_read_bound_replacement_uses_the_hash_from_the_exact_read_receipt(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\nother = 3\n')
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    handle = 'source-0123456789abcdef'
+
+    result = attempt_read_bound_text_replacement(
+        tmp_path, 'pkg/source.py', handle, 'value = 1', 'value = 2',
+        {'pkg/source.py'}, {handle: ('pkg/source.py', source_hash)},
+    )
+
+    assert result['applied'] is True
+    assert result['source_handle'] == handle
+    assert result['source_sha256_before'] == source_hash
+    assert result['source_sha256_after'] == hashlib.sha256(
+        b'value = 2\nother = 3\n'
+    ).hexdigest()
+    assert result['postimage_matches_replacement'] is True
+    assert source.read_text(encoding='utf-8') == 'value = 2\nother = 3\n'
+
+
+def test_read_bound_replacement_rejects_guessed_wrong_path_and_stale_handles(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\n')
+    handle = 'source-0123456789abcdef'
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    receipts = {handle: ('pkg/source.py', source_hash)}
+
+    guessed = attempt_read_bound_text_replacement(
+        tmp_path, 'pkg/source.py', 'source-fedcba9876543210', 'value = 1', 'value = 2',
+        {'pkg/source.py'}, receipts,
+    )
+    wrong_path = attempt_read_bound_text_replacement(
+        tmp_path, 'other.py', handle, 'value = 1', 'value = 2',
+        {'pkg/source.py', 'other.py'}, receipts,
+    )
+    source.write_text('value = 9\n', encoding='utf-8')
+    stale = attempt_read_bound_text_replacement(
+        tmp_path, 'pkg/source.py', handle, 'value = 1', 'value = 2',
+        {'pkg/source.py'}, receipts,
+    )
+
+    assert guessed['applied'] is False
+    assert 'unknown' in guessed['error']
+    assert wrong_path['applied'] is False
+    assert 'different path' in wrong_path['error']
+    assert stale['applied'] is False
+    assert stale['stale_source'] is True
+    assert source.read_text(encoding='utf-8') == 'value = 9\n'
+
+
 def test_malformed_edit_recovery_feedback_preserves_exact_error_and_source_state(tmp_path):
     source, _revision = _git_workspace(tmp_path, 'vllm/entrypoints/anthropic/protocol.py', b'value = 1\n')
     root = Path(__file__).resolve().parents[1]
@@ -911,6 +999,20 @@ def test_malformed_edit_recovery_feedback_preserves_exact_error_and_source_state
     assert result['error'] in feedback
     assert 'no grader ran' in feedback
     assert 'expected_source_sha256' in feedback
+
+
+def test_malformed_edit_recovery_uses_short_read_handle_when_enabled():
+    feedback = malformed_edit_retry_feedback(
+        {'applied': False, 'error': 'corrupt diff'},
+        allowed_paths=['src/module.py'],
+        source_hashes_before={'src/module.py': 'a' * 64},
+        source_hashes_after={'src/module.py': 'a' * 64},
+        source_read_handles=True,
+    )
+
+    assert 'source_handle' in feedback
+    assert 'replace_from_read' in feedback
+    assert 'expected_source_sha256' not in feedback
 
 
 def test_saved_malformed_edit_retry_replays_controller_feedback_without_a_fake_tool_call():

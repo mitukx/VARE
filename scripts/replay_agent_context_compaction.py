@@ -92,6 +92,7 @@ def reconstruct_attempt_messages(
                     turn['model_output'], edit_format=attempt['edit_format'],
                     allowed_paths=allowed_paths,
                     token_limit=budgets['max_new_tokens_per_turn'],
+                    source_read_handles=attempt.get('source_read_handles_enabled') is True,
                 ),
             })
 
@@ -117,6 +118,7 @@ def main() -> int:
     tools = tools_for(
         attempt['edit_format'],
         include_navigation=attempt.get('navigation_tools_enabled') is True,
+        include_read_handles=attempt.get('source_read_handles_enabled') is True,
     )
     messages, prompt_checks = reconstruct_attempt_messages(attempt, tokenizer, tools)
     before_tokens = len(tokenizer.encode(
