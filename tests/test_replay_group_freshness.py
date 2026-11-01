@@ -215,3 +215,76 @@ def test_ungrouped_current_sampling_deduplicates_by_record_identity(monkeypatch)
     assert len(selected) == 2
     assert len({id(exp) for exp in selected}) == 2
     assert selected[0] == selected[1]
+
+
+def test_exponential_race_order_is_weighted_without_replacement():
+    # Exact Plackett-Luce first-selection and pairwise-order probabilities.
+    replay = PrioritizedReplay(ReplayConfig(capacity=16), seed=20261102)
+    keys = [("small", 1.0), ("medium", 2.0), ("large", 4.0)]
+    first = Counter()
+    before = 0
+    trials = 20_000
+    for _ in range(trials):
+        order = replay._weighted_group_order(keys)
+        assert len(set(order)) == 3
+        first[order[0]] += 1
+        before += order.index("small") < order.index("large")
+    assert abs(first["small"] / trials - 1.0 / 7.0) < 0.02
+    assert abs(first["medium"] / trials - 2.0 / 7.0) < 0.02
+    assert abs(first["large"] / trials - 4.0 / 7.0) < 0.02
+    assert abs(before / trials - 1.0 / 5.0) < 0.02
+
+
+def test_exponential_race_rejects_invalid_weights():
+    replay = PrioritizedReplay(ReplayConfig(capacity=16), seed=0)
+    for bad in (0.0, -1.0, float("nan"), float("inf")):
+        try:
+            replay._weighted_group_order([("bad", bad)])
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f"invalid weight admitted: {bad}")
+
+
+def test_large_grouped_replay_returns_complete_distinct_groups():
+    # At 256 groups and 256 requested rows, both public grouped entrypoints
+    # cross the large-pool optimization threshold.
+    replay = PrioritizedReplay(ReplayConfig(capacity=1024), seed=17)
+    for group_index in range(256):
+        group_id = f"large-group-{group_index}"
+        assert replay.add_group(
+            _group(group_id, 10_000 + 4 * group_index),
+            [1.0 + group_index / 1000.0] * 4,
+        )
+
+    for selected in (
+        replay.sample_grouped(256),
+        replay.sample_current(256, freshness_fn=lambda _: 1.0, grouped=True),
+    ):
+        counts = Counter(
+            item.attempt.metadata["vare_rollout_group"] for item in selected
+        )
+        assert len(selected) == 256
+        assert len(counts) == 64
+        assert set(counts.values()) == {4}
+        assert len({id(item) for item in selected}) == 256
+
+
+def test_large_current_sampling_excludes_entire_stale_group():
+    replay = PrioritizedReplay(ReplayConfig(capacity=512), seed=17)
+    for group_index in range(128):
+        assert replay.add_group(
+            _group(f"large-{group_index}", 10_000 + 4 * group_index),
+            [1.0] * 4,
+        )
+
+    def freshness(exp: Experience) -> float | None:
+        return None if exp.attempt.metadata["vare_rollout_group"] == "large-0" else 1.0
+
+    selected = replay.sample_current(256, freshness_fn=freshness, grouped=True)
+    counts = Counter(
+        item.attempt.metadata["vare_rollout_group"] for item in selected
+    )
+    assert "large-0" not in counts
+    assert len(selected) == 256
+    assert set(counts.values()) == {4}
