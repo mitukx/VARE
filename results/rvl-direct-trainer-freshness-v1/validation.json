@@ -20,7 +20,7 @@
   },
   "model_training": false,
   "accelerator_use": false,
-  "external_mts_evaluation": false,
+  "agent_capability_evaluation": false,
   "environment_diagnostic": {
     "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py -q",
     "result": "failed in test_check_script_passes_on_this_repository because its subprocess selected /usr/bin/python3 3.9.6, which does not support zip(strict=...); rerun with Python 3.12 first on PATH passed"

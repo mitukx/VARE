@@ -1,0 +1,291 @@
+{
+  "schema_version": 2,
+  "source_commit": "6373d8d91ac76d5f3ba1bae53cdee002b59db16c",
+  "transformation": "Replaced machine-specific workspace roots with /redacted/workspace in the listed logs and /redacted/worktree in the earlier container observations. Measurements, outcomes, protocol definitions, source snapshots, and container targets were preserved.",
+  "evidence_policy": "Original blobs remain reachable from source_commit. This commit publishes redacted derivatives; it does not rewrite history or claim removal from earlier commits, forks, caches, or copies.",
+  "protocol_locks_modified": [],
+  "records": [
+    {
+      "record_path": "results/grpo-audit-independent-reproduction-v2/run-1/attempt-1-failure.log",
+      "source_git_blob_sha1": "1bd9366da2508eeaf0d29a0be5fa8e724821eb0a",
+      "source_sha256": "817b3bcfd9b0c5d0cc7eaa6460eaa6a11a966f546579591b7b4053895deef846",
+      "published_sha256": "c50a5cbdc8715e97dc5059a4a8ef9d2bcbcdf826f04af837bc2603539826aa39",
+      "source_bytes": 1121,
+      "published_bytes": 995,
+      "redacted_occurrences": 2,
+      "updated_manifest_path": "results/grpo-audit-independent-reproduction-v2/run-1/attempt-history.json"
+    },
+    {
+      "record_path": "results/promotion-cancellation-ownership-v1/run-1/candidate-pytest.log",
+      "source_git_blob_sha1": "7a1d9892c9b0fedf8e53ad52b054a15585a6d802",
+      "source_sha256": "1a6ffc8464a4511623b724e19d00b8f662a1c6da78cf7207f04fbdf510ca4e9c",
+      "published_sha256": "ff1b723661ffa792ae0e9ae07ffd1cf55d2e02c7b1235065232310ec6db380e2",
+      "source_bytes": 558,
+      "published_bytes": 495,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/promotion-cancellation-ownership-v1/run-1/manifest.json"
+    },
+    {
+      "record_path": "results/promotion-cancellation-ownership-v1/run-1/baseline-pytest.log",
+      "source_git_blob_sha1": "3f8d04563d82ed64f26df97f9a32b78f9834327d",
+      "source_sha256": "6a1bab6d56144f7044d3f69a9a54c4822d2dcc0ac66173a9c43016c71d3cd6a3",
+      "published_sha256": "f44f151b2194dbad25a7801ce772fc058f3eaa1f0e6cb8828eb3d6c87b473fdf",
+      "source_bytes": 23802,
+      "published_bytes": 23739,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/promotion-cancellation-ownership-v1/run-1/manifest.json"
+    },
+    {
+      "record_path": "results/rvl-inference-transaction-v1/pr58-freshness-compat/fixed-pytest.log",
+      "source_git_blob_sha1": "bb3ce804d830ffdb1b9c3070bae067edf602c61c",
+      "source_sha256": "bc39c1a4c8e807ba4095dcc0f3c361577474a84126879dd15b11a1d99e8e7885",
+      "published_sha256": "4d26341a8da9965bd1986a3b39bec205923100ef23dd36a8af9660939222c9cf",
+      "source_bytes": 660,
+      "published_bytes": 597,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/rvl-inference-transaction-v1/pr58-freshness-compat/manifest.json"
+    },
+    {
+      "record_path": "results/rvl-inference-transaction-v1/pr58-freshness-compat/baseline-pytest.log",
+      "source_git_blob_sha1": "e352d70121be936426a083f5a6b8f2c5ec6320a5",
+      "source_sha256": "31768d7f63588c24b2c4971f789ffd1dd6211e940353de87d66939de20f1a156",
+      "published_sha256": "4754dbc54ef776c1abf70b752cc341ac7d61cf4e9d6cd8b58536e67b17b8ce89",
+      "source_bytes": 35586,
+      "published_bytes": 35523,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/rvl-inference-transaction-v1/pr58-freshness-compat/manifest.json"
+    },
+    {
+      "record_path": "results/rvl-inference-transaction-v1/pr58-freshness-compat/alias_only-pytest.log",
+      "source_git_blob_sha1": "6cd50d8116eea7a0666f62d55da5e12d9d51c01e",
+      "source_sha256": "07a5ca712026142d927464b0441d9227109bcb9db370ca03bf8f05abe4dcc6af",
+      "published_sha256": "4887e78bfb7740fd80334ae151381fd4101f3a27717485739e110ba0a2c71b86",
+      "source_bytes": 32321,
+      "published_bytes": 32258,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/rvl-inference-transaction-v1/pr58-freshness-compat/manifest.json"
+    },
+    {
+      "record_path": "results/rvl-inference-transaction-v1/pr58-freshness-compat/integration_main-pytest.log",
+      "source_git_blob_sha1": "9626bc1be72a76f93d21b9e048c97cdf2446bcf0",
+      "source_sha256": "249f980dc53fa952157201e8f9ffbcde8a237817aa5195e49685e9acbe80cfb5",
+      "published_sha256": "0035221255fe002cd6bd20cf0927209fbcc8cb75148411b85a373d2b0430e41d",
+      "source_bytes": 32351,
+      "published_bytes": 32288,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/rvl-inference-transaction-v1/pr58-freshness-compat/manifest.json"
+    },
+    {
+      "record_path": "results/isolation-boundary-verification-v1/run-1-colima-m1/observations.json",
+      "source_git_blob_sha1": "54f73da6ad2610c3f854bdcf78b17bf36ae101ca",
+      "source_sha256": "fd6c011efb651e7257c9a832dffe3cab3d621231287348a120dd9bd79f3111b2",
+      "published_sha256": "9c0574ecdb7ab5808a768004c9dd41b28a0018d17557765201e95c4295415b15",
+      "source_bytes": 9058,
+      "published_bytes": 8512,
+      "redacted_occurrences": 7,
+      "updated_manifest_path": "results/isolation-boundary-verification-v1/run-1-colima-m1/manifest.json"
+    },
+    {
+      "record_path": "results/isolation-boundary-verification-v1/run-1-colima-m1/run-progress.json",
+      "source_git_blob_sha1": "82687b81fd9f18fecaa57e73d05cd3aa9f660474",
+      "source_sha256": "88808878c7d6072406de633f106b4047b48e777d4994d74e437f80caeeca7e2b",
+      "published_sha256": "000405c2438cc58c2e04c577765e7689dc877a4b33cf1cee383a48039160cceb",
+      "source_bytes": 8413,
+      "published_bytes": 7945,
+      "redacted_occurrences": 6
+    },
+    {
+      "record_path": "results/isolation-boundary-verification-v1/run-2-colima-m1/observations.json",
+      "source_git_blob_sha1": "09da3d2787a83f24eaad5d710be181cb621e8012",
+      "source_sha256": "d5dacd99d2ecc73049a7da17ee8bfc59680182cbb0d8377e101f4d302c993dde",
+      "published_sha256": "ffb598beba9ba2ed1b12871ed26acf494b4f0ac44396ced73de7c4281e4f811a",
+      "source_bytes": 9067,
+      "published_bytes": 8521,
+      "redacted_occurrences": 7,
+      "updated_manifest_path": "results/isolation-boundary-verification-v1/run-2-colima-m1/manifest.json"
+    },
+    {
+      "record_path": "results/isolation-boundary-verification-v1/run-2-colima-m1/run-progress.json",
+      "source_git_blob_sha1": "5bd1847a85d89a4ac649eee81ad8d97bad7ebc19",
+      "source_sha256": "561879386a5a809fae10e446dfc83a12b05a35984c8eebfe5f468f5ed4690bd6",
+      "published_sha256": "d4eb3df3782c58c1ca4bd51eb211b65eff879041db0ceb916f6f97c34bc11af9",
+      "source_bytes": 8422,
+      "published_bytes": 7954,
+      "redacted_occurrences": 6
+    },
+    {
+      "record_path": "results/isolation-boundary-verification-v1/run-3-colima-m1/observations.json",
+      "source_git_blob_sha1": "b2b1d9bf141be9c258fabfffd8ac63165e2aea3b",
+      "source_sha256": "373681c0bb37678825eca86dee4d043f542ce5ee9c4d2e5a4453ef46175fb4bc",
+      "published_sha256": "5f5ad2e54807353bfdaf91a730b31989ef3b8b3ed81326f077e61a8df80cd7e4",
+      "source_bytes": 9067,
+      "published_bytes": 8521,
+      "redacted_occurrences": 7,
+      "updated_manifest_path": "results/isolation-boundary-verification-v1/run-3-colima-m1/manifest.json"
+    },
+    {
+      "record_path": "results/isolation-boundary-verification-v1/run-3-colima-m1/run-progress.json",
+      "source_git_blob_sha1": "042133aa00bba294cfd9c0cbf195bab20e24e188",
+      "source_sha256": "1e6a412da8aefd21ed8527ecde497db9774e7b72108897708f32e22038ccf393",
+      "published_sha256": "421ee8dcd10a29958d58a261a128ba8870cbb3c5602ad99a677bd1b5e87997f8",
+      "source_bytes": 8422,
+      "published_bytes": 7954,
+      "redacted_occurrences": 6
+    },
+    {
+      "record_path": "results/trusted-scoring-boundary-v1/run-2-colima-m1/observations.json",
+      "source_git_blob_sha1": "28451f71dfee80eac5c737eb495e059bb79fd3e6",
+      "source_sha256": "90e03ce3fc2da21955840a71d0117e9159ae1ceb0a948c37b56190bd5eecc2fc",
+      "published_sha256": "8227872e162069c40500fe83574e33ce97f26933c4518a05aa2c4fcc8219e425",
+      "source_bytes": 3275,
+      "published_bytes": 3197,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/trusted-scoring-boundary-v1/run-2-colima-m1/manifest.json"
+    },
+    {
+      "record_path": "results/trusted-scoring-boundary-v1/run-3-colima-m1/observations.json",
+      "source_git_blob_sha1": "78aaedf7b0b3b51fe3943e29872f549d7d0ff49e",
+      "source_sha256": "2792c1ff3f1b6059ce6c631e37aa76ae67919a511172acdae4bf851083811e6f",
+      "published_sha256": "4e024213fce64a94015ccad46e01427144dfb426b8584933c53ebe7aa0ddd500",
+      "source_bytes": 3275,
+      "published_bytes": 3197,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/trusted-scoring-boundary-v1/run-3-colima-m1/manifest.json"
+    },
+    {
+      "record_path": "results/trusted-scoring-boundary-v1/run-4-colima-m1/observations.json",
+      "source_git_blob_sha1": "e02ff41071b06434ab22ae427fac8935d26e83ef",
+      "source_sha256": "0bacade975bdb41310021f28ece9b6d5829236288ede1c0f1a5b4cb7f829e497",
+      "published_sha256": "f29aaf2dbd4b54b7a829b0d97e92b52aee59b14d74ff784af9b4729e1faffb3d",
+      "source_bytes": 3321,
+      "published_bytes": 3243,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/trusted-scoring-boundary-v1/run-4-colima-m1/manifest.json"
+    },
+    {
+      "record_path": "results/trusted-scoring-boundary-v1/run-5-colima-m1/observations.json",
+      "source_git_blob_sha1": "6c3826fad962fc107c1825db5c396f4c3cdcb0f3",
+      "source_sha256": "be880e5d92b77667bb960ea9503233e8169a274f979081fe19443ae03ccb10b1",
+      "published_sha256": "7e2e065dc690d8f477d05cd88d0b81a8c4948b2b0e7920f10a02574ce6727d01",
+      "source_bytes": 3321,
+      "published_bytes": 3243,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/trusted-scoring-boundary-v1/run-5-colima-m1/manifest.json"
+    },
+    {
+      "record_path": "results/trusted-scoring-boundary-v1/run-6-colima-m1/observations.json",
+      "source_git_blob_sha1": "f2fd2da6a55443d1a8bd0ad8bb55ae3e4c3f178c",
+      "source_sha256": "6f07494d711a6b9968708e7ac0854eb54ee1647d20fde7cb4db3e016cbd7146e",
+      "published_sha256": "d328cbcb545a6a8e812d9349aa78da37d6b6ef487d53f23e993a75886cc489b1",
+      "source_bytes": 3322,
+      "published_bytes": 3244,
+      "redacted_occurrences": 1,
+      "updated_manifest_path": "results/trusted-scoring-boundary-v1/run-6-colima-m1/manifest.json"
+    }
+  ],
+  "updated_manifests": [
+    {
+      "path": "results/grpo-audit-independent-reproduction-v2/run-1/attempt-history.json",
+      "source_git_blob_sha1": "82a2918b77530ea87b8f3a4f69ee06fdbeddc0a6",
+      "source_sha256": "c13b36e555c190592cf959030efb24965428d1e3d7a97749e189de9dcd0baf9f",
+      "published_sha256": "5f2ba67cf6693aedf455fee7b9edb5329e406005e388dbaf59edd7badac07e36",
+      "updated_entries": [
+        "attempt-1-failure.log"
+      ]
+    },
+    {
+      "path": "results/isolation-boundary-verification-v1/run-1-colima-m1/manifest.json",
+      "source_git_blob_sha1": "46cd93366292fc1fc4d7064103902c181a7f92e4",
+      "source_sha256": "b256f17dda6e53461f7200dd7f3e67589d37575892dcf386f55b34b369187055",
+      "published_sha256": "dc606bdcccf6a6be322240bf8a4a438be7eda48fc134b55b61431bc2cf06fafa",
+      "updated_entries": [
+        "observations.json"
+      ]
+    },
+    {
+      "path": "results/isolation-boundary-verification-v1/run-2-colima-m1/manifest.json",
+      "source_git_blob_sha1": "6f4be7ace16969d803d53d16213e77750c570e44",
+      "source_sha256": "39fec7b9a97ac2777fade7e6afd2001c6e233cd6a3012ede9b2875fd74bd146a",
+      "published_sha256": "9cc3f1fbb953c4e3ccc5b8b1a108b77c9e3bdb9d5a5ed385c24cb7a0533b1fba",
+      "updated_entries": [
+        "observations.json"
+      ]
+    },
+    {
+      "path": "results/isolation-boundary-verification-v1/run-3-colima-m1/manifest.json",
+      "source_git_blob_sha1": "28219e4ee296086d992d0d656ae90ccbeebe8a11",
+      "source_sha256": "de7d3cdc7a684969a1dfc0185dcf7ac44e9071962cd6d733fb405fe9e0a284ca",
+      "published_sha256": "0cbc71cd3ca2597041188d3369681a08bbd9a451120ab922874cc31ff9898169",
+      "updated_entries": [
+        "observations.json"
+      ]
+    },
+    {
+      "path": "results/promotion-cancellation-ownership-v1/run-1/manifest.json",
+      "source_git_blob_sha1": "e6c17349d478fe856091763ac5355758e4183e00",
+      "source_sha256": "864220346e297d203cd71dce832c10410d95d36a4287788033012aa6e9f8ff55",
+      "published_sha256": "8613aab6083fb396a91ef91db380da67c8e843a19d4405b8809c54b1722aeb6c",
+      "updated_entries": [
+        "baseline-pytest.log",
+        "candidate-pytest.log"
+      ]
+    },
+    {
+      "path": "results/rvl-inference-transaction-v1/pr58-freshness-compat/manifest.json",
+      "source_git_blob_sha1": "824c02ca7e3aeee80657de86b3d827d27a5a38f9",
+      "source_sha256": "626d626f17654fd6fec6659cabc9d60b4b50d9a21a0ba2e200f20631f4ac451c",
+      "published_sha256": "42409403d481893e5f7c0161ae780ad853e90c3fb52f1c6f76754c3191c3e352",
+      "updated_entries": [
+        "alias_only-pytest.log",
+        "baseline-pytest.log",
+        "fixed-pytest.log",
+        "integration_main-pytest.log"
+      ]
+    },
+    {
+      "path": "results/trusted-scoring-boundary-v1/run-2-colima-m1/manifest.json",
+      "source_git_blob_sha1": "f8677031f8a30e119d617c28231cae6177f7a94d",
+      "source_sha256": "dd860ce071e394d51d79a0db4d5ad045365e56f9575f939689645110f519f5c0",
+      "published_sha256": "036d3f259279abc4400f2b322946482f301f2f23b2c130a71a8532aeff529a89",
+      "updated_entries": [
+        "observations.json"
+      ]
+    },
+    {
+      "path": "results/trusted-scoring-boundary-v1/run-3-colima-m1/manifest.json",
+      "source_git_blob_sha1": "45b2d2269b7155924b520df4d0161b2c0e976521",
+      "source_sha256": "7573a3bd03eb626e31c944e9cf9d79e84facd389a55b6b7682f0af0acb1544a6",
+      "published_sha256": "35d36e105ff847fc53fe13c9cc7580dba0c7c82944bb2632e79d0861caacd132",
+      "updated_entries": [
+        "observations.json"
+      ]
+    },
+    {
+      "path": "results/trusted-scoring-boundary-v1/run-4-colima-m1/manifest.json",
+      "source_git_blob_sha1": "01f2cf2142b5e29560576a2e76d1657d92aedc10",
+      "source_sha256": "2fc0591a6436c586fe68065ff6a836e535c133c982e62ea207618ffc7cefe671",
+      "published_sha256": "6713cef2d31450230ce4ee4a87d3b9b4fb87843ce4cb5b8cb3c3d7e7e231c55d",
+      "updated_entries": [
+        "observations.json"
+      ]
+    },
+    {
+      "path": "results/trusted-scoring-boundary-v1/run-5-colima-m1/manifest.json",
+      "source_git_blob_sha1": "9cd6228cc9292e4ea6e56a07132775030a7f7734",
+      "source_sha256": "0e1ab999aef407dbdd57a7ce2e6d99e0322ee78e1be4add53020142635e9e31c",
+      "published_sha256": "de342284dffcba0b64df8861c100567b278cb93bb36ce0d92945769a755e46dd",
+      "updated_entries": [
+        "observations.json"
+      ]
+    },
+    {
+      "path": "results/trusted-scoring-boundary-v1/run-6-colima-m1/manifest.json",
+      "source_git_blob_sha1": "f8f51c691f0fe0aba3318a8a88e6cef882d7ad49",
+      "source_sha256": "abd2bd8aec870644a3d175c331e7801bd98cb058ba9a1f9288647ca41d7c1393",
+      "published_sha256": "7f826c0e7342c9355a18fe1f0056426890d404b99d1ad4a97dba7a876bccd3b0",
+      "updated_entries": [
+        "observations.json"
+      ]
+    }
+  ]
+}
