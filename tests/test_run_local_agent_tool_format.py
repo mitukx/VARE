@@ -30,6 +30,7 @@ from scripts.run_local_agent import (
     normalize_tool_call_format,
     render_chat_prompt,
     refresh_public_tests_after_edit,
+    run_public_tests,
     resolve_allowed_path,
     tools_for,
 )
@@ -41,6 +42,7 @@ from scripts.run_separated_coding_eval import (
     incomplete_tool_retry_args,
     verified_task_success,
 )
+from vare.container_isolation import DockerIsolationRunner, IsolationResult
 
 
 def _git_workspace(tmp_path, relative_path, original):
@@ -1021,6 +1023,44 @@ def test_applied_recovered_edit_requires_a_fresh_public_test(monkeypatch, tmp_pa
     assert refreshed == {"passed": False, "returncode": 1}
     assert refreshed is not stale_result
     assert calls == [(tmp_path, "pinned-image", "test-hash")]
+
+
+def test_public_tests_run_with_readonly_candidate_workspace(monkeypatch, tmp_path):
+    workspace = tmp_path / "task"
+    workspace.mkdir()
+    test_file = workspace / "test_public.py"
+    test_file.write_text("print('public checks passed')\n", encoding="utf-8")
+    test_hash = hashlib.sha256(test_file.read_bytes()).hexdigest()
+    observed = {}
+
+    async def run_candidate_io(
+        self, limits, *, allowed_workspace_root, workspace, command, stdin_data,
+    ):
+        argv = self.candidate_argv(
+            limits,
+            name="vare-agent-" + "a" * 24,
+            allowed_workspace_root=allowed_workspace_root,
+            workspace=workspace,
+            command=command,
+            readonly_workspace=True,
+            interactive=True,
+        )
+        observed.update({
+            "argv": argv,
+            "stdin_data": stdin_data,
+            "workspace": workspace,
+        })
+        return IsolationResult(0, "public checks passed\n", "")
+
+    monkeypatch.setattr(DockerIsolationRunner, "run_candidate_io", run_candidate_io)
+    result = run_public_tests(workspace, "local/test@sha256:" + "a" * 64, test_hash)
+
+    mount_index = observed["argv"].index("--mount")
+    assert observed["argv"][mount_index + 1].endswith(",readonly")
+    assert observed["stdin_data"] == b""
+    assert observed["workspace"] == workspace
+    assert result["passed"] is True
+    assert result["isolation"] == "docker-network-none-read-only-root-and-workspace-mount"
 
 
 def test_attempted_task_run_count_includes_every_arm_and_secondary_model():

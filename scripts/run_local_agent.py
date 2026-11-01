@@ -320,9 +320,10 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> di
                              pids_limit=32, max_output_bytes=20_000)
     started = time.perf_counter()
     try:
-        result = asyncio.run(DockerIsolationRunner().run_candidate(
+        result = asyncio.run(DockerIsolationRunner().run_candidate_io(
             limits, allowed_workspace_root=workspace.parent, workspace=workspace,
             command=['python', '/workspace/test_public.py'],
+            stdin_data=b'',
         ))
     except Exception as exc:
         return {'passed': False, 'error': f'{type(exc).__name__}: {exc}',
@@ -330,7 +331,7 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> di
     return {'passed': result.returncode == 0, 'returncode': result.returncode,
             'stdout': result.stdout, 'stderr': result.stderr,
             'elapsed_seconds': round(time.perf_counter() - started, 3),
-            'isolation': 'docker-network-none-read-only-root-only-workspace-mount'}
+            'isolation': 'docker-network-none-read-only-root-and-workspace-mount'}
 
 
 def refresh_public_tests_after_edit(
