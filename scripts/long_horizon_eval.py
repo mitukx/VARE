@@ -604,6 +604,10 @@ class FunctionOracleGrader:
             "calls": [dataclasses.asdict(call) for call in self.calls],
             "source_identity": self.source_identity,
         })
+        # The store binds one verifier name/version to one immutable config.
+        # A digest suffix lets a run safely grade multiple task-specific oracle
+        # contracts without rebinding the same verifier identity.
+        self.name = f"vare_function_oracle:{self._config_sha256[:16]}"
 
     def config_sha256(self) -> str:
         return self._config_sha256
@@ -762,7 +766,14 @@ class EpisodeHarness:
                 break
             self._execute(lease)
         if self.grader_for is not None:
-            while (lease := self._claim("verify")) is not None:
+            while True:
+                lease = self._claim("verify")
+                if lease is None:
+                    counts = self.store.work_counts("verify")
+                    if wait_for_expired and (counts.get("queued", 0) or counts.get("running", 0)):
+                        time.sleep(poll_seconds)
+                        continue
+                    break
                 self._verify(lease)
 
     def _commit(self, lease: TrajectoryLease, step: AgentStep) -> None:
@@ -961,6 +972,7 @@ class EpisodeHarness:
                              trusted=bool(verdict["trusted"]),
                              metadata={"trajectory_sha256": head, "verifier_config_sha256": grader.config_sha256(),
                                        "verdict": verdict, "grade_summary": summary,
+                                       "raw_grade": dict(raw) if isinstance(raw, Mapping) else {},
                                        "grade_sha256": _grade_digest(raw),
                                        "grading_seconds": round(seconds, 6),
                                        "graded_files": sorted(files)})
@@ -1124,6 +1136,7 @@ def episode_metrics(store: TrajectoryStore, ident: str) -> dict[str, Any]:
         "graded": trusted,
         "trusted_grade": trusted,
         "grade_reason": (verification or {}).get("metadata", {}).get("verdict", {}).get("reason", "ungraded"),
+        "raw_grade": (verification or {}).get("metadata", {}).get("raw_grade"),
         # Primary outcome. Ungraded or untrusted is never success.
         "final_success": bool(verification and verification["trusted"] and verification["passed"]),
         "trajectory_head": row["head"],
@@ -1337,6 +1350,166 @@ def _load_factory(spec: str | None) -> Callable[..., Any] | None:
     return getattr(importlib.import_module(module), name)
 
 
+def validate_frozen_protocol(
+    protocol: Mapping[str, Any], *, model_id: str, revision: str | None,
+    controller: ControllerConfig, tasks: Sequence[EpisodeTask], graders: Mapping[str, TrustedGrader | None],
+    arm: str, policy_version: int, adapter: Path | None, seeds: Sequence[int], crash_after_commit_index: int | None,
+    lease_seconds: float, max_attempts: int, manifest_sha256: str,
+    max_prompt_tokens: int, task_limit: int, grader_factory: str | None, source_root: Path,
+    min_available_memory_gib: float, min_free_disk_gib: float,
+) -> None:
+    """Reject execution settings that do not match a frozen protocol exactly.
+
+    This runs after Train task/grader construction but before policy loading,
+    trajectory enrollment, or model inference. A protocol digest is meaningful
+    only when the executed configuration and implementation identities match it.
+    """
+    from pathlib import PurePosixPath
+
+    mismatches: list[str] = []
+
+    def require(ok: bool, name: str) -> None:
+        if not ok:
+            mismatches.append(name)
+
+    require(protocol.get("preregistered_before_model_inference") is True,
+            "preregistered_before_model_inference")
+    require(isinstance(protocol.get("protocol_id"), str) and bool(protocol.get("protocol_id")),
+            "protocol_id")
+
+    model = protocol.get("model", {})
+    require(model.get("id") == model_id, "model.id")
+    require(model.get("revision") == revision and bool(revision), "model.revision")
+    if model.get("local_only") is True:
+        require(os.environ.get("HF_HUB_OFFLINE") == "1" and os.environ.get("TRANSFORMERS_OFFLINE") == "1",
+                "model.local_only environment")
+
+    frozen_controller = protocol.get("controller", {})
+    require(frozen_controller.get("name") == controller.name, "controller.name")
+    require(frozen_controller.get("config") == controller.to_dict(), "controller.config")
+    require(frozen_controller.get("sha256") == controller.sha256(), "controller.sha256")
+
+    budgets = protocol.get("budgets", {})
+    controller_budget_names = (
+        "max_calls_per_turn", "max_new_tokens_per_turn", "max_total_new_tokens",
+        "max_turns", "temperature", "top_p", "wall_seconds",
+    )
+    for name in controller_budget_names:
+        if name in budgets:
+            require(budgets[name] == getattr(controller, name), f"budgets.{name}")
+    if "lease_seconds" in budgets:
+        require(budgets["lease_seconds"] == lease_seconds, "budgets.lease_seconds")
+    if "max_attempts" in budgets:
+        require(budgets["max_attempts"] == max_attempts, "budgets.max_attempts")
+    require(budgets.get("max_prompt_tokens") == max_prompt_tokens, "budgets.max_prompt_tokens")
+    require(budgets.get("task_limit") == task_limit, "budgets.task_limit")
+    if "seed" in budgets:
+        require(list(seeds) == [budgets["seed"]], "budgets.seed")
+
+    resources = protocol.get("resources", {})
+    if "min_available_memory_gib" in resources:
+        require(resources["min_available_memory_gib"] == min_available_memory_gib,
+                "resources.min_available_memory_gib")
+    if "min_free_disk_gib" in resources:
+        require(resources["min_free_disk_gib"] == min_free_disk_gib,
+                "resources.min_free_disk_gib")
+
+    task_spec = protocol.get("task", {})
+    require(len(tasks) == int(protocol.get("execution", protocol.get("episodes", {})).get(
+        "task_count", len(tasks))), "task_count")
+    if len(tasks) == 1:
+        task = tasks[0]
+        expected_task_fields = {
+            "task_id": task.task_id,
+            "repository": task.repository,
+            "split": task.split,
+            "source_revision": task.source_revision,
+            "episode_task_sha256": task.sha256(),
+            "issue_sha256": hashlib.sha256(task.issue.encode("utf-8")).hexdigest(),
+            "readable_file_count": len(task.readable_files),
+        }
+        for name, actual in expected_task_fields.items():
+            if name in task_spec:
+                require(task_spec[name] == actual, f"task.{name}")
+        target_file = task_spec.get("target_file")
+        if target_file is not None:
+            require(task.target_files == (target_file,), "task.target_file")
+        if "bug_patch_sha256" in task_spec:
+            require(task.workspace_patch_sha256 == task_spec["bug_patch_sha256"],
+                    "task.bug_patch_sha256")
+    require(manifest_sha256 == task_spec.get("train_manifest_sha256"), "task.train_manifest_sha256")
+
+    contract_root = protocol.get("execution", protocol.get("episodes", {}))
+    expected_fault = None
+    if crash_after_commit_index is not None:
+        expected_fault = {"signal": "SIGKILL", "stage": "after_commit",
+                          "zero_based_step_index": crash_after_commit_index}
+    for seed in seeds:
+        matching: list[Mapping[str, Any]] = []
+        for candidate in contract_root.values():
+            if not isinstance(candidate, Mapping) or candidate.get("arm") != arm or candidate.get("seed") != seed:
+                continue
+            fault = candidate.get("fault")
+            if expected_fault is None:
+                if fault is None:
+                    matching.append(candidate)
+            elif (isinstance(fault, Mapping)
+                  and all(fault.get(key) == value for key, value in expected_fault.items())):
+                matching.append(candidate)
+        require(len(matching) == 1, f"execution scenario arm={arm},seed={seed},fault={expected_fault}")
+        if len(matching) == 1 and "adapter" in matching[0]:
+            expected_adapter = matching[0]["adapter"]
+            actual_adapter = directory_sha256(adapter) if adapter is not None else None
+            require(actual_adapter == expected_adapter, f"execution adapter for seed={seed}")
+    if "effective_episode_seed" in contract_root:
+        require(list(seeds) == [contract_root["effective_episode_seed"]], "effective_episode_seed")
+    if "seeds_argument" in contract_root:
+        require(len(seeds) == contract_root["seeds_argument"], "seeds_argument")
+    if "task_count" in contract_root:
+        require(len(tasks) == contract_root["task_count"], "execution.task_count")
+    if arm == "base":
+        require(len(seeds) == 1, "base arm requires one preregistered seed")
+        require(policy_version == 0, "base arm policy_version")
+
+    frozen_grader = protocol.get("grader", {})
+    require(frozen_grader.get("factory") == grader_factory, "grader.factory")
+    for task in tasks:
+        grader = graders.get(task.task_id)
+        if grader is None:
+            require(frozen_grader.get("class") is None, f"grader missing for {task.task_id}")
+            continue
+        require(type(grader).__name__ == frozen_grader.get("class"), "grader.class")
+        require(grader.config_sha256() == frozen_grader.get("config_sha256"), "grader.config_sha256")
+        if "source_identity" in frozen_grader:
+            require(getattr(grader, "source_identity", None) == frozen_grader["source_identity"],
+                    "grader.source_identity")
+        if "case_ids" in frozen_grader and hasattr(grader, "calls"):
+            require([call.case_id for call in grader.calls] == frozen_grader["case_ids"], "grader.case_ids")
+
+    source_hashes = protocol.get("source_hashes", {})
+    if not isinstance(source_hashes, Mapping):
+        mismatches.append("source_hashes")
+    else:
+        required_source_paths = {
+            "scripts/long_horizon_eval.py", "scripts/funcy_tree_oracle.py",
+            "scripts/run_local_agent.py", "src/vare/trajectory_store.py",
+            "src/vare/isolated_candidate.py", "src/vare/container_isolation.py",
+        }
+        require(required_source_paths <= set(source_hashes), "source_hashes.required_sources")
+        for name, expected in source_hashes.items():
+            relative = PurePosixPath(name)
+            if (relative.is_absolute() or relative.as_posix() != name
+                    or any(part in {"", ".", ".."} for part in relative.parts)):
+                mismatches.append(f"source_hashes.{name}: unsafe path")
+                continue
+            path = source_root / Path(*relative.parts)
+            actual = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+            require(actual == expected, f"source_hashes.{name}")
+
+    if mismatches:
+        raise ValueError("execution does not match frozen protocol: " + ", ".join(mismatches))
+
+
 def run_learning_pipeline_arm(args: argparse.Namespace) -> Path:
     from vare.learning_pipeline import curriculum, repo_env, resources
 
@@ -1344,26 +1517,17 @@ def run_learning_pipeline_arm(args: argparse.Namespace) -> Path:
     root.mkdir(parents=True, exist_ok=True)
     protocol_sha256 = None
     protocol_id = None
+    protocol = None
     if args.protocol is not None:
         protocol_path = args.protocol.expanduser().resolve()
         protocol_bytes = protocol_path.read_bytes()
         protocol = json.loads(protocol_bytes)
-        if (protocol.get("preregistered_before_model_inference") is not True
+        if (not isinstance(protocol, Mapping)
+                or protocol.get("preregistered_before_model_inference") is not True
                 or not isinstance(protocol.get("protocol_id"), str)):
             raise ValueError("--protocol must identify a frozen pre-inference protocol")
         protocol_sha256 = hashlib.sha256(protocol_bytes).hexdigest()
         protocol_id = protocol["protocol_id"]
-        saved_protocol = root / "protocol.json"
-        if saved_protocol.exists() and saved_protocol.read_bytes() != protocol_bytes:
-            raise ValueError("episode root already contains a different frozen protocol")
-        if not saved_protocol.exists():
-            saved_protocol.write_bytes(protocol_bytes)
-    preflight = {"memory_start": resources.check_memory(args.min_available_memory_gib, stage="lh_preflight"),
-                 "free_disk_bytes": resources.check_disk(args.output, args.min_free_disk_gib, stage="lh_preflight"),
-                 "argv": sys.argv[1:], "protocol_id": protocol_id,
-                 "protocol_sha256": protocol_sha256}
-    (root / "preflight.json").write_text(json.dumps(preflight, indent=2, sort_keys=True, default=str) + "\n",
-                                         encoding="utf-8")
     records = load_train_manifest(args.manifest)
     if args.instances:
         wanted = args.instances.split(",")
@@ -1386,6 +1550,31 @@ def run_learning_pipeline_arm(args: argparse.Namespace) -> Path:
         factories[task.task_id] = repo_workspace_factory(env.path, env.commit, record["_patch"])
         graders[task.task_id] = grader_factory(record, env) if grader_factory else None
         tasks.append(task)
+    controller = CONTROLLER_PRESETS[args.controller]
+    if protocol is not None:
+        validate_frozen_protocol(
+            protocol, model_id=args.model, revision=args.revision, controller=controller,
+            tasks=tasks, graders=graders, arm=args.arm, policy_version=args.policy_version,
+            adapter=args.adapter, seeds=list(range(args.seeds)),
+            crash_after_commit_index=args.crash_after_commit_index,
+            lease_seconds=args.lease_seconds, max_attempts=5,
+            manifest_sha256=hashlib.sha256(Path(args.manifest).read_bytes()).hexdigest(),
+            max_prompt_tokens=args.max_prompt_tokens, task_limit=args.limit,
+            grader_factory=args.grader_factory, source_root=ROOT,
+            min_available_memory_gib=args.min_available_memory_gib,
+            min_free_disk_gib=args.min_free_disk_gib,
+        )
+        saved_protocol = root / "protocol.json"
+        if saved_protocol.exists() and saved_protocol.read_bytes() != protocol_bytes:
+            raise ValueError("episode root already contains a different frozen protocol")
+        if not saved_protocol.exists():
+            saved_protocol.write_bytes(protocol_bytes)
+    preflight = {"memory_start": resources.check_memory(args.min_available_memory_gib, stage="lh_preflight"),
+                 "free_disk_bytes": resources.check_disk(args.output, args.min_free_disk_gib, stage="lh_preflight"),
+                 "argv": sys.argv[1:], "protocol_id": protocol_id,
+                 "protocol_sha256": protocol_sha256}
+    (root / "preflight.json").write_text(json.dumps(preflight, indent=2, sort_keys=True, default=str) + "\n",
+                                         encoding="utf-8")
     digest = sha256_json({"model": args.model, "revision": args.revision,
                           "adapter": directory_sha256(args.adapter) if args.adapter else None})
     policy = mlx_policy(args.model, str(args.adapter) if args.adapter else None, revision=args.revision,
@@ -1403,7 +1592,7 @@ def run_learning_pipeline_arm(args: argparse.Namespace) -> Path:
                 print(json.dumps({"fault_injection": fault_injection, "pid": os.getpid()}), flush=True)
                 os.kill(os.getpid(), signal.SIGKILL)
 
-    harness = EpisodeHarness(root, arm, CONTROLLER_PRESETS[args.controller], factories=factories,
+    harness = EpisodeHarness(root, arm, controller, factories=factories,
                              grader_for=lambda t: graders.get(t.task_id), lease_seconds=args.lease_seconds,
                              protocol_sha256=protocol_sha256,
                              crash_hook=crash_hook, fault_injection=fault_injection)

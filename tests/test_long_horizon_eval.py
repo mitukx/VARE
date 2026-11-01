@@ -10,6 +10,7 @@ import sqlite3
 import subprocess
 import sys
 import textwrap
+import time
 from pathlib import Path
 
 import pytest
@@ -106,6 +107,7 @@ def test_full_controller_metrics_on_fixture(tmp_path):
     assert episode["controller_assists"]["automatic_public_tests"] == 1
     assert episode["compute"]["generated_tokens"] > 0
     assert episode["trusted_grade"] is True and episode["final_success"] is True
+    assert episode["raw_grade"]["call_report"]["cases"][0]["case_id"] == "case-1"
     agg = result["aggregate"]
     assert agg["episodes"] == 2 and agg["completion_rate"] == 1.0 and agg["final_success_rate"] == 1.0
     assert agg["synthetic"] is True
@@ -247,6 +249,87 @@ def test_function_oracle_grader_uses_parent_owned_calls_and_scoped_source(tmp_pa
                                 support_files={"../escape.py": "x = 1\n"})
 
 
+def test_function_oracle_configs_have_distinct_verifier_identities(tmp_path):
+    from vare.isolated_candidate import FunctionCall
+
+    image = "python@sha256:" + "a" * 64
+    first = lh.FunctionOracleGrader(
+        task_id="task-one", target_file="calc/ops.py",
+        calls=[FunctionCall("case-one", "calc.ops", "add", [1, 2], 3)], image=image)
+    second = lh.FunctionOracleGrader(
+        task_id="task-two", target_file="calc/ops.py",
+        calls=[FunctionCall("case-two", "calc.ops", "add", [1, 2], 3)], image=image)
+    assert first.config_sha256() != second.config_sha256()
+    assert first.name != second.name
+
+    store = TrajectoryStore.create(tmp_path / "verifiers.sqlite", run_id="verifier-identities")
+    store.register_verifier(first.name, first.version, first.config_sha256())
+    store.register_verifier(second.name, second.version, second.config_sha256())
+
+
+def _fixture_protocol(task, grader, controller, *, source_root, factory="tests.fake:grader_factory"):
+    return {
+        "preregistered_before_model_inference": True,
+        "protocol_id": "fixture-protocol-v1",
+        "model": {"id": "fixture-model", "revision": "a" * 40},
+        "controller": {"name": controller.name, "config": controller.to_dict(),
+                       "sha256": controller.sha256()},
+        "budgets": {"lease_seconds": 0.5, "max_attempts": 5, "max_prompt_tokens": 8192,
+                    "task_limit": 1, "seed": 0,
+                    "max_calls_per_turn": controller.max_calls_per_turn,
+                    "max_new_tokens_per_turn": controller.max_new_tokens_per_turn,
+                    "max_total_new_tokens": controller.max_total_new_tokens,
+                    "max_turns": controller.max_turns,
+                    "temperature": controller.temperature, "top_p": controller.top_p,
+                    "wall_seconds": controller.wall_seconds},
+        "resources": {"min_available_memory_gib": 8.0, "min_free_disk_gib": 4.0},
+        "execution": {"base_uninterrupted": {"arm": "base", "seed": 0, "adapter": None},
+                      "effective_episode_seed": 0, "seeds_argument": 1, "task_count": 1},
+        "task": {"task_id": task.task_id, "repository": task.repository, "split": task.split,
+                 "source_revision": task.source_revision, "episode_task_sha256": task.sha256(),
+                 "issue_sha256": hashlib.sha256(task.issue.encode()).hexdigest(),
+                 "readable_file_count": len(task.readable_files), "target_file": task.target_files[0],
+                 "train_manifest_sha256": "b" * 64},
+        "grader": {"factory": factory, "class": type(grader).__name__,
+                   "config_sha256": grader.config_sha256()},
+        "source_hashes": {
+            name: hashlib.sha256((source_root / name).read_bytes()).hexdigest()
+            for name in (
+                "scripts/long_horizon_eval.py", "scripts/funcy_tree_oracle.py",
+                "scripts/run_local_agent.py", "src/vare/trajectory_store.py",
+                "src/vare/isolated_candidate.py", "src/vare/container_isolation.py",
+            )
+        },
+    }
+
+
+def test_frozen_protocol_binds_model_controller_task_grader_and_source():
+    task = lh.fixture_task()
+    grader = FakeGrader()
+    controller = lh.CONTROLLER_PRESETS["full"]
+    protocol = _fixture_protocol(task, grader, controller, source_root=ROOT)
+    kwargs = dict(
+        model_id="fixture-model", revision="a" * 40, controller=controller,
+        tasks=[task], graders={task.task_id: grader}, arm="base", policy_version=0,
+        adapter=None, seeds=[0], crash_after_commit_index=None, lease_seconds=0.5,
+        max_attempts=5, manifest_sha256="b" * 64, max_prompt_tokens=8192, task_limit=1,
+        grader_factory="tests.fake:grader_factory",
+        source_root=ROOT, min_available_memory_gib=8.0, min_free_disk_gib=4.0,
+    )
+    lh.validate_frozen_protocol(protocol, **kwargs)
+
+    with pytest.raises(ValueError, match="controller"):
+        lh.validate_frozen_protocol(protocol, **dict(kwargs, controller=lh.CONTROLLER_PRESETS["minimal"]))
+    with pytest.raises(ValueError, match="model.revision"):
+        lh.validate_frozen_protocol(protocol, **dict(kwargs, revision="c" * 40))
+    with pytest.raises(ValueError, match="scenario"):
+        lh.validate_frozen_protocol(protocol, **dict(kwargs, seeds=[1]))
+    wrong_source = dict(protocol, source_hashes={
+        **protocol["source_hashes"], "scripts/long_horizon_eval.py": "0" * 64})
+    with pytest.raises(ValueError, match="source_hashes"):
+        lh.validate_frozen_protocol(wrong_source, **kwargs)
+
+
 def test_grader_receives_only_changed_editable_files(tmp_path):
     grader = FakeGrader()
     run_once(tmp_path / "run", grader=grader)
@@ -305,6 +388,25 @@ def test_resume_after_kill_has_no_duplicated_or_lost_steps(tmp_path, stage, inde
     assert killed["final_success"] is True
     assert [s["index"] for s in TrajectoryStore(run / "trajectories.sqlite", audit_only=True).iter_steps(
         killed["episode_id"])] == list(range(16))
+
+
+def test_resume_waits_for_expired_verification_lease(tmp_path):
+    run = tmp_path / "verify-recovery"
+    initial = harness(run, lease_seconds=0.35, worker_id="worker-before-crash")
+    initial.run()  # Finish execution but leave verification queued.
+    abandoned = initial.store.claim("verify", "worker-crashed", lease_seconds=0.35)
+    assert abandoned is not None
+
+    resumed = harness(run, grader=FakeGrader(), lease_seconds=0.35, worker_id="worker-after-crash")
+    started = time.monotonic()
+    resumed.run(wait_for_expired=True, poll_seconds=0.01)
+    elapsed = time.monotonic() - started
+
+    assert elapsed >= 0.2
+    assert resumed.store.counts().get("verified") == 2
+    result = lh.run_metrics(run)
+    assert result["audit"]["pass"] is True
+    assert all(episode["raw_grade"] is not None for episode in result["episodes"])
 
 
 def test_resume_refuses_different_controller(tmp_path):
