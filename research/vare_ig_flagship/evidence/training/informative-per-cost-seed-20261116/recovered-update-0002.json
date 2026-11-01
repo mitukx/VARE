@@ -1,0 +1,129 @@
+{
+  "branch": "sigkill-resume",
+  "checkpoint_manifest": null,
+  "ending_optimizer_sha256": "6439c27c87d561e0af0c01a2515f27e0b2febfeab7a716239e6ac37dda686ea6",
+  "ending_parameter_sha256": "10d5b1f7accc046551c127fec4920289e63352a417bd181c1da0984bb692876e",
+  "groups": {
+    "groups": [
+      {
+        "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+        "informative": false,
+        "rewards": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "task_id": "vare_ig.train.csv_record.v1"
+      },
+      {
+        "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+        "informative": false,
+        "rewards": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "task_id": "vare_ig.train.deep_merge_defaults.v1"
+      },
+      {
+        "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+        "informative": false,
+        "rewards": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "task_id": "vare_ig.train.stable_toposort.v1"
+      }
+    ],
+    "n_groups": 3,
+    "n_informative_groups": 0,
+    "n_zero_variance_groups": 3
+  },
+  "optimizer_step": 1,
+  "peak_mlx_gib": 2.150176130235195,
+  "process_cpu_seconds": 3.579526,
+  "starting_optimizer_sha256": "6439c27c87d561e0af0c01a2515f27e0b2febfeab7a716239e6ac37dda686ea6",
+  "starting_parameter_sha256": "10d5b1f7accc046551c127fec4920289e63352a417bd181c1da0984bb692876e",
+  "update": {
+    "config": {
+      "clip_eps_high": 0.2,
+      "clip_eps_low": 0.2,
+      "group_size": 4,
+      "max_grad_norm": 1.0,
+      "max_policy_lag": 0,
+      "normalize_std": true,
+      "temperature": 0.7
+    },
+    "groups": [
+      {
+        "advantages": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "behavior_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+        "informative": false,
+        "instance_id": "vare_ig.train.csv_record.v1",
+        "rewards": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "size": 4
+      },
+      {
+        "advantages": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "behavior_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+        "informative": false,
+        "instance_id": "vare_ig.train.deep_merge_defaults.v1",
+        "rewards": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "size": 4
+      },
+      {
+        "advantages": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "behavior_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+        "informative": false,
+        "instance_id": "vare_ig.train.stable_toposort.v1",
+        "rewards": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "size": 4
+      }
+    ],
+    "max_observed_lag": 0,
+    "n_groups": 3,
+    "n_informative_groups": 0,
+    "n_samples": 12,
+    "n_tokens": 0,
+    "n_trained_samples": 0,
+    "policy_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+    "policy_step": 1,
+    "reason": "no_informative_group",
+    "schema": "vare.learning_pipeline.grpo_step/v1",
+    "update_applied": false
+  }
+}

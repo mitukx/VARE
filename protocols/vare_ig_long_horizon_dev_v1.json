@@ -1,0 +1,150 @@
+{
+  "budgets": {
+    "hidden_parent_grade_cases_per_task": "3 or 4, disjoint from public examples",
+    "max_new_tokens_per_turn": 512,
+    "max_prompt_tokens": 8192,
+    "max_tool_calls_per_turn": 4,
+    "max_total_new_tokens": 4096,
+    "max_turns": 14,
+    "max_wall_seconds_per_episode": 1800.0,
+    "public_test_cases_per_task": 2,
+    "public_tests_after_successful_edit": true,
+    "temperature": 0.0,
+    "top_p": 1.0
+  },
+  "claim_boundary": "Four synthetic Development repository-repair tasks; descriptive agent-behavior measurement, not held-out capability evidence.",
+  "controller": {
+    "config": {
+      "auto_public_tests_after_edit": true,
+      "finish_gate": true,
+      "max_calls_per_turn": 4,
+      "max_new_tokens_per_turn": 512,
+      "max_no_tool_retries": 2,
+      "max_total_new_tokens": 4096,
+      "max_turns": 14,
+      "name": "vare-ig-long-horizon-full-v1",
+      "normalize_tool_calls": true,
+      "recover_bare_edits": true,
+      "reveal_target": false,
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "wall_seconds": 1800.0
+    },
+    "sha256": "da727bfe2928d8a512e604f23d74c0b7e2136d8ecb9eb920485036d03313405d"
+  },
+  "execution": {
+    "controller_arm": "fixed across policy checkpoints",
+    "final_case_ids": {
+      "vare_ig.lh_dev.json_pointer_lookup.v1": [
+        "array_index",
+        "invalid_escape",
+        "leading_zero_index",
+        "missing"
+      ],
+      "vare_ig.lh_dev.layered_option_lookup.v1": [
+        "missing_higher_falls_back",
+        "missing_everywhere",
+        "empty_path"
+      ],
+      "vare_ig.lh_dev.lexical_course_planner.v1": [
+        "duplicate_course_and_edge",
+        "duplicate_edge",
+        "cycle",
+        "unknown"
+      ],
+      "vare_ig.lh_dev.resource_window_coalescer.v1": [
+        "separated",
+        "same_time_different_resources",
+        "empty"
+      ]
+    },
+    "grader_config_sha256": {
+      "vare_ig.lh_dev.json_pointer_lookup.v1": "43c25406e229167e380c295f05bfadff7a6cc71159ea70a1926319c44bc77b0b",
+      "vare_ig.lh_dev.layered_option_lookup.v1": "84f717b7c5097c61b38553f6496cd9d04acc6fe215c4d8309bb89468590e9f66",
+      "vare_ig.lh_dev.lexical_course_planner.v1": "189ee6236704904bdc5f5fac66f0712f43f3c633d53a743a77029a002357a2ed",
+      "vare_ig.lh_dev.resource_window_coalescer.v1": "a1cf62d576840e651cfa0a51c646a3ebf0e73d940f1510fd1c863b357d633f7f"
+    },
+    "public_case_ids": {
+      "vare_ig.lh_dev.json_pointer_lookup.v1": [
+        "public_nested",
+        "public_escapes"
+      ],
+      "vare_ig.lh_dev.layered_option_lookup.v1": [
+        "high_precedence",
+        "null_override"
+      ],
+      "vare_ig.lh_dev.lexical_course_planner.v1": [
+        "public_order",
+        "new_ready_node_precedes_existing"
+      ],
+      "vare_ig.lh_dev.resource_window_coalescer.v1": [
+        "public_resource_partition",
+        "public_touching"
+      ]
+    },
+    "same_task_seed_for_base_and_trained": true,
+    "seeds_by_task": {
+      "vare_ig.lh_dev.json_pointer_lookup.v1": 20261109,
+      "vare_ig.lh_dev.layered_option_lookup.v1": 20261106,
+      "vare_ig.lh_dev.lexical_course_planner.v1": 20261107,
+      "vare_ig.lh_dev.resource_window_coalescer.v1": 20261108
+    },
+    "task_ids": [
+      "vare_ig.lh_dev.layered_option_lookup.v1",
+      "vare_ig.lh_dev.lexical_course_planner.v1",
+      "vare_ig.lh_dev.resource_window_coalescer.v1",
+      "vare_ig.lh_dev.json_pointer_lookup.v1"
+    ],
+    "task_sha256": {
+      "vare_ig.lh_dev.json_pointer_lookup.v1": "de0d90d74b3a098ec4e91c6ba97038102082e80eeb4f94247556f56cec2bb9f4",
+      "vare_ig.lh_dev.layered_option_lookup.v1": "34811facf8c85444e9e113fb6047aacd20e3ceb4b60d9cec6d4eef73590b4966",
+      "vare_ig.lh_dev.lexical_course_planner.v1": "a3ccdf51390d9fbb6be3391d0127e8e24e7b0e6ff05c655f359fc02666a96873",
+      "vare_ig.lh_dev.resource_window_coalescer.v1": "82468907f53ef6ca2982fdaf5b97ff46e12de0ef699508eb1e09cd844ca9c4c4"
+    },
+    "workspace_sha256": {
+      "vare_ig.lh_dev.json_pointer_lookup.v1": "175c740b7860d6e1617a4c3c61e51716eb15a40c6afdd32ee3b49777b9df01f7",
+      "vare_ig.lh_dev.layered_option_lookup.v1": "bd7d1785ca33bc3d95e2d5db79ed19404fb58c12bb346bf112aa9fe2f198567b",
+      "vare_ig.lh_dev.lexical_course_planner.v1": "0ce78062c4b1b6be4024d0f5f36e8be2ff6ccda4642d8bcc48e02c4a273878fd",
+      "vare_ig.lh_dev.resource_window_coalescer.v1": "817ad2bca5595838e942f8f328010594bbfd948a3849e8cdefe95eec81794827"
+    }
+  },
+  "frozen_at_utc": "2026-11-01T12:12:02+00:00",
+  "grader": {
+    "candidate_pytest_authority": false,
+    "expected_values_parent_owned": true,
+    "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "network_disabled": true,
+    "schema": "vare_function_oracle_v1"
+  },
+  "model": {
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "inference": "MLX/Metal",
+    "local_only": true,
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "preregistered_before_model_inference": true,
+  "protocol_id": "vare-ig-qwen3-4b-long-horizon-development-v1",
+  "resources": {
+    "max_phase_seconds": 7200.0,
+    "one_model_process_at_a_time": true,
+    "preflight": "existing Qwen runner memory, swap, and disk checks"
+  },
+  "schema": "vare_ig_long_horizon_dev_protocol_v1",
+  "source_hashes": {
+    "scripts/long_horizon_eval.py": "cfe4a54f85108b42d29f9ea2e84f4ec2e16514f1674a834a0ece09c04784f45f",
+    "scripts/qwen3_function_repair_grpo.py": "a74fd87651efed5eb1be85738c5714bd8029ed431aa4f029ab61b14d7b480975",
+    "scripts/run_local_agent.py": "754c0b25e44ee7ba12b9c955b4cf54d959e66872c50c31ab5dd45e37cef71443",
+    "scripts/vare_ig_long_horizon_cohort.py": "6a4c04fc4545e7d1a0f3fb040040ee2d83a9150b462563c46a708d71c2826372",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+    "src/vare/learning_pipeline/policy.py": "f3bc25da7cbc7337c5e05e5fc9570513548f5474cceaa79df68836d412d1101c",
+    "src/vare/trajectory_store.py": "2a41ea328d733635919e0782f7fb212c591cd20f6ebb7731c6252d45b0af8f74"
+  },
+  "split": "development",
+  "study_questions": [
+    "How often does the real policy inspect more than one context file before editing?",
+    "How often are failed tool actions or public-test failures recovered from?",
+    "What fraction of Development tasks pass the independent parent oracle?",
+    "Does a genuinely trained adapter change these behaviors under the same controller and task seeds?"
+  ]
+}

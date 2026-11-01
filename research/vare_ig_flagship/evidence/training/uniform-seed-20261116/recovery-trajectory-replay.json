@@ -1,0 +1,70 @@
+{
+  "behavior_step": 1,
+  "freshness_policy_lag": 0,
+  "group_provenance_homogeneous": true,
+  "policy_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+  "policy_checkpoint_sha256": "10d5b1f7accc046551c127fec4920289e63352a417bd181c1da0984bb692876e",
+  "prefix_cache_benchmark_sha256": "ffb24291af7530795179da7aec92b65e0f4ac26563ea7426e23d81336b0a52c4",
+  "prefix_cache_enabled": true,
+  "schema": "vare_ig_recovery_trajectory_replay_v1",
+  "trajectory_groups": [
+    {
+      "freshness_checked_at_policy_version": 1,
+      "group_id": "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1",
+      "group_size": 4,
+      "phase": "train-step-1",
+      "policy_checkpoint_sha256": "10d5b1f7accc046551c127fec4920289e63352a417bd181c1da0984bb692876e",
+      "policy_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+      "policy_version": 1,
+      "replay_admitted": true,
+      "task_id": "vare_ig.train.csv_record.v1",
+      "trajectory_heads": {
+        "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1:member:0": "450597fbea23dd23032242b9277c0f472a18d7a9494ee14435c643f75c48d0a7",
+        "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1:member:1": "97495d78a468b7dc241ecfea45ef3bc8f8762a0de38df31f00aabfcbeaae1031",
+        "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1:member:2": "a9f1199c6db8124c09c8cd35364e88634dcb14d6eb26f33f73390598b2a34052",
+        "vareig:uniform:20261116:train-step-1:0:vare_ig.train.csv_record.v1:member:3": "ac5b9da8b31ef5c3b38f4669c29451f57f8f555e6cac8e925e67c5efa229f2f5"
+      },
+      "verifier_config_sha256": "6f25ec0e72e0e5e11dcc28ed478c1cc1e64d0728ee8fb6ff85f0a895fabda2c0",
+      "verifier_id": "6f25ec0e72e0e5e11dcc28ed478c1cc1e64d0728ee8fb6ff85f0a895fabda2c0"
+    },
+    {
+      "freshness_checked_at_policy_version": 1,
+      "group_id": "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1",
+      "group_size": 4,
+      "phase": "train-step-1",
+      "policy_checkpoint_sha256": "10d5b1f7accc046551c127fec4920289e63352a417bd181c1da0984bb692876e",
+      "policy_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+      "policy_version": 1,
+      "replay_admitted": true,
+      "task_id": "vare_ig.train.stable_toposort.v1",
+      "trajectory_heads": {
+        "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1:member:0": "a27e98d5750deae96ef0a67c6eefe5b053a010a0837a9f6be94c9603496387cb",
+        "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1:member:1": "0e35422f98015d9e0ca61cf850b4fa6e6c991b84fbdcace8d19040eba401beb0",
+        "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1:member:2": "db11bd7ed4a0af065252d6d9c73e8071e8cf58037695fea29b14b45406b3a18f",
+        "vareig:uniform:20261116:train-step-1:1:vare_ig.train.stable_toposort.v1:member:3": "29779870f7c8d347403abb2bb419e0901e67b607b6d3784f6897e47418e72a8b"
+      },
+      "verifier_config_sha256": "503410f2d4232b346aa249ce2eaa444ec1e7308b12c33d6e45bbf46ba2feeda1",
+      "verifier_id": "503410f2d4232b346aa249ce2eaa444ec1e7308b12c33d6e45bbf46ba2feeda1"
+    },
+    {
+      "freshness_checked_at_policy_version": 1,
+      "group_id": "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1",
+      "group_size": 4,
+      "phase": "train-step-1",
+      "policy_checkpoint_sha256": "10d5b1f7accc046551c127fec4920289e63352a417bd181c1da0984bb692876e",
+      "policy_id": "qwen3-4b-mlx:50d427756c6b:u1:10d5b1f7accc046551c1",
+      "policy_version": 1,
+      "replay_admitted": true,
+      "task_id": "vare_ig.train.deep_merge_defaults.v1",
+      "trajectory_heads": {
+        "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:0": "9a49e92aa3bcb1c7585d704ca5fefad99f56cd2bf5a45408bb4ec4818a0897de",
+        "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:1": "d2a259f218692f7959c63d4730236e566ccd88291901b8435410785598ba63f9",
+        "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:2": "35cdfa1bd6ce88aa51a0dd5e68d6fdbcf13c1378681cfd176a90b731fe3254dc",
+        "vareig:uniform:20261116:train-step-1:2:vare_ig.train.deep_merge_defaults.v1:member:3": "c199374aee035af57ceed3cb9fa259ced5c3846c99197cf358a945037902a6f7"
+      },
+      "verifier_config_sha256": "e3b5aad7ad7ba00e9bfc05a5503a3b47e5bac538bb8a957c4cf80b22180e2be7",
+      "verifier_id": "e3b5aad7ad7ba00e9bfc05a5503a3b47e5bac538bb8a957c4cf80b22180e2be7"
+    }
+  ],
+  "trajectory_replay_sample_count": 12
+}

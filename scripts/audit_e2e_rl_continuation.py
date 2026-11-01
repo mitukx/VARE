@@ -221,6 +221,15 @@ INVENTORY_V5_SOURCES = INVENTORY_V4_SOURCES | frozenset({
     "src/vare/function_repair_tasks.py",
     "src/vare/grpo_mlx.py",
 })
+# VARE-IG adds its verified scheduler/replay/task modules and same-prompt MLX
+# cache implementation. Keep v1-v5 immutable so old continuation evidence
+# remains auditable against the source set that produced it.
+INVENTORY_V6_SOURCES = INVENTORY_V5_SOURCES | frozenset({
+    "src/vare/learning_pipeline/informative_curriculum.py",
+    "src/vare/learning_pipeline/vare_ig_tasks.py",
+    "src/vare/learning_pipeline/verified_rollout_replay.py",
+    "src/vare/mlx_prefix_reuse.py",
+})
 # Exact-match registry; a campaign is identified by its complete source set.
 SOURCE_INVENTORIES = {
     "v1-pinned": LEGACY_EXPECTED_SOURCES,
@@ -228,11 +237,12 @@ SOURCE_INVENTORIES = {
     "v3": INVENTORY_V3_SOURCES,
     "v4": INVENTORY_V4_SOURCES,
     "v5": INVENTORY_V5_SOURCES,
+    "v6": INVENTORY_V6_SOURCES,
 }
-CURRENT_SOURCE_INVENTORY = "v5"
+CURRENT_SOURCE_INVENTORY = "v6"
 EXPECTED_SOURCES = SOURCE_INVENTORIES[CURRENT_SOURCE_INVENTORY]
 # Versions whose campaigns record the recovery endpoint at the resumed-round end.
-EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5"})
+EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5", "v6"})
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.

@@ -1,0 +1,57 @@
+{
+  "candidate": {
+    "cost": 4.953747176269699,
+    "measured_verifier_case_count": 15,
+    "n": 4,
+    "policy_id": "qwen3-4b-mlx:50d427756c6b:adapter:37d250ffd7ef4c810efa",
+    "primary": 0.5,
+    "slices": {
+      "configuration": 0.5,
+      "graph": 0.0,
+      "stream": 1.0
+    },
+    "unmeasured_verifier_case_count": 5
+  },
+  "candidate_adapter_sha256": "37d250ffd7ef4c810efa6eb533cf089991d674fa2c85cf5ea998c5fb761b38b0",
+  "candidate_checkpoint_manifest_sha256": "54d600f9e6f9142b2aea85ae416bce3de6630e799aab856cd1b4425b32f3bda6",
+  "claim_boundary": "Development-only gate diagnostic; no promotion claim or held-out evidence.",
+  "config": {
+    "min_eval_examples": 64,
+    "min_paired_examples": 64,
+    "paired_confidence_gate": true,
+    "required_slice_names": [
+      "configuration",
+      "graph",
+      "stream"
+    ]
+  },
+  "decision": {
+    "accepted": false,
+    "paired_gain": 0.0,
+    "paired_lcb": null,
+    "paired_n": 4,
+    "primary_gain": 0.0,
+    "reasons": [
+      "insufficient_eval_examples",
+      "insufficient_primary_gain",
+      "insufficient_paired_examples"
+    ],
+    "worst_slice_regression": 0.0
+  },
+  "heldout": false,
+  "incumbent": {
+    "cost": 5.146499531211956,
+    "measured_verifier_case_count": 15,
+    "n": 4,
+    "policy_id": "qwen3-4b-mlx:50d427756c6b:u0:45de7562ba3da3611203",
+    "primary": 0.5,
+    "slices": {
+      "configuration": 0.5,
+      "graph": 0.0,
+      "stream": 1.0
+    },
+    "unmeasured_verifier_case_count": 5
+  },
+  "schema": "vare_ig_development_promotion_gate_v1",
+  "split": "development"
+}

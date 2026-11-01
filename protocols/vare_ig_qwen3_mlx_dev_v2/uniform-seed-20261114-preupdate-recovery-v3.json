@@ -1,0 +1,76 @@
+{
+  "frozen_at_utc": "2026-11-01T13:19:49+00:00",
+  "input_artifact_sha256": {
+    "base-policy.json": "5facbe8636503134f8f6e6fc436ace1678f4c3cb7f997646fca796f9645366e0",
+    "rollouts-train-step-0.jsonl": "967d30928daf4d0a030988e910e8bdbd22597800a8f0cdfec42ee64d0172ab05",
+    "run_meta.json": "28999faf86c59cc4ae4e92e179fc909868aeb6046a0e1a06b46a5a0ce7b26b85",
+    "scheduler-selection.json": "c3ed8b1da46ae9ecf7f513cf6661d61af39bce527026ba7906107a019e521461",
+    "task_manifest.json": "a388b77d9222e2109eb759b8cddf16d73887e1dd1a6625f17eb4696988b7a38e",
+    "training-samples-before-logprob.json": "380df3db3bdfadefb42e9fcfab89c318d595ccef2b323e217022874ac009b31e",
+    "trajectory-store.sqlite3": "ed12275b7a2b702c00c7a9f118aa71597d679d86a4f5bea4295d5a085494196f"
+  },
+  "learner_config": {
+    "completion_only_loss": true,
+    "config": {
+      "clip_eps_high": 0.2,
+      "clip_eps_low": 0.2,
+      "group_size": 4,
+      "max_grad_norm": 1.0,
+      "max_policy_lag": 0,
+      "normalize_std": true,
+      "temperature": 0.7
+    },
+    "lora": {
+      "dropout": 0.0,
+      "num_layers": 8,
+      "rank": 8,
+      "scale": 20.0
+    },
+    "objective": "existing VARE MLX clipped-ratio GRPO",
+    "optimizer": {
+      "learning_rate": 1e-05,
+      "name": "mlx.optimizers.Adam"
+    },
+    "policy_lag": 0,
+    "sampling_consistency": "full-vocabulary temperature-softmax, top_p=1, top_k=0, min_p=0",
+    "update_count": "at most one initial applied update per run; later on-policy recovery update only if its new groups are informative",
+    "zero_variance": "skip all-equal reward group; never create an update from it"
+  },
+  "model": {
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "local_only": true,
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "non_actions": [
+    "no new model sampling",
+    "no regrading",
+    "no task substitution",
+    "no reward edits",
+    "no forced optimizer update"
+  ],
+  "preregistered_before_model_inference": false,
+  "preregistered_before_optimizer_update": true,
+  "protocol_id": "vare-ig-uniform-seed-20261114-preupdate-recovery-v3",
+  "recovery_action": "load the unchanged base policy, recompute exact traced behavior log-probabilities for the persisted informative samples, then invoke existing VARE MLX GRPO train_step at most once; persist the optimizer checkpoint and durable acknowledgment",
+  "recovery_helper_path": "${VARE_ROOT}/scripts/resume_vare_ig_preupdate_batch.py",
+  "recovery_helper_sha256": "34204aa8631c3d5ea3864391304d11d4442bc723055dfe45a4c976ed9b201e8f",
+  "recovery_protocol_revision": 3,
+  "recovery_validation_amendment": "The pre-update sample schema stores response_text but has no response_sha256 field; hash saved response_text and compare it with both the raw rollout text and its response_sha256.",
+  "resource_stop_diagnostic_path": "${VARE_ROOT}/results/vare-ig-training-v2/uniform-seed-20261114/preupdate-resource-stop-diagnostic.json",
+  "resource_stop_diagnostic_sha256": "68c1dee061b96ec1312f72c713246dd3651d3aa716f6ea300e4f12ee2f34c297",
+  "resource_stop_reason": "available_memory fell below the locked 8 GiB floor after all 24 rollouts were persisted; no optimizer checkpoint exists",
+  "reward_outcomes_examined_for_recovery_design": false,
+  "schema": "vare_ig_preupdate_batch_recovery_v1",
+  "seed": 20261114,
+  "supersedes_invalid_lock_path": "${VARE_ROOT}/protocols/vare_ig_qwen3_mlx_dev_v2/uniform-seed-20261114-preupdate-recovery.json",
+  "supersedes_invalid_lock_sha256": "9d9d1bd5714047d08fd9d09f4bac70d05da914963e3f958617940590d7122d33",
+  "supersedes_previous_lock_path": "${VARE_ROOT}/protocols/vare_ig_qwen3_mlx_dev_v2/uniform-seed-20261114-preupdate-recovery-v2.json",
+  "supersedes_previous_lock_sha256": "7ba837db10b3a1b54ee49d91195ecc2b6b1863c1af9cc607fbb1532c4802b867",
+  "target_arm": "uniform",
+  "target_run_directory": "${VARE_ROOT}/results/vare-ig-training-v2/uniform-seed-20261114",
+  "target_run_id": "vare-ig-qwen3-uniform-seed-20261114-v2",
+  "target_run_protocol_path": "${VARE_ROOT}/protocols/vare_ig_qwen3_mlx_dev_v2/uniform-seed-20261114.json",
+  "target_run_protocol_sha256": "ecc0ff9bed033b375241ff90d8e97cd32474d12c011cc641701ddb1bf69dc29a",
+  "target_seed": 20261114,
+  "verification": "candidate rewards remain bound to the frozen parent-owned function oracle and are cross-checked against the exact persisted rollout JSONL"
+}

@@ -1,0 +1,21 @@
+{
+  "completed_completions": 40,
+  "docker_host": "${DOCKER_HOST}",
+  "docker_server": "29.5.2 linux aarch64",
+  "helper_path": "${VARE_ROOT}/scripts/regrade_vare_ig_exploration.py",
+  "helper_sha256": "86c6af3836db7fa67efc65c6b3398fac499d9e048beafddc7ee6202bf1cf958d",
+  "model": {
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "policy_checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:5c72778221be1180b41f",
+  "protocol_path": "${VARE_ROOT}/protocols/vare_ig_qwen3_mlx_dev_v1.json",
+  "protocol_sha256": "0e2ffe76a333e107cf2fef7af3422730c9dc6e162b8de86fac51042b77ff8e19",
+  "regrade_wall_seconds": 61.392634,
+  "regraded_rollouts_sha256": "5818f2058a1f30d85ea3e0f1b707db54a55d80416176286d5239bcbb0821e735",
+  "schema": "vare_ig_exploration_regrade_manifest_v1",
+  "source_pilot_meta_sha256": "52bad9c199d5a113d30433b6bf9b73770c78dd61dff522e8f6d4bcfe5a37e71e",
+  "source_rollouts_sha256": "ea64755f3e1da632d0c673dc22e8d2a85031be8deb6a1d03f66cfa800f234125",
+  "source_run": "${VARE_ROOT}/results/vare-ig-exploration-v1",
+  "summary_sha256": "33d8b68acd781613aaf30c1e99b7d48b4d34b13b591066d2e166f88665f97757"
+}

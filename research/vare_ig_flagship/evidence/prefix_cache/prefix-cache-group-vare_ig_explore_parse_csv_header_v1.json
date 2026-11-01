@@ -1,0 +1,60 @@
+{
+  "base_cache_cursor_unchanged": true,
+  "cached_group_seconds": 35.61128212581389,
+  "completion_tokens": [
+    304,
+    355,
+    382,
+    341
+  ],
+  "decode_tokens_per_second": {
+    "cached": [
+      39.43918538044368,
+      39.83955973627567,
+      39.682445043952725,
+      39.59495694358205
+    ],
+    "independent": [
+      39.75253762348123,
+      39.78351194781662,
+      39.239350664418524,
+      39.67233751791193
+    ]
+  },
+  "first_token_measurements": {
+    "cached_first_yield_seconds": [
+      0.040457500028423965,
+      0.0391018750378862,
+      0.03860970807727426,
+      0.04034708300605416
+    ],
+    "cached_tail_prefill_and_first_sample_seconds": [
+      0.039495416916906834,
+      0.03768654202576727,
+      0.0377252500038594,
+      0.03883295797277242
+    ],
+    "independent_first_yield_seconds": [
+      0.5227440829621628,
+      0.4999877919908613,
+      0.49464099993929267,
+      0.49594304198399186
+    ],
+    "independent_prompt_prefill_and_first_sample_seconds": [
+      0.5203122911043465,
+      0.4989163330756128,
+      0.49328037502709776,
+      0.4950413329061121
+    ]
+  },
+  "group_speedup_independent_over_cached": 1.0378126959113778,
+  "independent_group_seconds": 36.957840707851574,
+  "outputs_and_probabilities_equal": true,
+  "prompt_tokens": 137,
+  "samples_per_mode": 4,
+  "shared_prefix_cache_bytes": 37748736,
+  "shared_prefix_prefill_seconds": 0.540047041955404,
+  "shared_prompt_tokenization_seconds": 0.013990166946314275,
+  "task_id": "vare_ig.explore.parse_csv_header.v1",
+  "task_sha256": "262488bbd52623b09a7bdea7e01a42e417e40bfb99dff197a113aa5126cf1f52"
+}

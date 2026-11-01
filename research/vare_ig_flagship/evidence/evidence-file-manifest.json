@@ -1,0 +1,941 @@
+{
+  "files": [
+    {
+      "bytes": 15784,
+      "compression": "gzip",
+      "path": "evidence/exploration/exploration-rollouts-regraded.jsonl.gz",
+      "public_sha256": "27c88213447b0a2f0b5ff0477a96f3466632d1261a813851967bf288ab8097f5",
+      "redacted": false,
+      "source_sha256": "5818f2058a1f30d85ea3e0f1b707db54a55d80416176286d5239bcbb0821e735",
+      "uncompressed_bytes": 100370,
+      "uncompressed_public_sha256": "5818f2058a1f30d85ea3e0f1b707db54a55d80416176286d5239bcbb0821e735"
+    },
+    {
+      "bytes": 16865,
+      "path": "evidence/exploration/exploration-summary.json",
+      "public_sha256": "1c8fc0d4865a8f63d7b88bd500d315b1671d9fb10b2e4e038b3bde4cf7955514",
+      "redacted": true,
+      "source_sha256": "33d8b68acd781613aaf30c1e99b7d48b4d34b13b591066d2e166f88665f97757"
+    },
+    {
+      "bytes": 6637,
+      "path": "evidence/exploration/pilot-meta.json",
+      "public_sha256": "2225466a0358650b70b7ecea527fb467a26bf896581ba43fa56f9f3a6a40d7b4",
+      "redacted": true,
+      "source_sha256": "c2ae7ef5c9ccae241056b342d6a30e8ffb254025e9ee6bb9d5f502c7b287b752"
+    },
+    {
+      "bytes": 1181,
+      "path": "evidence/exploration/regrade-manifest.json",
+      "public_sha256": "fd6989b8d0b4b0321e461c7b27269226a6d2ba37aeccd356ba7bce64a3fb67ee",
+      "redacted": true,
+      "source_sha256": "8ac6dd71dc9f215c8a2d7866ca7d2ce33fef9cedc535afdd56b160659ac44d84"
+    },
+    {
+      "bytes": 23786,
+      "compression": "gzip",
+      "events": 81,
+      "ledger_head_sha256": "a60693e21faf4cbac01a4712f2ce6ed841ea3d3aa44478403a8fea7f243c0401",
+      "path": "evidence/long_horizon/base-events.jsonl.gz",
+      "public_sha256": "db419c60021e31d901e2e5712b2592d98c67c2672988e45384cdfd7f2650120b",
+      "redacted": false,
+      "source_kind": "read-only export from hash-audited trajectory SQLite database",
+      "source_sha256": "094374d656ba83eb4930ea61e3716630c6dfb14138a8b863922fb5a6426ff36e",
+      "steps": 56,
+      "uncompressed_bytes": 161371,
+      "uncompressed_public_sha256": "b34cdd6e42072a594d7b38ae046c8bffcc62ffed87d2a5d54ae0637b756e7250"
+    },
+    {
+      "bytes": 17161,
+      "path": "evidence/long_horizon/base-summary.json",
+      "posthoc_correction_from_sha256": "bf0945eb8d22765b91c233404291ae4103c5a4cdad20ab09fda6190f5c2ce0c7",
+      "public_sha256": "64ef46bd56bb0ef5eaac896cf95011a901d7ab5d75261378291779c750b8863b",
+      "redacted": false,
+      "source_sha256": "bf0945eb8d22765b91c233404291ae4103c5a4cdad20ab09fda6190f5c2ce0c7"
+    },
+    {
+      "bytes": 3443,
+      "derived_artifact": "post-hoc recomputation of final success from recorded outcomes",
+      "path": "evidence/long_horizon/public-gate-correction.json",
+      "public_sha256": "c3a3009499468a52d54202e267e2eef27bc6f185c616a135b8cb7c60b8db109e",
+      "redacted": false,
+      "source_sha256": "c3a3009499468a52d54202e267e2eef27bc6f185c616a135b8cb7c60b8db109e"
+    },
+    {
+      "bytes": 20827,
+      "compression": "gzip",
+      "events": 81,
+      "ledger_head_sha256": "aea1c9eb64931096ff87f9900efaa1cf32275fc7cc4e5f69abf0edd816e9aeb5",
+      "path": "evidence/long_horizon/trained-events.jsonl.gz",
+      "public_sha256": "bce68bc2cb71e07bd38137707fa8153f1ab9084937b90c854dfe4100fdbd24f3",
+      "redacted": false,
+      "source_kind": "read-only export from hash-audited trajectory SQLite database",
+      "source_sha256": "80b88dd30663eac16fb4ed2b7aceb693bec47b9c3b8d1b07f2543816d7a4067a",
+      "steps": 56,
+      "uncompressed_bytes": 143609,
+      "uncompressed_public_sha256": "d1e8cf2ef57063fc40b435a64618751b068987cb390f67e8e063510de0e97697"
+    },
+    {
+      "bytes": 17347,
+      "path": "evidence/long_horizon/trained-summary.json",
+      "posthoc_correction_from_sha256": "8a5d1a89b2087ec04c34fc289059f9ac65f4203e385940f010b1bb4916553db2",
+      "public_sha256": "506ac043ad334973c96e81e429ae62610c2a9e1461b256185c801f2c91af4eb1",
+      "redacted": false,
+      "source_sha256": "8a5d1a89b2087ec04c34fc289059f9ac65f4203e385940f010b1bb4916553db2"
+    },
+    {
+      "bytes": 1624,
+      "path": "evidence/prefix_cache/prefix-cache-group-vare_ig_explore_graph_course_order_v1.json",
+      "public_sha256": "730ea0dd691a2781f838f20a1b06c16bd69b65b9d7f3d150b0a57e8df4f2efb4",
+      "redacted": false,
+      "source_sha256": "730ea0dd691a2781f838f20a1b06c16bd69b65b9d7f3d150b0a57e8df4f2efb4"
+    },
+    {
+      "bytes": 1618,
+      "path": "evidence/prefix_cache/prefix-cache-group-vare_ig_explore_parse_csv_header_v1.json",
+      "public_sha256": "f650b42c456140c6fc64d75327b32c77bf713357162a2c7356026dda7d07e937",
+      "redacted": false,
+      "source_sha256": "f650b42c456140c6fc64d75327b32c77bf713357162a2c7356026dda7d07e937"
+    },
+    {
+      "bytes": 8536,
+      "compression": "gzip",
+      "path": "evidence/prefix_cache/prefix-cache-pairs.jsonl.gz",
+      "public_sha256": "eade1d96049a211e6ec793c2cb3af40ee2cc4df956014fcc861262b8cf6e6d8c",
+      "redacted": false,
+      "source_sha256": "917cc7c6ec2f83c6d176d767e694b9fc5d60c6ba411e45431d2a24bfa71e9b9c",
+      "uncompressed_bytes": 114143,
+      "uncompressed_public_sha256": "917cc7c6ec2f83c6d176d767e694b9fc5d60c6ba411e45431d2a24bfa71e9b9c"
+    },
+    {
+      "bytes": 8105,
+      "path": "evidence/prefix_cache/prefix-cache-summary.json",
+      "public_sha256": "ffb24291af7530795179da7aec92b65e0f4ac26563ea7426e23d81336b0a52c4",
+      "redacted": false,
+      "source_sha256": "ffb24291af7530795179da7aec92b65e0f4ac26563ea7426e23d81336b0a52c4"
+    },
+    {
+      "bytes": 15479,
+      "path": "evidence/task-oracle-audit.json",
+      "public_sha256": "f3e4087968ed48516f0219ad040b0314d927a1e7a4c9f46d5b778c39f7106698",
+      "redacted": false,
+      "source_sha256": "f3e4087968ed48516f0219ad040b0314d927a1e7a4c9f46d5b778c39f7106698"
+    },
+    {
+      "bytes": 811,
+      "path": "evidence/training/informative-per-cost-seed-20261116/checkpoint-replay-comparison.json",
+      "public_sha256": "4dfb21d41bd15cbd2c422b5577390f3f5d0055e8ea6561aa4d2c3c23fcf39926",
+      "redacted": false,
+      "source_sha256": "4dfb21d41bd15cbd2c422b5577390f3f5d0055e8ea6561aa4d2c3c23fcf39926"
+    },
+    {
+      "bytes": 2809,
+      "path": "evidence/training/informative-per-cost-seed-20261116/checkpoints/update-0001/checkpoint.json",
+      "public_sha256": "54d600f9e6f9142b2aea85ae416bce3de6630e799aab856cd1b4425b32f3bda6",
+      "redacted": false,
+      "source_sha256": "54d600f9e6f9142b2aea85ae416bce3de6630e799aab856cd1b4425b32f3bda6"
+    },
+    {
+      "bytes": 6983,
+      "path": "evidence/training/informative-per-cost-seed-20261116/development-post.jsonl",
+      "public_sha256": "312c363a12f931f3f446bf462355f82c9fc7d3da540cb7fcd836d250096f7574",
+      "redacted": false,
+      "source_sha256": "312c363a12f931f3f446bf462355f82c9fc7d3da540cb7fcd836d250096f7574"
+    },
+    {
+      "bytes": 6994,
+      "path": "evidence/training/informative-per-cost-seed-20261116/development-pre.jsonl",
+      "public_sha256": "21ecf988309133924c1722f5670e6839a921dd05b65905a9ab42a51a5c1d2ddd",
+      "redacted": false,
+      "source_sha256": "21ecf988309133924c1722f5670e6839a921dd05b65905a9ab42a51a5c1d2ddd"
+    },
+    {
+      "bytes": 9187,
+      "path": "evidence/training/informative-per-cost-seed-20261116/final-summary.json",
+      "public_sha256": "37a7014966b13b2455e005046138f3acbe187801c5593e39380c62bda330f184",
+      "redacted": true,
+      "source_sha256": "f298f1eb48dbc8efc20a45f671afe8a9bb2903038bd49ce98ccbd61a69c50349"
+    },
+    {
+      "bytes": 1867,
+      "path": "evidence/training/informative-per-cost-seed-20261116/initial-update-sigkill-recovery.json",
+      "public_sha256": "51ea1d232faced491f48e10cc39e3dc7d275de810b94ec6f3c3e9b0336da8328",
+      "redacted": false,
+      "source_sha256": "51ea1d232faced491f48e10cc39e3dc7d275de810b94ec6f3c3e9b0336da8328"
+    },
+    {
+      "bytes": 1025,
+      "path": "evidence/training/informative-per-cost-seed-20261116/learner-events-reconciled.json",
+      "public_sha256": "f9d7de1e93119b055e93df9e8da9125250d111c2195d24e1994bb8c9d4e6c6d9",
+      "redacted": false,
+      "source_sha256": "f9d7de1e93119b055e93df9e8da9125250d111c2195d24e1994bb8c9d4e6c6d9"
+    },
+    {
+      "bytes": 11493,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261116/pending-update-0002.json.gz",
+      "public_sha256": "3a3f670515cba43369e17fcfb8dc359d25e5afd7b47ce4e7a4219f18089af74f",
+      "redacted": false,
+      "source_sha256": "1381ab013a9c25176c1b33cd84be6f6c650181489e69f401cbd8fb655482a53d",
+      "uncompressed_bytes": 157646,
+      "uncompressed_public_sha256": "1381ab013a9c25176c1b33cd84be6f6c650181489e69f401cbd8fb655482a53d"
+    },
+    {
+      "bytes": 658,
+      "path": "evidence/training/informative-per-cost-seed-20261116/postflight.json",
+      "public_sha256": "32ccefdd14cc6e4da43cbf8c18d9f8ac6f250022afbf992d2604eceb6fd34603",
+      "redacted": true,
+      "source_sha256": "a26ffa6bcf1ee6a9c9c93073114728820f8ba5d473b9717399f837712ee0d053"
+    },
+    {
+      "bytes": 1571,
+      "path": "evidence/training/informative-per-cost-seed-20261116/promotion-decision.json",
+      "public_sha256": "baed91afb7ef3680a04c758548b479159b73a56c247f638e9e9d22124a32a1da",
+      "redacted": false,
+      "source_sha256": "baed91afb7ef3680a04c758548b479159b73a56c247f638e9e9d22124a32a1da"
+    },
+    {
+      "bytes": 3288,
+      "path": "evidence/training/informative-per-cost-seed-20261116/recovered-update-0002.json",
+      "public_sha256": "f97beeaf2b7138d5c7cb0975c5c92cf3a5ca50774977e12c7e9151056ab7fac1",
+      "redacted": false,
+      "source_sha256": "f97beeaf2b7138d5c7cb0975c5c92cf3a5ca50774977e12c7e9151056ab7fac1"
+    },
+    {
+      "bytes": 363,
+      "path": "evidence/training/informative-per-cost-seed-20261116/recovery-boundary-pending.json",
+      "public_sha256": "f44ed4cf0eadaecba7eeff1b38f064f17337d2f316c9912a6e6a135c0a8cf77b",
+      "redacted": false,
+      "source_sha256": "f44ed4cf0eadaecba7eeff1b38f064f17337d2f316c9912a6e6a135c0a8cf77b"
+    },
+    {
+      "bytes": 796,
+      "path": "evidence/training/informative-per-cost-seed-20261116/recovery-helper-manifest.json",
+      "public_sha256": "631a3e1b1c8e5d67603230ba7583c6b25cd27aa6268ee810e96a1327a6679c37",
+      "redacted": false,
+      "source_sha256": "631a3e1b1c8e5d67603230ba7583c6b25cd27aa6268ee810e96a1327a6679c37"
+    },
+    {
+      "bytes": 649,
+      "path": "evidence/training/informative-per-cost-seed-20261116/recovery-restore-prepare-recovery.json",
+      "public_sha256": "7d33f087845ab89a0d6c34f0edf34d8421027d987589919abf7b051a78c026a2",
+      "redacted": false,
+      "source_sha256": "7d33f087845ab89a0d6c34f0edf34d8421027d987589919abf7b051a78c026a2"
+    },
+    {
+      "bytes": 639,
+      "path": "evidence/training/informative-per-cost-seed-20261116/recovery-restore-resume.json",
+      "public_sha256": "8fb5d1b946e9c5ec280fc1143203f83ed49604e7cd9f742f68b298e39f9b1d76",
+      "redacted": false,
+      "source_sha256": "8fb5d1b946e9c5ec280fc1143203f83ed49604e7cd9f742f68b298e39f9b1d76"
+    },
+    {
+      "bytes": 4788,
+      "path": "evidence/training/informative-per-cost-seed-20261116/recovery-trajectory-replay.json",
+      "public_sha256": "76733506ceb77978d8acff57524aedc02605f341818fefe41a01408b55344f6d",
+      "redacted": false,
+      "source_sha256": "76733506ceb77978d8acff57524aedc02605f341818fefe41a01408b55344f6d"
+    },
+    {
+      "bytes": 8977,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261116/rollouts-train-step-0.jsonl.gz",
+      "public_sha256": "7915dae8fa9e1c4f87fcee2439841f3ff1c48ebf7aa1400331bd0e25c1b615bb",
+      "redacted": false,
+      "source_sha256": "ea26226f63423f0b7ac10ce6ae3685f032bae81ee56e9eede79def034dc2562c",
+      "uncompressed_bytes": 59762,
+      "uncompressed_public_sha256": "ea26226f63423f0b7ac10ce6ae3685f032bae81ee56e9eede79def034dc2562c"
+    },
+    {
+      "bytes": 34359,
+      "path": "evidence/training/informative-per-cost-seed-20261116/rollouts-train-step-1.jsonl",
+      "public_sha256": "be64d7b07f78b0771404a9e38228f3fdf8ac0ad28a4e7c12f0929267f929d99a",
+      "redacted": false,
+      "source_sha256": "be64d7b07f78b0771404a9e38228f3fdf8ac0ad28a4e7c12f0929267f929d99a"
+    },
+    {
+      "bytes": 11672,
+      "path": "evidence/training/informative-per-cost-seed-20261116/run_meta.json",
+      "public_sha256": "6eae6a6c24607796982f6c1369cd9afc63f6c807b84f12b6ba2d174fd169f902",
+      "redacted": false,
+      "source_sha256": "6eae6a6c24607796982f6c1369cd9afc63f6c807b84f12b6ba2d174fd169f902"
+    },
+    {
+      "bytes": 19579,
+      "path": "evidence/training/informative-per-cost-seed-20261116/scheduler-selection.json",
+      "public_sha256": "ef2ca4b1872e340e9116517b5ce0780dc0d1d27547435a6e68ee4531317d5f57",
+      "redacted": true,
+      "source_sha256": "41ab64d09d098dc08dffa4fd81f211c1dd47d0a121c161cc3e2d248b3ac5adb7"
+    },
+    {
+      "bytes": 4843,
+      "path": "evidence/training/informative-per-cost-seed-20261116/training-result.json",
+      "public_sha256": "ec121e9296f712c3df04ee2b63c46daa244b4e311f6eff969669dd8138ce9f77",
+      "redacted": false,
+      "source_sha256": "ec121e9296f712c3df04ee2b63c46daa244b4e311f6eff969669dd8138ce9f77"
+    },
+    {
+      "bytes": 16069,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261116/training-samples-before-logprob.json.gz",
+      "public_sha256": "119c362f6940b7dc9e0c4a7fbcf7e058f876487c754fe0b91f9c7648ee07e736",
+      "redacted": false,
+      "source_sha256": "0235cd0ae4404cf3db604db589055c6ac8399c259eef21bc9f9135af1b22380a",
+      "uncompressed_bytes": 225485,
+      "uncompressed_public_sha256": "0235cd0ae4404cf3db604db589055c6ac8399c259eef21bc9f9135af1b22380a"
+    },
+    {
+      "bytes": 15046,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261116/training-samples-streamed-train-step-0.jsonl.gz",
+      "public_sha256": "4dc626bf08a8c339601e9cbd907849038c4f55fe96f0b6ff678bdc57ee2e9327",
+      "redacted": false,
+      "source_sha256": "ce4d45d51c5fdf3a4d4d3413de6635f74981730eab084849f153318b7d7fb3d4",
+      "uncompressed_bytes": 129994,
+      "uncompressed_public_sha256": "ce4d45d51c5fdf3a4d4d3413de6635f74981730eab084849f153318b7d7fb3d4"
+    },
+    {
+      "bytes": 9691,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261116/training-samples-streamed-train-step-1.jsonl.gz",
+      "public_sha256": "60a0714073cf8aaab98bab3511515625d1fc90616163ba2dc3e994b6eee7c24f",
+      "redacted": false,
+      "source_sha256": "d5fbee60d7e58de987d583be52f63199b2d3476d7a9ad0d0e9efc1e6b7b927a1",
+      "uncompressed_bytes": 79556,
+      "uncompressed_public_sha256": "d5fbee60d7e58de987d583be52f63199b2d3476d7a9ad0d0e9efc1e6b7b927a1"
+    },
+    {
+      "bytes": 9680,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261116/training-samples.json.gz",
+      "public_sha256": "6d0662a62edc5191bbb1239a059b0334aa3d543366662bdb289b977041f18409",
+      "redacted": false,
+      "source_sha256": "71f8d20bc4fa8ff374751e8bc3ce6adb95fc30c0f41299b6501884d70da89d17",
+      "uncompressed_bytes": 127951,
+      "uncompressed_public_sha256": "71f8d20bc4fa8ff374751e8bc3ce6adb95fc30c0f41299b6501884d70da89d17"
+    },
+    {
+      "bytes": 5639,
+      "path": "evidence/training/informative-per-cost-seed-20261116/trajectory-consumption-0001.json",
+      "public_sha256": "9945cef3ac28286b20583c2d4042f1187502d8ef1c63b664724c9fad7fadda45",
+      "redacted": false,
+      "source_sha256": "9945cef3ac28286b20583c2d4042f1187502d8ef1c63b664724c9fad7fadda45"
+    },
+    {
+      "bytes": 3008,
+      "path": "evidence/training/informative-per-cost-seed-20261116/trajectory-consumption-0002.json",
+      "public_sha256": "43913a44e722d769ff409abc55f1fcd5ffde1be88917c76e2f7b862c1bbe2996",
+      "redacted": false,
+      "source_sha256": "43913a44e722d769ff409abc55f1fcd5ffde1be88917c76e2f7b862c1bbe2996"
+    },
+    {
+      "bytes": 810,
+      "path": "evidence/training/informative-per-cost-seed-20261117/checkpoint-replay-comparison.json",
+      "public_sha256": "afdf0043c8008aac08f0adface47fae12b02a21e2a108ccb5c4a9af949b98342",
+      "redacted": false,
+      "source_sha256": "afdf0043c8008aac08f0adface47fae12b02a21e2a108ccb5c4a9af949b98342"
+    },
+    {
+      "bytes": 877,
+      "path": "evidence/training/informative-per-cost-seed-20261117/checkpoints/recovered-update-0002/checkpoint.json",
+      "public_sha256": "17279be139c50867941999c8ebffb65624a20419aa7c53b65c7c459b9b0e045b",
+      "redacted": false,
+      "source_sha256": "17279be139c50867941999c8ebffb65624a20419aa7c53b65c7c459b9b0e045b"
+    },
+    {
+      "bytes": 888,
+      "path": "evidence/training/informative-per-cost-seed-20261117/checkpoints/replay-control-update-0002/checkpoint.json",
+      "public_sha256": "d3357c48bec868461e73eb9c2dc396abea84a6d46b8bb34a0d67dd09c326779b",
+      "redacted": false,
+      "source_sha256": "d3357c48bec868461e73eb9c2dc396abea84a6d46b8bb34a0d67dd09c326779b"
+    },
+    {
+      "bytes": 2809,
+      "path": "evidence/training/informative-per-cost-seed-20261117/checkpoints/update-0001/checkpoint.json",
+      "public_sha256": "ade3c3f91173cfecb013db31997372b527255eb9fc43ea7816af4f5fb19fcf49",
+      "redacted": false,
+      "source_sha256": "ade3c3f91173cfecb013db31997372b527255eb9fc43ea7816af4f5fb19fcf49"
+    },
+    {
+      "bytes": 6955,
+      "path": "evidence/training/informative-per-cost-seed-20261117/development-post.jsonl",
+      "public_sha256": "e1f1133e1d69e1b31beb9c088754d4a01a101a4a1f113aac681e2d6b4cf946c4",
+      "redacted": false,
+      "source_sha256": "e1f1133e1d69e1b31beb9c088754d4a01a101a4a1f113aac681e2d6b4cf946c4"
+    },
+    {
+      "bytes": 6996,
+      "path": "evidence/training/informative-per-cost-seed-20261117/development-pre.jsonl",
+      "public_sha256": "23395a6c2f4027cdbdb9f6f28941d6814e4be672403c0aabde0d818eaa952f11",
+      "redacted": false,
+      "source_sha256": "23395a6c2f4027cdbdb9f6f28941d6814e4be672403c0aabde0d818eaa952f11"
+    },
+    {
+      "bytes": 9196,
+      "path": "evidence/training/informative-per-cost-seed-20261117/final-summary.json",
+      "public_sha256": "471cceaf707adb79a94686e4e6678880c601ab8428dac8d7416d340a740e3db8",
+      "redacted": true,
+      "source_sha256": "6b45fd6c1289ea70c3666405a6751acf0deb08537ece5d821b6accb5d994a93a"
+    },
+    {
+      "bytes": 391,
+      "path": "evidence/training/informative-per-cost-seed-20261117/learner-events.json",
+      "public_sha256": "6a3e24721f41fb0afed0107cb9664057c8ed044951917b82b604cbfe7fbba22f",
+      "redacted": false,
+      "source_sha256": "6a3e24721f41fb0afed0107cb9664057c8ed044951917b82b604cbfe7fbba22f"
+    },
+    {
+      "bytes": 12469,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261117/pending-update-0002.json.gz",
+      "public_sha256": "70b2becf1b332854ac90496b3a91cb3ca6ea0f159a7bc88ec5e76bffd6973416",
+      "redacted": false,
+      "source_sha256": "534f72e531a71b63b13b4f87d64efff3616333d963ab5eaee38b35991b42c8b9",
+      "uncompressed_bytes": 157699,
+      "uncompressed_public_sha256": "534f72e531a71b63b13b4f87d64efff3616333d963ab5eaee38b35991b42c8b9"
+    },
+    {
+      "bytes": 661,
+      "path": "evidence/training/informative-per-cost-seed-20261117/postflight.json",
+      "public_sha256": "ded1410824308f565be04f05467933f7e28990d3754de331862b6d1967b39dbc",
+      "redacted": true,
+      "source_sha256": "1d63d02ce7da3eb408e80c389bc3d4f91187c08399afdc590a05250da9265087"
+    },
+    {
+      "bytes": 1572,
+      "path": "evidence/training/informative-per-cost-seed-20261117/promotion-decision.json",
+      "public_sha256": "ece1f493099a385aa11312181581c08ba1d8f9f401aa5a4e72bc282d1621393d",
+      "redacted": false,
+      "source_sha256": "ece1f493099a385aa11312181581c08ba1d8f9f401aa5a4e72bc282d1621393d"
+    },
+    {
+      "bytes": 4678,
+      "path": "evidence/training/informative-per-cost-seed-20261117/recovered-update-0002.json",
+      "public_sha256": "ce6d9ae1399b7fb5eed7a671cb62376f03b13c76f0e449cf70fca9d194654879",
+      "redacted": false,
+      "source_sha256": "ce6d9ae1399b7fb5eed7a671cb62376f03b13c76f0e449cf70fca9d194654879"
+    },
+    {
+      "bytes": 362,
+      "path": "evidence/training/informative-per-cost-seed-20261117/recovery-boundary-pending.json",
+      "public_sha256": "f7ea6f1fc2eb3eaab06fd6db18f9fa38e70737da76ed30d55aeb150eac015764",
+      "redacted": false,
+      "source_sha256": "f7ea6f1fc2eb3eaab06fd6db18f9fa38e70737da76ed30d55aeb150eac015764"
+    },
+    {
+      "bytes": 649,
+      "path": "evidence/training/informative-per-cost-seed-20261117/recovery-restore-prepare-recovery.json",
+      "public_sha256": "0f79ec01cb2d73503f499c3bf760f12cbd3a092eccc4483e704241e1a28fc961",
+      "redacted": false,
+      "source_sha256": "0f79ec01cb2d73503f499c3bf760f12cbd3a092eccc4483e704241e1a28fc961"
+    },
+    {
+      "bytes": 639,
+      "path": "evidence/training/informative-per-cost-seed-20261117/recovery-restore-resume.json",
+      "public_sha256": "621d297e4c1816962894dd58309d2bd058c3b9c0b8692ede6cb6ad71eb8e6348",
+      "redacted": false,
+      "source_sha256": "621d297e4c1816962894dd58309d2bd058c3b9c0b8692ede6cb6ad71eb8e6348"
+    },
+    {
+      "bytes": 4788,
+      "path": "evidence/training/informative-per-cost-seed-20261117/recovery-trajectory-replay.json",
+      "public_sha256": "d04c583d661724775fd769f2ad82faadf8b7a51a28ab15a7ad9aac2b7cc02d9f",
+      "redacted": false,
+      "source_sha256": "d04c583d661724775fd769f2ad82faadf8b7a51a28ab15a7ad9aac2b7cc02d9f"
+    },
+    {
+      "bytes": 9418,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261117/rollouts-train-step-0.jsonl.gz",
+      "public_sha256": "6c5c34b14fc27a558a2381e47a5fcd06fc85ab8fb46160ebdc60b9928296eb36",
+      "redacted": false,
+      "source_sha256": "610845713aeead9e0d00cb937fd93adb239c6ff81ba7eba98dcb2f1766a4d62c",
+      "uncompressed_bytes": 61982,
+      "uncompressed_public_sha256": "610845713aeead9e0d00cb937fd93adb239c6ff81ba7eba98dcb2f1766a4d62c"
+    },
+    {
+      "bytes": 32915,
+      "path": "evidence/training/informative-per-cost-seed-20261117/rollouts-train-step-1.jsonl",
+      "public_sha256": "aff25cb224889b192eef0fdb5e9a173e0d7d69bd931d3c907605abc1a12a84b3",
+      "redacted": false,
+      "source_sha256": "aff25cb224889b192eef0fdb5e9a173e0d7d69bd931d3c907605abc1a12a84b3"
+    },
+    {
+      "bytes": 11678,
+      "path": "evidence/training/informative-per-cost-seed-20261117/run_meta.json",
+      "public_sha256": "1b0fb97f3dc5a3d0bc557697c13e58aa11faae985c10f9d720aa95730f62a0eb",
+      "redacted": false,
+      "source_sha256": "1b0fb97f3dc5a3d0bc557697c13e58aa11faae985c10f9d720aa95730f62a0eb"
+    },
+    {
+      "bytes": 19616,
+      "path": "evidence/training/informative-per-cost-seed-20261117/scheduler-selection.json",
+      "public_sha256": "191a5418b1fb3e5e88beb4bcaec105ddfa2a4913b2db2030da51fb42915fb8a9",
+      "redacted": true,
+      "source_sha256": "370eaf08777af9ba0f0b305e83079441d457f1aa921919c1fa1a0463236ff907"
+    },
+    {
+      "bytes": 4850,
+      "path": "evidence/training/informative-per-cost-seed-20261117/training-result.json",
+      "public_sha256": "038c5e65f0bca676d9a1ab622c76e66d017173da3fc51b6322edaebb47b79e1d",
+      "redacted": false,
+      "source_sha256": "038c5e65f0bca676d9a1ab622c76e66d017173da3fc51b6322edaebb47b79e1d"
+    },
+    {
+      "bytes": 16789,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261117/training-samples-before-logprob.json.gz",
+      "public_sha256": "3e07542835368c222a29b0f079e87fe4ea62a8832c3c9aa23713adc37e7ca279",
+      "redacted": false,
+      "source_sha256": "ad7749704761d159ccf6d84681f2a18aff4ebc4681534b4d1b7dcba3b002e162",
+      "uncompressed_bytes": 236289,
+      "uncompressed_public_sha256": "ad7749704761d159ccf6d84681f2a18aff4ebc4681534b4d1b7dcba3b002e162"
+    },
+    {
+      "bytes": 15714,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261117/training-samples-streamed-train-step-0.jsonl.gz",
+      "public_sha256": "f51aa3f3335dab15d6bfeb7eb0e3c73cf82042e5b267afbf31135aefc9510b60",
+      "redacted": false,
+      "source_sha256": "e085b5f2ff2a6d46b427a57fb1b7c0beac782dbf5bf5718621d01d0f764403d8",
+      "uncompressed_bytes": 136306,
+      "uncompressed_public_sha256": "e085b5f2ff2a6d46b427a57fb1b7c0beac782dbf5bf5718621d01d0f764403d8"
+    },
+    {
+      "bytes": 9711,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261117/training-samples-streamed-train-step-1.jsonl.gz",
+      "public_sha256": "f28dc46d37311d5b289f921a5033247e46f7914b88eba6645e87590b750b83cc",
+      "redacted": false,
+      "source_sha256": "1cbe786f84673add63392e41974407858f1b375aa4e4e7ff3f2b3bbf98c7fdc9",
+      "uncompressed_bytes": 75266,
+      "uncompressed_public_sha256": "1cbe786f84673add63392e41974407858f1b375aa4e4e7ff3f2b3bbf98c7fdc9"
+    },
+    {
+      "bytes": 11623,
+      "compression": "gzip",
+      "path": "evidence/training/informative-per-cost-seed-20261117/training-samples.json.gz",
+      "public_sha256": "7c1622be610871391f8fa2856651ca9848f7daf1cc38f4fc97dbf2300d8ad86b",
+      "redacted": false,
+      "source_sha256": "7f5642e38056612b68d35f602a288a1fe42e06a54eacf40f1de4f4238c83f031",
+      "uncompressed_bytes": 135146,
+      "uncompressed_public_sha256": "7f5642e38056612b68d35f602a288a1fe42e06a54eacf40f1de4f4238c83f031"
+    },
+    {
+      "bytes": 5663,
+      "path": "evidence/training/informative-per-cost-seed-20261117/trajectory-consumption-0001.json",
+      "public_sha256": "6ef49cdc49ab34f4ae5020693c701a85b4f07c02b6ae9d4126e51543252ea976",
+      "redacted": false,
+      "source_sha256": "6ef49cdc49ab34f4ae5020693c701a85b4f07c02b6ae9d4126e51543252ea976"
+    },
+    {
+      "bytes": 3007,
+      "path": "evidence/training/informative-per-cost-seed-20261117/trajectory-consumption-0002.json",
+      "public_sha256": "77d3481ee65b41b0bce3446b61578154ea293e5d5e570e600b02fc86746b69b1",
+      "redacted": false,
+      "source_sha256": "77d3481ee65b41b0bce3446b61578154ea293e5d5e570e600b02fc86746b69b1"
+    },
+    {
+      "bytes": 811,
+      "path": "evidence/training/uniform-seed-20261116/checkpoint-replay-comparison.json",
+      "public_sha256": "86f38a4226f2f86ec27c318651129f2fc4d5c2ba43f078e87e5fa108b1473557",
+      "redacted": false,
+      "source_sha256": "86f38a4226f2f86ec27c318651129f2fc4d5c2ba43f078e87e5fa108b1473557"
+    },
+    {
+      "bytes": 2796,
+      "path": "evidence/training/uniform-seed-20261116/checkpoints/update-0001/checkpoint.json",
+      "public_sha256": "2d835c91518cc4dbd50c7eaa2c90fe596cdffc5a4624d07863cc0687711ebd8f",
+      "redacted": false,
+      "source_sha256": "2d835c91518cc4dbd50c7eaa2c90fe596cdffc5a4624d07863cc0687711ebd8f"
+    },
+    {
+      "bytes": 6990,
+      "path": "evidence/training/uniform-seed-20261116/development-post.jsonl",
+      "public_sha256": "0c26d9ea653161bc9106f033265a1e937273d54edc01e21e492ec45e375e9151",
+      "redacted": false,
+      "source_sha256": "0c26d9ea653161bc9106f033265a1e937273d54edc01e21e492ec45e375e9151"
+    },
+    {
+      "bytes": 6996,
+      "path": "evidence/training/uniform-seed-20261116/development-pre.jsonl",
+      "public_sha256": "4384d5591b32c6683a9038cceaed509c39a0d5fd2a6089513e98102a5da7a241",
+      "redacted": false,
+      "source_sha256": "4384d5591b32c6683a9038cceaed509c39a0d5fd2a6089513e98102a5da7a241"
+    },
+    {
+      "bytes": 9170,
+      "path": "evidence/training/uniform-seed-20261116/final-summary.json",
+      "public_sha256": "0a989303dbdcb46dcee8df7bf94e3432a504119efbbe1170b3db276d57db9cc1",
+      "redacted": true,
+      "source_sha256": "e9a5cf6dd97c2ce27e9f7c543dca3a71f954c897e119b72c912dde8f63783980"
+    },
+    {
+      "bytes": 390,
+      "path": "evidence/training/uniform-seed-20261116/learner-events.json",
+      "public_sha256": "8fc43016e62e06c90a0925a4c93419a21a776d57186c5a3f2e4b856dbd481e0b",
+      "redacted": false,
+      "source_sha256": "8fc43016e62e06c90a0925a4c93419a21a776d57186c5a3f2e4b856dbd481e0b"
+    },
+    {
+      "bytes": 11489,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261116/pending-update-0002.json.gz",
+      "public_sha256": "6e4e2bc2e55d08f253e319879a226ea434327457e1bab649c67e089dd1354310",
+      "redacted": false,
+      "source_sha256": "6e25c09e4805109cfa2a7a9f421a2f15cf3e7aa938c17b998aad7376dc1f0a39",
+      "uncompressed_bytes": 157647,
+      "uncompressed_public_sha256": "6e25c09e4805109cfa2a7a9f421a2f15cf3e7aa938c17b998aad7376dc1f0a39"
+    },
+    {
+      "bytes": 648,
+      "path": "evidence/training/uniform-seed-20261116/postflight.json",
+      "public_sha256": "50c524f6bc38d502b1beadd905719d0184d1c9b9e4065564c6aab6d05a9d1ed1",
+      "redacted": true,
+      "source_sha256": "e741b49ed7f9e21d8dbefd9366886aa46aa2395e3246cb4245d5c6e3dbb9143b"
+    },
+    {
+      "bytes": 1571,
+      "path": "evidence/training/uniform-seed-20261116/promotion-decision.json",
+      "public_sha256": "e5fe970196328d7e8e1a4660031578f25b1b0c02297f19a1a8dd931cbe7b3f60",
+      "redacted": false,
+      "source_sha256": "e5fe970196328d7e8e1a4660031578f25b1b0c02297f19a1a8dd931cbe7b3f60"
+    },
+    {
+      "bytes": 3288,
+      "path": "evidence/training/uniform-seed-20261116/recovered-update-0002.json",
+      "public_sha256": "cee5e51148ac3c48d7c6d2c2d8e59961ed642fddafc83267294e1d4938e8ebc8",
+      "redacted": false,
+      "source_sha256": "cee5e51148ac3c48d7c6d2c2d8e59961ed642fddafc83267294e1d4938e8ebc8"
+    },
+    {
+      "bytes": 362,
+      "path": "evidence/training/uniform-seed-20261116/recovery-boundary-pending.json",
+      "public_sha256": "7a3a0103f105263ed331d3182d8d843c46c9b50f97468694192559627cd0ac51",
+      "redacted": false,
+      "source_sha256": "7a3a0103f105263ed331d3182d8d843c46c9b50f97468694192559627cd0ac51"
+    },
+    {
+      "bytes": 649,
+      "path": "evidence/training/uniform-seed-20261116/recovery-restore-prepare-recovery.json",
+      "public_sha256": "e0ce20bd4af2c7c540a19e89f9a99cf0bf428edfd786cd25a5f7d62bcf525b6a",
+      "redacted": false,
+      "source_sha256": "e0ce20bd4af2c7c540a19e89f9a99cf0bf428edfd786cd25a5f7d62bcf525b6a"
+    },
+    {
+      "bytes": 639,
+      "path": "evidence/training/uniform-seed-20261116/recovery-restore-resume.json",
+      "public_sha256": "8f75de84388f9ecb62667f575c5303f0c393e98275902778cf1484c15210e586",
+      "redacted": false,
+      "source_sha256": "8f75de84388f9ecb62667f575c5303f0c393e98275902778cf1484c15210e586"
+    },
+    {
+      "bytes": 4593,
+      "path": "evidence/training/uniform-seed-20261116/recovery-trajectory-replay.json",
+      "public_sha256": "1f0b448109ebd85de1eaa92166d58a4d83400dfb3d0dbfe7e5632be3b59ffc93",
+      "redacted": false,
+      "source_sha256": "1f0b448109ebd85de1eaa92166d58a4d83400dfb3d0dbfe7e5632be3b59ffc93"
+    },
+    {
+      "bytes": 8951,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261116/rollouts-train-step-0.jsonl.gz",
+      "public_sha256": "3162da2db04f8ad1d364346f44024ce9ae9f9b32fc982e1d30a365b2bdd17e68",
+      "redacted": false,
+      "source_sha256": "e30440156289b6f0245d3dd3f7b6ddaa25e855ca2029a88d4ccab53b2641e8c0",
+      "uncompressed_bytes": 59720,
+      "uncompressed_public_sha256": "e30440156289b6f0245d3dd3f7b6ddaa25e855ca2029a88d4ccab53b2641e8c0"
+    },
+    {
+      "bytes": 34357,
+      "path": "evidence/training/uniform-seed-20261116/rollouts-train-step-1.jsonl",
+      "public_sha256": "2478c2fc78aa8f8f0a94c5618b0e2b516d310d0314d4ebb11cb4d0fc281cb412",
+      "redacted": false,
+      "source_sha256": "2478c2fc78aa8f8f0a94c5618b0e2b516d310d0314d4ebb11cb4d0fc281cb412"
+    },
+    {
+      "bytes": 11634,
+      "path": "evidence/training/uniform-seed-20261116/run_meta.json",
+      "public_sha256": "857bfd4f5ce48676d94bf7e2d47070068baacbddc73f452b595d86a2117eeffd",
+      "redacted": false,
+      "source_sha256": "857bfd4f5ce48676d94bf7e2d47070068baacbddc73f452b595d86a2117eeffd"
+    },
+    {
+      "bytes": 18786,
+      "path": "evidence/training/uniform-seed-20261116/scheduler-selection.json",
+      "public_sha256": "87c42e0170b5fe2fbf8b1d1b53d7adb3750b990cf13645df6ae6ba37fedf3743",
+      "redacted": true,
+      "source_sha256": "b6c7f1070b1a8211985c08b7fb51d95531ae8faebdc69520ed27d0bedce1e7ab"
+    },
+    {
+      "bytes": 4849,
+      "path": "evidence/training/uniform-seed-20261116/training-result.json",
+      "public_sha256": "39b4bc6910d05f3d05cd53323261f508071772e920fcef41d510bad6c0f21bd7",
+      "redacted": false,
+      "source_sha256": "39b4bc6910d05f3d05cd53323261f508071772e920fcef41d510bad6c0f21bd7"
+    },
+    {
+      "bytes": 16262,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261116/training-samples-before-logprob.json.gz",
+      "public_sha256": "cd8479a982886936b520fbff460acf538a17ef770403fdf3dc78b03b08afb984",
+      "redacted": false,
+      "source_sha256": "63aadf10c22d258a467928e2f31d52d20e9c7637c11290480c10380e27c33a64",
+      "uncompressed_bytes": 225442,
+      "uncompressed_public_sha256": "63aadf10c22d258a467928e2f31d52d20e9c7637c11290480c10380e27c33a64"
+    },
+    {
+      "bytes": 14963,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261116/training-samples-streamed-train-step-0.jsonl.gz",
+      "public_sha256": "71eddc14beb863bc38609dd60251c113ba4fbc81c2d61093f1f5e9e02ed52ceb",
+      "redacted": false,
+      "source_sha256": "69bf651e5583a5cf84dfdac3b2d13a528dd18203b383ad0e0d05eec70f9169e6",
+      "uncompressed_bytes": 129957,
+      "uncompressed_public_sha256": "69bf651e5583a5cf84dfdac3b2d13a528dd18203b383ad0e0d05eec70f9169e6"
+    },
+    {
+      "bytes": 9694,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261116/training-samples-streamed-train-step-1.jsonl.gz",
+      "public_sha256": "2fddd37881dc3ce20b8c9a04695ced39882efe2fff7009bac9ed1d49ad8bf621",
+      "redacted": false,
+      "source_sha256": "040bacf699554a2a25320022d7c12583787ed3ab58e5314fa7f31da502dc60ec",
+      "uncompressed_bytes": 79558,
+      "uncompressed_public_sha256": "040bacf699554a2a25320022d7c12583787ed3ab58e5314fa7f31da502dc60ec"
+    },
+    {
+      "bytes": 9679,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261116/training-samples.json.gz",
+      "public_sha256": "24ea7cc2413d5c88021b3463c9b79295d57de9d29cc84fb9ea557994d1781dcc",
+      "redacted": false,
+      "source_sha256": "11466f7c3bca480642c93832add1f6864ccbffb85f86dbad8513e5b9714e81f0",
+      "uncompressed_bytes": 127951,
+      "uncompressed_public_sha256": "11466f7c3bca480642c93832add1f6864ccbffb85f86dbad8513e5b9714e81f0"
+    },
+    {
+      "bytes": 5238,
+      "path": "evidence/training/uniform-seed-20261116/trajectory-consumption-0001.json",
+      "public_sha256": "681c0af155ff3e5b43cce4bd5541a1682ff14a1d6a491ffcea0d083879d4262c",
+      "redacted": false,
+      "source_sha256": "681c0af155ff3e5b43cce4bd5541a1682ff14a1d6a491ffcea0d083879d4262c"
+    },
+    {
+      "bytes": 2813,
+      "path": "evidence/training/uniform-seed-20261116/trajectory-consumption-0002.json",
+      "public_sha256": "df864d789d51723b93358c50bd2b76050e7a6697752b2cc82f9a529acf801cba",
+      "redacted": false,
+      "source_sha256": "df864d789d51723b93358c50bd2b76050e7a6697752b2cc82f9a529acf801cba"
+    },
+    {
+      "bytes": 810,
+      "path": "evidence/training/uniform-seed-20261117/checkpoint-replay-comparison.json",
+      "public_sha256": "6754541d08f3f1eb0e384fb7235e74533f4aa232b8fafe25114f52ceb165ee85",
+      "redacted": false,
+      "source_sha256": "6754541d08f3f1eb0e384fb7235e74533f4aa232b8fafe25114f52ceb165ee85"
+    },
+    {
+      "bytes": 864,
+      "path": "evidence/training/uniform-seed-20261117/checkpoints/recovered-update-0002/checkpoint.json",
+      "public_sha256": "ebcb1f0c5fe05d1e5c42c2d18912e3e86e0c112cb47f3bd47baa3a3d4d983a9b",
+      "redacted": false,
+      "source_sha256": "ebcb1f0c5fe05d1e5c42c2d18912e3e86e0c112cb47f3bd47baa3a3d4d983a9b"
+    },
+    {
+      "bytes": 875,
+      "path": "evidence/training/uniform-seed-20261117/checkpoints/replay-control-update-0002/checkpoint.json",
+      "public_sha256": "25ad887b5ce5eb7691ca5f52bfb6f5e01666cd23e5b97c7ccb822f517fb3ce69",
+      "redacted": false,
+      "source_sha256": "25ad887b5ce5eb7691ca5f52bfb6f5e01666cd23e5b97c7ccb822f517fb3ce69"
+    },
+    {
+      "bytes": 2796,
+      "path": "evidence/training/uniform-seed-20261117/checkpoints/update-0001/checkpoint.json",
+      "public_sha256": "33bda45ee9a107e07edf533493c01c1ae0c71e32a8a4b26d39df7ad40a3f4d91",
+      "redacted": false,
+      "source_sha256": "33bda45ee9a107e07edf533493c01c1ae0c71e32a8a4b26d39df7ad40a3f4d91"
+    },
+    {
+      "bytes": 6949,
+      "path": "evidence/training/uniform-seed-20261117/development-post.jsonl",
+      "public_sha256": "5b911ed95e4b1eb8358e5b1150a7ebd2fda711b3988acca43efd1974a0f2faca",
+      "redacted": false,
+      "source_sha256": "5b911ed95e4b1eb8358e5b1150a7ebd2fda711b3988acca43efd1974a0f2faca"
+    },
+    {
+      "bytes": 6990,
+      "path": "evidence/training/uniform-seed-20261117/development-pre.jsonl",
+      "public_sha256": "997a57101ef9f5930734b4ab0eeada04deaa9efde5ffe2b0fbc4b3b2244ae0fe",
+      "redacted": false,
+      "source_sha256": "997a57101ef9f5930734b4ab0eeada04deaa9efde5ffe2b0fbc4b3b2244ae0fe"
+    },
+    {
+      "bytes": 9167,
+      "path": "evidence/training/uniform-seed-20261117/final-summary.json",
+      "public_sha256": "d9233b0312a170f8cc9951264bc7d7ca464cfbb3eb7ed664d48c8e3e6483f0f2",
+      "redacted": true,
+      "source_sha256": "db29e39a5278ac20bc8028330c3758533bc08f9a950444361cf5e52cea65021f"
+    },
+    {
+      "bytes": 391,
+      "path": "evidence/training/uniform-seed-20261117/learner-events.json",
+      "public_sha256": "4d25a49b0675bf141ef253a0b634b2ae426fb16a60b20e489fc6404275cf1f78",
+      "redacted": false,
+      "source_sha256": "4d25a49b0675bf141ef253a0b634b2ae426fb16a60b20e489fc6404275cf1f78"
+    },
+    {
+      "bytes": 12443,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261117/pending-update-0002.json.gz",
+      "public_sha256": "2036278ed76f8ee56d13488f88da4ab9578231a14203bea1edcbda9419e054dc",
+      "redacted": false,
+      "source_sha256": "f60800c0ead01f09dd08d1a9013e666d0fd14c90239d0bc99368faac1bb0cff7",
+      "uncompressed_bytes": 157697,
+      "uncompressed_public_sha256": "f60800c0ead01f09dd08d1a9013e666d0fd14c90239d0bc99368faac1bb0cff7"
+    },
+    {
+      "bytes": 650,
+      "path": "evidence/training/uniform-seed-20261117/postflight.json",
+      "public_sha256": "16a183c04a132764136fb33c5d2992f5250f83ba54d8cfc176f97c7dca4c33a5",
+      "redacted": true,
+      "source_sha256": "4afcc8808b594a4f2060ac58e35fd7507804e7493fb4d153aa8c53fc7e418d38"
+    },
+    {
+      "bytes": 1570,
+      "path": "evidence/training/uniform-seed-20261117/promotion-decision.json",
+      "public_sha256": "7e92337059aa6418810f9266b5004ea723d2409c353c1ccf164a87d9496f5481",
+      "redacted": false,
+      "source_sha256": "7e92337059aa6418810f9266b5004ea723d2409c353c1ccf164a87d9496f5481"
+    },
+    {
+      "bytes": 4675,
+      "path": "evidence/training/uniform-seed-20261117/recovered-update-0002.json",
+      "public_sha256": "de0b69097547590ffa3fac6d05487a0ce79bc2b084f3e1141006129dec89f99c",
+      "redacted": false,
+      "source_sha256": "de0b69097547590ffa3fac6d05487a0ce79bc2b084f3e1141006129dec89f99c"
+    },
+    {
+      "bytes": 362,
+      "path": "evidence/training/uniform-seed-20261117/recovery-boundary-pending.json",
+      "public_sha256": "19bd0e52cf7ebd4c4e610688ddd9f4aff9e7963a12393243162d0119ff5d5b94",
+      "redacted": false,
+      "source_sha256": "19bd0e52cf7ebd4c4e610688ddd9f4aff9e7963a12393243162d0119ff5d5b94"
+    },
+    {
+      "bytes": 649,
+      "path": "evidence/training/uniform-seed-20261117/recovery-restore-prepare-recovery.json",
+      "public_sha256": "63f5b5c1919a39ebb69ef0a235fdb4b68744d42245ce220a03e480083b3a807f",
+      "redacted": false,
+      "source_sha256": "63f5b5c1919a39ebb69ef0a235fdb4b68744d42245ce220a03e480083b3a807f"
+    },
+    {
+      "bytes": 639,
+      "path": "evidence/training/uniform-seed-20261117/recovery-restore-resume.json",
+      "public_sha256": "f4ef89b01eb64994f34f4aa18441ef897ab479a13976e1b4f5df73219fa5b75e",
+      "redacted": false,
+      "source_sha256": "f4ef89b01eb64994f34f4aa18441ef897ab479a13976e1b4f5df73219fa5b75e"
+    },
+    {
+      "bytes": 4593,
+      "path": "evidence/training/uniform-seed-20261117/recovery-trajectory-replay.json",
+      "public_sha256": "13450f25b2fa02bd47c0db385813344aba05e2062a5af2ab95e42f55f969f118",
+      "redacted": false,
+      "source_sha256": "13450f25b2fa02bd47c0db385813344aba05e2062a5af2ab95e42f55f969f118"
+    },
+    {
+      "bytes": 8774,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261117/rollouts-train-step-0.jsonl.gz",
+      "public_sha256": "e5d49b2ad17503c34465559ad223ba71fa742366361723e9073651b1cdae337a",
+      "redacted": false,
+      "source_sha256": "f604df058c725ce9d5d819cbdf05da3583f5578b82b4b00da320613f6b676f4e",
+      "uncompressed_bytes": 59319,
+      "uncompressed_public_sha256": "f604df058c725ce9d5d819cbdf05da3583f5578b82b4b00da320613f6b676f4e"
+    },
+    {
+      "bytes": 32908,
+      "path": "evidence/training/uniform-seed-20261117/rollouts-train-step-1.jsonl",
+      "public_sha256": "74a6e492f3363792752bb25c64a5f9658e639a90232d8d10146b8cb147548e21",
+      "redacted": false,
+      "source_sha256": "74a6e492f3363792752bb25c64a5f9658e639a90232d8d10146b8cb147548e21"
+    },
+    {
+      "bytes": 11640,
+      "path": "evidence/training/uniform-seed-20261117/run_meta.json",
+      "public_sha256": "fd06cb784fcce511439d30581e0e75e04d5fcb68e790f7701b023534cbc57200",
+      "redacted": false,
+      "source_sha256": "fd06cb784fcce511439d30581e0e75e04d5fcb68e790f7701b023534cbc57200"
+    },
+    {
+      "bytes": 18790,
+      "path": "evidence/training/uniform-seed-20261117/scheduler-selection.json",
+      "public_sha256": "5855343f86209d9e367d6dca8cd9d4913fe813685c186cc9a373dfbba404f217",
+      "redacted": true,
+      "source_sha256": "9c9d8d1748795861768cb9a0b405033fd04766731fd8195735346c93e46634e8"
+    },
+    {
+      "bytes": 4845,
+      "path": "evidence/training/uniform-seed-20261117/training-result.json",
+      "public_sha256": "aa2eb86abe16fdaea5a71f931a0ed2fd1483df585c75e6f9be91a9cbc56c617e",
+      "redacted": false,
+      "source_sha256": "aa2eb86abe16fdaea5a71f931a0ed2fd1483df585c75e6f9be91a9cbc56c617e"
+    },
+    {
+      "bytes": 14892,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261117/training-samples-before-logprob.json.gz",
+      "public_sha256": "4efadfb77aee6b0dc601612bd7a6b9b1cb1dd01f36eb46fb0eda786ee3241c83",
+      "redacted": false,
+      "source_sha256": "b467eca3821b26f1180581b00d5ba7689dd3bf80a3ce379e60f9c8efba135e48",
+      "uncompressed_bytes": 218386,
+      "uncompressed_public_sha256": "b467eca3821b26f1180581b00d5ba7689dd3bf80a3ce379e60f9c8efba135e48"
+    },
+    {
+      "bytes": 14085,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261117/training-samples-streamed-train-step-0.jsonl.gz",
+      "public_sha256": "4671c70519e932955b9736c90bb9ac384fab712795ca6847f25b4e6766a05675",
+      "redacted": false,
+      "source_sha256": "ab80d81df9115f9f2bf712abbaea3ef32d6270d6c0a5ee81b80ca94c5b6429e2",
+      "uncompressed_bytes": 126404,
+      "uncompressed_public_sha256": "ab80d81df9115f9f2bf712abbaea3ef32d6270d6c0a5ee81b80ca94c5b6429e2"
+    },
+    {
+      "bytes": 9696,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261117/training-samples-streamed-train-step-1.jsonl.gz",
+      "public_sha256": "d2121faaa1c0ab766ae7798e3259773ee0349ffc777c09239ba921f47df3fad7",
+      "redacted": false,
+      "source_sha256": "43ea614663173c50dedf3cf1b9d14956a003702931a38893a532434cbac67c48",
+      "uncompressed_bytes": 75264,
+      "uncompressed_public_sha256": "43ea614663173c50dedf3cf1b9d14956a003702931a38893a532434cbac67c48"
+    },
+    {
+      "bytes": 10970,
+      "compression": "gzip",
+      "path": "evidence/training/uniform-seed-20261117/training-samples.json.gz",
+      "public_sha256": "caf15cc30d0a2ac2f7947d564bdf7a1096ee0f9d70d55f26fb533b03c937e684",
+      "redacted": false,
+      "source_sha256": "f7dfb22f9803f1360f5918e00d26e4ea3a3a9b7fb742949791039c6a9d108824",
+      "uncompressed_bytes": 128177,
+      "uncompressed_public_sha256": "f7dfb22f9803f1360f5918e00d26e4ea3a3a9b7fb742949791039c6a9d108824"
+    },
+    {
+      "bytes": 5258,
+      "path": "evidence/training/uniform-seed-20261117/trajectory-consumption-0001.json",
+      "public_sha256": "861bba6c23d778d6c3ea3d6a923cf15898e0c60daa034ab14692af41567f8846",
+      "redacted": false,
+      "source_sha256": "861bba6c23d778d6c3ea3d6a923cf15898e0c60daa034ab14692af41567f8846"
+    },
+    {
+      "bytes": 2812,
+      "path": "evidence/training/uniform-seed-20261117/trajectory-consumption-0002.json",
+      "public_sha256": "0cac84ddd46176daaa2dabcd649429f4f63fc914e557f6c0364a24bad77a3ce2",
+      "redacted": false,
+      "source_sha256": "0cac84ddd46176daaa2dabcd649429f4f63fc914e557f6c0364a24bad77a3ce2"
+    }
+  ],
+  "note": "Source SHA256 identifies the exact local source artifact. Public SHA256 identifies the committed copy. Copies containing machine-specific root paths replace them with ${VARE_ROOT}; Docker socket paths use ${DOCKER_HOST}. Long-horizon metric summaries contain an explicitly recorded post-hoc correction requiring public-test success alongside the trusted final grade; the event ledgers are unchanged.",
+  "schema": "vare_ig_evidence_file_manifest_v1"
+}

@@ -113,10 +113,61 @@ def test_full_controller_metrics_on_fixture(tmp_path):
     assert agg["synthetic"] is True
 
 
+def test_budget_stop_requires_public_and_trusted_grade_for_success(tmp_path):
+    task = lh.fixture_task()
+    script = (
+        "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
+        "<tool_call>{\"name\":\"read_file\",\"arguments\":{\"path\":\"calc/ops.py\"}}</tool_call>",
+        "<tool_call>{\"name\":\"replace_text\",\"arguments\":{\"path\":\"calc/ops.py\","
+        "\"old_text\":\"return a - b\",\"new_text\":\"return a * b\"}}</tool_call>",
+    )
+    arm = stub_arm(script=script)
+    controller = lh.ControllerConfig(name="public-gate-budget", max_turns=3)
+    grader = FakeGrader(trusted_result(True))
+    run = tmp_path / "public-gate-budget"
+    h = lh.EpisodeHarness(
+        run, arm, controller,
+        factories={task.task_id: lh.write_fixture},
+        public_tests={task.task_id: lh.fixture_public_tests},
+        grader_for=lambda _task: grader,
+    )
+    h.enroll([lh.EpisodeSpec(task, seed=0)])
+    h.run()
+
+    episode = lh.run_metrics(run)["episodes"][0]
+    assert episode["stop_reason"] == "turn_budget_exhausted"
+    assert episode["trusted_grade"] is True  # the hidden grader passes the intentionally bad edit
+    assert episode["public_tests"]["final_passed"] is False
+    assert episode["final_success"] is False
+
+
 def test_protocol_digest_is_bound_to_episode_and_metrics(tmp_path):
     protocol_sha = "c" * 64
     result = run_once(tmp_path / "run", grader=FakeGrader(), protocol_sha256=protocol_sha)
     assert result["episodes"][0]["protocol_sha256"] == protocol_sha
+
+
+def test_development_enrollment_requires_a_frozen_protocol(tmp_path):
+    base = lh.fixture_task()
+    task = lh.EpisodeTask(
+        task_id="fixture-development", repository=base.repository, split="development",
+        issue=base.issue, readable_files=base.readable_files,
+        editable_files=base.editable_files, target_files=base.target_files, synthetic=True,
+    )
+    without_lock = lh.EpisodeHarness(
+        tmp_path / "unlocked", stub_arm(), lh.CONTROLLER_PRESETS["full"],
+        factories={task.task_id: lh.write_fixture},
+    )
+    with pytest.raises(ValueError, match="Development episodes require a validated frozen protocol"):
+        without_lock.enroll([lh.EpisodeSpec(task, 1)])
+
+    locked = lh.EpisodeHarness(
+        tmp_path / "locked", stub_arm(), lh.CONTROLLER_PRESETS["full"],
+        factories={task.task_id: lh.write_fixture}, protocol_sha256="d" * 64,
+    )
+    assert locked.enroll([lh.EpisodeSpec(task, 1)])
+    metadata = json.loads(locked.store.trajectory("stub:full:fixture-development:s1")["task"])["task"]["metadata"]
+    assert metadata["task_split"] == "development"
 
 
 def test_controller_ablation_changes_outcome_with_same_policy(tmp_path):

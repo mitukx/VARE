@@ -24,9 +24,10 @@ under a different controller. ``CONTROLLER_PRESETS["minimal"]`` turns every
 assist off with the same budgets; comparing ``full`` with ``minimal`` under
 one policy measures what the controller, not the model, contributes.
 
-Final task success comes only from a ``TrustedGrader`` whose result passes
-``trusted_verdict``. A missing grader, a grader error, or a result without
-attested isolation is recorded as not trusted and never counts as success.
+Final task success requires a passing ``TrustedGrader`` result and, when public
+tests are configured for the episode, passing public tests. A missing grader,
+a grader error, or a result without attested isolation is recorded as not
+trusted and never counts as success.
 
 The ``ScriptedPolicy`` stub replays fixed text; it is synthetic plumbing for
 CPU tests, not model behavior. Nothing here establishes a capability claim.
@@ -162,10 +163,11 @@ class EpisodeTask:
     workspace_patch_sha256: str | None = None
 
     def __post_init__(self) -> None:
-        if self.split != "train":
-            # Held-out execution is deliberately unavailable until a frozen
-            # protocol supplies a disjoint, pre-registered task set.
-            raise ValueError("only Train-split tasks may run through this harness")
+        if self.split not in {"train", "development"}:
+            # Exploration is not an execution split. Development is accepted
+            # here only so a separately frozen cohort can use the harness;
+            # enrollment below requires its protocol digest.
+            raise ValueError("episode tasks must use the Train or Development split")
         if not self.editable_files or not set(self.editable_files) <= set(self.readable_files):
             raise ValueError("editable files must be a non-empty subset of readable files")
         if not set(self.target_files) <= set(self.editable_files):
@@ -703,10 +705,13 @@ class EpisodeHarness:
     def enroll(self, specs: Iterable[EpisodeSpec]) -> list[str]:
         ids = []
         for spec in specs:
+            if spec.task.split == "development" and self.protocol_sha256 is None:
+                raise ValueError("Development episodes require a validated frozen protocol")
             ident = spec.episode_id(self.arm.name, self.controller)
             meta = {"schema": SCHEMA, "arm": self.arm.name, "seed": spec.seed,
                     "controller": self.controller.to_dict(), "controller_sha256": self.controller.sha256(),
                     "task_sha256": spec.task.sha256(), "repository": spec.task.repository,
+                    "task_split": spec.task.split,
                     "source_revision": spec.task.source_revision,
                     "workspace_patch_sha256": spec.task.workspace_patch_sha256,
                     "protocol_sha256": self.protocol_sha256,
@@ -1137,8 +1142,13 @@ def episode_metrics(store: TrajectoryStore, ident: str) -> dict[str, Any]:
         "trusted_grade": trusted,
         "grade_reason": (verification or {}).get("metadata", {}).get("verdict", {}).get("reason", "ungraded"),
         "raw_grade": (verification or {}).get("metadata", {}).get("raw_grade"),
-        # Primary outcome. Ungraded or untrusted is never success.
-        "final_success": bool(verification and verification["trusted"] and verification["passed"]),
+        # Primary outcome requires both the independent parent grade and the
+        # public checks when the episode has them. The finish-tool gate cannot
+        # enforce this on episodes that stop at a turn or token budget.
+        "final_success": bool(
+            verification and verification["trusted"] and verification["passed"]
+            and (not meta.get("public_tests") or last_state.get("public_passed") is True)
+        ),
         "trajectory_head": row["head"],
     }
 

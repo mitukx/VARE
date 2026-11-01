@@ -476,6 +476,7 @@ def test_historical_source_inventory_versions_stay_frozen():
         "v2":(73,"298da9a3b31b9f91825d99d34608bf233521cab6338e4f74d868fb6783815ce6"),
         "v3":(83,"7c6a454ce817c4cc4874825bff032cb6589604af4767732efd4b77bd052f0a00"),
         "v4":(98,"123b90fd2e899493f4dff524be7ae56f88e0937f5f30f1208b13cf04fc484d95"),
+        "v5":(100,"d7fecdd126292481921ca31777df2a2a8b680c4926b40210b3867e604d810d7e"),
     }
     for version,(count,expected) in frozen.items():
         names=auditor.SOURCE_INVENTORIES[version]
@@ -484,12 +485,12 @@ def test_historical_source_inventory_versions_stay_frozen():
     assert len(set(auditor.SOURCE_INVENTORIES.values()))==len(auditor.SOURCE_INVENTORIES)
     assert auditor.EXPECTED_SOURCES==auditor.SOURCE_INVENTORIES[auditor.CURRENT_SOURCE_INVENTORY]
     # Inventories that predate exact recovery endpoints keep the interval check.
-    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4","v5"}
+    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4","v5","v6"}
 
 
 def test_v4_inventory_adds_only_reachable_learning_pipeline_modules():
     package=bench.ROOT/"src/vare/learning_pipeline"
-    modules={path.stem for path in package.glob("*.py")}
+    modules={Path(name).stem for name in auditor.LEARNING_PIPELINE_SOURCES}
     prefix="vare.learning_pipeline"
 
     def references(path):
@@ -538,8 +539,18 @@ def test_v5_adds_qwen_training_modules_without_rewriting_v4():
     assert auditor.INVENTORY_V4_SOURCES<=auditor.INVENTORY_V5_SOURCES
 
 
-def test_v3_and_v4_source_inventories_are_accepted_by_version():
-    for version in ("v3","v4"):
+def test_v6_adds_vare_ig_modules_without_rewriting_v5():
+    assert auditor.INVENTORY_V6_SOURCES-auditor.INVENTORY_V5_SOURCES=={
+        "src/vare/learning_pipeline/informative_curriculum.py",
+        "src/vare/learning_pipeline/vare_ig_tasks.py",
+        "src/vare/learning_pipeline/verified_rollout_replay.py",
+        "src/vare/mlx_prefix_reuse.py",
+    }
+    assert auditor.INVENTORY_V5_SOURCES<=auditor.INVENTORY_V6_SOURCES
+
+
+def test_v3_through_v6_source_inventories_are_accepted_by_version():
+    for version in ("v3","v4","v5","v6"):
         names=auditor.SOURCE_INVENTORIES[version]
         assert auditor.source_inventory_version(set(names))==version
         auditor.validate_source_inventory(committed_manifest(names),set(names),True)

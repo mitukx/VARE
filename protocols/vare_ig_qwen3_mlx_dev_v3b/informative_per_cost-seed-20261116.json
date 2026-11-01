@@ -1,0 +1,362 @@
+{
+  "analysis": {
+    "inference_cost_claim": "descriptive on the locked workload; no speedup claim without matched realized work",
+    "primary_outcome": "empirical informative task groups per fixed candidate/verifier budget",
+    "secondary_outcomes": [
+      "informative groups per 1000 generated tokens",
+      "informative groups per minute",
+      "actual applied optimizer updates",
+      "effective completion tokens trained",
+      "gradient norm and finite-gradient checks",
+      "parameter and optimizer state digests",
+      "per-family and per-task pass rate",
+      "unique candidate/source hashes",
+      "generation and verification seconds",
+      "descriptive Development pre/post rewards"
+    ],
+    "uncertainty": "report task/family counts and Wilson intervals descriptively; no inferential or significance claim from this small pilot"
+  },
+  "base_master_protocol_sha256": "e670822c7483e62366341b3ca31d57b65247e7a943e45e510d45ec867b36bb40",
+  "claim_boundary": "Prospective synthetic coding task and scheduler study; no held-out model capability claim unless separately certified.",
+  "development": {
+    "evaluation": "greedy temperature=0, one completion per task per available checkpoint",
+    "interpretation": "small descriptive Development-only check, no significance or independent generalization claim",
+    "tasks": [
+      "vare_ig.dev.parse_duration_pair.v1",
+      "vare_ig.dev.lexical_course_order.v1",
+      "vare_ig.dev.first_event_ids.v1",
+      "vare_ig.dev.deep_lookup.v1"
+    ]
+  },
+  "execution": {
+    "cache_release_before_resource_guard": true,
+    "durable_training_launcher_sha256": "79d0e91751b5b63de078289abfc72135ef2280e1b54e3af56865b79d0c2b1aa0",
+    "persist_token_ids_before_behavior_logprobs": true,
+    "sample_artifact": "training-samples-streamed-{phase}.jsonl; one fsynced exact learner sample per graded rollout"
+  },
+  "exposure": {
+    "base_difficulty_pilot_split": "exploration",
+    "development_role": "descriptive greedy pre/post checks; not independent or held-out evaluation",
+    "heldout_role": "none; no held-out task pool is used or claimed",
+    "retired_task_ids_excluded": [
+      "train.merge_closed_intervals.v1",
+      "train.maximum_fixed_window.v1",
+      "train.top_k_words.v1",
+      "train.parse_env_lines.v1",
+      "train.rotate_matrix_clockwise.v1",
+      "train.valid_brackets.v1"
+    ],
+    "scheduler_eligible_split": "train only",
+    "scheduler_prior_may_use": "exploration only"
+  },
+  "frozen_at_utc": "2026-11-01T13:34:54+00:00",
+  "implementation_start_sha": "05491832a8930ebb498569dede1b5a45310cdf9d",
+  "inference_benchmark": {
+    "comparison": "same model parameters, prompt token IDs, temperature-softmax sampler, seed, and token cap",
+    "exactness": {
+      "completion_token_ids": true,
+      "decoded_text": true,
+      "sampler_logprob_abs_tol": 1e-06,
+      "sampler_logprob_rel_tol": 1e-06,
+      "shared_cache_cursor_unchanged": true
+    },
+    "max_new_tokens": 512,
+    "paired_seed_schedule": "sha256(base_seed:vare-ig-prefix-cache-v1:task_id:sample_index)[:8]",
+    "samples_per_task": 4,
+    "seed": 20261103,
+    "split": "exploration",
+    "task_ids": [
+      "vare_ig.explore.parse_csv_header.v1",
+      "vare_ig.explore.graph_course_order.v1"
+    ],
+    "temperature": 0.7,
+    "training_enablement": {
+      "applies_equally_to_both_scheduler_arms": true,
+      "minimum_mean_task_group_speedup": 1.02,
+      "require_exact_outputs_and_probabilities": true,
+      "require_shared_cache_ownership_check": true
+    },
+    "trial_order": "independent-then-cached for even sample index; cached-then-independent for odd index"
+  },
+  "learner": {
+    "completion_only_loss": true,
+    "config": {
+      "clip_eps_high": 0.2,
+      "clip_eps_low": 0.2,
+      "group_size": 4,
+      "max_grad_norm": 1.0,
+      "max_policy_lag": 0,
+      "normalize_std": true,
+      "temperature": 0.7
+    },
+    "lora": {
+      "dropout": 0.0,
+      "num_layers": 8,
+      "rank": 8,
+      "scale": 20.0
+    },
+    "objective": "existing VARE MLX clipped-ratio GRPO",
+    "optimizer": {
+      "learning_rate": 1e-05,
+      "name": "mlx.optimizers.Adam"
+    },
+    "policy_lag": 0,
+    "sampling_consistency": "full-vocabulary temperature-softmax, top_p=1, top_k=0, min_p=0",
+    "update_count": "at most one initial applied update per run; later on-policy recovery update only if its new groups are informative",
+    "zero_variance": "skip all-equal reward group; never create an update from it"
+  },
+  "model": {
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "local_only": true,
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "planned_run_id": "vare-ig-qwen3-informative_per_cost-seed-20261116-v3b",
+  "preregistered_before_model_inference": true,
+  "prior_art_boundary": "Difficulty-aware RL sampling and reward-variance curricula are established. This study evaluates a small, auditable implementation in a distinct verifier-bound coding workload; it makes no algorithmic novelty claim.",
+  "protocol_amendment": {
+    "execution_change": "a hash-locked launcher clears reusable MLX buffers before the unchanged resource guard and fsyncs each exact sample, including prompt/completion token IDs and verifier provenance, immediately after its graded rollout is appended and before any behavior-logprob pass",
+    "fresh_matched_research_seeds": [
+      20261116,
+      20261117
+    ],
+    "frozen_at_utc": "2026-11-01T13:34:54+00:00",
+    "implementation_start_sha": "05491832a8930ebb498569dede1b5a45310cdf9d",
+    "incomplete_batch_disposition": "the 12 step-1 rollout texts are retained, but the runner did not persist exact token IDs before the behavior-logprob pass; this batch is excluded from training and will not be replayed",
+    "incomplete_outcomes_used_for_selection_or_tuning": false,
+    "incomplete_rollout_sha256": "42c75b022c871378fb18d13e8212a1a9453c9b14c665abeeffe516e2b3edc200",
+    "incomplete_run_directory": "results/vare-ig-training-v2/uniform-seed-20261114",
+    "launcher_path": "scripts/run_vare_ig_durable_training.py",
+    "launcher_sha256": "79d0e91751b5b63de078289abfc72135ef2280e1b54e3af56865b79d0c2b1aa0",
+    "parent_master_path": "protocols/vare_ig_qwen3_mlx_dev_v2.json",
+    "parent_master_sha256": "12838f83e74bd2ef8247ff38a705b039cede8af0af3794a8e23be50e65a9faf7",
+    "pilot_summary_path": "results/vare-ig-exploration-v1-regraded-v2/exploration-summary.json",
+    "pilot_summary_sha256": "33d8b68acd781613aaf30c1e99b7d48b4d34b13b591066d2e166f88665f97757",
+    "prefix_cache_summary_path": "results/vare-ig-prefix-cache-v1/prefix-cache-summary.json",
+    "prefix_cache_summary_sha256": "ffb24291af7530795179da7aec92b65e0f4ac26563ea7426e23d81336b0a52c4",
+    "protocol_amendment_tool_path": "scripts/correct_vare_ig_v3_protocol_lock.py",
+    "protocol_amendment_tool_sha256": "ff7d49855e05f0fcd0cd59a725a347e8dffd2242d644c65e7f0d5aedf08c438d",
+    "protocol_correction": "V3b static-lock correction before model inference",
+    "protocol_correction_reason": "V3's run locks omitted the explicit task_contracts.train/development maps required by the existing runner payload validator; all four were rejected before model loading",
+    "resource_stop_path": "results/vare-ig-training-v2/uniform-seed-20261114/resource-stop-prepare-recovery.json",
+    "resource_stop_sha256": "2e1fe4b6bf341cd959df876f5ed37db17a8afa9937968bc9d35c3c6995233994",
+    "schema": "vare_ig_training_protocol_amendment_v1",
+    "seed_change_reason": "avoid reusing all V2 sampling seeds after a resource-stopped recovery attempt",
+    "superseded_v3_master_path": "protocols/vare_ig_qwen3_mlx_dev_v3.json",
+    "superseded_v3_master_sha256": "7c07fe0084edff3774384d91c7f1cd2ddbc9c4ce4ac54c03de5c53fc0d0cee57",
+    "superseded_v3_run_locks": {
+      "informative_per_cost-seed-20261116.json": "ff9cef8e877be41bc0e398d0abfe055a07ca934c76c4f5ad174af71bf9bffb03",
+      "informative_per_cost-seed-20261117.json": "1871b3e27bc61ace8538bca71511bce23f5d6920326b401f6c17001379522516",
+      "uniform-seed-20261116.json": "3e17e9c781f021e516856d8ef19b76b92037247ba2deaa881b306e6458293ec5",
+      "uniform-seed-20261117.json": "557f538b6a1e9f42f427aa91883bd6940f4a03cc44fc0503712a596d477dfe6d"
+    },
+    "unchanged_contracts": [
+      "model and revision",
+      "task contracts and splits",
+      "trusted parent-owned reward oracle",
+      "scheduler algorithm and family-level prior",
+      "sampling distribution and temperatures",
+      "group sizes and candidate/verifier budgets",
+      "learner objective and optimizer",
+      "resource thresholds",
+      "Development evaluation contract"
+    ]
+  },
+  "protocol_correction": {
+    "reason": "missing task_contracts map; rejected pre-inference",
+    "supersedes_path": "protocols/vare_ig_qwen3_mlx_dev_v3/informative_per_cost-seed-20261116.json",
+    "supersedes_sha256": "ff9cef8e877be41bc0e398d0abfe055a07ca934c76c4f5ad174af71bf9bffb03"
+  },
+  "protocol_id": "vare-ig-informative_per_cost-seed-20261116-v3b",
+  "protocol_preregistration_scope": "the four fresh V3 training runs; V1 Exploration/cache evidence and V2 seed-20261114 update-1 evidence remain preserved under their existing immutable locks",
+  "protocol_stage": "post-V2 resource-stop amendment frozen before V3 model runs",
+  "recovery": {
+    "initial_update_sigkill_arm": "informative_per_cost",
+    "initial_update_sigkill_boundary": "after_checkpoint_before_completion_ack",
+    "initial_update_sigkill_seed": 20261116,
+    "replay_control": "same retained checkpoint and pending group data replayed from the same checkpoint; compare parameters and optimizer byte digests",
+    "second_boundary": "after_fresh_on_policy_rollouts_rewards_and_behavior_logprobs_persisted_before_update_2",
+    "task_ids": [
+      "vare_ig.train.csv_record.v1",
+      "vare_ig.train.stable_toposort.v1",
+      "vare_ig.train.deep_merge_defaults.v1"
+    ],
+    "update_boundary_only_if_real_update_exists": true
+  },
+  "research_question": "Under matched group and verifier-call budgets, does an online family-level sampler based on observed trusted informative-group frequency per measured generation+verification second produce more informative groups than uniform sampling?",
+  "resources": {
+    "offline_model_cache_required": true,
+    "one_4b_model_process_at_a_time": true,
+    "resource_snapshot_before_and_during_each_phase": true,
+    "runner_max_phase_seconds": 7200.0,
+    "runner_min_available_memory_gib": 8.0,
+    "runner_min_free_disk_gib": 8.0,
+    "runner_min_memory_free_percent": 15.0,
+    "runner_start_swap_fraction_max_exclusive": 0.94,
+    "runner_stop_swap_fraction": 0.97
+  },
+  "reward": {
+    "all_five_parent_owned_cases_required": true,
+    "candidate_execution": "existing DockerIsolationRunner, network disabled, digest-pinned Python image",
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "expected_values": "trusted parent module only; never included in candidate prompt or candidate workspace",
+    "memory_mb": 512,
+    "schema": "vare_parent_owned_function_oracle_v1",
+    "timeout_seconds": 5.0,
+    "untrusted_repository_pytest_authority": false
+  },
+  "runtime_expected": {
+    "host": "Apple Silicon M1 Pro, 32 GiB unified memory",
+    "inference": "MLX/Metal",
+    "mlx": "0.32.3",
+    "mlx_lm": "0.32.0",
+    "python": "3.12.12"
+  },
+  "sampling": {
+    "distribution": "untruncated temperature-softmax; exact behavior log-probabilities",
+    "generation_seed_schedule": "sha256(base_seed:phase:task_id:sample_index)[:8]",
+    "group_size": 4,
+    "matched_seed_across_arms": true,
+    "max_new_tokens": 512,
+    "max_prompt_tokens": 2048,
+    "min_p": 0.0,
+    "research_seeds": [
+      20261116,
+      20261117
+    ],
+    "samples_per_exploration_task": 4,
+    "seed": 20261116,
+    "temperature": 0.7,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "schema": "vare_ig_qwen3_mlx_protocol_v3",
+  "selection": {
+    "adaptive_score": "Beta(1,1)-smoothed observed mixed-reward group rate for the task family divided by mean pilot generation+verification seconds per group",
+    "arm": "informative_per_cost",
+    "arms": [
+      "uniform",
+      "informative_per_cost"
+    ],
+    "exploration_summary_sha256": "33d8b68acd781613aaf30c1e99b7d48b4d34b13b591066d2e166f88665f97757",
+    "family_level_prior_only": true,
+    "fixed_budget": {
+      "candidate_generations_per_run": 24,
+      "candidate_max_new_tokens": 512,
+      "groups_per_run": 6,
+      "interpretation": "fixed groups, candidate count, token cap, and verifier-call count; realized tokens and seconds are measured and may vary",
+      "verifier_calls_per_run": 120,
+      "verifier_cases_per_candidate": 5
+    },
+    "group_budget": 6,
+    "group_cost_definition": "sum of actual completion generation seconds and parent-reported isolated case wall seconds for one four-completion task group",
+    "inference_optimization": "shared-prefix reuse is used in training only if the predeclared base-model benchmark passes exact-output, log-probability, cache-ownership, and 1.02x mean group-speedup criteria; otherwise independent generation remains in use",
+    "online_update": "after each selected task group, update family mixed-group and reward counts before the next draw",
+    "pilot_completions": 40,
+    "pilot_groups": 10,
+    "pilot_task_count": 10,
+    "prefix_cache_benchmark_sha256": "ffb24291af7530795179da7aec92b65e0f4ac26563ea7426e23d81336b0a52c4",
+    "scheduler_version": "vare_informative_group_cost_scheduler_v1",
+    "selection_without_replacement": true,
+    "training_completions_per_run": 24,
+    "training_groups_per_run": 6,
+    "training_runs_per_arm": 2,
+    "uniform_probability": "1 / remaining eligible Train tasks at each draw",
+    "within_task_completion_independence_assumption": false
+  },
+  "source_hashes": {
+    "scripts/funcy_tree_oracle.py": "0d02f98778a40b9b193a3c9c37ba4bb7783a1de83a16a14f5e402b0e46ee618e",
+    "scripts/long_horizon_eval.py": "cfe4a54f85108b42d29f9ea2e84f4ec2e16514f1674a834a0ece09c04784f45f",
+    "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+    "scripts/qwen3_function_repair_grpo.py": "a74fd87651efed5eb1be85738c5714bd8029ed431aa4f029ab61b14d7b480975",
+    "scripts/run_local_agent.py": "754c0b25e44ee7ba12b9c955b4cf54d959e66872c50c31ab5dd45e37cef71443",
+    "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/eval_stats.py": "9ba1f27421f721200f2596df3c595b6a5622852eb18950953093cddddbfd8f06",
+    "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+    "src/vare/function_repair_tasks.py": "43c6d27a269359e1ba903ed56446df58092ca5397e8336d4f79b663387d910f2",
+    "src/vare/grpo_mlx.py": "1044eab634b85d54729c576bed90da0bd56c7566b88e96ea8264d3f638752cf8",
+    "src/vare/isolated_candidate.py": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+    "src/vare/learning_pipeline/policy.py": "f3bc25da7cbc7337c5e05e5fc9570513548f5474cceaa79df68836d412d1101c",
+    "src/vare/trajectory_store.py": "2a41ea328d733635919e0782f7fb212c591cd20f6ebb7731c6252d45b0af8f74"
+  },
+  "starting_main_sha": "bc8803264e4a08721b0631ec04173f2785daa676",
+  "task_contract_hashes": {
+    "development": {
+      "vare_ig.dev.deep_lookup.v1": "786ae55bd4aec6cc36da39343449e85ec044d84bef27ca6be8a0e75fd2593b29",
+      "vare_ig.dev.first_event_ids.v1": "1ab3ea912a9ada85b70a72e4310b8fc4f8de3f2ce229a726c1146ee7c6013f69",
+      "vare_ig.dev.lexical_course_order.v1": "845abfa224e3f6e136f892cde4fa79a69a5b17d5e0a8719f0dac0d43811ad946",
+      "vare_ig.dev.parse_duration_pair.v1": "90042e6939d73014c9a92a444d8b71acc1bd15fbd688f39ea0ad3b39c9bf1463"
+    },
+    "exploration": {
+      "vare_ig.explore.dedupe_event_ids.v1": "54f91709c63326c832afa0afe27950c611b808882a43f04de455a3365b6f9c3c",
+      "vare_ig.explore.deep_defaults_config.v1": "62d8699809617818631d3326ab778296bd7822389015f0bc3c5c9aeea447f063",
+      "vare_ig.explore.duration_ms.v1": "e93d064517f5fa3d8a5028ec47cdf7f9d3eb91c20d687d79e7d78c7f691130e7",
+      "vare_ig.explore.graph_course_order.v1": "53570f8b5ca2e38d0e94ffe2ce79fdbb9b57b7c2f9d10089ac2eee21e8e8ea9e",
+      "vare_ig.explore.ini_overrides.v1": "a9759e14ddecb355b95b74d56bdacfacc168fbb4e88176cb62cc8c93819d21c5",
+      "vare_ig.explore.merge_event_ranges.v1": "c33f70d7988969610686454f829e393b985387457b2486bbd969391d09761ea8",
+      "vare_ig.explore.parse_csv_header.v1": "262488bbd52623b09a7bdea7e01a42e417e40bfb99dff197a113aa5126cf1f52",
+      "vare_ig.explore.relative_path.v1": "a9d4616efcfa9e47f966333471442558c748521e5714386503cf41002d6b20d9",
+      "vare_ig.explore.running_event_counts.v1": "2d03671b3b460e1cf9db4221639d1716fd0885818232f99e82972071c34c768d",
+      "vare_ig.explore.shortest_unweighted_path.v1": "28c2cd6a4cb49565f9f26f7fa2a474cd9d87935f818c8e0673c59f0e9914bf51"
+    },
+    "train": {
+      "vare_ig.train.cli_overrides.v1": "bbf2eac59d5b49fe47d3b7fea6af526c35b95d47bb69758dd102d00f96334aee",
+      "vare_ig.train.csv_record.v1": "424bd0de9a66f4f53586c0683eaf1ac6eab513c7bf38e5c0f25c5dbdf4170f27",
+      "vare_ig.train.deep_merge_defaults.v1": "f8a346a3f6b48543f45e1606de6c1ac6e6be437c5b3f32405bdedfe7c94e1806",
+      "vare_ig.train.graph_reachable.v1": "0b6271dad32fdf9b940c76eedf33a24f80d01ca26f85e44fa9a4d80783562cf6",
+      "vare_ig.train.ini_sections.v1": "a9c2408d3e436b3d66bfdb266279b2ee01c9dc9058c43f85d6ad00658d8163e4",
+      "vare_ig.train.latest_record_by_key.v1": "9b2d541748cabca9f57d405958e169a52969c1fb42722140de9029957143ad87",
+      "vare_ig.train.merge_busy_windows.v1": "2673d06ba1d384876c8767d73ca3b7cc3d219e8427a8d487f0b943ee687b76f8",
+      "vare_ig.train.normalize_relative_path.v1": "6671102aaf10047ec125caed9a54e9a82d92ec7cd86124611840e5aaf478439e",
+      "vare_ig.train.parse_duration_ms.v1": "78483b66d676a02eba40c2979c7f0ad4a7128505c5c677504fed5e6c07a607f3",
+      "vare_ig.train.running_key_totals.v1": "3c3449991253bb3d138e7be1cecb293e2f73bdf3453e810fb48e40b0db39f9aa",
+      "vare_ig.train.stable_toposort.v1": "dba5ab24a46e1d02ae172958289d85471ed5ad367d63232b14736d383338c813",
+      "vare_ig.train.undirected_components.v1": "b219241d57ac186d6f206af9cc4fca5df8f85d0df968b4dfb6b1c9611af09a0d"
+    }
+  },
+  "task_contracts": {
+    "development": {
+      "task_hashes": {
+        "vare_ig.dev.deep_lookup.v1": "786ae55bd4aec6cc36da39343449e85ec044d84bef27ca6be8a0e75fd2593b29",
+        "vare_ig.dev.first_event_ids.v1": "1ab3ea912a9ada85b70a72e4310b8fc4f8de3f2ce229a726c1146ee7c6013f69",
+        "vare_ig.dev.lexical_course_order.v1": "845abfa224e3f6e136f892cde4fa79a69a5b17d5e0a8719f0dac0d43811ad946",
+        "vare_ig.dev.parse_duration_pair.v1": "90042e6939d73014c9a92a444d8b71acc1bd15fbd688f39ea0ad3b39c9bf1463"
+      }
+    },
+    "train": {
+      "task_hashes": {
+        "vare_ig.train.cli_overrides.v1": "bbf2eac59d5b49fe47d3b7fea6af526c35b95d47bb69758dd102d00f96334aee",
+        "vare_ig.train.csv_record.v1": "424bd0de9a66f4f53586c0683eaf1ac6eab513c7bf38e5c0f25c5dbdf4170f27",
+        "vare_ig.train.deep_merge_defaults.v1": "f8a346a3f6b48543f45e1606de6c1ac6e6be437c5b3f32405bdedfe7c94e1806",
+        "vare_ig.train.graph_reachable.v1": "0b6271dad32fdf9b940c76eedf33a24f80d01ca26f85e44fa9a4d80783562cf6",
+        "vare_ig.train.ini_sections.v1": "a9c2408d3e436b3d66bfdb266279b2ee01c9dc9058c43f85d6ad00658d8163e4",
+        "vare_ig.train.latest_record_by_key.v1": "9b2d541748cabca9f57d405958e169a52969c1fb42722140de9029957143ad87",
+        "vare_ig.train.merge_busy_windows.v1": "2673d06ba1d384876c8767d73ca3b7cc3d219e8427a8d487f0b943ee687b76f8",
+        "vare_ig.train.normalize_relative_path.v1": "6671102aaf10047ec125caed9a54e9a82d92ec7cd86124611840e5aaf478439e",
+        "vare_ig.train.parse_duration_ms.v1": "78483b66d676a02eba40c2979c7f0ad4a7128505c5c677504fed5e6c07a607f3",
+        "vare_ig.train.running_key_totals.v1": "3c3449991253bb3d138e7be1cecb293e2f73bdf3453e810fb48e40b0db39f9aa",
+        "vare_ig.train.stable_toposort.v1": "dba5ab24a46e1d02ae172958289d85471ed5ad367d63232b14736d383338c813",
+        "vare_ig.train.undirected_components.v1": "b219241d57ac186d6f206af9cc4fca5df8f85d0df968b4dfb6b1c9611af09a0d"
+      }
+    }
+  },
+  "vare_ig_source_hashes": {
+    "scripts/audit_vare_ig_task_oracles.py": "9661d8bf8178de14dda95a02ee0da734f54e331fce44fda62699376ab49b45b0",
+    "scripts/freeze_vare_ig_protocol.py": "68f3d36fcc256f9aac38e4b4e5a6cebe86b93e98e96a24796b05f881d3e2af7a",
+    "scripts/qwen3_function_repair_grpo.py": "a74fd87651efed5eb1be85738c5714bd8029ed431aa4f029ab61b14d7b480975",
+    "scripts/qwen3_vare_ig_experiment.py": "1f3ae74c00d0b2c95738161d58178b1e825c780ce6f469016d5855f0bd65a9c6",
+    "src/vare/config.py": "3ddcb32df475e9e1d2a1aa3689ba5955494a67971cad03aa5a88e045ba4b7051",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/function_repair_tasks.py": "43c6d27a269359e1ba903ed56446df58092ca5397e8336d4f79b663387d910f2",
+    "src/vare/grpo_mlx.py": "1044eab634b85d54729c576bed90da0bd56c7566b88e96ea8264d3f638752cf8",
+    "src/vare/isolated_candidate.py": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+    "src/vare/learning_pipeline/informative_curriculum.py": "6744d1c2347a830f9a1b5dead3001d7d943da833361feaa9c52b2fac6eb49594",
+    "src/vare/learning_pipeline/vare_ig_tasks.py": "950e7be4eec9cfe1c6b8c531d0b4947ad0c66310f586e67b77ca385c53aa23e9",
+    "src/vare/learning_pipeline/verified_rollout_replay.py": "39c15675a5796747fa9a5cb4c867106439a31ac4d6177e46bf12d1c26133d47d",
+    "src/vare/mlx_prefix_reuse.py": "626dfa7899a3a20f77413aed99b13abd5d13c7fa9a4cf25ee2fbba5cd145709f",
+    "src/vare/promotion.py": "73f2fcbd3358d1f9153a53012f49ebe41ca0d65f555ed6457c8b98ccc708474b",
+    "src/vare/replay.py": "8d22b821380ddfb221df4ddc9dec8f987f74faebfe6492e7316e7b0d8ee472ff",
+    "src/vare/trajectory_store.py": "2a41ea328d733635919e0782f7fb212c591cd20f6ebb7731c6252d45b0af8f74",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "extra": {
+    "branch": "checkpoint-replay-control",
+    "experiment_id": "vare-ig-qwen3-uniform-seed-20261117-v3b",
+    "optimizer": {
+      "learning_rate": 1e-05,
+      "name": "mlx.optimizers.Adam"
+    },
+    "pending_update_sha256": "b8db8a8f52f0af6de26837e42183b7b4e6e3fcb4a087d334f9d23277dde833ff",
+    "starting_checkpoint": "checkpoints/update-0001"
+  },
+  "files": {
+    "adapters.safetensors": "3fa4334c4a3273a77b539d01f0af0fac6c078e723665fa94627dba03b010f180",
+    "optimizer.safetensors": "8929b03c7779a6481bcfd3fd878ead589937fb69dac41c2d1015720d4c254ab3"
+  },
+  "optimizer_step": 2,
+  "rng": {
+    "base_seed": 20261117,
+    "derivation": "sha256(f'{base_seed}:{step}')[:8]",
+    "step": 2
+  },
+  "schema": "vare.learning_pipeline.grpo_checkpoint/v1",
+  "step": 2,
+  "trainable_digest": "d705b8d422036627b1bc246d5ec4e4c7522965be4848cf4874674fd094cb69db"
+}
