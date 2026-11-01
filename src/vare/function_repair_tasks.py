@@ -1,7 +1,7 @@
 """Frozen, parent-owned function-repair contracts for the Qwen3 GRPO pilot.
 
 The prompts contain task instructions only. Expected values stay in this
-module and are passed only to ``vare.isolated_candidate.grade_calls``.
+module and are compared by the parent-side scorer after isolated candidate calls.
 """
 from __future__ import annotations
 

@@ -83,12 +83,6 @@ def test_numeric_checker_can_match_frozen_bool_as_number_semantics() -> None:
     assert not values_close(True, 1.0, rtol=0, atol=0)
 
 
-def test_json_null_values_compare_exactly() -> None:
-    assert values_close(None, None, rtol=0, atol=0)
-    assert not values_close(None, [], rtol=0, atol=0)
-    assert not values_close(False, None, rtol=0, atol=0)
-
-
 def test_task_kind_comes_from_the_caller(tmp_path: Path) -> None:
     subject = _subject(tmp_path, "add", "def add(a, b):\n    return a + b\n")
     call = FunctionCall("case", "add", "add", [2, 3], 5)

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from scripts import qwen3_function_repair_grpo as runner
-from vare.learning_pipeline import function_repair_tasks as tasks
+from vare import function_repair_tasks as tasks
 
 
 def test_task_ids_and_splits_are_unique_and_frozen():
@@ -17,6 +17,36 @@ def test_task_ids_and_splits_are_unique_and_frozen():
     assert all(task.split == "train" for task in tasks.TRAIN_TASKS)
     assert all(task.split == "development" for task in tasks.DEVELOPMENT_TASKS)
     assert all(task.cases and len({case.case_id for case in task.cases}) == len(task.cases) for task in all_tasks)
+
+
+def test_parent_json_comparison_handles_null_and_keeps_boolean_types_distinct():
+    matches = runner._json_value_matches
+    assert matches(None, None)
+    assert matches({"a": [None, True, 1]}, {"a": [None, True, 1.0]})
+    assert not matches(None, [])
+    assert not matches(False, None)
+    assert not matches(True, 1)
+    assert not matches({"a": None}, {"a": "None"})
+
+
+def test_parent_oracle_scores_json_null_through_the_isolated_worker():
+    source = """def solve(values, k):
+    if k < 1 or k > len(values):
+        return None
+    best_sum = sum(values[:k])
+    best_start = 0
+    current = best_sum
+    for end in range(k, len(values)):
+        current += values[end] - values[end - k]
+        if current > best_sum:
+            best_sum, best_start = current, end - k + 1
+    return [best_sum, best_start]
+"""
+    report = runner.score_source(tasks.TRAIN_TASKS[1], source)
+    assert report["trusted_contract"] is True
+    assert report["passed"] is True
+    assert report["reward"] == 1.0
+    assert len(report["cases"]) == len(tasks.TRAIN_TASKS[1].cases)
 
 
 def test_model_prompt_contains_contract_but_not_parent_owned_cases():

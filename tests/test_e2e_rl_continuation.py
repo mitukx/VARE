@@ -475,6 +475,7 @@ def test_historical_source_inventory_versions_stay_frozen():
         "v1-pinned":(15,"53363d17b5f7d641b8a2c0cb1b4ce023a60ced9286e32fa296bfcb95eb50c074"),
         "v2":(73,"298da9a3b31b9f91825d99d34608bf233521cab6338e4f74d868fb6783815ce6"),
         "v3":(83,"7c6a454ce817c4cc4874825bff032cb6589604af4767732efd4b77bd052f0a00"),
+        "v4":(98,"123b90fd2e899493f4dff524be7ae56f88e0937f5f30f1208b13cf04fc484d95"),
     }
     for version,(count,expected) in frozen.items():
         names=auditor.SOURCE_INVENTORIES[version]
@@ -483,7 +484,7 @@ def test_historical_source_inventory_versions_stay_frozen():
     assert len(set(auditor.SOURCE_INVENTORIES.values()))==len(auditor.SOURCE_INVENTORIES)
     assert auditor.EXPECTED_SOURCES==auditor.SOURCE_INVENTORIES[auditor.CURRENT_SOURCE_INVENTORY]
     # Inventories that predate exact recovery endpoints keep the interval check.
-    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4"}
+    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4","v5"}
 
 
 def test_v4_inventory_adds_only_reachable_learning_pipeline_modules():
@@ -527,6 +528,14 @@ def test_current_benchmark_snapshot_is_the_current_inventory_version():
     names=benchmark_snapshot_names()
     assert names==auditor.EXPECTED_SOURCES
     assert auditor.source_inventory_version(names)==auditor.CURRENT_SOURCE_INVENTORY
+
+
+def test_v5_adds_qwen_training_modules_without_rewriting_v4():
+    assert auditor.INVENTORY_V5_SOURCES-auditor.INVENTORY_V4_SOURCES=={
+        "src/vare/grpo_mlx.py",
+        "src/vare/function_repair_tasks.py",
+    }
+    assert auditor.INVENTORY_V4_SOURCES<=auditor.INVENTORY_V5_SOURCES
 
 
 def test_v3_and_v4_source_inventories_are_accepted_by_version():

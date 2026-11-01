@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Run a bounded Qwen3-4B MLX GRPO experiment on parent-scored function tasks.
 
-This runner sends only task instructions to the model. Candidate code is graded
-by ``vare.isolated_candidate.grade_calls`` in the existing Docker candidate
-boundary; expected values and verdict logic remain in the parent process.
+This runner sends only task instructions to the model. Candidate calls use the
+existing isolated Docker worker; expected values and strict JSON verdict logic
+remain in the parent process.
 """
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from contextlib import contextmanager
 import gc
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import platform
@@ -23,17 +24,18 @@ import subprocess
 import sys
 import tempfile
 import time
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 for _path in (ROOT, ROOT / "src"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+from vare.container_isolation import DockerIsolationRunner  # noqa: E402
 from vare.evidence import sha256_json  # noqa: E402
-from vare.isolated_candidate import FunctionCall, grade_calls  # noqa: E402
-from vare.learning_pipeline import function_repair_tasks as task_pack  # noqa: E402
-from vare.learning_pipeline import grpo_mlx  # noqa: E402
+from vare import grpo_mlx  # noqa: E402
+from vare import function_repair_tasks as task_pack  # noqa: E402
+from vare.isolated_candidate import _one_call  # noqa: E402
 
 MODEL_ID = "mlx-community/Qwen3-4B-Instruct-2507-4bit"
 MODEL_REVISION = "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
@@ -248,8 +250,8 @@ def source_hashes() -> dict[str, str]:
         ROOT / "scripts/funcy_tree_oracle.py",
         ROOT / "scripts/run_local_agent.py",
         ROOT / "scripts/pinned_workspace_git.py",
-        ROOT / "src/vare/learning_pipeline/grpo_mlx.py",
-        ROOT / "src/vare/learning_pipeline/function_repair_tasks.py",
+        ROOT / "src/vare/grpo_mlx.py",
+        ROOT / "src/vare/function_repair_tasks.py",
         ROOT / "src/vare/learning_pipeline/policy.py",
         ROOT / "src/vare/agent_edit_format.py",
         ROOT / "src/vare/trajectory_store.py",
@@ -266,7 +268,8 @@ def verifier_id(task: task_pack.FunctionRepairTask) -> str:
         "schema": "vare_parent_owned_function_oracle_v1",
         "task_id": task.task_id,
         "task_sha256": task.sha256(),
-        "scorer_sha256": sha256_file(ROOT / "src/vare/isolated_candidate.py"),
+        "scorer_sha256": sha256_file(ROOT / "scripts/qwen3_function_repair_grpo.py"),
+        "candidate_worker_sha256": sha256_file(ROOT / "src/vare/isolated_candidate.py"),
         "isolation_sha256": sha256_file(ROOT / "src/vare/container_isolation.py"),
         "container_image": CONTAINER_IMAGE,
         "timeout_s": EVAL_TIMEOUT_SECONDS,
@@ -301,8 +304,33 @@ def extract_source(text: str) -> tuple[str | None, str]:
     return source, "source_extracted"
 
 
-def function_calls(task: task_pack.FunctionRepairTask) -> list[FunctionCall]:
-    return [FunctionCall(case.case_id, "solution", "solve", list(case.args), case.expected) for case in task.cases]
+def _json_value_matches(actual: Any, expected: Any) -> bool:
+    """Compare decoded JSON values exactly, with numeric int/float equality."""
+    if actual is None or expected is None:
+        return actual is None and expected is None
+    if isinstance(actual, bool) or isinstance(expected, bool):
+        return type(actual) is type(expected) and actual == expected
+    if isinstance(actual, (int, float)) and isinstance(expected, (int, float)):
+        try:
+            left, right = float(actual), float(expected)
+        except OverflowError:
+            return type(actual) is type(expected) is int and actual == expected
+        return math.isfinite(left) and math.isfinite(right) and left == right
+    if isinstance(actual, str) or isinstance(expected, str):
+        return type(actual) is type(expected) is str and actual == expected
+    if type(actual) is list or type(expected) is list:
+        return (
+            type(actual) is type(expected) is list
+            and len(actual) == len(expected)
+            and all(_json_value_matches(a, e) for a, e in zip(actual, expected, strict=True))
+        )
+    if type(actual) is dict or type(expected) is dict:
+        return (
+            type(actual) is type(expected) is dict
+            and set(actual) == set(expected)
+            and all(_json_value_matches(actual[key], expected[key]) for key in actual)
+        )
+    return False
 
 
 def score_source(task: task_pack.FunctionRepairTask, text: str) -> dict[str, Any]:
@@ -313,23 +341,32 @@ def score_source(task: task_pack.FunctionRepairTask, text: str) -> dict[str, Any
     with tempfile.TemporaryDirectory(prefix="vare-qwen3-function-oracle-") as temp:
         subject = Path(temp)
         (subject / "solution.py").write_text(source, encoding="utf-8")
-        report = grade_calls(
-            subject, function_calls(task), task_kind="correctness", image=CONTAINER_IMAGE,
-            timeout_s=EVAL_TIMEOUT_SECONDS, memory_mb=EVAL_MEMORY_MB,
-            discard_candidate_stdout=True,
-        )
-    details = report.to_dict()
-    if details.get("task_kind") != "correctness" or not details.get("cases"):
-        raise RuntimeError("function oracle returned an incomplete call report")
+        isolation = DockerIsolationRunner()
+        case_results = []
+        for case in task.cases:
+            value, wall_s, failure = _one_call(
+                subject, "solution", "solve", list(case.args), {},
+                EVAL_TIMEOUT_SECONDS, CONTAINER_IMAGE, isolation, (), EVAL_MEMORY_MB,
+                True, None,
+            )
+            if failure is None and not _json_value_matches(value, case.expected):
+                failure = "wrong_output"
+            case_results.append({
+                "case_id": case.case_id,
+                "passed": failure is None,
+                "failure": failure,
+                "wall_s": wall_s,
+            })
+    passed = bool(case_results) and all(case["passed"] for case in case_results)
     return {
-        "reward": 1.0 if report.passed else 0.0,
-        "grade_status": "all_cases_passed" if report.passed else "case_failed",
+        "reward": 1.0 if passed else 0.0,
+        "grade_status": "all_cases_passed" if passed else "case_failed",
         "trusted_contract": True,
-        "passed": bool(report.passed),
+        "passed": passed,
         "candidate_source": source,
         "candidate_source_sha256": hashlib.sha256(source.encode("utf-8")).hexdigest(),
         "case_set_sha256": verifier_id(task),
-        "cases": details["cases"],
+        "cases": case_results,
     }
 
 

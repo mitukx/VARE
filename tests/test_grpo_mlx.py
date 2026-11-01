@@ -11,7 +11,7 @@ import math
 
 import pytest
 
-from vare.learning_pipeline import grpo_mlx as G
+from vare import grpo_mlx as G
 
 HAS_MLX = importlib.util.find_spec("mlx") is not None and importlib.util.find_spec("mlx_lm") is not None
 needs_mlx = pytest.mark.skipif(not HAS_MLX, reason="mlx / mlx-lm not installed")

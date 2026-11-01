@@ -6,8 +6,8 @@ This run began from `main` at `93ee9231e5da97b29fa0aa1745dfab332a6a952d`, with 2
 
 ## Implemented code
 
-- `src/vare/learning_pipeline/grpo_mlx.py` contains the MLX GRPO objective, completion-only loss masks, policy-age checks, zero-variance group handling, checkpoint save/load, and numerical reference path.
-- `scripts/qwen3_function_repair_grpo.py` runs a pinned Qwen3-4B policy against parent-owned function contracts, scores candidates in the existing isolated function-call container, and records source, task, optimizer, and checkpoint identities. Its optional `--protocol` now locks the seed, source hashes, and task hashes for additive follow-up runs; the original protocol remains unchanged.
+- `src/vare/grpo_mlx.py` contains the MLX GRPO objective, completion-only loss masks, policy-age checks, zero-variance group handling, checkpoint save/load, and numerical reference path.
+- `scripts/qwen3_function_repair_grpo.py` runs a pinned Qwen3-4B policy against parent-owned function contracts, executes each candidate case through the existing isolated Docker worker, and compares typed JSON outcomes in the parent (including exact `None` handling). It records source, task, optimizer, and checkpoint identities. Its optional `--protocol` locks the seed, source hashes, and task hashes for additive follow-up runs; the original protocol remains unchanged.
 - `scripts/long_horizon_eval.py` connects the pinned MLX policy to the existing fixed controller and durable hash-chained trajectory store. It records protocol identity on the episode, reconstructs workspaces from committed edits on resume, and supports SIGKILL injection after a selected commit.
 - `scripts/funcy_tree_oracle.py` scopes independent grading to one Train task and four parent-owned expected cases. It does not run arbitrary repository pytest in the candidate interpreter.
 - `scripts/run_local_agent.py` has hardened syntax checks against symlink traversal.
