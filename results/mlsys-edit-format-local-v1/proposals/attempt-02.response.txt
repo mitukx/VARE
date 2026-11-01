@@ -1,0 +1,26 @@
+HYPOTHESIS: Replace the explicit line-by-line stripping and slicing with a more efficient regex-based search that preserves the exact line-by-line structure and handles edge cases like blank lines and trailing whitespace without redundant list operations.
+
+```diff
+@@ -108,23 +108,20 @@
+ def _relaxed_replace(text: str, block: Block) -> str | None:
+     lines = text.split("\n")
+     needle = [ln.rstrip() for ln in block.search.split("\n")]
+-    stripped = [ln.rstrip() for ln in lines]
+-    hits = [
+-        i for i in range(len(lines) - len(needle) + 1) if stripped[i : i + len(needle)] == needle
+-    ]
+-    if len(hits) != 1:
+-        return None
+-    i = hits[0]
+-    return "\n".join(lines[:i] + block.replace.split("\n") + lines[i + len(needle) :])
++
++    # Build a regex pattern matching the stripped lines of the search block
++    pattern = re.compile(r"\n".join(re.escape(ln.rstrip()) for ln in block.search.split("\n")), re.DOTALL)
++    match = pattern.search(text)
++    if not match:
++        return None
++    # Extract the portion before and after the match
++    start = match.start()
++    end = start + len(match.group(0))
++    return text[:start] + "\n".join(block.replace.split("\n")) + text[end:]
+```

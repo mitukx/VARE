@@ -133,6 +133,7 @@ For CPU model experiments, use the pinned setup and fresh output paths in the [c
 | Continuous CPU post-training control loop | Toy real neural model; synthetic tasks; actual optimizer and learner restart | [Report](docs/e2e-rl-continuation-v2-report.md) · [protocol](benchmarks/e2e_rl_continuation_v2/protocol.json) |
 | Durable asynchronous trajectories | Synthetic single-host control-plane throughput and latency | [Report](docs/async-trajectory-runtime.md) · [protocol](benchmarks/trajectory_runtime_v2/protocol.json) |
 | Multi-completion GRPO | Real optimizer arithmetic on a small pretrained model; synthetic diagnostics | [Report](docs/grpo-e2e-cpu-report.md) · [protocol](benchmarks/grpo_e2e_cpu_v5/protocol.json) |
+| Local MLX autonomous edit-format proposals | Two real Qwen3 4B proposals rejected for correctness; scripted-control performance result is null | [Report](docs/mlsys-edit-format-local-v1-report.md) · [protocol](protocols/mlsys_edit_format_local_benchmark_v1.json) |
 | Actual-model fault benchmark v1 | Toy neural model; different single-round workload and baseline than continuation v2 | [Report](docs/e2e-rl-real-model-v1-report.md) · [protocol](benchmarks/e2e_rl_real_model_v1/protocol.json) |
 | Verifier refresh controls | Synthetic visible/within-family shift; negative result retained | [Report](docs/verifier-refresh-controls.md) |
 

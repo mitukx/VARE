@@ -1,0 +1,71 @@
+{
+  "differential_case_count": 24,
+  "incorrect_control": "relaxed matcher always returns None",
+  "known_good_patch_sha256": "339451b7bba7b261a3576e5a81d63961de08f14c7a846d3c8719eaafdb340fa1",
+  "known_good_provenance": "PR #173 scripted control; not exposed in either model prompt",
+  "oracle": "unchanged baseline module in the trusted parent; all control sources ran in digest-pinned Colima containers",
+  "public_case_count": 7,
+  "results": {
+    "baseline": {
+      "case_count": 31,
+      "failures": [],
+      "pass_count": 31,
+      "source_sha256": "4f0ee215d5769b42df3aa83128e947b7259234141678856fba74d98bdc7c1f59"
+    },
+    "incorrect": {
+      "case_count": 31,
+      "failures": [
+        {
+          "case_id": "case-006",
+          "failure": "wrong_output"
+        },
+        {
+          "case_id": "case-010",
+          "failure": "wrong_output"
+        },
+        {
+          "case_id": "case-011",
+          "failure": "wrong_output"
+        },
+        {
+          "case_id": "case-013",
+          "failure": "wrong_output"
+        },
+        {
+          "case_id": "case-014",
+          "failure": "wrong_output"
+        },
+        {
+          "case_id": "case-019",
+          "failure": "wrong_output"
+        },
+        {
+          "case_id": "case-021",
+          "failure": "wrong_output"
+        },
+        {
+          "case_id": "case-022",
+          "failure": "wrong_output"
+        },
+        {
+          "case_id": "case-025",
+          "failure": "wrong_output"
+        },
+        {
+          "case_id": "case-026",
+          "failure": "wrong_output"
+        }
+      ],
+      "pass_count": 21,
+      "source_sha256": "e3ec2cb18621a6cf97a0673c5b5356a21e02ea8b7e453d4799a71f38c8da83ca"
+    },
+    "known_good": {
+      "case_count": 31,
+      "failures": [],
+      "pass_count": 31,
+      "source_sha256": "d2945f9c5c5a69d239efb3346891da7655f888ad6235645131d3b98014bda6a1"
+    }
+  },
+  "schema": "vare.mlsys_controls_blackbox_report.v1",
+  "seed_sha256": "5d067e73d97e675ba69385061ed951fb9cd97eec67e56ed9cd8471cb4c61a00d"
+}
