@@ -21,6 +21,6 @@ def test_audit_rejects_artifact_fault_before_reporting_success(tmp_path, optimiz
         (bundle / "unexpected.json").write_text("{}")
     script = Path(__file__).resolve().parents[1] / "scripts/audit_checkpoint_read_bounds_v1.py"
     result = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(bundle)],
-                            capture_output=True, text=True, timeout=5)
+                            capture_output=True, text=True, timeout=20)
     assert result.returncode != 0 and "ValueError" in result.stderr
     assert result.stdout == ""

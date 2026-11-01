@@ -1,0 +1,1133 @@
+﻿2026-10-26T21:11:34.0278386Z Current runner version: '2.338.0'
+2026-10-26T21:11:34.0327835Z ##[group]Runner Image Provisioner
+2026-10-26T21:11:34.0328786Z Hosted Compute Agent
+2026-10-26T21:11:34.0329497Z Version: 20261021.618
+2026-10-26T21:11:34.0330132Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-26T21:11:34.0330888Z Build Date: 2026-10-21T00:45:21Z
+2026-10-26T21:11:34.0331612Z Worker ID: {b477d774-9343-45e9-b705-98ab042e533b}
+2026-10-26T21:11:34.0332312Z Region: westus
+2026-10-26T21:11:34.0332916Z Cloud: Azure
+2026-10-26T21:11:34.0333454Z ##[endgroup]
+2026-10-26T21:11:34.0335180Z ##[group]Operating System
+2026-10-26T21:11:34.0335948Z Ubuntu
+2026-10-26T21:11:34.0336814Z 24.04.5
+2026-10-26T21:11:34.0337464Z LTS
+2026-10-26T21:11:34.0337975Z ##[endgroup]
+2026-10-26T21:11:34.0338547Z ##[group]Runner Image
+2026-10-26T21:11:34.0339243Z Image: ubuntu-24.04
+2026-10-26T21:11:34.0339812Z Version: 20261012.334.1
+2026-10-26T21:11:34.0341122Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-26T21:11:34.0342655Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-26T21:11:34.0343723Z ##[endgroup]
+2026-10-26T21:11:34.0344821Z ##[group]GITHUB_TOKEN Permissions
+2026-10-26T21:11:34.0346963Z Contents: read
+2026-10-26T21:11:34.0347573Z Metadata: read
+2026-10-26T21:11:34.0348221Z ##[endgroup]
+2026-10-26T21:11:34.0350415Z Secret source: Actions
+2026-10-26T21:11:34.0351452Z Cache mode: write
+2026-10-26T21:11:34.0352171Z Prepare workflow directory
+2026-10-26T21:11:34.0761750Z Prepare all required actions
+2026-10-26T21:11:34.0809974Z Getting action download info
+2026-10-26T21:11:34.4606361Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-26T21:11:34.5760795Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-26T21:11:34.6635156Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-26T21:11:34.8668654Z Complete job name: actual-optimizer-and-recovery
+2026-10-26T21:11:34.9610934Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-10-26T21:11:34.9611980Z with:
+2026-10-26T21:11:34.9612393Z   fetch-depth: 0
+2026-10-26T21:11:34.9612834Z   repository: mitukx/VARE
+2026-10-26T21:11:34.9616695Z   token: ***
+2026-10-26T21:11:34.9617129Z   ssh-strict: true
+2026-10-26T21:11:34.9617562Z   ssh-user: git
+2026-10-26T21:11:34.9617998Z   persist-credentials: true
+2026-10-26T21:11:34.9618469Z   clean: true
+2026-10-26T21:11:34.9618901Z   sparse-checkout-cone-mode: true
+2026-10-26T21:11:34.9619410Z   fetch-tags: false
+2026-10-26T21:11:34.9619850Z   show-progress: true
+2026-10-26T21:11:34.9620300Z   lfs: false
+2026-10-26T21:11:34.9620711Z   submodules: false
+2026-10-26T21:11:34.9621153Z   set-safe-directory: true
+2026-10-26T21:11:34.9621652Z   allow-unsafe-pr-checkout: false
+2026-10-26T21:11:34.9622563Z env:
+2026-10-26T21:11:34.9622978Z   OMP_NUM_THREADS: 1
+2026-10-26T21:11:34.9623427Z   MKL_NUM_THREADS: 1
+2026-10-26T21:11:34.9623926Z   TOKENIZERS_PARALLELISM: false
+2026-10-26T21:11:34.9624437Z   PYTHONHASHSEED: 0
+2026-10-26T21:11:34.9624865Z ##[endgroup]
+2026-10-26T21:11:35.0658364Z Syncing repository: mitukx/VARE
+2026-10-26T21:11:35.0660968Z ##[group]Getting Git version info
+2026-10-26T21:11:35.0662006Z Working directory is '/home/runner/work/VARE/VARE'
+2026-10-26T21:11:35.0663625Z [command]/usr/bin/git version
+2026-10-26T21:11:35.0739155Z git version 2.55.0
+2026-10-26T21:11:35.0759984Z ##[endgroup]
+2026-10-26T21:11:35.0775301Z Temporarily overriding HOME='/home/runner/work/_temp/a7870e41-ea74-4cef-9c72-cc9be26dc396' before making global git config changes
+2026-10-26T21:11:35.0777934Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-26T21:11:35.0781099Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+2026-10-26T21:11:35.0859701Z Deleting the contents of '/home/runner/work/VARE/VARE'
+2026-10-26T21:11:35.0864802Z ##[group]Initializing the repository
+2026-10-26T21:11:35.0870555Z [command]/usr/bin/git init /home/runner/work/VARE/VARE
+2026-10-26T21:11:35.0983233Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-26T21:11:35.0985405Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-26T21:11:35.0987627Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-26T21:11:35.0989192Z hint: call:
+2026-10-26T21:11:35.0990207Z hint:
+2026-10-26T21:11:35.0992486Z hint: 	git config --global init.defaultBranch <name>
+2026-10-26T21:11:35.0993901Z hint:
+2026-10-26T21:11:35.0995223Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-26T21:11:35.0997512Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-26T21:11:35.0998968Z hint:
+2026-10-26T21:11:35.0999995Z hint: 	git branch -m <name>
+2026-10-26T21:11:35.1001176Z hint:
+2026-10-26T21:11:35.1002750Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-26T21:11:35.1004829Z Initialized empty Git repository in /home/runner/work/VARE/VARE/.git/
+2026-10-26T21:11:35.1008384Z [command]/usr/bin/git remote add origin https://github.com/mitukx/VARE
+2026-10-26T21:11:35.1055506Z ##[endgroup]
+2026-10-26T21:11:35.1057356Z ##[group]Disabling automatic garbage collection
+2026-10-26T21:11:35.1060908Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-26T21:11:35.1094878Z ##[endgroup]
+2026-10-26T21:11:35.1097114Z ##[group]Setting up auth
+2026-10-26T21:11:35.1184843Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-26T21:11:35.1191521Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-26T21:11:35.1762909Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-26T21:11:35.1802645Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-26T21:11:35.2032261Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-26T21:11:35.2073155Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-26T21:11:35.2301490Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-26T21:11:35.2344127Z ##[endgroup]
+2026-10-26T21:11:35.2345388Z ##[group]Fetching the repository
+2026-10-26T21:11:35.2354732Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +e5e621c643c476285c42772b2dd876377ea3a0d4:refs/remotes/pull/139/merge
+2026-10-26T21:12:08.6979936Z From https://github.com/mitukx/VARE
+2026-10-26T21:12:08.6981398Z  * [new branch]        codex/4b-mlx-agent-pilot                 -> origin/codex/4b-mlx-agent-pilot
+2026-10-26T21:12:08.6983115Z  * [new branch]        codex/7b-mlsys-independent-reliability   -> origin/codex/7b-mlsys-independent-reliability
+2026-10-26T21:12:08.6985125Z  * [new branch]        codex/async-worker-sqlite-serialization  -> origin/codex/async-worker-sqlite-serialization
+2026-10-26T21:12:08.6987687Z  * [new branch]        codex/coding-reward-provenance-replay-v1 -> origin/codex/coding-reward-provenance-replay-v1
+2026-10-26T21:12:08.6989607Z  * [new branch]        codex/cpu-grpo-preupdate-integrity-20261013 -> origin/codex/cpu-grpo-preupdate-integrity-20261013
+2026-10-26T21:12:08.6991395Z  * [new branch]        codex/dependency-artifact-pilot          -> origin/codex/dependency-artifact-pilot
+2026-10-26T21:12:08.6993309Z  * [new branch]        codex/development-navigation-campaign-v1 -> origin/codex/development-navigation-campaign-v1
+2026-10-26T21:12:08.6994671Z  * [new branch]        codex/durable-agent-trajectories         -> origin/codex/durable-agent-trajectories
+2026-10-26T21:12:08.6995864Z  * [new branch]        codex/durable-runtime-source-pin         -> origin/codex/durable-runtime-source-pin
+2026-10-26T21:12:08.6997656Z  * [new branch]        codex/e2e-rl-continuation-v2             -> origin/codex/e2e-rl-continuation-v2
+2026-10-26T21:12:08.6999039Z  * [new branch]        codex/e2e-rl-pipeline-benchmark          -> origin/codex/e2e-rl-pipeline-benchmark
+2026-10-26T21:12:08.7000143Z  * [new branch]        codex/engine-evaluation-task-lifecycle-20261013 -> origin/codex/engine-evaluation-task-lifecycle-20261013
+2026-10-26T21:12:08.7001191Z  * [new branch]        codex/failure-triage-e0-20261013         -> origin/codex/failure-triage-e0-20261013
+2026-10-26T21:12:08.7002196Z  * [new branch]        codex/fix-post-merge-report-state        -> origin/codex/fix-post-merge-report-state
+2026-10-26T21:12:08.7003206Z  * [new branch]        codex/flagship-teacher-gate              -> origin/codex/flagship-teacher-gate
+2026-10-26T21:12:08.7004292Z  * [new branch]        codex/format-comparison-record-audit-20261013 -> origin/codex/format-comparison-record-audit-20261013
+2026-10-26T21:12:08.7005306Z  * [new branch]        codex/fresh-coding-task-cohort           -> origin/codex/fresh-coding-task-cohort
+2026-10-26T21:12:08.7006832Z  * [new branch]        codex/fresh-dev-agent-study-v5           -> origin/codex/fresh-dev-agent-study-v5
+2026-10-26T21:12:08.7007911Z  * [new branch]        codex/fresh-hf-dev-candidates-v1         -> origin/codex/fresh-hf-dev-candidates-v1
+2026-10-26T21:12:08.7008903Z  * [new branch]        codex/fresh-task-qualification-mlx-lm-1910 -> origin/codex/fresh-task-qualification-mlx-lm-1910
+2026-10-26T21:12:08.7010236Z  * [new branch]        codex/grader-owner-loss                  -> origin/codex/grader-owner-loss
+2026-10-26T21:12:08.7011326Z  * [new branch]        codex/grpo-audit-independent-reproduction -> origin/codex/grpo-audit-independent-reproduction
+2026-10-26T21:12:08.7012515Z  * [new branch]        codex/grpo-e2e-correctness               -> origin/codex/grpo-e2e-correctness
+2026-10-26T21:12:08.7013674Z  * [new branch]        codex/grpo-integrity-clean-clone-run-3   -> origin/codex/grpo-integrity-clean-clone-run-3
+2026-10-26T21:12:08.7014754Z  * [new branch]        codex/grpo-reproduction-fail-closed-optimized -> origin/codex/grpo-reproduction-fail-closed-optimized
+2026-10-26T21:12:08.7015762Z  * [new branch]        codex/hash-bound-agent-edit-v1           -> origin/codex/hash-bound-agent-edit-v1
+2026-10-26T21:12:08.7016963Z  * [new branch]        codex/heldout-task-certification-pilot-v1 -> origin/codex/heldout-task-certification-pilot-v1
+2026-10-26T21:12:08.7018081Z  * [new branch]        codex/hf-coding-dev-inference-v2-dual-python -> origin/codex/hf-coding-dev-inference-v2-dual-python
+2026-10-26T21:12:08.7019784Z  * [new branch]        codex/isolated-grader-v1                 -> origin/codex/isolated-grader-v1
+2026-10-26T21:12:08.7020915Z  * [new branch]        codex/lag-shift-domain-validation        -> origin/codex/lag-shift-domain-validation
+2026-10-26T21:12:08.7021945Z  * [new branch]        codex/ledger-concurrent-append-cpu-20261013 -> origin/codex/ledger-concurrent-append-cpu-20261013
+2026-10-26T21:12:08.7023144Z  * [new branch]        codex/mlsys-candidate-manual-qualification-queue-20261022 -> origin/codex/mlsys-candidate-manual-qualification-queue-20261022
+2026-10-26T21:12:08.7024236Z  * [new branch]        codex/mlsys-isolated-harness             -> origin/codex/mlsys-isolated-harness
+2026-10-26T21:12:08.7025139Z  * [new branch]        codex/mlsys-task-candidate-survey        -> origin/codex/mlsys-task-candidate-survey
+2026-10-26T21:12:08.7026550Z  * [new branch]        codex/mlx-core-development-agent-feasibility-v1 -> origin/codex/mlx-core-development-agent-feasibility-v1
+2026-10-26T21:12:08.7028641Z  * [new branch]        codex/mlx-pr4748-qwen3-pilot-v1          -> origin/codex/mlx-pr4748-qwen3-pilot-v1
+2026-10-26T21:12:08.7030070Z  * [new branch]        codex/mlxlm-1912-isolation               -> origin/codex/mlxlm-1912-isolation
+2026-10-26T21:12:08.7031548Z  * [new branch]        codex/mlxlm-1971-attested-calibration    -> origin/codex/mlxlm-1971-attested-calibration
+2026-10-26T21:12:08.7032958Z  * [new branch]        codex/mlxlm-1971-isolation               -> origin/codex/mlxlm-1971-isolation
+2026-10-26T21:12:08.7034345Z  * [new branch]        codex/mlxlm-1971-v10-operator            -> origin/codex/mlxlm-1971-v10-operator
+2026-10-26T21:12:08.7035823Z  * [new branch]        codex/navigation-integrity-fixes-v1      -> origin/codex/navigation-integrity-fixes-v1
+2026-10-26T21:12:08.7037603Z  * [new branch]        codex/navigation-symlink-fix-v1          -> origin/codex/navigation-symlink-fix-v1
+2026-10-26T21:12:08.7039121Z  * [new branch]        codex/phase-a-v6-colima-exit125          -> origin/codex/phase-a-v6-colima-exit125
+2026-10-26T21:12:08.7040720Z  * [new branch]        codex/phase-a-v6-colima-public-tests     -> origin/codex/phase-a-v6-colima-public-tests
+2026-10-26T21:12:08.7042684Z  * [new branch]        codex/promotion-cancellation-ownership   -> origin/codex/promotion-cancellation-ownership
+2026-10-26T21:12:08.7044255Z  * [new branch]        codex/qwen-development-feasibility       -> origin/codex/qwen-development-feasibility
+2026-10-26T21:12:08.7045968Z  * [new branch]        codex/qwen3-deepmath-a100-v1-20261013    -> origin/codex/qwen3-deepmath-a100-v1-20261013
+2026-10-26T21:12:08.7047503Z  * [new branch]        codex/qwengyre-ready-reward-validation   -> origin/codex/qwengyre-ready-reward-validation
+2026-10-26T21:12:08.7048656Z  * [new branch]        codex/readiness-and-next-e2e-plan-20261022 -> origin/codex/readiness-and-next-e2e-plan-20261022
+2026-10-26T21:12:08.7049512Z  * [new branch]        codex/real-agent-interface-v1            -> origin/codex/real-agent-interface-v1
+2026-10-26T21:12:08.7050286Z  * [new branch]        codex/real-model-capability-eval         -> origin/codex/real-model-capability-eval
+2026-10-26T21:12:08.7051402Z  * [new branch]        codex/recovery-integrity-slice           -> origin/codex/recovery-integrity-slice
+2026-10-26T21:12:08.7052556Z  * [new branch]        codex/reject-same-policy-promotion-20261013 -> origin/codex/reject-same-policy-promotion-20261013
+2026-10-26T21:12:08.7053368Z  * [new branch]        codex/repo-coding-task-e2e               -> origin/codex/repo-coding-task-e2e
+2026-10-26T21:12:08.7054111Z  * [new branch]        codex/research-mission-controller-v1     -> origin/codex/research-mission-controller-v1
+2026-10-26T21:12:08.7054969Z  * [new branch]        codex/research-qualification-20261016    -> origin/codex/research-qualification-20261016
+2026-10-26T21:12:08.7056785Z  * [new branch]        codex/research-qualification-refresh-2026-10-15 -> origin/codex/research-qualification-refresh-2026-10-15
+2026-10-26T21:12:08.7057790Z  * [new branch]        codex/rollback-state-restoration-20261013 -> origin/codex/rollback-state-restoration-20261013
+2026-10-26T21:12:08.7058627Z  * [new branch]        codex/rvl-direct-trainer-freshness       -> origin/codex/rvl-direct-trainer-freshness
+2026-10-26T21:12:08.7059428Z  * [new branch]        codex/rvl-evidence-triage-20261013       -> origin/codex/rvl-evidence-triage-20261013
+2026-10-26T21:12:08.7060173Z  * [new branch]        codex/rvl-grpo-group-provenance          -> origin/codex/rvl-grpo-group-provenance
+2026-10-26T21:12:08.7060901Z  * [new branch]        codex/rvl-shared-alias-followup          -> origin/codex/rvl-shared-alias-followup
+2026-10-26T21:12:08.7061671Z  * [new branch]        codex/rvl-trajectory-gradient-parity     -> origin/codex/rvl-trajectory-gradient-parity
+2026-10-26T21:12:08.7062480Z  * [new branch]        codex/seed-aware-pass-at-k-20261013      -> origin/codex/seed-aware-pass-at-k-20261013
+2026-10-26T21:12:08.7063221Z  * [new branch]        codex/source-navigation-v1               -> origin/codex/source-navigation-v1
+2026-10-26T21:12:08.7064453Z  * [new branch]        codex/stabilize-multiprocess-claim-fixture -> origin/codex/stabilize-multiprocess-claim-fixture
+2026-10-26T21:12:08.7065315Z  * [new branch]        codex/streamed-learner-ingestion         -> origin/codex/streamed-learner-ingestion
+2026-10-26T21:12:08.7066059Z  * [new branch]        codex/structured-edit-agent-v1           -> origin/codex/structured-edit-agent-v1
+2026-10-26T21:12:08.7067118Z  * [new branch]        codex/structured-edit-controller-v2      -> origin/codex/structured-edit-controller-v2
+2026-10-26T21:12:08.7067923Z  * [new branch]        codex/structured-edit-core-standalone    -> origin/codex/structured-edit-core-standalone
+2026-10-26T21:12:08.7068719Z  * [new branch]        codex/trajectory-capture-boundary        -> origin/codex/trajectory-capture-boundary
+2026-10-26T21:12:08.7069474Z  * [new branch]        codex/transformers-45852-isolation       -> origin/codex/transformers-45852-isolation
+2026-10-26T21:12:08.7070282Z  * [new branch]        codex/transformers-47468-qualification-v1 -> origin/codex/transformers-47468-qualification-v1
+2026-10-26T21:12:08.7071127Z  * [new branch]        codex/transformers-47468-qualification-v4 -> origin/codex/transformers-47468-qualification-v4
+2026-10-26T21:12:08.7071952Z  * [new branch]        codex/transformers-49412-qualification   -> origin/codex/transformers-49412-qualification
+2026-10-26T21:12:08.7072737Z  * [new branch]        codex/transformers-49752-repo-task       -> origin/codex/transformers-49752-repo-task
+2026-10-26T21:12:08.7073524Z  * [new branch]        codex/transitive-reference-exposure-v1   -> origin/codex/transitive-reference-exposure-v1
+2026-10-26T21:12:08.7074310Z  * [new branch]        codex/trl-async-stale-resume-cursor      -> origin/codex/trl-async-stale-resume-cursor
+2026-10-26T21:12:08.7075024Z  * [new branch]        codex/trl-grader-alias-v9                -> origin/codex/trl-grader-alias-v9
+2026-10-26T21:12:08.7075740Z  * [new branch]        codex/trusted-scoring-separation         -> origin/codex/trusted-scoring-separation
+2026-10-26T21:12:08.7076924Z  * [new branch]        codex/vare-verified-mlsys-no-go          -> origin/codex/vare-verified-mlsys-no-go
+2026-10-26T21:12:08.7077719Z  * [new branch]        codex/verified-agent-preflight-v3        -> origin/codex/verified-agent-preflight-v3
+2026-10-26T21:12:08.7078522Z  * [new branch]        codex/verifier-consistent-async-grpo-v1  -> origin/codex/verifier-consistent-async-grpo-v1
+2026-10-26T21:12:08.7079341Z  * [new branch]        codex/verifier-drift-multiscenario-v1    -> origin/codex/verifier-drift-multiscenario-v1
+2026-10-26T21:12:08.7080155Z  * [new branch]        codex/verifier-prepare-fencing-evidence  -> origin/codex/verifier-prepare-fencing-evidence
+2026-10-26T21:12:08.7080926Z  * [new branch]        codex/verl-async-staleness-task          -> origin/codex/verl-async-staleness-task
+2026-10-26T21:12:08.7081607Z  * [new branch]        cursor/eval-stats-af75                   -> origin/cursor/eval-stats-af75
+2026-10-26T21:12:08.7082342Z  * [new branch]        cursor/exact-integer-smoke-result-af75   -> origin/cursor/exact-integer-smoke-result-af75
+2026-10-26T21:12:08.7083195Z  * [new branch]        cursor/exact-integer-update-cost-smoke-af75 -> origin/cursor/exact-integer-update-cost-smoke-af75
+2026-10-26T21:12:08.7084434Z  * [new branch]        cursor/format-vs-correctness-v2-af75     -> origin/cursor/format-vs-correctness-v2-af75
+2026-10-26T21:12:08.7085301Z  * [new branch]        cursor/format-vs-correctness-v2-result-af75 -> origin/cursor/format-vs-correctness-v2-result-af75
+2026-10-26T21:12:08.7086317Z  * [new branch]        cursor/heldout-exact-integer-gate-af75   -> origin/cursor/heldout-exact-integer-gate-af75
+2026-10-26T21:12:08.7087137Z  * [new branch]        cursor/heldout-exact-integer-v2-af75     -> origin/cursor/heldout-exact-integer-v2-af75
+2026-10-26T21:12:08.7088249Z  * [new branch]        cursor/heldout-exact-integer-v2-result-af75 -> origin/cursor/heldout-exact-integer-v2-result-af75
+2026-10-26T21:12:08.7089262Z  * [new branch]        cursor/minigrpo-af75                     -> origin/cursor/minigrpo-af75
+2026-10-26T21:12:08.7089952Z  * [new branch]        cursor/minigrpo-colab-af75               -> origin/cursor/minigrpo-colab-af75
+2026-10-26T21:12:08.7090679Z  * [new branch]        cursor/mlsys-coding-agent-e2e-4095       -> origin/cursor/mlsys-coding-agent-e2e-4095
+2026-10-26T21:12:08.7091411Z  * [new branch]        cursor/mlsys-coding-tasks-7d0a           -> origin/cursor/mlsys-coding-tasks-7d0a
+2026-10-26T21:12:08.7092402Z  * [new branch]        cursor/mlsys-comparison-runner-7d0a      -> origin/cursor/mlsys-comparison-runner-7d0a
+2026-10-26T21:12:08.7093415Z  * [new branch]        cursor/mlsys-heldout-expansion-7d0a      -> origin/cursor/mlsys-heldout-expansion-7d0a
+2026-10-26T21:12:08.7094222Z  * [new branch]        cursor/python-executable-ci-af75         -> origin/cursor/python-executable-ci-af75
+2026-10-26T21:12:08.7094998Z  * [new branch]        cursor/readme-question-results-af75      -> origin/cursor/readme-question-results-af75
+2026-10-26T21:12:08.7095846Z  * [new branch]        cursor/rvl-adapter-shared-module-mode-af75 -> origin/cursor/rvl-adapter-shared-module-mode-af75
+2026-10-26T21:12:08.7097064Z  * [new branch]        cursor/rvl-shared-module-mode-adapter-408a -> origin/cursor/rvl-shared-module-mode-adapter-408a
+2026-10-26T21:12:08.7097900Z  * [new branch]        cursor/seed-split-generator-af75         -> origin/cursor/seed-split-generator-af75
+2026-10-26T21:12:08.7098605Z  * [new branch]        cursor/selfimprove-af75                  -> origin/cursor/selfimprove-af75
+2026-10-26T21:12:08.7099348Z  * [new branch]        cursor/separated-candidate-grading-558b  -> origin/cursor/separated-candidate-grading-558b
+2026-10-26T21:12:08.7100166Z  * [new branch]        cursor/tracked-blob-budget-af75          -> origin/cursor/tracked-blob-budget-af75
+2026-10-26T21:12:08.7101113Z  * [new branch]        cursor/two-tier-answer-scoring-af75      -> origin/cursor/two-tier-answer-scoring-af75
+2026-10-26T21:12:08.7101883Z  * [new branch]        cursor/typecheck-lint-ci-af75            -> origin/cursor/typecheck-lint-ci-af75
+2026-10-26T21:12:08.7102859Z  * [new branch]        docs/clarify-architecture-evidence-20261015 -> origin/docs/clarify-architecture-evidence-20261015
+2026-10-26T21:12:08.7103725Z  * [new branch]        docs/restructure-research-navigation     -> origin/docs/restructure-research-navigation
+2026-10-26T21:12:08.7104525Z  * [new branch]        feat/meta-improvement-cpu-v1-20261013    -> origin/feat/meta-improvement-cpu-v1-20261013
+2026-10-26T21:12:08.7105354Z  * [new branch]        feat/owned-command-agent-cancellation-v1 -> origin/feat/owned-command-agent-cancellation-v1
+2026-10-26T21:12:08.7106425Z  * [new branch]        feat/verified-coding-agent-evidence-v2   -> origin/feat/verified-coding-agent-evidence-v2
+2026-10-26T21:12:08.7107326Z  * [new branch]        feature/post-training-reward-audit       -> origin/feature/post-training-reward-audit
+2026-10-26T21:12:08.7108164Z  * [new branch]        feature/trajectory-aware-safety-evaluator -> origin/feature/trajectory-aware-safety-evaluator
+2026-10-26T21:12:08.7109003Z  * [new branch]        fix/durable-step-resume-head-20261022    -> origin/fix/durable-step-resume-head-20261022
+2026-10-26T21:12:08.7109842Z  * [new branch]        fix/replay-group-provenance-fence-20261022 -> origin/fix/replay-group-provenance-fence-20261022
+2026-10-26T21:12:08.7110706Z  * [new branch]        fix/rollout-provenance-and-drain-20261014 -> origin/fix/rollout-provenance-and-drain-20261014
+2026-10-26T21:12:08.7112234Z  * [new branch]        fix/runtime-round-ownership-20261014     -> origin/fix/runtime-round-ownership-20261014
+2026-10-26T21:12:08.7113147Z  * [new branch]        main                                     -> origin/main
+2026-10-26T21:12:08.7113976Z  * [new branch]        research/authenticated-rvl-reward-admission-v1 -> origin/research/authenticated-rvl-reward-admission-v1
+2026-10-26T21:12:08.7115668Z  * [new branch]        research/evaluation-transaction-completion-v1 -> origin/research/evaluation-transaction-completion-v1
+2026-10-26T21:12:08.7117814Z  * [new branch]        research/promotion-publication-recovery-v1 -> origin/research/promotion-publication-recovery-v1
+2026-10-26T21:12:08.7119197Z  * [new branch]        research/rejection-rollback-recovery-v1  -> origin/research/rejection-rollback-recovery-v1
+2026-10-26T21:12:08.7120562Z  * [new branch]        safety/attested-promotion-ledger-precommit -> origin/safety/attested-promotion-ledger-precommit
+2026-10-26T21:12:08.7121718Z  * [new branch]        safety/checkpoint-bound-durable-promotion-v1 -> origin/safety/checkpoint-bound-durable-promotion-v1
+2026-10-26T21:12:08.7123008Z  * [new branch]        safety/docker-trusted-evaluator-isolation-v1 -> origin/safety/docker-trusted-evaluator-isolation-v1
+2026-10-26T21:12:08.7124113Z  * [new branch]        safety/sandboxed-repository-verifier-v1  -> origin/safety/sandboxed-repository-verifier-v1
+2026-10-26T21:12:08.7124942Z  * [new branch]        safety/trusted-checkpoint-store-eval-v1  -> origin/safety/trusted-checkpoint-store-eval-v1
+2026-10-26T21:12:08.7125706Z  * [new tag]           e2e-rl-continuation-v2-20261016          -> e2e-rl-continuation-v2-20261016
+2026-10-26T21:12:08.7126912Z  * [new tag]           grpo-e2e-cpu-20261017                    -> grpo-e2e-cpu-20261017
+2026-10-26T21:12:08.7128043Z  * [new tag]           streamed-grpo-cpu-20261017               -> streamed-grpo-cpu-20261017
+2026-10-26T21:12:08.7129233Z  * [new tag]           streamed-grpo-cpu-v31-20261024           -> streamed-grpo-cpu-v31-20261024
+2026-10-26T21:12:08.7130446Z  * [new tag]           trajectory-runtime-cpu-20261017          -> trajectory-runtime-cpu-20261017
+2026-10-26T21:12:08.7131721Z  * [new tag]           vare-apple-silicon-update-v1-evidence    -> vare-apple-silicon-update-v1-evidence
+2026-10-26T21:12:08.7132982Z  * [new tag]           vare-pr122-grading-images-v1             -> vare-pr122-grading-images-v1
+2026-10-26T21:12:08.7134035Z  * [new ref]           e5e621c643c476285c42772b2dd876377ea3a0d4 -> pull/139/merge
+2026-10-26T21:12:08.7136258Z ##[endgroup]
+2026-10-26T21:12:08.7137215Z ##[group]Determining the checkout info
+2026-10-26T21:12:08.7138322Z ##[endgroup]
+2026-10-26T21:12:08.7138872Z [command]/usr/bin/git sparse-checkout disable
+2026-10-26T21:12:08.7140391Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-26T21:12:08.7142127Z ##[group]Checking out the ref
+2026-10-26T21:12:08.7142872Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/139/merge
+2026-10-26T21:12:10.0271351Z Updating files:  15% (1876/12255)
+2026-10-26T21:12:10.2282388Z Updating files:  16% (1961/12255)
+2026-10-26T21:12:10.5717191Z Updating files:  17% (2084/12255)
+2026-10-26T21:12:10.7285104Z Updating files:  18% (2206/12255)
+2026-10-26T21:12:10.7443053Z Updating files:  18% (2305/12255)
+2026-10-26T21:12:10.8271206Z Updating files:  19% (2329/12255)
+2026-10-26T21:12:10.8334570Z Updating files:  20% (2451/12255)
+2026-10-26T21:12:10.8406524Z Updating files:  21% (2574/12255)
+2026-10-26T21:12:10.8469581Z Updating files:  22% (2697/12255)
+2026-10-26T21:12:10.8532033Z Updating files:  23% (2819/12255)
+2026-10-26T21:12:10.8597239Z Updating files:  24% (2942/12255)
+2026-10-26T21:12:10.8656482Z Updating files:  25% (3064/12255)
+2026-10-26T21:12:10.8727080Z Updating files:  26% (3187/12255)
+2026-10-26T21:12:10.8789634Z Updating files:  27% (3309/12255)
+2026-10-26T21:12:10.8848896Z Updating files:  28% (3432/12255)
+2026-10-26T21:12:10.8945479Z Updating files:  29% (3554/12255)
+2026-10-26T21:12:10.9005637Z Updating files:  30% (3677/12255)
+2026-10-26T21:12:10.9066685Z Updating files:  31% (3800/12255)
+2026-10-26T21:12:10.9129809Z Updating files:  32% (3922/12255)
+2026-10-26T21:12:10.9222750Z Updating files:  33% (4045/12255)
+2026-10-26T21:12:10.9294843Z Updating files:  34% (4167/12255)
+2026-10-26T21:12:10.9369933Z Updating files:  35% (4290/12255)
+2026-10-26T21:12:10.9462730Z Updating files:  36% (4412/12255)
+2026-10-26T21:12:10.9521945Z Updating files:  37% (4535/12255)
+2026-10-26T21:12:10.9578198Z Updating files:  38% (4657/12255)
+2026-10-26T21:12:10.9640626Z Updating files:  39% (4780/12255)
+2026-10-26T21:12:10.9697033Z Updating files:  40% (4902/12255)
+2026-10-26T21:12:10.9756168Z Updating files:  41% (5025/12255)
+2026-10-26T21:12:10.9812667Z Updating files:  42% (5148/12255)
+2026-10-26T21:12:10.9872176Z Updating files:  43% (5270/12255)
+2026-10-26T21:12:10.9928376Z Updating files:  44% (5393/12255)
+2026-10-26T21:12:10.9988200Z Updating files:  45% (5515/12255)
+2026-10-26T21:12:11.0045770Z Updating files:  46% (5638/12255)
+2026-10-26T21:12:11.0105599Z Updating files:  47% (5760/12255)
+2026-10-26T21:12:11.0161769Z Updating files:  48% (5883/12255)
+2026-10-26T21:12:11.0220605Z Updating files:  49% (6005/12255)
+2026-10-26T21:12:11.0277177Z Updating files:  50% (6128/12255)
+2026-10-26T21:12:11.0339328Z Updating files:  51% (6251/12255)
+2026-10-26T21:12:11.0396586Z Updating files:  52% (6373/12255)
+2026-10-26T21:12:11.0451060Z Updating files:  53% (6496/12255)
+2026-10-26T21:12:11.0530507Z Updating files:  54% (6618/12255)
+2026-10-26T21:12:11.0605425Z Updating files:  55% (6741/12255)
+2026-10-26T21:12:11.0702619Z Updating files:  56% (6863/12255)
+2026-10-26T21:12:11.0814783Z Updating files:  57% (6986/12255)
+2026-10-26T21:12:11.0918298Z Updating files:  58% (7108/12255)
+2026-10-26T21:12:11.1116657Z Updating files:  59% (7231/12255)
+2026-10-26T21:12:11.1246879Z Updating files:  60% (7353/12255)
+2026-10-26T21:12:11.1309431Z Updating files:  61% (7476/12255)
+2026-10-26T21:12:11.1371321Z Updating files:  62% (7599/12255)
+2026-10-26T21:12:11.1436338Z Updating files:  63% (7721/12255)
+2026-10-26T21:12:11.1496613Z Updating files:  64% (7844/12255)
+2026-10-26T21:12:11.1578715Z Updating files:  65% (7966/12255)
+2026-10-26T21:12:11.1648235Z Updating files:  66% (8089/12255)
+2026-10-26T21:12:11.1714738Z Updating files:  67% (8211/12255)
+2026-10-26T21:12:11.1823484Z Updating files:  68% (8334/12255)
+2026-10-26T21:12:11.1894419Z Updating files:  69% (8456/12255)
+2026-10-26T21:12:11.1955932Z Updating files:  70% (8579/12255)
+2026-10-26T21:12:11.2013693Z Updating files:  71% (8702/12255)
+2026-10-26T21:12:11.2135618Z Updating files:  72% (8824/12255)
+2026-10-26T21:12:11.2247422Z Updating files:  73% (8947/12255)
+2026-10-26T21:12:11.2341784Z Updating files:  74% (9069/12255)
+2026-10-26T21:12:11.2437923Z Updating files:  75% (9192/12255)
+2026-10-26T21:12:11.2701538Z Updating files:  76% (9314/12255)
+2026-10-26T21:12:11.2767182Z Updating files:  77% (9437/12255)
+2026-10-26T21:12:11.2823828Z Updating files:  78% (9559/12255)
+2026-10-26T21:12:11.2899722Z Updating files:  79% (9682/12255)
+2026-10-26T21:12:11.2979140Z Updating files:  80% (9804/12255)
+2026-10-26T21:12:11.3034210Z Updating files:  81% (9927/12255)
+2026-10-26T21:12:11.3093219Z Updating files:  82% (10050/12255)
+2026-10-26T21:12:11.3156984Z Updating files:  83% (10172/12255)
+2026-10-26T21:12:11.3211786Z Updating files:  84% (10295/12255)
+2026-10-26T21:12:11.3268840Z Updating files:  85% (10417/12255)
+2026-10-26T21:12:11.3328005Z Updating files:  86% (10540/12255)
+2026-10-26T21:12:11.3398998Z Updating files:  87% (10662/12255)
+2026-10-26T21:12:11.3473957Z Updating files:  88% (10785/12255)
+2026-10-26T21:12:11.3550755Z Updating files:  89% (10907/12255)
+2026-10-26T21:12:11.3686800Z Updating files:  90% (11030/12255)
+2026-10-26T21:12:11.3749216Z Updating files:  91% (11153/12255)
+2026-10-26T21:12:11.3839691Z Updating files:  92% (11275/12255)
+2026-10-26T21:12:11.3894004Z Updating files:  93% (11398/12255)
+2026-10-26T21:12:11.3976846Z Updating files:  94% (11520/12255)
+2026-10-26T21:12:11.4067741Z Updating files:  95% (11643/12255)
+2026-10-26T21:12:11.4153206Z Updating files:  96% (11765/12255)
+2026-10-26T21:12:11.4243745Z Updating files:  97% (11888/12255)
+2026-10-26T21:12:11.4328059Z Updating files:  98% (12010/12255)
+2026-10-26T21:12:11.4408398Z Updating files:  99% (12133/12255)
+2026-10-26T21:12:11.4409195Z Updating files: 100% (12255/12255)
+2026-10-26T21:12:11.4409798Z Updating files: 100% (12255/12255), done.
+2026-10-26T21:12:11.4573996Z Note: switching to 'refs/remotes/pull/139/merge'.
+2026-10-26T21:12:11.4574453Z 
+2026-10-26T21:12:11.4574828Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-26T21:12:11.4575702Z changes and commit them, and you can discard any commits you make in this
+2026-10-26T21:12:11.4577064Z state without impacting any branches by switching back to a branch.
+2026-10-26T21:12:11.4577581Z 
+2026-10-26T21:12:11.4577915Z If you want to create a new branch to retain commits you create, you may
+2026-10-26T21:12:11.4578728Z do so (now or later) by using -c with the switch command. Example:
+2026-10-26T21:12:11.4579196Z 
+2026-10-26T21:12:11.4579405Z   git switch -c <new-branch-name>
+2026-10-26T21:12:11.4579727Z 
+2026-10-26T21:12:11.4579902Z Or undo this operation with:
+2026-10-26T21:12:11.4580187Z 
+2026-10-26T21:12:11.4580334Z   git switch -
+2026-10-26T21:12:11.4580545Z 
+2026-10-26T21:12:11.4580923Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-26T21:12:11.4581505Z 
+2026-10-26T21:12:11.4582161Z HEAD is now at e5e621c6 Merge 549cb7e083028364dcc3eecd2a1a5d4618b20372 into 6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1
+2026-10-26T21:12:11.4820091Z ##[endgroup]
+2026-10-26T21:12:11.4870276Z [command]/usr/bin/git log -1 --format=%H
+2026-10-26T21:12:11.4901415Z e5e621c643c476285c42772b2dd876377ea3a0d4
+2026-10-26T21:12:11.5166342Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-10-26T21:12:11.5166883Z with:
+2026-10-26T21:12:11.5167093Z   python-version: 3.11
+2026-10-26T21:12:11.5167326Z   check-latest: false
+2026-10-26T21:12:11.5169794Z   token: ***
+2026-10-26T21:12:11.5170011Z   update-environment: true
+2026-10-26T21:12:11.5170268Z   allow-prereleases: false
+2026-10-26T21:12:11.5170505Z   freethreaded: false
+2026-10-26T21:12:11.5170712Z env:
+2026-10-26T21:12:11.5170895Z   OMP_NUM_THREADS: 1
+2026-10-26T21:12:11.5171107Z   MKL_NUM_THREADS: 1
+2026-10-26T21:12:11.5171326Z   TOKENIZERS_PARALLELISM: false
+2026-10-26T21:12:11.5171588Z   PYTHONHASHSEED: 0
+2026-10-26T21:12:11.5171793Z ##[endgroup]
+2026-10-26T21:12:11.6472364Z ##[group]Installed versions
+2026-10-26T21:12:11.6612309Z (node:2224) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-26T21:12:11.6613600Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-26T21:12:11.6614648Z Successfully set up CPython (3.11.17)
+2026-10-26T21:12:11.6615563Z ##[endgroup]
+2026-10-26T21:12:11.6808424Z ##[group]Run python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+2026-10-26T21:12:11.6809620Z [36;1mpython -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu[0m
+2026-10-26T21:12:11.6810560Z [36;1mpython -m pip install -r requirements/e2e-rl-real-model-v1.txt[0m
+2026-10-26T21:12:11.7304946Z shell: /usr/bin/bash -e {0}
+2026-10-26T21:12:11.7305296Z env:
+2026-10-26T21:12:11.7305554Z   OMP_NUM_THREADS: 1
+2026-10-26T21:12:11.7305841Z   MKL_NUM_THREADS: 1
+2026-10-26T21:12:11.7306359Z   TOKENIZERS_PARALLELISM: false
+2026-10-26T21:12:11.7306693Z   PYTHONHASHSEED: 0
+2026-10-26T21:12:11.7307057Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:11.7307632Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-26T21:12:11.7308195Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:11.7308705Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:11.7309262Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:11.7309746Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-26T21:12:11.7310089Z ##[endgroup]
+2026-10-26T21:12:14.7220052Z Looking in indexes: https://download.pytorch.org/whl/cpu
+2026-10-26T21:12:14.8527508Z Collecting torch==2.8.0
+2026-10-26T21:12:15.0808087Z   Downloading torch-2.8.0%2Bcpu-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (29 kB)
+2026-10-26T21:12:15.1195040Z Collecting filelock (from torch==2.8.0)
+2026-10-26T21:12:15.1707006Z   Downloading filelock-3.32.3-py3-none-any.whl.metadata (2.0 kB)
+2026-10-26T21:12:15.1882858Z Collecting typing-extensions>=4.10.0 (from torch==2.8.0)
+2026-10-26T21:12:15.1923285Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-10-26T21:12:15.2097787Z Collecting sympy>=1.13.3 (from torch==2.8.0)
+2026-10-26T21:12:15.2157249Z   Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+2026-10-26T21:12:15.2387664Z Collecting networkx (from torch==2.8.0)
+2026-10-26T21:12:15.2419131Z   Downloading networkx-3.6.1-py3-none-any.whl.metadata (6.8 kB)
+2026-10-26T21:12:15.2546194Z Collecting jinja2 (from torch==2.8.0)
+2026-10-26T21:12:15.2582843Z   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+2026-10-26T21:12:15.2811858Z Collecting fsspec (from torch==2.8.0)
+2026-10-26T21:12:15.2841825Z   Downloading fsspec-2026.7.0-py3-none-any.whl.metadata (10 kB)
+2026-10-26T21:12:15.3129690Z Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch==2.8.0)
+2026-10-26T21:12:15.3160344Z   Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+2026-10-26T21:12:15.3363958Z Collecting MarkupSafe>=2.0 (from jinja2->torch==2.8.0)
+2026-10-26T21:12:15.3401177Z   Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2026-10-26T21:12:15.3745297Z Downloading torch-2.8.0%2Bcpu-cp311-cp311-manylinux_2_28_x86_64.whl (184.1 MB)
+2026-10-26T21:12:18.6269451Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 184.1/184.1 MB 56.6 MB/s  0:00:03
+2026-10-26T21:12:18.6309749Z Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+2026-10-26T21:12:18.8693838Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 26.7 MB/s  0:00:00
+2026-10-26T21:12:18.8730389Z Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+2026-10-26T21:12:18.8780619Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 89.7 MB/s  0:00:00
+2026-10-26T21:12:18.8816352Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-26T21:12:18.8894536Z Downloading filelock-3.32.3-py3-none-any.whl (98 kB)
+2026-10-26T21:12:18.9040939Z Downloading fsspec-2026.7.0-py3-none-any.whl (206 kB)
+2026-10-26T21:12:18.9111361Z Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+2026-10-26T21:12:18.9169339Z Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+2026-10-26T21:12:18.9235658Z Downloading networkx-3.6.1-py3-none-any.whl (2.1 MB)
+2026-10-26T21:12:18.9372809Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 159.6 MB/s  0:00:00
+2026-10-26T21:12:19.4333439Z Installing collected packages: mpmath, typing-extensions, sympy, networkx, MarkupSafe, fsspec, filelock, jinja2, torch
+2026-10-26T21:12:35.4829473Z 
+2026-10-26T21:12:35.4841278Z Successfully installed MarkupSafe-3.0.3 filelock-3.32.3 fsspec-2026.7.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.6.1 sympy-1.14.0 torch-2.8.0+cpu typing-extensions-4.16.0
+2026-10-26T21:12:35.9517862Z Requirement already satisfied: Jinja2==3.1.6 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r requirements/e2e-rl-real-model-v1.txt (line 2)) (3.1.6)
+2026-10-26T21:12:36.0708809Z Collecting MarkupSafe==3.0.4 (from -r requirements/e2e-rl-real-model-v1.txt (line 3))
+2026-10-26T21:12:36.1163568Z   Downloading markupsafe-3.0.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2026-10-26T21:12:36.1497514Z Collecting PyYAML==6.0.3 (from -r requirements/e2e-rl-real-model-v1.txt (line 4))
+2026-10-26T21:12:36.1531471Z   Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2026-10-26T21:12:36.1683053Z Collecting Pygments==2.21.0 (from -r requirements/e2e-rl-real-model-v1.txt (line 5))
+2026-10-26T21:12:36.1712803Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-10-26T21:12:36.1865430Z Collecting certifi==2026.7.22 (from -r requirements/e2e-rl-real-model-v1.txt (line 6))
+2026-10-26T21:12:36.1895351Z   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+2026-10-26T21:12:36.3108891Z Collecting charset-normalizer==3.5.2 (from -r requirements/e2e-rl-real-model-v1.txt (line 7))
+2026-10-26T21:12:36.3150694Z   Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (46 kB)
+2026-10-26T21:12:36.3409774Z Collecting filelock==4.2.0 (from -r requirements/e2e-rl-real-model-v1.txt (line 8))
+2026-10-26T21:12:36.3448371Z   Downloading filelock-4.2.0-py3-none-any.whl.metadata (2.0 kB)
+2026-10-26T21:12:36.3602486Z Collecting fsspec==2026.9.0 (from -r requirements/e2e-rl-real-model-v1.txt (line 9))
+2026-10-26T21:12:36.3633111Z   Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+2026-10-26T21:12:36.4149295Z Collecting hf-xet==1.7.0 (from -r requirements/e2e-rl-real-model-v1.txt (line 10))
+2026-10-26T21:12:36.4183988Z   Downloading hf_xet-1.7.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+2026-10-26T21:12:36.4548740Z Collecting huggingface_hub==0.36.2 (from -r requirements/e2e-rl-real-model-v1.txt (line 11))
+2026-10-26T21:12:36.4580849Z   Downloading huggingface_hub-0.36.2-py3-none-any.whl.metadata (15 kB)
+2026-10-26T21:12:36.4846126Z Collecting idna==3.20 (from -r requirements/e2e-rl-real-model-v1.txt (line 12))
+2026-10-26T21:12:36.4881837Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-10-26T21:12:36.4976107Z Collecting iniconfig==2.3.1 (from -r requirements/e2e-rl-real-model-v1.txt (line 13))
+2026-10-26T21:12:36.5006239Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+2026-10-26T21:12:36.5037438Z Requirement already satisfied: mpmath==1.3.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r requirements/e2e-rl-real-model-v1.txt (line 14)) (1.3.0)
+2026-10-26T21:12:36.5041957Z Requirement already satisfied: networkx==3.6.1 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r requirements/e2e-rl-real-model-v1.txt (line 15)) (3.6.1)
+2026-10-26T21:12:36.6999553Z Collecting numpy==2.4.6 (from -r requirements/e2e-rl-real-model-v1.txt (line 16))
+2026-10-26T21:12:36.7037042Z   Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-10-26T21:12:36.7171608Z Collecting packaging==26.3 (from -r requirements/e2e-rl-real-model-v1.txt (line 17))
+2026-10-26T21:12:36.7200089Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-10-26T21:12:36.7304809Z Collecting pluggy==1.7.0 (from -r requirements/e2e-rl-real-model-v1.txt (line 18))
+2026-10-26T21:12:36.7339020Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+2026-10-26T21:12:36.7921393Z Collecting psutil==7.1.0 (from -r requirements/e2e-rl-real-model-v1.txt (line 19))
+2026-10-26T21:12:36.7957618Z   Downloading psutil-7.1.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (23 kB)
+2026-10-26T21:12:36.8218527Z Collecting pytest==8.4.2 (from -r requirements/e2e-rl-real-model-v1.txt (line 20))
+2026-10-26T21:12:36.8264095Z   Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+2026-10-26T21:12:37.1572928Z Collecting ruff==0.15.12 (from -r requirements/e2e-rl-real-model-v1.txt (line 21))
+2026-10-26T21:12:37.1608487Z   Downloading ruff-0.15.12-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (26 kB)
+2026-10-26T21:12:37.5409778Z Collecting regex==2026.9.29 (from -r requirements/e2e-rl-real-model-v1.txt (line 22))
+2026-10-26T21:12:37.5444756Z   Downloading regex-2026.9.29-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+2026-10-26T21:12:37.5642094Z Collecting requests==2.34.2 (from -r requirements/e2e-rl-real-model-v1.txt (line 23))
+2026-10-26T21:12:37.5674953Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-10-26T21:12:37.6737664Z Collecting safetensors==0.8.0 (from -r requirements/e2e-rl-real-model-v1.txt (line 24))
+2026-10-26T21:12:37.6771167Z   Downloading safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.2 kB)
+2026-10-26T21:12:37.6839147Z Requirement already satisfied: sympy==1.14.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r requirements/e2e-rl-real-model-v1.txt (line 25)) (1.14.0)
+2026-10-26T21:12:37.8095805Z Collecting tokenizers==0.22.2 (from -r requirements/e2e-rl-real-model-v1.txt (line 26))
+2026-10-26T21:12:37.8127865Z   Downloading tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+2026-10-26T21:12:37.8171282Z Requirement already satisfied: torch==2.8.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r requirements/e2e-rl-real-model-v1.txt (line 27)) (2.8.0+cpu)
+2026-10-26T21:12:37.8364079Z Collecting tqdm==4.70.1 (from -r requirements/e2e-rl-real-model-v1.txt (line 28))
+2026-10-26T21:12:37.8402133Z   Downloading tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+2026-10-26T21:12:37.8770414Z Collecting transformers==4.56.2 (from -r requirements/e2e-rl-real-model-v1.txt (line 29))
+2026-10-26T21:12:37.8826612Z   Downloading transformers-4.56.2-py3-none-any.whl.metadata (40 kB)
+2026-10-26T21:12:37.9362655Z Requirement already satisfied: typing_extensions==4.16.0 in /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages (from -r requirements/e2e-rl-real-model-v1.txt (line 30)) (4.16.0)
+2026-10-26T21:12:37.9503225Z Collecting urllib3==2.8.0 (from -r requirements/e2e-rl-real-model-v1.txt (line 31))
+2026-10-26T21:12:37.9534851Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-10-26T21:12:37.9968145Z Downloading markupsafe-3.0.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+2026-10-26T21:12:38.0021289Z Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+2026-10-26T21:12:38.0149722Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 75.8 MB/s  0:00:00
+2026-10-26T21:12:38.0182450Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-26T21:12:38.0318629Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 101.3 MB/s  0:00:00
+2026-10-26T21:12:38.0352991Z Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-10-26T21:12:38.0435337Z Downloading charset_normalizer-3.5.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (269 kB)
+2026-10-26T21:12:38.0509768Z Downloading filelock-4.2.0-py3-none-any.whl (135 kB)
+2026-10-26T21:12:38.0560252Z Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+2026-10-26T21:12:38.0627849Z Downloading hf_xet-1.7.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.2 MB)
+2026-10-26T21:12:38.0838152Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.2/4.2 MB 221.3 MB/s  0:00:00
+2026-10-26T21:12:38.0875105Z Downloading huggingface_hub-0.36.2-py3-none-any.whl (566 kB)
+2026-10-26T21:12:38.0939906Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 76.3 MB/s  0:00:00
+2026-10-26T21:12:38.0969157Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-10-26T21:12:38.1016486Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-10-26T21:12:38.1063926Z Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+2026-10-26T21:12:38.1692561Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 275.3 MB/s  0:00:00
+2026-10-26T21:12:38.1730785Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-26T21:12:38.1792388Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-10-26T21:12:38.1896517Z Downloading psutil-7.1.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (291 kB)
+2026-10-26T21:12:38.1955486Z Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+2026-10-26T21:12:38.2014387Z Downloading ruff-0.15.12-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (11.3 MB)
+2026-10-26T21:12:38.2403897Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.3/11.3 MB 303.3 MB/s  0:00:00
+2026-10-26T21:12:38.2438881Z Downloading regex-2026.9.29-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (804 kB)
+2026-10-26T21:12:38.2493364Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 805.0/805.0 kB 161.9 MB/s  0:00:00
+2026-10-26T21:12:38.2525298Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-10-26T21:12:38.2588890Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-10-26T21:12:38.2642108Z Downloading safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (516 kB)
+2026-10-26T21:12:38.2703534Z Downloading tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+2026-10-26T21:12:38.2830934Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 292.1 MB/s  0:00:00
+2026-10-26T21:12:38.2862496Z Downloading tqdm-4.70.1-py3-none-any.whl (80 kB)
+2026-10-26T21:12:38.2924108Z Downloading transformers-4.56.2-py3-none-any.whl (11.6 MB)
+2026-10-26T21:12:38.3763378Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.6/11.6 MB 143.5 MB/s  0:00:00
+2026-10-26T21:12:38.5999419Z Installing collected packages: urllib3, tqdm, safetensors, ruff, regex, PyYAML, Pygments, psutil, pluggy, packaging, numpy, MarkupSafe, iniconfig, idna, hf-xet, fsspec, filelock, charset-normalizer, certifi, requests, pytest, huggingface_hub, tokenizers, transformers
+2026-10-26T21:12:41.8285125Z   Attempting uninstall: MarkupSafe
+2026-10-26T21:12:41.8300809Z     Found existing installation: MarkupSafe 3.0.3
+2026-10-26T21:12:41.8317397Z     Uninstalling MarkupSafe-3.0.3:
+2026-10-26T21:12:41.8325695Z       Successfully uninstalled MarkupSafe-3.0.3
+2026-10-26T21:12:41.9383113Z   Attempting uninstall: fsspec
+2026-10-26T21:12:41.9401186Z     Found existing installation: fsspec 2026.7.0
+2026-10-26T21:12:41.9450424Z     Uninstalling fsspec-2026.7.0:
+2026-10-26T21:12:41.9462246Z       Successfully uninstalled fsspec-2026.7.0
+2026-10-26T21:12:42.0974872Z   Attempting uninstall: filelock
+2026-10-26T21:12:42.0989761Z     Found existing installation: filelock 3.32.3
+2026-10-26T21:12:42.1016265Z     Uninstalling filelock-3.32.3:
+2026-10-26T21:12:42.1025135Z       Successfully uninstalled filelock-3.32.3
+2026-10-26T21:12:48.9921840Z 
+2026-10-26T21:12:48.9940779Z Successfully installed MarkupSafe-3.0.4 PyYAML-6.0.3 Pygments-2.21.0 certifi-2026.7.22 charset-normalizer-3.5.2 filelock-4.2.0 fsspec-2026.9.0 hf-xet-1.7.0 huggingface_hub-0.36.2 idna-3.20 iniconfig-2.3.1 numpy-2.4.6 packaging-26.3 pluggy-1.7.0 psutil-7.1.0 pytest-8.4.2 regex-2026.9.29 requests-2.34.2 ruff-0.15.12 safetensors-0.8.0 tokenizers-0.22.2 tqdm-4.70.1 transformers-4.56.2 urllib3-2.8.0
+2026-10-26T21:12:48.9949658Z 
+2026-10-26T21:12:48.9950105Z [notice] A new release of pip is available: 26.2.1 -> 26.2.2
+2026-10-26T21:12:48.9950638Z [notice] To update, run: pip install --upgrade pip
+2026-10-26T21:12:49.1229695Z ##[group]Run python - <<'PY'
+2026-10-26T21:12:49.1230045Z [36;1mpython - <<'PY'[0m
+2026-10-26T21:12:49.1230290Z [36;1mimport os[0m
+2026-10-26T21:12:49.1230570Z [36;1mfrom huggingface_hub import snapshot_download[0m
+2026-10-26T21:12:49.1231923Z [36;1msnapshot_download('sshleifer/tiny-gpt2', revision='5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be', local_dir=os.environ['RUNNER_TEMP']+'/tiny-gpt2', allow_patterns=['config.json','pytorch_model.bin','tokenizer_config.json','vocab.json','merges.txt','special_tokens_map.json'])[0m
+2026-10-26T21:12:49.1233021Z [36;1mPY[0m
+2026-10-26T21:12:49.1300745Z shell: /usr/bin/bash -e {0}
+2026-10-26T21:12:49.1301012Z env:
+2026-10-26T21:12:49.1301210Z   OMP_NUM_THREADS: 1
+2026-10-26T21:12:49.1301430Z   MKL_NUM_THREADS: 1
+2026-10-26T21:12:49.1301653Z   TOKENIZERS_PARALLELISM: false
+2026-10-26T21:12:49.1301907Z   PYTHONHASHSEED: 0
+2026-10-26T21:12:49.1302188Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:49.1302673Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-26T21:12:49.1303116Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:49.1303495Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:49.1303888Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:49.1304278Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-26T21:12:49.1304602Z ##[endgroup]
+2026-10-26T21:12:49.8208179Z 
+2026-10-26T21:12:49.9820705Z Fetching 6 files:   0%|          | 0/6 [00:00<?, ?it/s]
+2026-10-26T21:12:50.7471611Z Fetching 6 files:  17%|█▋        | 1/6 [00:00<00:00,  6.21it/s]
+2026-10-26T21:12:50.7472763Z Fetching 6 files: 100%|██████████| 6/6 [00:00<00:00,  6.48it/s]
+2026-10-26T21:12:50.7473701Z Fetching 6 files: 100%|██████████| 6/6 [00:00<00:00,  6.48it/s]
+2026-10-26T21:12:50.7921647Z ##[group]Run python -m pytest tests/test_e2e_rl_real_model.py
+2026-10-26T21:12:50.7922116Z [36;1mpython -m pytest tests/test_e2e_rl_real_model.py[0m
+2026-10-26T21:12:50.7985245Z shell: /usr/bin/bash -e {0}
+2026-10-26T21:12:50.7985497Z env:
+2026-10-26T21:12:50.7985692Z   OMP_NUM_THREADS: 1
+2026-10-26T21:12:50.7985910Z   MKL_NUM_THREADS: 1
+2026-10-26T21:12:50.7986430Z   TOKENIZERS_PARALLELISM: false
+2026-10-26T21:12:50.7986716Z   PYTHONHASHSEED: 0
+2026-10-26T21:12:50.7986999Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:50.7987445Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-26T21:12:50.7987882Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:50.7988271Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:50.7988666Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:12:50.7989093Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-26T21:12:50.7989487Z   VARE_E2E_MODEL_DIR: /home/runner/work/_temp/tiny-gpt2
+2026-10-26T21:12:50.7989797Z ##[endgroup]
+2026-10-26T21:13:07.7491867Z .........                                                                [100%]
+2026-10-26T21:13:07.7492492Z 9 passed in 15.90s
+2026-10-26T21:13:08.3167077Z ##[group]Run python scripts/benchmark_e2e_rl_real_model.py --output "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2" --workers 1 --seeds 1701 --tasks 8 --eval-tasks 8
+2026-10-26T21:13:08.3169334Z [36;1mpython scripts/benchmark_e2e_rl_real_model.py --output "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2" --workers 1 --seeds 1701 --tasks 8 --eval-tasks 8[0m
+2026-10-26T21:13:08.3171097Z [36;1mpython scripts/audit_e2e_rl_real_model.py "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2"[0m
+2026-10-26T21:13:08.3242169Z shell: /usr/bin/bash -e {0}
+2026-10-26T21:13:08.3242428Z env:
+2026-10-26T21:13:08.3242625Z   OMP_NUM_THREADS: 1
+2026-10-26T21:13:08.3242843Z   MKL_NUM_THREADS: 1
+2026-10-26T21:13:08.3243092Z   TOKENIZERS_PARALLELISM: false
+2026-10-26T21:13:08.3243349Z   PYTHONHASHSEED: 0
+2026-10-26T21:13:08.3243631Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:13:08.3244126Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-26T21:13:08.3244563Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:13:08.3245151Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:13:08.3245557Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:13:08.3245960Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-26T21:13:08.3246528Z ##[endgroup]
+2026-10-26T21:13:17.9405396Z {"directory": "w1-s1701-minimal", "tasks_s": 30.941105037589043, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+2026-10-26T21:13:18.3210634Z {"directory": "w1-s1701-guarded", "tasks_s": 30.46937589870734, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+2026-10-26T21:13:22.2193045Z {"directory": "fault-policy_stale-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+2026-10-26T21:13:22.4864273Z {"directory": "fault-policy_stale-s1701-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+2026-10-26T21:13:22.8420589Z {"directory": "fault-replay_stale-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+2026-10-26T21:13:23.1089759Z {"directory": "fault-replay_stale-s1701-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+2026-10-26T21:13:23.4562990Z {"directory": "fault-reward_tamper-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+2026-10-26T21:13:23.7080384Z {"directory": "fault-reward_tamper-s1701-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "unauthenticated_training_reward_evidence"}}
+2026-10-26T21:13:24.0551821Z {"directory": "fault-forged_eval-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+2026-10-26T21:13:24.4111078Z {"directory": "fault-forged_eval-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+2026-10-26T21:13:24.7555251Z {"directory": "fault-checkpoint_corrupt-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+2026-10-26T21:13:25.1144547Z {"directory": "fault-checkpoint_corrupt-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CheckpointIntegrityError", "message": "checkpoint is not a bounded regular file"}}
+2026-10-26T21:13:25.4039780Z {"directory": "fault-optimizer_exception-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "injected failure after real AdamW step"}}
+2026-10-26T21:13:25.7214851Z {"directory": "fault-optimizer_exception-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "injected failure after real AdamW step"}}
+2026-10-26T21:13:26.0508274Z {"directory": "fault-evaluation_cancel-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CancelledError", "message": ""}}
+2026-10-26T21:13:26.4034571Z {"directory": "fault-evaluation_cancel-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CancelledError", "message": ""}}
+2026-10-26T21:13:29.7698669Z {"directory": "fault-worker_crash-s1701-minimal", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "BrokenProcessPool", "message": "A process in the process pool was terminated abruptly while the future was running or pending."}}
+2026-10-26T21:13:33.1277997Z {"directory": "fault-worker_crash-s1701-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "BrokenProcessPool", "message": "A process in the process pool was terminated abruptly while the future was running or pending."}}
+2026-10-26T21:13:33.6160488Z {"directory": "fault-publication_crash-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": {"type": "PromotionRecoveryRequired", "message": "promotion failed; verify the runtime and reconcile durable evidence"}}
+2026-10-26T21:13:34.1287800Z {"directory": "fault-publication_crash-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": {"type": "PromotionRecoveryRequired", "message": "promotion failed; verify the runtime and reconcile durable evidence"}}
+2026-10-26T21:13:35.2997804Z PASS 20 measured cases; 25.854s campaign
+2026-10-26T21:13:39.3219022Z {"artifacts_hashed": 269, "cases": 20, "checkpoint_scores_replayed": true, "pass": true}
+2026-10-26T21:13:39.8128049Z ##[group]Run set +e
+2026-10-26T21:13:39.8128320Z [36;1mset +e[0m
+2026-10-26T21:13:39.8128728Z [36;1mpython -m pytest tests/test_e2e_rl_continuation.py --basetemp="${RUNNER_TEMP}/v2-tests"[0m
+2026-10-26T21:13:39.8129204Z [36;1mpytest_status=$?[0m
+2026-10-26T21:13:39.8129581Z [36;1mtar -cJf "${RUNNER_TEMP}/v2-tests.tar.xz" -C "${RUNNER_TEMP}/v2-tests" .[0m
+2026-10-26T21:13:39.8129998Z [36;1marchive_status=$?[0m
+2026-10-26T21:13:39.8130261Z [36;1mif [ "${pytest_status}" -ne 0 ]; then[0m
+2026-10-26T21:13:39.8130556Z [36;1m  exit "${pytest_status}"[0m
+2026-10-26T21:13:39.8130807Z [36;1mfi[0m
+2026-10-26T21:13:39.8131012Z [36;1mexit "${archive_status}"[0m
+2026-10-26T21:13:39.8193016Z shell: /usr/bin/bash -e {0}
+2026-10-26T21:13:39.8193274Z env:
+2026-10-26T21:13:39.8193472Z   OMP_NUM_THREADS: 1
+2026-10-26T21:13:39.8193693Z   MKL_NUM_THREADS: 1
+2026-10-26T21:13:39.8193918Z   TOKENIZERS_PARALLELISM: false
+2026-10-26T21:13:39.8194175Z   PYTHONHASHSEED: 0
+2026-10-26T21:13:39.8194487Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:13:39.8194934Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-26T21:13:39.8195389Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:13:39.8195786Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:13:39.8196336Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:13:39.8196735Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-26T21:13:39.8197116Z   VARE_E2E_MODEL_DIR: /home/runner/work/_temp/tiny-gpt2
+2026-10-26T21:13:39.8197427Z ##[endgroup]
+2026-10-26T21:16:44.1979076Z .F..F..............................................F.................... [ 73%]
+2026-10-26T21:16:54.2292762Z ..........................                                               [100%]
+2026-10-26T21:16:54.2293330Z =================================== FAILURES ===================================
+2026-10-26T21:16:54.2294115Z _____ test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign _____
+2026-10-26T21:16:54.2294742Z 
+2026-10-26T21:16:54.2295143Z     def test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign():
+2026-10-26T21:16:54.2296499Z         runtime_sources={str(path.relative_to(bench.ROOT))
+2026-10-26T21:16:54.2297317Z                          for path in (bench.ROOT/"src/vare").rglob("*.py")}
+2026-10-26T21:16:54.2298570Z         historical_77=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V1]
+2026-10-26T21:16:54.2299707Z         diagnostic_78=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V2]
+2026-10-26T21:16:54.2300918Z         diagnostic_80=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
+2026-10-26T21:16:54.2302627Z         navigation_v4=auditor.PINNED_RUNTIME_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V4]
+2026-10-26T21:16:54.2304009Z         assert auditor.runtime_source_names_from_commit(historical_77)==auditor.RUNTIME_PACKAGE_SOURCES_V1
+2026-10-26T21:16:54.2305357Z         assert auditor.runtime_source_names_from_commit(diagnostic_78)==auditor.RUNTIME_PACKAGE_SOURCES_V2
+2026-10-26T21:16:54.2306447Z         assert auditor.runtime_source_names_from_commit(diagnostic_80)==auditor.RUNTIME_PACKAGE_SOURCES_V3
+2026-10-26T21:16:54.2307581Z         assert auditor.runtime_source_names_from_commit(navigation_v4)==auditor.RUNTIME_PACKAGE_SOURCES_V4
+2026-10-26T21:16:54.2308317Z >       assert runtime_sources==auditor.RUNTIME_PACKAGE_SOURCES_V4
+2026-10-26T21:16:54.2320486Z E       AssertionError: assert {'src/vare/__...t_v2.py', ...} == frozenset({'s..._v2.py', ...})
+2026-10-26T21:16:54.2321238Z E         
+2026-10-26T21:16:54.2321629Z E         Extra items in the left set:
+2026-10-26T21:16:54.2322131Z E         'src/vare/source_navigation_v2.py'
+2026-10-26T21:16:54.2322624Z E         'src/vare/schema_slot_protocol.py'
+2026-10-26T21:16:54.2323073Z E         
+2026-10-26T21:16:54.2323384Z E         Full diff:
+2026-10-26T21:16:54.2323702Z E         - frozenset({
+2026-10-26T21:16:54.2324186Z E         + {
+2026-10-26T21:16:54.2324426Z E               'src/vare/__init__.py',
+2026-10-26T21:16:54.2324715Z E               'src/vare/__main__.py',
+2026-10-26T21:16:54.2324993Z E               'src/vare/_grader_guard.py',
+2026-10-26T21:16:54.2325303Z E               'src/vare/_public.py',
+2026-10-26T21:16:54.2325601Z E               'src/vare/agent_edit_format.py',
+2026-10-26T21:16:54.2325903Z E               'src/vare/agent_edit_v2.py',
+2026-10-26T21:16:54.2326498Z E               'src/vare/agent_task_contract.py',
+2026-10-26T21:16:54.2326831Z E               'src/vare/answer_scoring.py',
+2026-10-26T21:16:54.2327129Z E               'src/vare/attestation.py',
+2026-10-26T21:16:54.2327416Z E               'src/vare/blob_budget.py',
+2026-10-26T21:16:54.2327724Z E               'src/vare/checkpoint_artifacts.py',
+2026-10-26T21:16:54.2328031Z E               'src/vare/cli.py',
+2026-10-26T21:16:54.2328289Z E               'src/vare/config.py',
+2026-10-26T21:16:54.2328577Z E               'src/vare/container_isolation.py',
+2026-10-26T21:16:54.2328874Z E               'src/vare/controls.py',
+2026-10-26T21:16:54.2329143Z E               'src/vare/curriculum.py',
+2026-10-26T21:16:54.2329418Z E               'src/vare/demo.py',
+2026-10-26T21:16:54.2329675Z E               'src/vare/durable.py',
+2026-10-26T21:16:54.2329941Z E               'src/vare/engine.py',
+2026-10-26T21:16:54.2330206Z E               'src/vare/entrypoint.py',
+2026-10-26T21:16:54.2330507Z E               'src/vare/environments/__init__.py',
+2026-10-26T21:16:54.2330823Z E               'src/vare/environments/campaign.py',
+2026-10-26T21:16:54.2331135Z E               'src/vare/environments/catalog.py',
+2026-10-26T21:16:54.2331436Z E               'src/vare/environments/factory.py',
+2026-10-26T21:16:54.2331736Z E               'src/vare/environments/runner.py',
+2026-10-26T21:16:54.2332041Z E               'src/vare/environments/spec.py',
+2026-10-26T21:16:54.2332358Z E               'src/vare/environments/verifier.py',
+2026-10-26T21:16:54.2332657Z E               'src/vare/eval_stats.py',
+2026-10-26T21:16:54.2332931Z E               'src/vare/evidence.py',
+2026-10-26T21:16:54.2333198Z E               'src/vare/failure.py',
+2026-10-26T21:16:54.2333472Z E               'src/vare/failure_triage.py',
+2026-10-26T21:16:54.2333781Z E               'src/vare/format_vs_correctness.py',
+2026-10-26T21:16:54.2334138Z E               'src/vare/format_vs_correctness_seeded_summary_v3.py',
+2026-10-26T21:16:54.2334511Z E               'src/vare/format_vs_correctness_v2.py',
+2026-10-26T21:16:54.2334846Z E               'src/vare/heldout_exact_integer.py',
+2026-10-26T21:16:54.2335175Z E               'src/vare/integer_seed_split.py',
+2026-10-26T21:16:54.2335490Z E               'src/vare/integrations/__init__.py',
+2026-10-26T21:16:54.2335831Z E               'src/vare/integrations/chat_completions.py',
+2026-10-26T21:16:54.2336453Z E               'src/vare/integrations/rvl.py',
+2026-10-26T21:16:54.2336832Z E               'src/vare/integrations/rvl_grpo.py',
+2026-10-26T21:16:54.2337160Z E               'src/vare/integrations/rvl_trajectory.py',
+2026-10-26T21:16:54.2337476Z E               'src/vare/interfaces.py',
+2026-10-26T21:16:54.2337765Z E               'src/vare/isolated_candidate.py',
+2026-10-26T21:16:54.2338070Z E               'src/vare/isolated_hooks.py',
+2026-10-26T21:16:54.2338588Z E               'src/vare/lag.py',
+2026-10-26T21:16:54.2338851Z E               'src/vare/lifecycle.py',
+2026-10-26T21:16:54.2339141Z E               'src/vare/meta_improvement.py',
+2026-10-26T21:16:54.2339482Z E               'src/vare/mlsys_coding_actions.py',
+2026-10-26T21:16:54.2339799Z E               'src/vare/mlsys_coding_comparison.py',
+2026-10-26T21:16:54.2340129Z E               'src/vare/mlsys_heldout_task_pilot_v1.py',
+2026-10-26T21:16:54.2340454Z E               'src/vare/mlsys_repo_task.py',
+2026-10-26T21:16:54.2340751Z E               'src/vare/mlxlm_1912_repo_task.py',
+2026-10-26T21:16:54.2341045Z E               'src/vare/promotion.py',
+2026-10-26T21:16:54.2341473Z E               'src/vare/promotion_journal.py',
+2026-10-26T21:16:54.2341766Z E               'src/vare/protocol.py',
+2026-10-26T21:16:54.2342037Z E               'src/vare/replay.py',
+2026-10-26T21:16:54.2342312Z E               'src/vare/reward_evidence.py',
+2026-10-26T21:16:54.2342605Z E               'src/vare/runner.py',
+2026-10-26T21:16:54.2342866Z E               'src/vare/runtime.py',
+2026-10-26T21:16:54.2343126Z E               'src/vare/safety.py',
+2026-10-26T21:16:54.2343401Z E               'src/vare/sandboxed_repository.py',
+2026-10-26T21:16:54.2343706Z E         +     'src/vare/schema_slot_protocol.py',
+2026-10-26T21:16:54.2344031Z E               'src/vare/separated_candidate_harness.py',
+2026-10-26T21:16:54.2344358Z E               'src/vare/separated_grading.py',
+2026-10-26T21:16:54.2344657Z E               'src/vare/source_navigation_v1.py',
+2026-10-26T21:16:54.2344958Z E         +     'src/vare/source_navigation_v2.py',
+2026-10-26T21:16:54.2345252Z E               'src/vare/telemetry.py',
+2026-10-26T21:16:54.2345534Z E               'src/vare/trajectory_admission.py',
+2026-10-26T21:16:54.2345842Z E               'src/vare/trajectory_dispatch.py',
+2026-10-26T21:16:54.2346406Z E               'src/vare/trajectory_learner.py',
+2026-10-26T21:16:54.2346733Z E               'src/vare/trajectory_promotion.py',
+2026-10-26T21:16:54.2347046Z E               'src/vare/trajectory_provenance.py',
+2026-10-26T21:16:54.2347369Z E               'src/vare/trajectory_reference.py',
+2026-10-26T21:16:54.2347679Z E               'src/vare/trajectory_safety.py',
+2026-10-26T21:16:54.2347975Z E               'src/vare/trajectory_store.py',
+2026-10-26T21:16:54.2348276Z E               'src/vare/trajectory_workers.py',
+2026-10-26T21:16:54.2348585Z E               'src/vare/transformers_repo_task.py',
+2026-10-26T21:16:54.2348895Z E               'src/vare/trusted_evaluation.py',
+2026-10-26T21:16:54.2349194Z E               'src/vare/trusted_scoring.py',
+2026-10-26T21:16:54.2349484Z E               'src/vare/types.py',
+2026-10-26T21:16:54.2349759Z E               'src/vare/update_cost_smoke.py',
+2026-10-26T21:16:54.2350047Z E               'src/vare/verifiers.py',
+2026-10-26T21:16:54.2350308Z E         - })
+2026-10-26T21:16:54.2350501Z E         + }
+2026-10-26T21:16:54.2350616Z 
+2026-10-26T21:16:54.2350771Z tests/test_e2e_rl_continuation.py:42: AssertionError
+2026-10-26T21:16:54.2351197Z _______________ test_campaign_snapshots_the_full_runtime_package _______________
+2026-10-26T21:16:54.2351499Z 
+2026-10-26T21:16:54.2351892Z campaign = (PosixPath('/home/runner/work/_temp/v2-tests/continuation0/run'), PosixPath('/home/runner/work/_temp/tiny-gpt2'))
+2026-10-26T21:16:54.2352611Z tmp_path = PosixPath('/home/runner/work/_temp/v2-tests/test_campaign_snapshots_the_fu0')
+2026-10-26T21:16:54.2352963Z 
+2026-10-26T21:16:54.2353174Z     def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
+2026-10-26T21:16:54.2353569Z         root,_=campaign
+2026-10-26T21:16:54.2353833Z         manifest=auditor.read(root/"manifest.json")
+2026-10-26T21:16:54.2354354Z         runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
+2026-10-26T21:16:54.2354863Z >       assert len(runtime_sources)==80
+2026-10-26T21:16:54.2355145Z E       AssertionError: assert 82 == 80
+2026-10-26T21:16:54.2355989Z E        +  where 82 = len({'src/vare/__init__.py', 'src/vare/__main__.py', 'src/vare/_grader_guard.py', 'src/vare/_public.py', 'src/vare/agent_edit_format.py', 'src/vare/agent_edit_v2.py', ...})
+2026-10-26T21:16:54.2356853Z 
+2026-10-26T21:16:54.2356997Z tests/test_e2e_rl_continuation.py:117: AssertionError
+2026-10-26T21:16:54.2357427Z ____________ test_80_file_inventory_rejects_an_unpinned_base_commit ____________
+2026-10-26T21:16:54.2357729Z 
+2026-10-26T21:16:54.2357892Z     def test_80_file_inventory_rejects_an_unpinned_base_commit():
+2026-10-26T21:16:54.2358377Z         pinned=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
+2026-10-26T21:16:54.2358930Z         unpinned=subprocess.check_output(
+2026-10-26T21:16:54.2359285Z             ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
+2026-10-26T21:16:54.2359612Z         ).strip()
+2026-10-26T21:16:54.2359848Z         assert unpinned!=pinned
+2026-10-26T21:16:54.2360294Z >       assert auditor.runtime_source_names_from_commit(unpinned)==auditor.RUNTIME_PACKAGE_SOURCES_V3
+2026-10-26T21:16:54.2360947Z E       AssertionError: assert frozenset({'s..._v2.py', ...}) == frozenset({'s..._v2.py', ...})
+2026-10-26T21:16:54.2361447Z E         
+2026-10-26T21:16:54.2361683Z E         Extra items in the left set:
+2026-10-26T21:16:54.2361968Z E         'src/vare/source_navigation_v2.py'
+2026-10-26T21:16:54.2362269Z E         'src/vare/schema_slot_protocol.py'
+2026-10-26T21:16:54.2362530Z E         
+2026-10-26T21:16:54.2362712Z E         Full diff:
+2026-10-26T21:16:54.2362923Z E           frozenset({
+2026-10-26T21:16:54.2363154Z E               'src/vare/__init__.py',
+2026-10-26T21:16:54.2363428Z E               'src/vare/__main__.py',
+2026-10-26T21:16:54.2363701Z E               'src/vare/_grader_guard.py',
+2026-10-26T21:16:54.2363977Z E               'src/vare/_public.py',
+2026-10-26T21:16:54.2364254Z E               'src/vare/agent_edit_format.py',
+2026-10-26T21:16:54.2364547Z E               'src/vare/agent_edit_v2.py',
+2026-10-26T21:16:54.2364846Z E               'src/vare/agent_task_contract.py',
+2026-10-26T21:16:54.2365151Z E               'src/vare/answer_scoring.py',
+2026-10-26T21:16:54.2365452Z E               'src/vare/attestation.py',
+2026-10-26T21:16:54.2365732Z E               'src/vare/blob_budget.py',
+2026-10-26T21:16:54.2366029Z E               'src/vare/checkpoint_artifacts.py',
+2026-10-26T21:16:54.2366608Z E               'src/vare/cli.py',
+2026-10-26T21:16:54.2366869Z E               'src/vare/config.py',
+2026-10-26T21:16:54.2367154Z E               'src/vare/container_isolation.py',
+2026-10-26T21:16:54.2367448Z E               'src/vare/controls.py',
+2026-10-26T21:16:54.2367727Z E               'src/vare/curriculum.py',
+2026-10-26T21:16:54.2367998Z E               'src/vare/demo.py',
+2026-10-26T21:16:54.2368255Z E               'src/vare/durable.py',
+2026-10-26T21:16:54.2368515Z E               'src/vare/engine.py',
+2026-10-26T21:16:54.2368776Z E               'src/vare/entrypoint.py',
+2026-10-26T21:16:54.2369080Z E               'src/vare/environments/__init__.py',
+2026-10-26T21:16:54.2369395Z E               'src/vare/environments/campaign.py',
+2026-10-26T21:16:54.2369708Z E               'src/vare/environments/catalog.py',
+2026-10-26T21:16:54.2370014Z E               'src/vare/environments/factory.py',
+2026-10-26T21:16:54.2370317Z E               'src/vare/environments/runner.py',
+2026-10-26T21:16:54.2370620Z E               'src/vare/environments/spec.py',
+2026-10-26T21:16:54.2370926Z E               'src/vare/environments/verifier.py',
+2026-10-26T21:16:54.2371218Z E               'src/vare/eval_stats.py',
+2026-10-26T21:16:54.2371491Z E               'src/vare/evidence.py',
+2026-10-26T21:16:54.2371768Z E               'src/vare/failure.py',
+2026-10-26T21:16:54.2372039Z E               'src/vare/failure_triage.py',
+2026-10-26T21:16:54.2372336Z E               'src/vare/format_vs_correctness.py',
+2026-10-26T21:16:54.2372686Z E               'src/vare/format_vs_correctness_seeded_summary_v3.py',
+2026-10-26T21:16:54.2373197Z E               'src/vare/format_vs_correctness_v2.py',
+2026-10-26T21:16:54.2373512Z E               'src/vare/heldout_exact_integer.py',
+2026-10-26T21:16:54.2373815Z E               'src/vare/integer_seed_split.py',
+2026-10-26T21:16:54.2374118Z E               'src/vare/integrations/__init__.py',
+2026-10-26T21:16:54.2374448Z E               'src/vare/integrations/chat_completions.py',
+2026-10-26T21:16:54.2374781Z E               'src/vare/integrations/rvl.py',
+2026-10-26T21:16:54.2375083Z E               'src/vare/integrations/rvl_grpo.py',
+2026-10-26T21:16:54.2375404Z E               'src/vare/integrations/rvl_trajectory.py',
+2026-10-26T21:16:54.2375716Z E               'src/vare/interfaces.py',
+2026-10-26T21:16:54.2376345Z E               'src/vare/isolated_candidate.py',
+2026-10-26T21:16:54.2376753Z E               'src/vare/isolated_hooks.py',
+2026-10-26T21:16:54.2377050Z E               'src/vare/lag.py',
+2026-10-26T21:16:54.2377318Z E               'src/vare/lifecycle.py',
+2026-10-26T21:16:54.2377620Z E               'src/vare/meta_improvement.py',
+2026-10-26T21:16:54.2377936Z E               'src/vare/mlsys_coding_actions.py',
+2026-10-26T21:16:54.2378255Z E               'src/vare/mlsys_coding_comparison.py',
+2026-10-26T21:16:54.2378581Z E               'src/vare/mlsys_heldout_task_pilot_v1.py',
+2026-10-26T21:16:54.2378895Z E               'src/vare/mlsys_repo_task.py',
+2026-10-26T21:16:54.2379192Z E               'src/vare/mlxlm_1912_repo_task.py',
+2026-10-26T21:16:54.2379481Z E               'src/vare/promotion.py',
+2026-10-26T21:16:54.2379767Z E               'src/vare/promotion_journal.py',
+2026-10-26T21:16:54.2380058Z E               'src/vare/protocol.py',
+2026-10-26T21:16:54.2380356Z E               'src/vare/replay.py',
+2026-10-26T21:16:54.2380627Z E               'src/vare/reward_evidence.py',
+2026-10-26T21:16:54.2380907Z E               'src/vare/runner.py',
+2026-10-26T21:16:54.2381164Z E               'src/vare/runtime.py',
+2026-10-26T21:16:54.2381455Z E               'src/vare/safety.py',
+2026-10-26T21:16:54.2381743Z E               'src/vare/sandboxed_repository.py',
+2026-10-26T21:16:54.2382051Z E         +     'src/vare/schema_slot_protocol.py',
+2026-10-26T21:16:54.2382371Z E               'src/vare/separated_candidate_harness.py',
+2026-10-26T21:16:54.2382688Z E               'src/vare/separated_grading.py',
+2026-10-26T21:16:54.2383001Z E               'src/vare/source_navigation_v1.py',
+2026-10-26T21:16:54.2383309Z E         +     'src/vare/source_navigation_v2.py',
+2026-10-26T21:16:54.2383601Z E               'src/vare/telemetry.py',
+2026-10-26T21:16:54.2383882Z E               'src/vare/trajectory_admission.py',
+2026-10-26T21:16:54.2384186Z E               'src/vare/trajectory_dispatch.py',
+2026-10-26T21:16:54.2384497Z E               'src/vare/trajectory_learner.py',
+2026-10-26T21:16:54.2384838Z E               'src/vare/trajectory_promotion.py',
+2026-10-26T21:16:54.2385146Z E               'src/vare/trajectory_provenance.py',
+2026-10-26T21:16:54.2385453Z E               'src/vare/trajectory_reference.py',
+2026-10-26T21:16:54.2385752Z E               'src/vare/trajectory_safety.py',
+2026-10-26T21:16:54.2386255Z E               'src/vare/trajectory_store.py',
+2026-10-26T21:16:54.2386735Z E               'src/vare/trajectory_workers.py',
+2026-10-26T21:16:54.2387046Z E               'src/vare/transformers_repo_task.py',
+2026-10-26T21:16:54.2387348Z E               'src/vare/trusted_evaluation.py',
+2026-10-26T21:16:54.2387642Z E               'src/vare/trusted_scoring.py',
+2026-10-26T21:16:54.2387919Z E               'src/vare/types.py',
+2026-10-26T21:16:54.2388187Z E               'src/vare/update_cost_smoke.py',
+2026-10-26T21:16:54.2388470Z E               'src/vare/verifiers.py',
+2026-10-26T21:16:54.2388727Z E           })
+2026-10-26T21:16:54.2388844Z 
+2026-10-26T21:16:54.2388983Z tests/test_e2e_rl_continuation.py:694: AssertionError
+2026-10-26T21:16:54.2389360Z =========================== short test summary info ============================
+2026-10-26T21:16:54.2390538Z FAILED tests/test_e2e_rl_continuation.py::test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign - AssertionError: assert {'src/vare/__...t_v2.py', ...} == frozenset({'s..._v2.py', ...})
+2026-10-26T21:16:54.2391327Z   
+2026-10-26T21:16:54.2391519Z   Extra items in the left set:
+2026-10-26T21:16:54.2391778Z   'src/vare/source_navigation_v2.py'
+2026-10-26T21:16:54.2392046Z   'src/vare/schema_slot_protocol.py'
+2026-10-26T21:16:54.2392288Z   
+2026-10-26T21:16:54.2392454Z   Full diff:
+2026-10-26T21:16:54.2392640Z   - frozenset({
+2026-10-26T21:16:54.2392840Z   + {
+2026-10-26T21:16:54.2393034Z         'src/vare/__init__.py',
+2026-10-26T21:16:54.2393277Z         'src/vare/__main__.py',
+2026-10-26T21:16:54.2393625Z         'src/vare/_grader_guard.py',
+2026-10-26T21:16:54.2393885Z         'src/vare/_public.py',
+2026-10-26T21:16:54.2394133Z         'src/vare/agent_edit_format.py',
+2026-10-26T21:16:54.2394403Z         'src/vare/agent_edit_v2.py',
+2026-10-26T21:16:54.2394667Z         'src/vare/agent_task_contract.py',
+2026-10-26T21:16:54.2394947Z         'src/vare/answer_scoring.py',
+2026-10-26T21:16:54.2395209Z         'src/vare/attestation.py',
+2026-10-26T21:16:54.2395465Z         'src/vare/blob_budget.py',
+2026-10-26T21:16:54.2395730Z         'src/vare/checkpoint_artifacts.py',
+2026-10-26T21:16:54.2396006Z         'src/vare/cli.py',
+2026-10-26T21:16:54.2396406Z         'src/vare/config.py',
+2026-10-26T21:16:54.2396678Z         'src/vare/container_isolation.py',
+2026-10-26T21:16:54.2396945Z         'src/vare/controls.py',
+2026-10-26T21:16:54.2397208Z         'src/vare/curriculum.py',
+2026-10-26T21:16:54.2397450Z         'src/vare/demo.py',
+2026-10-26T21:16:54.2397685Z         'src/vare/durable.py',
+2026-10-26T21:16:54.2397922Z         'src/vare/engine.py',
+2026-10-26T21:16:54.2398162Z         'src/vare/entrypoint.py',
+2026-10-26T21:16:54.2398427Z         'src/vare/environments/__init__.py',
+2026-10-26T21:16:54.2398719Z         'src/vare/environments/campaign.py',
+2026-10-26T21:16:54.2399004Z         'src/vare/environments/catalog.py',
+2026-10-26T21:16:54.2399290Z         'src/vare/environments/factory.py',
+2026-10-26T21:16:54.2399568Z         'src/vare/environments/runner.py',
+2026-10-26T21:16:54.2399851Z         'src/vare/environments/spec.py',
+2026-10-26T21:16:54.2400131Z         'src/vare/environments/verifier.py',
+2026-10-26T21:16:54.2400403Z         'src/vare/eval_stats.py',
+2026-10-26T21:16:54.2400646Z         'src/vare/evidence.py',
+2026-10-26T21:16:54.2400883Z         'src/vare/failure.py',
+2026-10-26T21:16:54.2401125Z         'src/vare/failure_triage.py',
+2026-10-26T21:16:54.2401396Z         'src/vare/format_vs_correctness.py',
+2026-10-26T21:16:54.2401717Z         'src/vare/format_vs_correctness_seeded_summary_v3.py',
+2026-10-26T21:16:54.2402067Z         'src/vare/format_vs_correctness_v2.py',
+2026-10-26T21:16:54.2402361Z         'src/vare/heldout_exact_integer.py',
+2026-10-26T21:16:54.2402648Z         'src/vare/integer_seed_split.py',
+2026-10-26T21:16:54.2402932Z         'src/vare/integrations/__init__.py',
+2026-10-26T21:16:54.2403239Z         'src/vare/integrations/chat_completions.py',
+2026-10-26T21:16:54.2403542Z         'src/vare/integrations/rvl.py',
+2026-10-26T21:16:54.2403819Z         'src/vare/integrations/rvl_grpo.py',
+2026-10-26T21:16:54.2404115Z         'src/vare/integrations/rvl_trajectory.py',
+2026-10-26T21:16:54.2404411Z         'src/vare/interfaces.py',
+2026-10-26T21:16:54.2404666Z         'src/vare/isolated_candidate.py',
+2026-10-26T21:16:54.2404944Z         'src/vare/isolated_hooks.py',
+2026-10-26T21:16:54.2405203Z         'src/vare/lag.py',
+2026-10-26T21:16:54.2405433Z         'src/vare/lifecycle.py',
+2026-10-26T21:16:54.2405687Z         'src/vare/meta_improvement.py',
+2026-10-26T21:16:54.2405967Z         'src/vare/mlsys_coding_actions.py',
+2026-10-26T21:16:54.2406403Z         'src/vare/mlsys_coding_comparison.py',
+2026-10-26T21:16:54.2406712Z         'src/vare/mlsys_heldout_task_pilot_v1.py',
+2026-10-26T21:16:54.2407008Z         'src/vare/mlsys_repo_task.py',
+2026-10-26T21:16:54.2407401Z         'src/vare/mlxlm_1912_repo_task.py',
+2026-10-26T21:16:54.2407672Z         'src/vare/promotion.py',
+2026-10-26T21:16:54.2407934Z         'src/vare/promotion_journal.py',
+2026-10-26T21:16:54.2408207Z         'src/vare/protocol.py',
+2026-10-26T21:16:54.2408444Z         'src/vare/replay.py',
+2026-10-26T21:16:54.2408688Z         'src/vare/reward_evidence.py',
+2026-10-26T21:16:54.2408946Z         'src/vare/runner.py',
+2026-10-26T21:16:54.2409178Z         'src/vare/runtime.py',
+2026-10-26T21:16:54.2409411Z         'src/vare/safety.py',
+2026-10-26T21:16:54.2409655Z         'src/vare/sandboxed_repository.py',
+2026-10-26T21:16:54.2409937Z   +     'src/vare/schema_slot_protocol.py',
+2026-10-26T21:16:54.2410333Z         'src/vare/separated_candidate_harness.py',
+2026-10-26T21:16:54.2410636Z         'src/vare/separated_grading.py',
+2026-10-26T21:16:54.2410916Z         'src/vare/source_navigation_v1.py',
+2026-10-26T21:16:54.2411193Z   +     'src/vare/source_navigation_v2.py',
+2026-10-26T21:16:54.2411459Z         'src/vare/telemetry.py',
+2026-10-26T21:16:54.2411717Z         'src/vare/trajectory_admission.py',
+2026-10-26T21:16:54.2411994Z         'src/vare/trajectory_dispatch.py',
+2026-10-26T21:16:54.2412272Z         'src/vare/trajectory_learner.py',
+2026-10-26T21:16:54.2412548Z         'src/vare/trajectory_promotion.py',
+2026-10-26T21:16:54.2412830Z         'src/vare/trajectory_provenance.py',
+2026-10-26T21:16:54.2413118Z         'src/vare/trajectory_reference.py',
+2026-10-26T21:16:54.2413407Z         'src/vare/trajectory_safety.py',
+2026-10-26T21:16:54.2413689Z         'src/vare/trajectory_store.py',
+2026-10-26T21:16:54.2413968Z         'src/vare/trajectory_workers.py',
+2026-10-26T21:16:54.2414261Z         'src/vare/transformers_repo_task.py',
+2026-10-26T21:16:54.2414550Z         'src/vare/trusted_evaluation.py',
+2026-10-26T21:16:54.2414825Z         'src/vare/trusted_scoring.py',
+2026-10-26T21:16:54.2415086Z         'src/vare/types.py',
+2026-10-26T21:16:54.2415333Z         'src/vare/update_cost_smoke.py',
+2026-10-26T21:16:54.2415602Z         'src/vare/verifiers.py',
+2026-10-26T21:16:54.2415831Z   - })
+2026-10-26T21:16:54.2416009Z   + }
+2026-10-26T21:16:54.2416619Z FAILED tests/test_e2e_rl_continuation.py::test_campaign_snapshots_the_full_runtime_package - AssertionError: assert 82 == 80
+2026-10-26T21:16:54.2417609Z  +  where 82 = len({'src/vare/__init__.py', 'src/vare/__main__.py', 'src/vare/_grader_guard.py', 'src/vare/_public.py', 'src/vare/agent_edit_format.py', 'src/vare/agent_edit_v2.py', ...})
+2026-10-26T21:16:54.2418786Z FAILED tests/test_e2e_rl_continuation.py::test_80_file_inventory_rejects_an_unpinned_base_commit - AssertionError: assert frozenset({'s..._v2.py', ...}) == frozenset({'s..._v2.py', ...})
+2026-10-26T21:16:54.2419517Z   
+2026-10-26T21:16:54.2419702Z   Extra items in the left set:
+2026-10-26T21:16:54.2419954Z   'src/vare/source_navigation_v2.py'
+2026-10-26T21:16:54.2420224Z   'src/vare/schema_slot_protocol.py'
+2026-10-26T21:16:54.2420463Z   
+2026-10-26T21:16:54.2420637Z   Full diff:
+2026-10-26T21:16:54.2420880Z     frozenset({
+2026-10-26T21:16:54.2421082Z         'src/vare/__init__.py',
+2026-10-26T21:16:54.2421322Z         'src/vare/__main__.py',
+2026-10-26T21:16:54.2421564Z         'src/vare/_grader_guard.py',
+2026-10-26T21:16:54.2421817Z         'src/vare/_public.py',
+2026-10-26T21:16:54.2422067Z         'src/vare/agent_edit_format.py',
+2026-10-26T21:16:54.2422341Z         'src/vare/agent_edit_v2.py',
+2026-10-26T21:16:54.2422601Z         'src/vare/agent_task_contract.py',
+2026-10-26T21:16:54.2422879Z         'src/vare/answer_scoring.py',
+2026-10-26T21:16:54.2423142Z         'src/vare/attestation.py',
+2026-10-26T21:16:54.2423395Z         'src/vare/blob_budget.py',
+2026-10-26T21:16:54.2423662Z         'src/vare/checkpoint_artifacts.py',
+2026-10-26T21:16:54.2423934Z         'src/vare/cli.py',
+2026-10-26T21:16:54.2424163Z         'src/vare/config.py',
+2026-10-26T21:16:54.2424413Z         'src/vare/container_isolation.py',
+2026-10-26T21:16:54.2424682Z         'src/vare/controls.py',
+2026-10-26T21:16:54.2425052Z         'src/vare/curriculum.py',
+2026-10-26T21:16:54.2425298Z         'src/vare/demo.py',
+2026-10-26T21:16:54.2425534Z         'src/vare/durable.py',
+2026-10-26T21:16:54.2425771Z         'src/vare/engine.py',
+2026-10-26T21:16:54.2426016Z         'src/vare/entrypoint.py',
+2026-10-26T21:16:54.2426404Z         'src/vare/environments/__init__.py',
+2026-10-26T21:16:54.2426697Z         'src/vare/environments/campaign.py',
+2026-10-26T21:16:54.2426984Z         'src/vare/environments/catalog.py',
+2026-10-26T21:16:54.2427266Z         'src/vare/environments/factory.py',
+2026-10-26T21:16:54.2427552Z         'src/vare/environments/runner.py',
+2026-10-26T21:16:54.2427834Z         'src/vare/environments/spec.py',
+2026-10-26T21:16:54.2428226Z         'src/vare/environments/verifier.py',
+2026-10-26T21:16:54.2428505Z         'src/vare/eval_stats.py',
+2026-10-26T21:16:54.2428746Z         'src/vare/evidence.py',
+2026-10-26T21:16:54.2428984Z         'src/vare/failure.py',
+2026-10-26T21:16:54.2429227Z         'src/vare/failure_triage.py',
+2026-10-26T21:16:54.2429504Z         'src/vare/format_vs_correctness.py',
+2026-10-26T21:16:54.2429828Z         'src/vare/format_vs_correctness_seeded_summary_v3.py',
+2026-10-26T21:16:54.2430173Z         'src/vare/format_vs_correctness_v2.py',
+2026-10-26T21:16:54.2430468Z         'src/vare/heldout_exact_integer.py',
+2026-10-26T21:16:54.2430757Z         'src/vare/integer_seed_split.py',
+2026-10-26T21:16:54.2431037Z         'src/vare/integrations/__init__.py',
+2026-10-26T21:16:54.2431343Z         'src/vare/integrations/chat_completions.py',
+2026-10-26T21:16:54.2431649Z         'src/vare/integrations/rvl.py',
+2026-10-26T21:16:54.2431926Z         'src/vare/integrations/rvl_grpo.py',
+2026-10-26T21:16:54.2432232Z         'src/vare/integrations/rvl_trajectory.py',
+2026-10-26T21:16:54.2432528Z         'src/vare/interfaces.py',
+2026-10-26T21:16:54.2432785Z         'src/vare/isolated_candidate.py',
+2026-10-26T21:16:54.2433058Z         'src/vare/isolated_hooks.py',
+2026-10-26T21:16:54.2433315Z         'src/vare/lag.py',
+2026-10-26T21:16:54.2433557Z         'src/vare/lifecycle.py',
+2026-10-26T21:16:54.2433810Z         'src/vare/meta_improvement.py',
+2026-10-26T21:16:54.2434084Z         'src/vare/mlsys_coding_actions.py',
+2026-10-26T21:16:54.2434371Z         'src/vare/mlsys_coding_comparison.py',
+2026-10-26T21:16:54.2434676Z         'src/vare/mlsys_heldout_task_pilot_v1.py',
+2026-10-26T21:16:54.2434970Z         'src/vare/mlsys_repo_task.py',
+2026-10-26T21:16:54.2435239Z         'src/vare/mlxlm_1912_repo_task.py',
+2026-10-26T21:16:54.2435509Z         'src/vare/promotion.py',
+2026-10-26T21:16:54.2435765Z         'src/vare/promotion_journal.py',
+2026-10-26T21:16:54.2436034Z         'src/vare/protocol.py',
+2026-10-26T21:16:54.2436430Z         'src/vare/replay.py',
+2026-10-26T21:16:54.2436677Z         'src/vare/reward_evidence.py',
+2026-10-26T21:16:54.2436930Z         'src/vare/runner.py',
+2026-10-26T21:16:54.2437168Z         'src/vare/runtime.py',
+2026-10-26T21:16:54.2437402Z         'src/vare/safety.py',
+2026-10-26T21:16:54.2437651Z         'src/vare/sandboxed_repository.py',
+2026-10-26T21:16:54.2437962Z   +     'src/vare/schema_slot_protocol.py',
+2026-10-26T21:16:54.2438255Z         'src/vare/separated_candidate_harness.py',
+2026-10-26T21:16:54.2438554Z         'src/vare/separated_grading.py',
+2026-10-26T21:16:54.2438833Z         'src/vare/source_navigation_v1.py',
+2026-10-26T21:16:54.2439116Z   +     'src/vare/source_navigation_v2.py',
+2026-10-26T21:16:54.2439422Z         'src/vare/telemetry.py',
+2026-10-26T21:16:54.2439676Z         'src/vare/trajectory_admission.py',
+2026-10-26T21:16:54.2439958Z         'src/vare/trajectory_dispatch.py',
+2026-10-26T21:16:54.2440239Z         'src/vare/trajectory_learner.py',
+2026-10-26T21:16:54.2440520Z         'src/vare/trajectory_promotion.py',
+2026-10-26T21:16:54.2440804Z         'src/vare/trajectory_provenance.py',
+2026-10-26T21:16:54.2441086Z         'src/vare/trajectory_reference.py',
+2026-10-26T21:16:54.2441368Z         'src/vare/trajectory_safety.py',
+2026-10-26T21:16:54.2441768Z         'src/vare/trajectory_store.py',
+2026-10-26T21:16:54.2442043Z         'src/vare/trajectory_workers.py',
+2026-10-26T21:16:54.2442331Z         'src/vare/transformers_repo_task.py',
+2026-10-26T21:16:54.2442618Z         'src/vare/trusted_evaluation.py',
+2026-10-26T21:16:54.2442896Z         'src/vare/trusted_scoring.py',
+2026-10-26T21:16:54.2443153Z         'src/vare/types.py',
+2026-10-26T21:16:54.2443395Z         'src/vare/update_cost_smoke.py',
+2026-10-26T21:16:54.2443664Z         'src/vare/verifiers.py',
+2026-10-26T21:16:54.7104872Z     })
+2026-10-26T21:16:54.7105306Z 3 failed, 95 passed in 194.25s (0:03:14)
+2026-10-26T21:19:37.7894433Z ##[error]Process completed with exit code 1.
+2026-10-26T21:19:37.7984983Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-26T21:19:37.7985409Z with:
+2026-10-26T21:19:37.7985618Z   name: e2e-system-cpu-regression
+2026-10-26T21:19:37.7986031Z   path: /home/runner/work/_temp/e2e-regression
+/home/runner/work/_temp/v2-tests.tar.xz
+
+2026-10-26T21:19:37.7986670Z   if-no-files-found: warn
+2026-10-26T21:19:37.7986903Z   compression-level: 6
+2026-10-26T21:19:37.7987118Z   overwrite: false
+2026-10-26T21:19:37.7987330Z   include-hidden-files: false
+2026-10-26T21:19:37.7987558Z env:
+2026-10-26T21:19:37.7987739Z   OMP_NUM_THREADS: 1
+2026-10-26T21:19:37.7987949Z   MKL_NUM_THREADS: 1
+2026-10-26T21:19:37.7988159Z   TOKENIZERS_PARALLELISM: false
+2026-10-26T21:19:37.7988398Z   PYTHONHASHSEED: 0
+2026-10-26T21:19:37.7988667Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:19:37.7989093Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-26T21:19:37.7989547Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:19:37.7989928Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:19:37.7990323Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:19:37.7990709Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-26T21:19:37.7991036Z ##[endgroup]
+2026-10-26T21:19:37.9623997Z (node:3455) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-26T21:19:37.9624867Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-26T21:19:38.0329285Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-26T21:19:38.0340450Z The least common ancestor is /home/runner/work/_temp. This will be the root directory of the artifact
+2026-10-26T21:19:38.0341916Z With the provided path, there will be 271 files uploaded
+2026-10-26T21:19:38.0343882Z Artifact name is valid!
+2026-10-26T21:19:38.0344675Z Root directory input is valid!
+2026-10-26T21:19:38.4220621Z Beginning upload of artifact content to blob storage
+2026-10-26T21:19:38.8344365Z (node:3455) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-26T21:19:39.7959928Z Uploaded bytes 8388608
+2026-10-26T21:19:40.0964486Z Uploaded bytes 16777216
+2026-10-26T21:19:40.1526967Z Uploaded bytes 25165824
+2026-10-26T21:19:40.3467356Z Uploaded bytes 33554432
+2026-10-26T21:19:40.4740575Z Uploaded bytes 41943040
+2026-10-26T21:19:40.6106436Z Uploaded bytes 50331648
+2026-10-26T21:19:40.7217080Z Uploaded bytes 52773080
+2026-10-26T21:19:40.7995113Z Finished uploading artifact content to blob storage!
+2026-10-26T21:19:40.7999125Z SHA256 digest of uploaded artifact zip is 6e17468b625eae2b1172e7d808d72f042b65f90f5a890dbebb570b81ebe29379
+2026-10-26T21:19:40.8002071Z Finalizing artifact upload
+2026-10-26T21:19:41.2619830Z Artifact e2e-system-cpu-regression.zip successfully finalized. Artifact ID 12688839234
+2026-10-26T21:19:41.2621241Z Artifact e2e-system-cpu-regression has been successfully uploaded! Final size is 52773080 bytes. Artifact ID is 12688839234
+2026-10-26T21:19:41.2629296Z Artifact download URL: https://github.com/mitukx/VARE/actions/runs/40402241333/artifacts/12688839234
+2026-10-26T21:19:41.2800377Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-26T21:19:41.2800833Z with:
+2026-10-26T21:19:41.2801052Z   name: actual-grpo-cpu-regression
+2026-10-26T21:19:41.2801360Z   path: /home/runner/work/_temp/grpo-regression
+2026-10-26T21:19:41.2801688Z   if-no-files-found: warn
+2026-10-26T21:19:41.2801936Z   compression-level: 6
+2026-10-26T21:19:41.2802156Z   overwrite: false
+2026-10-26T21:19:41.2802375Z   include-hidden-files: false
+2026-10-26T21:19:41.2802610Z env:
+2026-10-26T21:19:41.2802792Z   OMP_NUM_THREADS: 1
+2026-10-26T21:19:41.2803005Z   MKL_NUM_THREADS: 1
+2026-10-26T21:19:41.2803224Z   TOKENIZERS_PARALLELISM: false
+2026-10-26T21:19:41.2803471Z   PYTHONHASHSEED: 0
+2026-10-26T21:19:41.2803749Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:19:41.2804213Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-26T21:19:41.2804638Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:19:41.2805099Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:19:41.2805539Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-26T21:19:41.2805950Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-26T21:19:41.2806766Z ##[endgroup]
+2026-10-26T21:19:41.4467987Z (node:3470) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-26T21:19:41.4469500Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-26T21:19:41.4508949Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/grpo-regression. No artifacts will be uploaded.
+2026-10-26T21:19:41.4763965Z Post job cleanup.
+2026-10-26T21:19:41.5653935Z [command]/usr/bin/git version
+2026-10-26T21:19:41.5699507Z git version 2.55.0
+2026-10-26T21:19:41.5743436Z Temporarily overriding HOME='/home/runner/work/_temp/883c528b-537d-4c2e-8fbe-4968036ad08b' before making global git config changes
+2026-10-26T21:19:41.5744723Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-26T21:19:41.5749693Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+2026-10-26T21:19:41.5789831Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-26T21:19:41.5826656Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-26T21:19:41.6097117Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-26T21:19:41.6122171Z http.https://github.com/.extraheader
+2026-10-26T21:19:41.6133781Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-26T21:19:41.6182720Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-26T21:19:41.6460095Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-26T21:19:41.6506781Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-26T21:19:41.6981481Z Cleaning up orphan processes
+2026-10-26T21:19:41.7340403Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,91 @@
+{
+  "source_ledger_sha256": "ead678711dc1f5da7fdcdc7b127cd8e122e8f20b6bd116542633524aac788f39",
+  "rows": [
+    {
+      "task_id": "transformers-48319-stale-best-checkpoint",
+      "family": "stale_best_checkpoint_recovery",
+      "split": "heldout",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Later source/grader certificate; linked records and hashes checked. This sprint does not independently rerun the complete isolation/exposure environment.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    },
+    {
+      "task_id": "transformers-49208-resume-metrics",
+      "family": "resume_training_metrics",
+      "split": "heldout",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Later source/grader certificate; linked records and hashes checked. This sprint does not independently rerun the complete isolation/exposure environment.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    },
+    {
+      "task_id": "mlxlm-1921-padded-logprobs",
+      "family": "padded_batch_logprob_consistency",
+      "split": "heldout",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Later source/grader certificate; linked records and hashes checked. This sprint does not independently rerun the complete isolation/exposure environment.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    },
+    {
+      "task_id": "mlxlm-1926-falcon-cache-gradient",
+      "family": "falcon_h1_cache_and_gradient",
+      "split": "heldout",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Exact #129 audit replay passed: baseline/fix/mutant, patch admission, source/exposure and declared isolation controls.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    },
+    {
+      "task_id": "mlxlm-1938-phi3small-logits-mask",
+      "family": "phi3small_vocab_mask_axis",
+      "split": "heldout",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Exact #129 audit replay passed: baseline/fix/mutant, patch admission, source/exposure and declared isolation controls.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    },
+    {
+      "task_id": "mlxlm-1979-ssm-padding-mask",
+      "family": "ssm_padding_mask_state_equivalence",
+      "split": "heldout",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Exact #129 audit replay passed: baseline/fix/mutant, patch admission, source/exposure and declared isolation controls.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    },
+    {
+      "task_id": "transformers-49147-gemma3n-fp16-gradient-clipping",
+      "family": "gemma3n_fp16_gradient_clipping",
+      "split": "prospective_heldout_extension",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Later source/grader certificate; linked records and hashes checked. This sprint does not independently rerun the complete isolation/exposure environment.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    },
+    {
+      "task_id": "mlxlm-1898-qwen3-rope-parameters",
+      "family": "qwen3_model_rope_parameter_nesting",
+      "split": "prospective_heldout_extension",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Later source/grader certificate; linked records and hashes checked. This sprint does not independently rerun the complete isolation/exposure environment.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    },
+    {
+      "task_id": "mlxlm-1877-compressed-tensors-format-validation",
+      "family": "compressed_tensor_format_routing",
+      "split": "prospective_heldout_extension",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Later source/grader certificate; linked records and hashes checked. This sprint does not independently rerun the complete isolation/exposure environment.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    },
+    {
+      "task_id": "mlxlm-1880-gptq-group-error-propagation",
+      "family": "gptq_grouped_error_propagation",
+      "split": "prospective_heldout_extension",
+      "ledger_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "standard": "Later source/grader certificate; linked records and hashes checked. This sprint does not independently rerun the complete isolation/exposure environment. Baseline uses a retained post-outcome raw-log adjudication, unlike a clean frozen matcher pass.",
+      "model_eligibility": "NOT_ESTABLISHED"
+    }
+  ],
+  "reported_source_grader_certificates": 10,
+  "replayed_original_certificates": 3,
+  "model_eligible_count": "UNKNOWN",
+  "required_model_eligible_families": 15,
+  "decision": "NO_GO",
+  "interpretation": "The three #129 certificates and the later seven have different evidence histories. Ten is a source/grader ledger count, not a uniform independently revalidated eligibility count. No allocation is changed and no reserved model prompt runs."
+}

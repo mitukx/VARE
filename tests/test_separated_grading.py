@@ -552,6 +552,23 @@ def _engineering_fixture(tmp_path: Path, *, split: str = "train") -> Path:
     return task
 
 
+def _commit_candidate_workspace_baseline(workspace: Path) -> None:
+    """Create the candidate-local HEAD required by the agent's diff contract."""
+    subprocess.run(["git", "init", "-q"], cwd=workspace, check=True)
+    subprocess.run(["git", "config", "user.name", "VARE test"], cwd=workspace, check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "vare-test@example.invalid"],
+        cwd=workspace,
+        check=True,
+    )
+    subprocess.run(["git", "add", "--", "add.py"], cwd=workspace, check=True)
+    subprocess.run(
+        ["git", "commit", "-q", "-m", "candidate baseline"],
+        cwd=workspace,
+        check=True,
+    )
+
+
 def test_engineering_contract_hides_evaluator_and_refuses_heldout(tmp_path):
     task = _engineering_fixture(tmp_path)
     contract = load_agent_task(task)
@@ -917,6 +934,7 @@ def test_local_agent_parses_engineering_task_without_loading_weights(tmp_path, m
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     (workspace / "add.py").write_text((task / "subject" / "add.py").read_text(encoding="utf-8"), encoding="utf-8")
+    _commit_candidate_workspace_baseline(workspace)
     model = tmp_path / "model"
     model.mkdir()
     monkeypatch.delenv("HF_HUB_OFFLINE", raising=False)
@@ -940,6 +958,7 @@ def test_local_agent_parses_engineering_task_without_loading_weights(tmp_path, m
     held_workspace = tmp_path / "held-workspace"
     held_workspace.mkdir()
     (held_workspace / "add.py").write_text("def add(left, right):\n    return 0\n", encoding="utf-8")
+    _commit_candidate_workspace_baseline(held_workspace)
     monkeypatch.setattr(sys, "argv", [
         "run_local_agent.py",
         "--workspace", str(held_workspace),

@@ -1,0 +1,65 @@
+{
+  "budgets": {
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_public_test_runs": 3,
+    "max_total_new_tokens": 6000,
+    "max_turns": 20,
+    "wall_seconds": 1800
+  },
+  "controller": {
+    "edit_format": "structured_replace",
+    "git_head_before_run": "25c16910f47f5f1b1aa84d7325723a1a3ad4dc29",
+    "protocol": "vare.schema-slots.v1",
+    "source_diff_sha256": "63d23ffa747a98b263a8d6e76ef6c4331b7961d84d9adff31eed43678a9787b2",
+    "source_sha256": {
+      "scripts/run_local_agent.py": "d154ecfad493581d059f303655297c3e0f4adc3326bbc59f3205dfc94ff370d1",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "b455e8b1b8c2097693b7c3491d6285b025547b38548726d160183d68d825e21c",
+      "src/vare/agent_task_contract.py": "e062de7a08a418ff54ef7ee4dcc3722d2e44344655bbed69a3e677c5fcaf664a",
+      "src/vare/schema_slot_protocol.py": "f92198b29285875427fc0d768a920219f2e7020fca9b5071e79ebff673359d05",
+      "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+      "tests/test_schema_slot_protocol.py": "4063c95667ac086452dc6a8c4b0f738a3d7d497689ecf6b11393f915d3619aaa"
+    },
+    "tool_interface": "lease_bound_navigation_v1"
+  },
+  "controls": {
+    "qualified": true,
+    "sha256": "47ad0419669f62a62dc2a8b6cbc50f474fe49647b950c686d63877dc8c554a98",
+    "source_run": "../schema_slots_synthetic_fixture_v1/controls/control-results.json"
+  },
+  "docker_context": "colima",
+  "frozen_at_utc": "2026-10-26T17:59:43.724516+00:00",
+  "frozen_before_inference": true,
+  "model": {
+    "backend": "MLX CPU",
+    "quantization": "4-bit",
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80"
+  },
+  "public_test_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "public_test_sha256": "d2d861a01395927253d62c9868109e0d08e3b800acfc9ed9957504764cde8090",
+  "purpose": "Validate the corrected MLX constrained tool protocol on one complete synthetic tool interaction; not a coding-capability benchmark.",
+  "resources": {
+    "model_load_preflight_required": true,
+    "preflight": {
+      "memory_pressure_free_percent": 77,
+      "physical_memory_bytes": 34359738368,
+      "swap_abort_threshold_mib": 1531.0,
+      "swap_free_baseline_mib": 1285.0,
+      "swap_total_mib": 2048,
+      "swap_used_baseline_mib": 763.0
+    },
+    "stop_if_cap_exceeded": true,
+    "swap_growth_cap_mib": 768
+  },
+  "sampling": {
+    "do_sample": false,
+    "seed": 73
+  },
+  "schema": "vare.schema-slot-real-model-synthetic.v2",
+  "task_id": "synthetic-schema-slots-retry-budget-v1",
+  "task_sha256": "1d79849b7586d11f0c42d141ddb79798ab9c253dec9e96e404e84691c62b288f",
+  "task_source_sha256": "b0a250abec5e388514630f324a761f46d9be54fd49344aa253f67b837c6556b7"
+}

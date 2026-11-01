@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/audit_streamed_grpo_cpu.py", line 250, in <module>
+    print(json.dumps(audit(args.output,args.model_dir,args.rvl_source,args.expected_manifest),indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/audit_streamed_grpo_cpu.py", line 151, in audit
+    require(not expected_manifest.resolve().is_relative_to(root.resolve()),"external manifest must be outside artifact")
+  File "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/audit_streamed_grpo_cpu.py", line 39, in require
+    raise ValueError(message)
+ValueError: external manifest must be outside artifact

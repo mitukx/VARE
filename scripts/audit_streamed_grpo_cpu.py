@@ -101,7 +101,9 @@ def load_snapshot_store(revision, expected_source_sha256, source_archive=None,
                 require(digest(source_tree/path)==expected,
                         "anchored VARE source file hash mismatch")
         actual_names={path.relative_to(source_tree).as_posix()
-                      for path in source.rglob('*') if path.is_file()}
+                      for path in source.rglob('*')
+                      if path.is_file() and '__pycache__' not in path.parts
+                      and path.suffix != '.pyc'}
         require(expected_names and actual_names==expected_names,
                 "anchored VARE source snapshot is incomplete")
 
@@ -146,6 +148,42 @@ def verify_snapshot_source(config, source_files):
             "snapshot runtime source differs from archived source bytes")
 
 
+def protocol_registry():
+    """Return exact frozen protocols and their archived runner locations."""
+    return {
+        'vare.streamed-grpo-systems.v1': (
+            ROOT/'benchmarks/streamed_grpo_cpu_v1/protocol.json',
+            'source/scripts/validate_streamed_grpo_cpu.py',
+        ),
+        'vare.streamed-grpo-systems.v2': (
+            ROOT/'benchmarks/streamed_grpo_cpu_v2/protocol.json',
+            'source/scripts/validate_streamed_grpo_cpu.py',
+        ),
+        'vare.streamed-grpo-systems.v3': (
+            ROOT/'benchmarks/streamed_grpo_cpu_v3/protocol.json',
+            'source/scripts/validate_streamed_grpo_cpu.py',
+        ),
+        'vare.streamed-grpo-systems.v3.1': (
+            ROOT/'benchmarks/streamed_grpo_cpu_v3/protocol-v3.1.json',
+            'source/scripts/validate_streamed_grpo_cpu.py',
+        ),
+        'vare.streamed-grpo-systems.sprint-ii.v1': (
+            ROOT/'results/sprint_ii_20261027/streamed_grpo_v32/protocol.json',
+            'source/scripts/validate_streamed_grpo_cpu_sprint_ii_v1.py',
+        ),
+    }
+
+
+def archived_runner_for_protocol(protocol):
+    """Fail closed unless the supplied protocol is byte-for-byte frozen."""
+    registry=protocol_registry()
+    schema=protocol.get('schema')
+    require(schema in registry,"unsupported protocol")
+    frozen_protocol,runner_archive=registry[schema]
+    require(protocol==json.loads(frozen_protocol.read_text()),"frozen protocol mismatch")
+    return runner_archive
+
+
 def audit(root, model_dir, rvl_source, expected_manifest):
     import torch
     require(not expected_manifest.resolve().is_relative_to(root.resolve()),"external manifest must be outside artifact")
@@ -155,18 +193,11 @@ def audit(root, model_dir, rvl_source, expected_manifest):
         require(not Path(name).is_absolute() and '..' not in Path(name).parts,"unsafe artifact path")
         require(digest(root/name)==expected,"artifact bytes differ: "+name)
     protocol=json.loads((root/'protocol.json').read_text())
-    protocols={
-        'vare.streamed-grpo-systems.v1':ROOT/'benchmarks/streamed_grpo_cpu_v1/protocol.json',
-        'vare.streamed-grpo-systems.v2':ROOT/'benchmarks/streamed_grpo_cpu_v2/protocol.json',
-        'vare.streamed-grpo-systems.v3':ROOT/'benchmarks/streamed_grpo_cpu_v3/protocol.json',
-        'vare.streamed-grpo-systems.v3.1':ROOT/'benchmarks/streamed_grpo_cpu_v3/protocol-v3.1.json',
-    }
-    require(protocol.get('schema') in protocols,"unsupported protocol")
-    require(protocol==json.loads(protocols[protocol['schema']].read_text()),"frozen protocol mismatch")
+    runner_archive=archived_runner_for_protocol(protocol)
     summary=json.loads((root/'summary.json').read_text())
     for name,expected in summary['source_files'].items():
         require(digest(root/'source'/name)==expected,"source snapshot mismatch")
-    require(digest(root/'source/scripts/validate_streamed_grpo_cpu.py')==protocol['runner_sha256'],"runner mismatch")
+    require(digest(root/runner_archive)==protocol['runner_sha256'],"runner mismatch")
     reference_path=root/'source/scripts/validate_grpo_e2e_cpu.py'
     reference_update=load_reference_update(reference_path)
     for name,expected in protocol['model_files'].items():

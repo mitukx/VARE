@@ -1,0 +1,37 @@
+{
+  "incorrect_mutant": {
+    "grade": {
+      "errors": [
+        "descriptor_comprehension_binding_invalid"
+      ],
+      "reason": "compiled_forward_binding_incomplete",
+      "success": false
+    },
+    "public_passed": false,
+    "public_returncode": 1,
+    "test_tail": "a2c50>)\n\ntest_public.py:7: AssertionError\n=========================== short test summary info ============================\nFAILED test_public.py::test_forward_comprehensions_keep_outer_encoder_tensor\n"
+  },
+  "known_fix": {
+    "grade": {
+      "errors": [],
+      "reason": "contract_pass",
+      "success": true
+    },
+    "public_passed": true,
+    "public_returncode": 0,
+    "test_tail": ".                                                                        [100%]\n"
+  },
+  "subject": {
+    "grade": {
+      "errors": [
+        "keypoint_comprehension_binding_invalid",
+        "descriptor_comprehension_binding_invalid"
+      ],
+      "reason": "compiled_forward_binding_incomplete",
+      "success": false
+    },
+    "public_passed": false,
+    "public_returncode": 1,
+    "test_tail": "7f790>)\n\ntest_public.py:7: AssertionError\n=========================== short test summary info ============================\nFAILED test_public.py::test_forward_comprehensions_keep_outer_encoder_tensor\n"
+  }
+}

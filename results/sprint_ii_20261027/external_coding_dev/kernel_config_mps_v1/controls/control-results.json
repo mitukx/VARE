@@ -1,0 +1,42 @@
+{
+  "incorrect_mutant": {
+    "independent_grade": {
+      "errors": [
+        "validation_not_using_shared_device_constant:sanitize_kernel_mapping"
+      ],
+      "reason": "mps_device_validation_incomplete",
+      "success": false
+    },
+    "independent_grader_returncode": 0,
+    "public_smoke_output_tail": "<generator object test_mps_is_declared_and_used_in_all_validation_paths.<locals>.<genexpr> at 0x106b27d80>)\n\ntest_public.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED test_public.py::test_mps_is_declared_and_used_in_all_validation_paths\n",
+    "public_smoke_passed": false,
+    "public_smoke_returncode": 1
+  },
+  "known_fix": {
+    "independent_grade": {
+      "errors": [],
+      "reason": "contract_pass",
+      "success": true
+    },
+    "independent_grader_returncode": 0,
+    "public_smoke_output_tail": ".                                                                        [100%]\n",
+    "public_smoke_passed": true,
+    "public_smoke_returncode": 0
+  },
+  "subject": {
+    "independent_grade": {
+      "errors": [
+        "shared_device_constant_missing_supported_values",
+        "validation_not_using_shared_device_constant:add_to_mapping",
+        "validation_not_using_shared_device_constant:add_to_mapping_local",
+        "validation_not_using_shared_device_constant:sanitize_kernel_mapping"
+      ],
+      "reason": "mps_device_validation_incomplete",
+      "success": false
+    },
+    "independent_grader_returncode": 0,
+    "public_smoke_output_tail": "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       StopIteration\n\ntest_public.py:5: StopIteration\n=========================== short test summary info ============================\nFAILED test_public.py::test_mps_is_declared_and_used_in_all_validation_paths\n",
+    "public_smoke_passed": false,
+    "public_smoke_returncode": 1
+  }
+}

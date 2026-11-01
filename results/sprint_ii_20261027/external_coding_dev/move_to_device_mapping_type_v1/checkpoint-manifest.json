@@ -1,0 +1,23 @@
+{
+  "baseline_blob_sha": "a79b17efdf9a5c560e6a683b6c4c9d85ee5354a2",
+  "baseline_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+  "baseline_sha256": "cab95b73a9eada20f0192b89dc6b4544a7495cd958124fe8eab130d327c3e4d4",
+  "control_results_sha256": "668bc9a6ba4b9c058f5adac002185996e952436f2f13d14090ba2d3ba73e33da",
+  "grader_sha256": "6facdf8a7f32814b5e5091cc1b2f2768332d220484434b3057f5dd42df0bdcdb",
+  "incorrect_mutant_sha256": "0b3b6a09ae48b5804429e4f8a67d70f37c5303d095a482d752c6288d5a7e48df",
+  "known_fix_blob_sha": "966c9b1449441875a9f548c131620da16d358045",
+  "known_fix_head_revision": "d806b8c84fea7247bc2a066254e72d4a72583430",
+  "known_fix_revision": "b19c4a6669eab3d446789405d5bd00c3ace65863",
+  "known_fix_sha256": "f1908bb1b85714fee71c127d55e306d8eac5a2f6565f58d7a29075ae82ab6beb",
+  "public_tests_sha256": "f0826e755207078770ca2df52213e518bc07cf5d8dffe46c3aa4697eb3fefe63",
+  "qualification_protocol": "baseline FAIL; exact merged upstream fix PASS; incorrect mutant preserves type shallowly but fails recursive tensor movement; candidate workspace/test hash is bound to task public test before inference",
+  "source_file": "pytorch_utils.py",
+  "task_sha256": "86612b94f2e7e9f57f4f8fd92afb85b2ab4a1777056ac13a83d6f29e13202a4b",
+  "upstream_pull_request": {
+    "base_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+    "head_revision": "d806b8c84fea7247bc2a066254e72d4a72583430",
+    "merge_revision": "b19c4a6669eab3d446789405d5bd00c3ace65863",
+    "number": 49731,
+    "title": "Fix inputs dict casting in generate"
+  }
+}

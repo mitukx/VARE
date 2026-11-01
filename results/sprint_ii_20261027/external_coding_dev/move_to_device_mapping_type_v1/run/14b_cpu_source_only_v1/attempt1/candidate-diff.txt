@@ -1,0 +1,36 @@
+--- upstream-base/src/transformers/pytorch_utils.py
++++ model-candidate/pytorch_utils.py
+@@ -207,15 +207,31 @@
+     """
+     return torch.meshgrid(*tensors, indexing=indexing)
+ 
+-
++```python
+ def move_to_device(value, device: torch.device):
+     """Moves the tensors in `value`, including those nested in dicts, lists and tuples, onto `device`."""
+     if isinstance(value, torch.Tensor):
+         return value.to(device)
+     if isinstance(value, dict):
+-        return {k: move_to_device(v, device) for k, v in value.items()}
++        return type(value)({k: move_to_device(v, device) for k, v in value.items()})
+     if isinstance(value, (list, tuple)):
+         return type(value)(move_to_device(v, device) for v in value)
++    return value
++```
++
++
++    return value
++```
++
++
++    return value
++```
++
++
++    return value
++```
++
++
+     return value
+ 
+ 

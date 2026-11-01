@@ -1,0 +1,55 @@
+{
+  "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "protocol": "public-test-runner-validation-v2",
+  "rows": {
+    "baseline": {
+      "result": {
+        "elapsed_seconds": 0.266,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_seed_zero_uses_explicit_none_checks_in_both_rng_paths\nTraceback (most recent call last):\n  File \"<string>\", line 18, in <module>\n  File \"/workspace/test_public.py\", line 6, in test_seed_zero_uses_explicit_none_checks_in_both_rng_paths\n    assert any(isinstance(n,ast.Compare) and isinstance(n.left,ast.Attribute) and isinstance(n.left.value,ast.Name) and n.left.value.id==\"self\" and n.left.attr==\"seed\" and len(n.ops)==1 and isinstance(n.ops[0],ast.IsNot) and isinstance(n.comparators[0],ast.Constant) and n.comparators[0].value is None for n in ast.walk(funcs[name]))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": ""
+      },
+      "source_sha256": "2438edda2caf1d37b85eb9eac800853a3cbff096c1ede6d4238a05030d7b7bb9",
+      "test_sha256": "9e115d56d18830bc973a09b1f2a2bf9b067d9ef27fa6ec1c3a1888057a1b5b61"
+    },
+    "incorrect_mutant": {
+      "result": {
+        "elapsed_seconds": 0.265,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_seed_zero_uses_explicit_none_checks_in_both_rng_paths\nTraceback (most recent call last):\n  File \"<string>\", line 18, in <module>\n  File \"/workspace/test_public.py\", line 6, in test_seed_zero_uses_explicit_none_checks_in_both_rng_paths\n    assert any(isinstance(n,ast.Compare) and isinstance(n.left,ast.Attribute) and isinstance(n.left.value,ast.Name) and n.left.value.id==\"self\" and n.left.attr==\"seed\" and len(n.ops)==1 and isinstance(n.ops[0],ast.IsNot) and isinstance(n.comparators[0],ast.Constant) and n.comparators[0].value is None for n in ast.walk(funcs[name]))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": ""
+      },
+      "source_sha256": "f9084fc9912da5f0bb11a475795ce0cec41df5c134354941ec07daa0e2de1c2b",
+      "test_sha256": "9e115d56d18830bc973a09b1f2a2bf9b067d9ef27fa6ec1c3a1888057a1b5b61"
+    },
+    "known_fix": {
+      "result": {
+        "elapsed_seconds": 0.263,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "1 public test(s) passed\n"
+      },
+      "source_sha256": "8d008e44455f256657e315c8f724f30f20e743f6fd4d2644190a3ddf5080b2a1",
+      "test_sha256": "9e115d56d18830bc973a09b1f2a2bf9b067d9ef27fa6ec1c3a1888057a1b5b61"
+    },
+    "model_candidate": {
+      "result": {
+        "elapsed_seconds": 0.267,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_seed_zero_uses_explicit_none_checks_in_both_rng_paths\nTraceback (most recent call last):\n  File \"<string>\", line 18, in <module>\n  File \"/workspace/test_public.py\", line 4, in test_seed_zero_uses_explicit_none_checks_in_both_rng_paths\n    tree=ast.parse(Path(\"data_collator.py\").read_text(encoding=\"utf-8\")); cls=next(n for n in ast.walk(tree) if isinstance(n,ast.ClassDef) and n.name==\"DataCollatorForLanguageModeling\"); funcs={n.name:n for n in cls.body if isinstance(n,ast.FunctionDef)}\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/ast.py\", line 52, in parse\n    return compile(source, filename, mode, flags,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<unknown>\", line 621\n    def __init__(self, *args, **kwargs):\nIndentationError: unexpected indent\n",
+        "stdout": ""
+      },
+      "source_sha256": "6c2844e0bc357c88d3030fc5eaf4fb62310964fcc3c1f1f48d0b2ad3b811a262",
+      "test_sha256": "9e115d56d18830bc973a09b1f2a2bf9b067d9ef27fa6ec1c3a1888057a1b5b61"
+    }
+  },
+  "test_sha256": "9e115d56d18830bc973a09b1f2a2bf9b067d9ef27fa6ec1c3a1888057a1b5b61"
+}

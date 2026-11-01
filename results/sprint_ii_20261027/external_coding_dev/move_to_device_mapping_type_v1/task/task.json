@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "candidate_visible_files": [
+      "pytorch_utils.py"
+    ],
+    "editable_files": [
+      "pytorch_utils.py",
+      "test_public.py"
+    ],
+    "split": "development",
+    "task_type": "external_mlsys_generation_input_preservation",
+    "upstream_pr": "https://github.com/huggingface/transformers/pull/49731"
+  },
+  "prompt": "Fix move_to_device so recursively moved dict-like generation inputs keep their concrete mapping type, including nested mapping subclasses, while tensor values are still moved to the requested device.",
+  "source": {
+    "base_blob_sha": "a79b17efdf9a5c560e6a683b6c4c9d85ee5354a2",
+    "external_upstream_path": "src/transformers/pytorch_utils.py",
+    "external_upstream_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+    "known_fix_blob_sha": "966c9b1449441875a9f548c131620da16d358045",
+    "known_fix_head_revision": "d806b8c84fea7247bc2a066254e72d4a72583430",
+    "known_fix_revision": "b19c4a6669eab3d446789405d5bd00c3ace65863",
+    "local_path": "huggingface/transformers",
+    "upstream_fix": "https://github.com/huggingface/transformers/pull/49731"
+  },
+  "task_id": "transformers-move-to-device-mapping-type-20261027-v1",
+  "title": "Preserve mapping subclasses while moving generation inputs"
+}

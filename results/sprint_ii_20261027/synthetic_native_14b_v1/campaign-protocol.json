@@ -1,0 +1,78 @@
+{
+  "agent": {
+    "edit_format": "structured_replace",
+    "generation_protocol": "raw_v1",
+    "navigation_guidance": "v2",
+    "strict_tool_output_parser": "parse_tool_output_v1; no output repair",
+    "tool_interface": "lease_bound_navigation_v2"
+  },
+  "budgets": {
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_public_test_runs": 3,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "public_test_memory_mib": 512,
+    "public_test_timeout_seconds": 45,
+    "resource_guard": {
+      "free_swap_preflight_mib": 1024,
+      "memory_free_preflight_percent": 65,
+      "process_tree_rss_cap_mib": 12288,
+      "swap_growth_cap_mib": 768,
+      "wall_cap_seconds": 1800
+    },
+    "wall_seconds": 1800
+  },
+  "controller_sources_sha256": {
+    "scripts/run_local_agent.py": "8c472c25e6f92e4d437071d26a70c8134930a9dd87a21f44d6969315a2b11e6a",
+    "src/vare/schema_slot_protocol.py": "f92198b29285875427fc0d768a920219f2e7020fca9b5071e79ebff673359d05",
+    "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+    "src/vare/source_navigation_v2.py": "c6c65592fbc9028551b76b4e3e02b2f4e8f049ef64002cc0c6e31580a110b847"
+  },
+  "exclusions": [
+    "Synthetic fixture only; not an external coding benchmark or capability result.",
+    "No optimizer update or learning claim.",
+    "No resource limit relaxation."
+  ],
+  "frozen_at_utc": "2026-10-26 19:37:16 UTC",
+  "model": {
+    "backend": "MLX 0.32.4 / mlx-lm 0.32.2, CPU, Apple M1 Pro",
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "model_files_sha256": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "README.md": "36c856ec2056a132eb408dee54b786ce44c3573760a5ff261e699c9ace8a4986",
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "7a2e85de5e0e115e6aaea7cb71091c5833aa29786fc748ef1d7e607e3a3a18f2",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model-00001-of-00002.safetensors": "784b0c89d3e006f49cb8547aba1f2f4e99b365ab4380cf202655ca04c87d7ac3",
+      "model-00002-of-00002.safetensors": "a1b7516f1926070177601698661494dfc68c2de1d98e7c43ba910a0d1d7dfbbe",
+      "model.safetensors.index.json": "635d985ebf00b6a25daba71b7eba4d5ec8be7902c15104a79312fe947f44b121",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "quantization": "4-bit checkpoint as distributed",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "sampling": "greedy/no sampling",
+    "seed": 73,
+    "snapshot_revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "template_status": "snapshot-native config; whole-file SHA equals the previously exported corrected 7B tokenizer config; no override applied",
+    "tokenizer_config_sha256": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6"
+  },
+  "outcomes": [
+    "strict parser accepts complete native-template tool calls",
+    "model reaches bounded read/edit/public-test/finish interaction without repairing raw output",
+    "independent synthetic grader passes only if the model-generated source is correct"
+  ],
+  "protocol_id": "vare-synthetic-native-template-14b-tool-e2e-v1",
+  "purpose": "Verify a larger Qwen2.5-Coder model, its snapshot-native corrected Qwen2.5 chat template, raw tool-call framing, strict parser, and complete bounded tool interaction before a fresh external coding task.",
+  "status": "FROZEN_BEFORE_SYNTHETIC_MODEL_INFERENCE",
+  "synthetic_task": {
+    "control_results_sha256": "5a909bba3e369485b47cc0d82b3551b8afad6f1c5e966b4a285aa55140a00a41",
+    "grader_sha256": "83ed5c949574e1521b86feb48f4474d53a309db49423b8bb48cbe4c71994341b",
+    "local_baseline_commit": "9e4214d65a82855b2bff01848b2abf720a2c4845",
+    "qualification": "baseline FAIL, known fix PASS, incorrect multiplication mutant FAIL under isolated static AST grader; public syntax smoke passes all three controls.",
+    "task_id": "synthetic-native-tool-14b-add-v1"
+  }
+}\n

@@ -1,0 +1,61 @@
+{
+  "budgets": {
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 1024,
+    "max_public_test_runs": 3,
+    "max_total_new_tokens": 8192,
+    "max_turns": 20,
+    "public_test_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "resource_guard": {
+      "free_swap_preflight_mib": 700,
+      "memory_free_preflight_percent": 70,
+      "process_tree_rss_cap_mib": 12288,
+      "swap_growth_cap_mib": 512,
+      "wall_cap_seconds": 1800
+    },
+    "wall_seconds": 1800
+  },
+  "claim_limit": "Single Development task; not a task-population estimate, held-out claim, or learning claim.",
+  "controller": {
+    "controller_source_sha256": {
+      "scripts/run_local_agent.py": "5766b5cb4f470fff2ab262262f1fda2ee280496fcbf56364ad5b6d52338bc391",
+      "src/vare/schema_slot_protocol.py": "0efa124d34e349058c88db6356af5572fbacbb3fab2ac983b6945defa206a81c",
+      "src/vare/source_navigation_v2.py": "c6c65592fbc9028551b76b4e3e02b2f4e8f049ef64002cc0c6e31580a110b847"
+    },
+    "generation_protocol": "schema_slots_v2",
+    "navigation_guidance": "v2",
+    "parser": "strict; no post-hoc output repair",
+    "tool_interface": "lease_bound_navigation_v2"
+  },
+  "design": "One greedy Development attempt on a newly qualified external Transformers task. Strict schema-slot generation plus terminal-newline EOS constraint when the exact read lease requires it. This 7B arm is run after the 14B MPS arm exhausted its edit-slot budget; task is disjoint from all prior model attempts.",
+  "frozen_at_utc": "2026-10-26 20:05:16 UTC",
+  "model": {
+    "backend": "MLX 0.32.4 / mlx-lm 0.32.2, CPU, Apple M1 Pro",
+    "effective_chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "quantization": "4-bit",
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "snapshot_revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_tokenizer_config_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+    "tokenizer_override_sha256": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "weights_sha256": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e"
+  },
+  "protocol_id": "vare-transformers-data-collator-seed0-7b-schema-slots-v2-v1",
+  "sampling": {
+    "mode": "greedy/no sampling",
+    "seed": 73
+  },
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "stopping_rule": "Abort before model load if free swap <700 MiB or memory free <70%; abort during execution if swap growth exceeds 512 MiB, RSS exceeds 12 GiB, or wall time exceeds 1800 seconds. No resource cap may be relaxed.",
+  "task": {
+    "controls_sha256": "05a003fd9ecad7e2cb275cca06162f8cf730bd1fdf09be1f070eea80dd0b849c",
+    "grader_sha256": "abcffdba864462e08163b66044d93e1db1231e8671e82abb901d5b0a0a1ba215",
+    "known_fix_blob_sha": "8e6f104249fff447afdb05422200c797a761da64",
+    "known_fix_revision": "b4526a7658b216e6674f776cf7eac84b346fcd32",
+    "public_tests_sha256": "9e115d56d18830bc973a09b1f2a2bf9b067d9ef27fa6ec1c3a1888057a1b5b61",
+    "source_blob_sha": "3dcb41aa91978f05487cd8549f5d0ef62cba6389",
+    "source_revision": "5a27d2d2706cbd1ee36d1a8e8441656bb88e7f04",
+    "source_sha256": "2438edda2caf1d37b85eb9eac800853a3cbff096c1ede6d4238a05030d7b7bb9",
+    "task_id": "transformers-data-collator-seed-zero-20261027-v1",
+    "task_sha256": "df3512960195173e6890837a5a30637435b733a251aacd45e458d08a45582941"
+  }
+}

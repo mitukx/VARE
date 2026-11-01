@@ -1,0 +1,248 @@
+...ssssssssssssssssssssssssssssssss.......FF...............sssssssssssss [ 48%]
+ssssssss.ssssssssssssssss............................................... [ 97%]
+...                                                                      [100%]
+=================================== FAILURES ===================================
+_____ test_v5_accepts_current_campaign_with_separate_immutable_runtime_pin _____
+
+    def test_v5_accepts_current_campaign_with_separate_immutable_runtime_pin():
+        campaign_commit=subprocess.check_output(
+            ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
+        ).strip()
+        manifest=_v5_manifest_for_campaign_commit(campaign_commit)
+        assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V5
+        assert manifest["source_identity"]["inventory_id"]==auditor.SOURCE_INVENTORY_V5_ID
+        assert manifest["source_identity"]["runtime_source_commit"]==\
+            auditor.PINNED_RUNTIME_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V5]
+        assert "scripts/run_local_agent.py" in manifest["source_identity"]["campaign_source_sha256"]
+>       auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V5,False)
+
+tests/test_e2e_rl_continuation.py:564: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/audit_e2e_rl_continuation.py:365: in validate_source_inventory
+    need(campaign_runtime_sources==runtime_sources,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ok = False
+message = 'campaign runtime source hashes differ from immutable V5 runtime commit'
+
+    def need(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: campaign runtime source hashes differ from immutable V5 runtime commit
+
+scripts/audit_e2e_rl_continuation.py:447: ValueError
+__________ test_v5_rejects_wrong_identity_base_hashes_and_source_sets __________
+
+    def test_v5_rejects_wrong_identity_base_hashes_and_source_sets():
+        campaign_commit=subprocess.check_output(
+            ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
+        ).strip()
+        manifest=_v5_manifest_for_campaign_commit(campaign_commit)
+    
+        wrong_runtime={**manifest,"source_identity":{
+            **manifest["source_identity"],"runtime_source_commit":"0"*40,
+        }}
+        with pytest.raises(ValueError,match="V5 runtime source commit differs from its immutable pin"):
+            auditor.validate_source_inventory(wrong_runtime,auditor.SOURCE_INVENTORY_V5,False)
+    
+        wrong_base={**manifest,"base_commit":"f"*40}
+        with pytest.raises(ValueError,match="V5 campaign source commit differs from recorded base commit"):
+            auditor.validate_source_inventory(wrong_base,auditor.SOURCE_INVENTORY_V5,False)
+    
+        wrong_runtime_hash={**manifest,"source_identity":{
+            **manifest["source_identity"],
+            "runtime_source_sha256":{
+                **manifest["source_identity"]["runtime_source_sha256"],
+                "src/vare/engine.py":"0"*64,
+            },
+        }}
+        with pytest.raises(ValueError,match="V5 runtime source hashes differ from immutable runtime commit"):
+>           auditor.validate_source_inventory(wrong_runtime_hash,auditor.SOURCE_INVENTORY_V5,False)
+
+tests/test_e2e_rl_continuation.py:591: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/audit_e2e_rl_continuation.py:365: in validate_source_inventory
+    need(campaign_runtime_sources==runtime_sources,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ok = False
+message = 'campaign runtime source hashes differ from immutable V5 runtime commit'
+
+    def need(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: campaign runtime source hashes differ from immutable V5 runtime commit
+
+scripts/audit_e2e_rl_continuation.py:447: ValueError
+
+During handling of the above exception, another exception occurred:
+
+    def test_v5_rejects_wrong_identity_base_hashes_and_source_sets():
+        campaign_commit=subprocess.check_output(
+            ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
+        ).strip()
+        manifest=_v5_manifest_for_campaign_commit(campaign_commit)
+    
+        wrong_runtime={**manifest,"source_identity":{
+            **manifest["source_identity"],"runtime_source_commit":"0"*40,
+        }}
+        with pytest.raises(ValueError,match="V5 runtime source commit differs from its immutable pin"):
+            auditor.validate_source_inventory(wrong_runtime,auditor.SOURCE_INVENTORY_V5,False)
+    
+        wrong_base={**manifest,"base_commit":"f"*40}
+        with pytest.raises(ValueError,match="V5 campaign source commit differs from recorded base commit"):
+            auditor.validate_source_inventory(wrong_base,auditor.SOURCE_INVENTORY_V5,False)
+    
+        wrong_runtime_hash={**manifest,"source_identity":{
+            **manifest["source_identity"],
+            "runtime_source_sha256":{
+                **manifest["source_identity"]["runtime_source_sha256"],
+                "src/vare/engine.py":"0"*64,
+            },
+        }}
+>       with pytest.raises(ValueError,match="V5 runtime source hashes differ from immutable runtime commit"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'V5 runtime source hashes differ from immutable runtime commit'
+E        Input: 'campaign runtime source hashes differ from immutable V5 runtime commit'
+
+tests/test_e2e_rl_continuation.py:590: AssertionError
+==================================== PASSES ====================================
+_ test_real_runner_main_path_with_fake_backend_filters_and_journals_navigation _
+----------------------------- Captured stdout call -----------------------------
+{
+  "task_id": "synthetic-navigation-runner-integration",
+  "seed": 81,
+  "stop_reason": "agent_finished",
+  "elapsed_seconds": 0.04,
+  "new_tokens": 574,
+  "tool_turns": 6,
+  "candidate_diff_sha256": "fb16c2f3a25e01baaa2ae9fa69bb751c3d67997089b56685dd6052e7386e94bb"
+}
+- generated xml file: /Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/integration-tests.xml -
+=========================== short test summary info ============================
+PASSED tests/test_e2e_rl_continuation.py::test_v2_task_namespaces_are_round_and_evaluation_disjoint
+PASSED tests/test_e2e_rl_continuation.py::test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign
+PASSED tests/test_e2e_rl_continuation.py::test_restart_refuses_changed_learner_source_before_loading_model
+PASSED tests/test_e2e_rl_continuation.py::test_frozen_source_inventory_requires_exact_commit_and_digests
+PASSED tests/test_e2e_rl_continuation.py::test_immediately_previous_source_inventory_remains_accepted
+PASSED tests/test_e2e_rl_continuation.py::test_fresh_conformant_campaign_accepts_its_complete_source_inventory
+PASSED tests/test_e2e_rl_continuation.py::test_navigation_source_inventory_is_bound_to_its_exact_committed_tree
+PASSED tests/test_e2e_rl_continuation.py::test_navigation_v4_inventory_is_pinned_to_the_hardened_runner_commit
+PASSED tests/test_e2e_rl_continuation.py::test_v4_accepts_exact_campaign_identity_with_immutable_runtime_pin
+PASSED tests/test_e2e_rl_continuation.py::test_v4_rejects_wrong_runtime_commit_campaign_commit_and_source_hashes
+PASSED tests/test_e2e_rl_continuation.py::test_versioned_source_inventory_is_bound_to_exact_committed_runtime_tree[historical-77-file]
+PASSED tests/test_e2e_rl_continuation.py::test_versioned_source_inventory_is_bound_to_exact_committed_runtime_tree[diagnostic-78-file]
+PASSED tests/test_e2e_rl_continuation.py::test_versioned_source_inventory_is_bound_to_exact_committed_runtime_tree[navigation-80-file]
+PASSED tests/test_e2e_rl_continuation.py::test_77_file_inventory_cannot_omit_the_78th_runtime_file_at_a_newer_commit
+PASSED tests/test_e2e_rl_continuation.py::test_78_file_inventory_requires_a_commit_with_the_added_runtime_file
+PASSED tests/test_e2e_rl_continuation.py::test_78_file_inventory_rejects_other_commits_even_if_the_tree_is_unchanged
+PASSED tests/test_e2e_rl_continuation.py::test_80_file_inventory_rejects_an_unpinned_base_commit
+PASSED tests/test_e2e_rl_continuation.py::test_versioned_inventory_rejects_missing_unexpected_changed_or_mismatched_sources[77-file]
+PASSED tests/test_e2e_rl_continuation.py::test_versioned_inventory_rejects_missing_unexpected_changed_or_mismatched_sources[78-file]
+PASSED tests/test_e2e_rl_continuation.py::test_versioned_inventory_rejects_missing_unexpected_changed_or_mismatched_sources[80-file]
+PASSED tests/test_e2e_rl_continuation.py::test_source_hashes_from_commit_use_raw_git_blobs_with_export_subst
+PASSED tests/test_e2e_rl_continuation.py::test_new_source_inventory_requires_a_full_base_commit[78-file]
+PASSED tests/test_e2e_rl_continuation.py::test_new_source_inventory_requires_a_full_base_commit[80-file]
+PASSED tests/test_e2e_rl_continuation.py::test_new_source_inventory_requires_a_locally_verifiable_commit[78-file]
+PASSED tests/test_e2e_rl_continuation.py::test_new_source_inventory_requires_a_locally_verifiable_commit[80-file]
+PASSED tests/test_e2e_rl_continuation.py::test_derived_resource_metrics_are_read_from_samples
+PASSED tests/test_agent_edit_systems_only_v1.py::test_deterministic_controller_applies_multiple_known_hunks[lease_bound_lines_v1]
+PASSED tests/test_agent_edit_systems_only_v1.py::test_deterministic_controller_applies_multiple_known_hunks[legacy_structured_replace]
+PASSED tests/test_agent_edit_systems_only_v1.py::test_real_task_diff_opcode_counts_are_stable
+PASSED tests/test_agent_edit_systems_only_v1.py::test_event_chain_verifier_detects_tampering
+PASSED tests/test_agent_edit_systems_only_v1.py::test_resource_monitor_durably_samples_system_and_fails_closed_on_preflight
+PASSED tests/test_agent_edit_systems_only_v1.py::test_execute_cell_records_one_terminal_completion_event
+PASSED tests/test_source_navigation_v1.py::test_navigation_interface_is_versioned_and_keeps_lease_bound_edit
+PASSED tests/test_source_navigation_v1.py::test_navigation_run_identity_includes_all_selected_interface_sources
+PASSED tests/test_source_navigation_v1.py::test_navigation_run_identity_changes_when_active_parser_changes
+PASSED tests/test_source_navigation_v1.py::test_search_splits_snake_case_and_camel_case_identifiers
+PASSED tests/test_source_navigation_v1.py::test_large_file_search_finds_late_target_and_ranks_deterministically
+PASSED tests/test_source_navigation_v1.py::test_search_response_has_a_hard_serialized_output_bound
+PASSED tests/test_source_navigation_v1.py::test_source_comments_are_returned_as_untrusted_data_without_execution
+PASSED tests/test_source_navigation_v1.py::test_test_and_grader_paths_are_excluded_and_symlinks_fail_closed
+PASSED tests/test_source_navigation_v1.py::test_unicode_confusable_protected_directory_is_excluded
+PASSED tests/test_source_navigation_v1.py::test_contract_and_runner_capabilities_drop_test_grader_basename_variants
+PASSED tests/test_source_navigation_v1.py::test_real_runner_main_path_with_fake_backend_filters_and_journals_navigation
+PASSED tests/test_source_navigation_v1.py::test_dense_large_file_uses_one_fd_read_per_snapshot_and_linear_line_scans
+PASSED tests/test_source_navigation_v1.py::test_source_index_enforces_aggregate_byte_and_line_limits_before_indexing
+PASSED tests/test_source_navigation_v1.py::test_source_index_rejects_per_file_byte_and_line_overflow
+PASSED tests/test_source_navigation_v1.py::test_line_counter_matches_python_splitlines_for_cr_and_crlf
+PASSED tests/test_source_navigation_v1.py::test_changed_source_invalidates_and_rebuilds_the_index
+PASSED tests/test_source_navigation_v1.py::test_search_result_edit_uses_existing_hash_bound_lease_path
+PASSED tests/test_navigation_review_regressions_v1.py::test_large_inventory_does_not_displace_a_useful_hit
+PASSED tests/test_navigation_review_regressions_v1.py::test_failed_rebuild_is_retried_after_source_repair
+PASSED tests/test_navigation_review_regressions_v1.py::test_failed_initial_read_can_recover
+PASSED tests/test_navigation_review_regressions_v1.py::test_empty_allowlist_remains_an_error
+PASSED tests/test_manifest_review_regression_v1.py::test_empty_inventory_is_rejected[manifest0]
+PASSED tests/test_manifest_review_regression_v1.py::test_empty_inventory_is_rejected[manifest1]
+PASSED tests/test_manifest_review_regression_v1.py::test_empty_inventory_is_rejected[manifest2]
+PASSED tests/test_manifest_review_regression_v1.py::test_empty_inventory_is_rejected[manifest3]
+PASSED tests/test_manifest_review_regression_v1.py::test_nonempty_inventory_verifies_bytes_and_rejects_corruption[False]
+PASSED tests/test_manifest_review_regression_v1.py::test_nonempty_inventory_verifies_bytes_and_rejects_corruption[True]
+PASSED tests/test_manifest_review_regression_v1.py::test_duplicate_paths_are_rejected
+PASSED tests/test_development_candidate_admission_v1.py::test_pinned_baseline_is_admitted[navigation-overflow]
+PASSED tests/test_development_candidate_admission_v1.py::test_pinned_baseline_is_admitted[navigation-retry]
+PASSED tests/test_development_candidate_admission_v1.py::test_pinned_baseline_is_admitted[manifest-nonempty]
+PASSED tests/test_development_candidate_admission_v1.py::test_interference_rejected_before_execution[print('forged success')\nreturn [], []]
+PASSED tests/test_development_candidate_admission_v1.py::test_interference_rejected_before_execution[import os\nos._exit(0)]
+PASSED tests/test_development_candidate_admission_v1.py::test_interference_rejected_before_execution[return manifest.__class__]
+PASSED tests/test_development_candidate_admission_v1.py::test_interference_rejected_before_execution[return globals()]
+PASSED tests/test_development_candidate_admission_v1.py::test_interference_rejected_before_execution[json.dumps = str\nreturn [], []]
+PASSED tests/test_development_candidate_admission_v1.py::test_interference_rejected_before_execution[return getattr(manifest, 'keys')()]
+PASSED tests/test_development_candidate_admission_v1.py::test_interference_rejected_before_execution[return (lambda: 1)()]
+PASSED tests/test_development_candidate_admission_v1.py::test_forged_module_completion_is_never_imported
+PASSED tests/test_development_candidate_admission_v1.py::test_other_function_edits_rejected
+PASSED tests/test_qwen25_tool_template_repair_v1.py::test_repair_changes_literal_example_to_valid_json
+PASSED tests/test_qwen25_tool_template_repair_v1.py::test_unrecognized_or_ambiguous_input_is_rejected[None]
+PASSED tests/test_qwen25_tool_template_repair_v1.py::test_unrecognized_or_ambiguous_input_is_rejected[ordinary template]
+PASSED tests/test_qwen25_tool_template_repair_v1.py::test_unrecognized_or_ambiguous_input_is_rejected[{{\\"name\\": <function-name>, \\"arguments\\": <args-json-object>}}{{\\"name\\": <function-name>, \\"arguments\\": <args-json-object>}}]
+SKIPPED [1] tests/test_e2e_rl_continuation.py:84: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:96: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [6] tests/test_e2e_rl_continuation.py:130: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:145: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:171: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [10] tests/test_e2e_rl_continuation.py:197: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:220: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:230: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:243: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:255: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:269: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:281: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:295: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:310: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:325: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:340: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:358: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:374: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:797: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [5] tests/test_e2e_rl_continuation.py:807: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:822: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:839: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [2] tests/test_e2e_rl_continuation.py:858: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:874: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:889: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:915: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:946: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:967: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:982: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:996: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1010: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1021: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [2] tests/test_e2e_rl_continuation.py:1049: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1071: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1106: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1117: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1131: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1146: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1169: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1191: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [3] tests/test_e2e_rl_continuation.py:1205: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1230: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [2] tests/test_e2e_rl_continuation.py:1245: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1267: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1289: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:1306: actual continuation cases require VARE_E2E_MODEL_DIR
+FAILED tests/test_e2e_rl_continuation.py::test_v5_accepts_current_campaign_with_separate_immutable_runtime_pin
+FAILED tests/test_e2e_rl_continuation.py::test_v5_rejects_wrong_identity_base_hashes_and_source_sets
+2 failed, 76 passed, 69 skipped in 5.28s

@@ -1,0 +1,167 @@
+{
+  "abort": null,
+  "command": [
+    "/Users/user/.cache/vare-mlx-venv/bin/python",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/development_campaign_model_entry_v1.py",
+    "--workspace",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/cpu-model-campaign/cpu-qwen25-3b-manifest-nonempty/workspace",
+    "--model-path",
+    "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-3B-Instruct-4bit/snapshots/4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "--model-repository",
+    "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "--backend",
+    "mlx",
+    "--mlx-device",
+    "cpu",
+    "--task-root",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/cpu-model-campaign/cpu-qwen25-3b-manifest-nonempty/task",
+    "--output",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/cpu-model-campaign/cpu-qwen25-3b-manifest-nonempty/agent-record.json",
+    "--event-journal",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/cpu-model-campaign/cpu-qwen25-3b-manifest-nonempty/events.jsonl",
+    "--instruction",
+    "Repair manifest_entries in scripts/verify_coding_agent_evidence_manifest_v1.py. Apply a minimal source edit and then call finish.",
+    "--seed",
+    "101",
+    "--max-turns",
+    "12",
+    "--max-no-tool-retries",
+    "1",
+    "--max-new-tokens-per-turn",
+    "1024",
+    "--max-total-new-tokens",
+    "4096",
+    "--max-context-tokens",
+    "12288",
+    "--wall-seconds",
+    "600",
+    "--no-do-sample",
+    "--edit-format",
+    "structured_replace",
+    "--tool-interface",
+    "lease_bound_navigation_v1",
+    "--require-split",
+    "development",
+    "--temperature",
+    "0",
+    "--top-p",
+    "0",
+    "--top-k",
+    "0"
+  ],
+  "elapsed_s": 4.710907542001223,
+  "peak_sampled_rss_bytes": 2009694208,
+  "returncode": 0,
+  "samples": [
+    {
+      "available_memory_bytes": 8413413376,
+      "elapsed_s": 0.0016994170000543818,
+      "rss_bytes": 7634944,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 8413413376,
+      "elapsed_s": 0.26336404199537355,
+      "rss_bytes": 46923776,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 8413413376,
+      "elapsed_s": 0.5250465839999379,
+      "rss_bytes": 46923776,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 8413413376,
+      "elapsed_s": 0.781748791996506,
+      "rss_bytes": 49053696,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 8395554816,
+      "elapsed_s": 1.0435787919996073,
+      "rss_bytes": 53346304,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 8395554816,
+      "elapsed_s": 1.3042987090011593,
+      "rss_bytes": 79691776,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 8395554816,
+      "elapsed_s": 1.5649374169952353,
+      "rss_bytes": 84213760,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 8395554816,
+      "elapsed_s": 1.8254573750018608,
+      "rss_bytes": 86163456,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 7736557568,
+      "elapsed_s": 2.0860022919951007,
+      "rss_bytes": 1557561344,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 7548796928,
+      "elapsed_s": 2.357760833998327,
+      "rss_bytes": 1974288384,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 7548796928,
+      "elapsed_s": 2.618923249996442,
+      "rss_bytes": 2009694208,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 7548796928,
+      "elapsed_s": 2.877193583997723,
+      "rss_bytes": 1501724672,
+      "swap_used_bytes": 1074003968
+    },
+    {
+      "available_memory_bytes": 5913214976,
+      "elapsed_s": 3.1439725419986644,
+      "rss_bytes": 643858432,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 5906644992,
+      "elapsed_s": 3.405310041998746,
+      "rss_bytes": 644595712,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 5906644992,
+      "elapsed_s": 3.6660805419960525,
+      "rss_bytes": 645103616,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 5906644992,
+      "elapsed_s": 3.9269169999970472,
+      "rss_bytes": 645513216,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 6686015488,
+      "elapsed_s": 4.187030959001277,
+      "rss_bytes": 649986048,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 6138200064,
+      "elapsed_s": 4.448602874996141,
+      "rss_bytes": 650838016,
+      "swap_used_bytes": 1243152384
+    }
+  ],
+  "swap_used_end_bytes": 1243152384,
+  "swap_used_start_bytes": 1074003968
+}

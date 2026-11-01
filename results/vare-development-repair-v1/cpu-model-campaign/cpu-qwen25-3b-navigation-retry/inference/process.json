@@ -1,0 +1,161 @@
+{
+  "abort": null,
+  "command": [
+    "/Users/user/.cache/vare-mlx-venv/bin/python",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/development_campaign_model_entry_v1.py",
+    "--workspace",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/cpu-model-campaign/cpu-qwen25-3b-navigation-retry/workspace",
+    "--model-path",
+    "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-3B-Instruct-4bit/snapshots/4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "--model-repository",
+    "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "--backend",
+    "mlx",
+    "--mlx-device",
+    "cpu",
+    "--task-root",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/cpu-model-campaign/cpu-qwen25-3b-navigation-retry/task",
+    "--output",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/cpu-model-campaign/cpu-qwen25-3b-navigation-retry/agent-record.json",
+    "--event-journal",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/cpu-model-campaign/cpu-qwen25-3b-navigation-retry/events.jsonl",
+    "--instruction",
+    "Repair search in src/vare/source_navigation_v1.py. Apply a minimal source edit and then call finish.",
+    "--seed",
+    "101",
+    "--max-turns",
+    "12",
+    "--max-no-tool-retries",
+    "1",
+    "--max-new-tokens-per-turn",
+    "1024",
+    "--max-total-new-tokens",
+    "4096",
+    "--max-context-tokens",
+    "12288",
+    "--wall-seconds",
+    "600",
+    "--no-do-sample",
+    "--edit-format",
+    "structured_replace",
+    "--tool-interface",
+    "lease_bound_navigation_v1",
+    "--require-split",
+    "development",
+    "--temperature",
+    "0",
+    "--top-p",
+    "0",
+    "--top-k",
+    "0"
+  ],
+  "elapsed_s": 4.440309124998748,
+  "peak_sampled_rss_bytes": 1993162752,
+  "returncode": 0,
+  "samples": [
+    {
+      "available_memory_bytes": 8954068992,
+      "elapsed_s": 0.0015507499992963858,
+      "rss_bytes": 7667712,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 8954068992,
+      "elapsed_s": 0.2632244170017657,
+      "rss_bytes": 47955968,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 8954068992,
+      "elapsed_s": 0.5250496250009746,
+      "rss_bytes": 47955968,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 8954068992,
+      "elapsed_s": 0.7868672080003307,
+      "rss_bytes": 50118656,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 8918155264,
+      "elapsed_s": 1.0452411670048605,
+      "rss_bytes": 52248576,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 8918155264,
+      "elapsed_s": 1.30699029200332,
+      "rss_bytes": 80166912,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 8918155264,
+      "elapsed_s": 1.5646454169982462,
+      "rss_bytes": 84590592,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 8918155264,
+      "elapsed_s": 1.8253395420033485,
+      "rss_bytes": 85901312,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 7529709568,
+      "elapsed_s": 2.0860140830045566,
+      "rss_bytes": 1875263488,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 7452491776,
+      "elapsed_s": 2.3468346250010654,
+      "rss_bytes": 1987493888,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 7452491776,
+      "elapsed_s": 2.606712417000381,
+      "rss_bytes": 1988575232,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 7452491776,
+      "elapsed_s": 2.8702891249995446,
+      "rss_bytes": 1989197824,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 6212091904,
+      "elapsed_s": 3.131680750004307,
+      "rss_bytes": 1989214208,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 6212091904,
+      "elapsed_s": 3.3934466670034453,
+      "rss_bytes": 1989214208,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 6212091904,
+      "elapsed_s": 3.654801333002979,
+      "rss_bytes": 1989230592,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 6212091904,
+      "elapsed_s": 3.916005375001987,
+      "rss_bytes": 1989230592,
+      "swap_used_bytes": 1243152384
+    },
+    {
+      "available_memory_bytes": 6172590080,
+      "elapsed_s": 4.177445499997702,
+      "rss_bytes": 1993162752,
+      "swap_used_bytes": 1243152384
+    }
+  ],
+  "swap_used_end_bytes": 1243152384,
+  "swap_used_start_bytes": 1243152384
+}

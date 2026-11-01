@@ -1,0 +1,15 @@
+{
+  "id": "manifest-nonempty",
+  "metadata": {
+    "editable_files": [
+      "scripts/verify_coding_agent_evidence_manifest_v1.py"
+    ],
+    "split": "development",
+    "upstream_repository": "mitukx/VARE",
+    "upstream_revision": "58ecd9c9727a1544a5a08c9c250f1f36dd9a5f8d"
+  },
+  "prompt": "Repair manifest_entries in scripts/verify_coding_agent_evidence_manifest_v1.py. A manifest that omits files, or supplies an empty object or empty array, currently verifies zero files and can be reported as completed. Require a nonempty files inventory. Invalid inventory must return a nonempty errors list with no entries. Continue to support nonempty path-map and array formats, retaining duplicate-path and malformed-array checks. Change only the body of manifest_entries, preserving its signature and every other definition. Do not add imports, IO, reflection, nested definitions, or changes to module state. Hidden behavioral checks run only after the attempt. This is Development feasibility, not held-out evaluation.",
+  "source": {
+    "base_revision": "960431f99a2920aa765e8e385b082a0346ae20d9"
+  }
+}

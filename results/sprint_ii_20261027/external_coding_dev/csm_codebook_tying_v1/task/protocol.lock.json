@@ -1,0 +1,16 @@
+{
+  "protocol_id": "external-csm-codebook-tying-development-v1",
+  "split": "development",
+  "candidate_visible_paths": ["configuration_csm.py"],
+  "public_test_path": "subject/test_public.py",
+  "independent_grader_path": "grader/grade.py",
+  "grader_visibility": "grader remains outside the candidate workspace and model-readable tool allowlist",
+  "upstream_repository": "https://github.com/huggingface/transformers",
+  "upstream_base_revision": "50e35cc0ca18ec19b80653690de553e6decf74f5",
+  "upstream_base_path": "src/transformers/models/csm/configuration_csm.py",
+  "upstream_known_fix_pr": "https://github.com/huggingface/transformers/pull/49197",
+  "upstream_known_fix_merge_commit": "6c5f8f4186c15f4bfbd67941a1736b2b347e0155",
+  "reserved_heldout_used": false,
+  "model_pretraining_exposure": "unknown; upstream task was selected recently but no claim of zero pretraining exposure is made",
+  "qualification_rule": "baseline fail, upstream known fix pass, incorrect mutant fail under independent grader; source is parsed but never imported by grader"
+}

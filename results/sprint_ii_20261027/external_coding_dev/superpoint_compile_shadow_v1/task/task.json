@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "candidate_visible_files": [
+      "modeling_superpoint.py"
+    ],
+    "editable_files": [
+      "modeling_superpoint.py",
+      "test_public.py"
+    ],
+    "split": "development",
+    "task_type": "external_mlsys_compile_runtime_bug",
+    "upstream_fix": "https://github.com/huggingface/transformers/pull/49409"
+  },
+  "prompt": "Repair the SuperPoint forward method so its list comprehensions do not reuse last_hidden_state as a comprehension target. Preserve the outer encoder output for both keypoint and descriptor decoding; keep both decoder comprehensions aligned with the same per-image hidden-state tensor.",
+  "source": {
+    "base_blob_sha": "59379ce357ef37c11476c73ec71eb0796f2de5f6",
+    "external_upstream_path": "src/transformers/models/superpoint/modeling_superpoint.py",
+    "external_upstream_revision": "ea9259355388f518240f96a8c2dee7311b1c5911",
+    "known_fix_blob_sha": "d00aca41820041c726c875513ff6cf95b3957d36",
+    "known_fix_revision": "f2ae8da4d3ea45e1138862af42ac25da6d3e7e89",
+    "local_path": "huggingface/transformers",
+    "upstream_fix": "https://github.com/huggingface/transformers/pull/49409"
+  },
+  "task_id": "transformers-superpoint-compile-local-shadow-20261027-v1",
+  "title": "Avoid local-name shadowing in compiled SuperPoint forward"
+}

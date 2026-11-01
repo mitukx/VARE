@@ -28,9 +28,7 @@ def test_v2_task_namespaces_are_round_and_evaluation_disjoint():
     assert len({t.prompt for t in [*train,*future,*heldout]})==24
 
 
-def test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign():
-    runtime_sources={str(path.relative_to(bench.ROOT))
-                     for path in (bench.ROOT/"src/vare").rglob("*.py")}
+def test_auditor_inventory_pins_historical_campaign_runtime_sources():
     historical_77=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V1]
     diagnostic_78=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V2]
     diagnostic_80=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
@@ -39,7 +37,10 @@ def test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign():
     assert auditor.runtime_source_names_from_commit(diagnostic_78)==auditor.RUNTIME_PACKAGE_SOURCES_V2
     assert auditor.runtime_source_names_from_commit(diagnostic_80)==auditor.RUNTIME_PACKAGE_SOURCES_V3
     assert auditor.runtime_source_names_from_commit(navigation_v4)==auditor.RUNTIME_PACKAGE_SOURCES_V4
-    assert runtime_sources==auditor.RUNTIME_PACKAGE_SOURCES_V4
+    # These inventories describe immutable historical campaign revisions.
+    # The current checkout may add runtime modules; comparing its live tree to
+    # a frozen V4/V5 inventory would silently conflate today's code with the
+    # source set that a historical campaign actually executed.
     assert auditor.RUNTIME_PACKAGE_SOURCES_V1 < auditor.RUNTIME_PACKAGE_SOURCES_V2
     assert auditor.RUNTIME_PACKAGE_SOURCES_V2 < auditor.RUNTIME_PACKAGE_SOURCES_V3
     assert auditor.RUNTIME_PACKAGE_SOURCES_V4==auditor.RUNTIME_PACKAGE_SOURCES_V3
@@ -72,11 +73,28 @@ def campaign(tmp_path_factory):
     pytest.importorskip("transformers")
     pytest.importorskip("psutil")
     target=tmp_path_factory.mktemp("continuation")/"run"
-    process=subprocess.run([sys.executable,str(bench.ROOT/"scripts/benchmark_e2e_rl_continuation.py"),
+    # This suite verifies historical V5 execution, not the current coding
+    # runtime. Run the benchmark from the exact V5 campaign checkout; the
+    # current auditor still checks every recorded source hash against Git.
+    pinned_commit="6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
+    checkout=target.parent/"historical-v5"
+    subprocess.run(["git","-C",str(bench.ROOT),"worktree","add","--detach",
+                    str(checkout),pinned_commit],check=True,capture_output=True,text=True)
+    bench.atomic_json(target.parent/"execution-boundary.json",{
+        "benchmark_commit":pinned_commit,
+        "test_driver_commit":subprocess.check_output(
+            ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True).strip(),
+        "test_driver_sha256":auditor.sha(Path(__file__)),
+    })
+    try:
+        process=subprocess.run([sys.executable,str(checkout/"scripts/benchmark_e2e_rl_continuation.py"),
                             "--output",str(target),"--model-dir",str(Path(model).resolve()),
                             "--workers","2","--seeds","3901","--rounds","6","--tasks","4","--eval-tasks","4"],
                            capture_output=True,text=True,timeout=240,
-                           env={**os.environ,"OMP_NUM_THREADS":"1","MKL_NUM_THREADS":"1","TOKENIZERS_PARALLELISM":"false","PYTHONHASHSEED":"0"})
+                               env={**os.environ,"OMP_NUM_THREADS":"1","MKL_NUM_THREADS":"1","TOKENIZERS_PARALLELISM":"false","PYTHONHASHSEED":"0"})
+    finally:
+        subprocess.run(["git","-C",str(bench.ROOT),"worktree","remove",str(checkout)],
+                       check=True,capture_output=True,text=True)
     assert process.returncode==0,process.stdout+process.stderr
     return target,Path(model).resolve()
 
@@ -96,9 +114,6 @@ def test_actual_checkpoint_state_and_scores_replay(campaign):
 def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     root,_=campaign
     manifest=auditor.read(root/"manifest.json")
-    runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
-    assert len(runtime_sources)==80
-    assert runtime_sources==auditor.RUNTIME_PACKAGE_SOURCES_V4
     assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V5
     assert set(manifest["source_sha256"])==auditor.SOURCE_INVENTORY_V5
     identity=manifest["source_identity"]
@@ -106,6 +121,14 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
         auditor.SOURCE_INVENTORY_V5
     ]
     assert identity["inventory_id"]==auditor.SOURCE_INVENTORY_V5_ID
+    # Validate the snapshot against its immutable runtime commit, not the
+    # current checkout, which may contain additional runtime modules.
+    runtime_commit=identity["runtime_source_commit"]
+    assert auditor.runtime_source_names_from_commit(runtime_commit)==\
+        auditor.RUNTIME_PACKAGE_SOURCES_V4
+    assert identity["runtime_source_sha256"]==auditor.source_hashes_from_commit(
+        runtime_commit,auditor.RUNTIME_PACKAGE_SOURCES_V4,
+    )
     assert "scripts/run_local_agent.py" in identity["campaign_source_sha256"]
     assert identity["campaign_source_commit"]==manifest["base_commit"]
     changed=tmp_path/"changed-runtime-dependency"
@@ -551,10 +574,10 @@ def test_v4_rejects_wrong_runtime_commit_campaign_commit_and_source_hashes():
         )
 
 
-def test_v5_accepts_current_campaign_with_separate_immutable_runtime_pin():
-    campaign_commit=subprocess.check_output(
-        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
-    ).strip()
+def test_v5_accepts_pinned_campaign_with_separate_immutable_runtime_pin():
+    # V5 accepts only campaigns whose package still matches its frozen
+    # runtime. Later unrelated runtime edits must not redefine that record.
+    campaign_commit="6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
     manifest=_v5_manifest_for_campaign_commit(campaign_commit)
     assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V5
     assert manifest["source_identity"]["inventory_id"]==auditor.SOURCE_INVENTORY_V5_ID
@@ -564,10 +587,16 @@ def test_v5_accepts_current_campaign_with_separate_immutable_runtime_pin():
     auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V5,False)
 
 
+def test_v5_rejects_a_campaign_with_changed_runtime_sources():
+    manifest=_v5_manifest_for_campaign_commit(
+        "6c2718e17c0afa43cd8304a1581666ea80799545",
+    )
+    with pytest.raises(ValueError,match="campaign runtime source hashes differ"):
+        auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V5,False)
+
+
 def test_v5_rejects_wrong_identity_base_hashes_and_source_sets():
-    campaign_commit=subprocess.check_output(
-        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
-    ).strip()
+    campaign_commit="6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
     manifest=_v5_manifest_for_campaign_commit(campaign_commit)
 
     wrong_runtime={**manifest,"source_identity":{
@@ -662,11 +691,12 @@ def test_78_file_inventory_rejects_other_commits_even_if_the_tree_is_unchanged()
         auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V2,False)
 
 
-def test_80_file_inventory_rejects_an_unpinned_base_commit():
+def test_80_file_inventory_rejects_an_unpinned_commit_with_same_historical_tree():
     pinned=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
-    unpinned=subprocess.check_output(
-        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
-    ).strip()
+    # Pick an immutable descendant that still has the exact 80-file V3 tree.
+    # HEAD is deliberately unsuitable: this checkout now includes newer
+    # runtime modules that were never part of the frozen V3 protocol.
+    unpinned="6c2718e17c0afa43cd8304a1581666ea80799545"
     assert unpinned!=pinned
     assert auditor.runtime_source_names_from_commit(unpinned)==auditor.RUNTIME_PACKAGE_SOURCES_V3
     manifest={

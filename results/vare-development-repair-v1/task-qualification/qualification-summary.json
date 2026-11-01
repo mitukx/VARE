@@ -1,0 +1,237 @@
+{
+  "controls": [
+    {
+      "control_passed": true,
+      "elapsed_s": 0.17878874999587424,
+      "grade": {
+        "admitted": true,
+        "candidate_sha256": "23d8aeee1a7ecd0fb28cde8e8b204aeaa9752b1e2bc04436bb1951abf8f3f162",
+        "checks": {
+          "bounded-2048": false,
+          "bounded-4096": false,
+          "bounded-8192": false,
+          "invalid-query-rejected": true,
+          "no-fabricated-hits": false,
+          "retains-hit-2048": false,
+          "retains-hit-4096": false,
+          "retains-hit-8192": false
+        },
+        "success": false,
+        "task": "navigation-overflow"
+      },
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/task-qualification/inputs/navigation-overflow-baseline.py",
+      "returncode": 0,
+      "sha256": "23d8aeee1a7ecd0fb28cde8e8b204aeaa9752b1e2bc04436bb1951abf8f3f162",
+      "task": "navigation-overflow",
+      "variant": "baseline"
+    },
+    {
+      "control_passed": true,
+      "elapsed_s": 0.18891695800266461,
+      "grade": {
+        "admitted": true,
+        "candidate_sha256": "69d0415326f79a389839d2be49f823a25572a0fd052e80df877868af6c2ef02b",
+        "checks": {
+          "bounded-2048": true,
+          "bounded-4096": true,
+          "bounded-8192": true,
+          "invalid-query-rejected": true,
+          "no-fabricated-hits": true,
+          "retains-hit-2048": true,
+          "retains-hit-4096": true,
+          "retains-hit-8192": true
+        },
+        "success": true,
+        "task": "navigation-overflow"
+      },
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/task-qualification/inputs/navigation-overflow-known-fix.py",
+      "returncode": 0,
+      "sha256": "69d0415326f79a389839d2be49f823a25572a0fd052e80df877868af6c2ef02b",
+      "task": "navigation-overflow",
+      "variant": "known-fix"
+    },
+    {
+      "control_passed": true,
+      "elapsed_s": 0.18455141699814703,
+      "grade": {
+        "admitted": true,
+        "candidate_sha256": "23361f8e616b859c8a91d84f66f9622dec0a13992cb6472376d6f4048550ca00",
+        "checks": {
+          "bounded-2048": true,
+          "bounded-4096": true,
+          "bounded-8192": true,
+          "invalid-query-rejected": true,
+          "no-fabricated-hits": true,
+          "retains-hit-2048": false,
+          "retains-hit-4096": false,
+          "retains-hit-8192": false
+        },
+        "success": false,
+        "task": "navigation-overflow"
+      },
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/task-qualification/inputs/navigation-overflow-incorrect-mutant.py",
+      "returncode": 0,
+      "sha256": "23361f8e616b859c8a91d84f66f9622dec0a13992cb6472376d6f4048550ca00",
+      "task": "navigation-overflow",
+      "variant": "incorrect-mutant"
+    },
+    {
+      "control_passed": true,
+      "elapsed_s": 0.06561641699954635,
+      "grade": {
+        "admitted": true,
+        "candidate_sha256": "23d8aeee1a7ecd0fb28cde8e8b204aeaa9752b1e2bc04436bb1951abf8f3f162",
+        "checks": {
+          "empty-allowlist-fails": true,
+          "fresh-content": false,
+          "initial-build-recovers": false,
+          "initial-success": true,
+          "missing-source-fails": true,
+          "oversized-fails": true,
+          "recovers-after-repair": false,
+          "stable-generation": false
+        },
+        "success": false,
+        "task": "navigation-retry"
+      },
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/task-qualification/inputs/navigation-retry-baseline.py",
+      "returncode": 0,
+      "sha256": "23d8aeee1a7ecd0fb28cde8e8b204aeaa9752b1e2bc04436bb1951abf8f3f162",
+      "task": "navigation-retry",
+      "variant": "baseline"
+    },
+    {
+      "control_passed": true,
+      "elapsed_s": 0.0653793340025004,
+      "grade": {
+        "admitted": true,
+        "candidate_sha256": "0d878797233db83e2865d284256d84206d6f9c341c7ad9bd42ff70aff9752158",
+        "checks": {
+          "empty-allowlist-fails": true,
+          "fresh-content": true,
+          "initial-build-recovers": true,
+          "initial-success": true,
+          "missing-source-fails": true,
+          "oversized-fails": true,
+          "recovers-after-repair": true,
+          "stable-generation": true
+        },
+        "success": true,
+        "task": "navigation-retry"
+      },
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/task-qualification/inputs/navigation-retry-known-fix.py",
+      "returncode": 0,
+      "sha256": "0d878797233db83e2865d284256d84206d6f9c341c7ad9bd42ff70aff9752158",
+      "task": "navigation-retry",
+      "variant": "known-fix"
+    },
+    {
+      "control_passed": true,
+      "elapsed_s": 0.06774795900128083,
+      "grade": {
+        "admitted": true,
+        "candidate_sha256": "caa35340b349849f981109958cb70cf73dfcfd1a3136c41b6bf041ac371213d3",
+        "checks": {
+          "empty-allowlist-fails": true,
+          "fresh-content": false,
+          "initial-build-recovers": true,
+          "initial-success": true,
+          "missing-source-fails": false,
+          "oversized-fails": false,
+          "recovers-after-repair": false,
+          "stable-generation": true
+        },
+        "success": false,
+        "task": "navigation-retry"
+      },
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/task-qualification/inputs/navigation-retry-incorrect-mutant.py",
+      "returncode": 0,
+      "sha256": "caa35340b349849f981109958cb70cf73dfcfd1a3136c41b6bf041ac371213d3",
+      "task": "navigation-retry",
+      "variant": "incorrect-mutant"
+    },
+    {
+      "control_passed": true,
+      "elapsed_s": 0.05260120800085133,
+      "grade": {
+        "admitted": true,
+        "candidate_sha256": "d8e9981e5bbec210cb6f90e3af3abb3e5fb496810a422f7a3d5e18b82fd24bf1",
+        "checks": {
+          "array-preserved": true,
+          "duplicates-rejected": true,
+          "invalid-0": false,
+          "invalid-1": false,
+          "invalid-2": false,
+          "invalid-3": true,
+          "invalid-4": true,
+          "invalid-5": true,
+          "malformed-array-rejected": true,
+          "mapping-preserved": true
+        },
+        "success": false,
+        "task": "manifest-nonempty"
+      },
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/task-qualification/inputs/manifest-nonempty-baseline.py",
+      "returncode": 0,
+      "sha256": "d8e9981e5bbec210cb6f90e3af3abb3e5fb496810a422f7a3d5e18b82fd24bf1",
+      "task": "manifest-nonempty",
+      "variant": "baseline"
+    },
+    {
+      "control_passed": true,
+      "elapsed_s": 0.05058541699690977,
+      "grade": {
+        "admitted": true,
+        "candidate_sha256": "bc8381eca706c4a965c6864ca99bc70c124d70427aaca5196a76b7309a19f9e9",
+        "checks": {
+          "array-preserved": true,
+          "duplicates-rejected": true,
+          "invalid-0": true,
+          "invalid-1": true,
+          "invalid-2": true,
+          "invalid-3": true,
+          "invalid-4": true,
+          "invalid-5": true,
+          "malformed-array-rejected": true,
+          "mapping-preserved": true
+        },
+        "success": true,
+        "task": "manifest-nonempty"
+      },
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/task-qualification/inputs/manifest-nonempty-known-fix.py",
+      "returncode": 0,
+      "sha256": "bc8381eca706c4a965c6864ca99bc70c124d70427aaca5196a76b7309a19f9e9",
+      "task": "manifest-nonempty",
+      "variant": "known-fix"
+    },
+    {
+      "control_passed": true,
+      "elapsed_s": 0.05093091700109653,
+      "grade": {
+        "admitted": true,
+        "candidate_sha256": "512300a3ffcf15757692c64b190aa1ebe37489e832c1bbf2dc32f7082a987ee8",
+        "checks": {
+          "array-preserved": true,
+          "duplicates-rejected": true,
+          "invalid-0": false,
+          "invalid-1": true,
+          "invalid-2": true,
+          "invalid-3": true,
+          "invalid-4": true,
+          "invalid-5": true,
+          "malformed-array-rejected": true,
+          "mapping-preserved": true
+        },
+        "success": false,
+        "task": "manifest-nonempty"
+      },
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/task-qualification/inputs/manifest-nonempty-incorrect-mutant.py",
+      "returncode": 0,
+      "sha256": "512300a3ffcf15757692c64b190aa1ebe37489e832c1bbf2dc32f7082a987ee8",
+      "task": "manifest-nonempty",
+      "variant": "incorrect-mutant"
+    }
+  ],
+  "protocol_sha256": "f92aacb347b8d30d3853c3f5ba47603435f250a28be745a22a7dbf79b1cfbff2",
+  "qualified": true
+}

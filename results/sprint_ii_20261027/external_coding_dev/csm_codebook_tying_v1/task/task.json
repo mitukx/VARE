@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "editable_files": [
+      "configuration_csm.py",
+      "test_public.py"
+    ],
+    "split": "development",
+    "task_type": "external_mlsys_config_repair",
+    "upstream_fix": "https://github.com/huggingface/transformers/pull/49197",
+    "upstream_issue": "https://github.com/huggingface/transformers/issues/49196"
+  },
+  "prompt": "Repair CSM configuration behavior so codebook embedding tying is controlled consistently by tie_codebooks_embeddings when loading serialized settings. Keep text embeddings and the language-model head untied; preserve the configuration API and other defaults.",
+  "source": {
+    "base_revision": "f64044270ba3cb6d006a9ca18e944a7609726ea6",
+    "calibration_revision": "6c5f8f4186c15f4bfbd67941a1736b2b347e0155",
+    "external_upstream_path": "src/transformers/models/csm/configuration_csm.py",
+    "external_upstream_revision": "50e35cc0ca18ec19b80653690de553e6decf74f5",
+    "local_path": "huggingface/transformers"
+  },
+  "task_id": "transformers-csm-codebook-embedding-tying-20261027-v1",
+  "tests": [],
+  "title": "Preserve CSM codebook embedding tying configuration"
+}

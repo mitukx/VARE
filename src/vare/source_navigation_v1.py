@@ -252,6 +252,7 @@ class SourceNavigatorV1:
     def _bounded(self, result: dict[str, Any]) -> dict[str, Any]:
         """Drop lower-ranked results until the actual JSON payload fits."""
         results = result.get("results")
+        paths = result.get("indexed_paths")
         while True:
             # Match the local agent's exact tool-result serialization.
             encoded = json.dumps(result, ensure_ascii=False).encode("utf-8")
@@ -260,6 +261,12 @@ class SourceNavigatorV1:
                 return result
             if size <= self.max_output_bytes:
                 result["output_bytes"] = size
+                continue
+            # Inventory is auxiliary metadata. Keep useful ranked hits before
+            # spending the response budget on the complete path listing.
+            if isinstance(paths, list) and paths:
+                paths.pop()
+                result["indexed_paths_truncated"] = True
                 continue
             if not isinstance(results, list) or not results:
                 return {
@@ -278,9 +285,9 @@ class SourceNavigatorV1:
             return self._bounded(_error("invalid_query", max_query_terms=MAX_QUERY_TERMS))
 
         rebuilt = False
-        if self._last_build_error is not None:
-            return self._bounded(dict(self._last_build_error))
-        if self._is_stale():
+        if not self.allowed:
+            return self._bounded(_error("no_candidate_visible_source_files"))
+        if self._last_build_error is not None or self._is_stale():
             if not self._rebuild():
                 return self._bounded(dict(self._last_build_error or _error("source_index_failed")))
             rebuilt = True
@@ -331,6 +338,8 @@ class SourceNavigatorV1:
             "index_generation": self._generation,
             "index_rebuilt": rebuilt,
             "indexed_paths": list(sorted(self._snapshot)),
+            "indexed_path_count": len(self._snapshot),
+            "indexed_paths_truncated": False,
             "result_limit": self.max_results,
             "truncated": match_count > len(matches),
             "results": matches,

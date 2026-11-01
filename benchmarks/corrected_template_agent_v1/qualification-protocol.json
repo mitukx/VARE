@@ -1,0 +1,115 @@
+{
+  "asset_hashes": {
+    "UPSTREAM_LICENSE": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+    "checkpoint-shards-baseline.py.txt": "8f52b7c88ba676ecb3d9a954aa5a39a4824ea45bdee85abf846318f0fb0b5234",
+    "checkpoint-shards-incorrect-mutant.py.txt": "014ad3e7c368922a91320c77d31f09d1e1ae2fd259207f406b641a10803bd657",
+    "checkpoint-shards-upstream-fixed.py.txt": "625a06baa9f99a87eab030ba2c2f6bdf14f2fb2b5cefc51e9d44d6bace46f3f9",
+    "gqa-repeat-baseline.py.txt": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+    "gqa-repeat-incorrect-mutant.py.txt": "942114aaddc5e98ba182c925718d31d36b98bbc2753b183dc34badf0c9b9e03b",
+    "gqa-repeat-upstream-fixed.py.txt": "965564fe5831475b46dd059634a22b3c153f3c9b81b3b72d3f7fbf84bab3b697",
+    "qwen25-corrected-tokenizer-config.json": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "tasks.json": "bd43a02f8592e8bb256989ec85599065843db16197b6155908ed1dc71a242e8d"
+  },
+  "asset_root": "benchmarks/corrected_template_agent_v1",
+  "claim_boundary": "Task-level feasibility only. These tasks are not held out, are not eligible as held-out evidence, and do not qualify training or a coding-capability gain.",
+  "exposure_audit": "thinking-markers/MLX-LM #1974 was found in the earlier flagship report and is excluded as consumed. The gqa-repeat source pack row was unassigned, not held out, and no prior model trajectory was found in the bounded local search; this campaign allocates it to Development and permanently excludes it from future held-out use. checkpoint-shards #1721 was not present in the VARE task/result inventories; its public upstream exposure is unknown. No claim of model-pretraining non-exposure is made.",
+  "frozen_at_utc": "2026-10-26T15:16:47.641264+00:00",
+  "grader": "scripts/grade_corrected_template_candidate_v1.py",
+  "grader_boundary": "Candidate modules are never imported. Only the declared target function body is structurally admitted and compiled beside a pinned pure baseline projection. The checkpoint-shards candidate sees only make_shards and MAX_FILE_SIZE_GB, not the full utils.py module; in particular, reserved held-out #1877 load_model code is absent. The gqa-repeat candidate sees the authored source file but only repeat_kv_heads may change.",
+  "id": "corrected-template-agent-qualification-v1",
+  "model_inference": "NOT_RUN",
+  "predecessor": {
+    "head": "6e4cac06512d1eca97b8cd1859b94b99202e56b4",
+    "pull_request": 139
+  },
+  "predeclared_pass_rule": "For every task, baseline and incorrect mutant must be structurally admitted and fail at least one hidden contract check; known fix must be admitted and pass every hidden contract check. Qualification passes only if all six outcomes match these expectations.",
+  "purpose": "Qualify two fresh, disjoint Development function-repair tasks before any new model inference. This protocol governs deterministic task controls only; the original-versus-corrected template campaign will have its own protocol frozen before generation.",
+  "qualification_resources": {
+    "maximum_paid_spend": 0,
+    "rss_limit_bytes": 536870912,
+    "swap_growth_limit_bytes": 134217728,
+    "wall_seconds": 30
+  },
+  "source_hashes": {
+    "benchmarks/mlsys_coding_v2/manifest.json": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+    "benchmarks/mlsys_coding_v2/split.json": "7a3bd7f368b6794dc1503b6154004d71d207f7ca8abeabf8689b628bf9e46b51",
+    "benchmarks/mlsys_coding_v2/tasks/gqa_repeat/evaluator/test_hidden.py": "9cf8466e92d19287054a4fb4d5b46c46118fed4e023a0d4e2692d0e7455b8634",
+    "benchmarks/mlsys_coding_v2/tasks/gqa_repeat/subject/gqa_repeat.py": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+    "benchmarks/mlsys_coding_v2/tasks/gqa_repeat/subject/test_public.py": "8d18a1af06006508975f8371329fb091a5ddd21b4f52e0775c17faecb4605bef",
+    "benchmarks/mlsys_coding_v2/tasks/gqa_repeat/task.json": "fa8c8754d711886660be7ca0e18efc7cb610d452f30d27789369eecb63ff7fc8",
+    "docs/flagship-verified-agent-v1-report.md": "c123dc4ae011e6bf6e7f8f5785ef2fa43ec7e3eb7b6d175caf91688a3c8ae0e8",
+    "scripts/grade_corrected_template_candidate_v1.py": "519faf81184afee334868fe2bfd2475a749ff59234693f151d3cdb0db21e8e9d",
+    "scripts/grade_vare_development_candidate_v1.py": "a56ea948234df6f910bc0b0bdd58ee8824c9f550741bd0368024feec51c0377a",
+    "scripts/qualify_corrected_template_tasks_v1.py": "32140928bcb2c9b86a8ef40dd1d1ce83da776a2be89c84cfa84313581a473d5d"
+  },
+  "task_catalog_sha256": "bd43a02f8592e8bb256989ec85599065843db16197b6155908ed1dc71a242e8d",
+  "tasks": [
+    {
+      "base_revision": "e99e3df975562e4363d60b4b6ad43d731a25df1d",
+      "base_target_function_sha256": "8be20669dcf8242540aaa34d26258fa376058d06734b06492b018f8befc755bc",
+      "candidate_projection_asset": "checkpoint-shards-baseline.py.txt",
+      "candidate_projection_sha256": "8f52b7c88ba676ecb3d9a954aa5a39a4824ea45bdee85abf846318f0fb0b5234",
+      "candidate_scope": "Only make_shards is mutable. The full utils.py module and unrelated fixes are not provided.",
+      "fix_revision": "8f4dc363b291c2ee3abeece68bf69d4e0c64ed09",
+      "fix_target_function_sha256": "8f70fe4dea5897471f9469e3176d1ef335e57f44bd2a59bd1a2cde6e2c74447e",
+      "full_baseline_source_sha256": "d0e6867e3695600adaf975c0fa7e58b96a1c629d1aa12cb5d09e2f8f2aa133c9",
+      "full_fix_source_sha256": "0c663344fa6bcece617c34737d6cda9a1df1be98d07f345639713aad3b4aa046",
+      "id": "checkpoint-shards",
+      "incorrect_mutant_asset": "checkpoint-shards-incorrect-mutant.py.txt",
+      "incorrect_mutant_sha256": "014ad3e7c368922a91320c77d31f09d1e1ae2fd259207f406b641a10803bd657",
+      "known_fix_asset": "checkpoint-shards-upstream-fixed.py.txt",
+      "known_fix_projection_sha256": "625a06baa9f99a87eab030ba2c2f6bdf14f2fb2b5cefc51e9d44d6bace46f3f9",
+      "repository": "ml-explore/mlx-lm",
+      "reserved_source_file_overlap": "The exact utils.py file also contains reserved #1877 code, but only this target function and MAX_FILE_SIZE_GB are exposed. The #1877 load_model target and fix are absent.",
+      "source_path": "mlx_lm/utils.py",
+      "split": "development",
+      "target_function": "make_shards",
+      "task_id": "mlx-lm-1721-checkpoint-shards-development-v1",
+      "upstream_pr": 1721
+    },
+    {
+      "candidate_projection_asset": "gqa-repeat-baseline.py.txt",
+      "candidate_projection_sha256": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+      "candidate_scope": "Only repeat_kv_heads is mutable. The pinned validation helper remains unchanged.",
+      "full_baseline_source_sha256": "1ed21eafb23498313c6a59bb2cca5953cb9508800400230af721600b7301cca6",
+      "id": "gqa-repeat",
+      "incorrect_mutant_asset": "gqa-repeat-incorrect-mutant.py.txt",
+      "incorrect_mutant_sha256": "942114aaddc5e98ba182c925718d31d36b98bbc2753b183dc34badf0c9b9e03b",
+      "incorrect_mutant_target_function_sha256": "120413402e5316ffd61a2e0c627f87de34191242aa15e0b4b6981fb9ca0b8bd8",
+      "known_fix_asset": "gqa-repeat-upstream-fixed.py.txt",
+      "known_fix_projection_sha256": "965564fe5831475b46dd059634a22b3c153f3c9b81b3b72d3f7fbf84bab3b697",
+      "known_fix_target_function_sha256": "cdda16ff067a9ab24f87d2d22132352b6a5e6a7590c447ec0c5c5acd12d6de7e",
+      "original_hidden_grader_sha256": "9cf8466e92d19287054a4fb4d5b46c46118fed4e023a0d4e2692d0e7455b8634",
+      "original_public_test_sha256": "8d18a1af06006508975f8371329fb091a5ddd21b4f52e0775c17faecb4605bef",
+      "original_task_json_sha256": "fa8c8754d711886660be7ca0e18efc7cb610d452f30d27789369eecb63ff7fc8",
+      "source_pack": "mlsys-coding-v2",
+      "source_pack_manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+      "source_pack_original_split": "unassigned",
+      "source_pack_split_sha256": "7a3bd7f368b6794dc1503b6154004d71d207f7ca8abeabf8689b628bf9e46b51",
+      "source_path": "gqa_repeat.py",
+      "source_task_id": "mlsys-v2-gqa-repeat",
+      "split": "development",
+      "target_function": "repeat_kv_heads",
+      "task_id": "mlsys-v2-gqa-repeat-development-v1"
+    }
+  ],
+  "upstream_sources": [
+    {
+      "path": "mlx_lm/utils.py",
+      "repository": "/Users/user/.cache/vare/source-mirrors/mlx-lm",
+      "revision": "e99e3df975562e4363d60b4b6ad43d731a25df1d",
+      "sha256": "d0e6867e3695600adaf975c0fa7e58b96a1c629d1aa12cb5d09e2f8f2aa133c9"
+    },
+    {
+      "path": "mlx_lm/utils.py",
+      "repository": "/Users/user/.cache/vare/source-mirrors/mlx-lm",
+      "revision": "8f4dc363b291c2ee3abeece68bf69d4e0c64ed09",
+      "sha256": "0c663344fa6bcece617c34737d6cda9a1df1be98d07f345639713aad3b4aa046"
+    }
+  ],
+  "variants": [
+    "baseline",
+    "known-fix",
+    "incorrect-mutant"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "grader_sha256": "6facdf8a7f32814b5e5091cc1b2f2768332d220484434b3057f5dd42df0bdcdb",
+  "protocol": "external-task-qualification-v1",
+  "public_test_sha256": "f0826e755207078770ca2df52213e518bc07cf5d8dffe46c3aa4697eb3fefe63",
+  "rows": {
+    "incorrect_mutant": {
+      "grader": {
+        "error": "AttributeError: 'types.SimpleNamespace' object has no attribute 'device'",
+        "reason": "grader_execution_failure",
+        "success": false
+      },
+      "grader_sha256": "6facdf8a7f32814b5e5091cc1b2f2768332d220484434b3057f5dd42df0bdcdb",
+      "public_result": {
+        "elapsed_seconds": 0.262,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_mapping_subclass_is_preserved_and_values_are_recursively_moved\nTraceback (most recent call last):\n  File \"<string>\", line 18, in <module>\n  File \"/workspace/test_public.py\", line 24, in test_mapping_subclass_is_preserved_and_values_are_recursively_moved\n    move_to_device = load_move_to_device()\n                     ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/test_public.py\", line 20, in load_move_to_device\n    exec(compile(module, \"pytorch_utils.py\", \"exec\"), namespace)\n  File \"pytorch_utils.py\", line 211, in <module>\n    def move_to_device(value, device: torch.device):\n                                      ^^^^^^^^^^^^\nAttributeError: 'types.SimpleNamespace' object has no attribute 'device'\n",
+        "stdout": ""
+      },
+      "source_sha256": "0b3b6a09ae48b5804429e4f8a67d70f37c5303d095a482d752c6288d5a7e48df"
+    },
+    "known_fix": {
+      "grader": {
+        "error": "AttributeError: 'types.SimpleNamespace' object has no attribute 'device'",
+        "reason": "grader_execution_failure",
+        "success": false
+      },
+      "grader_sha256": "6facdf8a7f32814b5e5091cc1b2f2768332d220484434b3057f5dd42df0bdcdb",
+      "public_result": {
+        "elapsed_seconds": 0.259,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_mapping_subclass_is_preserved_and_values_are_recursively_moved\nTraceback (most recent call last):\n  File \"<string>\", line 18, in <module>\n  File \"/workspace/test_public.py\", line 24, in test_mapping_subclass_is_preserved_and_values_are_recursively_moved\n    move_to_device = load_move_to_device()\n                     ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/test_public.py\", line 20, in load_move_to_device\n    exec(compile(module, \"pytorch_utils.py\", \"exec\"), namespace)\n  File \"pytorch_utils.py\", line 211, in <module>\n    def move_to_device(value, device: torch.device):\n                                      ^^^^^^^^^^^^\nAttributeError: 'types.SimpleNamespace' object has no attribute 'device'\n",
+        "stdout": ""
+      },
+      "source_sha256": "f1908bb1b85714fee71c127d55e306d8eac5a2f6565f58d7a29075ae82ab6beb"
+    },
+    "subject": {
+      "grader": {
+        "error": "AttributeError: 'types.SimpleNamespace' object has no attribute 'device'",
+        "reason": "grader_execution_failure",
+        "success": false
+      },
+      "grader_sha256": "6facdf8a7f32814b5e5091cc1b2f2768332d220484434b3057f5dd42df0bdcdb",
+      "public_result": {
+        "elapsed_seconds": 0.271,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_mapping_subclass_is_preserved_and_values_are_recursively_moved\nTraceback (most recent call last):\n  File \"<string>\", line 18, in <module>\n  File \"/workspace/test_public.py\", line 24, in test_mapping_subclass_is_preserved_and_values_are_recursively_moved\n    move_to_device = load_move_to_device()\n                     ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/test_public.py\", line 20, in load_move_to_device\n    exec(compile(module, \"pytorch_utils.py\", \"exec\"), namespace)\n  File \"pytorch_utils.py\", line 211, in <module>\n    def move_to_device(value, device: torch.device):\n                                      ^^^^^^^^^^^^\nAttributeError: 'types.SimpleNamespace' object has no attribute 'device'\n",
+        "stdout": ""
+      },
+      "source_sha256": "cab95b73a9eada20f0192b89dc6b4544a7495cd958124fe8eab130d327c3e4d4"
+    }
+  },
+  "task_id": "transformers-move-to-device-mapping-type-20261027-v1"
+}

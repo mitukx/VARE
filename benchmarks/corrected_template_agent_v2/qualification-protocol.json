@@ -1,0 +1,136 @@
+{
+  "asset_hashes": {
+    "ema-bias-baseline.py.txt": "4f989a6293a95982523b5ecadf6e54c0351d8f684257fb89919a46901d8e4816",
+    "ema-bias-incorrect-mutant.py.txt": "bb2d416e1076af93eff774b0991ea7217af684ef4d181a91f137993faeb5ef59",
+    "ema-bias-known-fix.py.txt": "3f1ab73b811db25de2770b006277455c5cdfb0dd7c20b10b626ee766cc6281e5",
+    "label-smooth-baseline.py.txt": "cc2af6d07db108e5b357d38da022412f41ae419a6d569dfe750bf8ab76de1871",
+    "label-smooth-incorrect-mutant.py.txt": "ff20853c01003941d967e670c44279499e7791554c6c31f0ccfe90fa562e6ff4",
+    "label-smooth-known-fix.py.txt": "ac8f402c9698462b6fe76546620e5cbf15e9e8aeaeac90bbd10c25694c0d86d1",
+    "qwen25-corrected-tokenizer-config.json": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "tasks.json": "215eed23af60486a8c9f08ad287a1ecb6735bef99700c5bea64a0d44ef1f0f39"
+  },
+  "asset_root": "benchmarks/corrected_template_agent_v2",
+  "claim_boundary": "Task-oracle calibration only. No model capability, held-out readiness, or training result is claimed.",
+  "expected_controls": {
+    "baseline": "FAIL",
+    "incorrect-mutant": "FAIL",
+    "known-fix": "PASS"
+  },
+  "frozen_at_utc": "2026-10-26T16:04:15.869738+00:00",
+  "grader": "scripts/grade_mlsys_coding_v2_candidate_v1.py",
+  "grader_boundary": "Only the named top-level function body executes after static admission. Candidate modules are not imported by the local full-contract grader. The source-pack hidden test also runs each control from a fresh workspace outside the grader directory.",
+  "id": "corrected-template-agent-controller-intervention-qualification-v2",
+  "model_inference": "NOT_RUN_DURING_QUALIFICATION",
+  "predecessor": {
+    "campaign_protocol_sha256": "5af4c4e159d8838ed49a9c9e3444cea2e1940371948b290df4dc515efb962e10",
+    "campaign_summary": "results/corrected-template-agent-v1/model-run-1/summary.json",
+    "campaign_summary_sha256": "523bd23cd1e1f81fdeea34d323a25cbce2ba71f6212a1c416ae1ed35f0518a88",
+    "finding": "corrected GQA produced two strict valid calls, then a narrated edit that failed parsing; corrected checkpoint bundled three tool calls in one response; no source reads or edits occurred."
+  },
+  "qualification_resources": {
+    "rss_limit_bytes": 536870912,
+    "swap_growth_limit_bytes": 134217728,
+    "wall_seconds": 30
+  },
+  "selection": {
+    "fresh_for_model_inference": true,
+    "future_heldout_exclusions": [
+      "mlsys-v2-label-smooth",
+      "mlsys-v2-ema-bias"
+    ],
+    "reserved_heldout_tasks_used": false,
+    "split": "development"
+  },
+  "source_hashes": {
+    "benchmarks/mlsys_coding_v1/candidate_call.py": "2fe17034f5ba87838aee9cce31effa3eecd9b63034f010a5c774a54983fefbf9",
+    "benchmarks/mlsys_coding_v1/harness_adapter.py": "5e4979d8306e4e9e7140a276f891e86879be0ba74130c4019fd86f9db80dbeca",
+    "scripts/grade_mlsys_coding_v2_candidate_v1.py": "ff0512d35312a8ba5db2e61a26d4d2fd8c3eee8f5d95eb42f04b5a23448cafac",
+    "scripts/grade_vare_development_candidate_v1.py": "a56ea948234df6f910bc0b0bdd58ee8824c9f550741bd0368024feec51c0377a",
+    "scripts/qualify_corrected_template_tasks_v2.py": "483e3b628655ad54999f81e0b4fd84dde90c928dd04004e619e57e0e0a953350",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf",
+    "src/vare/separated_candidate_harness.py": "a1a98c7ee7bbc4a05d6f0445875cf66996ce727f90ffae1ccbd078d033aad9b5",
+    "src/vare/separated_grading.py": "1e371e61297b348ec186048a17c598e9f942403dfc9e440c448cc3e30b04a2b5"
+  },
+  "source_pack": {
+    "allocation": "allocate both to Development before inference and permanently exclude both from future held-out selection",
+    "external_pretraining_exposure": "not assessed; authored VARE utilities, not upstream historical fixes",
+    "id": "mlsys-coding-v2",
+    "manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+    "original_membership": "both tasks were unassigned draft-pool candidates",
+    "split_sha256": "7a3bd7f368b6794dc1503b6154004d71d207f7ca8abeabf8689b628bf9e46b51"
+  },
+  "source_pack_hashes": {
+    "benchmarks/mlsys_coding_v2/manifest.json": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+    "benchmarks/mlsys_coding_v2/split.json": "7a3bd7f368b6794dc1503b6154004d71d207f7ca8abeabf8689b628bf9e46b51",
+    "benchmarks/mlsys_coding_v2/tasks/ema_bias/evaluator/oracle/ema_bias.py": "f836da3a9d21aec21e2ea9976081930e42928600d4fa99aaabf5449df5ac6112",
+    "benchmarks/mlsys_coding_v2/tasks/ema_bias/evaluator/test_hidden.py": "d3a019f42171d91f685930debe25c9183975eb26053264fffa200d95a9d39440",
+    "benchmarks/mlsys_coding_v2/tasks/ema_bias/subject/ema_bias.py": "4f989a6293a95982523b5ecadf6e54c0351d8f684257fb89919a46901d8e4816",
+    "benchmarks/mlsys_coding_v2/tasks/ema_bias/subject/test_public.py": "1043bcfe72c02e2f4dc0905130b8b1d38c5111448c57da0a780a8b05a03bdf86",
+    "benchmarks/mlsys_coding_v2/tasks/ema_bias/task.json": "eaf09482c4077bb587c7962f732502f9f19959783d6eb438cbdc4d30e6600a5f",
+    "benchmarks/mlsys_coding_v2/tasks/label_smooth/evaluator/oracle/label_smooth.py": "78aababd2378fabfe4ea1e0f22f50f7c6a197f91fc9098e4563f1f94adec03f1",
+    "benchmarks/mlsys_coding_v2/tasks/label_smooth/evaluator/test_hidden.py": "7bfadb5f75a863d66e3570b2b9d2344c025085dedb72f182c8ab79cc3e9d1e56",
+    "benchmarks/mlsys_coding_v2/tasks/label_smooth/subject/label_smooth.py": "cc2af6d07db108e5b357d38da022412f41ae419a6d569dfe750bf8ab76de1871",
+    "benchmarks/mlsys_coding_v2/tasks/label_smooth/subject/test_public.py": "58f1c7e86f6c213b01dd65fb6d74521500fce89b760790ef98b7fa6041515e55",
+    "benchmarks/mlsys_coding_v2/tasks/label_smooth/task.json": "16efe0739ef040a4abbb7683f9a853caa91cfce7c4a52ddf0fee03d9a4630576"
+  },
+  "tasks": [
+    {
+      "candidate_projection_asset": "label-smooth-baseline.py.txt",
+      "candidate_projection_sha256": "cc2af6d07db108e5b357d38da022412f41ae419a6d569dfe750bf8ab76de1871",
+      "candidate_scope": "Only smooth_targets is mutable; imports, helpers, docstring, and all other source remain pinned.",
+      "full_baseline_source_sha256": "cc2af6d07db108e5b357d38da022412f41ae419a6d569dfe750bf8ab76de1871",
+      "full_known_fix_source_sha256": "ac8f402c9698462b6fe76546620e5cbf15e9e8aeaeac90bbd10c25694c0d86d1",
+      "id": "label-smooth",
+      "incorrect_mutant_asset": "label-smooth-incorrect-mutant.py.txt",
+      "incorrect_mutant_sha256": "ff20853c01003941d967e670c44279499e7791554c6c31f0ccfe90fa562e6ff4",
+      "instruction": "Repair smooth_targets in label_smooth.py. Apply a minimal source edit, read relevant lines before editing, run the public smoke check, and finish only after it passes.",
+      "known_fix_asset": "label-smooth-known-fix.py.txt",
+      "known_fix_sha256": "ac8f402c9698462b6fe76546620e5cbf15e9e8aeaeac90bbd10c25694c0d86d1",
+      "source_pack_hidden_grader_sha256": "7bfadb5f75a863d66e3570b2b9d2344c025085dedb72f182c8ab79cc3e9d1e56",
+      "source_pack_manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+      "source_pack_oracle_sha256": "78aababd2378fabfe4ea1e0f22f50f7c6a197f91fc9098e4563f1f94adec03f1",
+      "source_pack_original_split": "unassigned",
+      "source_pack_split_sha256": "7a3bd7f368b6794dc1503b6154004d71d207f7ca8abeabf8689b628bf9e46b51",
+      "source_pack_task_id": "mlsys-v2-label-smooth",
+      "source_pack_task_json_sha256": "16efe0739ef040a4abbb7683f9a853caa91cfce7c4a52ddf0fee03d9a4630576",
+      "source_path": "label_smooth.py",
+      "split": "development",
+      "target_function": "smooth_targets",
+      "task_id": "mlsys-v2-label-smooth-development-v1",
+      "task_prompt": "Edit label_smooth.py so smooth_targets matches the contract in its module docstring for every valid class count and smoothing weight. test_public.py is a smoke check and is not the grader. Do not hard-code one distribution.",
+      "title": "Put the smoothed class mass on every class, including the labeled one"
+    },
+    {
+      "candidate_projection_asset": "ema-bias-baseline.py.txt",
+      "candidate_projection_sha256": "4f989a6293a95982523b5ecadf6e54c0351d8f684257fb89919a46901d8e4816",
+      "candidate_scope": "Only bias_corrected_ema is mutable; imports, helpers, docstring, and all other source remain pinned.",
+      "full_baseline_source_sha256": "4f989a6293a95982523b5ecadf6e54c0351d8f684257fb89919a46901d8e4816",
+      "full_known_fix_source_sha256": "3f1ab73b811db25de2770b006277455c5cdfb0dd7c20b10b626ee766cc6281e5",
+      "id": "ema-bias",
+      "incorrect_mutant_asset": "ema-bias-incorrect-mutant.py.txt",
+      "incorrect_mutant_sha256": "bb2d416e1076af93eff774b0991ea7217af684ef4d181a91f137993faeb5ef59",
+      "instruction": "Repair bias_corrected_ema in ema_bias.py. Apply a minimal source edit, read relevant lines before editing, run the public smoke check, and finish only after it passes.",
+      "known_fix_asset": "ema-bias-known-fix.py.txt",
+      "known_fix_sha256": "3f1ab73b811db25de2770b006277455c5cdfb0dd7c20b10b626ee766cc6281e5",
+      "source_pack_hidden_grader_sha256": "d3a019f42171d91f685930debe25c9183975eb26053264fffa200d95a9d39440",
+      "source_pack_manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+      "source_pack_oracle_sha256": "f836da3a9d21aec21e2ea9976081930e42928600d4fa99aaabf5449df5ac6112",
+      "source_pack_original_split": "unassigned",
+      "source_pack_split_sha256": "7a3bd7f368b6794dc1503b6154004d71d207f7ca8abeabf8689b628bf9e46b51",
+      "source_pack_task_id": "mlsys-v2-ema-bias",
+      "source_pack_task_json_sha256": "eaf09482c4077bb587c7962f732502f9f19959783d6eb438cbdc4d30e6600a5f",
+      "source_path": "ema_bias.py",
+      "split": "development",
+      "target_function": "bias_corrected_ema",
+      "task_id": "mlsys-v2-ema-bias-development-v1",
+      "task_prompt": "Edit ema_bias.py so bias_corrected_ema matches the contract in its module docstring, including the first step. test_public.py is a smoke check and is not the grader. Do not special-case one numeric input.",
+      "title": "Bias-correct an exponential moving average at the current step"
+    }
+  ],
+  "variants": [
+    "baseline",
+    "known-fix",
+    "incorrect-mutant"
+  ]
+}

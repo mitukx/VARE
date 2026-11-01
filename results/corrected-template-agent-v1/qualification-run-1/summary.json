@@ -1,0 +1,49 @@
+{
+  "model_inference": "NOT_RUN",
+  "outcomes": [
+    {
+      "expected_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "checkpoint-shards",
+      "variant": "baseline"
+    },
+    {
+      "expected_success": true,
+      "observed_success": true,
+      "qualification_gate_passed": true,
+      "task_id": "checkpoint-shards",
+      "variant": "known-fix"
+    },
+    {
+      "expected_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "checkpoint-shards",
+      "variant": "incorrect-mutant"
+    },
+    {
+      "expected_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "gqa-repeat",
+      "variant": "baseline"
+    },
+    {
+      "expected_success": true,
+      "observed_success": false,
+      "qualification_gate_passed": false,
+      "task_id": "gqa-repeat",
+      "variant": "known-fix"
+    },
+    {
+      "expected_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": false,
+      "task_id": "gqa-repeat",
+      "variant": "incorrect-mutant"
+    }
+  ],
+  "protocol_sha256": "ec1afff97af1fcf0cdc431e42b8e9b3f8a6e31dc820cc7abfbaa8a237fb492ac",
+  "qualification_passed": false
+}

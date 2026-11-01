@@ -1,0 +1,29 @@
+{
+  "source_tokenizer_config_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+  "snapshot_unchanged": true,
+  "model_inference": "NOT_RUN",
+  "rows": [
+    {
+      "variant": "original",
+      "prompt_sha256": "4609003d693ba93b3cc3a5029930f8da09c35f3fc15e428099c3c7b495307dec",
+      "literal_example": "{{\"name\": <function-name>, \"arguments\": <args-json-object>}}",
+      "instantiated_example": "{{\"name\": \"search_source\", \"arguments\": {\"query\":\"needle\"}}}",
+      "valid_json": false,
+      "decoded": null
+    },
+    {
+      "variant": "prospective",
+      "prompt_sha256": "eff8015eaae3c1db6d61c41a1748702cd046a629fa3a768162846f4e42988965",
+      "literal_example": "{\"name\": <function-name>, \"arguments\": <args-json-object>}",
+      "instantiated_example": "{\"name\": \"search_source\", \"arguments\": {\"query\":\"needle\"}}",
+      "valid_json": true,
+      "decoded": {
+        "name": "search_source",
+        "arguments": {
+          "query": "needle"
+        }
+      }
+    }
+  ],
+  "causal_limit": "The two consumed model outputs copied doubled braces. No corrected-template model rerun was performed; a causal coding-performance effect is not established."
+}

@@ -1,0 +1,33 @@
+{
+  "baseline": {
+    "grade": {
+      "reason": "cached_length_growth_condition_missing",
+      "success": false
+    },
+    "returncode": 0,
+    "stderr": ""
+  },
+  "incorrect_mutant": {
+    "grade": {
+      "reason": "growth_uses_wrong_requested_length",
+      "success": false
+    },
+    "returncode": 0,
+    "stderr": ""
+  },
+  "known_fix": {
+    "grade": {
+      "counterexample": {
+        "initial_weight_rows": 4,
+        "observed_growth_argument": "seq_len + past_key_values_length",
+        "past_key_values_length": 5,
+        "required_weight_rows": 7,
+        "seq_len": 2
+      },
+      "reason": "contract_pass",
+      "success": true
+    },
+    "returncode": 0,
+    "stderr": ""
+  }
+}

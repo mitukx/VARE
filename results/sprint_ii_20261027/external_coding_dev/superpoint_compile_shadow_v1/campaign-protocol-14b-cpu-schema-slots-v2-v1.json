@@ -1,0 +1,84 @@
+{
+  "budgets": {
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 1024,
+    "max_public_test_runs": 3,
+    "max_total_new_tokens": 8192,
+    "max_turns": 20,
+    "public_test_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "public_test_memory_mb": 512,
+    "public_test_timeout_s": 45,
+    "wall_seconds": 3600
+  },
+  "claim_limit": "One Development task attempt; not a held-out estimate, broad capability claim, training result, or model improvement.",
+  "controller": {
+    "controller_source_sha256": {
+      "scripts/run_local_agent.py": "aadf7a69d29e6a558d128d6f79048ed038823454e87f1d65db587251b4215390",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "b455e8b1b8c2097693b7c3491d6285b025547b38548726d160183d68d825e21c",
+      "src/vare/agent_task_contract.py": "e050e7f37bdc1f53e006afc66667f30f3e25f9e9c36961c0df5fe53ebce53570",
+      "src/vare/schema_slot_protocol.py": "0efa124d34e349058c88db6356af5572fbacbb3fab2ac983b6945defa206a81c",
+      "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+      "src/vare/source_navigation_v2.py": "c6c65592fbc9028551b76b4e3e02b2f4e8f049ef64002cc0c6e31580a110b847"
+    },
+    "edit_format": "structured_replace",
+    "generation_protocol": "schema_slots_v2",
+    "navigation_guidance": "v2",
+    "strict_parser": "parse_tool_output_v1; no post-hoc repair",
+    "tool_interface": "lease_bound_navigation_v2"
+  },
+  "design": "One greedy real-model Development attempt on a fresh, independently qualified external Transformers task. The workspace uses exact upstream baseline source and the exact task-pinned public test. The public runner executes each test function; independent AST grader remains separate. No rerun or retry after outcome.",
+  "frozen_at_utc": "2026-10-26 20:15:23 UTC",
+  "model": {
+    "backend": "MLX 0.32.4 / mlx-lm 0.32.2, CPU, Apple M1 Pro",
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "quantization": "4-bit as distributed",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "snapshot_revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "template": "snapshot-native corrected Qwen2.5 template; no override",
+    "tokenizer_config_sha256": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "weights_sha256": {
+      "model-00001-of-00002.safetensors": "784b0c89d3e006f49cb8547aba1f2f4e99b365ab4380cf202655ca04c87d7ac3",
+      "model-00002-of-00002.safetensors": "a1b7516f1926070177601698661494dfc68c2de1d98e7c43ba910a0d1d7dfbbe"
+    }
+  },
+  "outcomes": [
+    "preserve every raw model generation and tool result",
+    "count only applied source changes",
+    "run the task-pinned public test after an edit and before finish",
+    "independently grade final candidate",
+    "resource gate failure is retained and is not retried with relaxed limits"
+  ],
+  "protocol_id": "vare-transformers-superpoint-shadow-14b-cpu-schema-slots-v2-v1",
+  "resource_guard": {
+    "memory_free_preflight_min_percent": 70,
+    "observed_memory_pressure_free_percent_before_protocol": 79,
+    "observed_preflight_before_protocol_mib": 772.69,
+    "process_tree_rss_cap_mib": 12288,
+    "swap_free_preflight_min_mib": 700,
+    "swap_growth_cap_mib": 512,
+    "wall_cap_seconds": 3600
+  },
+  "sampling": {
+    "do_sample": false,
+    "seed": 73,
+    "temperature": 0
+  },
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "task": {
+    "candidate_source": "modeling_superpoint.py",
+    "control_results_sha256": "da61dd4190489e0b0bb781e446a7b4353aa6586757860f118a75a2e1b9294953",
+    "grader_sha256": "c2ae6f7f0a6d0136b466195fc2090c5fc0925e7048931df30fb0ead5570113f1",
+    "known_fix_blob_sha": "d00aca41820041c726c875513ff6cf95b3957d36",
+    "known_fix_revision": "f2ae8da4d3ea45e1138862af42ac25da6d3e7e89",
+    "public_tests_sha256": "c5007014555e553fcd79ad4be21034c1cf9de40b24de6dac4b90ace1acc32ac0",
+    "qualification": "baseline FAIL; exact upstream fix PASS; incorrect mutant FAIL; public smoke checks compiled-forward comprehension bindings; no candidate model exposure",
+    "source_blob_sha": "59379ce357ef37c11476c73ec71eb0796f2de5f6",
+    "source_sha256": "453d7ff7a639bcac59ac647cc6b700bdf835c2853c1419bc41a3941a88dd5da1",
+    "task_id": "transformers-superpoint-compile-local-shadow-20261027-v1",
+    "task_sha256": "d95cf43d7217201c3cc742504880a6de4e2a843e3daea596c10a239f813b7b7c",
+    "upstream_pr": "https://github.com/huggingface/transformers/pull/49409",
+    "upstream_revision": "ea9259355388f518240f96a8c2dee7311b1c5911"
+  }
+}

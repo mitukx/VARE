@@ -1,0 +1,139 @@
+{
+  "scope": "Finite current 6d95-descendant checkout, results/**/*.json with actual initial_messages, transcript and a non-fake model_repository. No archive, external corpus, other worktree, or global no-exposure claim. Researcher qualification is not supplied to candidate models.",
+  "new_tasks": [
+    "navigation-overflow",
+    "navigation-retry",
+    "manifest-nonempty"
+  ],
+  "inspected_model_records": [
+    {
+      "path": "work/VARE/results/local-agent-rvl-pilot-v1/run-2.agent.json",
+      "sha256": "70c89a86b2064f4e9a63cc0c8deaf962a03e72c7d373e3adda1418a953505224",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/local-agent-rvl-pilot-v1/run-3.agent.json",
+      "sha256": "58a4707d9e4cead7fce7020fa8a3487b31680788c50a8bcb86db615d3640b6ae",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/local-agent-rvl-pilot-v1/run-1.agent.json",
+      "sha256": "c732e93b3f3c17cdd50115261ce0768d475d9750bf50da187f559c7656ed71d2",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/isolated-grader-v1/agent-101-v2.json",
+      "sha256": "902b8f093ed6501e672ab7f623979748a1404772153ef2100761f9a55d06ea96",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/isolated-grader-v1/agent-101.json",
+      "sha256": "7ace9a46e532afc7b85c4d1c5907a413df638f28e8f8255897256eea71f55f10",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/local-agent-rvl-pilot-v2/run-2.agent.json",
+      "sha256": "4436825b5c2ba7cd4ac2d183879bf3a3c824029dbc284900f32d722c96e86a7e",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/local-agent-rvl-pilot-v2/run-3.agent.json",
+      "sha256": "66a40af212d869d9d62c8642368e5b051196b374efdf35ccafdcbd7acb4ed729",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/local-agent-rvl-pilot-v2/run-1.agent.json",
+      "sha256": "cf5b5d0220c385ed37f7239b0e9a414f6a7d4cf5818a34fdb8c228fd527b01ef",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/real_agent_interface_v1/model_run/02-mlx-lm-1978-rotating-cache-unified_diff/agent.json",
+      "sha256": "9d864c781ce4c417db2caaca9e1c317bd2f4e06708a943134ceb395f1ed6b986",
+      "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "task_id": "mlx-lm-1978-rotating-cache"
+    },
+    {
+      "path": "work/VARE/results/real_agent_interface_v1/model_run/01-mlx-lm-1980-pipeline-scales-structured_replace/agent.json",
+      "sha256": "b851ba7821f5661d79bb7372e6ec4fb5d43564cc659f17787049193384fed1ce",
+      "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "task_id": "mlx-lm-1980-pipeline-scales"
+    },
+    {
+      "path": "work/VARE/results/mlx-core-development-agent-feasibility-v1/agent/mlx-4729-negative-take.json",
+      "sha256": "014e17b6a806ebd5d4046a5c53cc74b457556b0488b7c5fda6f85cc4a1b259a0",
+      "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "task_id": "mlx-4729-negative-take"
+    },
+    {
+      "path": "work/VARE/results/mlx-core-development-agent-feasibility-v1/agent/mlx-4730-normal-shape.json",
+      "sha256": "8093a88280ca0ea73f09fffeb9880c5159ab5bc6b23b2ccd9c63c9e9d42e6623",
+      "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "task_id": "mlx-4730-normal-shape"
+    },
+    {
+      "path": "work/VARE/results/mlx-pr4748-qwen3-development-pilot-v1/model/runs/model-run-v6/agent.json",
+      "sha256": "d36101e872ee012eb9a5c44f7a9d4b38b0ac3c30c2a28aabf731b25e835eb628",
+      "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "task_id": "mlx-4748-vmap-tri-inverse-model-pilot-v1"
+    },
+    {
+      "path": "work/VARE/results/separated-coding-eval-cpu-v1/primary/seed-101/mlsys-v1-grad-accum-tail/agent.json",
+      "sha256": "dbafa8c27a4b9cf608d9d04a781733cb767e16e2dede8ae5ce7d0576449ab84a",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "mlsys-v1-grad-accum-tail"
+    },
+    {
+      "path": "work/VARE/results/separated-coding-eval-cpu-v1/primary/seed-101/mlsys-v1-paired-shuffle-loader/agent.json",
+      "sha256": "076f3a0be3085d2b817cb8a6c86e66e12a986f801115217a416775de7732793f",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "mlsys-v1-paired-shuffle-loader"
+    },
+    {
+      "path": "work/VARE/results/separated-coding-eval-cpu-v1/primary/seed-101/mlsys-v1-warmup-cosine/agent.json",
+      "sha256": "f92da7f43f0a43f15dd69f3b770dfb8d590003fb5063f6867f7eb27149c570fb",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "mlsys-v1-warmup-cosine"
+    },
+    {
+      "path": "work/VARE/results/separated-coding-eval-cpu-v1/primary/seed-101/mlsys-v1-range-sums/agent.json",
+      "sha256": "02e3db059c31a4f46dee048044b5888b65c4c1db30c35cd4a5be1967a94bd4fd",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "mlsys-v1-range-sums"
+    },
+    {
+      "path": "work/VARE/results/separated-coding-eval-cpu-v1/primary/seed-101/mlsys-v1-row-log-softmax/agent.json",
+      "sha256": "828e4be17a06da0b4fe787fea41ac73468b300f93b5d6266787647e32463a7a2",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "mlsys-v1-row-log-softmax"
+    },
+    {
+      "path": "work/VARE/results/isolated-grader-v1/agent-101-v3-audit/inputs/agent.json",
+      "sha256": "902b8f093ed6501e672ab7f623979748a1404772153ef2100761f9a55d06ea96",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/isolated-grader-v1/agent-101-audit/inputs/agent.json",
+      "sha256": "7ace9a46e532afc7b85c4d1c5907a413df638f28e8f8255897256eea71f55f10",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    },
+    {
+      "path": "work/VARE/results/isolated-grader-v1/agent-101-v2-audit/inputs/agent.json",
+      "sha256": "902b8f093ed6501e672ab7f623979748a1404772153ef2100761f9a55d06ea96",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "task_id": "rvl-hf-behavior-policy-parity-v1"
+    }
+  ],
+  "matches": [],
+  "oversized_json_skipped": 2,
+  "decision": "No matching task/source exposure observed within this scan; Development only."
+}

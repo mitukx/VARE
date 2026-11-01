@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "protocol_id": "corrected-template-agent-task-qualification-v3",
+  "frozen_at_utc": "2026-10-26T16:16:00Z",
+  "supersedes_before_inference": {
+    "protocol_id": "corrected-template-agent-task-qualification-v2",
+    "protocol_path": "benchmarks/corrected_template_agent_v2/qualification-protocol.json",
+    "protocol_sha256": "b3da098f58a975e67776cdd10a07df48b51295d820cc15b5825e2298d13cad7a",
+    "campaign_path": "benchmarks/corrected_template_agent_v2/campaign-protocol-v2.json",
+    "campaign_sha256": "c4d66c04276b94909a2ec4b565d37736ed962edfc6d4743e52d9f04c42501997",
+    "initial_summary_path": "results/corrected-template-agent-v2/qualification-run-1/summary.json",
+    "initial_summary_sha256": "6d44867bd9d6333c169be4568ae5f182b5249885dbcbad4e26f6f8b86fe74d99",
+    "reason": "The first local controls reached a temporary host-process shim because the package was not installed in that invocation. Exact-head CI correctly used the frozen generic isolated adapter and rejected the authored mlsys-coding-v2 pack as unsupported. No model inference occurred; this protocol pins a dedicated isolated verifier for the same unused tasks."
+  },
+  "task_allocation": {
+    "split": "development",
+    "source_pack_split": "unassigned",
+    "reserved_heldout_tasks_used": false,
+    "future_heldout_exclusions": [
+      "mlsys-v2-label-smooth",
+      "mlsys-v2-ema-bias"
+    ],
+    "model_attempts_before_qualification": 0
+  },
+  "isolation_protocol": {
+    "path": "benchmarks/corrected_template_agent_v3/isolation-protocol.json",
+    "sha256": "d87ad20c1a477b313e3dd8ec4cd35e30efc82273155d4c4bbc306e5c19fa2b88"
+  },
+  "task_pack": {
+    "path": "benchmarks/mlsys_coding_v2",
+    "manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0"
+  },
+  "control_rule": "Each baseline must fail, each known fix must pass, and each incorrect mutant must fail under both the narrow admitted-body checks and the pinned isolated container grader. Any missing control, hash mismatch, timeout, or isolation error vetoes qualification.",
+  "controls": {
+    "label-smooth": {
+      "task_id": "mlsys-v2-label-smooth",
+      "baseline": {
+        "path": "benchmarks/corrected_template_agent_v2/label-smooth-baseline.py.txt",
+        "sha256": "cc2af6d07db108e5b357d38da022412f41ae419a6d569dfe750bf8ab76de1871",
+        "expected_success": false
+      },
+      "known_fix": {
+        "path": "benchmarks/corrected_template_agent_v2/label-smooth-known-fix.py.txt",
+        "sha256": "ac8f402c9698462b6fe76546620e5cbf15e9e8aeaeac90bbd10c25694c0d86d1",
+        "expected_success": true
+      },
+      "incorrect_mutant": {
+        "path": "benchmarks/corrected_template_agent_v2/label-smooth-incorrect-mutant.py.txt",
+        "sha256": "ff20853c01003941d967e670c44279499e7791554c6c31f0ccfe90fa562e6ff4",
+        "expected_success": false
+      }
+    },
+    "ema-bias": {
+      "task_id": "mlsys-v2-ema-bias",
+      "baseline": {
+        "path": "benchmarks/corrected_template_agent_v2/ema-bias-baseline.py.txt",
+        "sha256": "4f989a6293a95982523b5ecadf6e54c0351d8f684257fb89919a46901d8e4816",
+        "expected_success": false
+      },
+      "known_fix": {
+        "path": "benchmarks/corrected_template_agent_v2/ema-bias-known-fix.py.txt",
+        "sha256": "3f1ab73b811db25de2770b006277455c5cdfb0dd7c20b10b626ee766cc6281e5",
+        "expected_success": true
+      },
+      "incorrect_mutant": {
+        "path": "benchmarks/corrected_template_agent_v2/ema-bias-incorrect-mutant.py.txt",
+        "sha256": "bb2d416e1076af93eff774b0991ea7217af684ef4d181a91f137993faeb5ef59",
+        "expected_success": false
+      }
+    }
+  },
+  "model_inference": "NOT_RUN_DURING_QUALIFICATION",
+  "qualification_output_schema": {
+    "one_json_record_per_control": true,
+    "raw_isolated_grade_evidence_retained": true,
+    "summary_requires_all_six_controls": true
+  }
+}

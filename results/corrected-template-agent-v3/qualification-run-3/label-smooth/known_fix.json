@@ -1,0 +1,94 @@
+{
+  "expected_success": true,
+  "grade": {
+    "admitted": true,
+    "checks": {
+      "distribution-0": true,
+      "distribution-1": true,
+      "distribution-2": true,
+      "distribution-3": true,
+      "distribution-4": true,
+      "distribution-5": true,
+      "distribution-6": true,
+      "inputs-preserved-0": true,
+      "inputs-preserved-1": true,
+      "inputs-preserved-2": true,
+      "inputs-preserved-3": true,
+      "inputs-preserved-4": true,
+      "inputs-preserved-5": true,
+      "inputs-preserved-6": true,
+      "invalid-0": true,
+      "invalid-1": true,
+      "invalid-2": true,
+      "invalid-3": true,
+      "invalid-4": true,
+      "sum-to-one-0": true,
+      "sum-to-one-1": true,
+      "sum-to-one-2": true,
+      "sum-to-one-3": true,
+      "sum-to-one-4": true,
+      "sum-to-one-5": true,
+      "sum-to-one-6": true
+    },
+    "isolated_candidate_execution": true,
+    "isolated_grade": {
+      "decision": {
+        "conservative_speedup": null,
+        "oracle_subject_ratio": null,
+        "reason": "correctness",
+        "reward": 1.0,
+        "success": true,
+        "workload_sufficient": false
+      },
+      "grade": {
+        "cases": [
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-0",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0008430419984506443
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-1",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0006496669957414269
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-2",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0005499170001712628
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-3",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0006044580004527234
+          },
+          {
+            "case_id": "mlsys-v2-label-smooth-hidden-4",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0005972919971100055
+          }
+        ],
+        "passed": true,
+        "task_kind": "correctness"
+      },
+      "grade_passed": true,
+      "test_timed_out": false
+    },
+    "public": false,
+    "source_sha256": "ac8f402c9698462b6fe76546620e5cbf15e9e8aeaeac90bbd10c25694c0d86d1",
+    "success": true,
+    "task": "label-smooth"
+  },
+  "isolated_success": true,
+  "observed_success": true,
+  "qualification_gate_passed": true,
+  "source_path": "benchmarks/corrected_template_agent_v2/label-smooth-known-fix.py.txt",
+  "source_sha256": "ac8f402c9698462b6fe76546620e5cbf15e9e8aeaeac90bbd10c25694c0d86d1",
+  "task_id": "mlsys-v2-label-smooth",
+  "variant": "known_fix"
+}

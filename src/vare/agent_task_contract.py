@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from pathlib import PurePosixPath
@@ -134,6 +135,46 @@ class AgentTaskContract:
         return self.base_revision or "HEAD"
 
 
+def resolve_candidate_diff_revision(
+    workspace: Path,
+    revision: str,
+    source_files: tuple[str, ...] | list[str],
+) -> str:
+    """Resolve a candidate-local baseline and verify it matches the starting files.
+
+    Upstream source revisions are provenance identities, but isolated task
+    worktrees may intentionally contain only a synthetic baseline commit. The
+    final candidate diff must use a commit that exists in that worktree and
+    whose tracked source bytes exactly match the files the model receives.
+    """
+    root = Path(workspace).resolve()
+    resolved = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "--verify", f"{revision}^{{commit}}"],
+        capture_output=True,
+        text=True,
+    )
+    if resolved.returncode != 0:
+        raise ValueError(f"candidate diff baseline is unavailable: {revision}")
+    commit = resolved.stdout.strip()
+    if not commit:
+        raise ValueError(f"candidate diff baseline did not resolve: {revision}")
+
+    for relative in source_files:
+        safe = _safe_relative(relative)
+        current = root / safe
+        if current.is_symlink() or not current.is_file():
+            raise ValueError(f"candidate source is missing or not a regular file: {safe}")
+        baseline = subprocess.run(
+            ["git", "-C", str(root), "show", f"{commit}:{safe}"],
+            capture_output=True,
+        )
+        if baseline.returncode != 0:
+            raise ValueError(f"candidate diff baseline omits source file: {safe}")
+        if hashlib.sha256(baseline.stdout).digest() != hashlib.sha256(current.read_bytes()).digest():
+            raise ValueError(f"candidate diff baseline differs from starting source: {safe}")
+    return commit
+
+
 def assert_train_only(contract: AgentTaskContract, split: dict) -> None:
     """Refuse held-out ids from a frozen pack split."""
     assert_split_member(contract, split, "train")
@@ -149,6 +190,19 @@ def assert_split_member(contract: AgentTaskContract, split: dict, split_name: st
         raise ValueError("held-out task must not be executed")
     if contract.split != split_name or contract.task_id not in members:
         raise ValueError(f"task is outside the frozen {split_name} split")
+
+
+def _add_public_test_hash(root: Path, files: list[str], hashes: dict[str, str]) -> None:
+    if "test_public.py" not in files:
+        return
+    candidates = [
+        path for path in (root / "subject" / "test_public.py", root / "test_public.py")
+        if path.is_file()
+    ]
+    if len(candidates) > 1:
+        raise ValueError("task has ambiguous public test files")
+    if candidates:
+        hashes["test_public.py"] = _sha256(candidates[0])
 
 
 def load_agent_task(task_root: Path) -> AgentTaskContract:
@@ -173,6 +227,7 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
         files = [_safe_relative(name) for name in source["files"]]
         if not files:
             raise ValueError("historical task has no source files")
+        _add_public_test_hash(root, files, hashes)
         return AgentTaskContract(
             task_id=str(task["task_id"]),
             schema="historical",
@@ -189,6 +244,7 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
     files = [_safe_relative(name) for name in metadata["editable_files"]]
     if not files:
         raise ValueError("engineering task has no editable files")
+    _add_public_test_hash(root, files, hashes)
     prompt = task.get("prompt")
     if not isinstance(prompt, str) or not prompt.strip():
         raise ValueError("engineering task prompt is empty")

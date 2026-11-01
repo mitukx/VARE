@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "protocol_id": "vare-authored-mlsys-v2-isolated-grade-v1",
+  "task_pack": {
+    "path": "benchmarks/mlsys_coding_v2",
+    "manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0"
+  },
+  "candidate_execution": "vare.separated_grading.grade_isolated_subject",
+  "verifier": {
+    "source": "the pack's trusted test_hidden.py input generator and oracle, materialized operator-side as isolated JSON calls",
+    "expected_outputs_mounted_into_candidate": false,
+    "candidate_module_imported_by_parent": false,
+    "unknown_tasks": "fail closed"
+  },
+  "container_images": {
+    "linux_x86_64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+    "darwin_arm64": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
+  },
+  "resource_limits": {
+    "memory_mb": 2048,
+    "cpus": 1.0,
+    "pids_limit": 64,
+    "max_output_bytes": 512000,
+    "network": "none",
+    "read_only_root": true,
+    "unprivileged_uid": 65534,
+    "task_wall_seconds": 20
+  },
+  "supported_tasks": {
+    "mlsys-v2-label-smooth": {
+      "module": "label_smooth",
+      "function": "smooth_targets",
+      "case_count": 5,
+      "evaluator": "benchmarks/mlsys_coding_v2/tasks/label_smooth/evaluator/test_hidden.py",
+      "evaluator_sha256": "7bfadb5f75a863d66e3570b2b9d2344c025085dedb72f182c8ab79cc3e9d1e56"
+    },
+    "mlsys-v2-ema-bias": {
+      "module": "ema_bias",
+      "function": "bias_corrected_ema",
+      "case_count": 4,
+      "evaluator": "benchmarks/mlsys_coding_v2/tasks/ema_bias/evaluator/test_hidden.py",
+      "evaluator_sha256": "d3a019f42171d91f685930debe25c9183975eb26053264fffa200d95a9d39440"
+    }
+  }
+}

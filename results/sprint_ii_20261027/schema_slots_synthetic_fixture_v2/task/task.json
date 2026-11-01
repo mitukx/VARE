@@ -1,0 +1,18 @@
+{
+  "task_id": "synthetic-schema-slots-retry-budget-v1",
+  "title": "Correct retry attempt budget",
+  "prompt": "Fix retry_budget in retry_policy.py. The result must count all requested retries including the first attempt; it must return the input count unchanged. Preserve the function name and type annotation.",
+  "source": {
+    "local_path": "subject",
+    "base_revision": "synthetic-fixture-v1"
+  },
+  "metadata": {
+    "editable_files": [
+      "retry_policy.py",
+      "test_public.py"
+    ],
+    "split": null,
+    "task_type": "controller_feasibility_fixture"
+  },
+  "tests": []
+}

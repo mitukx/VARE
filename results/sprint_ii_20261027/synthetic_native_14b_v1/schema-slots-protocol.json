@@ -1,0 +1,70 @@
+{
+  "agent": {
+    "edit_format": "structured_replace",
+    "generation_protocol": "schema_slots_v1",
+    "navigation_guidance": "v2",
+    "no_posthoc_repair": true,
+    "tool_interface": "lease_bound_navigation_v2"
+  },
+  "budgets": {
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_public_test_runs": 3,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "resource_guard": {
+      "free_swap_preflight_mib": 1024,
+      "memory_free_preflight_percent": 65,
+      "process_tree_rss_cap_mib": 12288,
+      "swap_growth_cap_mib": 768,
+      "wall_cap_seconds": 1800
+    },
+    "wall_seconds": 1800
+  },
+  "controller_sources_sha256": {
+    "scripts/run_local_agent.py": "8c472c25e6f92e4d437071d26a70c8134930a9dd87a21f44d6969315a2b11e6a",
+    "src/vare/schema_slot_protocol.py": "f92198b29285875427fc0d768a920219f2e7020fca9b5071e79ebff673359d05",
+    "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+    "src/vare/source_navigation_v2.py": "c6c65592fbc9028551b76b4e3e02b2f4e8f049ef64002cc0c6e31580a110b847"
+  },
+  "exclusions": [
+    "Synthetic only.",
+    "No optimizer/training update.",
+    "No resource cap changes."
+  ],
+  "frozen_at_utc": "2026-10-26 19:39:00 UTC",
+  "model": {
+    "backend": "MLX 0.32.4 / mlx-lm 0.32.2 CPU",
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "quantization": "4-bit",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "sampling": "greedy/no sampling",
+    "seed": 73,
+    "snapshot_revision": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "tokenizer_config_sha256": "7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6",
+    "weight_shards_sha256": {
+      "model-00001-of-00002.safetensors": "784b0c89d3e006f49cb8547aba1f2f4e99b365ab4380cf202655ca04c87d7ac3",
+      "model-00002-of-00002.safetensors": "a1b7516f1926070177601698661494dfc68c2de1d98e7c43ba910a0d1d7dfbbe"
+    }
+  },
+  "paired_context": "Same synthetic task, model, snapshot-native corrected tokenizer config, seed, tool interface, edit format, and budgets as raw_v1 arm. Only generation protocol changes from raw_v1 to schema_slots_v1. One synthetic task; not external capability evidence.",
+  "prior_raw_arm": {
+    "outcome": "2 strict valid calls (search_source, read_lines), then parser rejected wrapper-prefixed replace_lines output; no edit or test.",
+    "resource_summary_sha256": "f3f5617cdfee636ebf94d1faef0a41c60a7ea3e4fc7d1a724da18fdc07cd7561",
+    "result_sha256": "247814db84306aedaa2c76565e0d88cd6941d58429fa99b743eb212fcbdcbbdc"
+  },
+  "protocol_id": "vare-synthetic-constrained-slots-14b-v1",
+  "question": "Does schema-slot tool generation allow the 14B model to complete a bounded tool interaction after the snapshot-native raw template produced an invalid third-turn envelope?",
+  "status": "FROZEN_BEFORE_SCHEMA_SLOT_ARM_INFERENCE",
+  "success_criteria": [
+    "several consecutive schema-valid generated tool calls",
+    "tool read/edit/public-test flow completes or a truthful failure is retained",
+    "independent static grader on final source"
+  ],
+  "task": {
+    "control_results_sha256": "5a909bba3e369485b47cc0d82b3551b8afad6f1c5e966b4a285aa55140a00a41",
+    "grader_sha256": "83ed5c949574e1521b86feb48f4474d53a309db49423b8bb48cbe4c71994341b",
+    "local_baseline_commit": "9e4214d65a82855b2bff01848b2abf720a2c4845",
+    "task_id": "synthetic-native-tool-14b-add-v1"
+  }
+}\n

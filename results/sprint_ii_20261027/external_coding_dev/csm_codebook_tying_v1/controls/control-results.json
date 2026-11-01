@@ -1,0 +1,44 @@
+{
+  "baseline": {
+    "container_returncode": 0,
+    "grader": {
+      "checks": {
+        "derived_from_tie_codebooks_embeddings": false,
+        "does_not_reject_serialized_override": false,
+        "not_forced_false": false,
+        "serialized_tie_word_embeddings_removed": false
+      },
+      "reason": "configuration_contract_failed",
+      "success": false
+    },
+    "stderr": ""
+  },
+  "incorrect_mutant": {
+    "container_returncode": 0,
+    "grader": {
+      "checks": {
+        "derived_from_tie_codebooks_embeddings": false,
+        "does_not_reject_serialized_override": true,
+        "not_forced_false": true,
+        "serialized_tie_word_embeddings_removed": true
+      },
+      "reason": "configuration_contract_failed",
+      "success": false
+    },
+    "stderr": ""
+  },
+  "known_fix": {
+    "container_returncode": 0,
+    "grader": {
+      "checks": {
+        "derived_from_tie_codebooks_embeddings": true,
+        "does_not_reject_serialized_override": true,
+        "not_forced_false": true,
+        "serialized_tie_word_embeddings_removed": true
+      },
+      "reason": "contract_pass",
+      "success": true
+    },
+    "stderr": ""
+  }
+}

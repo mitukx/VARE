@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "editable_files": [
+      "modeling_musicgen_melody.py",
+      "test_public.py"
+    ],
+    "split": "development",
+    "task_type": "external_mlsys_cached_position_embedding_repair",
+    "upstream_fix": "https://github.com/huggingface/transformers/pull/49842",
+    "upstream_issue": "https://github.com/huggingface/transformers/pull/49842"
+  },
+  "prompt": "Fix MusicgenMelodySinusoidalPositionalEmbedding.forward so positional embeddings grow far enough when past_key_values_length is nonzero. Preserve ordinary no-cache behavior and the existing positional offset used for lookup.",
+  "source": {
+    "base_revision": "bee525abbbb1370deaf45a24bd5a1650ca66ab3e",
+    "external_upstream_path": "src/transformers/models/musicgen_melody/modeling_musicgen_melody.py",
+    "external_upstream_revision": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+    "local_path": "huggingface/transformers"
+  },
+  "task_id": "transformers-musicgen-melody-cached-position-20261027-v1",
+  "title": "Grow MusicGen Melody positional embeddings for cached sequence offsets"
+}

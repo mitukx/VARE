@@ -1,0 +1,508 @@
+{
+  "matrix_sha256": "ead678711dc1f5da7fdcdc7b127cd8e122e8f20b6bd116542633524aac788f39",
+  "references": [
+    {
+      "location": "root.certificate_updates.original_tasks.carried_forward_summary",
+      "path": "results/mlsys-heldout-task-qualification-pilot-v9/run-1/summary.json",
+      "expected": "2bda6e08f40c8f8da201e8d1f4a5dc6bfa2bf29c71929a1901bbd97b70a47b07",
+      "exists": true,
+      "actual": "2bda6e08f40c8f8da201e8d1f4a5dc6bfa2bf29c71929a1901bbd97b70a47b07"
+    },
+    {
+      "location": "root.certificate_updates.original_tasks.final_protocol",
+      "path": "protocols/mlsys_heldout_task_qualification_pilot_v9.json",
+      "expected": "ee863cf69516f2bb0472006988dbd2c6b3e7a3ad66447917ebfc4ba725bd298d",
+      "exists": true,
+      "actual": "ee863cf69516f2bb0472006988dbd2c6b3e7a3ad66447917ebfc4ba725bd298d"
+    },
+    {
+      "location": "root.certificate_updates.original_tasks.protocol",
+      "path": "protocols/mlsys_heldout_task_qualification_pilot_v8.json",
+      "expected": "65c8bd27bbbb6c5b427fdde9158294e2d18b4e48e763adc9e5d83d74dba59446",
+      "exists": true,
+      "actual": "65c8bd27bbbb6c5b427fdde9158294e2d18b4e48e763adc9e5d83d74dba59446"
+    },
+    {
+      "location": "root.certificate_updates.original_tasks.retained_exposure_audit",
+      "path": "results/mlsys-heldout-task-qualification-pilot-v4/exposure-audit.json",
+      "expected": "330d6bf8cb039687d224f9dc58354c28dd443e653f3c9b8aeebf404bd85aa796",
+      "exists": true,
+      "actual": "330d6bf8cb039687d224f9dc58354c28dd443e653f3c9b8aeebf404bd85aa796"
+    },
+    {
+      "location": "root.manual_24_queue",
+      "path": "docs/mlsys-candidate-manual-qualification-queue.md",
+      "expected": "8f9b188cc20646fd53c488157e50cb6fdeac50dc8401e43174cb5945fca2d31f",
+      "exists": true,
+      "actual": "8f9b188cc20646fd53c488157e50cb6fdeac50dc8401e43174cb5945fca2d31f"
+    },
+    {
+      "location": "root.nonunique_or_rejected_candidates[0].evidence[0]",
+      "path": "results/mlsys-heldout-queue-qualification-v1/run-1/continuation-1/mlxlm-1925-adjudication.json",
+      "expected": "f253bdd1da227f983da1ef1bd7f09f7e97a5ac3ec1ce1d74b6a1999ec08438e1",
+      "exists": true,
+      "actual": "f253bdd1da227f983da1ef1bd7f09f7e97a5ac3ec1ce1d74b6a1999ec08438e1"
+    },
+    {
+      "location": "root.nonunique_or_rejected_candidates[0].evidence[1]",
+      "path": "results/mlsys-heldout-queue-qualification-v1/run-1/continuation-1/mlxlm-1925-minicpm3-phixtral-left-padding.baseline.json",
+      "expected": "edb82c250c25648d43df858673b67a40db3705a97852b5d986e8498a8b8a5629",
+      "exists": true,
+      "actual": "edb82c250c25648d43df858673b67a40db3705a97852b5d986e8498a8b8a5629"
+    },
+    {
+      "location": "root.nonunique_or_rejected_candidates[0].evidence[2]",
+      "path": "results/mlsys-heldout-queue-qualification-v1/run-1/continuation-1/mlxlm-1925-minicpm3-phixtral-left-padding.known_fix.json",
+      "expected": "e9ccd1000a7d08dd7d79b2998de7deb37970f71f47e3459c31f2373875febbdd",
+      "exists": true,
+      "actual": "e9ccd1000a7d08dd7d79b2998de7deb37970f71f47e3459c31f2373875febbdd"
+    },
+    {
+      "location": "root.nonunique_or_rejected_candidates[0].evidence[3]",
+      "path": "results/mlsys-heldout-queue-qualification-v1/run-1/continuation-1/mlxlm-1925-minicpm3-phixtral-left-padding.incorrect_mutant.json",
+      "expected": "0372a0e9ff3e82aae8788944c8a96ce19a73c03ce163985226fd744a6a57355d",
+      "exists": true,
+      "actual": "0372a0e9ff3e82aae8788944c8a96ce19a73c03ce163985226fd744a6a57355d"
+    },
+    {
+      "location": "root.nonunique_or_rejected_candidates[1].evidence",
+      "path": "results/mlsys-heldout-queue-qualification-v2/transformers-49116-exposure-adjudication.json",
+      "expected": "8eb06101d0587c81a3e45a4edd3207401bd6d9e48dcde9f59e6418dd327c1599",
+      "exists": true,
+      "actual": "8eb06101d0587c81a3e45a4edd3207401bd6d9e48dcde9f59e6418dd327c1599"
+    },
+    {
+      "location": "root.nonunique_or_rejected_candidates[1].representative_exact_exposure",
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49116-seed-101.json",
+      "expected": "7e331301bff10caaba4a3db48f48c0b465401e2a6416ba7b1e4d51956e4bd69b",
+      "exists": false,
+      "actual": null,
+      "historical_git_blob": {
+        "revision": "02684dcce4c0a5474256b1d97a2adbda879388d2",
+        "actual_sha256": "7e331301bff10caaba4a3db48f48c0b465401e2a6416ba7b1e4d51956e4bd69b",
+        "verified": true
+      }
+    },
+    {
+      "location": "root.original_task_rows[0].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[0].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[1].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[1].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[2].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[2].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[3].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[3].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[4].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[4].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[5].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[5].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[6].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[6].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[7].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[7].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[8].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[8].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[9].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[9].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[10].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[10].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[11].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[11].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[12].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[12].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[13].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[13].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.original_task_rows[14].evidence.evidence_manifest",
+      "path": "results/mlsys-task-deep-qualification-v1/evidence-manifest.json",
+      "expected": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57",
+      "exists": true,
+      "actual": "a28810e836436f7d405fcc07b9d06313fcdb0ddb16e54852b1c8039bffc7ac57"
+    },
+    {
+      "location": "root.original_task_rows[14].evidence.source_pool_report",
+      "path": "docs/mlsys-heldout-task-qualification-pilot-v1-report.md",
+      "expected": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13",
+      "exists": true,
+      "actual": "390df87814b151f44f9cf353947a60ebcb262f1fd943312220addfbe877f1f13"
+    },
+    {
+      "location": "root.outside_pool_certified[0].evidence[0]",
+      "path": "results/mlsys-heldout-queue-qualification-v1/run-v2/transformers-49147-gemma3n-fp16-gradient-clipping.baseline.json",
+      "expected": "27e0714ad2ea3bfe2a59b2b8cebcd4202687887df54b9bb94a9c4ea865e508ef",
+      "exists": true,
+      "actual": "27e0714ad2ea3bfe2a59b2b8cebcd4202687887df54b9bb94a9c4ea865e508ef"
+    },
+    {
+      "location": "root.outside_pool_certified[0].evidence[1]",
+      "path": "results/mlsys-heldout-queue-qualification-v1/run-v2/transformers-49147-gemma3n-fp16-gradient-clipping.known_fix.json",
+      "expected": "751df2203f856142e69e03cb6cf7153e44c85f924139aeb80fd2d8567ece0b98",
+      "exists": true,
+      "actual": "751df2203f856142e69e03cb6cf7153e44c85f924139aeb80fd2d8567ece0b98"
+    },
+    {
+      "location": "root.outside_pool_certified[0].evidence[2]",
+      "path": "results/mlsys-heldout-queue-qualification-v1/run-v2/transformers-49147-gemma3n-fp16-gradient-clipping.incorrect_mutant.json",
+      "expected": "6002237913d823759fe29e3b800253f93c07102e6c25db83c585a87d71a7dcb7",
+      "exists": true,
+      "actual": "6002237913d823759fe29e3b800253f93c07102e6c25db83c585a87d71a7dcb7"
+    },
+    {
+      "location": "root.outside_pool_certified[0].evidence[3]",
+      "path": "results/mlsys-heldout-queue-qualification-v1/preflight-v2/transformers-49147.collect-only.json",
+      "expected": "ca8e96097f78571a0d39d895a64a500ac741356795962124cf149b4ea25e6ca4",
+      "exists": true,
+      "actual": "ca8e96097f78571a0d39d895a64a500ac741356795962124cf149b4ea25e6ca4"
+    },
+    {
+      "location": "root.outside_pool_certified[0].exposure_audit",
+      "path": "results/mlsys-heldout-queue-exposure-v1.json",
+      "expected": "d5f913900351fb30993a71ca6c9a4d5773b2dcd7a17a82059250e432194cef0a",
+      "exists": true,
+      "actual": "d5f913900351fb30993a71ca6c9a4d5773b2dcd7a17a82059250e432194cef0a"
+    },
+    {
+      "location": "root.outside_pool_certified[0].protocol",
+      "path": "protocols/transformers_49147_certification_v2.json",
+      "expected": "8121c1e553e46c946f7c59065b628800eab738060268079b5778d0a3a03362d2",
+      "exists": true,
+      "actual": "8121c1e553e46c946f7c59065b628800eab738060268079b5778d0a3a03362d2"
+    },
+    {
+      "location": "root.outside_pool_certified[0].result",
+      "path": "results/mlsys-heldout-queue-qualification-v1/run-v2/summary.json",
+      "expected": "0f510808a0499fcff4edfc5bba32f81f25c59a9809f4e50b7c907eecca7636db",
+      "exists": true,
+      "actual": "0f510808a0499fcff4edfc5bba32f81f25c59a9809f4e50b7c907eecca7636db"
+    },
+    {
+      "location": "root.outside_pool_certified[1].evidence[0]",
+      "path": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-run-1/mlxlm-1898-qwen3-rope-parameters.baseline.json",
+      "expected": "49be39370bf25b479e46593311e509976a16c1f429f6ca37772289fc728b4eb1",
+      "exists": true,
+      "actual": "49be39370bf25b479e46593311e509976a16c1f429f6ca37772289fc728b4eb1"
+    },
+    {
+      "location": "root.outside_pool_certified[1].evidence[1]",
+      "path": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-run-1/mlxlm-1898-qwen3-rope-parameters.known_fix.json",
+      "expected": "2811838996f88cee1e577c10ae1b236e32c02ebb00c8ecdfab8a9171be302a58",
+      "exists": true,
+      "actual": "2811838996f88cee1e577c10ae1b236e32c02ebb00c8ecdfab8a9171be302a58"
+    },
+    {
+      "location": "root.outside_pool_certified[1].evidence[2]",
+      "path": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-run-1/mlxlm-1898-qwen3-rope-parameters.incorrect_mutant.json",
+      "expected": "cf29ed172e6d2ff588d282f9833175bd7b3726787bb8060c1d8cf5f209d3c24c",
+      "exists": true,
+      "actual": "cf29ed172e6d2ff588d282f9833175bd7b3726787bb8060c1d8cf5f209d3c24c"
+    },
+    {
+      "location": "root.outside_pool_certified[1].evidence[3]",
+      "path": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-exposure-audit.json",
+      "expected": "97df612999c0ee0e4b48597231adabbf890504072ef6a94a8c73a836357f3013",
+      "exists": true,
+      "actual": "97df612999c0ee0e4b48597231adabbf890504072ef6a94a8c73a836357f3013"
+    },
+    {
+      "location": "root.outside_pool_certified[1].protocol",
+      "path": "protocols/mlxlm_1898_certification_v1.json",
+      "expected": "df2725275157a3b0aed11c8379c99805f276f5d7dd0430c3b317ebf356f1117a",
+      "exists": true,
+      "actual": "df2725275157a3b0aed11c8379c99805f276f5d7dd0430c3b317ebf356f1117a"
+    },
+    {
+      "location": "root.outside_pool_certified[1].result",
+      "path": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-run-1/summary.json",
+      "expected": "fe18209d203514b48a11e9c902d416766064bd292f924fb7ec29ed68896e0dc8",
+      "exists": true,
+      "actual": "fe18209d203514b48a11e9c902d416766064bd292f924fb7ec29ed68896e0dc8"
+    },
+    {
+      "location": "root.outside_pool_certified[2].evidence[0]",
+      "path": "results/mlsys-heldout-queue-qualification-v5/run-1/mlxlm-1877-compressed-tensors-format-validation.baseline.json",
+      "expected": "ea8ba7fdf8cd5443b4604bc3277334cc20837f959955cb17200c802b79e5c5da",
+      "exists": true,
+      "actual": "ea8ba7fdf8cd5443b4604bc3277334cc20837f959955cb17200c802b79e5c5da"
+    },
+    {
+      "location": "root.outside_pool_certified[2].evidence[1]",
+      "path": "results/mlsys-heldout-queue-qualification-v5/run-1/mlxlm-1877-compressed-tensors-format-validation.known_fix.json",
+      "expected": "1f4c80f2e4e165f5b46f79a5fbb87ee3c616a3a0fc39724073c3625740906934",
+      "exists": true,
+      "actual": "1f4c80f2e4e165f5b46f79a5fbb87ee3c616a3a0fc39724073c3625740906934"
+    },
+    {
+      "location": "root.outside_pool_certified[2].evidence[2]",
+      "path": "results/mlsys-heldout-queue-qualification-v5/run-1/mlxlm-1877-compressed-tensors-format-validation.incorrect_mutant.json",
+      "expected": "1ea6bf121c5b384f6fba65b76afa4b1757ef7814cb5309f28524cbf571b68655",
+      "exists": true,
+      "actual": "1ea6bf121c5b384f6fba65b76afa4b1757ef7814cb5309f28524cbf571b68655"
+    },
+    {
+      "location": "root.outside_pool_certified[2].evidence[3]",
+      "path": "results/mlsys-heldout-queue-qualification-v3/exposure-audit.json",
+      "expected": "9cc1ba8c23d11cd56d06b9385405b0a8fc9ab7409dd8aa83d6b4d383d6e6679f",
+      "exists": true,
+      "actual": "9cc1ba8c23d11cd56d06b9385405b0a8fc9ab7409dd8aa83d6b4d383d6e6679f"
+    },
+    {
+      "location": "root.outside_pool_certified[2].protocol",
+      "path": "protocols/mlsys_heldout_extension_v5.json",
+      "expected": "5d638dcd84d3f2a08df796b01f24aeac80a368ce704036212bd304b2a97cfb94",
+      "exists": true,
+      "actual": "5d638dcd84d3f2a08df796b01f24aeac80a368ce704036212bd304b2a97cfb94"
+    },
+    {
+      "location": "root.outside_pool_certified[2].result",
+      "path": "results/mlsys-heldout-queue-qualification-v5/run-1/summary.json",
+      "expected": "a33b4ca18adefc7756fa9ce0b51eaf88b60640de1838c27ff66da55be5327274",
+      "exists": true,
+      "actual": "a33b4ca18adefc7756fa9ce0b51eaf88b60640de1838c27ff66da55be5327274"
+    },
+    {
+      "location": "root.outside_pool_certified[3].baseline_adjudication",
+      "path": "results/mlsys-heldout-queue-qualification-v6/baseline-adjudication.json",
+      "expected": "43919c001fa2248bf274837190687e6227834e42c8b07ad7d2bc5e08efdecb07",
+      "exists": true,
+      "actual": "43919c001fa2248bf274837190687e6227834e42c8b07ad7d2bc5e08efdecb07"
+    },
+    {
+      "location": "root.outside_pool_certified[3].baseline_adjudication_implementation",
+      "path": "scripts/adjudicate_mlx1880_baseline_v1.py",
+      "expected": "6be515a2902f827506175cee9221f8fc565c89f5dc19ad38855c154141b5ff97",
+      "exists": true,
+      "actual": "6be515a2902f827506175cee9221f8fc565c89f5dc19ad38855c154141b5ff97"
+    },
+    {
+      "location": "root.outside_pool_certified[3].evidence[0]",
+      "path": "results/mlsys-heldout-queue-qualification-v6/baseline-adjudication.json",
+      "expected": "43919c001fa2248bf274837190687e6227834e42c8b07ad7d2bc5e08efdecb07",
+      "exists": true,
+      "actual": "43919c001fa2248bf274837190687e6227834e42c8b07ad7d2bc5e08efdecb07"
+    },
+    {
+      "location": "root.outside_pool_certified[3].evidence[1]",
+      "path": "results/mlsys-heldout-queue-qualification-v6/run-1/mlxlm-1880-gptq-group-error-propagation.baseline.json",
+      "expected": "ba0796f9db47f15ef03acef7dbf4f558ee1cfe355df53c056c4f9b86b9916d3c",
+      "exists": true,
+      "actual": "ba0796f9db47f15ef03acef7dbf4f558ee1cfe355df53c056c4f9b86b9916d3c"
+    },
+    {
+      "location": "root.outside_pool_certified[3].evidence[2]",
+      "path": "results/mlsys-heldout-queue-qualification-v7/run-1/mlxlm-1880-gptq-group-error-propagation.known_fix.json",
+      "expected": "d82e054591844301f8a32a8a6befe05a1339288b827d593c1db2b6a1265ca7fd",
+      "exists": true,
+      "actual": "d82e054591844301f8a32a8a6befe05a1339288b827d593c1db2b6a1265ca7fd"
+    },
+    {
+      "location": "root.outside_pool_certified[3].evidence[3]",
+      "path": "results/mlsys-heldout-queue-qualification-v7/run-1/mlxlm-1880-gptq-group-error-propagation.incorrect_mutant.json",
+      "expected": "3709cc38fed5c0c8a2b6f09394321146d4c9ffc0aa1816845ec0ed8fe293cfbc",
+      "exists": true,
+      "actual": "3709cc38fed5c0c8a2b6f09394321146d4c9ffc0aa1816845ec0ed8fe293cfbc"
+    },
+    {
+      "location": "root.outside_pool_certified[3].evidence[4]",
+      "path": "results/mlsys-heldout-queue-qualification-v3/exposure-audit.json",
+      "expected": "9cc1ba8c23d11cd56d06b9385405b0a8fc9ab7409dd8aa83d6b4d383d6e6679f",
+      "exists": true,
+      "actual": "9cc1ba8c23d11cd56d06b9385405b0a8fc9ab7409dd8aa83d6b4d383d6e6679f"
+    },
+    {
+      "location": "root.outside_pool_certified[3].protocol",
+      "path": "protocols/mlsys_heldout_extension_v7.json",
+      "expected": "ff0778b3554ff3af979762524cbc3434bec99fa0481969c8da53cb0965dcb06e",
+      "exists": true,
+      "actual": "ff0778b3554ff3af979762524cbc3434bec99fa0481969c8da53cb0965dcb06e"
+    },
+    {
+      "location": "root.outside_pool_certified[3].result",
+      "path": "results/mlsys-heldout-queue-qualification-v7/run-1/summary.json",
+      "expected": "adab1d9151401ff9946ee8e40617bd468c2ff49de05c3b79f86fab58e6bc6c2c",
+      "exists": true,
+      "actual": "adab1d9151401ff9946ee8e40617bd468c2ff49de05c3b79f86fab58e6bc6c2c"
+    },
+    {
+      "location": "root.reproducibility.image_rebuild_attestation",
+      "path": "results/mlsys-mlx-image-rebuild-v1/attestation.json",
+      "expected": "45974505e96810237c677a862364762fcecdcca4ac2cce71249153924dfc13a7",
+      "exists": true,
+      "actual": "45974505e96810237c677a862364762fcecdcca4ac2cce71249153924dfc13a7"
+    },
+    {
+      "location": "root.reproducibility.image_rebuild_raw_log",
+      "path": "results/mlsys-mlx-image-rebuild-v1/rebuild-smoke.log",
+      "expected": "4700c06d3b952815f1f9363a853d61e1fe916f63c4d446115da0222c858cee62",
+      "exists": true,
+      "actual": "4700c06d3b952815f1f9363a853d61e1fe916f63c4d446115da0222c858cee62"
+    }
+  ],
+  "scope": "Checksum and identity reconciliation only; does not rerun task outcomes or establish model eligibility."
+}

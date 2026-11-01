@@ -1,0 +1,20 @@
+{
+  "candidate_visible_paths": [
+    "modeling_musicgen.py"
+  ],
+  "grader_visibility": "grader isolated from candidate-visible workspace and never imports/executes candidate source",
+  "independent_grader_path": "grader/grade.py",
+  "local_candidate_base_revision": "d810cee130801c93a3dc066e648f99de8f25f86d",
+  "model_pretraining_exposure": "Unknown; task was selected from a recent upstream issue/PR, but this does not demonstrate absence from pretraining.",
+  "protocol_id": "external-musicgen-cached-position-development-v1",
+  "public_test_path": "subject/test_public.py",
+  "qualification_rule": "baseline fail, exact merged upstream fix pass, wrong growth argument mutant fail using pinned isolated AST grader; no candidate code execution.",
+  "reserved_heldout_used": false,
+  "split": "development",
+  "upstream_base_blob_sha": "e8db1a942c76dbed5ce97167d63a3b50ac2172d2",
+  "upstream_base_revision": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+  "upstream_fix_blob_sha": "b1b3624ae2210395a662e4e5e04f507025d51082",
+  "upstream_known_fix_merge_commit": "3043da63578bcef1392499579ae7527f044c93bb",
+  "upstream_known_fix_pr": "https://github.com/huggingface/transformers/pull/49842",
+  "upstream_repository": "https://github.com/huggingface/transformers"
+}
