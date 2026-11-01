@@ -1,0 +1,41 @@
+{
+  "agent_attempt_record_created": false,
+  "attempt_id": "vllm-64575-qwen3-4b-development-agent-attempt-001",
+  "candidate_patch_created": false,
+  "candidate_source_read": false,
+  "classification": "The MLX model runner could not import mlx.core because the generated private interpreter alias resolved to the system Python instead of the pre-existing VARE virtual environment.",
+  "committed_log": {
+    "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v1/attempt-001/model-launch.redacted.log",
+    "redaction": "The absolute VARE checkout prefix in the Python traceback was replaced with <VARE_ROOT>; the complete raw log remains at the local /private/tmp attempt path.",
+    "sha256": "c57bc237ed5544e1624383f80876de7a2fa5c8a325c01bc109f98bd5e9d1f66a"
+  },
+  "first_generation_started": false,
+  "follow_up": "A new prospective v2 protocol may authorize one replacement attempt because this process failed before model import, task prompt construction, or inference. Preserve this failure unchanged.",
+  "independent_grader_run": false,
+  "launch_receipt": {
+    "elapsed_seconds": 0.533,
+    "exit_code": 1,
+    "os_wait4_child_max_rss_bytes": 28459008,
+    "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v1/attempt-001/launch-receipt.json",
+    "sha256": "c79bd42b0bef1f5503d67d88b50f941b48729b2a8514247b3d89669879143c43"
+  },
+  "model_loaded": false,
+  "model_weights_read": false,
+  "no_rerun_under_original_protocol": true,
+  "preflight": {
+    "model_loaded": false,
+    "path": "results/mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v1/attempt-001/launch-preflight.json",
+    "sha256": "4b23011d492cbde1b0153f59d8bcb7d617e1149dd2ff3ea9dc34697518ff7e0c",
+    "status": "PASSED"
+  },
+  "protocol_id": "mlsys-fresh-vllm-64575-qwen3-4b-development-agent-v1",
+  "protocol_sha256": "e6aed00337567afa0c313a2ef278151bb6c7bc1716669df390a2d507ea0bc9ec",
+  "raw_local_log_sha256": "8f69011cc6427c264e9be96741e883c2ef284768bbf35c0e8f7dff47277f4d71",
+  "schema_version": 1,
+  "status": "LAUNCH_FAILURE_NO_MODEL_EXPOSURE",
+  "task_contract_loaded_by_runner": true,
+  "task_prompt_composed_for_model": false,
+  "task_prompt_delivered_to_model": false,
+  "workspace_clean_after_exit": true,
+  "workspace_head": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59"
+}
