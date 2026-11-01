@@ -223,7 +223,7 @@
     },
     "local_model_profile": {
       "path": "work/vare-trace-64674-agent-attempt-v1/runtime/model-agent.sb",
-      "sha256": "d1647eaeffadaa59e59b16db2bdb02462cbdc03ba25dfb83c29d91dae3057952"
+      "sha256": "c571ffd3f7896bd32f1ae64890f67431e7f74df64ecdb5ac7cf2342a9ecad83f"
     },
     "local_runtime_smoke": {
       "path": "work/vare-trace-64674-agent-attempt-v1/runtime/runtime-smoke.py",
@@ -291,7 +291,7 @@
       "purpose": "verify local Qwen/MLX/Metal JIT works under the frozen sandbox before the Development task prompt",
       "task_prompt_delivered": false
     },
-    "sandbox_profile_sha256": "d1647eaeffadaa59e59b16db2bdb02462cbdc03ba25dfb83c29d91dae3057952"
+    "sandbox_profile_sha256": "c571ffd3f7896bd32f1ae64890f67431e7f74df64ecdb5ac7cf2342a9ecad83f"
   },
   "protocol_amendments": [
     {
@@ -388,6 +388,59 @@
       "model_loading_attempted": true,
       "model_weight_file_size_bytes": 2263022417,
       "reason": "After the corrected sandbox allowed model files, the task-independent smoke loaded the pinned model but its generation call used an obsolete temp keyword unsupported by MLX-LM 0.32.2.",
+      "task_prompt_delivered": false
+    },
+    {
+      "at_utc": "2026-11-01T19:46:02Z",
+      "changes": [
+        "Added exact read/write access for the canonical /private/var Metal compiler and GPU archiver cache directories.",
+        "Updated both protocol bindings to the corrected sandbox profile SHA-256."
+      ],
+      "corrected_cache_write_diagnostic": {
+        "artifacts": [
+          {
+            "artifact_class": "local_only",
+            "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/metal-cache-write-diagnostic-private.log",
+            "sha256": "83181895535d076cb5cf18c50ef64f200c514dda1ac849bfd7a5ff45c73ce85f"
+          },
+          {
+            "artifact_class": "local_only",
+            "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/metal-cache-write-diagnostic-private.json",
+            "sha256": "6d9ad0e950148656c4a10286b6f5e87f5c1d829ca7e59fb2d0a01af3e1dca8db"
+          }
+        ],
+        "scope": "created and removed one-byte probe file under the exact canonical Metal compiler cache path; no model inference",
+        "status": "PASSED"
+      },
+      "failure_artifacts": [
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/runtime-smoke-final.log",
+          "sha256": "9233262e5a083346f8ad650f8037336722632687b32f433a59851257c2e3ded4"
+        },
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/runtime-smoke-final-bounded.json",
+          "sha256": "8faffa35278e871d998517e55b78c5a6c65dd9590fc26755229f4f819b7eee53"
+        },
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/metal-cache-write-diagnostic.log",
+          "sha256": "8e6ec97defb7096684db14b68634d3cdd47449b12ee75142d40dacf7c0ab8b47"
+        },
+        {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/metal-cache-write-diagnostic.json",
+          "sha256": "59361008e8aab188c7bf03b182b79946ca32151a67cf09b25e33147818d6488a"
+        }
+      ],
+      "generated_tokens": 0,
+      "metal_jit_started": true,
+      "model_loaded": true,
+      "model_loading_attempted": true,
+      "model_weight_file_size_bytes": 2263022417,
+      "prior_launch_preflight_invalidated": true,
+      "reason": "With the pinned model loaded and the MLX sampler API corrected, Metal JIT could not write its compiler output because the sandbox rules named /var while macOS canonicalized the cache path to /private/var.",
       "task_prompt_delivered": false
     }
   ],
