@@ -96,6 +96,50 @@ class VerifiedGroupReplay:
                or sample.behavior_step != policy_version for sample in samples):
             raise ValueError("rollout group policy or task identity mismatch")
 
+        # Verify the entire externally supplied group *before* registering any
+        # trajectory IDs, policies or verifiers. Otherwise one malformed row
+        # can strand partially enrolled durable trajectories and block retry.
+        group_samples(samples, group_size=self.group_size)
+        prompt_json = _json(list(prompt_messages))
+        task_digest = task.sha256()
+        for sample, row in zip(samples, rows, strict=True):
+            if (row.get("instance_id") != task.task_id
+                    or int(row.get("sample_index", -1)) != sample.sample_index):
+                raise ValueError("sample and persisted row identities differ")
+            probabilities = row.get("sampler_logprobs")
+            if (not isinstance(probabilities, (list, tuple))
+                    or len(probabilities) != len(sample.completion_ids)
+                    or not all(type(value) in (int, float) and math.isfinite(value)
+                               for value in probabilities)):
+                raise ValueError("sampler log-probabilities must be finite and token-aligned")
+            detail = row.get("reward_detail")
+            if not isinstance(detail, Mapping) or detail.get("trusted_contract") is not True:
+                raise ValueError("untrusted reward cannot enter VARE replay")
+            if type(detail.get("passed")) is not bool:
+                raise ValueError("trusted outcome must be boolean")
+            if (type(sample.reward) not in (int, float)
+                    or not math.isfinite(sample.reward)
+                    or sample.reward not in (0.0, 1.0)
+                    or sample.reward != float(detail["passed"])):
+                raise ValueError("binary trusted result and GRPO reward disagree")
+            observed_reward = row.get("reward")
+            if (type(observed_reward) not in (int, float)
+                    or not math.isfinite(observed_reward)
+                    or observed_reward != sample.reward):
+                raise ValueError("persisted reward and sample reward disagree")
+            if not isinstance(row.get("response_text"), str) or type(row.get("seed")) is not int:
+                raise ValueError("generation evidence is missing a response or integer seed")
+            for name in ("generation_seconds", "sample_generation_seconds", "temperature"):
+                if name == "sample_generation_seconds" and name not in row:
+                    continue
+                if name == "temperature" and name not in row:
+                    continue
+                value = row.get(name)
+                if (type(value) not in (int, float) or not math.isfinite(value)
+                        or (name == "temperature" and value <= 0)
+                        or (name != "temperature" and value < 0)):
+                    raise ValueError(f"invalid generation evidence: {name}")
+
         verifier_id = samples[0].verifier
         verifier_config_sha256 = verifier_id
         if any(sample.verifier != verifier_id for sample in samples):
@@ -104,13 +148,12 @@ class VerifiedGroupReplay:
         self.store.register_policy(policy)
         self.store.register_verifier(verifier_id, 0, verifier_config_sha256)
 
-        prompt_json = _json(list(prompt_messages))
         replay_task = Task(
             id=task.task_id,
             prompt=prompt_json,
             family=family,
             metadata={
-                "task_sha256": task.sha256(),
+                "task_sha256": task_digest,
                 "policy_checkpoint_sha256": policy_checkpoint_sha256,
                 "verifier_config_sha256": verifier_config_sha256,
                 "vare_rollout_group": group_id,
