@@ -135,9 +135,10 @@ class VerifiedGroupReplay:
                 if name == "temperature" and name not in row:
                     continue
                 value = row.get(name)
-                if (type(value) not in (int, float) or not math.isfinite(value)
-                        or (name == "temperature" and value <= 0)
-                        or (name != "temperature" and value < 0)):
+                if (not isinstance(value, (int, float)) or isinstance(value, bool)
+                        or not math.isfinite(value)):
+                    raise ValueError(f"invalid generation evidence: {name}")
+                if (name == "temperature" and value <= 0) or (name != "temperature" and value < 0):
                     raise ValueError(f"invalid generation evidence: {name}")
 
         verifier_id = samples[0].verifier
