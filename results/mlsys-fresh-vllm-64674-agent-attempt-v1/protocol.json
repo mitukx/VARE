@@ -525,6 +525,27 @@
       "scope": "Prospective independent grading rerun only. Frozen task assignment, task inputs, candidate source, model prompt, model generation and attempt record are unchanged.",
       "reason": "The first grader call reached report construction after hidden randomized-prefix, hidden reparse-invariance and public-test calls returned, then raised AttributeError because the agent record correctly used null for an unrun public test. The grader wrote no report, so the first grading attempt yields no outcome.",
       "rerun_gate": "Commit the redacted failure record and grader fix, then pass exact-head CI before rerunning the independent grader under a new report path."
+    },
+    {
+      "at_utc": "2026-11-01T20:32:15.520955+00:00",
+      "prior_protocol_sha256": "15af55dab6246ff22554cbd88ae26b9419ba5de742ad89c432b93162c2c3e533",
+      "reason": "Persist the corrected independent-grader rerun outcome after exact-head CI passed; grading feedback remained unavailable to the model.",
+      "scope": "Grading evidence only. The frozen task, model attempt, source candidate, and model feedback state are unchanged.",
+      "grader_rerun": {
+        "local_report": {
+          "artifact_class": "local_only",
+          "relative_path": "work/vare-trace-64674-agent-attempt-v1/attempt-001/independent-grader-rerun.json",
+          "sha256": "4a318a178dd2a951c043f4da3099fc7ecaeb8ba1c5a512972fa55fdd170713da"
+        },
+        "redacted_summary_path": "results/mlsys-fresh-vllm-64674-agent-attempt-v1/grading-summary-redacted.json",
+        "hidden_prefix_pass": true,
+        "hidden_reparse_pass": false,
+        "public_test_pass": false,
+        "trusted_grade_pass": false,
+        "final_success": false,
+        "model_attempt_repeated": false,
+        "feedback_to_model": false
+      }
     }
   ],
   "protocol_id": "mlsys-fresh-vllm-64674-agent-attempt-v1-qwen3-4b-development",
