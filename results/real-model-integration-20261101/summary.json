@@ -1,0 +1,526 @@
+{
+  "integration_branch": "codex/real-model-integration-20261101",
+  "long_horizon": {
+    "case_outcome": {
+      "empty_tree": true,
+      "false_and_none_leaves": true,
+      "nested_lists": false,
+      "scalar_root": true
+    },
+    "episodes": [
+      {
+        "controller": "full",
+        "execute_attempts": 1,
+        "final_file_sha256": {
+          "funcy/tree.py": "afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2"
+        },
+        "final_success": false,
+        "generated_tokens": 192,
+        "grade_reason": "case_failed",
+        "grading_seconds": 1.410546,
+        "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+        "model_generation_seconds": 31.195746,
+        "prompt_tokens": 9939,
+        "resumed": false,
+        "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+        "run_id": "base_uninterrupted",
+        "seed": 0,
+        "step_seconds": 31.259089,
+        "task_id": "Suor__funcy.207a7810.func_basic__jtj6rhfx",
+        "tool_calls": [
+          "list_files",
+          "read_file",
+          "search_text",
+          "replace_text",
+          "check_syntax",
+          "finish"
+        ],
+        "tool_seconds": 0.063343,
+        "trajectory_sha256": "394235f43c0bb67b8b8421571643cb1a311e901f3a308996a43918f861e98120",
+        "trusted_grade": true
+      },
+      {
+        "controller": "full",
+        "execute_attempts": 2,
+        "final_file_sha256": {
+          "funcy/tree.py": "afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2"
+        },
+        "final_success": false,
+        "generated_tokens": 192,
+        "grade_reason": "case_failed",
+        "grading_seconds": 1.322017,
+        "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+        "model_generation_seconds": 31.005148,
+        "prompt_tokens": 9939,
+        "resumed": true,
+        "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+        "run_id": "step1_recovered",
+        "seed": 0,
+        "step_seconds": 31.076941,
+        "task_id": "Suor__funcy.207a7810.func_basic__jtj6rhfx",
+        "tool_calls": [
+          "list_files",
+          "read_file",
+          "search_text",
+          "replace_text",
+          "check_syntax",
+          "finish"
+        ],
+        "tool_seconds": 0.071793,
+        "trajectory_sha256": "aed9828a004c08caf0dc8934bb1f0a74575d9117617d7275a0511bae12be412c",
+        "trusted_grade": true
+      },
+      {
+        "controller": "full",
+        "execute_attempts": 2,
+        "final_file_sha256": {
+          "funcy/tree.py": "afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2"
+        },
+        "final_success": false,
+        "generated_tokens": 192,
+        "grade_reason": "case_failed",
+        "grading_seconds": 1.391121,
+        "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+        "model_generation_seconds": 31.046485,
+        "prompt_tokens": 9939,
+        "resumed": true,
+        "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+        "run_id": "post_edit_recovered",
+        "seed": 0,
+        "step_seconds": 31.110684,
+        "task_id": "Suor__funcy.207a7810.func_basic__jtj6rhfx",
+        "tool_calls": [
+          "list_files",
+          "read_file",
+          "search_text",
+          "replace_text",
+          "check_syntax",
+          "finish"
+        ],
+        "tool_seconds": 0.064199,
+        "trajectory_sha256": "41bcc7ea16d4a5c9562975e5953fd4c2e36feac8ee01e621263132054e2768c1",
+        "trusted_grade": true
+      }
+    ],
+    "oracle_controls": "pinned reference passed 4/4; trivial None passed 0/4",
+    "post_edit_addendum_sha256": "a7bf2c1fc9c37167c930167e0b6008f51337ec9d79fd1141514f61aebb33bbea",
+    "protocol_sha256": "1444cc7612568069ad129b5f5f2bb8d2765c4c5132c80ad499f0f089b543da22",
+    "recovery_comparison": {
+      "audits": {
+        "after_edit_recovery": {
+          "completions": 1,
+          "database_sha256": "144776af153a8ea3bd576e2377731faa965eebbd14e5cdfb2ae6a9744afc8085",
+          "effective_duplicates": 0,
+          "events": 25,
+          "ledger_head_sha256": "9ef4a701d8f3e22c716bae3ac4564eb931cf9e5e97fd4734cf0610909ae25bf8",
+          "pass": true,
+          "steps": 16
+        },
+        "baseline": {
+          "completions": 1,
+          "database_sha256": "2a08e6b0721b28864da611e3eb98028a9474a5bca93b806de755f3cd0d418435",
+          "effective_duplicates": 0,
+          "events": 23,
+          "ledger_head_sha256": "3a59aa7cea159b8834861485673531be80930a8b05312aa2fb192787e07641a8",
+          "pass": true,
+          "steps": 16
+        },
+        "first_recovery": {
+          "completions": 1,
+          "database_sha256": "c28b35c5f50b0daa67b9b492a8b9ecf20f87c241121fcbcb557d8eb6371e0743",
+          "effective_duplicates": 0,
+          "events": 25,
+          "ledger_head_sha256": "8ae85876056bc9b8b2e3be28cb1ee21919ed3abf5deedce81522c4464ad31d9c",
+          "pass": true,
+          "steps": 16
+        }
+      },
+      "baseline_vs_first_recovery_semantic_trace_equal": true,
+      "baseline_vs_post_edit_recovery_semantic_trace_equal": true,
+      "excluded_from_semantic_equality": [
+        "timing.*",
+        "calls[].seconds",
+        "generation.policy_peak_memory_bytes"
+      ],
+      "execution_attempt_generation": {
+        "after_edit_recovery": 2,
+        "baseline": 1,
+        "first_recovery": 2
+      },
+      "fault_boundary_step3": {
+        "edit_applied": true,
+        "file_sha256": {
+          "funcy/tree.py": "afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2"
+        },
+        "operation_id": "base:full:Suor__funcy.207a7810.func_basic__jtj6rhfx:s0:op:3",
+        "tool": "replace_text"
+      },
+      "final_files": {
+        "baseline": {
+          "funcy/tree.py": "afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2"
+        },
+        "identical": true,
+        "recovered": {
+          "funcy/tree.py": "afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2"
+        }
+      },
+      "operation_ids_identical": true,
+      "states": {
+        "after_edit_recovery": [
+          "verified",
+          "{\"confidence\":1.0,\"disagreement\":0.0,\"metadata\":{\"grade_sha256\":\"d8db3325766289d874f749a01639de7691cdcdfb519a3e6aea6bc08b61861cd9\",\"grade_summary\":{\"candidate_sha256\":\"afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2\",\"executed\":true,\"reason\":\"case_failed\",\"schema\":\"vare_function_oracle_v1\"},\"graded_files\":[\"funcy/tree.py\"],\"grading_seconds\":1.391121,\"trajectory_sha256\":\"41bcc7ea16d4a5c9562975e5953fd4c2e36feac8ee01e621263132054e2768c1\",\"verdict\":{\"passed\":false,\"reason\":\"case_failed\",\"trusted\":true},\"verifier_config_sha256\":\"3cc35d7f513a4e78209a02c67f707cdd0defaab32421a018af7f5e48f3e82bb3\"},\"passed\":false,\"score\":0.0,\"trusted\":true,\"verifier_name\":\"vare_function_oracle\",\"verifier_version\":1}",
+          null
+        ],
+        "baseline": [
+          "verified",
+          "{\"confidence\":1.0,\"disagreement\":0.0,\"metadata\":{\"grade_sha256\":\"f44eafabcbdb5460985487ed995a3e0ef125473ee48d5499efe8f73fae12a7a6\",\"grade_summary\":{\"candidate_sha256\":\"afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2\",\"executed\":true,\"reason\":\"case_failed\",\"schema\":\"vare_function_oracle_v1\"},\"graded_files\":[\"funcy/tree.py\"],\"grading_seconds\":1.410546,\"trajectory_sha256\":\"394235f43c0bb67b8b8421571643cb1a311e901f3a308996a43918f861e98120\",\"verdict\":{\"passed\":false,\"reason\":\"case_failed\",\"trusted\":true},\"verifier_config_sha256\":\"3cc35d7f513a4e78209a02c67f707cdd0defaab32421a018af7f5e48f3e82bb3\"},\"passed\":false,\"score\":0.0,\"trusted\":true,\"verifier_name\":\"vare_function_oracle\",\"verifier_version\":1}",
+          null
+        ],
+        "first_recovery": [
+          "verified",
+          "{\"confidence\":1.0,\"disagreement\":0.0,\"metadata\":{\"grade_sha256\":\"2ea176a508c0d69bbae521ccd9b484bf5af9a57c9643b99a68283c78b1646d3b\",\"grade_summary\":{\"candidate_sha256\":\"afe7e2e5bfb2a9998e21b79eac09b37469cdf7a7b058e835af3cd2526ccfbed2\",\"executed\":true,\"reason\":\"case_failed\",\"schema\":\"vare_function_oracle_v1\"},\"graded_files\":[\"funcy/tree.py\"],\"grading_seconds\":1.322017,\"trajectory_sha256\":\"aed9828a004c08caf0dc8934bb1f0a74575d9117617d7275a0511bae12be412c\",\"verdict\":{\"passed\":false,\"reason\":\"case_failed\",\"trusted\":true},\"verifier_config_sha256\":\"3cc35d7f513a4e78209a02c67f707cdd0defaab32421a018af7f5e48f3e82bb3\"},\"passed\":false,\"score\":0.0,\"trusted\":true,\"verifier_name\":\"vare_function_oracle\",\"verifier_version\":1}",
+          null
+        ]
+      },
+      "steps": {
+        "after_edit_fault_recovered": 16,
+        "baseline": 16
+      },
+      "tool_names": [
+        "list_files",
+        "read_file",
+        "search_text",
+        "replace_text",
+        "check_syntax",
+        "finish"
+      ],
+      "trace_sha256": "33f48f41ea29738abb20fd10bbe916a69066861165f8404d3f1c78ed39678a8c"
+    }
+  },
+  "main_start_sha": "93ee9231e5da97b29fa0aa1745dfab332a6a952d",
+  "model_environment": {
+    "architecture": "arm64",
+    "docker": "29.5.2",
+    "hardware": "MacBook Pro M1 Pro, 32 GiB unified memory, Apple Metal via MLX",
+    "huggingface_hub": "2.2.0",
+    "macos": "27.0.1",
+    "mlx": "0.32.3",
+    "mlx_lm": "0.32.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "python": "3.12.12"
+  },
+  "open_pr_baseline": 27,
+  "provenance": {
+    "evidence_artifact_root": "qwen3-function-repair-dev-v1-run-001, qwen3-function-repair-dev-v1-seed-20261102 and qwen3-long-horizon-train-v1-* under outputs",
+    "grpo_parent_protocol_sha256": "3fd79045426ec19c9eb892d3ad519aff831e863cdfb3dfaf4339af0b5533ed62",
+    "grpo_seed_followup_sha256": "bf7bd9aff2a7cd595355aedbb62b4ad3553599ebe3ecd3254324be288c7402ce",
+    "recovery_comparison_trace_sha256": "33f48f41ea29738abb20fd10bbe916a69066861165f8404d3f1c78ed39678a8c"
+  },
+  "r7_forensics": {
+    "blocker": "immutable Run-002 report stores per-task outcome counts and stdout hashes but not stdout/JUnit XML needed to distinguish import/collection errors from absent requested test IDs; a new held-out rerun was not performed",
+    "diagnostic_fixture_count": 6,
+    "fixtures_used_as_run002_evidence": false,
+    "reference_fails": 31,
+    "reference_tests_missing": 769,
+    "run002_attempts": 903,
+    "valid_reference_outcomes": 103
+  },
+  "repository": "https://github.com/mitukx/VARE",
+  "rl": {
+    "adapter_checkpoints": 0,
+    "claim_boundary": "Development only; no held-out claim; no learning or capability improvement demonstrated",
+    "development_comparison": "not run: no adapter/update exists; both base pre-evaluations are 2/4",
+    "informative_groups": 0,
+    "optimizer_updates": 0,
+    "runs": [
+      {
+        "adapter_saved": false,
+        "development_pre": {
+          "n": 4,
+          "passed": 2
+        },
+        "group_size": 4,
+        "groups": {
+          "groups": [
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:636850695ee594e08617",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.maximum_fixed_window.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:636850695ee594e08617",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.merge_closed_intervals.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:636850695ee594e08617",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.parse_env_lines.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:636850695ee594e08617",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.rotate_matrix_clockwise.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:636850695ee594e08617",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.top_k_words.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:636850695ee594e08617",
+              "informative": false,
+              "rewards": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "task_id": "train.valid_brackets.v1"
+            }
+          ],
+          "n_groups": 6,
+          "n_informative_groups": 0,
+          "n_zero_variance_groups": 6
+        },
+        "learner_recovery": null,
+        "model": {
+          "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+        },
+        "params_changed": false,
+        "peak_mlx_gib": 2.613604163751006,
+        "peak_rss_gib": 2.460784912109375,
+        "post_development": null,
+        "preflight": {
+          "available_memory_gib": 13.80804443359375,
+          "disk_free_gib": 19.263294219970703,
+          "memory_free_pct": 74.0,
+          "swap": {
+            "fraction": 0.6906119791666666,
+            "total_gib": 3.0,
+            "used_gib": 2.0718359375
+          }
+        },
+        "process_cpu_seconds": 51.450533,
+        "protocol_sha256": "3fd79045426ec19c9eb892d3ad519aff831e863cdfb3dfaf4339af0b5533ed62",
+        "python": "3.12.12",
+        "run_id": "qwen3-function-repair-dev-v1-run-001",
+        "seed": 20261101,
+        "source_commit": "f77ae59bff2aeb5b7bb2e86ff8b89475db0f1127",
+        "source_hashes": {
+          "scripts/funcy_tree_oracle.py": "0d02f98778a40b9b193a3c9c37ba4bb7783a1de83a16a14f5e402b0e46ee618e",
+          "scripts/long_horizon_eval.py": "327462bf3c4d97d56e9a5ca086267435f147af9628cf58796f69ac145cddc7a9",
+          "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+          "scripts/qwen3_function_repair_grpo.py": "99f7f63ff96a7369b9750269097494dcbb13c38a87cf3dba589ecf59bf68d2b4",
+          "scripts/run_local_agent.py": "754c0b25e44ee7ba12b9c955b4cf54d959e66872c50c31ab5dd45e37cef71443",
+          "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+          "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+          "src/vare/eval_stats.py": "9ba1f27421f721200f2596df3c595b6a5622852eb18950953093cddddbfd8f06",
+          "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+          "src/vare/isolated_candidate.py": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+          "src/vare/learning_pipeline/function_repair_tasks.py": "cf0683f86a71c4f2f8ba84c68a2e64b6bc1d700d7d8a6d7e2d197024645818ce",
+          "src/vare/learning_pipeline/grpo_mlx.py": "1044eab634b85d54729c576bed90da0bd56c7566b88e96ea8264d3f638752cf8",
+          "src/vare/learning_pipeline/policy.py": "f3bc25da7cbc7337c5e05e5fc9570513548f5474cceaa79df68836d412d1101c",
+          "src/vare/trajectory_store.py": "f915cbb6f7ee11dc7812084a5f09807eb182268dd9320fcc68a2fa2e47696db8"
+        },
+        "train_samples": 24,
+        "train_task_ids": [
+          "train.merge_closed_intervals.v1",
+          "train.maximum_fixed_window.v1",
+          "train.top_k_words.v1",
+          "train.parse_env_lines.v1",
+          "train.rotate_matrix_clockwise.v1",
+          "train.valid_brackets.v1"
+        ],
+        "update_applied": false,
+        "update_step": 0,
+        "wall_seconds": 151.25668029196095
+      },
+      {
+        "adapter_saved": false,
+        "development_pre": {
+          "n": 4,
+          "passed": 2
+        },
+        "group_size": 4,
+        "groups": {
+          "groups": [
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:dfaadd1f9eb19bcfe15f",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.maximum_fixed_window.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:dfaadd1f9eb19bcfe15f",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.merge_closed_intervals.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:dfaadd1f9eb19bcfe15f",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.parse_env_lines.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:dfaadd1f9eb19bcfe15f",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.rotate_matrix_clockwise.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:dfaadd1f9eb19bcfe15f",
+              "informative": false,
+              "rewards": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "task_id": "train.top_k_words.v1"
+            },
+            {
+              "checkpoint_id": "qwen3-4b-mlx:50d427756c6b:u0:dfaadd1f9eb19bcfe15f",
+              "informative": false,
+              "rewards": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "task_id": "train.valid_brackets.v1"
+            }
+          ],
+          "n_groups": 6,
+          "n_informative_groups": 0,
+          "n_zero_variance_groups": 6
+        },
+        "learner_recovery": null,
+        "model": {
+          "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+        },
+        "params_changed": false,
+        "peak_mlx_gib": 2.6135984417051077,
+        "peak_rss_gib": 2.4415740966796875,
+        "post_development": null,
+        "preflight": {
+          "available_memory_gib": 14.500732421875,
+          "disk_free_gib": 19.12166976928711,
+          "memory_free_pct": 65.0,
+          "swap": {
+            "fraction": 0.6906119791666666,
+            "total_gib": 3.0,
+            "used_gib": 2.0718359375
+          }
+        },
+        "process_cpu_seconds": 49.340045999999994,
+        "protocol_sha256": "bf7bd9aff2a7cd595355aedbb62b4ad3553599ebe3ecd3254324be288c7402ce",
+        "python": "3.12.12",
+        "run_id": "qwen3-function-repair-dev-v1-seed-20261102",
+        "seed": 20261102,
+        "source_commit": "1a8c893f7311cb4218c8f4506d1a3fbf1a1fa610",
+        "source_hashes": {
+          "scripts/funcy_tree_oracle.py": "0d02f98778a40b9b193a3c9c37ba4bb7783a1de83a16a14f5e402b0e46ee618e",
+          "scripts/long_horizon_eval.py": "41a441a5107b43261f379e538d2a3cf19109c05cf7cc52d614ecbd828f514fd2",
+          "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+          "scripts/qwen3_function_repair_grpo.py": "0e78815b930b5ed25cbcffcea5a596cebddc51d15fdfdb1d60b4d5973b2d6324",
+          "scripts/run_local_agent.py": "754c0b25e44ee7ba12b9c955b4cf54d959e66872c50c31ab5dd45e37cef71443",
+          "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+          "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+          "src/vare/eval_stats.py": "9ba1f27421f721200f2596df3c595b6a5622852eb18950953093cddddbfd8f06",
+          "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+          "src/vare/isolated_candidate.py": "51925a745f1987608c826a23d066dcebcaef4239be8de631c9a70920ffa6c908",
+          "src/vare/learning_pipeline/function_repair_tasks.py": "cf0683f86a71c4f2f8ba84c68a2e64b6bc1d700d7d8a6d7e2d197024645818ce",
+          "src/vare/learning_pipeline/grpo_mlx.py": "1044eab634b85d54729c576bed90da0bd56c7566b88e96ea8264d3f638752cf8",
+          "src/vare/learning_pipeline/policy.py": "f3bc25da7cbc7337c5e05e5fc9570513548f5474cceaa79df68836d412d1101c",
+          "src/vare/trajectory_store.py": "f915cbb6f7ee11dc7812084a5f09807eb182268dd9320fcc68a2fa2e47696db8"
+        },
+        "train_samples": 24,
+        "train_task_ids": [
+          "train.merge_closed_intervals.v1",
+          "train.maximum_fixed_window.v1",
+          "train.top_k_words.v1",
+          "train.parse_env_lines.v1",
+          "train.rotate_matrix_clockwise.v1",
+          "train.valid_brackets.v1"
+        ],
+        "update_applied": false,
+        "update_step": 0,
+        "wall_seconds": 150.95073037501425
+      }
+    ],
+    "total_train_generations": 48,
+    "total_train_groups": 12
+  },
+  "schema": "vare.real_model_integration_report.v1",
+  "systems_analysis": {
+    "baseline_generation_seconds": 31.195746,
+    "baseline_grading_seconds": 1.410546,
+    "baseline_tool_seconds": 0.063343,
+    "bottleneck": "model generation/prefill",
+    "generation_fraction_of_generation_tool_and_grade": 0.9549,
+    "optimization_result": "no candidate optimization adopted; prior edit-format campaign remains a negative result; measured single-task run does not establish a safe cache optimization contract"
+  },
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "junit_sha256": "52b0cd23554a6c7a33279ce96b4edd966a1b2a7e7bd33f4012dcdf10878ca4be",
+    "skipped": 0,
+    "tests": 213,
+    "time_seconds": 70.014
+  }
+}
