@@ -1,0 +1,46 @@
+{
+  "attempt_id": "transformers-50219-posix-paths-agent-diagnostic-002",
+  "candidate": {
+    "base_commit": "0a13f794b2d4f474cfebb3be5b9c59420dc44aeb",
+    "tracked_workspace_unchanged": true
+  },
+  "failure": {
+    "category": "TRANSFORMERS_IMPORT_WORKING_DIRECTORY_ACCESS_DENIED",
+    "detail": "During Transformers import, pathlib.Path('src').resolve() attempted to resolve from the process working directory. That directory was inside the deliberately denied VARE experiment root, so Seatbelt denied the path operation before model weights were loaded.",
+    "generation_started": false,
+    "grader_run": false,
+    "model_prompt_sent": false,
+    "model_weights_loaded": false,
+    "task_descriptor_read_by_runner": true
+  },
+  "model": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "protocol": {
+    "addendum_commit": "44607a4d57214f79a326570ce9a9a0745fc90203",
+    "addendum_sha256": "fb1092189f38497c8470cd0c3bfd79c1d3f82b176cb964dac2595a844b5d0ee4",
+    "preflight_commit": "731f2e9a10c3e37de6325a75d779771040da3564",
+    "profile_sha256": "9942e5c41b944b0f9d9f346fcd82a411b2a456d8d18abcba61d22ea1dc08f385"
+  },
+  "raw_scratch_evidence": {
+    "bounded_agent_json_sha256": "dbbecba6b2b85ec8203207ca1f8a57719c806853493a300244bcdedf14606515",
+    "bounded_agent_log_sha256": "320f2c20426cd538a84630ac9f8bae6d75d5cc3c18e2b01f370efc1d3f7889e5",
+    "retention": "Raw scratch records are retained outside the public repository; the hashed log contains local paths and is not published."
+  },
+  "resource_observation": {
+    "elapsed_seconds": 1.051,
+    "exit_code": 1,
+    "os_wait4_child_max_rss_bytes": 74596352,
+    "sampled_process_tree_rss_max_bytes": 62996480,
+    "status": "COMPLETED_WITH_NONZERO_EXIT_BEFORE_MODEL_LOAD"
+  },
+  "schema_version": 1,
+  "shared_lease": {
+    "lease_id": "transformers-50219-agent-diagnostic-v1-002",
+    "released_after_process_exit": true,
+    "released_lease_sha256": "c316f98d9db37156dd8e91126999e8a7c76035d260c1b3046ab706f4a7ef5900"
+  },
+  "status": "INCOMPLETE_PRE_GENERATION_FAILURE_EXCLUDED_FROM_MODEL_OUTCOMES",
+  "task_id": "transformers-50219-posix-paths-agent-diagnostic-002"
+}
