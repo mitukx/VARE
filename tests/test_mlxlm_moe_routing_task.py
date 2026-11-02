@@ -702,6 +702,16 @@ def test_routing_patch_contract_documents_equivalent_rejection_and_wrong_mutants
     )
     assert grader._routing_fix_failures(source_root, baseline_root)["granitemoe"]
 
+    alias_implementation = (
+        "class GraniteMoeTopKGating:\n"
+        " def __call__(self, x):\n"
+        "    route_indices = mx.argpartition(x, kth=-2)[..., -2:]\n"
+        "    top_k_idx = mx.stop_gradient(route_indices)\n"
+        "    return mx.take_along_axis(x, top_k_idx, axis=-1)\n"
+    )
+    (model_dir / "granitemoe.py").write_text(alias_implementation, encoding="utf-8")
+    assert grader._routing_fix_failures(source_root, baseline_root)["granitemoe"]
+
     wrong_mutants = (
         # Detach a decoy while forwarding the original route indices.
         baseline.replace(
