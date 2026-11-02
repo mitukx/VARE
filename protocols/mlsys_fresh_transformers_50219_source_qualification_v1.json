@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-fresh-transformers-50219-source-qualification-v1",
+  "protocol_status": "frozen_before_upstream_source_test_patch_or_license_content_access",
+  "frozen_at_utc": "2026-11-02T14:25:53Z",
+  "purpose": "Qualify one small, metadata-screened Transformers repository repair as a source-level Development candidate. This protocol does not assign a split or authorize model inference or training.",
+  "hypothesis": "The exact merge-base source fails a narrowly extracted regression test from Transformers #50219, a minimal wrong mutant of the fixed source fails the same test, and the exact merged source passes in an offline resource-limited runner.",
+  "candidate": {
+    "repository": "huggingface/transformers",
+    "pull_request": 50219,
+    "url": "https://github.com/huggingface/transformers/pull/50219",
+    "title_from_frozen_metadata": "fix(tests_fetcher): use posix paths throughout, eliminate all os.path.sep/os.path.join patterns",
+    "task_id": "transformers-50219-tests-fetcher-posix-paths",
+    "family_hypothesis": "Cross-platform POSIX path handling in Transformers' repository test-fetching utility. Exact relationship to existing task families is UNASSESSED until source-level family review.",
+    "baseline_revision": "044aa4c823b367b3ea8988977e69202e378d8903",
+    "pr_head_revision": "8c5c8b7f91f9f7382d69f5f459955104d4ef4807",
+    "fixed_merge_revision": "a8f6bda51d955846152cc84d59a3fd2d7b806f2a",
+    "base_ref_sha_at_metadata_capture": "ca8c871ede62b521a75a2ddfc5e1968ac9c8e097",
+    "merge_commit_parent_1": "044aa4c823b367b3ea8988977e69202e378d8903",
+    "expected_changed_paths": [
+      "tests/repo_utils/test_tests_fetcher.py",
+      "utils/tests_fetcher.py"
+    ],
+    "license_to_verify_after_freeze": "Apache-2.0"
+  },
+  "frozen_selection_and_exposure_inputs": {
+    "metadata_discovery_protocol": {
+      "path": "work/vare-task-scout/discovery-protocol.json",
+      "sha256": "e717f06be219cfc244b75cd58149e6422dbe75dc4eccdb446571b795c1dc3c2d"
+    },
+    "metadata_screen_protocol": {
+      "path": "work/vare-task-scout/screen-protocol.json",
+      "sha256": "2af77a17a663b3256f4e5f3a1095eab2b80a9749830bcc028717c30a0e32a6b5"
+    },
+    "screened_metadata_snapshot": {
+      "path": "work/vare-task-scout/screened-metadata.json",
+      "sha256": "78fc6876acaaa234c429e8d8c7cd30750505e338731c0efd1a4f60d9f8920d97"
+    },
+    "candidate_pull_metadata": {
+      "path": "work/vare-task-scout/transformers-50219-pr-metadata.json",
+      "sha256": "615799fc2121759abcf203163649bf1db6bc39e3847cde270f521c8b92cecd08"
+    },
+    "verified_prior_identity_filter": {
+      "path": "scripts/discover_mlsys_fresh_development_candidates_v4.py",
+      "sha256_on_origin_main_85a0cfed": "400b46fb4987749892cf618b3b7225dbfef957c9f51305e4a44f846b5f35dc20",
+      "frozen_protocol_sha256_on_origin_main_85a0cfed": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+      "result": "The candidate identity was absent from the hash-verified set of prior Development, Train, and non-Held-Out candidate-queue identities (22 identities). The filter skips rows marked historical_split=heldout before reading any identity fields, skips qualification rows outside development/train before identity access, and includes only Development exposure events."
+    },
+    "remote_branch_name_screen": {
+      "candidate_identity_branch_match_count": 0,
+      "branch_count": 181,
+      "branch_list_sha256": "31b4bfb8f60032d4318ec04fe30809724079bfe101f641ff37a4ca23a3c4ad2f",
+      "limitation": "This checks only branch names, not every unmerged branch artifact or a model/controller exposure ledger; total prior exposure remains unverified."
+    }
+  },
+  "pre_source_access_record": {
+    "candidate_pr_body_or_comments_opened": false,
+    "candidate_source_opened": false,
+    "candidate_tests_opened": false,
+    "candidate_patch_opened": false,
+    "license_contents_opened": false,
+    "heldout_access": false,
+    "model_or_agent_inference": false
+  },
+  "qualification_plan": {
+    "authorization": {
+      "source_and_test_access_after_protocol_commit_and_push": true,
+      "source_level_task_qualification_only": true,
+      "development_split_assignment": false,
+      "agent_or_model_inference": false,
+      "training": false,
+      "heldout_access": false,
+      "paid_compute_or_api": false,
+      "external_repository_writes": false
+    },
+    "source_identity_gates": [
+      "Verify the exact baseline, PR head, merge commit and merge parent commit objects before reading candidate files.",
+      "Verify the expected two changed paths and the repository license after the protocol has been pushed.",
+      "Use only the frozen source and test paths plus the license file and strictly necessary test support files. Do not inspect PR discussions, unrelated source, model weights, or any Held-Out artifact.",
+      "If the commits, ancestry, paths, license, test isolation, or CPU feasibility differ from the frozen record, stop without substituting another candidate."
+    ],
+    "test_overlay": "After source access, extract the PR-added or PR-modified assertions from tests/repo_utils/test_tests_fetcher.py at the frozen merge revision, unchanged, into a trusted grader-only overlay. The candidate workspace must not contain the overlay.",
+    "arms": [
+      {
+        "name": "baseline",
+        "source_revision": "044aa4c823b367b3ea8988977e69202e378d8903",
+        "test_overlay": "The exact frozen regression assertions and necessary support bytes from the merge revision."
+      },
+      {
+        "name": "wrong-mutant",
+        "source_revision": "a8f6bda51d955846152cc84d59a3fd2d7b806f2a",
+        "source_mutation": "Choose one minimal incorrect reversal of the specific POSIX-path behavior in #50219 and freeze its exact diff and file hash in a source-access execution addendum before invoking any candidate test."
+      },
+      {
+        "name": "upstream-fixed",
+        "source_revision": "a8f6bda51d955846152cc84d59a3fd2d7b806f2a",
+        "test_overlay": "The identical regression assertions, support files, and harness as baseline and wrong-mutant."
+      }
+    ],
+    "required_outcomes": {
+      "baseline": "Every targeted case fails at the intended behavioral assertion, without import/collection error, skip, timeout, or unrelated failure.",
+      "wrong_mutant": "The identical cases reject the incorrect mutation at the intended assertion.",
+      "upstream_fixed": "Every targeted case passes without skip or unrelated failure.",
+      "all_arms": "Exact source and test hashes, grader separation, sandbox, command, and resource limits match the frozen execution addendum."
+    },
+    "execution_addendum_required_before_any_test": [
+      "exact test IDs and test/support hashes",
+      "trusted-overlay and candidate-workspace file manifests",
+      "exact source-file hashes for each arm",
+      "wrong-mutant diff and hash",
+      "runner and command hashes",
+      "Python and pytest versions",
+      "sandbox profile, no-network evidence, memory limit, and timeout"
+    ]
+  },
+  "isolation": {
+    "platform": "Local macOS Apple Silicon CPU only; no GPU, paid service, or remote execution.",
+    "sandbox": "Default-deny macOS Seatbelt or an already available resource-limited Docker/Colima CPU image; no network; candidate source read-only; grader files mounted read-only outside candidate workspace; writes limited to a fresh arm-specific evidence directory.",
+    "maximum_resident_memory_bytes_per_arm": 4294967296,
+    "maximum_wall_seconds_per_arm": 600,
+    "maximum_concurrent_arms": 1,
+    "maximum_invocations_per_arm": 1,
+    "execution_order": ["baseline", "wrong-mutant", "upstream-fixed"],
+    "stop_on": ["unexpected failure", "timeout", "import/collection error", "skip", "resource breach", "network or write-boundary violation"],
+    "retry_rule": "Each arm invocation is consumed; retry requires a new hash-bound protocol addendum committed before the retry."
+  },
+  "qualification_decision_rule": "QUALIFIED_SOURCE_LEVEL only if identity, source, license, baseline, wrong-mutant, upstream-fixed, isolation, and resource gates all pass. A pass does not authorize Development assignment, model inference, training, or Held-Out use.",
+  "output_path": "results/mlsys-fresh-transformers-50219-source-qualification-v1/",
+  "limitations": [
+    "Public pretraining exposure is UNKNOWN.",
+    "Prior model/controller exposure is not fully ruled out by the current-main ledgers and branch-name check; a task assignment requires a separate complete exposure audit.",
+    "One source-level task qualification is not an independently graded model repair or coding-capability result."
+  ],
+  "stop_rules": [
+    "Do not access candidate source or test until this exact protocol commit is pushed to VARE.",
+    "Do not execute any candidate test before a source-access execution addendum is committed and pushed.",
+    "Do not open PR bodies, discussion, unrelated patches, task prompts, or any Held-Out task or artifact.",
+    "Do not infer or train on this task or assign it to any split under this protocol.",
+    "If any pre-run gate fails, retain the failure, keep the task UNQUALIFIED and UNASSIGNED, and do not substitute another candidate."
+  ]
+}
