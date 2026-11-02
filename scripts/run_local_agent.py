@@ -602,6 +602,16 @@ def candidate_source_diff(
     return diff
 
 
+def canonical_candidate_diff_or_error(
+    root: Path, files: list[str], before: dict[str, bytes], base_revision: str,
+) -> tuple[str, str | None]:
+    """Retain the agent trajectory if final patch validation fails."""
+    try:
+        return candidate_source_diff(root, files, before, base_revision), None
+    except Exception as exc:
+        return "", f"{type(exc).__name__}: {exc}"
+
+
 def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     """Map a model-supplied path to one exact allowlisted relative file."""
     normalized = raw_path.replace('\\', '/').lstrip('./')
@@ -1570,7 +1580,13 @@ def main() -> int:
 
     elapsed = time.perf_counter() - start
     after = digest_tree(workspace, sorted(allowed))
-    diff = candidate_source_diff(workspace, sorted(allowed), source_before, workspace_revision)
+    diff, diff_validation_error = canonical_candidate_diff_or_error(
+        workspace, sorted(allowed), source_before, workspace_revision,
+    )
+    if diff_validation_error is not None:
+        # The raw trajectory remains useful for diagnosing an invalid final
+        # workspace even though no canonical candidate patch can be admitted.
+        stop_reason = 'candidate_diff_validation_failed'
     if args.backend == 'mlx':
         runtime['mlx_active_memory_bytes'] = int(mx.metal.get_active_memory())
         runtime['mlx_peak_memory_bytes'] = int(mx.metal.get_peak_memory())
@@ -1617,6 +1633,7 @@ def main() -> int:
         'workspace_revision': workspace_revision,
         'candidate_diff': diff,
         'candidate_diff_sha256': hashlib.sha256(diff.encode()).hexdigest(),
+        'candidate_diff_validation_error': diff_validation_error,
         'source_hashes_before': before, 'source_hashes_after': after,
         'tool_turns': len(transcript), 'no_tool_retries': no_tool_retries,
         'controller_retry_count': controller_retry_count, 'transcript': transcript,
@@ -1632,7 +1649,7 @@ def main() -> int:
     except FileExistsError:
         parser.error(f'refusing to overwrite existing agent record: {result_path}')
     print(json.dumps({key: result[key] for key in ['task_id', 'seed', 'stop_reason', 'elapsed_seconds', 'new_tokens', 'tool_turns', 'candidate_diff_sha256']}, indent=2))
-    return 0
+    return 1 if diff_validation_error is not None else 0
 
 
 if __name__ == '__main__':
