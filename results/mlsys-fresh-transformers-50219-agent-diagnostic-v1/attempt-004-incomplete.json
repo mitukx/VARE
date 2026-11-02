@@ -1,0 +1,47 @@
+{
+  "attempt_id": "transformers-50219-posix-paths-agent-diagnostic-004",
+  "candidate": {
+    "base_commit": "0a13f794b2d4f474cfebb3be5b9c59420dc44aeb",
+    "tracked_workspace_unchanged": true
+  },
+  "failure": {
+    "category": "METAL_COMPILER_CACHE_WRITE_DENIED_BY_SANDBOX",
+    "detail": "The first model generation call failed while MLX evaluated prompt-cache state and the Metal compiler attempted to create its monolithic_metal.pcm output under the macOS com.apple.metalfe cache. The profile allowed the task scratch directory but not this OS compiler cache. No model output token or agent result record was observed.",
+    "generation_call_started": true,
+    "grader_run": false,
+    "model_prompt_submitted_to_generation": true,
+    "model_weights_loaded": true,
+    "output_tokens_observed": 0
+  },
+  "model": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "protocol": {
+    "addendum_commit": "10bb469231c8ef0430284517fddbf90f36582d47",
+    "addendum_sha256": "19acf74ec07c79330c7ed208f13889313ac7198cb46e16f3728220491f6fd987",
+    "prelaunch_record_commit": "42dc836258899fadb67d4dd932e5d341b13b8938",
+    "profile_sha256": "78c0253e3c7e12dd680189b45dab22bf5d387833139fed84824fe271639ee9e3"
+  },
+  "raw_scratch_evidence": {
+    "bounded_agent_json_sha256": "611f905ad91ca90d64af9a4b0070e980b183442c4c00b76a69391ee8962f9df7",
+    "bounded_agent_log_sha256": "2d0741ff9d685ae27eedbbea69dae2e1d6749d0c71e33d985475639b68a01b1b",
+    "retention": "Raw scratch records are retained outside the public repository; the hashed log contains local paths and is not published."
+  },
+  "resource_observation": {
+    "elapsed_seconds": 2.088,
+    "exit_code": 1,
+    "os_wait4_child_max_rss_bytes": 2627731456,
+    "sampled_process_tree_rss_max_bytes": 2571845632,
+    "status": "GENERATION_CALL_FAILED_BEFORE_FIRST_OBSERVED_OUTPUT_TOKEN"
+  },
+  "schema_version": 1,
+  "shared_lease": {
+    "lease_id": "transformers-50219-agent-diagnostic-v1-attempt-004",
+    "released_after_process_exit": true,
+    "released_lease_sha256": "6dbb5e62a160825dcbb11d8f6635633bf4d85c63ca28d4b1e8710ef9c2a731f6"
+  },
+  "status": "TASK_CONSUMED_BY_MODEL_GENERATION_INVOCATION; NO_EDIT_OR_GRADE",
+  "task_disposition": "EXCLUDE_FROM_FUTURE_TRAIN_DEVELOPMENT_AND_HELDOUT_ASSIGNMENTS",
+  "task_id": "transformers-50219-posix-paths-agent-diagnostic-004"
+}
