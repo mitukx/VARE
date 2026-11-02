@@ -8,7 +8,6 @@ import ast
 import hashlib
 import json
 import pathlib
-import platform
 import resource
 import signal
 import sys
@@ -223,7 +222,7 @@ def main() -> int:
         "runtime": {
             "python": sys.version,
             "executable": sys.executable,
-            "platform": platform.platform(),
+            "platform": sys.platform,
         },
     }
     output_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")

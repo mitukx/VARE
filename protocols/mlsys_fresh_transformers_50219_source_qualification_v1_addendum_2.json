@@ -1,0 +1,163 @@
+{
+  "execution_policy": {
+    "MLX_or_Metal_run": false,
+    "additional_invocations_authorized": {
+      "baseline": 1,
+      "upstream-fixed": 1,
+      "wrong-mutant": 1
+    },
+    "development_assignment": false,
+    "heldout_access": false,
+    "model_or_agent_inference": false,
+    "order": [
+      "baseline retry",
+      "wrong-mutant",
+      "upstream-fixed"
+    ],
+    "proceed_only_if": "Each completed arm matches every frozen upstream and independent behavior outcome before the next arm is invoked.",
+    "stop_on": [
+      "any outcome differing from the frozen arm expectation",
+      "test import/collection or runner error",
+      "skip or unrelated failure",
+      "timeout",
+      "RSS above the observed ceiling",
+      "network or write-boundary violation"
+    ],
+    "training": false
+  },
+  "follow_on_execution_order": [
+    {
+      "arm": "baseline",
+      "attempt": 2,
+      "output": "results/mlsys-fresh-transformers-50219-source-qualification-v1/arms/baseline/attempt-002.json"
+    },
+    {
+      "arm": "wrong-mutant",
+      "attempt": 1,
+      "output": "results/mlsys-fresh-transformers-50219-source-qualification-v1/arms/wrong-mutant/attempt-001.json"
+    },
+    {
+      "arm": "upstream-fixed",
+      "attempt": 1,
+      "output": "results/mlsys-fresh-transformers-50219-source-qualification-v1/arms/upstream-fixed/attempt-001.json"
+    }
+  ],
+  "frozen_arm_order_and_expected_outcomes": [
+    {
+      "arm": "baseline",
+      "expected_independent_behavior": "Both functions return backslash-separated paths and fail the POSIX-path assertion.",
+      "expected_upstream_test": "FAIL at a banned native-separator expression",
+      "source_sha256": "92aacdd92a461b7e7894a5f5781b4b5d44e9e676ec4bbded2eaf8b0b50e60cac"
+    },
+    {
+      "arm": "wrong-mutant",
+      "expected_independent_behavior": "get_repo_utils_tests fails with backslash separators; get_conftest_tests passes.",
+      "expected_upstream_test": "FAIL at the str(relative_to(...)) assertion",
+      "source_sha256": "52e077a05b4c6f491af702ee547b7f085a74ebcd8276842d29bfeb2adf699da2"
+    },
+    {
+      "arm": "upstream-fixed",
+      "expected_independent_behavior": "Both functions return the expected POSIX paths.",
+      "expected_upstream_test": "PASS",
+      "source_sha256": "f2a7d2ea821befe5037a47f2e2b39cfb48c1b9a77739d6f333f15555eef9d579"
+    }
+  ],
+  "frozen_at_utc": "2026-11-02T14:46:49Z",
+  "grader_identity": {
+    "behavior_test_method": "Extract each named function from the pinned source AST, provide fake Windows-style Path objects, and assert that repository-relative paths use forward slashes. The functions are not imported as a module; no upstream source imports execute.",
+    "independent_behavior_tests": [
+      "windows_posix_outputs.get_repo_utils_tests",
+      "windows_posix_outputs.get_conftest_tests"
+    ],
+    "license": "Apache-2.0 verified from the exact fixed-revision LICENSE file",
+    "license_github_blob_sha1": "68b7d66c97d66c58de883ed0c451af2b3183e6f3",
+    "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+    "upstream_test_baseline": {
+      "github_blob_sha1": "028e061f5d59f763386405f379db97353e1a3fb2",
+      "sha256": "5e6f7c1d72fb7000e65a39251168cc2e9d4880325bee205b9373c71a9f6e2bca"
+    },
+    "upstream_test_fixed": {
+      "github_blob_sha1": "4384305c2a48f00b6fc7bdff17367112c82977b8",
+      "revision": "a8f6bda51d955846152cc84d59a3fd2d7b806f2a",
+      "sha256": "d61b904a44f89da35578b4db22391c0e4e79aa18957617725b7f24f4326d87e1"
+    },
+    "upstream_test_method_ast_sha256": "aadbebab9543c297f14a705dfeee78f544f5eb4d300cb6459d866b39801ee8da",
+    "upstream_test_path": "tests/repo_utils/test_tests_fetcher.py",
+    "upstream_test_selector": "TestFetcherTester.test_no_windows_path_patterns_in_fetcher"
+  },
+  "invocation_template": "PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1 sandbox-exec -D HOME_ROOT=<USER_HOME> -D RUNNER_ROOT=<VARE_BRANCH_ROOT> -D SOURCE_ROOT=<ARM_SOURCE_ROOT> -D TEST_ROOT=<TRUSTED_TEST_ROOT> -D OUTPUT_ROOT=<ARM_OUTPUT_ROOT> -f <VARE_BRANCH_ROOT>/protocols/transformers_50219_source_qualification.sb /Library/Developer/CommandLineTools/usr/bin/python3 <VARE_BRANCH_ROOT>/scripts/run_transformers_50219_source_qualification_arm.py --arm <FROZEN_ARM> --workspace <ARM_SOURCE_ROOT> --trusted-test <TRUSTED_TEST_ROOT>/fixed-test.py --expected-source-sha256 <FROZEN_SOURCE_SHA256> --expected-test-sha256 d61b904a44f89da35578b4db22391c0e4e79aa18957617725b7f24f4326d87e1 --output <ARM_OUTPUT_ROOT>/<ATTEMPT_FILENAME>",
+  "limitations": [
+    "The upstream test is primarily lexical; the independent Windows-path behavior checks are required for a source-level pass.",
+    "Source qualification does not establish full prior model/controller exposure absence, pretraining independence, task-family independence, Development eligibility, or repair success by a model."
+  ],
+  "parent_addendum_commit": "3a866f6f0f1701789768211813b803abee6a0c06",
+  "parent_addendum_path": "protocols/mlsys_fresh_transformers_50219_source_qualification_v1_addendum_1.json",
+  "parent_protocol_commit": "74b559c3da5dc6a2e8bf21eddfbd46d98b422997",
+  "parent_protocol_path": "protocols/mlsys_fresh_transformers_50219_source_qualification_v1.json",
+  "pre_follow_on_state": {
+    "baseline_attempt_1_status": "INCOMPLETE_RUNNER_FAILURE; no outcome captured",
+    "baseline_attempt_2_run": false,
+    "baseline_attempts_consumed": 1,
+    "fixed_run": false,
+    "wrong_mutant_run": false
+  },
+  "prior_incomplete_attempt": {
+    "attempt_id": "baseline-001",
+    "disposition": "Immutable consumed attempt; test outcomes unknown and not countable. It is not overwritten or retried under its original protocol.",
+    "record_path": "results/mlsys-fresh-transformers-50219-source-qualification-v1/trusted/baseline-001-incomplete.json",
+    "record_sha256": "cb21babea396dc44b0a6ce48142183e75d0cb39be4ccb554b74ad8b47c708fb4",
+    "stderr_path": "results/mlsys-fresh-transformers-50219-source-qualification-v1/trusted/baseline-001-incomplete.stderr.txt",
+    "stderr_sha256": "1e45cd69dacbf3629e6767adc9e6c5ce8d8deffa8654533dd557b41dadec2fa9"
+  },
+  "protocol_id": "mlsys-fresh-transformers-50219-source-qualification-v1-addendum-2",
+  "runner_and_sandbox": {
+    "candidate_workspace_manifest": "Each arm workspace contains exactly one allowlisted regular file: utils/tests_fetcher.py. Grader test remains outside every candidate workspace.",
+    "correction_reason": "The baseline-001 run reached runtime record construction, but Seatbelt denied the platform.uname system call. No test result JSON or stdout summary was emitted.",
+    "platform_field_change": "Replaced platform.platform() with sys.platform so runtime metadata does not call os.uname() under Seatbelt.",
+    "profile": "Seatbelt denies network; permits process execution; permits file reads outside the user home, denies user-home reads by default, then allows only the runner, task source, and trusted test roots; writes are allowed only under the arm output directory.",
+    "profile_preflight": "Under the frozen profile, Python read the runner, wrote only a marker to the arm output directory, and an open attempt outside the allowlisted user-home subpaths was denied. The marker was removed. No source/test was executed.",
+    "resource_limits": {
+      "cpu_seconds": 540,
+      "memory_limit_caveat": "macOS rejected 4 GiB RLIMIT_AS, RLIMIT_RSS, and RLIMIT_DATA settings. No hard memory limit is claimed. The runner processes a 56 KiB source file, one 44 KiB trusted test file, and two fixed path stubs; observed peak RSS over 4 GiB invalidates qualification.",
+      "observed_peak_rss_ceiling_bytes": 4294967296,
+      "peak_rss_method": "resource.getrusage(RUSAGE_SELF).ru_maxrss; on Darwin the value is bytes",
+      "resource_api_preflight": "RLIMIT_CPU=540 and signal.alarm(600) succeeded; memory RLIMIT attempts failed before any candidate test.",
+      "wall_seconds": 600
+    },
+    "runner_path": "scripts/run_transformers_50219_source_qualification_arm.py",
+    "runner_sha256": "2bb58cede057b6f51a19dbcd9ab85435a1f92964dce845ba377de8e0fa6f9cf2",
+    "runner_syntax_preflight": "Python AST parse succeeded; no candidate source or test was invoked.",
+    "runtime": {
+      "executable_for_run": "/Library/Developer/CommandLineTools/usr/bin/python3",
+      "python_version": "3.9.6",
+      "sandbox_executable": "sandbox-exec"
+    },
+    "sandbox_profile_path": "protocols/transformers_50219_source_qualification.sb",
+    "sandbox_profile_sha256": "1e5404bf936cc25bab79f6846f35c29bb036e5ab05bb947455a796796bf8d917",
+    "syntax_preflight": "Python AST parse succeeded for the exact hash-bound runner before freeze; no candidate source or trusted test was invoked."
+  },
+  "schema_version": 1,
+  "source_file_identity": {
+    "baseline": {
+      "github_blob_sha1": "9517ce15cb04bd4ca6e06179248118959e717226",
+      "revision": "044aa4c823b367b3ea8988977e69202e378d8903",
+      "sha256": "92aacdd92a461b7e7894a5f5781b4b5d44e9e676ec4bbded2eaf8b0b50e60cac"
+    },
+    "path": "utils/tests_fetcher.py",
+    "upstream_fixed": {
+      "github_blob_sha1": "b2e590cf0d9fd79dea9484abd90e403bb31d2328",
+      "revision": "a8f6bda51d955846152cc84d59a3fd2d7b806f2a",
+      "sha256": "f2a7d2ea821befe5037a47f2e2b39cfb48c1b9a77739d6f333f15555eef9d579"
+    },
+    "wrong_mutant": {
+      "github_blob_sha1": "52dbd300b479d9fd5f0bbeba1260d6061a3c2907",
+      "mutation": "In get_repo_utils_tests, replace path.relative_to(PATH_TO_REPO).as_posix() with str(path.relative_to(PATH_TO_REPO)); no other byte changes.",
+      "mutation_descriptor_path": "results/mlsys-fresh-transformers-50219-source-qualification-v1/trusted/wrong-mutant-mutation.json",
+      "mutation_descriptor_sha256": "6d7323e1116609578c7e1d49af49dcf2532e9b6f29ca3fcf87f4f2f5554ca838",
+      "revision_parent": "a8f6bda51d955846152cc84d59a3fd2d7b806f2a",
+      "sha256": "52e077a05b4c6f491af702ee547b7f085a74ebcd8276842d29bfeb2adf699da2"
+    }
+  },
+  "status": "frozen_before_any_follow_on_candidate_test_invocation",
+  "task_id": "transformers-50219-tests-fetcher-posix-paths"
+}

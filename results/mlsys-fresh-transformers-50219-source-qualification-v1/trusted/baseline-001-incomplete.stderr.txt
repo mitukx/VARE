@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "<VARE_ROOT>/scripts/run_transformers_50219_source_qualification_arm.py", line 235, in <module>
+    raise SystemExit(main())
+  File "<VARE_ROOT>/scripts/run_transformers_50219_source_qualification_arm.py", line 226, in main
+    "platform": platform.platform(),
+  File "<PYTHON_STDLIB>/platform.py", line 1215, in platform
+    system, node, release, version, machine, processor = uname()
+  File "<PYTHON_STDLIB>/platform.py", line 847, in uname
+    system, node, release, version, machine = infos = os.uname()
+PermissionError: [Errno 1] Operation not permitted
