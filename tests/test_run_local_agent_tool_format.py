@@ -17,11 +17,13 @@ from scripts.run_local_agent import (
     append_tool_interaction,
     attempt_configured_edit,
     attempt_exact_text_replacement,
+    attempt_read_bound_line_replacement,
     attempt_read_bound_text_replacement,
     malformed_edit_retry_feedback,
     bounded_list_page,
     bounded_search_results,
     bounded_source_page,
+    complete_source_line_range,
     bounded_tool_result,
     check_syntax_source,
     classify_incomplete_tool_call,
@@ -392,6 +394,7 @@ def test_read_bound_replacement_tool_is_opt_in_and_uses_a_short_handle():
     handle_by_name = {item['function']['name']: item['function'] for item in handle_tools}
     read_tool = handle_by_name['read_file']
     replace_tool = handle_by_name['replace_from_read']
+    line_replace_tool = handle_by_name['replace_lines_from_read']
 
     assert 'replace_from_read' not in legacy_names
     assert 'replace_text' not in handle_by_name
@@ -402,6 +405,12 @@ def test_read_bound_replacement_tool_is_opt_in_and_uses_a_short_handle():
         '^source-[0-9a-f]{16}$'
     )
     assert 'source_handle' in read_tool['description']
+    assert 'complete_line_range' in read_tool['description']
+    assert line_replace_tool['parameters']['required'] == [
+        'path', 'source_handle', 'start_line', 'end_line', 'new_text',
+    ]
+    assert 'complete lines' in line_replace_tool['description']
+    assert 'replace_lines_from_read' not in legacy_names
     with pytest.raises(ValueError, match='unified-diff edit mode'):
         tools_for('whole_file', include_navigation=True, include_read_handles=True)
 
@@ -938,6 +947,122 @@ def test_read_bound_replacement_uses_the_hash_from_the_exact_read_receipt(tmp_pa
     ).hexdigest()
     assert result['postimage_matches_replacement'] is True
     assert source.read_text(encoding='utf-8') == 'value = 2\nother = 3\n'
+
+
+def test_complete_source_line_range_excludes_partial_cursor_lines():
+    assert complete_source_line_range({
+        'start_line': 4, 'end_line': 6, 'next_cursor': None,
+    }) == (4, 6)
+    assert complete_source_line_range({
+        'start_line': 4, 'end_line': 6,
+        'next_cursor': {'start_line': 6, 'char_offset': 12},
+    }) == (4, 5)
+    assert complete_source_line_range({
+        'start_line': 4, 'end_line': 4,
+        'next_cursor': {'start_line': 4, 'char_offset': 12},
+    }) == (4, 3)
+    assert complete_source_line_range({
+        'start_line': 4, 'end_line': 5, 'next_cursor': None,
+    }, requested_char_offset=8) == (5, 5)
+
+
+def test_read_bound_line_replacement_applies_only_a_complete_read_range(tmp_path):
+    source, _revision = _git_workspace(
+        tmp_path, 'pkg/source.py', b'value = 1\nother = 3\n',
+    )
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    handle = 'source-0123456789abcdef'
+    receipts = {handle: ('pkg/source.py', source_hash, 1, 2)}
+
+    result = attempt_read_bound_line_replacement(
+        tmp_path, 'pkg/source.py', handle, 1, 1, 'value = 2',
+        {'pkg/source.py'}, receipts,
+    )
+
+    assert result['applied'] is True
+    assert result['edit_mode'] == 'read_bound_line_replacement'
+    assert result['line_range'] == [1, 1]
+    assert result['source_handle'] == handle
+    assert result['source_sha256_before'] == source_hash
+    assert result['source_sha256_after'] == hashlib.sha256(
+        b'value = 2\nother = 3\n'
+    ).hexdigest()
+    assert result['postimage_matches_replacement'] is True
+    assert source.read_bytes() == b'value = 2\nother = 3\n'
+
+
+def test_read_bound_line_replacement_rejects_unread_partial_stale_and_wrong_path(tmp_path):
+    source, _revision = _git_workspace(
+        tmp_path, 'pkg/source.py', b'value = 1\nother = 3\n',
+    )
+    handle = 'source-0123456789abcdef'
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    receipts = {handle: ('pkg/source.py', source_hash, 1, 1)}
+
+    out_of_read = attempt_read_bound_line_replacement(
+        tmp_path, 'pkg/source.py', handle, 1, 2, 'value = 2',
+        {'pkg/source.py'}, receipts,
+    )
+    wrong_path = attempt_read_bound_line_replacement(
+        tmp_path, 'other.py', handle, 1, 1, 'value = 2',
+        {'pkg/source.py', 'other.py'}, receipts,
+    )
+    source.write_text('value = 9\nother = 3\n', encoding='utf-8')
+    stale = attempt_read_bound_line_replacement(
+        tmp_path, 'pkg/source.py', handle, 1, 1, 'value = 2',
+        {'pkg/source.py'}, receipts,
+    )
+
+    assert out_of_read['applied'] is False
+    assert 'not fully returned' in out_of_read['error']
+    assert wrong_path['applied'] is False
+    assert 'different path' in wrong_path['error']
+    assert stale['applied'] is False
+    assert stale['stale_source'] is True
+    assert source.read_text(encoding='utf-8') == 'value = 9\nother = 3\n'
+
+
+def test_read_bound_line_replacement_preserves_missing_eof_newline(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1')
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    handle = 'source-0123456789abcdef'
+
+    result = attempt_read_bound_line_replacement(
+        tmp_path, 'pkg/source.py', handle, 1, 1, 'value = 2\n',
+        {'pkg/source.py'}, {handle: ('pkg/source.py', source_hash, 1, 1)},
+    )
+
+    assert result['applied'] is True
+    assert source.read_bytes() == b'value = 2'
+
+
+def test_read_bound_line_deletion_preserves_missing_eof_newline(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'first = 1\nlast = 2')
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    handle = 'source-0123456789abcdef'
+
+    result = attempt_read_bound_line_replacement(
+        tmp_path, 'pkg/source.py', handle, 2, 2, '',
+        {'pkg/source.py'}, {handle: ('pkg/source.py', source_hash, 1, 2)},
+    )
+
+    assert result['applied'] is True
+    assert source.read_bytes() == b'first = 1'
+
+
+def test_read_bound_line_replacement_rejects_crlf_without_changing_source(tmp_path):
+    source, _revision = _git_workspace(tmp_path, 'pkg/source.py', b'value = 1\r\n')
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    handle = 'source-0123456789abcdef'
+
+    result = attempt_read_bound_line_replacement(
+        tmp_path, 'pkg/source.py', handle, 1, 1, 'value = 2',
+        {'pkg/source.py'}, {handle: ('pkg/source.py', source_hash, 1, 1)},
+    )
+
+    assert result['applied'] is False
+    assert 'LF-only' in result['error']
+    assert source.read_bytes() == b'value = 1\r\n'
 
 
 def test_read_bound_replacement_rejects_guessed_wrong_path_and_stale_handles(tmp_path):
