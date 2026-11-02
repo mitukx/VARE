@@ -1,0 +1,200 @@
+{
+  "arms": {
+    "baseline": {
+      "attempt_id": "baseline-attempt-002",
+      "case_outcomes": [
+        "failed at the frozen post-override assertion",
+        "failed at the frozen post-override assertion"
+      ],
+      "classification": "TARGET_BASELINE_GATE_PASSED",
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/sandbox/baseline-attempt-002.sb",
+        "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python3.12",
+        "-m",
+        "pytest",
+        "-c",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/pytest.ini",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-o",
+        "log_file=<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-002/pytest-internal.log",
+        "--basetemp",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/baseline-attempt-002/pytest-tmp",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+      ],
+      "command_sha256": "396dd039e8a2837b10919ad0c8595fa8adc89b1ea452e47a2c9505a4a85ac5e9",
+      "elapsed_seconds": 0.53,
+      "max_process_tree_rss_bytes": 4294967296,
+      "method_sha256": "8e27720d05507ce6596dcc53fb47b858087efb29baa762e44a7aca6526f2c7ba",
+      "peak_process_tree_rss_bytes": 3932160,
+      "profile_sha256": "08a0686f6ea32878d5f99a21a2aeea2641fa38f3accfd2f42e1be6cafbad914c",
+      "pytest_config_sha256": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+      "pytest_exit_code": 1,
+      "pytest_log_sha256": "ff64d47636c162410629fe67a8f485cf1ae922384d49cdd40d1d71de4cedaa64",
+      "python_sha256": "a4d273ad5c99ab7a1c93d78bedb890512daed93210f11175b10c30c1e33a125a",
+      "rss_limit_exceeded": false,
+      "selected_test_ids": [
+        "test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+        "test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+      ],
+      "source_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+      "test_sha256": "c7d87ac08859609e015df3071a10a26ce5d057102d83dd7609a1a61817f0cbcd",
+      "timed_out": false
+    },
+    "upstream-fixed": {
+      "attempt_id": "upstream-fixed-attempt-002",
+      "case_outcomes": [
+        "passed",
+        "passed"
+      ],
+      "classification": "TARGET_FIXED_GATE_PASSED",
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/sandbox/upstream-fixed-attempt-002.sb",
+        "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python3.12",
+        "-m",
+        "pytest",
+        "-c",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/pytest.ini",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-o",
+        "log_file=<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/upstream-fixed-attempt-002/pytest-internal.log",
+        "--basetemp",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/upstream-fixed-attempt-002/pytest-tmp",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+      ],
+      "command_sha256": "e7cc260266566ad877aff18bbea2fce957648925fbf56d3a1fd04e6d3c3030fb",
+      "elapsed_seconds": 0.529,
+      "max_process_tree_rss_bytes": 4294967296,
+      "method_sha256": "8963659dedc3900222424438a5d812090e7d3e2839a8ad157a73b0753cf012fa",
+      "peak_process_tree_rss_bytes": 3932160,
+      "profile_sha256": "1cb52eb5c3a73051b26b56b8895f470990c0aa35b75f5984d2957644ba7fd60f",
+      "pytest_config_sha256": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+      "pytest_exit_code": 0,
+      "pytest_log_sha256": "f9991bfc1c7ebd12bb16ce56e1cf3117618ca286795cd280e4f6ac597c67ff48",
+      "python_sha256": "a4d273ad5c99ab7a1c93d78bedb890512daed93210f11175b10c30c1e33a125a",
+      "rss_limit_exceeded": false,
+      "selected_test_ids": [
+        "test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+        "test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+      ],
+      "source_revision": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+      "test_sha256": "c7d87ac08859609e015df3071a10a26ce5d057102d83dd7609a1a61817f0cbcd",
+      "timed_out": false
+    },
+    "wrong-mutant": {
+      "attempt_id": "wrong-mutant-attempt-002",
+      "case_outcomes": [
+        "failed at the same frozen post-override assertion",
+        "failed at the same frozen post-override assertion"
+      ],
+      "classification": "TARGET_MUTANT_REJECTED",
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/sandbox/wrong-mutant-attempt-002.sb",
+        "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python3.12",
+        "-m",
+        "pytest",
+        "-c",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/pytest.ini",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-o",
+        "log_file=<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/wrong-mutant-attempt-002/pytest-internal.log",
+        "--basetemp",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/wrong-mutant-attempt-002/pytest-tmp",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+        "<SESSION_ROOT>/work/VARE/results/mlsys-fresh-vllm-64830-source-qualification-v1/pretest/trusted/test_vllm_config_unsupported_features.py::test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+      ],
+      "command_sha256": "03ac75ce781e88454ad9a12b6831565369c70f5c6956036ba04a3c732b09c6b2",
+      "elapsed_seconds": 0.529,
+      "max_process_tree_rss_bytes": 4294967296,
+      "method_sha256": "70025c1721eed1e3139e6ffd6be72c4c16423d41788db4cabe1cbbd65a4e0ffd",
+      "peak_process_tree_rss_bytes": 3932160,
+      "profile_sha256": "66c4bcff27ca6735c62da6bffc7700f81f8b7ee3a32171162ab240c00d4900ed",
+      "pytest_config_sha256": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+      "pytest_exit_code": 1,
+      "pytest_log_sha256": "b6d042d2fb51195fe8e1ec8041bb5977b5a49d7cc85f5873cea6d04c72904e23",
+      "python_sha256": "a4d273ad5c99ab7a1c93d78bedb890512daed93210f11175b10c30c1e33a125a",
+      "rss_limit_exceeded": false,
+      "selected_test_ids": [
+        "test_v1_model_runner_rejects_v2_only_config[overrides0-HiSparse]",
+        "test_v1_model_runner_rejects_v2_only_config[overrides1-watermarking]"
+      ],
+      "source_revision": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+      "test_sha256": "c7d87ac08859609e015df3071a10a26ce5d057102d83dd7609a1a61817f0cbcd",
+      "timed_out": false
+    }
+  },
+  "conclusion": "The frozen two-case method-level source qualification passed: baseline failed both intended assertions, the wrong mutant was rejected by both, and upstream-fixed passed both. This does not qualify the whole upstream PR or excluded custom-speculator behavior and establishes no agent repair, Coding RL gain, model capability, or pretraining independence.",
+  "exposure": {
+    "development_assignment": "UNASSIGNED",
+    "heldout_access": false,
+    "model_exposure": false,
+    "model_inference": false,
+    "public_pretraining_exposure": "UNKNOWN",
+    "source_and_test_exposure_to_agent": true,
+    "training": false
+  },
+  "frozen_execution": {
+    "addendum_3": "superseded before invocation after its attempt-002 output path did not match the inherited attempt-001 profile write path; zero invocation",
+    "addendum_path": "results/mlsys-fresh-vllm-64830-source-qualification-v1/protocol-addendum-4-output-profile-binding.json",
+    "addendum_sha256": "dae44a37fa8e7c66276acb0117b155a5d84f4d8a6d3aad7b86816a5a2d8b5396",
+    "baseline_attempt_001": "STOPPED_BEFORE_TEST_COLLECTION due pytest logging plugin opening /dev/null under Seatbelt; zero candidate assertions; preserved but not included as behavioral arm"
+  },
+  "isolation": {
+    "all_time_and_memory_gates_passed": true,
+    "concurrent_arms": 1,
+    "cpu_only": true,
+    "default_policy": "deny",
+    "max_process_tree_rss_bytes_per_arm": 4294967296,
+    "max_wall_seconds_per_arm": 600,
+    "network": "denied by Seatbelt profile in each arm",
+    "paid_compute_or_api": false,
+    "runtime": "Python 3.12.12, pytest 8.4.2, macOS arm64",
+    "source_and_test_overlay_read_only_to_pytest": true,
+    "write_boundary": "each arm profile permits writes only to its matching attempt-002 output subtree; exact path matches verified"
+  },
+  "prohibited_claims": [
+    "whole PR #64830 is qualified",
+    "custom-speculator behavior is qualified",
+    "model or agent repair",
+    "Coding RL improvement",
+    "pretraining independence",
+    "Development assignment"
+  ],
+  "protocol_id": "mlsys-fresh-vllm-64830-source-qualification-v1",
+  "pull_request": 64830,
+  "qualification_status": "QUALIFIED_SOURCE_LEVEL",
+  "repository": "https://github.com/vllm-project/vllm.git",
+  "schema_version": 1,
+  "scope": {
+    "assertions_modified": false,
+    "cases": [
+      "HiSparse",
+      "watermarking"
+    ],
+    "excluded": "test_custom_speculator: its full registration and VllmConfig validation fixtures are outside this method-only overlay",
+    "production_method": "VllmConfig._get_v1_model_runner_unsupported_features",
+    "upstream_test": "tests/test_config.py::test_v1_model_runner_rejects_v2_only_config"
+  },
+  "source_identity": {
+    "baseline_revision": "17550580e932f15e772185847382d3ae4211f5ec",
+    "candidate_pr_head": "9800451ab0e78104971592315e5b26546c5e9993",
+    "common_ancestor": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "fixed_integrated_revision": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+    "license": "Apache-2.0"
+  },
+  "split_assignment": "UNASSIGNED",
+  "task_id": "vllm-64830-v1-runner-unsupported-feature-checks"
+}

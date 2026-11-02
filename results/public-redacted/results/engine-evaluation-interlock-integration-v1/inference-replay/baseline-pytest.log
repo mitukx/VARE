@@ -1,0 +1,729 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.6.0
+rootdir: <SESSION_ROOT>/VARE
+configfile: pyproject.toml
+collected 14 items
+
+tests/test_rvl_grpo_torch_state.py F.F.FFFFFF                            [ 71%]
+tests/test_rvl_grpo_inference_cancellation.py FFFF                       [100%]
+
+=================================== FAILURES ===================================
+_ test_candidate_restores_exact_modes_optimizer_rng_and_next_forward[True-True] _
+
+shared = True, fail_step = True
+
+    @pytest.mark.parametrize("shared", [True, False])
+    @pytest.mark.parametrize("fail_step", [True, False])
+    def test_candidate_restores_exact_modes_optimizer_rng_and_next_forward(shared, fail_step):
+        torch.manual_seed(13)
+        trainer = TensorTrainer(shared)
+        hooks = make_hooks(trainer)
+        before = trainer.snapshot_training_state()
+        before_modes = modes(trainer.model)
+        expected = trainer.model(torch.ones(3, 4)).detach().clone()
+        trainer.restore_training_state(before)
+        trainer.fail_step = fail_step
+    
+        if fail_step:
+            with pytest.raises(RuntimeError, match="injected after AdamW"):
+                asyncio.run(hooks.train_candidate("policy-0", [experience()]))
+            assert set(hooks._states) == {"policy-0"}
+        else:
+            candidate = asyncio.run(hooks.train_candidate("policy-0", [experience()]))
+            assert candidate in hooks._states
+        assert_equal(before, trainer.snapshot_training_state())
+>       assert modes(trainer.model) == before_modes
+E       AssertionError: assert {'': True, 'f...t': True, ...} == {'': True, 'f...t': True, ...}
+E         
+E         Omitting 4 identical items, use -vv to show
+E         Differing items:
+E         {'first.dropout': True} != {'first.dropout': False}
+E         Use -v to get more diff
+
+tests/test_rvl_grpo_torch_state.py:143: AssertionError
+_ test_candidate_restores_exact_modes_optimizer_rng_and_next_forward[False-True] _
+
+shared = True, fail_step = False
+
+    @pytest.mark.parametrize("shared", [True, False])
+    @pytest.mark.parametrize("fail_step", [True, False])
+    def test_candidate_restores_exact_modes_optimizer_rng_and_next_forward(shared, fail_step):
+        torch.manual_seed(13)
+        trainer = TensorTrainer(shared)
+        hooks = make_hooks(trainer)
+        before = trainer.snapshot_training_state()
+        before_modes = modes(trainer.model)
+        expected = trainer.model(torch.ones(3, 4)).detach().clone()
+        trainer.restore_training_state(before)
+        trainer.fail_step = fail_step
+    
+        if fail_step:
+            with pytest.raises(RuntimeError, match="injected after AdamW"):
+                asyncio.run(hooks.train_candidate("policy-0", [experience()]))
+            assert set(hooks._states) == {"policy-0"}
+        else:
+            candidate = asyncio.run(hooks.train_candidate("policy-0", [experience()]))
+            assert candidate in hooks._states
+        assert_equal(before, trainer.snapshot_training_state())
+>       assert modes(trainer.model) == before_modes
+E       AssertionError: assert {'': True, 'f...t': True, ...} == {'': True, 'f...t': True, ...}
+E         
+E         Omitting 4 identical items, use -vv to show
+E         Differing items:
+E         {'first.dropout': True} != {'first.dropout': False}
+E         Use -v to get more diff
+
+tests/test_rvl_grpo_torch_state.py:143: AssertionError
+___ test_rng_cleanup_failure_invalidates_or_recovers_loaded_state[evaluate] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f64545feed0>
+operation = 'evaluate'
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    def test_rng_cleanup_failure_invalidates_or_recovers_loaded_state(monkeypatch, operation):
+        trainer = TensorTrainer()
+        hooks = make_hooks(trainer)
+        before = trainer.snapshot_training_state()
+        before_modes = modes(trainer.model)
+        real_set_rng = torch.set_rng_state
+        fail_once = True
+    
+        def set_rng(state):
+            nonlocal fail_once
+            if fail_once:
+                fail_once = False
+                raise RuntimeError("injected RNG cleanup failure")
+            real_set_rng(state)
+    
+        monkeypatch.setattr(torch, "set_rng_state", set_rng)
+    
+        async def run():
+            with pytest.raises(RuntimeError, match="injected RNG cleanup"):
+                if operation == "evaluate":
+                    await hooks.evaluate("policy-0")
+                else:
+                    await hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0)
+            assert hooks._loaded_id == ("policy-0" if operation == "evaluate" else None)
+            await hooks.rollout(Task("recovery", "prompt"), "policy-0", 0, 1)
+    
+>       asyncio.run(run())
+
+tests/test_rvl_grpo_torch_state.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+>       with pytest.raises(RuntimeError, match="injected RNG cleanup"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'RuntimeError'>
+
+tests/test_rvl_grpo_torch_state.py:168: Failed
+____ test_rng_cleanup_failure_invalidates_or_recovers_loaded_state[rollout] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6454a26450>
+operation = 'rollout'
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    def test_rng_cleanup_failure_invalidates_or_recovers_loaded_state(monkeypatch, operation):
+        trainer = TensorTrainer()
+        hooks = make_hooks(trainer)
+        before = trainer.snapshot_training_state()
+        before_modes = modes(trainer.model)
+        real_set_rng = torch.set_rng_state
+        fail_once = True
+    
+        def set_rng(state):
+            nonlocal fail_once
+            if fail_once:
+                fail_once = False
+                raise RuntimeError("injected RNG cleanup failure")
+            real_set_rng(state)
+    
+        monkeypatch.setattr(torch, "set_rng_state", set_rng)
+    
+        async def run():
+            with pytest.raises(RuntimeError, match="injected RNG cleanup"):
+                if operation == "evaluate":
+                    await hooks.evaluate("policy-0")
+                else:
+                    await hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0)
+            assert hooks._loaded_id == ("policy-0" if operation == "evaluate" else None)
+            await hooks.rollout(Task("recovery", "prompt"), "policy-0", 0, 1)
+    
+>       asyncio.run(run())
+
+tests/test_rvl_grpo_torch_state.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+>       with pytest.raises(RuntimeError, match="injected RNG cleanup"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'RuntimeError'>
+
+tests/test_rvl_grpo_torch_state.py:168: Failed
+__ test_active_inference_preserves_modes_rng_and_tensor_state[False-evaluate] __
+
+operation = 'evaluate', fail = False
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    @pytest.mark.parametrize("fail", [False, True])
+    def test_active_inference_preserves_modes_rng_and_tensor_state(operation, fail):
+        torch.manual_seed(23)
+        trainer = TensorTrainer()
+        backend = ModeChangingBackend(trainer)
+        hooks = make_hooks(trainer, backend)
+        before = trainer.snapshot_training_state()
+        before_modes = modes(trainer.model)
+        backend.fail = fail
+    
+        async def run():
+            if operation == "evaluate":
+                return await hooks.evaluate("policy-0")
+            return await hooks.rollout(Task("rollout", "prompt"), "policy-0", 0, 1)
+    
+        if fail:
+            with pytest.raises(RuntimeError, match="injected generation"):
+                asyncio.run(run())
+        else:
+            asyncio.run(run())
+>       assert modes(trainer.model) == before_modes
+E       AssertionError: assert {'': True, 'f...t': True, ...} == {'': True, 'f...t': True, ...}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'first': True} != {'first': False}
+E         {'first.dropout': True} != {'first.dropout': False}
+E         Use -v to get more diff
+
+tests/test_rvl_grpo_torch_state.py:203: AssertionError
+__ test_active_inference_preserves_modes_rng_and_tensor_state[False-rollout] ___
+
+operation = 'rollout', fail = False
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    @pytest.mark.parametrize("fail", [False, True])
+    def test_active_inference_preserves_modes_rng_and_tensor_state(operation, fail):
+        torch.manual_seed(23)
+        trainer = TensorTrainer()
+        backend = ModeChangingBackend(trainer)
+        hooks = make_hooks(trainer, backend)
+        before = trainer.snapshot_training_state()
+        before_modes = modes(trainer.model)
+        backend.fail = fail
+    
+        async def run():
+            if operation == "evaluate":
+                return await hooks.evaluate("policy-0")
+            return await hooks.rollout(Task("rollout", "prompt"), "policy-0", 0, 1)
+    
+        if fail:
+            with pytest.raises(RuntimeError, match="injected generation"):
+                asyncio.run(run())
+        else:
+            asyncio.run(run())
+>       assert modes(trainer.model) == before_modes
+E       AssertionError: assert {'': True, 'f...t': True, ...} == {'': True, 'f...t': True, ...}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'first': True} != {'first': False}
+E         {'first.dropout': True} != {'first.dropout': False}
+E         Use -v to get more diff
+
+tests/test_rvl_grpo_torch_state.py:203: AssertionError
+__ test_active_inference_preserves_modes_rng_and_tensor_state[True-evaluate] ___
+
+operation = 'evaluate', fail = True
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    @pytest.mark.parametrize("fail", [False, True])
+    def test_active_inference_preserves_modes_rng_and_tensor_state(operation, fail):
+        torch.manual_seed(23)
+        trainer = TensorTrainer()
+        backend = ModeChangingBackend(trainer)
+        hooks = make_hooks(trainer, backend)
+        before = trainer.snapshot_training_state()
+        before_modes = modes(trainer.model)
+        backend.fail = fail
+    
+        async def run():
+            if operation == "evaluate":
+                return await hooks.evaluate("policy-0")
+            return await hooks.rollout(Task("rollout", "prompt"), "policy-0", 0, 1)
+    
+        if fail:
+            with pytest.raises(RuntimeError, match="injected generation"):
+                asyncio.run(run())
+        else:
+            asyncio.run(run())
+>       assert modes(trainer.model) == before_modes
+E       AssertionError: assert {'': True, 'f...t': True, ...} == {'': True, 'f...t': True, ...}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'first': True} != {'first': False}
+E         {'first.dropout': True} != {'first.dropout': False}
+E         Use -v to get more diff
+
+tests/test_rvl_grpo_torch_state.py:203: AssertionError
+___ test_active_inference_preserves_modes_rng_and_tensor_state[True-rollout] ___
+
+operation = 'rollout', fail = True
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    @pytest.mark.parametrize("fail", [False, True])
+    def test_active_inference_preserves_modes_rng_and_tensor_state(operation, fail):
+        torch.manual_seed(23)
+        trainer = TensorTrainer()
+        backend = ModeChangingBackend(trainer)
+        hooks = make_hooks(trainer, backend)
+        before = trainer.snapshot_training_state()
+        before_modes = modes(trainer.model)
+        backend.fail = fail
+    
+        async def run():
+            if operation == "evaluate":
+                return await hooks.evaluate("policy-0")
+            return await hooks.rollout(Task("rollout", "prompt"), "policy-0", 0, 1)
+    
+        if fail:
+            with pytest.raises(RuntimeError, match="injected generation"):
+                asyncio.run(run())
+        else:
+            asyncio.run(run())
+>       assert modes(trainer.model) == before_modes
+E       AssertionError: assert {'': True, 'f...t': True, ...} == {'': True, 'f...t': True, ...}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'first': True} != {'first': False}
+E         {'first.dropout': True} != {'first.dropout': False}
+E         Use -v to get more diff
+
+tests/test_rvl_grpo_torch_state.py:203: AssertionError
+_ test_repeated_cancel_drains_worker_before_next_model_access[False-evaluate] __
+
+operation = 'evaluate', worker_fails = False
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    @pytest.mark.parametrize("worker_fails", [False, True])
+    def test_repeated_cancel_drains_worker_before_next_model_access(operation, worker_fails):
+        async def run():
+            backend = ThreadBackend(worker_fails)
+            hooks = RVLGRPOHooks(
+                backend=backend, trainer=Trainer(), eval_tasks=[Task("eval", "prompt")],
+                score_fn=lambda *_: 1.0, generation_factory=SimpleNamespace,
+                verified_generation_factory=SimpleNamespace,
+            )
+            errors = []
+            asyncio.get_running_loop().set_exception_handler(lambda loop, context: errors.append(context))
+            task = asyncio.create_task(hooks.evaluate("policy-0") if operation == "evaluate"
+                                       else hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0))
+            follower = None
+            try:
+                assert await asyncio.to_thread(backend.entered.wait, 5)
+                task.cancel()
+                # Observe that a follower has actually attempted model access.
+                attempted = asyncio.Event()
+    
+                async def next_rollout():
+                    attempted.set()
+                    return await hooks.rollout(Task("next", "prompt"), "policy-0", 0, 1)
+    
+                follower = asyncio.create_task(next_rollout())
+                await attempted.wait()
+                task.cancel()
+                await asyncio.sleep(0)  # Deliver the second cancellation.
+                assert not task.done()
+                assert hooks._model_lock.locked()
+                assert not backend.finished.is_set()
+                assert backend.calls == 1
+                assert not follower.done()
+                backend.release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                await follower
+                assert backend.finished.is_set()
+                assert backend.calls == 2
+                assert not hooks._model_lock.locked()
+                assert hooks._loaded_id == "policy-0"
+                assert not errors  # Worker exceptions must be retrieved.
+            finally:
+                backend.release.set()
+                await asyncio.gather(task, *([follower] if follower else []), return_exceptions=True)
+    
+>       asyncio.run(run())
+
+tests/test_rvl_grpo_inference_cancellation.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        backend = ThreadBackend(worker_fails)
+        hooks = RVLGRPOHooks(
+            backend=backend, trainer=Trainer(), eval_tasks=[Task("eval", "prompt")],
+            score_fn=lambda *_: 1.0, generation_factory=SimpleNamespace,
+            verified_generation_factory=SimpleNamespace,
+        )
+        errors = []
+        asyncio.get_running_loop().set_exception_handler(lambda loop, context: errors.append(context))
+        task = asyncio.create_task(hooks.evaluate("policy-0") if operation == "evaluate"
+                                   else hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0))
+        follower = None
+        try:
+            assert await asyncio.to_thread(backend.entered.wait, 5)
+            task.cancel()
+            # Observe that a follower has actually attempted model access.
+            attempted = asyncio.Event()
+    
+            async def next_rollout():
+                attempted.set()
+                return await hooks.rollout(Task("next", "prompt"), "policy-0", 0, 1)
+    
+            follower = asyncio.create_task(next_rollout())
+            await attempted.wait()
+            task.cancel()
+            await asyncio.sleep(0)  # Deliver the second cancellation.
+>           assert not task.done()
+E           AssertionError: assert not True
+E            +  where True = <built-in method done of _asyncio.Task object at 0x7f64546cfdc0>()
+E            +    where <built-in method done of _asyncio.Task object at 0x7f64546cfdc0> = <Task cancelled name='Task-32' coro=<RVLGRPOHooks.evaluate() done, defined at /tmp/vare-inference-xgio71b5/baseline/src/vare/integrations/rvl_grpo.py:310>>.done
+
+tests/test_rvl_grpo_inference_cancellation.py:75: AssertionError
+__ test_repeated_cancel_drains_worker_before_next_model_access[False-rollout] __
+
+operation = 'rollout', worker_fails = False
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    @pytest.mark.parametrize("worker_fails", [False, True])
+    def test_repeated_cancel_drains_worker_before_next_model_access(operation, worker_fails):
+        async def run():
+            backend = ThreadBackend(worker_fails)
+            hooks = RVLGRPOHooks(
+                backend=backend, trainer=Trainer(), eval_tasks=[Task("eval", "prompt")],
+                score_fn=lambda *_: 1.0, generation_factory=SimpleNamespace,
+                verified_generation_factory=SimpleNamespace,
+            )
+            errors = []
+            asyncio.get_running_loop().set_exception_handler(lambda loop, context: errors.append(context))
+            task = asyncio.create_task(hooks.evaluate("policy-0") if operation == "evaluate"
+                                       else hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0))
+            follower = None
+            try:
+                assert await asyncio.to_thread(backend.entered.wait, 5)
+                task.cancel()
+                # Observe that a follower has actually attempted model access.
+                attempted = asyncio.Event()
+    
+                async def next_rollout():
+                    attempted.set()
+                    return await hooks.rollout(Task("next", "prompt"), "policy-0", 0, 1)
+    
+                follower = asyncio.create_task(next_rollout())
+                await attempted.wait()
+                task.cancel()
+                await asyncio.sleep(0)  # Deliver the second cancellation.
+                assert not task.done()
+                assert hooks._model_lock.locked()
+                assert not backend.finished.is_set()
+                assert backend.calls == 1
+                assert not follower.done()
+                backend.release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                await follower
+                assert backend.finished.is_set()
+                assert backend.calls == 2
+                assert not hooks._model_lock.locked()
+                assert hooks._loaded_id == "policy-0"
+                assert not errors  # Worker exceptions must be retrieved.
+            finally:
+                backend.release.set()
+                await asyncio.gather(task, *([follower] if follower else []), return_exceptions=True)
+    
+>       asyncio.run(run())
+
+tests/test_rvl_grpo_inference_cancellation.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        backend = ThreadBackend(worker_fails)
+        hooks = RVLGRPOHooks(
+            backend=backend, trainer=Trainer(), eval_tasks=[Task("eval", "prompt")],
+            score_fn=lambda *_: 1.0, generation_factory=SimpleNamespace,
+            verified_generation_factory=SimpleNamespace,
+        )
+        errors = []
+        asyncio.get_running_loop().set_exception_handler(lambda loop, context: errors.append(context))
+        task = asyncio.create_task(hooks.evaluate("policy-0") if operation == "evaluate"
+                                   else hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0))
+        follower = None
+        try:
+            assert await asyncio.to_thread(backend.entered.wait, 5)
+            task.cancel()
+            # Observe that a follower has actually attempted model access.
+            attempted = asyncio.Event()
+    
+            async def next_rollout():
+                attempted.set()
+                return await hooks.rollout(Task("next", "prompt"), "policy-0", 0, 1)
+    
+            follower = asyncio.create_task(next_rollout())
+            await attempted.wait()
+            task.cancel()
+            await asyncio.sleep(0)  # Deliver the second cancellation.
+>           assert not task.done()
+E           AssertionError: assert not True
+E            +  where True = <built-in method done of _asyncio.Task object at 0x7f64544e9240>()
+E            +    where <built-in method done of _asyncio.Task object at 0x7f64544e9240> = <Task cancelled name='Task-37' coro=<RVLGRPOHooks.rollout() done, defined at /tmp/vare-inference-xgio71b5/baseline/src/vare/integrations/rvl_grpo.py:144>>.done
+
+tests/test_rvl_grpo_inference_cancellation.py:75: AssertionError
+__ test_repeated_cancel_drains_worker_before_next_model_access[True-evaluate] __
+
+operation = 'evaluate', worker_fails = True
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    @pytest.mark.parametrize("worker_fails", [False, True])
+    def test_repeated_cancel_drains_worker_before_next_model_access(operation, worker_fails):
+        async def run():
+            backend = ThreadBackend(worker_fails)
+            hooks = RVLGRPOHooks(
+                backend=backend, trainer=Trainer(), eval_tasks=[Task("eval", "prompt")],
+                score_fn=lambda *_: 1.0, generation_factory=SimpleNamespace,
+                verified_generation_factory=SimpleNamespace,
+            )
+            errors = []
+            asyncio.get_running_loop().set_exception_handler(lambda loop, context: errors.append(context))
+            task = asyncio.create_task(hooks.evaluate("policy-0") if operation == "evaluate"
+                                       else hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0))
+            follower = None
+            try:
+                assert await asyncio.to_thread(backend.entered.wait, 5)
+                task.cancel()
+                # Observe that a follower has actually attempted model access.
+                attempted = asyncio.Event()
+    
+                async def next_rollout():
+                    attempted.set()
+                    return await hooks.rollout(Task("next", "prompt"), "policy-0", 0, 1)
+    
+                follower = asyncio.create_task(next_rollout())
+                await attempted.wait()
+                task.cancel()
+                await asyncio.sleep(0)  # Deliver the second cancellation.
+                assert not task.done()
+                assert hooks._model_lock.locked()
+                assert not backend.finished.is_set()
+                assert backend.calls == 1
+                assert not follower.done()
+                backend.release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                await follower
+                assert backend.finished.is_set()
+                assert backend.calls == 2
+                assert not hooks._model_lock.locked()
+                assert hooks._loaded_id == "policy-0"
+                assert not errors  # Worker exceptions must be retrieved.
+            finally:
+                backend.release.set()
+                await asyncio.gather(task, *([follower] if follower else []), return_exceptions=True)
+    
+>       asyncio.run(run())
+
+tests/test_rvl_grpo_inference_cancellation.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        backend = ThreadBackend(worker_fails)
+        hooks = RVLGRPOHooks(
+            backend=backend, trainer=Trainer(), eval_tasks=[Task("eval", "prompt")],
+            score_fn=lambda *_: 1.0, generation_factory=SimpleNamespace,
+            verified_generation_factory=SimpleNamespace,
+        )
+        errors = []
+        asyncio.get_running_loop().set_exception_handler(lambda loop, context: errors.append(context))
+        task = asyncio.create_task(hooks.evaluate("policy-0") if operation == "evaluate"
+                                   else hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0))
+        follower = None
+        try:
+            assert await asyncio.to_thread(backend.entered.wait, 5)
+            task.cancel()
+            # Observe that a follower has actually attempted model access.
+            attempted = asyncio.Event()
+    
+            async def next_rollout():
+                attempted.set()
+                return await hooks.rollout(Task("next", "prompt"), "policy-0", 0, 1)
+    
+            follower = asyncio.create_task(next_rollout())
+            await attempted.wait()
+            task.cancel()
+            await asyncio.sleep(0)  # Deliver the second cancellation.
+>           assert not task.done()
+E           AssertionError: assert not True
+E            +  where True = <built-in method done of _asyncio.Task object at 0x7f64546cfdc0>()
+E            +    where <built-in method done of _asyncio.Task object at 0x7f64546cfdc0> = <Task cancelled name='Task-42' coro=<RVLGRPOHooks.evaluate() done, defined at /tmp/vare-inference-xgio71b5/baseline/src/vare/integrations/rvl_grpo.py:310>>.done
+
+tests/test_rvl_grpo_inference_cancellation.py:75: AssertionError
+__ test_repeated_cancel_drains_worker_before_next_model_access[True-rollout] ___
+
+operation = 'rollout', worker_fails = True
+
+    @pytest.mark.parametrize("operation", ["evaluate", "rollout"])
+    @pytest.mark.parametrize("worker_fails", [False, True])
+    def test_repeated_cancel_drains_worker_before_next_model_access(operation, worker_fails):
+        async def run():
+            backend = ThreadBackend(worker_fails)
+            hooks = RVLGRPOHooks(
+                backend=backend, trainer=Trainer(), eval_tasks=[Task("eval", "prompt")],
+                score_fn=lambda *_: 1.0, generation_factory=SimpleNamespace,
+                verified_generation_factory=SimpleNamespace,
+            )
+            errors = []
+            asyncio.get_running_loop().set_exception_handler(lambda loop, context: errors.append(context))
+            task = asyncio.create_task(hooks.evaluate("policy-0") if operation == "evaluate"
+                                       else hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0))
+            follower = None
+            try:
+                assert await asyncio.to_thread(backend.entered.wait, 5)
+                task.cancel()
+                # Observe that a follower has actually attempted model access.
+                attempted = asyncio.Event()
+    
+                async def next_rollout():
+                    attempted.set()
+                    return await hooks.rollout(Task("next", "prompt"), "policy-0", 0, 1)
+    
+                follower = asyncio.create_task(next_rollout())
+                await attempted.wait()
+                task.cancel()
+                await asyncio.sleep(0)  # Deliver the second cancellation.
+                assert not task.done()
+                assert hooks._model_lock.locked()
+                assert not backend.finished.is_set()
+                assert backend.calls == 1
+                assert not follower.done()
+                backend.release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                await follower
+                assert backend.finished.is_set()
+                assert backend.calls == 2
+                assert not hooks._model_lock.locked()
+                assert hooks._loaded_id == "policy-0"
+                assert not errors  # Worker exceptions must be retrieved.
+            finally:
+                backend.release.set()
+                await asyncio.gather(task, *([follower] if follower else []), return_exceptions=True)
+    
+>       asyncio.run(run())
+
+tests/test_rvl_grpo_inference_cancellation.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        backend = ThreadBackend(worker_fails)
+        hooks = RVLGRPOHooks(
+            backend=backend, trainer=Trainer(), eval_tasks=[Task("eval", "prompt")],
+            score_fn=lambda *_: 1.0, generation_factory=SimpleNamespace,
+            verified_generation_factory=SimpleNamespace,
+        )
+        errors = []
+        asyncio.get_running_loop().set_exception_handler(lambda loop, context: errors.append(context))
+        task = asyncio.create_task(hooks.evaluate("policy-0") if operation == "evaluate"
+                                   else hooks.rollout(Task("first", "prompt"), "policy-0", 0, 0))
+        follower = None
+        try:
+            assert await asyncio.to_thread(backend.entered.wait, 5)
+            task.cancel()
+            # Observe that a follower has actually attempted model access.
+            attempted = asyncio.Event()
+    
+            async def next_rollout():
+                attempted.set()
+                return await hooks.rollout(Task("next", "prompt"), "policy-0", 0, 1)
+    
+            follower = asyncio.create_task(next_rollout())
+            await attempted.wait()
+            task.cancel()
+            await asyncio.sleep(0)  # Deliver the second cancellation.
+>           assert not task.done()
+E           AssertionError: assert not True
+E            +  where True = <built-in method done of _asyncio.Task object at 0x7f64546cfac0>()
+E            +    where <built-in method done of _asyncio.Task object at 0x7f64546cfac0> = <Task cancelled name='Task-47' coro=<RVLGRPOHooks.rollout() done, defined at /tmp/vare-inference-xgio71b5/baseline/src/vare/integrations/rvl_grpo.py:144>>.done
+
+tests/test_rvl_grpo_inference_cancellation.py:75: AssertionError
+- generated xml file: <SESSION_ROOT>/VARE/results/engine-evaluation-interlock-integration-v1/inference-replay/baseline-pytest.xml -
+=========================== short test summary info ============================
+FAILED tests/test_rvl_grpo_torch_state.py::test_candidate_restores_exact_modes_optimizer_rng_and_next_forward[True-True]
+FAILED tests/test_rvl_grpo_torch_state.py::test_candidate_restores_exact_modes_optimizer_rng_and_next_forward[False-True]
+FAILED tests/test_rvl_grpo_torch_state.py::test_rng_cleanup_failure_invalidates_or_recovers_loaded_state[evaluate]
+FAILED tests/test_rvl_grpo_torch_state.py::test_rng_cleanup_failure_invalidates_or_recovers_loaded_state[rollout]
+FAILED tests/test_rvl_grpo_torch_state.py::test_active_inference_preserves_modes_rng_and_tensor_state[False-evaluate]
+FAILED tests/test_rvl_grpo_torch_state.py::test_active_inference_preserves_modes_rng_and_tensor_state[False-rollout]
+FAILED tests/test_rvl_grpo_torch_state.py::test_active_inference_preserves_modes_rng_and_tensor_state[True-evaluate]
+FAILED tests/test_rvl_grpo_torch_state.py::test_active_inference_preserves_modes_rng_and_tensor_state[True-rollout]
+FAILED tests/test_rvl_grpo_inference_cancellation.py::test_repeated_cancel_drains_worker_before_next_model_access[False-evaluate]
+FAILED tests/test_rvl_grpo_inference_cancellation.py::test_repeated_cancel_drains_worker_before_next_model_access[False-rollout]
+FAILED tests/test_rvl_grpo_inference_cancellation.py::test_repeated_cancel_drains_worker_before_next_model_access[True-evaluate]
+FAILED tests/test_rvl_grpo_inference_cancellation.py::test_repeated_cancel_drains_worker_before_next_model_access[True-rollout]
+========================= 12 failed, 2 passed in 2.55s =========================

@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="13" time="0.442" timestamp="2026-10-13T11:07:34.990213+09:00" hostname="redacted-host"><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_evaluation_failure_drains_sibling_before_discard[False-p0]" time="0.002"><failure message="AssertionError: round returned without cancelling its sibling evaluation&#10;assert &lt;Task pending name='Task-3' coro=&lt;Event.wait() running at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:212&gt; wait_for=&lt;Future pending cb=[Task.task_wakeup()]&gt;&gt; in {&lt;Task finished name='Task-2' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>.../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}">fail_policy = 'p0', cleanup_error = False
+
+    @pytest.mark.parametrize("fail_policy", ["p0", "p1"])
+    @pytest.mark.parametrize("cleanup_error", [False, True])
+    def test_evaluation_failure_drains_sibling_before_discard(fail_policy, cleanup_error):
+        async def run():
+            hooks = Hooks(fail_policy=fail_policy, cleanup_error=cleanup_error)
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            sibling = 1 if fail_policy == "p0" else 0
+            signal = asyncio.create_task(hooks.cancelling[sibling].wait())
+            try:
+                done, _ = await asyncio.wait({task, signal}, timeout=2,
+                                             return_when=asyncio.FIRST_COMPLETED)
+                assert signal in done, "round returned without cancelling its sibling evaluation"
+                await repeat_cancel(task)
+                assert not task.done()
+                assert loop._round_lock.locked()
+                assert "p1" in hooks.states
+                assert not hooks.discard_started.is_set()
+                hooks.cleanup_release.set()
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeated cancel interrupted candidate discard"
+                assert loop._round_lock.locked()
+                hooks.discard_release.set()
+                with pytest.raises(RuntimeError, match="initial evaluation failure"):
+                    await task
+                assert hooks.cleaned[sibling]
+                assert all(t.done() for t in hooks.tasks)
+                assert hooks.events[-1] == "discard-finished"
+                assert "p1" not in hooks.states
+                assert not loop._round_lock.locked()
+            finally:
+                signal.cancel()
+                await release_and_retrieve(hooks, task, signal)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(fail_policy=fail_policy, cleanup_error=cleanup_error)
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        sibling = 1 if fail_policy == "p0" else 0
+        signal = asyncio.create_task(hooks.cancelling[sibling].wait())
+        try:
+            done, _ = await asyncio.wait({task, signal}, timeout=2,
+                                         return_when=asyncio.FIRST_COMPLETED)
+&gt;           assert signal in done, "round returned without cancelling its sibling evaluation"
+E           AssertionError: round returned without cancelling its sibling evaluation
+E           assert &lt;Task pending name='Task-3' coro=&lt;Event.wait() running at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:212&gt; wait_for=&lt;Future pending cb=[Task.task_wakeup()]&gt;&gt; in {&lt;Task finished name='Task-2' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>.../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}
+
+tests/test_engine_evaluation_lifecycle.py:124: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_evaluation_failure_drains_sibling_before_discard[False-p1]" time="0.002"><failure message="AssertionError: round returned without cancelling its sibling evaluation&#10;assert &lt;Task pending name='Task-12' coro=&lt;Event.wait() running at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:212&gt; wait_for=&lt;Future pending cb=[Task.task_wakeup()]&gt;&gt; in {&lt;Task finished name='Task-11' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>.../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}">fail_policy = 'p1', cleanup_error = False
+
+    @pytest.mark.parametrize("fail_policy", ["p0", "p1"])
+    @pytest.mark.parametrize("cleanup_error", [False, True])
+    def test_evaluation_failure_drains_sibling_before_discard(fail_policy, cleanup_error):
+        async def run():
+            hooks = Hooks(fail_policy=fail_policy, cleanup_error=cleanup_error)
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            sibling = 1 if fail_policy == "p0" else 0
+            signal = asyncio.create_task(hooks.cancelling[sibling].wait())
+            try:
+                done, _ = await asyncio.wait({task, signal}, timeout=2,
+                                             return_when=asyncio.FIRST_COMPLETED)
+                assert signal in done, "round returned without cancelling its sibling evaluation"
+                await repeat_cancel(task)
+                assert not task.done()
+                assert loop._round_lock.locked()
+                assert "p1" in hooks.states
+                assert not hooks.discard_started.is_set()
+                hooks.cleanup_release.set()
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeated cancel interrupted candidate discard"
+                assert loop._round_lock.locked()
+                hooks.discard_release.set()
+                with pytest.raises(RuntimeError, match="initial evaluation failure"):
+                    await task
+                assert hooks.cleaned[sibling]
+                assert all(t.done() for t in hooks.tasks)
+                assert hooks.events[-1] == "discard-finished"
+                assert "p1" not in hooks.states
+                assert not loop._round_lock.locked()
+            finally:
+                signal.cancel()
+                await release_and_retrieve(hooks, task, signal)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(fail_policy=fail_policy, cleanup_error=cleanup_error)
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        sibling = 1 if fail_policy == "p0" else 0
+        signal = asyncio.create_task(hooks.cancelling[sibling].wait())
+        try:
+            done, _ = await asyncio.wait({task, signal}, timeout=2,
+                                         return_when=asyncio.FIRST_COMPLETED)
+&gt;           assert signal in done, "round returned without cancelling its sibling evaluation"
+E           AssertionError: round returned without cancelling its sibling evaluation
+E           assert &lt;Task pending name='Task-12' coro=&lt;Event.wait() running at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:212&gt; wait_for=&lt;Future pending cb=[Task.task_wakeup()]&gt;&gt; in {&lt;Task finished name='Task-11' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>.../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}
+
+tests/test_engine_evaluation_lifecycle.py:124: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_evaluation_failure_drains_sibling_before_discard[True-p0]" time="0.002"><failure message="AssertionError: round returned without cancelling its sibling evaluation&#10;assert &lt;Task pending name='Task-21' coro=&lt;Event.wait() running at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:212&gt; wait_for=&lt;Future pending cb=[Task.task_wakeup()]&gt;&gt; in {&lt;Task finished name='Task-20' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>.../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}">fail_policy = 'p0', cleanup_error = True
+
+    @pytest.mark.parametrize("fail_policy", ["p0", "p1"])
+    @pytest.mark.parametrize("cleanup_error", [False, True])
+    def test_evaluation_failure_drains_sibling_before_discard(fail_policy, cleanup_error):
+        async def run():
+            hooks = Hooks(fail_policy=fail_policy, cleanup_error=cleanup_error)
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            sibling = 1 if fail_policy == "p0" else 0
+            signal = asyncio.create_task(hooks.cancelling[sibling].wait())
+            try:
+                done, _ = await asyncio.wait({task, signal}, timeout=2,
+                                             return_when=asyncio.FIRST_COMPLETED)
+                assert signal in done, "round returned without cancelling its sibling evaluation"
+                await repeat_cancel(task)
+                assert not task.done()
+                assert loop._round_lock.locked()
+                assert "p1" in hooks.states
+                assert not hooks.discard_started.is_set()
+                hooks.cleanup_release.set()
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeated cancel interrupted candidate discard"
+                assert loop._round_lock.locked()
+                hooks.discard_release.set()
+                with pytest.raises(RuntimeError, match="initial evaluation failure"):
+                    await task
+                assert hooks.cleaned[sibling]
+                assert all(t.done() for t in hooks.tasks)
+                assert hooks.events[-1] == "discard-finished"
+                assert "p1" not in hooks.states
+                assert not loop._round_lock.locked()
+            finally:
+                signal.cancel()
+                await release_and_retrieve(hooks, task, signal)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(fail_policy=fail_policy, cleanup_error=cleanup_error)
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        sibling = 1 if fail_policy == "p0" else 0
+        signal = asyncio.create_task(hooks.cancelling[sibling].wait())
+        try:
+            done, _ = await asyncio.wait({task, signal}, timeout=2,
+                                         return_when=asyncio.FIRST_COMPLETED)
+&gt;           assert signal in done, "round returned without cancelling its sibling evaluation"
+E           AssertionError: round returned without cancelling its sibling evaluation
+E           assert &lt;Task pending name='Task-21' coro=&lt;Event.wait() running at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:212&gt; wait_for=&lt;Future pending cb=[Task.task_wakeup()]&gt;&gt; in {&lt;Task finished name='Task-20' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>.../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}
+
+tests/test_engine_evaluation_lifecycle.py:124: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_evaluation_failure_drains_sibling_before_discard[True-p1]" time="0.001"><failure message="AssertionError: round returned without cancelling its sibling evaluation&#10;assert &lt;Task pending name='Task-30' coro=&lt;Event.wait() running at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:212&gt; wait_for=&lt;Future pending cb=[Task.task_wakeup()]&gt;&gt; in {&lt;Task finished name='Task-29' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>.../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}">fail_policy = 'p1', cleanup_error = True
+
+    @pytest.mark.parametrize("fail_policy", ["p0", "p1"])
+    @pytest.mark.parametrize("cleanup_error", [False, True])
+    def test_evaluation_failure_drains_sibling_before_discard(fail_policy, cleanup_error):
+        async def run():
+            hooks = Hooks(fail_policy=fail_policy, cleanup_error=cleanup_error)
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            sibling = 1 if fail_policy == "p0" else 0
+            signal = asyncio.create_task(hooks.cancelling[sibling].wait())
+            try:
+                done, _ = await asyncio.wait({task, signal}, timeout=2,
+                                             return_when=asyncio.FIRST_COMPLETED)
+                assert signal in done, "round returned without cancelling its sibling evaluation"
+                await repeat_cancel(task)
+                assert not task.done()
+                assert loop._round_lock.locked()
+                assert "p1" in hooks.states
+                assert not hooks.discard_started.is_set()
+                hooks.cleanup_release.set()
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeated cancel interrupted candidate discard"
+                assert loop._round_lock.locked()
+                hooks.discard_release.set()
+                with pytest.raises(RuntimeError, match="initial evaluation failure"):
+                    await task
+                assert hooks.cleaned[sibling]
+                assert all(t.done() for t in hooks.tasks)
+                assert hooks.events[-1] == "discard-finished"
+                assert "p1" not in hooks.states
+                assert not loop._round_lock.locked()
+            finally:
+                signal.cancel()
+                await release_and_retrieve(hooks, task, signal)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(fail_policy=fail_policy, cleanup_error=cleanup_error)
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        sibling = 1 if fail_policy == "p0" else 0
+        signal = asyncio.create_task(hooks.cancelling[sibling].wait())
+        try:
+            done, _ = await asyncio.wait({task, signal}, timeout=2,
+                                         return_when=asyncio.FIRST_COMPLETED)
+&gt;           assert signal in done, "round returned without cancelling its sibling evaluation"
+E           AssertionError: round returned without cancelling its sibling evaluation
+E           assert &lt;Task pending name='Task-30' coro=&lt;Event.wait() running at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:212&gt; wait_for=&lt;Future pending cb=[Task.task_wakeup()]&gt;&gt; in {&lt;Task finished name='Task-29' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>.../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}
+
+tests/test_engine_evaluation_lifecycle.py:124: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_round_cancellation_waits_for_both_evaluations_and_discard[False-False]" time="0.002"><failure message="assert (True and False)&#10; +  where True = all([True, True])&#10; +    where [True, True] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101d4afc0&gt;.finished&#10; +  and   False = all([False, False])&#10; +    where [False, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101d4afc0&gt;.cleaned">changed = False, cleanup_error = False
+
+    @pytest.mark.parametrize("changed", [False, True])
+    @pytest.mark.parametrize("cleanup_error", [False, True])
+    def test_round_cancellation_waits_for_both_evaluations_and_discard(changed, cleanup_error):
+        async def run():
+            hooks = Hooks(changed=changed, cleanup_error=cleanup_error)
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            try:
+                await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.started)), 2)
+                task.cancel()
+                await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.cancelling)), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeat cancel escaped evaluation cleanup"
+                assert loop._round_lock.locked()
+                assert not hooks.discard_started.is_set()
+                hooks.cleanup_release.set()
+                if changed:
+                    await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                    await repeat_cancel(task)
+                    assert not task.done(), "repeat cancel escaped discard"
+                    hooks.discard_release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                assert all(hooks.finished) and all(hooks.cleaned)
+                assert all(t.done() for t in hooks.tasks)
+                assert not loop._round_lock.locked()
+                assert set(hooks.states) == {"p0"}
+                assert hooks.discard_started.is_set() == changed
+            finally:
+                await release_and_retrieve(hooks, task)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(changed=changed, cleanup_error=cleanup_error)
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        try:
+            await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.started)), 2)
+            task.cancel()
+            await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.cancelling)), 2)
+            await repeat_cancel(task)
+            assert not task.done(), "repeat cancel escaped evaluation cleanup"
+            assert loop._round_lock.locked()
+            assert not hooks.discard_started.is_set()
+            hooks.cleanup_release.set()
+            if changed:
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeat cancel escaped discard"
+                hooks.discard_release.set()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+&gt;           assert all(hooks.finished) and all(hooks.cleaned)
+E           assert (True and False)
+E            +  where True = all([True, True])
+E            +    where [True, True] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101d4afc0&gt;.finished
+E            +  and   False = all([False, False])
+E            +    where [False, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101d4afc0&gt;.cleaned
+
+tests/test_engine_evaluation_lifecycle.py:173: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_round_cancellation_waits_for_both_evaluations_and_discard[False-True]" time="0.002"><failure message="AssertionError: repeat cancel escaped discard&#10;assert not True&#10; +  where True = &lt;built-in method done of _asyncio.Task object at 0x101ff2380&gt;()&#10; +    where &lt;built-in method done of _asyncio.Task object at 0x101ff2380&gt; = &lt;Task finished name='Task-50' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>...c/vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;.done">changed = True, cleanup_error = False
+
+    @pytest.mark.parametrize("changed", [False, True])
+    @pytest.mark.parametrize("cleanup_error", [False, True])
+    def test_round_cancellation_waits_for_both_evaluations_and_discard(changed, cleanup_error):
+        async def run():
+            hooks = Hooks(changed=changed, cleanup_error=cleanup_error)
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            try:
+                await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.started)), 2)
+                task.cancel()
+                await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.cancelling)), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeat cancel escaped evaluation cleanup"
+                assert loop._round_lock.locked()
+                assert not hooks.discard_started.is_set()
+                hooks.cleanup_release.set()
+                if changed:
+                    await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                    await repeat_cancel(task)
+                    assert not task.done(), "repeat cancel escaped discard"
+                    hooks.discard_release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                assert all(hooks.finished) and all(hooks.cleaned)
+                assert all(t.done() for t in hooks.tasks)
+                assert not loop._round_lock.locked()
+                assert set(hooks.states) == {"p0"}
+                assert hooks.discard_started.is_set() == changed
+            finally:
+                await release_and_retrieve(hooks, task)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(changed=changed, cleanup_error=cleanup_error)
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        try:
+            await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.started)), 2)
+            task.cancel()
+            await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.cancelling)), 2)
+            await repeat_cancel(task)
+            assert not task.done(), "repeat cancel escaped evaluation cleanup"
+            assert loop._round_lock.locked()
+            assert not hooks.discard_started.is_set()
+            hooks.cleanup_release.set()
+            if changed:
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                await repeat_cancel(task)
+&gt;               assert not task.done(), "repeat cancel escaped discard"
+E               AssertionError: repeat cancel escaped discard
+E               assert not True
+E                +  where True = &lt;built-in method done of _asyncio.Task object at 0x101ff2380&gt;()
+E                +    where &lt;built-in method done of _asyncio.Task object at 0x101ff2380&gt; = &lt;Task finished name='Task-50' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>...c/vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;.done
+
+tests/test_engine_evaluation_lifecycle.py:169: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_round_cancellation_waits_for_both_evaluations_and_discard[True-False]" time="0.002"><failure message="assert (True and False)&#10; +  where True = all([True, True])&#10; +    where [True, True] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101d4b1a0&gt;.finished&#10; +  and   False = all([False, False])&#10; +    where [False, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101d4b1a0&gt;.cleaned">changed = False, cleanup_error = True
+
+    @pytest.mark.parametrize("changed", [False, True])
+    @pytest.mark.parametrize("cleanup_error", [False, True])
+    def test_round_cancellation_waits_for_both_evaluations_and_discard(changed, cleanup_error):
+        async def run():
+            hooks = Hooks(changed=changed, cleanup_error=cleanup_error)
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            try:
+                await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.started)), 2)
+                task.cancel()
+                await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.cancelling)), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeat cancel escaped evaluation cleanup"
+                assert loop._round_lock.locked()
+                assert not hooks.discard_started.is_set()
+                hooks.cleanup_release.set()
+                if changed:
+                    await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                    await repeat_cancel(task)
+                    assert not task.done(), "repeat cancel escaped discard"
+                    hooks.discard_release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                assert all(hooks.finished) and all(hooks.cleaned)
+                assert all(t.done() for t in hooks.tasks)
+                assert not loop._round_lock.locked()
+                assert set(hooks.states) == {"p0"}
+                assert hooks.discard_started.is_set() == changed
+            finally:
+                await release_and_retrieve(hooks, task)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(changed=changed, cleanup_error=cleanup_error)
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        try:
+            await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.started)), 2)
+            task.cancel()
+            await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.cancelling)), 2)
+            await repeat_cancel(task)
+            assert not task.done(), "repeat cancel escaped evaluation cleanup"
+            assert loop._round_lock.locked()
+            assert not hooks.discard_started.is_set()
+            hooks.cleanup_release.set()
+            if changed:
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeat cancel escaped discard"
+                hooks.discard_release.set()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+&gt;           assert all(hooks.finished) and all(hooks.cleaned)
+E           assert (True and False)
+E            +  where True = all([True, True])
+E            +    where [True, True] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101d4b1a0&gt;.finished
+E            +  and   False = all([False, False])
+E            +    where [False, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101d4b1a0&gt;.cleaned
+
+tests/test_engine_evaluation_lifecycle.py:173: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_round_cancellation_waits_for_both_evaluations_and_discard[True-True]" time="0.002"><failure message="AssertionError: repeat cancel escaped discard&#10;assert not True&#10; +  where True = &lt;built-in method done of _asyncio.Task object at 0x101ff1b40&gt;()&#10; +    where &lt;built-in method done of _asyncio.Task object at 0x101ff1b40&gt; = &lt;Task finished name='Task-74' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>...c/vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;.done">changed = True, cleanup_error = True
+
+    @pytest.mark.parametrize("changed", [False, True])
+    @pytest.mark.parametrize("cleanup_error", [False, True])
+    def test_round_cancellation_waits_for_both_evaluations_and_discard(changed, cleanup_error):
+        async def run():
+            hooks = Hooks(changed=changed, cleanup_error=cleanup_error)
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            try:
+                await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.started)), 2)
+                task.cancel()
+                await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.cancelling)), 2)
+                await repeat_cancel(task)
+                assert not task.done(), "repeat cancel escaped evaluation cleanup"
+                assert loop._round_lock.locked()
+                assert not hooks.discard_started.is_set()
+                hooks.cleanup_release.set()
+                if changed:
+                    await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                    await repeat_cancel(task)
+                    assert not task.done(), "repeat cancel escaped discard"
+                    hooks.discard_release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                assert all(hooks.finished) and all(hooks.cleaned)
+                assert all(t.done() for t in hooks.tasks)
+                assert not loop._round_lock.locked()
+                assert set(hooks.states) == {"p0"}
+                assert hooks.discard_started.is_set() == changed
+            finally:
+                await release_and_retrieve(hooks, task)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(changed=changed, cleanup_error=cleanup_error)
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        try:
+            await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.started)), 2)
+            task.cancel()
+            await asyncio.wait_for(asyncio.gather(*(s.wait() for s in hooks.cancelling)), 2)
+            await repeat_cancel(task)
+            assert not task.done(), "repeat cancel escaped evaluation cleanup"
+            assert loop._round_lock.locked()
+            assert not hooks.discard_started.is_set()
+            hooks.cleanup_release.set()
+            if changed:
+                await asyncio.wait_for(hooks.discard_started.wait(), 2)
+                await repeat_cancel(task)
+&gt;               assert not task.done(), "repeat cancel escaped discard"
+E               AssertionError: repeat cancel escaped discard
+E               assert not True
+E                +  where True = &lt;built-in method done of _asyncio.Task object at 0x101ff1b40&gt;()
+E                +    where &lt;built-in method done of _asyncio.Task object at 0x101ff1b40&gt; = &lt;Task finished name='Task-74' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>...c/vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;.done
+
+tests/test_engine_evaluation_lifecycle.py:169: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_discard_failure_is_reported_after_evaluations_end[discard_error0]" time="0.002"><failure message="AssertionError: assert AssertionError('discard preceded evaluation termination\nassert False\n +  where False = all([True, False])\n +    where [True, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101f932c0&gt;.finished') is RuntimeError('discard fixture error')&#10; +  where AssertionError('discard preceded evaluation termination\nassert False\n +  where False = all([True, False])\n +    where [True, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101f932c0&gt;.finished') = RuntimeError('evaluation failed and candidate discard failed; policy state is unknown').__cause__&#10; +    where RuntimeError('evaluation failed and candidate discard failed; policy state is unknown') = &lt;ExceptionInfo RuntimeError('evaluation failed and candidate discard failed; policy state is unknown') tblen=3&gt;.value">discard_error = RuntimeError('discard fixture error')
+
+    @pytest.mark.parametrize("discard_error", [RuntimeError("discard fixture error"), asyncio.CancelledError()])
+    def test_discard_failure_is_reported_after_evaluations_end(discard_error):
+        async def run():
+            hooks = Hooks(fail_policy="p0")
+            hooks.cleanup_release.set()
+            hooks.discard_release.set()
+            hooks.discard_error = discard_error
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            try:
+                with pytest.raises(RuntimeError, match="policy state is unknown") as caught:
+                    await task
+                assert caught.value.__cause__ is discard_error
+                assert all(hooks.finished)
+                assert all(t.done() for t in hooks.tasks)
+            finally:
+                await release_and_retrieve(hooks, task)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(fail_policy="p0")
+        hooks.cleanup_release.set()
+        hooks.discard_release.set()
+        hooks.discard_error = discard_error
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        try:
+            with pytest.raises(RuntimeError, match="policy state is unknown") as caught:
+                await task
+&gt;           assert caught.value.__cause__ is discard_error
+E           AssertionError: assert AssertionError('discard preceded evaluation termination\nassert False\n +  where False = all([True, False])\n +    where [True, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101f932c0&gt;.finished') is RuntimeError('discard fixture error')
+E            +  where AssertionError('discard preceded evaluation termination\nassert False\n +  where False = all([True, False])\n +    where [True, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101f932c0&gt;.finished') = RuntimeError('evaluation failed and candidate discard failed; policy state is unknown').__cause__
+E            +    where RuntimeError('evaluation failed and candidate discard failed; policy state is unknown') = &lt;ExceptionInfo RuntimeError('evaluation failed and candidate discard failed; policy state is unknown') tblen=3&gt;.value
+
+tests/test_engine_evaluation_lifecycle.py:196: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_discard_failure_is_reported_after_evaluations_end[discard_error1]" time="0.002"><failure message="AssertionError: assert AssertionError('discard preceded evaluation termination\nassert False\n +  where False = all([True, False])\n +    where [True, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101f91f70&gt;.finished') is CancelledError()&#10; +  where AssertionError('discard preceded evaluation termination\nassert False\n +  where False = all([True, False])\n +    where [True, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101f91f70&gt;.finished') = RuntimeError('evaluation failed and candidate discard failed; policy state is unknown').__cause__&#10; +    where RuntimeError('evaluation failed and candidate discard failed; policy state is unknown') = &lt;ExceptionInfo RuntimeError('evaluation failed and candidate discard failed; policy state is unknown') tblen=3&gt;.value">discard_error = CancelledError()
+
+    @pytest.mark.parametrize("discard_error", [RuntimeError("discard fixture error"), asyncio.CancelledError()])
+    def test_discard_failure_is_reported_after_evaluations_end(discard_error):
+        async def run():
+            hooks = Hooks(fail_policy="p0")
+            hooks.cleanup_release.set()
+            hooks.discard_release.set()
+            hooks.discard_error = discard_error
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            try:
+                with pytest.raises(RuntimeError, match="policy state is unknown") as caught:
+                    await task
+                assert caught.value.__cause__ is discard_error
+                assert all(hooks.finished)
+                assert all(t.done() for t in hooks.tasks)
+            finally:
+                await release_and_retrieve(hooks, task)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = Hooks(fail_policy="p0")
+        hooks.cleanup_release.set()
+        hooks.discard_release.set()
+        hooks.discard_error = discard_error
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        try:
+            with pytest.raises(RuntimeError, match="policy state is unknown") as caught:
+                await task
+&gt;           assert caught.value.__cause__ is discard_error
+E           AssertionError: assert AssertionError('discard preceded evaluation termination\nassert False\n +  where False = all([True, False])\n +    where [True, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101f91f70&gt;.finished') is CancelledError()
+E            +  where AssertionError('discard preceded evaluation termination\nassert False\n +  where False = all([True, False])\n +    where [True, False] = &lt;test_engine_evaluation_lifecycle.Hooks object at 0x101f91f70&gt;.finished') = RuntimeError('evaluation failed and candidate discard failed; policy state is unknown').__cause__
+E            +    where RuntimeError('evaluation failed and candidate discard failed; policy state is unknown') = &lt;ExceptionInfo RuntimeError('evaluation failed and candidate discard failed; policy state is unknown') tblen=3&gt;.value
+
+tests/test_engine_evaluation_lifecycle.py:196: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_successful_evaluations_remain_concurrent_and_precede_discard" time="0.002" /><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_already_cancelling_evaluator_is_drained_without_another_cancel[False]" time="0.002"><failure message="AssertionError: engine interrupted an evaluator already in cancellation cleanup&#10;assert not {&lt;Task finished name='Task-112' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>...&lt;Event.wait() done, defined at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:199&gt; result=True&gt;}">self_cancel = False
+
+    @pytest.mark.parametrize("self_cancel", [False, True])
+    def test_already_cancelling_evaluator_is_drained_without_another_cancel(self_cancel):
+        class AlreadyCancellingHooks(Hooks):
+            async def evaluate(self, policy_id):
+                index = 0 if policy_id == "p0" else 1
+                current = asyncio.current_task()
+                if index == 1:
+                    self.candidate_task = current
+                self.tasks.append(current)
+                self.started[index].set()
+                try:
+                    if index == 0:
+                        await self.cancelling[1].wait()
+                        raise RuntimeError("initial evaluation failure")
+                    if self_cancel:
+                        current.cancel()
+                    try:
+                        await self.evaluation_release.wait()
+                    except asyncio.CancelledError:
+                        self.cancelling[1].set()
+                        await self.cleanup_release.wait()
+                        self.cleaned[1] = True
+                        raise
+                finally:
+                    self.finished[index] = True
+    
+        async def run():
+            hooks = AlreadyCancellingHooks()
+            hooks.discard_release.set()
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            signal = asyncio.create_task(hooks.discard_started.wait())
+            try:
+                await asyncio.wait_for(hooks.started[1].wait(), 2)
+                if not self_cancel:
+                    hooks.candidate_task.cancel()
+                await asyncio.wait_for(hooks.cancelling[1].wait(), 2)
+                done, _ = await asyncio.wait({task, signal}, timeout=0.05)
+                assert not done, "engine interrupted an evaluator already in cancellation cleanup"
+                assert not hooks.finished[1]
+                assert loop._round_lock.locked()
+                hooks.cleanup_release.set()
+                with pytest.raises(RuntimeError, match="initial evaluation failure"):
+                    await task
+                assert hooks.cleaned[1]
+                assert all(hooks.finished)
+                assert all(t.done() for t in hooks.tasks)
+                assert "p1" not in hooks.states
+            finally:
+                signal.cancel()
+                await release_and_retrieve(hooks, task, signal)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:278: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = AlreadyCancellingHooks()
+        hooks.discard_release.set()
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        signal = asyncio.create_task(hooks.discard_started.wait())
+        try:
+            await asyncio.wait_for(hooks.started[1].wait(), 2)
+            if not self_cancel:
+                hooks.candidate_task.cancel()
+            await asyncio.wait_for(hooks.cancelling[1].wait(), 2)
+            done, _ = await asyncio.wait({task, signal}, timeout=0.05)
+&gt;           assert not done, "engine interrupted an evaluator already in cancellation cleanup"
+E           AssertionError: engine interrupted an evaluator already in cancellation cleanup
+E           assert not {&lt;Task finished name='Task-112' coro=&lt;CapabilityLoop.run_round() done, defined at <TMPDIR>...&lt;Event.wait() done, defined at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/locks.py:199&gt; result=True&gt;}
+
+tests/test_engine_evaluation_lifecycle.py:264: AssertionError</failure></testcase><testcase classname="tests.test_engine_evaluation_lifecycle" name="test_already_cancelling_evaluator_is_drained_without_another_cancel[True]" time="0.002"><failure message="AssertionError: engine interrupted an evaluator already in cancellation cleanup&#10;assert not {&lt;Task finished name='Task-122' coro=&lt;Event.wait() done, defined at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3..../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}">self_cancel = True
+
+    @pytest.mark.parametrize("self_cancel", [False, True])
+    def test_already_cancelling_evaluator_is_drained_without_another_cancel(self_cancel):
+        class AlreadyCancellingHooks(Hooks):
+            async def evaluate(self, policy_id):
+                index = 0 if policy_id == "p0" else 1
+                current = asyncio.current_task()
+                if index == 1:
+                    self.candidate_task = current
+                self.tasks.append(current)
+                self.started[index].set()
+                try:
+                    if index == 0:
+                        await self.cancelling[1].wait()
+                        raise RuntimeError("initial evaluation failure")
+                    if self_cancel:
+                        current.cancel()
+                    try:
+                        await self.evaluation_release.wait()
+                    except asyncio.CancelledError:
+                        self.cancelling[1].set()
+                        await self.cleanup_release.wait()
+                        self.cleaned[1] = True
+                        raise
+                finally:
+                    self.finished[index] = True
+    
+        async def run():
+            hooks = AlreadyCancellingHooks()
+            hooks.discard_release.set()
+            loop = make_loop(hooks)
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            signal = asyncio.create_task(hooks.discard_started.wait())
+            try:
+                await asyncio.wait_for(hooks.started[1].wait(), 2)
+                if not self_cancel:
+                    hooks.candidate_task.cancel()
+                await asyncio.wait_for(hooks.cancelling[1].wait(), 2)
+                done, _ = await asyncio.wait({task, signal}, timeout=0.05)
+                assert not done, "engine interrupted an evaluator already in cancellation cleanup"
+                assert not hooks.finished[1]
+                assert loop._round_lock.locked()
+                hooks.cleanup_release.set()
+                with pytest.raises(RuntimeError, match="initial evaluation failure"):
+                    await task
+                assert hooks.cleaned[1]
+                assert all(hooks.finished)
+                assert all(t.done() for t in hooks.tasks)
+                assert "p1" not in hooks.states
+            finally:
+                signal.cancel()
+                await release_and_retrieve(hooks, task, signal)
+    
+&gt;       asyncio.run(run())
+
+tests/test_engine_evaluation_lifecycle.py:278: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = AlreadyCancellingHooks()
+        hooks.discard_release.set()
+        loop = make_loop(hooks)
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        signal = asyncio.create_task(hooks.discard_started.wait())
+        try:
+            await asyncio.wait_for(hooks.started[1].wait(), 2)
+            if not self_cancel:
+                hooks.candidate_task.cancel()
+            await asyncio.wait_for(hooks.cancelling[1].wait(), 2)
+            done, _ = await asyncio.wait({task, signal}, timeout=0.05)
+&gt;           assert not done, "engine interrupted an evaluator already in cancellation cleanup"
+E           AssertionError: engine interrupted an evaluator already in cancellation cleanup
+E           assert not {&lt;Task finished name='Task-122' coro=&lt;Event.wait() done, defined at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3..../vare/engine.py:86&gt; exception=RuntimeError('evaluation failed and candidate discard failed; policy state is unknown')&gt;}
+
+tests/test_engine_evaluation_lifecycle.py:264: AssertionError</failure></testcase></testsuite></testsuites>

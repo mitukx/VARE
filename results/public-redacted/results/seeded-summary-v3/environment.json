@@ -1,0 +1,29 @@
+{
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "executable": "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python3.12",
+  "packages": {
+    "pytest": "8.4.2",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "numpy": "2.4.4",
+    "sympy": "1.14.0",
+    "antlr4-python3-runtime": "4.13.2",
+    "ruff": "not in test interpreter",
+    "mypy": "not in test interpreter"
+  },
+  "quality_runtime": "separate Python 3.12 venv, Ruff 0.15.12 and mypy 1.19.1",
+  "commands": {
+    "full_suite": "PATH=\"<quality-venv>/bin:$PATH\" PYTHONPATH=\"$PWD/src\" PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3.12 -m pytest -v -p no:cacheprovider --junitxml=<output>/full-suite.xml",
+    "replay": "PYTHONPATH=\"$PWD/src\" PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3.12 scripts/reproduce_seeded_summary_v3.py --output <fresh-output>",
+    "mypy": "mypy src/vare/format_vs_correctness_seeded_summary_v3.py --follow-imports=silent",
+    "ruff": "ruff check src/vare/format_vs_correctness_seeded_summary_v3.py scripts/summarize_format_vs_correctness_seeded_v3.py tests/test_seeded_summary_v3.py scripts/reproduce_seeded_summary_v3.py reproducers/seeded_summary_v3.py reproducers/seeded_summary_fixture_v1.py reproducers/seeded_summary_progress_snapshot.py"
+  },
+  "model_training": false,
+  "model_generation": false,
+  "actual_confirmation_tasks_inspected_in_fixtures": false,
+  "execution": "CPU synthetic analysis/tests; optional CPU torch tests in broader suite",
+  "independent_human_review": false,
+  "full_suite_executable": "<SESSION_ROOT>/work/quality/bin/python3.12",
+  "replay_executable": "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python3.12"
+}

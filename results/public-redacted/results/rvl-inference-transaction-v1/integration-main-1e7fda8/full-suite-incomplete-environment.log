@@ -1,0 +1,100 @@
+....F.............................................................F..... [ 20%]
+...............................................................F........ [ 41%]
+........................................................................ [ 61%]
+........................................................................ [ 82%]
+.............................................................            [100%]
+=================================== FAILURES ===================================
+_________________ test_check_script_passes_on_this_repository __________________
+
+    def test_check_script_passes_on_this_repository():
+        proc = subprocess.run(
+            ["python3", "scripts/check_tracked_blob_budget.py"],
+            cwd=REPO,
+            check=False,
+            capture_output=True,
+            text=True,
+            env={**os.environ, "PYTHONPATH": "src"},
+        )
+>       assert proc.returncode == 0, proc.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<SESSION_ROOT>/work/VARE/scripts/check_tracked_blob_budget.py", line 49, in <module>
+E             raise SystemExit(main())
+E           File "<SESSION_ROOT>/work/VARE/scripts/check_tracked_blob_budget.py", line 36, in main
+E             tracked = list_tracked_blobs(repo)
+E           File "<SESSION_ROOT>/work/VARE/src/vare/blob_budget.py", line 129, in list_tracked_blobs
+E             return [(path, oid, sizes[oid]) for path, oid in zip(paths, oids, strict=True)]
+E         TypeError: zip() takes no keyword arguments
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['python3', 'scripts/check_tracked_blob_budget.py'], returncode=1, stdout='', stderr='Traceback ...path, oid, sizes[oid]) for path, oid in zip(paths, oids, strict=True)]\nTypeError: zip() takes no keyword arguments\n').returncode
+
+tests/test_blob_budget.py:81: AssertionError
+_________________ test_smoke_spec_hash_matches_retained_record _________________
+
+    def test_smoke_spec_hash_matches_retained_record():
+        from vare.evidence import sha256_json
+    
+        recorded = json.loads(
+>           (ROOT / "results/promotion-required-slices-v1/nested-python-path/without_venv_path.json").read_text(
+                encoding="utf-8"
+            )
+        )
+
+tests/test_environments.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('<SESSION_ROOT>/work/VARE/results/promotion-required-slices-v1/nested-python-path/without_venv_path.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '<SESSION_ROOT>/work/VARE/results/promotion-required-slices-v1/nested-python-path/without_venv_path.json'
+
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+________________ test_seed_spec_hash_matches_recorded_evidence _________________
+
+    def test_seed_spec_hash_matches_recorded_evidence():
+        recorded = json.loads(
+>           (ROOT / "evidence/historical_task_seed_v0.3.0.json").read_text(encoding="utf-8")
+        )
+
+tests/test_historical_task_seed.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('<SESSION_ROOT>/work/VARE/evidence/historical_task_seed_v0.3.0.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '<SESSION_ROOT>/work/VARE/evidence/historical_task_seed_v0.3.0.json'
+
+<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_blob_budget.py::test_check_script_passes_on_this_repository
+FAILED tests/test_environments.py::test_smoke_spec_hash_matches_retained_record
+FAILED tests/test_historical_task_seed.py::test_seed_spec_hash_matches_recorded_evidence
+3 failed, 346 passed in 65.60s (0:01:05)

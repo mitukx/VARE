@@ -1,0 +1,142 @@
+{
+  "arms": [
+    {
+      "name": "baseline",
+      "required_outcome": "Every targeted regression fails at its intended behavioral assertion; no import/collection error, skip, timeout, or unrelated failure.",
+      "source_revision": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+      "test_overlay": "exact PR-added test delta copied from frozen merge commit"
+    },
+    {
+      "name": "wrong-mutant",
+      "required_outcome": "The identical targeted test overlay rejects the mutant at the intended assertion.",
+      "source_mutation": "After reading source/tests, construct one mutant that relaxes/removes only the new type-rejection guard and therefore accepts at least one rejected type. Hash-bind its exact diff before any test execution.",
+      "source_revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149"
+    },
+    {
+      "name": "upstream-fixed",
+      "required_outcome": "Every targeted regression passes; no skip or unrelated failure.",
+      "source_revision": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+      "test_overlay": "same exact PR-added test delta and support files as both other arms"
+    }
+  ],
+  "authorization": {
+    "agent_or_model_inference": false,
+    "development_split_assignment": false,
+    "heldout_access": false,
+    "paid_compute_or_api": false,
+    "source_and_test_access_after_freeze": true,
+    "source_level_task_qualification_only": true,
+    "training": false
+  },
+  "candidate": {
+    "base_ref_sha_at_capture": "67d677bdef939cb95b433dfcd43a4eca234aa29b",
+    "changed_paths_from_frozen_metadata": [
+      "docs/serving/integrations/claude_code.md",
+      "tests/entrypoints/anthropic/test_anthropic_messages_conversion.py",
+      "tests/entrypoints/anthropic/test_messages.py",
+      "vllm/entrypoints/anthropic/protocol.py"
+    ],
+    "expected_test_paths_from_frozen_metadata": [
+      "tests/entrypoints/anthropic/test_anthropic_messages_conversion.py",
+      "tests/entrypoints/anthropic/test_messages.py"
+    ],
+    "head_sha": "46c6391a443952a40c8942abad407bd1587125b0",
+    "license_to_verify_after_protocol_freeze": "Apache-2.0",
+    "merge_base_sha": "8777b4c86ce89ba21cb8376621ad8a7d7a9a1a59",
+    "merge_commit_sha": "5829ca82e82ec0b17c3da0100446cbca25cb1149",
+    "metadata_overlap_review_path": "results/mlsys-fresh-development-candidate-selection-v2/task-family-overlap-review-v1.json",
+    "metadata_overlap_review_sha256": "cf32ccc984744ed074b938ef3ab10f39c4a0486159ae73665f59c8d09b8279e2",
+    "pull_request": 64575,
+    "qualification_status_before_this_protocol": "UNQUALIFIED",
+    "repository": "vllm-project/vllm",
+    "selection_path": "results/mlsys-fresh-development-candidate-selection-v2/selection.json",
+    "selection_sha256": "fdf5c2977f8eba36bc31b72057c2eca66923ec2dd1a77a396f30377dcaee5bd8",
+    "split_assignment": "UNASSIGNED",
+    "task_id": "vllm-64575-anthropic-tool-type-validation",
+    "title": "[Frontend] Reject Anthropic-defined tools by type in /v1/messages",
+    "url": "https://github.com/vllm-project/vllm/pull/64575"
+  },
+  "frozen_at_utc": "2026-10-31T03:57:58Z",
+  "frozen_inputs": {
+    "protocols/mlsys_fresh_development_candidate_discovery_v4.json": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+    "protocols/mlsys_fresh_development_candidate_selection_v1.json": "19254086ccd3093ed5a85518f4d49088fa9323b171e8ed190e0dd13f5d37ae10",
+    "protocols/mlsys_fresh_development_candidate_selection_v2.json": "e728ebc6dd5fddf930b3d11bab093eab1b601fb3fa596cfbbb55e001dae28359",
+    "protocols/mlsys_fresh_development_candidate_selection_v2_addendum_1.json": "bc185d74541c2b6ed6c72cbf5e92bb56155dd7a9a2db708f4bf729e1a2bf1298",
+    "protocols/mlsys_fresh_development_candidate_selection_v2_addendum_2.json": "e489d47309971ff3ec4725ca326b7de8eb17cd36bd830980cecfc71fe0a6bb7a",
+    "protocols/mlsys_fresh_development_task_family_overlap_v3.json": "a0e52e43c08228057e397023027a53be214f6889955cef80eefb93ab083ada42",
+    "protocols/mlsys_fresh_development_task_family_overlap_v4.json": "0d80c1d5c3262ec7ea1f4af551c04f01f5131202ce5bc1119224b93a0926092a",
+    "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-review-v1.json": "6a2f6bcff7bf58a2d02d0a1f83c23e43fd3f2a5449d683dbbfc495de97df9bb0",
+    "results/mlsys-fresh-development-candidate-selection-v2/selection.json": "fdf5c2977f8eba36bc31b72057c2eca66923ec2dd1a77a396f30377dcaee5bd8",
+    "results/mlsys-fresh-development-candidate-selection-v2/task-family-overlap-evidence-manifest.json": "80480ca2b95a57f46ea3071cc2c87bf84e56dbbdf07d9b59e26e187eb0bb3423",
+    "results/mlsys-fresh-development-candidate-selection-v2/task-family-overlap-report.md": "413ac48a581b0110ffc40cb6397e2135af0f5d2d73d15660d3073543e119820c",
+    "results/mlsys-fresh-development-candidate-selection-v2/task-family-overlap-review-v1.json": "cf32ccc984744ed074b938ef3ab10f39c4a0486159ae73665f59c8d09b8279e2"
+  },
+  "isolation": {
+    "candidate_or_model": "No model/agent in source qualification.",
+    "heldout": "No access.",
+    "host": "macOS Apple Silicon; Docker daemon unavailable at protocol freeze; 32 GiB host memory and 21 GiB disk available.",
+    "isolation_smoke": "A generic preflight profile denied network and writes outside its allowed <TMP> subpath, and allowed a write inside that subpath; this did not load candidate source or tests.",
+    "network": "Disabled for every test process.",
+    "sandbox": "macOS sandbox-exec Seatbelt profile; default deny; allow reads and process execution; deny network; allow writes only to the arm-specific output directory.",
+    "source_tree": "Exact arm-specific checkout, read-only under Seatbelt.",
+    "test_cache": "Disabled or directed to the arm-specific writable directory.",
+    "trusted_runner_and_profile": "Outside candidate source checkout and read-only under Seatbelt.",
+    "trusted_test_overlay": "Outside candidate source checkout and read-only under Seatbelt.",
+    "writable_area": "One isolated arm-specific directory under <TMP>/vare-vllm-64575-qualification/writable; no other writes."
+  },
+  "limitations": [
+    "A successful result establishes only source-level task and evaluator reproducibility.",
+    "The task and its public PR may have appeared in model pretraining data; exposure is unknown.",
+    "No model capability, learning, RL improvement, or pretraining independence is established."
+  ],
+  "output_path": "results/mlsys-fresh-vllm-64575-source-qualification-v1/",
+  "pre_source_access_record": {
+    "candidate_pr_body_or_comments_opened": false,
+    "candidate_source_opened": false,
+    "candidate_tests_opened": false,
+    "heldout_access": false,
+    "model_or_agent_inference": false,
+    "patch_opened": false
+  },
+  "protocol_id": "mlsys-fresh-vllm-64575-source-qualification-v1",
+  "protocol_status": "frozen_before_candidate_source_or_test_content_access; no qualification result; no inference authorized",
+  "purpose": "Qualify one metadata-selected, metadata-independent public Development candidate at source level using exact merge-base baseline, upstream-fixed source, and a frozen targeted wrong mutant before considering any model attempt.",
+  "qualification_gate": "QUALIFIED_SOURCE_LEVEL only if the baseline, wrong-mutant, and upstream-fixed arms satisfy the exact frozen outcomes under identical test overlay, runner, sandbox, and budgets.",
+  "qualification_gates": [
+    "After this protocol is committed and pushed, retrieve only the exact repository objects by frozen SHA; verify repository identity, merge-base ancestry, merge commit/head, license, and expected changed-path metadata.",
+    "Inspect only the source and changed test paths required to identify the PR-added regression; do not inspect any Held-Out task or evaluator.",
+    "Construct an independent trusted test overlay using only the candidate PR-added regression test(s) from the two metadata-listed test files. Do not edit their assertions.",
+    "Before any candidate test executes, freeze an execution addendum binding exact selected test IDs, test/support-file hashes, runner hash, arm source hashes, wrong-mutant diff hash, sandbox profile hash, commands, and environment.",
+    "The baseline uses source at exact merge_base_sha with the frozen test overlay. It must fail every targeted regression at the intended assertion with no import error, collection error, skip, timeout, or unrelated failure.",
+    "The wrong-mutant uses exact upstream-fixed source with only a predeclared incorrect relaxation/removal of the newly introduced rejection guard so at least one unsupported tool type is accepted. It must fail the same targeted regression at the intended assertion.",
+    "The upstream-fixed arm uses source at exact merge_commit_sha and the identical frozen test overlay; every targeted regression must pass with no skip or unrelated failure.",
+    "A source qualification passes only if all input hashes and identities match, all three arms meet their exact outcome gate, the grader boundary is validated, and resource/isolation limits hold."
+  ],
+  "run_order_and_limits": {
+    "accelerator": "not authorized; CPU only",
+    "baseline_gate": "Do not run wrong-mutant or fixed unless all baseline regressions fail at their intended assertions.",
+    "maximum_concurrent_arms": 1,
+    "maximum_invocations_per_arm": 1,
+    "maximum_paid_compute_or_api_spend_usd": 0,
+    "maximum_resident_memory_bytes": 4294967296,
+    "maximum_wall_seconds_per_arm": 600,
+    "mutant_gate": "Do not run fixed unless all wrong-mutant regressions fail at their intended assertions.",
+    "order": [
+      "baseline",
+      "wrong-mutant",
+      "upstream-fixed"
+    ],
+    "retry_rule": "Any arm invocation consumes that arm. Stop on an unexpected result, timeout, import/collection error, resource breach, or isolation failure. Retry only under a new hash-bound addendum frozen before retry."
+  },
+  "schema_version": 1,
+  "source_main_commit": "416f35c465712898e8e5764a8e43193ef86e7afb",
+  "stop_rules": [
+    "Do not fetch or inspect PR body, review comments, or unrelated patches.",
+    "Do not run the full vLLM test suite or any test outside the frozen addendum.",
+    "Do not continue if required tests need accelerator execution, network access, external services, or exceed resource limits.",
+    "Do not expose candidate prompt or source patch to any model or agent.",
+    "Keep qualification result separate from task split assignment and model capability.",
+    "Public pretraining exposure remains unknown even if the source-level qualification passes."
+  ],
+  "work_branch_pre_source_commit": "9f25e2c669d54a12d009142d69717ecef9f092bf"
+}

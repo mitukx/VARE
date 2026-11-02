@@ -1,0 +1,62 @@
+...............................F...........................              [100%]
+=================================== FAILURES ===================================
+__________ test_rehashed_protocol_snapshot_must_match_declared_digest __________
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-v2-main')
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-394/test_rehashed_protocol_snapsho0')
+
+    def test_rehashed_protocol_snapshot_must_match_declared_digest(audit_records,tmp_path):
+        changed=tmp_path/"protocol-digest-conflict"
+        shutil.copytree(audit_records,changed)
+        protocol_path=changed/"sources/benchmarks/e2e_rl_continuation_v2/protocol.json"
+        protocol=auditor.read(protocol_path)
+        protocol["objective"]+=" tampered after run"
+        bench.atomic_json(protocol_path,protocol)
+        manifest=auditor.read(changed/"manifest.json")
+        source_name="benchmarks/e2e_rl_continuation_v2/protocol.json"
+        manifest["sources"][source_name]=auditor.sha(protocol_path)
+        bench.atomic_json(changed/"manifest.json",manifest)
+        reseal_records(changed)
+        with pytest.raises(ValueError,match="declared protocol snapshot digest"):
+>           auditor.audit(changed)
+
+tests/test_e2e_rl_continuation.py:308: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/audit_e2e_rl_continuation.py:127: in audit
+    need(set(manifest.get("sources",{}))==EXPECTED_SOURCES and
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ok = False, message = 'pinned source inventory differs'
+
+    def need(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: pinned source inventory differs
+
+scripts/audit_e2e_rl_continuation.py:35: ValueError
+
+During handling of the above exception, another exception occurred:
+
+audit_records = PosixPath('<SESSION_ROOT>/work/continuation-v2-main')
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-394/test_rehashed_protocol_snapsho0')
+
+    def test_rehashed_protocol_snapshot_must_match_declared_digest(audit_records,tmp_path):
+        changed=tmp_path/"protocol-digest-conflict"
+        shutil.copytree(audit_records,changed)
+        protocol_path=changed/"sources/benchmarks/e2e_rl_continuation_v2/protocol.json"
+        protocol=auditor.read(protocol_path)
+        protocol["objective"]+=" tampered after run"
+        bench.atomic_json(protocol_path,protocol)
+        manifest=auditor.read(changed/"manifest.json")
+        source_name="benchmarks/e2e_rl_continuation_v2/protocol.json"
+        manifest["sources"][source_name]=auditor.sha(protocol_path)
+        bench.atomic_json(changed/"manifest.json",manifest)
+        reseal_records(changed)
+>       with pytest.raises(ValueError,match="declared protocol snapshot digest"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'declared protocol snapshot digest'
+E        Input: 'pinned source inventory differs'
+
+tests/test_e2e_rl_continuation.py:307: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_e2e_rl_continuation.py::test_rehashed_protocol_snapshot_must_match_declared_digest

@@ -1,0 +1,13 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.12, pytest-8.4.2, pluggy-1.6.0 -- <HOMEBREW_PREFIX>/Caskroom/miniforge/base/bin/python3.12
+cachedir: .pytest_cache
+rootdir: ${VARE_CHECKOUT}
+configfile: pyproject.toml
+collecting ... collected 4 items
+
+tests/test_urllib3_3352_evaluator.py::test_request_line_reader_obeys_absolute_deadline_under_slow_drip PASSED [ 25%]
+tests/test_environment_catalog.py::test_catalog_rollout_and_dynamic_verifier PASSED [ 50%]
+tests/test_environment_catalog.py::test_rollout_rejects_task_metadata_override PASSED [ 75%]
+tests/test_environment_catalog.py::test_verifier_rejects_attempt_task_id_override PASSED [100%]
+
+============================== 4 passed in 0.63s ===============================

@@ -1,0 +1,21 @@
+{
+  "excluded_integration_test": {
+    "name": "test_anthropic_server_tool_is_rejected",
+    "reason": "Requires the repository server/client integration fixture; this CPU qualification isolates the request-model regression class."
+  },
+  "extracted_helper_sha256": "929012581df1513edb7a4baa62b4c17dfe111f0e8dcd41783d90b4cfcb01fdd6",
+  "extracted_test_class_sha256": "ac4395a1ab438d32d1f4511c4900b1dc2504a8d496260828a99358886b87efd8",
+  "files": {
+    "test_anthropic_tool_definitions.py": {
+      "bytes": 3098,
+      "sha256": "a360f600e26e8ca1db56e18236bb00074d84a5ec5868589ff43bd192f3cfd1f8"
+    },
+    "upstream_test_anthropic_messages_conversion.py": {
+      "bytes": 90224,
+      "sha256": "1447d1b4b42160b0be5e48a495e5424bd94652fabf28478e17507d8f5bbb66f3"
+    }
+  },
+  "schema_version": 1,
+  "upstream_test_path": "<TMP>/vare-vllm-64575-qualification/fixed/tests/entrypoints/anthropic/test_anthropic_messages_conversion.py",
+  "upstream_test_sha256": "1447d1b4b42160b0be5e48a495e5424bd94652fabf28478e17507d8f5bbb66f3"
+}

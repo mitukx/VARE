@@ -1,0 +1,7 @@
+(version 1)
+(deny default)
+(allow file-read*)
+(allow process*)
+(allow sysctl-read)
+(allow file-write* (subpath "<TMP>/vare-vllm-64575-qualification/writable/baseline"))
+(deny network*)

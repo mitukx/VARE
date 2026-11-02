@@ -1,0 +1,80 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___________ test_pre_reservation_budget_failure_releases_both_fences ___________
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-310/test_pre_reservation_budget_fa0')
+
+    def test_pre_reservation_budget_failure_releases_both_fences(tmp_path):
+        from dataclasses import replace
+        store, adapter, loop, hooks = setup(tmp_path)
+        loop.config = replace(loop.config,replay_batch_size=1)
+        with pytest.raises(ValueError,match="complete group exceeds"):
+            asyncio.run(adapter.advance(loop,round_index=0))
+        assert adapter.pending() is None and store.counts()=={"verified":2}
+>       assert loop.runtime_coordinator.failure is None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+tests/test_trajectory_learner.py:263: AssertionError
+________________ test_cancelled_idle_poll_releases_both_fences _________________
+
+tmp_path = PosixPath('<TMPDIR>/pytest-of-user/pytest-310/test_cancelled_idle_poll_relea0')
+
+    def test_cancelled_idle_poll_releases_both_fences(tmp_path):
+        import threading
+        store, adapter, loop, hooks = setup(tmp_path)
+        store.cancel("t0")
+        original = adapter.claim
+        entered, release = threading.Event(), threading.Event()
+        def idle_claim(*args,**kwargs):
+            result = original(*args,**kwargs)
+            assert result is None
+            entered.set()
+            assert release.wait(2)
+            return result
+        adapter.claim = idle_claim
+        async def case():
+            task=asyncio.create_task(adapter.advance(loop,round_index=0))
+            try:
+                assert await asyncio.to_thread(entered.wait,2)
+                task.cancel()
+                release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+            finally:
+                release.set()
+            assert loop.runtime_coordinator.failure is None
+            assert loop.promotion_journal.status()["round_owner_id"] is None
+>       asyncio.run(case())
+
+tests/test_trajectory_learner.py:294: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<HOMEBREW_PREFIX>/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        task=asyncio.create_task(adapter.advance(loop,round_index=0))
+        try:
+            assert await asyncio.to_thread(entered.wait,2)
+            task.cancel()
+            release.set()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+        finally:
+            release.set()
+>       assert loop.runtime_coordinator.failure is None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+tests/test_trajectory_learner.py:292: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_learner.py::test_pre_reservation_budget_failure_releases_both_fences
+FAILED tests/test_trajectory_learner.py::test_cancelled_idle_poll_releases_both_fences

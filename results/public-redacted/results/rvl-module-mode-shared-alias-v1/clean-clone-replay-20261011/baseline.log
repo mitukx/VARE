@@ -1,0 +1,28 @@
+test_restore_snapshot_preserves_shared_child_module_mode (tests.test_mini_lab_torch.TorchAcceptanceTests.test_restore_snapshot_preserves_shared_child_module_mode) ... Executing <Task finished name='Task-2' coro=<TorchAcceptanceTests.test_restore_snapshot_preserves_shared_child_module_mode() done, defined at <TMPDIR>/tmp.TuWOfvjqby/baseline/tests/test_mini_lab_torch.py:483> exception=AssertionError("Lists differ: ['per-module modes', 'subsequent dropout forward'] != []\n\nFirst list contains 2 additional elements.\nFirst extra element 0:\n'per-module modes'\n\n- ['per-module modes', 'subsequent dropout forward']\n+ []") created at <HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:100> took 0.120 seconds
+FAIL
+
+======================================================================
+FAIL: test_restore_snapshot_preserves_shared_child_module_mode (tests.test_mini_lab_torch.TorchAcceptanceTests.test_restore_snapshot_preserves_shared_child_module_mode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<HOMEBREW_PREFIX>/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "<TMPDIR>/tmp.TuWOfvjqby/baseline/tests/test_mini_lab_torch.py", line 559, in test_restore_snapshot_preserves_shared_child_module_mode
+    self.assertEqual(failures, [])
+AssertionError: Lists differ: ['per-module modes', 'subsequent dropout forward'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'per-module modes'
+
+- ['per-module modes', 'subsequent dropout forward']
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.126s
+
+FAILED (failures=1)

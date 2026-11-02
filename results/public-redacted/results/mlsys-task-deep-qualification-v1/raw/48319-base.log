@@ -1,0 +1,167 @@
+
+tests/trainer/test_trainer_checkpointing.py::TrainerBestModelTest::test_resume_from_checkpoint_with_stale_best_model_checkpoint FAILED [100%]
+100%|██████████| 6/6 [00:00<00:00, 26.49it/s] 
+tests/trainer/test_trainer_checkpointing.py::TrainerBestModelTest::test_resume_from_checkpoint_with_stale_best_model_checkpoint [FAILED] 0.44s
+
+
+=================================== FAILURES ===================================
+_ TrainerBestModelTest.test_resume_from_checkpoint_with_stale_best_model_checkpoint _
+
+self = <tests.trainer.test_trainer_checkpointing.TrainerBestModelTest testMethod=test_resume_from_checkpoint_with_stale_best_model_checkpoint>
+
+    def test_resume_from_checkpoint_with_stale_best_model_checkpoint(self):
+        def constant_metrics(_):
+            return {"accuracy": 0.5}
+    
+        with (
+            tempfile.TemporaryDirectory() as tmp_dir_a,
+            tempfile.TemporaryDirectory() as tmp_dir_moved,
+            tempfile.TemporaryDirectory() as tmp_dir_b,
+        ):
+            trainer = get_regression_trainer(
+                output_dir=tmp_dir_a,
+                learning_rate=0.1,
+                eval_strategy="steps",
+                eval_steps=2,
+                save_steps=2,
+                save_total_limit=1,
+                load_best_model_at_end=True,
+                metric_for_best_model="accuracy",
+                greater_is_better=True,
+                compute_metrics=constant_metrics,
+                max_steps=4,
+            )
+            trainer.train()
+    
+            stale_best = trainer.state.best_model_checkpoint
+            self.assertIsNotNone(stale_best)
+            # With save_total_limit=1 only the best checkpoint survived the first run
+            checkpoints_a = [os.path.basename(str(p)) for p in Path(tmp_dir_a).glob(f"{PREFIX_CHECKPOINT_DIR}-*")]
+            self.assertEqual(checkpoints_a, [os.path.basename(stale_best)])
+    
+            # Simulate the original run being deleted and its checkpoints moved elsewhere
+            moved_checkpoint = os.path.join(tmp_dir_moved, os.path.basename(stale_best))
+            shutil.move(stale_best, moved_checkpoint)
+    
+            trainer = get_regression_trainer(
+                output_dir=tmp_dir_b,
+                learning_rate=0.1,
+                eval_strategy="steps",
+                eval_steps=2,
+                save_steps=2,
+                save_total_limit=1,
+                load_best_model_at_end=True,
+                metric_for_best_model="accuracy",
+                greater_is_better=True,
+                compute_metrics=constant_metrics,
+                max_steps=6,
+            )
+            with CaptureLogger(logging.get_logger()) as cl:
+>               output = trainer.train(resume_from_checkpoint=moved_checkpoint)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/vare-transformers-48319-base/tests/trainer/test_trainer_checkpointing.py:2102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/vare-transformers-48319-base/src/transformers/trainer.py:1458: in train
+    return inner_training_loop(
+/tmp/vare-transformers-48319-base/src/transformers/trainer.py:1556: in _inner_training_loop
+    return self._finalize_training(trial, num_train_samples, start_time)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/vare-transformers-48319-base/src/transformers/trainer.py:1884: in _finalize_training
+    if not os.path.samefile(checkpoint, self.state.best_model_checkpoint):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+f1 = '<TMPDIR>/tmpc_n0vyqa/checkpoint-4'
+f2 = '<TMPDIR>/tmpk00o5djm/checkpoint-2'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '<TMPDIR>/tmpk00o5djm/checkpoint-2'
+
+<frozen genericpath>:113: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+{'eval_loss': '9.496', 'eval_accuracy': '0.5', 'eval_runtime': '0.0324', 'eval_samples_per_second': '1977', 'eval_steps_per_second': '247.1', 'epoch': '0.25'}
+{'eval_loss': '9.051', 'eval_accuracy': '0.5', 'eval_runtime': '0.0095', 'eval_samples_per_second': '6714', 'eval_steps_per_second': '839.2', 'epoch': '0.5'}
+{'train_runtime': '0.1851', 'train_samples_per_second': '172.9', 'train_steps_per_second': '21.61', 'train_loss': '7.199', 'epoch': '0.5'}
+{'eval_loss': '8.898', 'eval_accuracy': '0.5', 'eval_runtime': '0.0124', 'eval_samples_per_second': '5141', 'eval_steps_per_second': '642.7', 'epoch': '0.5'}
+{'eval_loss': '8.577', 'eval_accuracy': '0.5', 'eval_runtime': '0.0102', 'eval_samples_per_second': '6296', 'eval_steps_per_second': '787', 'epoch': '0.75'}
+{'train_runtime': '0.0533', 'train_samples_per_second': '901.2', 'train_steps_per_second': '112.6', 'train_loss': '5.692', 'epoch': '0.75'}
+----------------------------- Captured stderr call -----------------------------
+
+  0%|          | 0/4 [00:00<?, ?it/s]
+ 25%|██▌       | 1/4 [00:00<00:00,  9.37it/s]
+
+  0%|          | 0/8 [00:00<?, ?it/s][A
+                                             
+
+                                     
+[A
+ 50%|█████     | 2/4 [00:00<00:00,  9.37it/s]
+
+100%|██████████| 8/8 [00:00<00:00, 320.69it/s][A
+
+                                              [A
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 740.78it/s]
+
+
+  0%|          | 0/8 [00:00<?, ?it/s][A
+                                             
+
+                                     
+[A
+100%|██████████| 4/4 [00:00<00:00,  9.37it/s]
+
+100%|██████████| 8/8 [00:00<00:00, 955.48it/s][A
+
+                                              [A
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 932.69it/s]
+[transformers] mtime may not be reliable on this filesystem, falling back to numerical ordering
+
+                                             
+
+100%|██████████| 4/4 [00:00<00:00,  9.37it/s]
+100%|██████████| 4/4 [00:00<00:00, 22.76it/s]
+
+  0%|          | 0/6 [00:00<?, ?it/s]
+
+  0%|          | 0/8 [00:00<?, ?it/s][A
+
+                                     
+[A
+                                     
+
+100%|██████████| 8/8 [00:00<00:00, 727.14it/s][A
+ 67%|██████▋   | 4/6 [00:00<00:00, 174.85it/s]
+
+                                              [A
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 959.58it/s]
+
+
+  0%|          | 0/8 [00:00<?, ?it/s][A
+
+                                     
+[A
+                                              
+
+100%|██████████| 8/8 [00:00<00:00, 892.98it/s][A
+100%|██████████| 6/6 [00:00<00:00, 130.16it/s]
+
+                                              [A
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1042.84it/s]
+
+                                              
+
+100%|██████████| 6/6 [00:00<00:00, 113.40it/s][transformers] Could not locate the best model at <TMPDIR>/tmpk00o5djm/checkpoint-2/pytorch_model.bin, if you are running a distributed training on multiple nodes, you should activate `--save_on_each_node`.
+================== CI READ-ONLY CACHE FALLBACK: not triggered ==================
+=========================== short test summary info ============================
+FAILED tests/trainer/test_trainer_checkpointing.py::TrainerBestModelTest::test_resume_from_checkpoint_with_stale_best_model_checkpoint
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+================= 1 failed, 55 deselected, 5 warnings in 1.15s =================
