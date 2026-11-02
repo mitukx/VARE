@@ -302,8 +302,11 @@ def test_signal_pilot_v13_supersedes_prior_selector_protocol():
     assert v8["policy"]["controller_source_sha256"] == _sha256(
         ROOT / "scripts/run_local_agent.py"
     )
-    assert v13["update"]["trainer_source_sha256"] == _sha256(
-        ROOT / "src/vare/grpo_mlx.py"
+    # v13 is frozen historical evidence. Keep its trainer identity pinned to
+    # the source digest recorded at preregistration; later live code changes
+    # must not rewrite the consumed task's provenance.
+    assert v13["update"]["trainer_source_sha256"] == (
+        "98e6150c14c00ed95809a1f7ca5fc1ec8258aa858d75a30f63b8caa51d0ae0e1"
     )
     assert v1["experiment_id"] != v13["experiment_id"]
 
@@ -651,6 +654,75 @@ def test_routing_ast_contract_rejects_decoy_stop_gradient(tmp_path):
     assert grader._routing_fix_failures(source_root, baseline_root)["granitemoe"] == [
         "source_modified_outside_routing_fix"
     ]
+
+
+def test_routing_patch_contract_documents_equivalent_rejection_and_wrong_mutants(
+    tmp_path,
+):
+    grader = _grader_module()
+    baseline_root = tmp_path / "baseline"
+    source_root = tmp_path / "candidate"
+    baseline_dir = baseline_root / "mlx_lm/models"
+    model_dir = source_root / "mlx_lm/models"
+    baseline_dir.mkdir(parents=True)
+    model_dir.mkdir(parents=True)
+    baseline = (
+        "class GraniteMoeTopKGating:\n"
+        " def __call__(self, x):\n"
+        "    top_k_idx = mx.argpartition(x, kth=-2)[..., -2:]\n"
+        "    return mx.take_along_axis(x, top_k_idx, axis=-1)\n"
+    )
+    expected = (
+        "class GraniteMoeTopKGating:\n"
+        " def __call__(self, x):\n"
+        "    top_k_idx = mx.stop_gradient(mx.argpartition(x, kth=-2)[..., -2:])\n"
+        "    return mx.take_along_axis(x, top_k_idx, axis=-1)\n"
+    )
+    (baseline_dir / "granitemoe.py").write_text(baseline, encoding="utf-8")
+    (model_dir / "granitemoe.py").write_text(expected, encoding="utf-8")
+    for model in ("granitemoehybrid", "lfm2_moe"):
+        placeholder = "class Placeholder:\n    pass\n"
+        (baseline_dir / f"{model}.py").write_text(placeholder, encoding="utf-8")
+        (model_dir / f"{model}.py").write_text(placeholder, encoding="utf-8")
+
+    assert grader._routing_fix_failures(source_root, baseline_root)["granitemoe"] == []
+
+    # stop_gradient is forward identity, so applying it immediately after the
+    # assignment is semantically equivalent. The restricted AST contract still
+    # rejects this form because it only normalizes the pinned patch shape.
+    equivalent_but_rejected = (
+        "class GraniteMoeTopKGating:\n"
+        " def __call__(self, x):\n"
+        "    top_k_idx = mx.argpartition(x, kth=-2)[..., -2:]\n"
+        "    top_k_idx = mx.stop_gradient(top_k_idx)\n"
+        "    return mx.take_along_axis(x, top_k_idx, axis=-1)\n"
+    )
+    (model_dir / "granitemoe.py").write_text(
+        equivalent_but_rejected, encoding="utf-8"
+    )
+    assert grader._routing_fix_failures(source_root, baseline_root)["granitemoe"]
+
+    wrong_mutants = (
+        # Detach a decoy while forwarding the original route indices.
+        baseline.replace(
+            "    return mx.take_along_axis",
+            "    unused = mx.stop_gradient(mx.argpartition(x, kth=-2)[..., -2:])\n"
+            "    return mx.take_along_axis",
+        ),
+        # Detach the route indices, then overwrite them with live indices.
+        expected.replace(
+            "    return mx.take_along_axis",
+            "    top_k_idx = mx.argpartition(x, kth=-2)[..., -2:]\n"
+            "    return mx.take_along_axis",
+        ),
+        # Preserve the wrapper syntax but select the wrong route slice.
+        expected.replace("[..., -2:])", "[..., :-2])"),
+        # Detach router scores instead of the discrete route indices.
+        baseline.replace("mx.argpartition(x,", "mx.argpartition(mx.stop_gradient(x),"),
+    )
+    for mutant in wrong_mutants:
+        (model_dir / "granitemoe.py").write_text(mutant, encoding="utf-8")
+        assert grader._routing_fix_failures(source_root, baseline_root)["granitemoe"]
 
 
 def test_candidate_report_alone_cannot_override_source_contract(tmp_path):
