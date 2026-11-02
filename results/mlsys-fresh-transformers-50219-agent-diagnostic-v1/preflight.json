@@ -1,0 +1,56 @@
+{
+  "captured_at_utc": "2026-11-02T15:09:25Z",
+  "event_id": "transformers-50219-agent-diagnostic-001-preflight",
+  "execution_preflights": {
+    "agent_cli": "PASS under the pinned Python/MLX runtime; --help only, no model loaded",
+    "independent_grader": "not run; no model attempt output yet",
+    "independent_grader_cli": "PASS under grader Seatbelt profile; --help only",
+    "metal_device": "PASS; Apple M1 Pro device identified without loading model weights",
+    "mlx_wrapper": "PASS under exact Seatbelt profile; 8 GiB graph limit and 8 GiB wired limit applied; --help only",
+    "model_sandbox": "PASS; task/candidate read and output write allowed; exact grader script read denied; network denied by profile",
+    "task_contract": "PASS; exact one-file allowlist, unassigned split, pinned candidate base revision"
+  },
+  "live_git": {
+    "experiment_branch_sha": "f48f364f65becf2dc198b584caad049239c7057a",
+    "main_sha": "85a0cfedcb602b9e1476d1bed8cf2210b59d728b"
+  },
+  "model_snapshot": {
+    "all_files_match_frozen_hashes": true,
+    "downloads_required": false,
+    "file_count": 13,
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "no_model_inference_or_generation_has_started": true,
+  "protocol_commit": "f48f364f65becf2dc198b584caad049239c7057a",
+  "protocol_sha256": "7c9253faee08cee2f3573c359b4f7f9bc01655dce72fd64ffde71a53c3e822b3",
+  "resources": {
+    "active_heavy_model_processes": 0,
+    "disk_available_bytes": 4476211200,
+    "disk_available_human": "4.2 GiB",
+    "memory_pressure_free_percent": 75,
+    "mlx_graph_memory_limit_bytes": 8589934592,
+    "mlx_wired_limit_bytes": 8589934592,
+    "outer_process_tree_rss_limit_bytes": 8589934592,
+    "physical_memory_bytes": 34359738368,
+    "swap_free_bytes": 1525153792,
+    "swap_total_bytes": 3221225472,
+    "swap_used_bytes": 1696071680,
+    "warning": "Swap already has 1.58 GiB in use at baseline; record post-run swap and memory pressure against this snapshot."
+  },
+  "runtime": {
+    "device": "Apple M1 Pro / Metal",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "numpy": "2.5.4",
+    "python": "3.12.12",
+    "transformers": "5.22.1"
+  },
+  "schema_version": 1,
+  "shared_lease": {
+    "acquired": true,
+    "lease_id": "transformers-50219-agent-diagnostic-v1-001",
+    "path": "/tmp/vare-mlx-metal.lease",
+    "sha256": "662bde20993cb53232f5badcff5a3494cb5d46f82d4b9cccf5d420e0f12d69a3"
+  },
+  "status": "READY_FOR_ONE_BOUNDED_MODEL_ATTEMPT"
+}
