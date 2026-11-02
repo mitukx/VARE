@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v11",
+  "supersedes": {
+    "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v10",
+    "protocol_lock_sha256": "23220b5ca421e0159a085e835f67a0ffb23af7ee34fd89fccc06bcb61f3cec99",
+    "reason": "The v10 baseline reached test import but MLX could not create a Metal device under the filesystem-only sandbox. A narrow probe succeeded after allowing only AGXDeviceUserClient, IOSurfaceRootUserClient, and the Metal compiler service, with a 2x2 GPU evaluation. V11 adds those exact GPU permissions while keeping network denied and all filesystem write boundaries unchanged.",
+    "prior_outcomes_or_model_exposure": "V6 through V10 calibration attempts stopped before any test body ran; no candidate or model was exposed. V10 failed at MLX Metal device initialization."
+  },
+  "status": "FROZEN_BEFORE_AGENT_ATTEMPTS",
+  "task_id": "mlxlm-moe-routing-backward-train-01",
+  "split": "train",
+  "task_definition": {
+    "task_json_sha256": "a4e891a61b95bcc8872d653fc1b4031cc60fdf8aaccc3084a47805f80ff68e13",
+    "task_md_sha256": "6b5156e57299aaaab079f8e60ccdf474d15f241226139267f388418114d0c885"
+  },
+  "source": {
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "baseline_revision": "77c33b14373ac70d7abd6f82af15962852adadbb",
+    "known_fix_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+    "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+    "baseline_file_sha256": {
+      "mlx_lm/models/granitemoe.py": "26186a3e66429f38900164764a9da8f0d9a32e7ca30941607bf65b69d36415af",
+      "mlx_lm/models/granitemoehybrid.py": "a9d4214a84d2ecb998d3ea00c6ff6de82c2b5d0a08680149739405f4466e0a19",
+      "mlx_lm/models/lfm2_moe.py": "cf1bda393544ff770a1f1961df2dad9e743a57db68f9574604948e8c322ce52a"
+    },
+    "known_fix_file_sha256": {
+      "mlx_lm/models/granitemoe.py": "ed6bc92f0a190ecdc78e67dfd4de9e9e2132c61ea92538977eb480c959ebd61f",
+      "mlx_lm/models/granitemoehybrid.py": "9f9ba35f3806bae835d88e390421345d88002ee70fab6852144c588195194b54",
+      "mlx_lm/models/lfm2_moe.py": "2268bcf9617d0dcdebd3c57b5dc02d2813b1abb88899ae49e998250f63b7902a"
+    }
+  },
+  "grader": {
+    "path": "evaluator/grade.py",
+    "sha256": "58c69338d4737d5d6b43f8a4b1016b6cdf827766b697e47850ef5e77bc95f8c0",
+    "upstream_file": "tests/test_tuner_trainer.py",
+    "upstream_test_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+    "upstream_test_sha256": "92c8954f802681b8ddecc4874f3cc60f2379e568580b6b4e959846c99e8c6f17",
+    "selectors": [
+      "TestTunerTrainer::test_granitemoe_backward",
+      "TestTunerTrainer::test_granitemoehybrid_backward",
+      "TestTunerTrainer::test_lfm2_moe_backward"
+    ],
+    "success": "all three selected tests pass; no collection errors, skips, timeouts, or resource-limit failures"
+  },
+  "calibration": {
+    "required_arms_in_order": [
+      "baseline",
+      "known-fix",
+      "wrong-mutant"
+    ],
+    "baseline_expected": {
+      "passed": 0,
+      "failed": 3,
+      "errors": 0
+    },
+    "known_fix_expected": {
+      "passed": 3,
+      "failed": 0,
+      "errors": 0
+    },
+    "wrong_mutant_expected": {
+      "passed": 2,
+      "failed": 1,
+      "errors": 0
+    },
+    "wrong_mutant_description": "Use the known repair in the two Granite MoE files while leaving the LFM2 MoE file at baseline. The LFM2 regression must still be rejected.",
+    "wall_seconds_per_arm": 240,
+    "process_tree_rss_limit_bytes": 8589934592,
+    "max_combined_output_bytes": 1048576,
+    "runner_path": "scripts/calibrate_mlxlm_moe_routing_grader.py",
+    "runner_sha256": "7bc889b994280bd6bd066bf60c08428b83d0dba2754aa79b3daa0251e86be113"
+  },
+  "isolation": {
+    "platform": "macOS Seatbelt sandbox-exec",
+    "default_deny": true,
+    "network": "denied",
+    "grader_and_candidate_source": "read-only to the test process",
+    "writable_paths": "fresh per-attempt scratch directory and narrowly scoped Metal compiler caches only",
+    "candidate_agent_tool_access_to_grader": "denied; grader files are absent from the task workspace and are not allowlisted for agent read tools",
+    "candidate_agent_receives_grader_output": "only after its trajectory has completed and is not fed back during this pilot",
+    "filesystem_root_read": "file-read-data permission on the literal root directory only; no recursive root subpath permission",
+    "python_base_runtime": "sys.base_prefix is allowlisted for read-only file access; no write permission",
+    "pytest_configuration": "The pinned trusted test is copied into the read-only grader source root beside trusted model code. Pytest uses that root as its config and confcutdir; it receives metadata-only access to the one parent directory needed by pytest hook discovery, with no directory listing or file data access there.",
+    "metal_gpu": "Only AGXDeviceUserClient and IOSurfaceRootUserClient iokit-open classes and com.apple.MTLCompilerService global/XPC lookup are allowed; verified with a tiny MLX GPU operation. Network remains denied."
+  },
+  "exposure": {
+    "task_model_or_controller_attempts_before_protocol": 0,
+    "researcher_source_qualification": "Not independently verified. V6 through V9 stopped before tests ran during bootstrap or pytest collection; V10 reached test import but MLX could not initialize Metal in the sandbox. No test body, candidate, or model was exposed. V11 baseline/known-fix/wrong-mutant calibration remains mandatory before candidate or model exposure.",
+    "related_exposure": "A separate MLX-LM Development diagnostic used the same upstream baseline revision but targeted mlx_lm/generate.py. This Train task concerns MoE backward routing in three different files. Cross-task source-snapshot exposure is disclosed; pretraining exposure is unknown.",
+    "heldout_use": false
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "pytest": "8.4.2",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "network_installation": false
+  }
+}

@@ -7,7 +7,6 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-import re
 import shutil
 import subprocess
 import sys
@@ -22,7 +21,10 @@ EDITABLE = (
 )
 BASELINE = "77c33b14373ac70d7abd6f82af15962852adadbb"
 KNOWN_FIX = "acb0240394dfc17ffd6db77a3ccecbdbde522ef9"
-SELECTED_WRONG_FAILURE = "test_lfm2_moe_backward"
+MODEL_FILES = dict(
+    zip(("granitemoe", "granitemoehybrid", "lfm2_moe"), EDITABLE, strict=True)
+)
+ARM_PROCESS_TIMEOUT_SECONDS = 1560
 
 
 def sha256_file(path: Path) -> str:
@@ -102,12 +104,32 @@ def prepare_arm(source_root: Path, known_fix: Path, arm_root: Path, arm: str) ->
     return workspace
 
 
-def expected_counts(arm: str) -> dict[str, int]:
+def expected_model_passes(arm: str) -> dict[str, bool]:
     return {
-        "baseline": {"passed": 0, "failed": 3, "errors": 0},
-        "known-fix": {"passed": 3, "failed": 0, "errors": 0},
-        "wrong-mutant": {"passed": 2, "failed": 1, "errors": 0},
+        "baseline": {"granitemoe": False, "granitemoehybrid": False, "lfm2_moe": False},
+        "known-fix": {"granitemoe": True, "granitemoehybrid": True, "lfm2_moe": True},
+        "wrong-mutant": {
+            "granitemoe": True,
+            "granitemoehybrid": True,
+            "lfm2_moe": False,
+        },
     }[arm]
+
+
+def expected_structure_rejections(arm: str) -> set[str]:
+    return {
+        "baseline": set(EDITABLE),
+        "known-fix": set(),
+        "wrong-mutant": {"mlx_lm/models/lfm2_moe.py"},
+    }[arm]
+
+
+def refuse_post_exposure_calibration(protocol: dict[str, Any]) -> None:
+    if protocol.get("status") == "POST_EXPOSURE_SECURITY_CORRECTION":
+        raise SystemExit(
+            "refusing to recalibrate this consumed task under a post-exposure grader; "
+            "use a fresh task identity and preregistered protocol"
+        )
 
 
 def main() -> int:
@@ -127,12 +149,12 @@ def main() -> int:
         raise SystemExit(f"refusing to overwrite calibration evidence: {output_root}")
     if task_root in prepared_root.parents or prepared_root in task_root.parents:
         raise SystemExit("task definition and prepared source must be separate trees")
-    output_root.mkdir(parents=True)
     manifest_path = prepared_root / "prepared-source-manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     protocol = json.loads(
         (task_root / "protocol.lock.json").read_text(encoding="utf-8")
     )
+    refuse_post_exposure_calibration(protocol)
     if (
         sha256_file(Path(__file__).resolve())
         != protocol["calibration"]["runner_sha256"]
@@ -167,6 +189,7 @@ def main() -> int:
     _verify_snapshot(known_fix, KNOWN_FIX, known_fix_hashes)
     if sha256_file(trusted_baseline / "LICENSE") != manifest["license_sha256"]:
         raise SystemExit("trusted baseline license differs from the prepared manifest")
+    output_root.mkdir(parents=True)
     records: list[dict[str, Any]] = []
     started = time.monotonic()
     expected_arm_order = ("baseline", "known-fix", "wrong-mutant")
@@ -204,11 +227,10 @@ def main() -> int:
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
-            timeout=780,
+            timeout=ARM_PROCESS_TIMEOUT_SECONDS,
             check=False,
         )
         grade_path = grade_output / "grade.json"
-        grade_log = grade_output / "pytest.log"
         attempt: dict[str, Any] = {
             "arm": arm,
             "command_sha256": hashlib.sha256("\0".join(command).encode()).hexdigest(),
@@ -219,36 +241,41 @@ def main() -> int:
         if grade_path.is_file():
             grade = json.loads(grade_path.read_text(encoding="utf-8"))
             actual = {
-                key: int(grade["pytest_counts"].get(key, 0))
-                for key in ("passed", "failed", "errors")
+                row["model"]: bool(row["passed"])
+                for row in grade.get("case_results", [])
             }
-            arm_ok = actual == expected_counts(arm) and not any(
+            rejected_structure = {
+                MODEL_FILES[row["model"]]
+                for row in grade.get("case_results", [])
+                if row.get("source_structure_failures")
+            }
+            resource_runs = [
+                *grade.get("reference_runs", []),
+                *grade.get("candidate_runs", []),
+            ]
+            arm_ok = actual == expected_model_passes(arm)
+            arm_ok = arm_ok and rejected_structure == expected_structure_rejections(arm)
+            arm_ok = arm_ok and not any(
                 (
-                    grade["timed_out"],
-                    grade["rss_limit_exceeded"],
-                    grade["output_limit_exceeded"],
-                    grade["monitor_error"],
+                    run.get("timed_out", False),
+                    run.get("rss_limit_exceeded", False),
+                    run.get("output_limit_exceeded", False),
+                    run.get("monitor_error"),
                 )
+                for run in resource_runs
             )
             arm_ok = arm_ok and grade["passed"] is (arm == "known-fix")
+            arm_ok = arm_ok and grade["grader_status"] == (
+                "PASS" if arm == "known-fix" else "TEST_FAIL"
+            )
             arm_ok = arm_ok and process.returncode == (0 if arm == "known-fix" else 1)
-            if arm == "wrong-mutant":
-                log_text = (
-                    grade_log.read_text(encoding="utf-8", errors="replace")
-                    if grade_log.is_file()
-                    else ""
-                )
-                arm_ok = arm_ok and bool(
-                    re.search(r"FAILED .*" + SELECTED_WRONG_FAILURE, log_text)
-                )
             attempt.update(
                 {
                     "grade_json_sha256": sha256_file(grade_path),
-                    "pytest_log_sha256": sha256_file(grade_log)
-                    if grade_log.is_file()
-                    else None,
-                    "pytest_counts": actual,
+                    "model_passes": actual,
+                    "source_structure_rejections": sorted(rejected_structure),
                     "grader_status": grade["grader_status"],
+                    "upstream_test_executed": grade.get("upstream_test_executed"),
                     "arm_calibration_passed": arm_ok,
                 }
             )
@@ -277,7 +304,8 @@ def main() -> int:
         "prepared_source_manifest_sha256": sha256_file(manifest_path),
         "protocol_lock_sha256": sha256_file(task_root / "protocol.lock.json"),
         "grader_source_sha256": sha256_file(args.grader.resolve(strict=True)),
-        "test_source_sha256": sha256_file(grader_test),
+        "upstream_test_source_sha256_not_executed": sha256_file(grader_test),
+        "upstream_test_executed": False,
     }
     write_json(output_root / "calibration.json", record)
     print(

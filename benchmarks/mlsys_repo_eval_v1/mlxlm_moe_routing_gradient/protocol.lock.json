@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v6",
+  "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v13",
   "supersedes": {
-    "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v5",
-    "protocol_lock_sha256": "09a40e7cbf2d86d2cb272b453a72ebe106c8675b689af35b00a2a96fb19470f5",
-    "reason": "The grader now emits a structured result and parses pytest counts with string keys; calibration requires the expected exit code and pass state for every control arm.",
-    "prior_outcomes_or_model_exposure": "none"
+    "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v12",
+    "protocol_lock_sha256": "0f5687a75638825f7660b2e31fd20cbdecfbab600e23d867365eebb58a7f3b49",
+    "reason": "Four model-generated attempts were made on the task under v12. Post-run audit reproduced candidate reads of grader tests and installed MLX-LM implementation artifacts, and showed pytest output could be forged; all historical v14 grades are invalid.",
+    "prior_outcomes_or_model_exposure": "Attempts 1 and 2 produced no usable source diff; attempts 3 and 4 produced source diffs, with two historical TEST_FAIL records under the invalid grader. No independent grades are valid, and no optimizer update occurred."
   },
-  "status": "FROZEN_BEFORE_AGENT_ATTEMPTS",
+  "status": "POST_EXPOSURE_SECURITY_CORRECTION",
   "task_id": "mlxlm-moe-routing-backward-train-01",
   "split": "train",
   "task_definition": {
@@ -32,7 +32,7 @@
   },
   "grader": {
     "path": "evaluator/grade.py",
-    "sha256": "273b1f4093ead86fd8b24d6fee83df246440cdc705612e12566945603510b8d5",
+    "sha256": "47d98e43e5cbe85ba8746f9ff5e2e69957277f90b16dc10633c20d8f6329a8e8",
     "upstream_file": "tests/test_tuner_trainer.py",
     "upstream_test_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
     "upstream_test_sha256": "92c8954f802681b8ddecc4874f3cc60f2379e568580b6b4e959846c99e8c6f17",
@@ -41,7 +41,9 @@
       "TestTunerTrainer::test_granitemoehybrid_backward",
       "TestTunerTrainer::test_lfm2_moe_backward"
     ],
-    "success": "all three selected tests pass; no collection errors, skips, timeouts, or resource-limit failures"
+    "success": "All three pinned model cases load from the candidate source, produce finite logits matching a fresh trusted-baseline forward pass, produce finite nonzero selected-expert and router gradients, and contain only the exact pinned route-index stop-gradient AST edit. The upstream pytest test is not imported or executed; its hash and selectors are retained for provenance only.",
+    "worker_path": "evaluator/candidate_worker.py",
+    "worker_sha256": "089600a47be2113a76e230c066ec91d2a3e07de56a8a68c67cac0f7f60eebfd2"
   },
   "calibration": {
     "required_arms_in_order": [
@@ -49,27 +51,46 @@
       "known-fix",
       "wrong-mutant"
     ],
-    "baseline_expected": {
-      "passed": 0,
-      "failed": 3,
-      "errors": 0
+    "expected_model_passes": {
+      "baseline": {
+        "granitemoe": false,
+        "granitemoehybrid": false,
+        "lfm2_moe": false
+      },
+      "known-fix": {
+        "granitemoe": true,
+        "granitemoehybrid": true,
+        "lfm2_moe": true
+      },
+      "wrong-mutant": {
+        "granitemoe": true,
+        "granitemoehybrid": true,
+        "lfm2_moe": false
+      }
     },
-    "known_fix_expected": {
-      "passed": 3,
-      "failed": 0,
-      "errors": 0
+    "expected_source_structure_rejections": {
+      "baseline": [
+        "mlx_lm/models/granitemoe.py",
+        "mlx_lm/models/granitemoehybrid.py",
+        "mlx_lm/models/lfm2_moe.py"
+      ],
+      "known-fix": [],
+      "wrong-mutant": [
+        "mlx_lm/models/lfm2_moe.py"
+      ]
     },
-    "wrong_mutant_expected": {
-      "passed": 2,
-      "failed": 1,
-      "errors": 0
-    },
-    "wrong_mutant_description": "Use the known repair in the two Granite MoE files while leaving the LFM2 MoE file at baseline. The LFM2 regression must still be rejected.",
-    "wall_seconds_per_arm": 240,
+    "wrong_mutant_description": "Apply the pinned repair to the two Granite MoE files and retain the LFM2 MoE baseline; the LFM2 source contract must reject it.",
+    "per_worker_wall_seconds": 240,
+    "worker_processes_per_arm": 6,
+    "max_arm_wall_seconds": 1560,
+    "outer_process_timeout_seconds": 1560,
     "process_tree_rss_limit_bytes": 8589934592,
     "max_combined_output_bytes": 1048576,
     "runner_path": "scripts/calibrate_mlxlm_moe_routing_grader.py",
-    "runner_sha256": "7bc889b994280bd6bd066bf60c08428b83d0dba2754aa79b3daa0251e86be113"
+    "runner_sha256": "7133345ffd2629dfaa5fb9568e351ac7f28ef72bd314214c32f1eae41545ebaa",
+    "status": "NOT_RUN_TASK_CONSUMED",
+    "upstream_test_executed": false,
+    "note": "Calibration on this task is permanently ineligible after candidate/model exposure; these expectations are for a fresh, independently identified task only."
   },
   "isolation": {
     "platform": "macOS Seatbelt sandbox-exec",
@@ -78,19 +99,37 @@
     "grader_and_candidate_source": "read-only to the test process",
     "writable_paths": "fresh per-attempt scratch directory and narrowly scoped Metal compiler caches only",
     "candidate_agent_tool_access_to_grader": "denied; grader files are absent from the task workspace and are not allowlisted for agent read tools",
-    "candidate_agent_receives_grader_output": "only after its trajectory has completed and is not fed back during this pilot"
+    "candidate_agent_receives_grader_output": "only after its trajectory has completed and is not fed back during this pilot",
+    "filesystem_root_read": "file-read-data permission on the literal root directory only; no recursive root subpath permission",
+    "python_base_runtime": "sys.base_prefix is allowlisted for read-only file access; no write permission",
+    "pytest_configuration": "The pinned trusted test is copied into the read-only grader source root beside trusted model code. Pytest uses that root as its config and confcutdir; it receives metadata-only access to the one parent directory needed by pytest hook discovery, with no directory listing or file data access there.",
+    "metal_gpu": "Only AGXDeviceUserClient and IOSurfaceRootUserClient iokit-open classes and com.apple.MTLCompilerService global/XPC lookup are allowed; verified with a tiny MLX GPU operation. Network remains denied.",
+    "entropy_device": "/dev/urandom is readable by exact literal path to support transitive native test dependencies; no broader /dev access is granted.",
+    "candidate_worker": "Hash-pinned evaluator/candidate_worker.py runs in a separate process; candidate source and trusted baseline source are copied into separate read-only roots.",
+    "trusted_tests_imported_by_candidate": false,
+    "candidate_workspace_git_visible": false,
+    "pytest_verdict_parser_used": false,
+    "upstream_test_execution": "not executed; pinned test hash/selectors are provenance only",
+    "protected_path_denials": "Task/grader files, original candidate workspace and its .git, trusted baseline, trusted known-fix source, reference source, installed MLX-LM source/bytecode/metadata/archive locations are denied after broad read allows.",
+    "worker_output": "Strict single-JSON schema with request nonce; no pytest text or count parser; candidate never receives baseline reference outputs."
   },
   "exposure": {
-    "task_model_or_controller_attempts_before_protocol": 0,
-    "researcher_source_qualification": "Not independently verified. Baseline-versus-known-fix grading through this isolated evaluator remains pending and is mandatory before candidate or model exposure.",
+    "task_model_or_controller_attempts_before_protocol": 4,
+    "researcher_source_qualification": "Four model-generated v14 attempts occurred before this correction: two yielded no usable source diff, and two yielded source edits that were historically marked TEST_FAIL by an invalid grader. The historical grades are not independent or valid. The corrected grader and fresh-task calibration have not been run.",
     "related_exposure": "A separate MLX-LM Development diagnostic used the same upstream baseline revision but targeted mlx_lm/generate.py. This Train task concerns MoE backward routing in three different files. Cross-task source-snapshot exposure is disclosed; pretraining exposure is unknown.",
-    "heldout_use": false
+    "heldout_use": false,
+    "historical_v14_grades_valid": false,
+    "independently_valid_grades": 0,
+    "optimizer_updates": 0,
+    "v14_evidence_directory": "work/mlxlm-moe-task-20261103-v14/results/",
+    "grader_isolation_audit_directory": "work/grader-isolation-audit/"
   },
   "runtime": {
     "python": "3.12.12",
     "pytest": "8.4.2",
     "mlx": "0.32.4",
     "mlx_lm": "0.32.2",
-    "network_installation": false
+    "network_installation": false,
+    "upstream_pytest_executed": false
   }
 }
