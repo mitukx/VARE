@@ -1,0 +1,46 @@
+{
+  "attempt_id": "transformers-50219-posix-paths-agent-diagnostic-003",
+  "candidate": {
+    "base_commit": "0a13f794b2d4f474cfebb3be5b9c59420dc44aeb",
+    "tracked_workspace_unchanged": true
+  },
+  "failure": {
+    "category": "PINNED_GIT_SUBPROCESS_FORK_DENIED_BY_SANDBOX",
+    "detail": "The controller completed the model load and assembled its initial messages, then its pre-generation candidate-revision check invoked the pinned Git helper. subprocess could not fork under the profile, so the controller stopped before the first model generation call.",
+    "generation_started": false,
+    "grader_run": false,
+    "model_prompt_submitted_to_generation": false,
+    "model_weights_loaded": true,
+    "task_prompt_constructed_in_controller_memory": true
+  },
+  "model": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "protocol": {
+    "addendum_commit": "1f7c5d7451131b37f4bd55c72a0db206c1c27f92",
+    "addendum_sha256": "2ec8ee5b4072f813020a5a866a971de3362ca97d47b2b8d092e8428b61c497d5",
+    "prelaunch_record_commit": "2432d994dc828d1534cefbcc78a1c513a6984ddd",
+    "profile_sha256": "9942e5c41b944b0f9d9f346fcd82a411b2a456d8d18abcba61d22ea1dc08f385"
+  },
+  "raw_scratch_evidence": {
+    "bounded_agent_json_sha256": "f0ff36a8506eb0f60aa7e7a5f87118e4c351dac40609f6b95f4541c7a7c2a991",
+    "bounded_agent_log_sha256": "183c4b51cda23a5313bce3a3542d7ace201d0d4d0ae1f6084b1a286f6508934b",
+    "retention": "Raw scratch records are retained outside the public repository; the hashed log contains local paths and is not published."
+  },
+  "resource_observation": {
+    "elapsed_seconds": 2.096,
+    "exit_code": 1,
+    "os_wait4_child_max_rss_bytes": 2614460416,
+    "sampled_process_tree_rss_max_bytes": 2566144000,
+    "status": "MODEL_LOADED_BUT_NO_GENERATION_OR_EDIT"
+  },
+  "schema_version": 1,
+  "shared_lease": {
+    "lease_id": "transformers-50219-agent-diagnostic-v1-attempt-003",
+    "released_after_process_exit": true,
+    "released_lease_sha256": "313963c7b4e797a11cc7a6fd46cfe6ab16e3ca58f1f2e2d5adaf2ed26bef2a8e"
+  },
+  "status": "INCOMPLETE_PRE_GENERATION_FAILURE_EXCLUDED_FROM_TASK_OUTCOMES",
+  "task_id": "transformers-50219-posix-paths-agent-diagnostic-003"
+}
