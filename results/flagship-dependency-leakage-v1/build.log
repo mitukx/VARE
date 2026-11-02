@@ -1,0 +1,17 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  34.86kB
+Step 1/4 : FROM vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7
+ ---> a377e54dc56c
+Step 2/4 : COPY gptq.py /usr/local/lib/python3.12/site-packages/mlx_lm/quant/gptq.py
+ ---> 02f384405745
+Step 3/4 : COPY tokenizer_utils.py /usr/local/lib/python3.12/site-packages/mlx_lm/tokenizer_utils.py
+ ---> 1ac4245455d1
+Step 4/4 : RUN python - <<'PY'
+ ---> Running in 1fc71201a360
+ ---> Removed intermediate container 1fc71201a360
+ ---> 4ed0fe081069
+Successfully built 4ed0fe081069
+Successfully tagged localhost:5000/vare/flagship-baseline-only:integrity-v1

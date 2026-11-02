@@ -1,0 +1,23 @@
+FROM localhost:5000/vare/flagship-baseline-only@sha256:4ed0fe081069061761fadc44783f6c02b3602c08828f66bbc1ffc4b4152c819a
+# Replacing sources must also remove stale installed-fix hashes and sizes.
+RUN python - <<'PY'
+import base64
+import csv
+import hashlib
+from pathlib import Path
+site = Path('/usr/local/lib/python3.12/site-packages')
+records = list(site.glob('mlx_lm-*.dist-info/RECORD'))
+if len(records) != 1:
+    raise ValueError('expected one mlx-lm installation record')
+record = records[0]
+with record.open(newline='') as stream:
+    rows = list(csv.reader(stream))
+for row in rows:
+    if row[0] in {'mlx_lm/quant/gptq.py', 'mlx_lm/tokenizer_utils.py'}:
+        data = (site / row[0]).read_bytes()
+        row[1] = 'sha256=' + base64.urlsafe_b64encode(hashlib.sha256(data).digest()).decode().rstrip('=')
+        row[2] = str(len(data))
+rows = [row for row in rows if not row[0].endswith('.pyc') or (site / row[0]).exists()]
+with record.open('w', newline='') as stream:
+    csv.writer(stream).writerows(rows)
+PY

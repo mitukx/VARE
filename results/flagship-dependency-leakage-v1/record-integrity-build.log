@@ -1,0 +1,13 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  34.86kB
+Step 1/2 : FROM localhost:5000/vare/flagship-baseline-only@sha256:4ed0fe081069061761fadc44783f6c02b3602c08828f66bbc1ffc4b4152c819a
+ ---> 4ed0fe081069
+Step 2/2 : RUN python - <<'PY'
+ ---> Running in 51708c497d86
+ ---> Removed intermediate container 51708c497d86
+ ---> bde707bc76b7
+Successfully built bde707bc76b7
+Successfully tagged localhost:5000/vare/flagship-baseline-only:record-integrity-v1

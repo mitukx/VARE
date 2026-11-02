@@ -1,0 +1,39 @@
+{
+  "decision": "NO_GO_MODEL_LEARNING",
+  "model_improvement_claim": "NOT_ESTABLISHED",
+  "student_updates": 0,
+  "heldout_evaluation": "NOT_RUN",
+  "async_learning_experiment": "NOT_RUN",
+  "rsi_intervention_experiment": "NOT_RUN",
+  "reasons": [
+    "No verified positive teacher trajectories",
+    "Both complete reward groups are [0,0]",
+    "15 eligible untouched held-out task minimum unmet",
+    "Original grading image failed installed-repair isolation"
+  ],
+  "current_development_contracts": [
+    {
+      "task_id": "gptq-groups",
+      "allocation": "consumed Development",
+      "heldout_eligible": false,
+      "training_eligible": false,
+      "narrow_module_calibration": "PASS",
+      "image": "localhost:5000/vare/flagship-baseline-only@sha256:d13df18e8ba98a4a71d5729073346ff3ae590f0d9ae85f850561d27a626b24c5"
+    },
+    {
+      "task_id": "thinking-markers",
+      "allocation": "consumed Development",
+      "heldout_eligible": false,
+      "training_eligible": false,
+      "narrow_module_calibration": "PASS",
+      "image": "localhost:5000/vare/flagship-baseline-only@sha256:d13df18e8ba98a4a71d5729073346ff3ae590f0d9ae85f850561d27a626b24c5"
+    }
+  ],
+  "legacy_images": {
+    "a377e54dc56c": "known-fix source and bytecode accessible; REVOKED",
+    "4ed0fe081069": "direct source delegation rejected; compiled fix and stale metadata remain; NOT_ELIGIBLE",
+    "bde707bc76b7": "record-cleanup heredoc did not execute; NOT_ELIGIBLE"
+  },
+  "preservation": "All earlier protocols, source, model outputs and grader results remain unchanged. The final image was calibrated without any model rerun.",
+  "scope": "Narrow target-module repair contracts against pinned runtime dependencies; full upstream repository integration and general sandbox soundness are not established."
+}

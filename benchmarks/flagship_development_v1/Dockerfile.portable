@@ -1,0 +1,7 @@
+FROM vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7
+COPY gptq.py /usr/local/lib/python3.12/site-packages/mlx_lm/quant/gptq.py
+COPY tokenizer_utils.py /usr/local/lib/python3.12/site-packages/mlx_lm/tokenizer_utils.py
+COPY sanitize_installed_assets.py /tmp/vare_sanitize_installed_assets.py
+# Exec form works with the installed legacy builder and fails on script errors.
+RUN ["python", "/tmp/vare_sanitize_installed_assets.py"]
+RUN ["rm", "/tmp/vare_sanitize_installed_assets.py"]

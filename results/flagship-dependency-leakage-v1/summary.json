@@ -1,0 +1,127 @@
+{
+  "compiled_delegation": {
+    "cases": 4,
+    "original_cases_passed": 4,
+    "portable_cases_passed": 0,
+    "source_only_cases_passed": 4
+  },
+  "earlier_image_record_check": "FAIL",
+  "final_asset_census": {
+    "baseline_metadata_consistent": true,
+    "installed_bytecode_files": 0,
+    "python_source_files": 187,
+    "python_sources_identical": true,
+    "status": "PASS"
+  },
+  "final_image": "localhost:5000/vare/flagship-baseline-only@sha256:d13df18e8ba98a4a71d5729073346ff3ae590f0d9ae85f850561d27a626b24c5",
+  "installed_source_delegation": {
+    "cases": 4,
+    "original_gptq_cases_passed": 4,
+    "original_task_passed": true,
+    "portable_gptq_cases_passed": 1,
+    "portable_task_passed": false
+  },
+  "learning": "NO_GO",
+  "model_reruns": 0,
+  "optimizer_steps": 0,
+  "portable_calibration": [
+    {
+      "cases": 4,
+      "cases_passed": 1,
+      "image_arm": "baseline-only",
+      "passed": false,
+      "task": "gptq-groups",
+      "variant": "installed-delegation"
+    },
+    {
+      "cases": 4,
+      "cases_passed": 1,
+      "image_arm": "baseline-only",
+      "passed": false,
+      "task": "gptq-groups",
+      "variant": "baseline"
+    },
+    {
+      "cases": 4,
+      "cases_passed": 4,
+      "image_arm": "baseline-only",
+      "passed": true,
+      "task": "gptq-groups",
+      "variant": "known-fix"
+    },
+    {
+      "cases": 4,
+      "cases_passed": 3,
+      "image_arm": "baseline-only",
+      "passed": false,
+      "task": "gptq-groups",
+      "variant": "wrong-local-error-index"
+    },
+    {
+      "cases": 4,
+      "cases_passed": 1,
+      "image_arm": "baseline-only",
+      "passed": false,
+      "task": "gptq-groups",
+      "variant": "wrong-group-slice"
+    },
+    {
+      "cases": 9,
+      "cases_passed": 5,
+      "image_arm": "baseline-only",
+      "passed": false,
+      "task": "thinking-markers",
+      "variant": "installed-delegation"
+    },
+    {
+      "cases": 9,
+      "cases_passed": 5,
+      "image_arm": "baseline-only",
+      "passed": false,
+      "task": "thinking-markers",
+      "variant": "baseline"
+    },
+    {
+      "cases": 9,
+      "cases_passed": 9,
+      "image_arm": "baseline-only",
+      "passed": true,
+      "task": "thinking-markers",
+      "variant": "known-fix"
+    },
+    {
+      "cases": 9,
+      "cases_passed": 8,
+      "image_arm": "baseline-only",
+      "passed": false,
+      "task": "thinking-markers",
+      "variant": "wrong-existing-mode"
+    },
+    {
+      "cases": 9,
+      "cases_passed": 7,
+      "image_arm": "baseline-only",
+      "passed": false,
+      "task": "thinking-markers",
+      "variant": "wrong-always-angle"
+    },
+    {
+      "cases": 4,
+      "cases_passed": 4,
+      "image_arm": "original",
+      "passed": true,
+      "task": "gptq-groups",
+      "variant": "installed-delegation"
+    },
+    {
+      "cases": 9,
+      "cases_passed": 5,
+      "image_arm": "original",
+      "passed": false,
+      "task": "thinking-markers",
+      "variant": "installed-delegation"
+    }
+  ],
+  "protocol": "protocols/flagship_installed_asset_isolation_v1.json",
+  "raw_archive": "raw-results.tar.gz"
+}
