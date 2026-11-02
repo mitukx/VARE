@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "/Users/user/vare-eval/expA/VARE/scripts/run_v10_multiturn_worker_v1.py", line 480, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/user/vare-eval/expA/VARE/scripts/run_v10_multiturn_worker_v1.py", line 473, in main
+    return run_probe(args)
+           ^^^^^^^^^^^^^^^
+  File "/Users/user/vare-eval/expA/VARE/scripts/run_v10_multiturn_worker_v1.py", line 439, in run_probe
+    entry['restored_vs_full'] = compare(full, last_logits_restored(prefix_ids, stage_ids[len(prefix_ids):]))
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/vare-eval/expA/VARE/scripts/run_v10_multiturn_worker_v1.py", line 399, in last_logits_restored
+    logits = model(mx.array([suffix_ids]), cache=restored)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/vare-sprint-vii-mlx/lib/python3.12/site-packages/mlx_lm/models/qwen2.py", line 191, in __call__
+    out = self.model(inputs, cache, input_embeddings)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/vare-sprint-vii-mlx/lib/python3.12/site-packages/mlx_lm/models/qwen2.py", line 161, in __call__
+    h = layer(h, mask, c)
+        ^^^^^^^^^^^^^^^^^
+  File "/tmp/vare-sprint-vii-mlx/lib/python3.12/site-packages/mlx_lm/models/qwen2.py", line 118, in __call__
+    r = self.self_attn(self.input_layernorm(x), mask, cache)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/vare-sprint-vii-mlx/lib/python3.12/site-packages/mlx_lm/models/qwen2.py", line 76, in __call__
+    keys, values = cache.update_and_fetch(keys, values)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/vare-sprint-vii-mlx/lib/python3.12/site-packages/mlx_lm/models/cache.py", line 359, in update_and_fetch
+    self.keys = self.keys[..., :prev, :]
+                ~~~~~~~~~^^^^^^^^^^^^^^^
+ValueError: Slice indices must be integers or None.

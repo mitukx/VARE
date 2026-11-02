@@ -1,0 +1,13 @@
+{
+ "amendment_id": "amendment-001",
+ "change": "Run scripts/run_v10_kv_probe_v2.py (identical prompts, comparisons, thresholds and negative control; state cloned like the controller) once, after run-001 finishes, under the same resource limits, into run-001-probe-v2/. The frozen analysis is run unchanged and retained (its probe gate is false because no v1 probe output exists). scripts/analyze_v10_multiturn_amendment_001.py then re-evaluates only the probe part of the kv_correctness gate on the v2 output with the frozen thresholds and recomputes the decision in the frozen order. Both decisions are reported.",
+ "file_sha256": {
+  "scripts/analyze_v10_multiturn_amendment_001.py": "d12f8f2741f2c420ac3df27bfa4e233cb1140ec9555a780ff2e0c617df787b1e",
+  "scripts/run_v10_kv_probe_v2.py": "85b6a7b5a4519f255c4664ee0b77ee2e5e2955a73f9060c5e95da68f29fe6a65"
+ },
+ "observed_deviation": "The frozen v1 probe (run-001/probe) exited with code 1 after 11.8 s: it wrapped every KVCache.state element in mx.array, including the integer offset that mlx-lm 0.32.2 stores in state, so the restored cache failed with 'Slice indices must be integers or None'. No probe comparison was produced. The controller under test clones only arrays and keeps scalars, so trajectories are unaffected. This is an instrumentation defect in the probe, not a controller result.",
+ "protocol_sha256": "283c01ca9a94cfebe2eb8c12f6d9a9b1c63de302308dd966024cb5b81c03d5f2",
+ "retained_failure": "results/v10_multiturn_abba_20261028/run-001/probe/ (stderr.log, guard.json)",
+ "written_before": "any execution of scripts/run_v10_kv_probe_v2.py; while run-001 trajectories were in progress (trajectory code and schedule unchanged)",
+ "written_unix": 1793197350.4520478
+}

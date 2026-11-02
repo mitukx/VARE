@@ -1,0 +1,60 @@
+{
+ "correct": false,
+ "final_source_sha256": "342acba933a946fcbc9818e415bad65244389e78dbbe02a978b2b73c3e7673c0",
+ "grader": "vare.synthetic-two-bug-repair.grader.v1",
+ "grader_only": {
+  "passed": false,
+  "status": "completed",
+  "summary": "2 passed, 3 failed",
+  "tests": [
+   {
+    "name": "test_average_empty",
+    "outcome": "passed"
+   },
+   {
+    "detail": "AssertionError: ",
+    "name": "test_average_three",
+    "outcome": "failed"
+   },
+   {
+    "name": "test_longest_first",
+    "outcome": "passed"
+   },
+   {
+    "detail": "AssertionError: ",
+    "name": "test_word_count_empty",
+    "outcome": "failed"
+   },
+   {
+    "detail": "AssertionError: ",
+    "name": "test_word_count_whitespace_mix",
+    "outcome": "failed"
+   }
+  ]
+ },
+ "hidden_tests_sha256": "37032352a417351f26a05ce8d725e7c589b832e9b277f09c18719b0ac675d3b6",
+ "public": {
+  "passed": false,
+  "status": "completed",
+  "summary": "1 passed, 2 failed",
+  "tests": [
+   {
+    "detail": "AssertionError: average_word_length('ab abcd') returned 2.0",
+    "name": "test_average_word_length",
+    "outcome": "failed"
+   },
+   {
+    "name": "test_longest_word",
+    "outcome": "passed"
+   },
+   {
+    "detail": "AssertionError: word_count('a  b') returned 3",
+    "name": "test_word_count_repeated_spaces",
+    "outcome": "failed"
+   }
+  ]
+ },
+ "source_changed": false,
+ "syntax_valid": true,
+ "variant": "textstats"
+}
