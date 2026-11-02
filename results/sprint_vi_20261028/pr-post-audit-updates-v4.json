@@ -1,0 +1,75 @@
+{
+  "captured_at_utc": "2026-10-27T18:09:12Z",
+  "correction_to_v3": {
+    "correct_value": null,
+    "field": "updates[pr_number=133].review.review_decision",
+    "previous_value": "REVIEW_REQUIRED",
+    "reason": "The exact live GitHub reviewDecision field at head e8ab4705 is blank. There is no independent approval and two P2 review threads remain unresolved. The prior string conflated approval absence with a GraphQL reviewDecision value; this correction preserves the original v3 snapshot.",
+    "record": "pr-post-audit-updates-v3.json"
+  },
+  "integrity_note": "Append-only review-state clarification. Do not rewrite v1-v3 snapshots.",
+  "main_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "repository": "mitukx/VARE",
+  "schema_version": 1,
+  "summary": {
+    "closed_prs": 0,
+    "draft_prs": 9,
+    "merged_prs": 0,
+    "open_prs": 18,
+    "updated_prs": 2
+  },
+  "updates": [
+    {
+      "base_sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+      "blockers": [
+        "stacked on closed unmerged #132",
+        "two unresolved P2 threads",
+        "no independent human approval"
+      ],
+      "checks": {
+        "ci": {
+          "run_id": 40554669721,
+          "status": "success"
+        },
+        "cpu-evidence": {
+          "run_id": 40554669903,
+          "status": "success"
+        },
+        "e2e-system-cpu": {
+          "run_id": 40554669884,
+          "status": "success"
+        }
+      },
+      "draft": false,
+      "github_review_decision_field": null,
+      "head_sha": "e8ab4705b84d82cd79e2883c391083087e82b4e8",
+      "independent_approval": false,
+      "mainline_integration_eligible": false,
+      "merge_state": "CLEAN",
+      "pr_number": 133,
+      "unresolved_current_threads": 2,
+      "url": "https://github.com/mitukx/VARE/pull/133"
+    },
+    {
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "ci": {
+          "run_id": 40557134816,
+          "status": "in_progress"
+        },
+        "cpu-evidence": {
+          "run_id": 40557134809,
+          "status": "in_progress"
+        }
+      },
+      "draft": true,
+      "github_review_decision_field": "REVIEW_REQUIRED",
+      "head_sha": "d8e9b418e032f8f74aed0e2fefe9bcbcdd60c482",
+      "independent_approval": false,
+      "merge_state": "BLOCKED",
+      "pr_number": 142,
+      "unresolved_current_threads": 0,
+      "url": "https://github.com/mitukx/VARE/pull/142"
+    }
+  ]
+}

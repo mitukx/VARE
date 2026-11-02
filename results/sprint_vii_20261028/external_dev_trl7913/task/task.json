@@ -1,0 +1,13 @@
+{
+  "metadata": {
+    "editable_files": [
+      "trl/experimental/cpo/cpo_trainer.py"
+    ],
+    "split": "development"
+  },
+  "prompt": "Fix CPO dataset preparation so that an example is excluded when truncation leaves either its chosen or rejected completion with no learning tokens. Apply the behavior consistently to both training and evaluation data while preserving examples with usable completions.",
+  "source": {
+    "base_revision": "HEAD"
+  },
+  "task_id": "trl-7913-cpo-truncated-completion-development-v1"
+}

@@ -1,0 +1,1098 @@
+{
+  "accepted_tool_call_count": 26,
+  "all_event_chains_valid": true,
+  "all_model_and_controller_provenance_valid": true,
+  "applied_edit_count": 4,
+  "attempt_count": 8,
+  "attempts": [
+    {
+      "accepted_tools": [
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "list_functions",
+          "public_test_passed": null,
+          "result_status": "functions_listed",
+          "turn": 1
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 2
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "list_functions",
+          "public_test_passed": null,
+          "result_status": "functions_listed",
+          "turn": 4
+        }
+      ],
+      "applied_edits": 0,
+      "attempt": {
+        "arm": "A_autonomous",
+        "seed": 432,
+        "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2"
+      },
+      "automatic_public_test_passes": 0,
+      "edit_attempts": 0,
+      "event_chain": {
+        "event_count": 14,
+        "failures": [],
+        "last_event_sha256": "0abd7b7e782f16a18a44ba9cf6423c852db336faf507808a9052d7a15d392fdb",
+        "last_event_type": "model_output_completed",
+        "valid": true
+      },
+      "explicit_public_test_tool_passes": 0,
+      "finish_tool_succeeded": false,
+      "generated_tokens": 1641,
+      "independent_grade": null,
+      "model_outputs": [
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 972,
+          "raw_output_sha256": "1d70e68508c885bdf21c9c105745882d608cc726b572ac80e0845c93068afff8",
+          "strict_parser_accepted": true,
+          "tokens": 34,
+          "turn": 1
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 3472,
+          "raw_output_sha256": "7ac873c5c433548c027a2db4e828bac26bdcc4826a9cb9f6f6ef49c4636be180",
+          "strict_parser_accepted": true,
+          "tokens": 37,
+          "turn": 2
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 3842,
+          "raw_output_sha256": "349dd361c4b5d39de56f811b473193b2f842ed65c34e1656c21515e4e95937cd",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 3
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 4424,
+          "raw_output_sha256": "018507feb8f4a6bfd07e8b20cf77b15b9afcb1cf102f87434556d5c8ffe3c275",
+          "strict_parser_accepted": true,
+          "tokens": 34,
+          "turn": 4
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 6924,
+          "raw_output_sha256": "07717facc5c6662412cb98d6304be2e177edf5a3832b8b2fc9f44f4f0c03be29",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 5
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 7506,
+          "raw_output_sha256": "07717facc5c6662412cb98d6304be2e177edf5a3832b8b2fc9f44f4f0c03be29",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 6
+        }
+      ],
+      "peak_process_rss_mib": 2998.594,
+      "process_failed_during_external_git_diff_export": true,
+      "process_failure_traceback_sha256": "629b9bd2b483677e87c1777952092b20afb9836eb713b5ffcc0d80ecab40702a",
+      "prompt_tokens_total": 27140,
+      "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+      "provenance_valid": true,
+      "repair_interpretation": "no_source_edit_or_finish",
+      "resource_monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 310.064,
+        "free_swap_mib_after": 425.12,
+        "free_swap_mib_before": 425.12,
+        "returncode": 1,
+        "status": "process_failed",
+        "swap_growth_mib": 0.0
+      },
+      "resource_ok": true,
+      "source_changed": false,
+      "source_reads": 1,
+      "strict_parser_accepted_outputs": 3,
+      "verified_correct_repair": false
+    },
+    {
+      "accepted_tools": [
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 1
+        },
+        {
+          "applied": true,
+          "automatic_public_test_passed": true,
+          "finished": null,
+          "name": "replace_function_body_transactional",
+          "public_test_passed": null,
+          "result_status": "edit_applied",
+          "turn": 2
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": true,
+          "name": "finish",
+          "public_test_passed": null,
+          "result_status": null,
+          "turn": 3
+        }
+      ],
+      "applied_edits": 1,
+      "attempt": {
+        "arm": "B_source_localized",
+        "seed": 432,
+        "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2"
+      },
+      "automatic_public_test_passes": 1,
+      "edit_attempts": 1,
+      "event_chain": {
+        "event_count": 11,
+        "failures": [],
+        "last_event_sha256": "82a40b23369d5163095ce86ed4b277e934fafab463f0e2be8cfe92e2320010a1",
+        "last_event_type": "tool_result",
+        "valid": true
+      },
+      "explicit_public_test_tool_passes": 0,
+      "finish_tool_succeeded": true,
+      "generated_tokens": 280,
+      "independent_grade": {
+        "hidden_pass": true,
+        "hidden_test_sha256": "87e6d8f8b60c558948e6de556ddb2ad3daf6f6cbd049ea17af74159f94ff75c8",
+        "public_pass": true,
+        "target_sha256": "052a2d4cb554f8952dc7be0c54f26461a89e4b3836f396a2aef1a0ee9b088f1c"
+      },
+      "model_outputs": [
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 1521,
+          "raw_output_sha256": "b2b1826acbe01c13766731b27d293e3ef158021ad580a6986dbd2c2492476c55",
+          "strict_parser_accepted": true,
+          "tokens": 49,
+          "turn": 1
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 1888,
+          "raw_output_sha256": "d6587b0a9fc1b19d2297dc6a9db0ae85c0ced5aee3c25a725896545b8bf01299",
+          "strict_parser_accepted": true,
+          "tokens": 192,
+          "turn": 2
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 2508,
+          "raw_output_sha256": "22b74c73997ff80976eedd6521ab50c43c97aac140692f9eb61a398ba07f090c",
+          "strict_parser_accepted": true,
+          "tokens": 39,
+          "turn": 3
+        }
+      ],
+      "peak_process_rss_mib": 6835.828,
+      "process_failed_during_external_git_diff_export": true,
+      "process_failure_traceback_sha256": "6e531ed981789a1767266b3e8d795ad5b29e640cdffff04249a0861999edeac4",
+      "prompt_tokens_total": 5917,
+      "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+      "provenance_valid": true,
+      "repair_interpretation": "verified_repair_tool_level_finish_and_independent_grade_pass; final runner report export failed at external-base git diff",
+      "resource_monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 66.434,
+        "free_swap_mib_after": 425.12,
+        "free_swap_mib_before": 425.12,
+        "returncode": 1,
+        "status": "process_failed",
+        "swap_growth_mib": 0.0
+      },
+      "resource_ok": true,
+      "source_changed": true,
+      "source_reads": 1,
+      "strict_parser_accepted_outputs": 3,
+      "verified_correct_repair": true
+    },
+    {
+      "accepted_tools": [
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "list_functions",
+          "public_test_passed": null,
+          "result_status": "functions_listed",
+          "turn": 1
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 2
+        }
+      ],
+      "applied_edits": 0,
+      "attempt": {
+        "arm": "A_autonomous",
+        "seed": 431,
+        "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2"
+      },
+      "automatic_public_test_passes": 0,
+      "edit_attempts": 0,
+      "event_chain": {
+        "event_count": 12,
+        "failures": [],
+        "last_event_sha256": "0df1c03258a7e6db5727ff315c4b29e42c25e65d77571e174bf43a72caac23ee",
+        "last_event_type": "model_output_completed",
+        "valid": true
+      },
+      "explicit_public_test_tool_passes": 0,
+      "finish_tool_succeeded": false,
+      "generated_tokens": 1607,
+      "independent_grade": null,
+      "model_outputs": [
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 972,
+          "raw_output_sha256": "1d70e68508c885bdf21c9c105745882d608cc726b572ac80e0845c93068afff8",
+          "strict_parser_accepted": true,
+          "tokens": 34,
+          "turn": 1
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 3472,
+          "raw_output_sha256": "7ac873c5c433548c027a2db4e828bac26bdcc4826a9cb9f6f6ef49c4636be180",
+          "strict_parser_accepted": true,
+          "tokens": 37,
+          "turn": 2
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 3841,
+          "raw_output_sha256": "f498fa5f623559c27d87e5ad1867f2018da70953e01c54f78bcc8a138aaa614b",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 3
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 4423,
+          "raw_output_sha256": "c55be8472a426b9d49d4f89d1ebcc8ab992c39ccffe54d510edd1046897b1dda",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 4
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 5005,
+          "raw_output_sha256": "c55be8472a426b9d49d4f89d1ebcc8ab992c39ccffe54d510edd1046897b1dda",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 5
+        }
+      ],
+      "peak_process_rss_mib": 5877.094,
+      "process_failed_during_external_git_diff_export": true,
+      "process_failure_traceback_sha256": "20b7505952caff6b6cff1fb240dade567be5fca3826a66ea8c919bee142691d7",
+      "prompt_tokens_total": 17713,
+      "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+      "provenance_valid": true,
+      "repair_interpretation": "no_source_edit_or_finish",
+      "resource_monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 233.545,
+        "free_swap_mib_after": 425.12,
+        "free_swap_mib_before": 425.12,
+        "returncode": 1,
+        "status": "process_failed",
+        "swap_growth_mib": 0.0
+      },
+      "resource_ok": true,
+      "source_changed": false,
+      "source_reads": 1,
+      "strict_parser_accepted_outputs": 2,
+      "verified_correct_repair": false
+    },
+    {
+      "accepted_tools": [
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 1
+        },
+        {
+          "applied": true,
+          "automatic_public_test_passed": true,
+          "finished": null,
+          "name": "replace_function_body_transactional",
+          "public_test_passed": null,
+          "result_status": "edit_applied",
+          "turn": 2
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": true,
+          "name": "finish",
+          "public_test_passed": null,
+          "result_status": null,
+          "turn": 3
+        }
+      ],
+      "applied_edits": 1,
+      "attempt": {
+        "arm": "B_source_localized",
+        "seed": 431,
+        "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2"
+      },
+      "automatic_public_test_passes": 1,
+      "edit_attempts": 1,
+      "event_chain": {
+        "event_count": 11,
+        "failures": [],
+        "last_event_sha256": "82a40b23369d5163095ce86ed4b277e934fafab463f0e2be8cfe92e2320010a1",
+        "last_event_type": "tool_result",
+        "valid": true
+      },
+      "explicit_public_test_tool_passes": 0,
+      "finish_tool_succeeded": true,
+      "generated_tokens": 295,
+      "independent_grade": {
+        "hidden_pass": true,
+        "hidden_test_sha256": "87e6d8f8b60c558948e6de556ddb2ad3daf6f6cbd049ea17af74159f94ff75c8",
+        "public_pass": true,
+        "target_sha256": "052a2d4cb554f8952dc7be0c54f26461a89e4b3836f396a2aef1a0ee9b088f1c"
+      },
+      "model_outputs": [
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 1521,
+          "raw_output_sha256": "b2b1826acbe01c13766731b27d293e3ef158021ad580a6986dbd2c2492476c55",
+          "strict_parser_accepted": true,
+          "tokens": 49,
+          "turn": 1
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 1892,
+          "raw_output_sha256": "14557458700173b70610d3906d8990280fcc2e883f290100a91b6b763f66ebfd",
+          "strict_parser_accepted": true,
+          "tokens": 207,
+          "turn": 2
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 2520,
+          "raw_output_sha256": "22b74c73997ff80976eedd6521ab50c43c97aac140692f9eb61a398ba07f090c",
+          "strict_parser_accepted": true,
+          "tokens": 39,
+          "turn": 3
+        }
+      ],
+      "peak_process_rss_mib": 4037.766,
+      "process_failed_during_external_git_diff_export": true,
+      "process_failure_traceback_sha256": "1cf46a01adaf9b43c7aaba1a197f02646f4bfa21bc1d6aef9b753da872cd6933",
+      "prompt_tokens_total": 5933,
+      "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+      "provenance_valid": true,
+      "repair_interpretation": "verified_repair_tool_level_finish_and_independent_grade_pass; final runner report export failed at external-base git diff",
+      "resource_monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 84.633,
+        "free_swap_mib_after": 425.12,
+        "free_swap_mib_before": 425.12,
+        "returncode": 1,
+        "status": "process_failed",
+        "swap_growth_mib": 0.0
+      },
+      "resource_ok": true,
+      "source_changed": true,
+      "source_reads": 1,
+      "strict_parser_accepted_outputs": 3,
+      "verified_correct_repair": true
+    },
+    {
+      "accepted_tools": [
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 1
+        },
+        {
+          "applied": true,
+          "automatic_public_test_passed": true,
+          "finished": null,
+          "name": "replace_function_body_transactional",
+          "public_test_passed": null,
+          "result_status": "edit_applied",
+          "turn": 2
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "run_public_tests",
+          "public_test_passed": true,
+          "result_status": null,
+          "turn": 3
+        }
+      ],
+      "applied_edits": 1,
+      "attempt": {
+        "arm": "B_source_localized",
+        "seed": 431,
+        "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+      },
+      "automatic_public_test_passes": 1,
+      "edit_attempts": 1,
+      "event_chain": {
+        "event_count": 14,
+        "failures": [],
+        "last_event_sha256": "6b9a9e2a28acd3bd3232763f3cebb43b846b599cd75ca1c12111f003918b75c7",
+        "last_event_type": "model_output_completed",
+        "valid": true
+      },
+      "explicit_public_test_tool_passes": 1,
+      "finish_tool_succeeded": false,
+      "generated_tokens": 1749,
+      "independent_grade": {
+        "hidden_pass": false,
+        "hidden_test_sha256": "dc2b1b01f89d6a2f2a7f0fd89f351bf13ba25daaf008bfedf9c5d1c6a8385e3a",
+        "public_pass": true,
+        "target_sha256": "f736d45e4eb10c74448048687801d4dc58af89d252a904b01e2642ae146c50cd"
+      },
+      "model_outputs": [
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 1601,
+          "raw_output_sha256": "666e6036c7d8e9320f54d6de19420eb222bce522d42f2046dc830c464d8daea3",
+          "strict_parser_accepted": true,
+          "tokens": 49,
+          "turn": 1
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 2000,
+          "raw_output_sha256": "c2c44a679d1782daa33caf7af1ae5996086214722e5d552978d006b651480ba4",
+          "strict_parser_accepted": true,
+          "tokens": 148,
+          "turn": 2
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 2580,
+          "raw_output_sha256": "c18e8aa92d23a566fce449943a6be10c5b9b4810a756b81f03072c0151cbe362",
+          "strict_parser_accepted": true,
+          "tokens": 16,
+          "turn": 3
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 2669,
+          "raw_output_sha256": "79d52dbc6f9b84d8d8c7e09a3c91b3bd447abe3d605faae52a378e1818f17bb2",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 4
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 3250,
+          "raw_output_sha256": "9681c3daea0b6d743923a34c267caec6ab6edf292b3367b2b6a1bbfe122674a7",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 5
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 3831,
+          "raw_output_sha256": "9681c3daea0b6d743923a34c267caec6ab6edf292b3367b2b6a1bbfe122674a7",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 6
+        }
+      ],
+      "peak_process_rss_mib": 5263.25,
+      "process_failed_during_external_git_diff_export": true,
+      "process_failure_traceback_sha256": "33e24d09547598b9bd8c097ba6a091faf90cc9354e88a571a30321501c0c3996",
+      "prompt_tokens_total": 15931,
+      "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+      "provenance_valid": true,
+      "repair_interpretation": "edited_and_public_pass_but_hidden_grade_failed",
+      "resource_monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 356.664,
+        "free_swap_mib_after": 425.12,
+        "free_swap_mib_before": 425.12,
+        "returncode": 1,
+        "status": "process_failed",
+        "swap_growth_mib": 0.0
+      },
+      "resource_ok": true,
+      "source_changed": true,
+      "source_reads": 1,
+      "strict_parser_accepted_outputs": 3,
+      "verified_correct_repair": false
+    },
+    {
+      "accepted_tools": [
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "list_functions",
+          "public_test_passed": null,
+          "result_status": "functions_listed",
+          "turn": 1
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 2
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "list_functions",
+          "public_test_passed": null,
+          "result_status": "functions_listed",
+          "turn": 4
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 5
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "list_functions",
+          "public_test_passed": null,
+          "result_status": "functions_listed",
+          "turn": 7
+        }
+      ],
+      "applied_edits": 0,
+      "attempt": {
+        "arm": "A_autonomous",
+        "seed": 431,
+        "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+      },
+      "automatic_public_test_passes": 0,
+      "edit_attempts": 0,
+      "event_chain": {
+        "event_count": 18,
+        "failures": [],
+        "last_event_sha256": "17ed3e8c177f032b7954d979b6064146a6afaa9d2ee2c3713726fb0601f490e7",
+        "last_event_type": "model_output_completed",
+        "valid": true
+      },
+      "explicit_public_test_tool_passes": 0,
+      "finish_tool_succeeded": false,
+      "generated_tokens": 1724,
+      "independent_grade": null,
+      "model_outputs": [
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 985,
+          "raw_output_sha256": "50d6a9eda5c5ba07f092b8558ec35edfee3532b15354ba1badb3b9bfc6a09594",
+          "strict_parser_accepted": true,
+          "tokens": 34,
+          "turn": 1
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 2484,
+          "raw_output_sha256": "3bb806ee46a5e73bab0de803352f07f7661f38de479d39cf46007b7417fe03ee",
+          "strict_parser_accepted": true,
+          "tokens": 37,
+          "turn": 2
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 2882,
+          "raw_output_sha256": "63e9406ca2e5f2ab5ea90724ca5f73e879e692e6e5c9a96ad8f2b23c57a3ac8f",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 3
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 3464,
+          "raw_output_sha256": "49e7cc7ebda7aa76b30769907b033091ba59fb60af9c726edccb16f86a18de5a",
+          "strict_parser_accepted": true,
+          "tokens": 34,
+          "turn": 4
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 4963,
+          "raw_output_sha256": "c565f6091bef7d1bd8bc7c37d43538b4a2b901bca607c5d49944133e12843f15",
+          "strict_parser_accepted": true,
+          "tokens": 49,
+          "turn": 5
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 5362,
+          "raw_output_sha256": "953947db2292256f33ad6aeea6fcf53bff5e57104487bdbf889517afc76558f8",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 6
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 5944,
+          "raw_output_sha256": "49e7cc7ebda7aa76b30769907b033091ba59fb60af9c726edccb16f86a18de5a",
+          "strict_parser_accepted": true,
+          "tokens": 34,
+          "turn": 7
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 7443,
+          "raw_output_sha256": "74854f18554e630383476b453e0ab0a2e5b1ee710a90dc68d29da132c9038106",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 8
+        }
+      ],
+      "peak_process_rss_mib": 3740.938,
+      "process_failed_during_external_git_diff_export": true,
+      "process_failure_traceback_sha256": "74e54d69ec3f510e3fc853371c9a8297afd81a7c71383eea97281062e2863a29",
+      "prompt_tokens_total": 33527,
+      "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+      "provenance_valid": true,
+      "repair_interpretation": "no_source_edit_or_finish",
+      "resource_monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 368.436,
+        "free_swap_mib_after": 425.12,
+        "free_swap_mib_before": 425.12,
+        "returncode": 1,
+        "status": "process_failed",
+        "swap_growth_mib": 0.0
+      },
+      "resource_ok": true,
+      "source_changed": false,
+      "source_reads": 2,
+      "strict_parser_accepted_outputs": 5,
+      "verified_correct_repair": false
+    },
+    {
+      "accepted_tools": [
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "list_functions",
+          "public_test_passed": null,
+          "result_status": "functions_listed",
+          "turn": 1
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 2
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "list_functions",
+          "public_test_passed": null,
+          "result_status": "functions_listed",
+          "turn": 4
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 5
+        }
+      ],
+      "applied_edits": 0,
+      "attempt": {
+        "arm": "A_autonomous",
+        "seed": 432,
+        "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+      },
+      "automatic_public_test_passes": 0,
+      "edit_attempts": 0,
+      "event_chain": {
+        "event_count": 16,
+        "failures": [],
+        "last_event_sha256": "4c9feb3d4d8cb5f21b1a6952191a4a3e44f434f824ddc18a753a00476e6cad3b",
+        "last_event_type": "model_output_completed",
+        "valid": true
+      },
+      "explicit_public_test_tool_passes": 0,
+      "finish_tool_succeeded": false,
+      "generated_tokens": 1690,
+      "independent_grade": null,
+      "model_outputs": [
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 985,
+          "raw_output_sha256": "50d6a9eda5c5ba07f092b8558ec35edfee3532b15354ba1badb3b9bfc6a09594",
+          "strict_parser_accepted": true,
+          "tokens": 34,
+          "turn": 1
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 2484,
+          "raw_output_sha256": "3bb806ee46a5e73bab0de803352f07f7661f38de479d39cf46007b7417fe03ee",
+          "strict_parser_accepted": true,
+          "tokens": 37,
+          "turn": 2
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 2882,
+          "raw_output_sha256": "ef8ba9312dadfc8d6e18d2215e24cc38903aacbaf3b196e3cc0ece0e388a3dbc",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 3
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 3464,
+          "raw_output_sha256": "49e7cc7ebda7aa76b30769907b033091ba59fb60af9c726edccb16f86a18de5a",
+          "strict_parser_accepted": true,
+          "tokens": 34,
+          "turn": 4
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 4963,
+          "raw_output_sha256": "c565f6091bef7d1bd8bc7c37d43538b4a2b901bca607c5d49944133e12843f15",
+          "strict_parser_accepted": true,
+          "tokens": 49,
+          "turn": 5
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 5362,
+          "raw_output_sha256": "7aa043938fe5ead60b249ceadd9526221bb03e631e58e86e8f9b1e0c4005bea5",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 6
+        },
+        {
+          "complete_json_boundary": false,
+          "prompt_tokens": 5944,
+          "raw_output_sha256": "bbeb3ef952a7f149335c58177be32534886f69d12bf058c4732d6799e56f8900",
+          "strict_parser_accepted": false,
+          "tokens": 512,
+          "turn": 7
+        }
+      ],
+      "peak_process_rss_mib": 1456.328,
+      "process_failed_during_external_git_diff_export": true,
+      "process_failure_traceback_sha256": "d7e95169bda24433ea245d4cdedc9273cd5f77b5e2713ce5733118cf0cfbcf68",
+      "prompt_tokens_total": 26084,
+      "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+      "provenance_valid": true,
+      "repair_interpretation": "no_source_edit_or_finish",
+      "resource_monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 304.042,
+        "free_swap_mib_after": 425.12,
+        "free_swap_mib_before": 425.12,
+        "returncode": 1,
+        "status": "process_failed",
+        "swap_growth_mib": 0.0
+      },
+      "resource_ok": true,
+      "source_changed": false,
+      "source_reads": 2,
+      "strict_parser_accepted_outputs": 4,
+      "verified_correct_repair": false
+    },
+    {
+      "accepted_tools": [
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": null,
+          "name": "read_function",
+          "public_test_passed": null,
+          "result_status": "read_complete",
+          "turn": 1
+        },
+        {
+          "applied": true,
+          "automatic_public_test_passed": true,
+          "finished": null,
+          "name": "replace_function_body_transactional",
+          "public_test_passed": null,
+          "result_status": "edit_applied",
+          "turn": 2
+        },
+        {
+          "applied": null,
+          "automatic_public_test_passed": null,
+          "finished": true,
+          "name": "finish",
+          "public_test_passed": null,
+          "result_status": null,
+          "turn": 3
+        }
+      ],
+      "applied_edits": 1,
+      "attempt": {
+        "arm": "B_source_localized",
+        "seed": 432,
+        "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+      },
+      "automatic_public_test_passes": 1,
+      "edit_attempts": 1,
+      "event_chain": {
+        "event_count": 11,
+        "failures": [],
+        "last_event_sha256": "7807feb72b07005719a446c447b744aea478ba8c5927f53075e2e14f63816a41",
+        "last_event_type": "tool_result",
+        "valid": true
+      },
+      "explicit_public_test_tool_passes": 0,
+      "finish_tool_succeeded": true,
+      "generated_tokens": 237,
+      "independent_grade": {
+        "hidden_pass": false,
+        "hidden_test_sha256": "dc2b1b01f89d6a2f2a7f0fd89f351bf13ba25daaf008bfedf9c5d1c6a8385e3a",
+        "public_pass": true,
+        "target_sha256": "f736d45e4eb10c74448048687801d4dc58af89d252a904b01e2642ae146c50cd"
+      },
+      "model_outputs": [
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 1601,
+          "raw_output_sha256": "666e6036c7d8e9320f54d6de19420eb222bce522d42f2046dc830c464d8daea3",
+          "strict_parser_accepted": true,
+          "tokens": 49,
+          "turn": 1
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 1999,
+          "raw_output_sha256": "03ddee1a7c0ed37478af00d1a74be6b15ace0205275338663eca5042550c0eb8",
+          "strict_parser_accepted": true,
+          "tokens": 136,
+          "turn": 2
+        },
+        {
+          "complete_json_boundary": true,
+          "prompt_tokens": 2577,
+          "raw_output_sha256": "d693f9f404a8c35a5affd0576969e7e364e02a6fe7c1dce994d3c5e27be227a9",
+          "strict_parser_accepted": true,
+          "tokens": 52,
+          "turn": 3
+        }
+      ],
+      "peak_process_rss_mib": 6365.891,
+      "process_failed_during_external_git_diff_export": true,
+      "process_failure_traceback_sha256": "8a4e71f83dd6a0c72b6dcc24e05cce406d4b2dbda544675e60624d7f78a7f690",
+      "prompt_tokens_total": 6177,
+      "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+      "provenance_valid": true,
+      "repair_interpretation": "edited_and_public_pass_but_hidden_grade_failed",
+      "resource_monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 68.729,
+        "free_swap_mib_after": 425.12,
+        "free_swap_mib_before": 425.12,
+        "returncode": 1,
+        "status": "process_failed",
+        "swap_growth_mib": 0.0
+      },
+      "resource_ok": true,
+      "source_changed": true,
+      "source_reads": 1,
+      "strict_parser_accepted_outputs": 3,
+      "verified_correct_repair": false
+    }
+  ],
+  "campaign_protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+  "campaign_status": "COMPLETED_WITH_FINAL_RUNNER_EXPORT_FAILURES",
+  "edit_attempt_count": 4,
+  "external_git_diff_export_failure_count": 8,
+  "families": [
+    {
+      "attempts": [
+        {
+          "applied_edits": 1,
+          "arm": "B_source_localized",
+          "edit_attempts": 1,
+          "finish_tool_succeeded": false,
+          "hidden_pass": false,
+          "public_pass": true,
+          "seed": 431,
+          "verified_correct_repair": false
+        },
+        {
+          "applied_edits": 0,
+          "arm": "A_autonomous",
+          "edit_attempts": 0,
+          "finish_tool_succeeded": false,
+          "hidden_pass": null,
+          "public_pass": null,
+          "seed": 431,
+          "verified_correct_repair": false
+        },
+        {
+          "applied_edits": 0,
+          "arm": "A_autonomous",
+          "edit_attempts": 0,
+          "finish_tool_succeeded": false,
+          "hidden_pass": null,
+          "public_pass": null,
+          "seed": 432,
+          "verified_correct_repair": false
+        },
+        {
+          "applied_edits": 1,
+          "arm": "B_source_localized",
+          "edit_attempts": 1,
+          "finish_tool_succeeded": true,
+          "hidden_pass": false,
+          "public_pass": true,
+          "seed": 432,
+          "verified_correct_repair": false
+        }
+      ],
+      "autonomous_verified_repairs": 0,
+      "base_revision": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+      "family_any_verified_repair": false,
+      "known_fix_revision": "b4844fd8072b1fc241ce3bb5f81526346b80370f",
+      "localized_verified_repairs": 0,
+      "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2",
+      "upstream_pull_request": 1913,
+      "upstream_repository": "https://github.com/ml-explore/mlx-lm"
+    },
+    {
+      "attempts": [
+        {
+          "applied_edits": 0,
+          "arm": "A_autonomous",
+          "edit_attempts": 0,
+          "finish_tool_succeeded": false,
+          "hidden_pass": null,
+          "public_pass": null,
+          "seed": 432,
+          "verified_correct_repair": false
+        },
+        {
+          "applied_edits": 1,
+          "arm": "B_source_localized",
+          "edit_attempts": 1,
+          "finish_tool_succeeded": true,
+          "hidden_pass": true,
+          "public_pass": true,
+          "seed": 432,
+          "verified_correct_repair": true
+        },
+        {
+          "applied_edits": 0,
+          "arm": "A_autonomous",
+          "edit_attempts": 0,
+          "finish_tool_succeeded": false,
+          "hidden_pass": null,
+          "public_pass": null,
+          "seed": 431,
+          "verified_correct_repair": false
+        },
+        {
+          "applied_edits": 1,
+          "arm": "B_source_localized",
+          "edit_attempts": 1,
+          "finish_tool_succeeded": true,
+          "hidden_pass": true,
+          "public_pass": true,
+          "seed": 431,
+          "verified_correct_repair": true
+        }
+      ],
+      "autonomous_verified_repairs": 0,
+      "base_revision": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "family_any_verified_repair": true,
+      "known_fix_revision": "ebba55f5176fe451b94f04212e975f052a6d96e0",
+      "localized_verified_repairs": 2,
+      "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2",
+      "upstream_pull_request": 1926,
+      "upstream_repository": "https://github.com/ml-explore/mlx-lm"
+    }
+  ],
+  "hidden_pass_count_independent_grade": 2,
+  "limitations": [
+    "The frozen cohort contains two upstream task families and supports feasibility only.",
+    "Autonomous and localized arms were matched by task family and seed; attempt outcomes are not independent task-family samples.",
+    "Every subprocess returned nonzero during final run_local_agent report export because git diff was asked to resolve an upstream base SHA absent from the VARE Git object database. This occurred after the model interaction loop, whether or not it had called finish. For both counted repair positives, the strict finish tool itself succeeded before the report-export exception; event journals and separate hidden grades are complete.",
+    "MiniCPM3 candidate edits passed public tests but failed independent hidden tests and do not count as repairs.",
+    "No training, held-out evaluation, or learning claim is supported by this Development cohort."
+  ],
+  "process_exit_nonzero_count": 8,
+  "public_pass_count_independent_grade": 4,
+  "resource_abort_count": 0,
+  "resource_summary": {
+    "max_peak_process_rss_mib": 6835.828,
+    "max_swap_growth_mib": 0.0,
+    "max_wall_seconds": 368.436,
+    "minimum_free_swap_after_mib": 425.12
+  },
+  "schema_version": 1,
+  "source_read_count": 10,
+  "status_correction": {
+    "correction": "The original label said POST_FINISH, but the same final export exception also occurred on attempts without a finish call. This derived copy changes only the label to FINAL_RUNNER_EXPORT_FAILURES.",
+    "frozen_protocol_unchanged": true,
+    "source_record": "campaign-reconciliation-v1.json"
+  },
+  "strict_parser_accepted_output_count": 26,
+  "task_families_with_verified_repair": 1,
+  "tool_level_finish_count": 3,
+  "total_model_outputs": 41,
+  "verified_correct_repair_count": 2
+}

@@ -1,0 +1,116 @@
+{
+  "baseline": {
+    "grader_result": {
+      "candidate_execution": "never_imported_or_executed",
+      "expected": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        100
+      ],
+      "grader": "sprint_x_synthetic_min_batch_ast_v1",
+      "inputs": [
+        -100,
+        -7,
+        -1,
+        0,
+        1,
+        2,
+        100
+      ],
+      "observed": [
+        -100,
+        -7,
+        -1,
+        0,
+        1,
+        2,
+        100
+      ],
+      "reason": "behavior_mismatch",
+      "source_sha256": "72884edb54de6644db457390c0de04a913a828fd4401cdb5d7fd1403a3ec5640",
+      "status": "FAIL"
+    },
+    "source_sha256": "72884edb54de6644db457390c0de04a913a828fd4401cdb5d7fd1403a3ec5640",
+    "status": "FAIL"
+  },
+  "known_fix": {
+    "grader_result": {
+      "candidate_execution": "never_imported_or_executed",
+      "expected": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        100
+      ],
+      "grader": "sprint_x_synthetic_min_batch_ast_v1",
+      "inputs": [
+        -100,
+        -7,
+        -1,
+        0,
+        1,
+        2,
+        100
+      ],
+      "observed": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        100
+      ],
+      "reason": null,
+      "source_sha256": "6be1c05ff58c12ed28b4238a10507b61aebad72dcea30c451053a707f9049354",
+      "status": "PASS"
+    },
+    "source_sha256": "6be1c05ff58c12ed28b4238a10507b61aebad72dcea30c451053a707f9049354",
+    "status": "PASS"
+  },
+  "wrong_mutant": {
+    "grader_result": {
+      "candidate_execution": "never_imported_or_executed",
+      "expected": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        100
+      ],
+      "grader": "sprint_x_synthetic_min_batch_ast_v1",
+      "inputs": [
+        -100,
+        -7,
+        -1,
+        0,
+        1,
+        2,
+        100
+      ],
+      "observed": [
+        -100,
+        -7,
+        -1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "reason": "behavior_mismatch",
+      "source_sha256": "32b0e85a3e939e679149ef5981d1cf86103d6d89dd5fa34ec9c17e608019f260",
+      "status": "FAIL"
+    },
+    "source_sha256": "32b0e85a3e939e679149ef5981d1cf86103d6d89dd5fa34ec9c17e608019f260",
+    "status": "FAIL"
+  }
+}

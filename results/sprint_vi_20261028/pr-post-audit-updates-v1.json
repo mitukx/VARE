@@ -1,0 +1,81 @@
+{
+  "captured_at_utc": "2026-10-27T17:11:28Z",
+  "integrity_note": "This is an append-only post-audit state record. The complete 18-PR snapshot, full base/head SHAs, review-thread bodies, and per-PR dispositions remain in pr-ledger.json.",
+  "main_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "repository": "mitukx/VARE",
+  "schema_version": 1,
+  "summary": {
+    "closed_prs": 0,
+    "draft_prs": 9,
+    "merged_prs": 0,
+    "open_prs": 18,
+    "updated_prs": 2
+  },
+  "updates": [
+    {
+      "base_sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+      "checks": {
+        "ci": {
+          "run": 1782,
+          "status": "in_progress"
+        },
+        "cpu-evidence": {
+          "run": 651,
+          "status": "in_progress"
+        },
+        "e2e-system-cpu": {
+          "run": 338,
+          "status": "in_progress"
+        }
+      },
+      "dependency": "#132 closed unmerged; stacked PR is not mainline-integrated",
+      "draft": false,
+      "head_commits": [
+        "947bbb08054174f7e3c569e257f129091c8df04f",
+        "96f1abb5838f02814fb16b413dadcb8fe3edb9b8",
+        "f3c36a9400b6731c9a2175a39be7bdeca5ffec78"
+      ],
+      "head_sha": "f3c36a9400b6731c9a2175a39be7bdeca5ffec78",
+      "mergeable": true,
+      "pr_number": 133,
+      "review": {
+        "independent_approval": false,
+        "state": "REVIEW_REQUIRED",
+        "unresolved_current_threads": 2
+      },
+      "url": "https://github.com/mitukx/VARE/pull/133"
+    },
+    {
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "ci": {
+          "run": 1780,
+          "status": "in_progress"
+        },
+        "cpu-evidence": {
+          "run": 650,
+          "status": "success"
+        }
+      },
+      "draft": true,
+      "evidence_bundle": {
+        "blob_budget": "success",
+        "lossless_gzip_originals": 2,
+        "verified_files": 184
+      },
+      "head_commits": [
+        "c282a9ff9dd95ad3f73aec6224661edf6d7e82f6",
+        "5830509eeaa6795ba1bdff949e23868aa796ce42"
+      ],
+      "head_sha": "5830509eeaa6795ba1bdff949e23868aa796ce42",
+      "mergeable": true,
+      "pr_number": 142,
+      "review": {
+        "independent_approval": false,
+        "state": "REVIEW_REQUIRED",
+        "unresolved_current_threads": 0
+      },
+      "url": "https://github.com/mitukx/VARE/pull/142"
+    }
+  ]
+}

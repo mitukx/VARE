@@ -1,0 +1,32 @@
+{
+  "base_revision": "6c5f8f4186c15f4bfbd67941a1736b2b347e0155",
+  "calibration_revision": "0876d33998f49c423fb8623b6bd397caf3b372fc",
+  "grading_boundary": "public and hidden executed after generation in separate read-only network-disabled Docker workers; hidden task-specific AST/runtime grader authored for this experiment",
+  "hidden": {
+    "passed": false,
+    "result": {
+      "passed": false,
+      "reason": "worker_failed_or_untrusted_output",
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 80, in entry\n  File \"<string>\", line 38, in run\nRuntimeError: candidate method imports are not allowed by this focused runtime grader\nVARE_HIDDEN_FAILURE:RuntimeError:candidate method imports are not allowed by this focused runtime grader\n",
+      "stdout": ""
+    },
+    "returncode": 1,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "01ff70dbc112949179d31b8145ae5b6d4c04b6eabc27616b9de27f63dbc48cdc"
+  },
+  "hidden_evaluator_sha256": "b948fb437d7bea015be4ec83eea7830b799f9586f210b4889133283a97773ca1",
+  "hidden_grader_sha256": "193a0e1ebe2205745bdacb05d5ac6fa8979fda57a72b275f83b8a32e8aebaf16",
+  "image": "localhost:5000/vare/transformers-50001-grader@sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+  "public": {
+    "error": "public test file is missing or changed",
+    "passed": false
+  },
+  "public_test_sha256": "edb8710855c607192f9536741e7553a65f6128570aa7d80020bba573b239d5c5",
+  "qualified_correct_repair": false,
+  "schema_version": 1,
+  "split": "development",
+  "target_path": "src/transformers/distributed/tensor_parallel.py",
+  "target_sha256": "f9ae7619ce5dc0e999aedb25b5eb89f0939accdf7cb346a3d73fbbe96c54083a",
+  "task_id": "transformers-49975-lazy-tp-gradient-hook-install-v1"
+}

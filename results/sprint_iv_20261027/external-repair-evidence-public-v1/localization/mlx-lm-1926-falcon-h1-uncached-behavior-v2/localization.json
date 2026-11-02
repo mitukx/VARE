@@ -1,0 +1,22 @@
+{
+  "algorithm": "task_prompt_lexical_windows_v1",
+  "base_revision": "87b7b583a697537aa68f47130b40884700b5f55f",
+  "content": "        self.pre_ff_layernorm = nn.RMSNorm(args.hidden_size, eps=args.rms_norm_eps)\n\n    def __call__(\n        self,\n        h: mx.array,\n        cache,\n        attn_mask: Optional[mx.array],\n        mamba_mask: Optional[mx.array],\n    ) -> mx.array:\n\n        residual = h\n        h = self.input_layernorm(h)\n\n        mamba_h = self.mamba(input_states=h, cache=cache[0], mask=mamba_mask)\n\n        attn_h = self.self_attn(\n            h,\n            mask=attn_mask,\n            cache=cache[1],\n        )\n\n        h = residual + mamba_h + attn_h\n\n        residual = h\n        h = self.pre_ff_layernorm(h)\n        h = self.feed_forward(h)\n        return residual + h\n\n\nclass FalconH1Model(nn.Module):\n    def __init__(self, args):\n        super().__init__()\n\n        self.args = args\n        self.vocab_size = args.vocab_size\n        self.hidden_size = args.hidden_size\n\n        self.embed_tokens = nn.Embedding(self.vocab_size, self.hidden_size)\n\n        self._mup_vector = compute_mup_vector(args)\n        self.layers = [\n            FalconH1DecoderLayer(args) for _ in range(args.num_hidden_layers)\n        ]\n        self.final_layernorm = nn.RMSNorm(self.hidden_size, eps=args.rms_norm_eps)\n\n    def __call__(self, inputs, cache=None):\n\n        h = self.embed_tokens(inputs)\n\n        if cache is None:\n            cache = [(None, None) * len(self.layers)]\n\n        mamba_mask = create_ssm_mask(h, cache[0][0])\n        attn_mask = create_attention_mask(h, cache[0][1])\n\n        for layer, c in zip(self.layers, cache):\n            h = layer(\n                h,\n                cache=c,\n                attn_mask=attn_mask,\n                mamba_mask=mamba_mask,\n            )\n\n        return self.final_layernorm(h)\n\n\nclass Model(nn.Module):\n\n    def __init__(self, args):\n        super().__init__()\n        self.args = args\n        self.model_type = args.model_type\n        self.model = FalconH1Model(args=args)\n        if not args.tie_word_embeddings:\n            self.lm_head = nn.Linear(args.hidden_size, args.vocab_size, bias=False)\n\n    def __call__(self, inputs, cache=None):\n        hidden_states = self.model(inputs, cache=cache)\n        if self.args.tie_word_embeddings:\n            out = self.model.embed_tokens.as_linear(hidden_states)\n",
+  "content_sha256": "eb34db634e6f0a84443171f377c1cfb9b0fb7ad3074426884c27c4e079725967",
+  "end_line": 452,
+  "known_fix_or_grader_read": false,
+  "lexical_overlap_score": 26,
+  "path": "mlx_lm/models/falcon_h1.py",
+  "prompt_terms_sha256": "65a62978283c01b7ba3675b513e0344a98b170a0a4b3dfb1ffe7a02222b7be2e",
+  "schema_version": 1,
+  "selection_inputs": [
+    "task_prompt",
+    "candidate_source",
+    "editable_path_from_task_metadata"
+  ],
+  "source_sha256": "68c25a5b53a8f87bf843e87c93b8c35caf1a059600583506d7180d2f79863ca6",
+  "start_line": 373,
+  "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2",
+  "task_prompt_sha256": "629728ccf1441cf508698c9d488f9b47dbeb142c2d351f3bbca2a709e4472867",
+  "window_lines": 80
+}

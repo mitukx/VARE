@@ -1,0 +1,11 @@
+{
+  "audit_id": "sprint-vii-controller-code-drift-v1",
+  "current_controller_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/run_sprint_vii_model_interface.py",
+  "current_controller_sha256": "9701412dbfd146ae0cafc2725262c4e1fbe363711b6d2d28014cd1d09b835cd2",
+  "frozen_controller_sha256": "70ecbacdb0490a7507180e169f16221986a55e8a3c463d5c81dc0ace37faceef",
+  "postrun_change": "After both arms completed, removed the empty GIT_EXTERNAL_DIFF environment override and added --no-ext-diff/--no-textconv to canonical diff generation. The frozen run output retained an empty wrapper diff, so a separate postrun audit reconstructs the canonical diff from the candidate workspaces.",
+  "protocol_sha256": "27796d62cd20a5764ba5191804df499c8a161b61d87afe55ad46378442490303",
+  "snapshot_matches_protocol": true,
+  "snapshot_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/model_compat_run_02/controller-snapshot/run_sprint_vii_model_interface.py",
+  "snapshot_sha256": "70ecbacdb0490a7507180e169f16221986a55e8a3c463d5c81dc0ace37faceef"
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "vare.sprint-vii.github-ci-success-record.v1",
+  "recorded_utc": "2026-10-28T02:51:00Z",
+  "pull_request": 139,
+  "head_sha": "e1be20cbf67d4d60a3e180172e9598d4bc0d1862",
+  "base_branch": "codex/navigation-integrity-fixes-v1",
+  "runs": {
+    "ci": [40622442697, 40622449164],
+    "cpu_evidence": [40622449205],
+    "e2e_system_cpu": [40622449291]
+  },
+  "result": "all checks shown for exact head passed",
+  "required_branch_protection_contexts": {
+    "count": 9,
+    "all_passed": true,
+    "contexts": [
+      "blob-budget",
+      "lint",
+      "math500-grader",
+      "rvl-inference-cpu",
+      "seeded-summary-cpu",
+      "test (3.11)",
+      "test (3.12)",
+      "test (3.13)",
+      "typecheck"
+    ]
+  },
+  "additional_checks": {
+    "calibrated-cpu-tasks": "pass",
+    "actual-optimizer-and-recovery": "pass"
+  },
+  "test_job_durations": {
+    "3.11": ["5m1s", "6m58s"],
+    "3.12": ["7m52s", "7m32s"],
+    "3.13": ["6m5s", "6m4s"]
+  },
+  "local_changed_area_regression": "58 passed, 4 skipped",
+  "merge_status": "not merged; PR remains Draft and requires an independent approving review"
+}

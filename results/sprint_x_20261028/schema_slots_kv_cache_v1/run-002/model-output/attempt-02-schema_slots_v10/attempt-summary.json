@@ -1,0 +1,327 @@
+{
+  "arm": "schema_slots_v10",
+  "attempt_index": 2,
+  "input_sha256": "0dda649ee3829f8cb87a2158106a3a8876f62b25938e30a779cc5e712cd0e75b",
+  "max_context_tokens": 8192,
+  "outcome": "two_turn_tool_interaction_complete",
+  "sampling": {
+    "do_sample": false,
+    "temperature": 0.0,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "token_budget_per_turn": 128,
+  "tool_execution": {
+    "arguments": {
+      "end": 3,
+      "path": "src/fixture.py",
+      "start": 1
+    },
+    "name": "read_lines",
+    "result": {
+      "content": "VALUE = 17\ndef combine(left, right):\n    return left + right\n",
+      "end_line": 3,
+      "lease": "bench-rep-01-lease",
+      "line_count": 3,
+      "path": "src/fixture.py",
+      "start_line": 1,
+      "status": "read_complete"
+    },
+    "wall_seconds": 0.000168
+  },
+  "tool_turns": [
+    {
+      "generated_tokens": 8,
+      "generation_protocol_detail": {
+        "kv_cache_policy": "shared_turn_prefix_cache",
+        "protocol_id": "vare.schema-slots.v10",
+        "serialized_action": {
+          "arguments": {
+            "end": 3,
+            "path": "src/fixture.py",
+            "start": 1
+          },
+          "name": "read_lines"
+        },
+        "shared_prefix_cache": {
+          "build_wall_seconds": 11.646328,
+          "cache_entries": 28,
+          "prefix_text_sha256": "23da2d5e0bb0fc3035fc773e8ad730d071386eb5bcc7ac463306e36a6d57872c",
+          "prefix_tokens": 2980
+        },
+        "stages": [
+          {
+            "allowed_token_sequences": {
+              "read_lines": [
+                878,
+                18323
+              ]
+            },
+            "allowed_tool_names": [
+              "read_lines"
+            ],
+            "decode_tokens_per_second": 25.83722,
+            "decode_wall_seconds_after_first_token": 0.077408,
+            "full_prompt_tokens": 3026,
+            "generated_token_ids": [
+              878,
+              18323
+            ],
+            "generated_tokens": 2,
+            "generation_wall_seconds": 0.528991,
+            "host_process_peak_rss_bytes_to_date": 4751491072,
+            "kv_cache_fallback_reason": null,
+            "kv_cache_policy": "shared_turn_prefix_cache",
+            "kv_cache_restore_wall_seconds": 0.00012,
+            "kv_cache_reused_prefix_tokens": 2980,
+            "metal_active_memory_bytes_after": 5722614792,
+            "metal_peak_memory_bytes_this_stage": 5891386668,
+            "prefill_input_tokens": 46,
+            "prompt_prefill_seconds": 0.353262,
+            "prompt_render_wall_seconds": 0.005231,
+            "prompt_sha256": "a924153562a3890ab9a23ecb8f36a0eaf8e4c9af18429bbf29ba933ff5937095",
+            "prompt_tokens": 3026,
+            "prompt_tokens_per_second": 130.215106,
+            "raw_model_output": "read_lines",
+            "selected_tool": "read_lines",
+            "stage": "tool_choice",
+            "stream_emitted_tokens": 3,
+            "template_seconds": 0.000114,
+            "time_to_first_token_seconds": 0.451583,
+            "tokenizer_encode_seconds": 0.005115
+          },
+          {
+            "argument": "path",
+            "decode_tokens_per_second": 29.955151,
+            "decode_wall_seconds_after_first_token": 0.133533,
+            "full_prompt_tokens": 3082,
+            "generated_token_ids": [
+              3548,
+              14,
+              59612,
+              7197
+            ],
+            "generated_tokens": 4,
+            "generation_constraint": "raw_string_slot",
+            "generation_wall_seconds": 0.687948,
+            "host_process_peak_rss_bytes_to_date": 4751491072,
+            "kv_cache_fallback_reason": null,
+            "kv_cache_policy": "shared_turn_prefix_cache",
+            "kv_cache_restore_wall_seconds": 0.000123,
+            "kv_cache_reused_prefix_tokens": 2980,
+            "metal_active_memory_bytes_after": 5908868104,
+            "metal_peak_memory_bytes_this_stage": 6165065252,
+            "prefill_input_tokens": 102,
+            "prompt_prefill_seconds": 0.553706,
+            "prompt_render_wall_seconds": 0.004937,
+            "prompt_sha256": "d71ad58f651bf81bcfa50dfdf2d3175fdb3d633195411523028962f603ad2012",
+            "prompt_tokens": 3082,
+            "prompt_tokens_per_second": 184.213144,
+            "raw_model_output": "src/fixture.py",
+            "schema_type": "string",
+            "stage": "argument_value",
+            "stream_emitted_tokens": 5,
+            "template_seconds": 0.000109,
+            "time_to_first_token_seconds": 0.554415,
+            "tokenizer_encode_seconds": 0.004826,
+            "tool": "read_lines"
+          },
+          {
+            "argument": "start",
+            "decode_tokens_per_second": 22.396751,
+            "decode_wall_seconds_after_first_token": 0.044649,
+            "full_prompt_tokens": 3103,
+            "generated_token_ids": [
+              16
+            ],
+            "generated_tokens": 1,
+            "generation_constraint": "strict_json_integer_scalar",
+            "generation_wall_seconds": 0.605813,
+            "host_process_peak_rss_bytes_to_date": 4751491072,
+            "kv_cache_fallback_reason": null,
+            "kv_cache_policy": "shared_turn_prefix_cache",
+            "kv_cache_restore_wall_seconds": 0.000157,
+            "kv_cache_reused_prefix_tokens": 2980,
+            "metal_active_memory_bytes_after": 5908868104,
+            "metal_peak_memory_bytes_this_stage": 6197079680,
+            "prefill_input_tokens": 123,
+            "prompt_prefill_seconds": 0.560384,
+            "prompt_render_wall_seconds": 0.006853,
+            "prompt_sha256": "bcc5b93b1b7f8a6c7ad29edf6415ce9ac73897e5a7d20d4bce78a534786c99a6",
+            "prompt_tokens": 3103,
+            "prompt_tokens_per_second": 219.492283,
+            "raw_model_output": "1",
+            "schema_type": "integer",
+            "stage": "argument_value",
+            "stream_emitted_tokens": 2,
+            "template_seconds": 0.000126,
+            "time_to_first_token_seconds": 0.561164,
+            "tokenizer_encode_seconds": 0.006726,
+            "tool": "read_lines"
+          },
+          {
+            "argument": "end",
+            "decode_tokens_per_second": 21.191941,
+            "decode_wall_seconds_after_first_token": 0.047188,
+            "full_prompt_tokens": 3130,
+            "generated_token_ids": [
+              18
+            ],
+            "generated_tokens": 1,
+            "generation_constraint": "strict_json_integer_scalar",
+            "generation_wall_seconds": 0.722401,
+            "host_process_peak_rss_bytes_to_date": 4751491072,
+            "kv_cache_fallback_reason": null,
+            "kv_cache_policy": "shared_turn_prefix_cache",
+            "kv_cache_restore_wall_seconds": 0.000206,
+            "kv_cache_reused_prefix_tokens": 2980,
+            "metal_active_memory_bytes_after": 5908868104,
+            "metal_peak_memory_bytes_this_stage": 6219100308,
+            "prefill_input_tokens": 150,
+            "prompt_prefill_seconds": 0.67465,
+            "prompt_render_wall_seconds": 0.004912,
+            "prompt_sha256": "e62a9ef628048b2de5e1aa6a9e34f727e984d74dd4e2f58fc1384c476f47b6ff",
+            "prompt_tokens": 3130,
+            "prompt_tokens_per_second": 222.337508,
+            "raw_model_output": "3",
+            "schema_type": "integer",
+            "stage": "argument_value",
+            "stream_emitted_tokens": 2,
+            "template_seconds": 0.000104,
+            "time_to_first_token_seconds": 0.675213,
+            "tokenizer_encode_seconds": 0.004806,
+            "tool": "read_lines"
+          }
+        ],
+        "stop_reason": "schema_valid_action",
+        "tool_choice_constraints": {
+          "allowed_tool_names": [
+            "read_lines"
+          ],
+          "token_level_mask": true
+        }
+      },
+      "name": "read_lines",
+      "parse_status": "complete_tool_call",
+      "prompt_tokens": 12341
+    },
+    {
+      "generated_tokens": 17,
+      "generation_protocol_detail": {
+        "kv_cache_policy": "shared_turn_prefix_cache",
+        "protocol_id": "vare.schema-slots.v10",
+        "serialized_action": {
+          "arguments": {
+            "summary": "Inspected the synthetic controller performance fixture. No source instructions provided. Task complete."
+          },
+          "name": "finish"
+        },
+        "shared_prefix_cache": {
+          "build_wall_seconds": 12.061517,
+          "cache_entries": 28,
+          "prefix_text_sha256": "6dab172325e3fef3aed3d1647ba705ccaf4dab8d86344462f6ae8370a522e26a",
+          "prefix_tokens": 3092
+        },
+        "stages": [
+          {
+            "allowed_token_sequences": {
+              "finish": [
+                30150
+              ]
+            },
+            "allowed_tool_names": [
+              "finish"
+            ],
+            "decode_tokens_per_second": 21.895333,
+            "decode_wall_seconds_after_first_token": 0.045672,
+            "full_prompt_tokens": 3137,
+            "generated_token_ids": [
+              30150
+            ],
+            "generated_tokens": 1,
+            "generation_wall_seconds": 0.527497,
+            "host_process_peak_rss_bytes_to_date": 4751491072,
+            "kv_cache_fallback_reason": null,
+            "kv_cache_policy": "shared_turn_prefix_cache",
+            "kv_cache_restore_wall_seconds": 0.000112,
+            "kv_cache_reused_prefix_tokens": 3092,
+            "metal_active_memory_bytes_after": 5800733704,
+            "metal_peak_memory_bytes_this_stage": 5965524264,
+            "prefill_input_tokens": 45,
+            "prompt_prefill_seconds": 0.376388,
+            "prompt_render_wall_seconds": 0.004834,
+            "prompt_sha256": "c1efc72c20cd547e381a84a93763e4d8f9eb508d31320f4f63153b0701a8810f",
+            "prompt_tokens": 3137,
+            "prompt_tokens_per_second": 119.557504,
+            "raw_model_output": "finish",
+            "selected_tool": "finish",
+            "stage": "tool_choice",
+            "stream_emitted_tokens": 2,
+            "template_seconds": 0.000119,
+            "time_to_first_token_seconds": 0.481825,
+            "tokenizer_encode_seconds": 0.004713
+          },
+          {
+            "argument": "summary",
+            "decode_tokens_per_second": 33.119823,
+            "decode_wall_seconds_after_first_token": 0.483094,
+            "full_prompt_tokens": 3191,
+            "generated_token_ids": [
+              15474,
+              4046,
+              279,
+              27268,
+              6461,
+              5068,
+              12507,
+              13,
+              2308,
+              2530,
+              11221,
+              3897,
+              13,
+              5430,
+              4583,
+              13
+            ],
+            "generated_tokens": 16,
+            "generation_constraint": "raw_string_slot",
+            "generation_wall_seconds": 1.029424,
+            "host_process_peak_rss_bytes_to_date": 4751491072,
+            "kv_cache_fallback_reason": null,
+            "kv_cache_policy": "shared_turn_prefix_cache",
+            "kv_cache_restore_wall_seconds": 0.000114,
+            "kv_cache_reused_prefix_tokens": 3092,
+            "metal_active_memory_bytes_after": 5991558152,
+            "metal_peak_memory_bytes_this_stage": 6167752176,
+            "prefill_input_tokens": 99,
+            "prompt_prefill_seconds": 0.545676,
+            "prompt_render_wall_seconds": 0.005202,
+            "prompt_sha256": "ec2cd44e99dea0c818c000a3a0ee498a8529df42af9b68e2dda5e5f9f871c6e3",
+            "prompt_tokens": 3191,
+            "prompt_tokens_per_second": 181.426396,
+            "raw_model_output": "Inspected the synthetic controller performance fixture. No source instructions provided. Task complete.",
+            "schema_type": "string",
+            "stage": "argument_value",
+            "stream_emitted_tokens": 17,
+            "template_seconds": 0.00012,
+            "time_to_first_token_seconds": 0.546329,
+            "tokenizer_encode_seconds": 0.005081,
+            "tool": "finish"
+          }
+        ],
+        "stop_reason": "schema_valid_action",
+        "tool_choice_constraints": {
+          "allowed_tool_names": [
+            "finish"
+          ],
+          "token_level_mask": true
+        }
+      },
+      "name": "finish",
+      "parse_status": "complete_tool_call",
+      "prompt_tokens": 6328
+    }
+  ],
+  "wall_seconds": 27.867637
+}

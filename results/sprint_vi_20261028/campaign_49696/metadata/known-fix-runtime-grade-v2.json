@@ -1,0 +1,45 @@
+{
+  "baseline_sha256": "06d5969991802b48b819484fa620862a074a77e04667870b3711ae9ceac6ce14",
+  "campaign_grader_sha256": "f3b524bc02534899accb0595776c665b9c4d68a98499439af8de3b552e42381b",
+  "candidate_base_commit": "bbfe86e1e8a1f078b41a3422257997dd56eb860b",
+  "grading_boundary": "Public tests used a local random-initialized tiny T5 with the pinned Transformers baseline package in an offline Docker worker. Independent hidden tests used a separately authored batch-2 runtime path from an inline grader script. Candidate code was executed only inside a network-disabled, read-only Docker container bounded to 2 GiB RAM, one CPU, 32 PIDs, and the frozen timeout. The synthetic one-commit workspace contains the full upstream baseline tree, no remotes/history, exact source provenance, and only target-file candidate changes are accepted.",
+  "hidden": {
+    "elapsed_seconds": 4.126,
+    "isolation": "network-disabled read-only workspace mount; 2 GiB RAM, 1 CPU, 32 PIDs",
+    "passed": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "{\"missing_id_shape\": [2, 3], \"missing_id_warnings\": [\"Passing `encoder_repetition_penalty` requires some form of `input_ids` to be passed to `generate`, ignoring the argument.\", \"Passing `encoder_no_repeat_ngram_size` requires some form of `input_ids` to be passed to `generate`, ignoring the argument.\"], \"passed\": true, \"valid_id_shape\": [2, 3], \"valid_id_warnings\": []}\n"
+  },
+  "hidden_runtime_script_sha256": "caf8a5be9926392f2e0aee0049c67a0bc7c361042c7a894356948226e320eff8",
+  "image": "vare-transformers-candidate-v2@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "public": {
+    "elapsed_seconds": 4.215,
+    "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+    "passed": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "3 public test(s) passed\n"
+  },
+  "public_test_sha256": "b9197596d639b144f88f009fd2ec1f813c7d812244abe9776785caec8da9f384",
+  "qualified_correct_repair": true,
+  "schema_version": 3,
+  "split": "development",
+  "target_path": "src/transformers/generation/utils.py",
+  "target_sha256": "16d2685a7dbcf5cc7bc5060c99c8159ac51bd3729317829c62b7a0cc3192af21",
+  "task_id": "transformers-49696-encoder-sentinel-logits-processors-runtime-v1",
+  "upstream_base_revision": "09a71e5b32a747dbc7805599457e67c956ef212f",
+  "upstream_fixed_revision": "ef1c61d3386d25275e4b8579ab2abf6ef4cf3c60",
+  "workspace_integrity": {
+    "baseline_source_sha256": "06d5969991802b48b819484fa620862a074a77e04667870b3711ae9ceac6ce14",
+    "changed_paths": [
+      "src/transformers/generation/utils.py"
+    ],
+    "history_commit_count": 1,
+    "inventory_matches_git": true,
+    "remote_count": 0,
+    "staged_paths": [],
+    "tracked_file_count": 6624,
+    "tracked_file_list_sha256": "9f016bb77758c33eee5f97cb8eaa13794e2309e96dfc21106d8fdfe4db25a0f3"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "candidate_execution": "grader interpreted a restricted AST; candidate was never imported or executed",
+  "classification": "synthetic end-to-end feasibility; not an external Development family",
+  "event_chain_valid": true,
+  "event_count": 21,
+  "event_journal_sha256": "e721cded3b01cc4b3221a767d32b08e867280536a2ca9b31b1e3a4557716927a",
+  "grader_execution_window": {
+    "end_utc": "2026-10-28T09:38:47.361910+00:00",
+    "start_utc": "2026-10-28T09:38:47.322022+00:00"
+  },
+  "grader_receipt_sha256": "77b76e9673fd2473a8e4a9025f2d2aed967374d953d7a737e5d3b94b68061e92",
+  "grader_started_after_model_run": true,
+  "independent_grade": {
+    "candidate_execution": "never_imported_or_executed",
+    "expected": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      100
+    ],
+    "grader": "sprint_x_synthetic_min_batch_ast_v1",
+    "inputs": [
+      -100,
+      -7,
+      -1,
+      0,
+      1,
+      2,
+      100
+    ],
+    "observed": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      100
+    ],
+    "reason": null,
+    "source_sha256": "71df183cf2441af7391c08ee662a108206badf03269fb3c1975d8c6a3c705d01",
+    "status": "PASS"
+  },
+  "metrics": {
+    "agent_stop_reason": "agent_finished",
+    "candidate_diff_sha256": "2c5238dff35058493722fdf66a00efd0df2c48e1533220e77d78ce512ba4ad63",
+    "candidate_source_sha256": "71df183cf2441af7391c08ee662a108206badf03269fb3c1975d8c6a3c705d01",
+    "edit_applied": true,
+    "generated_tokens": 61,
+    "model_explicitly_finished": true,
+    "sum_generation_wall_seconds": 44.184979,
+    "sum_prompt_tokens": 12039,
+    "tool_call_count": 4,
+    "tool_names": [
+      "list_functions",
+      "read_function",
+      "replace_function_body_transactional",
+      "finish"
+    ],
+    "turns": 4,
+    "valid_schema_turns": 4
+  },
+  "protocol_id": "vare-sprint-x-synthetic-function-edit-e0-v5",
+  "protocol_sha256": "096ef4df3a9cf38932904a807cb06bc6b9bbc5278c39aa48ed47602b5a774549",
+  "public_tests": "not exposed or run",
+  "resource_summary": {
+    "abort_reason": null,
+    "final_disk_free_bytes": 47022354432,
+    "final_swap_free_bytes": 1571291136,
+    "final_swap_used_bytes": 576192512,
+    "initial_available_memory_bytes": 13671284736,
+    "initial_disk_free_bytes": 47015997440,
+    "initial_free_swap_bytes": 1571291136,
+    "initial_swap_used_bytes": 576192512,
+    "limits": {
+      "max_agent_wall_seconds": 600,
+      "max_outer_wall_seconds": 750,
+      "max_process_tree_rss_bytes": 10737418240,
+      "max_swap_growth_bytes": 33554432,
+      "minimum_available_memory_bytes": 2147483648,
+      "minimum_disk_free_bytes": 17179869184,
+      "minimum_free_swap_bytes": 536870912,
+      "sample_interval_seconds": 1
+    },
+    "maximum_swap_growth_bytes": 0,
+    "minimum_host_available_memory_bytes": 7699841024,
+    "outer_elapsed_seconds": 51.688,
+    "peak_process_tree_rss_bytes": 4744724480,
+    "returncode": 0,
+    "status": "COMPLETED"
+  },
+  "sealed_at_utc": "2026-10-28T09:38:47.377177+00:00"
+}

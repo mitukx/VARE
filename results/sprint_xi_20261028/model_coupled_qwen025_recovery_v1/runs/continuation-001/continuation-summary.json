@@ -1,0 +1,125 @@
+{
+  "campaign_wall_seconds": 44.27413950001937,
+  "capability_claim": false,
+  "effective_v2_recovery_commits": 1,
+  "evaluation": {
+    "recovered_v2": 0.06611747574061155,
+    "reference_v2": 0.06611747574061155,
+    "v1": 0.06505862809717655
+  },
+  "fresh_v1_group_id": "sprint-xi-v1:fresh_v1:xi-v1-fresh-v1-03",
+  "host_ram_available_bytes_after": 15558082560,
+  "host_swap_growth_bytes": 0,
+  "learner_fault_returncode": -9,
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "naive_stale_optimizer_update": "NOT_RUN: queued cohort had constant zero reward across all eight prompts; admission-only contrast passed without using the group for training",
+  "optimizer_attempts_for_v2_recovery": 2,
+  "parent_partial_failure_sha256": "b067bb79a98670959e8fac0d9a9d28566e7b6114ebcbd79cb09afb185f1ad592",
+  "parent_partial_run": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_v1/runs/run-001",
+  "parent_protocol_id": "vare-sprint-xi-qwen025-model-coupled-recovery-v1",
+  "processes": [
+    {
+      "log": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/process-worker-fresh-v1.log",
+      "name": "worker-fresh-v1",
+      "peak_process_tree_rss_bytes": 2724773888,
+      "returncode": 0,
+      "wall_seconds": 7.157010166003602
+    },
+    {
+      "log": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/process-synchronous-reference-v2.log",
+      "name": "synchronous-reference-v2",
+      "peak_process_tree_rss_bytes": 3450322944,
+      "returncode": 0,
+      "wall_seconds": 5.502934208023362
+    },
+    {
+      "log": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/process-learner-sigkill-after-optimizer.log",
+      "name": "learner-sigkill-after-optimizer",
+      "peak_process_tree_rss_bytes": 2620932096,
+      "returncode": -9,
+      "wall_seconds": 4.852004665997811
+    },
+    {
+      "log": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/process-learner-recovery-v2.log",
+      "name": "learner-recovery-v2",
+      "peak_process_tree_rss_bytes": 3098329088,
+      "returncode": 0,
+      "wall_seconds": 5.701783750002505
+    },
+    {
+      "log": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/process-evaluate-v1.log",
+      "name": "evaluate-v1",
+      "peak_process_tree_rss_bytes": 2675245056,
+      "returncode": 0,
+      "wall_seconds": 5.255209249997279
+    },
+    {
+      "log": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/process-evaluate-reference-v2.log",
+      "name": "evaluate-reference-v2",
+      "peak_process_tree_rss_bytes": 2691825664,
+      "returncode": 0,
+      "wall_seconds": 5.2589438339928165
+    },
+    {
+      "log": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/process-evaluate-recovered-v2.log",
+      "name": "evaluate-recovered-v2",
+      "peak_process_tree_rss_bytes": 2668789760,
+      "returncode": 0,
+      "wall_seconds": 5.260540375020355
+    },
+    {
+      "log": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/process-evaluate-adverse-candidate.log",
+      "name": "evaluate-adverse-candidate",
+      "peak_process_tree_rss_bytes": 2666627072,
+      "returncode": 0,
+      "wall_seconds": 5.261947457998758
+    }
+  ],
+  "promotion": {
+    "checkpoint_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-sprint-iv-evidence-public/results/sprint_xi_20261028/model_coupled_qwen025_recovery_v1/runs/continuation-001/checkpoints/recovered-v2",
+    "checkpoint_sha256": "81e3efdd8aa58029e49a1e3c4657c2be1929c9c6b625220077d69f1e750e7dc2",
+    "incumbent_score": 0.06611747574061155,
+    "policy_version": 2,
+    "promotion_rule": "nondecreasing synthetic choice probability"
+  },
+  "protocol_id": "vare-sprint-xi-qwen025-model-coupled-recovery-continuation-v1",
+  "protocol_sha256": "ce783a3837792c0504110667eab5b35681ce59c3f7b91d5d28b82393db491caf",
+  "recovered_v2_checkpoint_sha256": "81e3efdd8aa58029e49a1e3c4657c2be1929c9c6b625220077d69f1e750e7dc2",
+  "recovery_latency_seconds": 5.70196812498034,
+  "reference_v2_checkpoint_sha256": "81e3efdd8aa58029e49a1e3c4657c2be1929c9c6b625220077d69f1e750e7dc2",
+  "rollback_negative_control": {
+    "active_checkpoint_sha256_after_rejection": "81e3efdd8aa58029e49a1e3c4657c2be1929c9c6b625220077d69f1e750e7dc2",
+    "adverse_candidate_score": 1.4341356227576263e-10,
+    "incumbent_identity_preserved": true,
+    "incumbent_score": 0.06611747574061155,
+    "pointer_sha256_after_rejection": "d7df65fc96badd70588adf5182f53e979c17467d3092179a282cc0e2387e0bde",
+    "rejected": true
+  },
+  "runner_sha256": "db704017142a39ed0c3fb57fc5b3e7d9e926a9f0904dd3289b5b711c619fa7ec",
+  "scope": "real Qwen inference plus two VARE/RVL GRPO commits on an output-bias adapter; synthetic rewards; systems/recovery feasibility only",
+  "staleness_admission": {
+    "active_policy_version": 1,
+    "group_id": "sprint-xi-v1:queued_stale_v0:xi-v1-stale-01",
+    "naive_accepted_same_stale_group": true,
+    "naive_admitted_members": 4,
+    "optimizer_update_on_constant_group": false,
+    "policy_version": 0,
+    "prompt_id": "xi-v1-stale-01",
+    "protocol_id": "vare-sprint-xi-qwen025-model-coupled-recovery-continuation-v1",
+    "queue_age_seconds": 196.1753830909729,
+    "replay_group_added": true,
+    "rewards": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "source_artifact_sha256": "fd8c336c6e49c18d017c75946778be90fe26cc9722060ad5ad140fa376cc1ed9",
+    "vare_admitted_members": 0,
+    "vare_rejected_stale_group": true
+  },
+  "status": "completed",
+  "synchronous_reference_commit_count": 1,
+  "v1_checkpoint_sha256": "e44cbec0882ba50dfd984f12b83cf476f8c1ff437a9dc090c71582585987e5eb",
+  "worker_sigkill_recovery_reused_from_parent_partial_run": true
+}

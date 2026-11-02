@@ -1,0 +1,41 @@
+Calling `python -m mlx_lm.lora...` directly is deprecated. Use `mlx_lm.lora...` or `python -m mlx_lm lora ...` instead.
+Loading pretrained model
+Loading datasets
+Warning: Validation set not found or empty. Training will proceed without validation.
+Training
+╭─ mlx_lm.lora ────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│    model                                                                                                             │
+│  /Users/user/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167d  │
+│  ef9a775                                                                                                             │
+│    type            lora · 4 layers · rank 8                                                                          │
+│    dataset                                                                                                           │
+│  <VARE_REPO>/results/sprint_iv_20261  │
+│  027/mlsys-train-only-sft-v1/data                                                                                    │
+│    optimizer       adam · lr 1.0e-05                                                                                 │
+│    batch · iters   1 · 20                                                                                            │
+│    max seq         2,048                                                                                             │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+Trainable parameters: 0.148% (0.733M/494.033M)
+  iter   train_loss     tok/s     tokens
+     1    0.628 ▼       54      0.3k
+     2    0.635 ▲      414      0.7k
+     3    0.618 ▼      814      1.0k
+     4    0.385 ▼      725      1.5k
+     5    0.395 ▲      852      2.0k
+     6    0.500 ▲      965      2.3k
+     7    0.483 ▼      873      2.7k
+     8    0.323 ▼      858      3.1k
+     9    0.272 ▼      794      3.6k
+    10    0.328 ▲      567      3.9k
+    11    0.351 ▲      860      4.3k
+    12    0.230 ▼      906      4.7k
+    13    0.306 ▲      969      5.1k
+    14    0.234 ▼      596      5.3k
+    15    0.186 ▼      764      5.9k
+    16    0.166 ▼      853      6.3k
+    17    0.178 ▲      626      6.6k
+    18    0.223 ▲      887      7.0k
+    19    0.214 ▼      734      7.3k
+    20    0.150 ▼      808      7.8k
+  save  0000020_adapters.safetensors
+train ██████████████████████████████ 100% ·    20/20

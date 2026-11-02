@@ -1,0 +1,11 @@
+--- upstream-baseline/mlx_lm/models/falcon_h1.py
++++ candidate/mlx_lm/models/falcon_h1.py
+@@ -420,7 +420,7 @@
+         h = self.embed_tokens(inputs)
+ 
+         if cache is None:
+-            cache = [(None, None) * len(self.layers)]
++            cache = [(None, None) for _ in range(len(self.layers))]
+ 
+         mamba_mask = create_ssm_mask(h, cache[0][0])
+         attn_mask = create_attention_mask(h, cache[0][1])

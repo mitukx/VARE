@@ -1,0 +1,58 @@
+{
+  "candidate_baseline": {
+    "commit": "80efcba045c3a7b228630caecb6fe214548506ca",
+    "commit_count": 1,
+    "remotes_absent": true,
+    "target_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+    "tree": "37ba7ee73cdd58cc55f8bee2dfebeed0317939b5",
+    "upstream_history_absent": true
+  },
+  "candidate_visible_tools": {
+    "editable_source_paths": [
+      "src/transformers/data/data_collator.py"
+    ],
+    "fixed_source_and_mutant_snapshots_outside_candidate_workspace": true,
+    "hidden_grader_not_in_candidate_workspace": true,
+    "public_test_available_only_through_bounded_runner": true
+  },
+  "exposure": {
+    "VARE_prior_model_attempt_found": false,
+    "model_pretraining_exposure": "UNKNOWN",
+    "public_fix_exposure_possible": true,
+    "researcher_inspected_public_upstream_pr_for_task_design": true
+  },
+  "identities": {
+    "baseline_source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+    "grading_image": "vare-transformers-candidate-v2@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "hidden_test_sha256": "b3789cf3d9c68be8978e5d426ed500fb62c7bdc634eae43fd4a8ae4122957c12",
+    "incorrect_mutant_source_sha256": "555746c4fb41ece40083a875ac9cd5493f86b75d383d5da625f66db22c14bf07",
+    "known_fix_source_sha256": "7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6",
+    "public_test_sha256": "e334e03c328fd6fff1a5e21fa401de7f5128a6edb98ec6c24c6073476302a3d7",
+    "task_brief_sha256": "f08057991691026096cfa43d33fd8c0953473529e74855af902a2f8037d6b017",
+    "task_json_sha256": "008a7d1d8234d739d986659169e47b9e934536cc85fb3dc3b746ca770d768496",
+    "trusted_grader_sha256": "08102d74a6b29c4ff951782ea99074c2ef231da3ca569cf50584e98d41e3a68d"
+  },
+  "notes": [
+    "This establishes Development qualification only.",
+    "It does not establish blind held-out eligibility or pretraining non-exposure."
+  ],
+  "qualification_controls": {
+    "adversarial_grader_integrity_tests": "4 passed",
+    "baseline": "FAIL",
+    "control_record_sha256": "d7ea8845e0895bcd07abda24bb455c6fe59a81b55f76dc9a7f186e877ecbac98",
+    "incorrect_mutant": "FAIL",
+    "known_fix": "PASS",
+    "public_hidden_separation": "hidden test mounted only at /grader/semantic_test.py in network-disabled read-only grading container"
+  },
+  "schema_version": 1,
+  "split": "development",
+  "task_id": "transformers-49900-numpy-integer-label-dtype-v1",
+  "upstream": {
+    "base_revision": "50a952d06c8f593b5a0cea5dc8040fad9761ea67",
+    "known_fix_revision": "54bec9ef72c1f9ed5bf0ea3096c5a1641583f1bd",
+    "merged_revision": "5922731af57ec4359b5a8cbadb73384a78f62fa1",
+    "pull_request": 49900,
+    "repository": "https://github.com/huggingface/transformers",
+    "target_path": "src/transformers/data/data_collator.py"
+  }
+}

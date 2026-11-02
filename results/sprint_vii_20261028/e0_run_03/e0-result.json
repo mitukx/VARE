@@ -1,0 +1,381 @@
+{
+  "cases": {
+    "artifact_size_budget": true,
+    "baseline_fails": true,
+    "canonical_diff": true,
+    "grader_immutable": true,
+    "grader_source_drift_rejected": true,
+    "grader_spoof_rejected": true,
+    "hash_bound_atomic_edit": true,
+    "invalid_patch_rejected_without_write": true,
+    "known_fix_passes": true,
+    "source_changed": true,
+    "source_listed": true,
+    "source_read": true,
+    "stale_source_rejected_without_overwrite": true,
+    "symlink_rejected_without_target_change": true,
+    "wall_clock_budget": true,
+    "wrong_mutant_fails": true
+  },
+  "code_sha256": {
+    "agent_runner": "3ba2ce0114927893d02a3e366276c9ea3ded6051858429971e75b25c1d6414cb",
+    "e0_test": "f48d5d84ddbbe8448bed4c64fd46ac0937a5fb1c84dc53981ce029e5b852fc72",
+    "function_edit": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+    "function_edit_test": "572dbbeece49c3f9619e964196e78e6adf093c1470868c308d6f065abbdb9b7f",
+    "grader": "fd94406bef984ef74489f39aa72d40126c1ba7db5ac4b76d9ceb99b7c23b7d22",
+    "runner": "be5525cd816380e7bad7dc7e5665868951e0a89c1752b497efa1f6671bda49aa",
+    "schema_slot_test": "6c9aaaec6ea792a368432f403caa8e0f570ca058498eb9e5c527201f163ea8c0",
+    "schema_slots": "d677e475460a9d9d9492cd74ef9c209bd78bdb2e950a8a02225cc82ce9b7dbaa",
+    "transactional_edit": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0"
+  },
+  "fixture_id": "vare-sprint-vii-e0-clamp-v1",
+  "grader_execution_boundary": "candidate bytes parsed and interpreted under restricted AST; candidate never imported or executed",
+  "grader_outcomes": {
+    "baseline": {
+      "command": [
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "-I",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/sprint_vii_e0_grader.py",
+        "--workspace-root",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/e0_run_03/grader-cases/baseline",
+        "--source",
+        "candidate.py",
+        "--expected-sha256",
+        "aba6e4174fa8d05b0359fd2c736c686c6a1fbb5784f7a62808495acdeea7ade2"
+      ],
+      "elapsed_seconds": 0.047135,
+      "receipt": {
+        "candidate_execution": "never_imported_or_executed",
+        "cases": [
+          {
+            "actual": -7,
+            "expected": 0,
+            "input": -7,
+            "passed": false
+          },
+          {
+            "actual": -1,
+            "expected": 0,
+            "input": -1,
+            "passed": false
+          },
+          {
+            "actual": 0,
+            "expected": 0,
+            "input": 0,
+            "passed": true
+          },
+          {
+            "actual": 1,
+            "expected": 1,
+            "input": 1,
+            "passed": true
+          },
+          {
+            "actual": 7,
+            "expected": 7,
+            "input": 7,
+            "passed": true
+          }
+        ],
+        "reason": "frozen_case_mismatch",
+        "source_sha256": "aba6e4174fa8d05b0359fd2c736c686c6a1fbb5784f7a62808495acdeea7ade2",
+        "status": "FAIL"
+      },
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"candidate_execution\":\"never_imported_or_executed\",\"cases\":[{\"actual\":-7,\"expected\":0,\"input\":-7,\"passed\":false},{\"actual\":-1,\"expected\":0,\"input\":-1,\"passed\":false},{\"actual\":0,\"expected\":0,\"input\":0,\"passed\":true},{\"actual\":1,\"expected\":1,\"input\":1,\"passed\":true},{\"actual\":7,\"expected\":7,\"input\":7,\"passed\":true}],\"reason\":\"frozen_case_mismatch\",\"source_sha256\":\"aba6e4174fa8d05b0359fd2c736c686c6a1fbb5784f7a62808495acdeea7ade2\",\"status\":\"FAIL\"}\n"
+    },
+    "grader_spoof": {
+      "command": [
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "-I",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/sprint_vii_e0_grader.py",
+        "--workspace-root",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/e0_run_03/grader-cases/grader-spoof",
+        "--source",
+        "candidate.py",
+        "--expected-sha256",
+        "d8ef10ca971ce5a4bbea80b564eb86872b4c1e7bbd73933efff87c92978b0541"
+      ],
+      "elapsed_seconds": 0.043523,
+      "receipt": {
+        "candidate_execution": "never_imported_or_executed",
+        "reason": "candidate_module_shape_rejected",
+        "source_sha256": "d8ef10ca971ce5a4bbea80b564eb86872b4c1e7bbd73933efff87c92978b0541",
+        "status": "REJECT"
+      },
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"candidate_execution\":\"never_imported_or_executed\",\"reason\":\"candidate_module_shape_rejected\",\"source_sha256\":\"d8ef10ca971ce5a4bbea80b564eb86872b4c1e7bbd73933efff87c92978b0541\",\"status\":\"REJECT\"}\n"
+    },
+    "known_fix": {
+      "command": [
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "-I",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/sprint_vii_e0_grader.py",
+        "--workspace-root",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/e0_run_03/candidate-workspace",
+        "--source",
+        "candidate.py",
+        "--expected-sha256",
+        "ab83f3ea53bd1431ce25833f369737955ece4f6e8566a687e4e68ba4c4499d1f"
+      ],
+      "elapsed_seconds": 0.043782,
+      "receipt": {
+        "candidate_execution": "never_imported_or_executed",
+        "cases": [
+          {
+            "actual": 0,
+            "expected": 0,
+            "input": -7,
+            "passed": true
+          },
+          {
+            "actual": 0,
+            "expected": 0,
+            "input": -1,
+            "passed": true
+          },
+          {
+            "actual": 0,
+            "expected": 0,
+            "input": 0,
+            "passed": true
+          },
+          {
+            "actual": 1,
+            "expected": 1,
+            "input": 1,
+            "passed": true
+          },
+          {
+            "actual": 7,
+            "expected": 7,
+            "input": 7,
+            "passed": true
+          }
+        ],
+        "reason": "all_frozen_cases_passed",
+        "source_sha256": "ab83f3ea53bd1431ce25833f369737955ece4f6e8566a687e4e68ba4c4499d1f",
+        "status": "PASS"
+      },
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"candidate_execution\":\"never_imported_or_executed\",\"cases\":[{\"actual\":0,\"expected\":0,\"input\":-7,\"passed\":true},{\"actual\":0,\"expected\":0,\"input\":-1,\"passed\":true},{\"actual\":0,\"expected\":0,\"input\":0,\"passed\":true},{\"actual\":1,\"expected\":1,\"input\":1,\"passed\":true},{\"actual\":7,\"expected\":7,\"input\":7,\"passed\":true}],\"reason\":\"all_frozen_cases_passed\",\"source_sha256\":\"ab83f3ea53bd1431ce25833f369737955ece4f6e8566a687e4e68ba4c4499d1f\",\"status\":\"PASS\"}\n"
+    },
+    "source_drift": {
+      "command": [
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "-I",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/sprint_vii_e0_grader.py",
+        "--workspace-root",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/e0_run_03/candidate-workspace",
+        "--source",
+        "candidate.py",
+        "--expected-sha256",
+        "aba6e4174fa8d05b0359fd2c736c686c6a1fbb5784f7a62808495acdeea7ade2"
+      ],
+      "elapsed_seconds": 0.04093,
+      "receipt": {
+        "candidate_execution": "never_imported_or_executed",
+        "reason": "source_hash_mismatch",
+        "source_sha256": "ab83f3ea53bd1431ce25833f369737955ece4f6e8566a687e4e68ba4c4499d1f",
+        "status": "REJECT"
+      },
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"candidate_execution\":\"never_imported_or_executed\",\"reason\":\"source_hash_mismatch\",\"source_sha256\":\"ab83f3ea53bd1431ce25833f369737955ece4f6e8566a687e4e68ba4c4499d1f\",\"status\":\"REJECT\"}\n"
+    },
+    "wrong_mutant": {
+      "command": [
+        "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "-I",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/sprint_vii_e0_grader.py",
+        "--workspace-root",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/e0_run_03/grader-cases/wrong-mutant",
+        "--source",
+        "candidate.py",
+        "--expected-sha256",
+        "ac72c16ad1dd02791b5bb39c2f19463e319f008043ff03a942d66b0304dc091c"
+      ],
+      "elapsed_seconds": 0.042619,
+      "receipt": {
+        "candidate_execution": "never_imported_or_executed",
+        "cases": [
+          {
+            "actual": 1,
+            "expected": 0,
+            "input": -7,
+            "passed": false
+          },
+          {
+            "actual": 1,
+            "expected": 0,
+            "input": -1,
+            "passed": false
+          },
+          {
+            "actual": 1,
+            "expected": 0,
+            "input": 0,
+            "passed": false
+          },
+          {
+            "actual": 1,
+            "expected": 1,
+            "input": 1,
+            "passed": true
+          },
+          {
+            "actual": 7,
+            "expected": 7,
+            "input": 7,
+            "passed": true
+          }
+        ],
+        "reason": "frozen_case_mismatch",
+        "source_sha256": "ac72c16ad1dd02791b5bb39c2f19463e319f008043ff03a942d66b0304dc091c",
+        "status": "FAIL"
+      },
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"candidate_execution\":\"never_imported_or_executed\",\"cases\":[{\"actual\":1,\"expected\":0,\"input\":-7,\"passed\":false},{\"actual\":1,\"expected\":0,\"input\":-1,\"passed\":false},{\"actual\":1,\"expected\":0,\"input\":0,\"passed\":false},{\"actual\":1,\"expected\":1,\"input\":1,\"passed\":true},{\"actual\":7,\"expected\":7,\"input\":7,\"passed\":true}],\"reason\":\"frozen_case_mismatch\",\"source_sha256\":\"ac72c16ad1dd02791b5bb39c2f19463e319f008043ff03a942d66b0304dc091c\",\"status\":\"FAIL\"}\n"
+    }
+  },
+  "grader_sha256_before_after": {
+    "after": "fd94406bef984ef74489f39aa72d40126c1ba7db5ac4b76d9ceb99b7c23b7d22",
+    "before": "fd94406bef984ef74489f39aa72d40126c1ba7db5ac4b76d9ceb99b7c23b7d22"
+  },
+  "model_inference": "NOT_RUN",
+  "negative_controls": {
+    "invalid_patch": {
+      "result": {
+        "applied": false,
+        "error": "invalid_replacement_lines",
+        "lease": "invalid-lease",
+        "status": "invalid_json_or_schema"
+      },
+      "source_unchanged": true
+    },
+    "stale_source": {
+      "drifted_source_preserved": true,
+      "result": {
+        "applied": false,
+        "error": "stale_preimage",
+        "lease": "stale-lease",
+        "status": "valid_call_rejected_by_policy"
+      }
+    },
+    "symlink": {
+      "result": {
+        "error": "[Errno 62] Too many levels of symbolic links: 'candidate.py'",
+        "status": "valid_call_rejected_by_policy"
+      },
+      "target_unchanged": true
+    }
+  },
+  "protocol_id": "vare.sprint-vii.e0-edit-acceptance.v3",
+  "protocol_sha256": "b45ddc7fbfb74edd7a560b75d39a72775e8096e421b7057bead9646380bf4cce",
+  "reproduction": [
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q tests/test_sprint_vii_e0.py",
+    "python scripts/run_sprint_vii_e0.py --protocol /Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/protocols/e0_v3.json --output /Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/e0_run_03"
+  ],
+  "resource": {
+    "artifact_budget_bytes": 5242880,
+    "artifact_bytes_before_receipt": 84876,
+    "elapsed_seconds": 0.71019,
+    "final_artifact_bytes": 101513,
+    "process_peak_rss_platform_units": 21512192,
+    "process_peak_rss_units": "bytes on macOS; KiB on Linux",
+    "receipt_and_manifest_reserve_bytes": 262144
+  },
+  "source_identity": {
+    "base_commit": "007b73c28f6250b326b2edcc3789466a5c470f3b",
+    "base_source_sha256": "aba6e4174fa8d05b0359fd2c736c686c6a1fbb5784f7a62808495acdeea7ade2",
+    "candidate_source_sha256": "ab83f3ea53bd1431ce25833f369737955ece4f6e8566a687e4e68ba4c4499d1f",
+    "canonical_diff_sha256": "2ec485fbec8875df753ab13f4115372841980f50e8bb02c37255327fc524c975",
+    "canonical_diff_utf8": "diff --git a/candidate.py b/candidate.py\nindex 1fbe8b3..45908d0 100644\n--- a/candidate.py\n+++ b/candidate.py\n@@ -1,2 +1,2 @@\n def clamp(value):\n-    return value\n+    return max(0, value)\n",
+    "workspace_identity_verified": true
+  },
+  "status": "PASS",
+  "task_family_capability_claim": false,
+  "tool_events": [
+    {
+      "arguments": {
+        "path": "candidate.py"
+      },
+      "result": {
+        "functions": [
+          {
+            "end_line": 2,
+            "qualified_name": "clamp",
+            "signature": {
+              "args_ast": "arguments(posonlyargs=[], args=[arg(arg='value')], kwonlyargs=[], kw_defaults=[], defaults=[])",
+              "is_async": false,
+              "name": "clamp",
+              "returns_ast": null,
+              "type_comment": null
+            },
+            "start_line": 1
+          }
+        ],
+        "path": "candidate.py",
+        "source_sha256": "aba6e4174fa8d05b0359fd2c736c686c6a1fbb5784f7a62808495acdeea7ade2",
+        "status": "functions_listed"
+      },
+      "tool": "list_functions"
+    },
+    {
+      "arguments": {
+        "path": "candidate.py",
+        "qualified_name": "clamp"
+      },
+      "result": {
+        "body": "    return value\n",
+        "body_indent_prefix": "    ",
+        "end_line": 2,
+        "lease": "e0-lease-0001",
+        "path": "candidate.py",
+        "preserved_prefix": "def clamp(value):\n",
+        "qualified_name": "clamp",
+        "signature": {
+          "args_ast": "arguments(posonlyargs=[], args=[arg(arg='value')], kwonlyargs=[], kw_defaults=[], defaults=[])",
+          "is_async": false,
+          "name": "clamp",
+          "returns_ast": null,
+          "type_comment": null
+        },
+        "single_line_return_only": false,
+        "start_line": 1,
+        "status": "read_complete"
+      },
+      "tool": "read_function"
+    },
+    {
+      "arguments": {
+        "body_lines": [
+          "    return max(0, value)"
+        ],
+        "lease": "e0-lease-0001"
+      },
+      "result": {
+        "after_sha256": "ab83f3ea53bd1431ce25833f369737955ece4f6e8566a687e4e68ba4c4499d1f",
+        "applied": true,
+        "before_sha256": "aba6e4174fa8d05b0359fd2c736c686c6a1fbb5784f7a62808495acdeea7ade2",
+        "final_newline_preserved": true,
+        "lease": "e0-lease-0001",
+        "line_ending": "LF",
+        "lines_replaced": 2,
+        "path": "candidate.py",
+        "qualified_name": "clamp",
+        "raw_body_lines_sha256": "adf43426bfa0c266b70574f46bc199820dcb3e616fe89d6d2ca37839fcb69008",
+        "replacement_line_count": 2,
+        "replacement_lines_sha256": "3d5874961a2818641862bb79ed2bf435ae3ef7d725628a69a4516002c5fd5d1d",
+        "status": "edit_applied",
+        "syntax_valid": true
+      },
+      "tool": "replace_function_body_transactional"
+    }
+  ]
+}

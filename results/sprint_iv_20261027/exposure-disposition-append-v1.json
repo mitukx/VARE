@@ -1,0 +1,82 @@
+{
+  "schema": "vare.dataset-exposure-disposition.v1",
+  "recorded_at_utc": "2026-10-27T09:42:13Z",
+  "record_kind": "append_only_prospective_reconciliation",
+  "frozen_history": {
+    "heldout_qualification_pr": 129,
+    "heldout_qualification_head": "4920c249f11d20dc0846ab8966066b1b5d4600e8",
+    "readiness_record": "results/mlsys-heldout-task-readiness-v2.json",
+    "readiness_record_sha256": "cde4489049e9f6e685528651907d63a1ef88ad4121fb33c4914468a7add2d65a",
+    "original_split_assignments_modified": false
+  },
+  "family_dispositions": [
+    {
+      "family_id": "mlx-lm-falcon-h1-cache-initialization-and-gradient",
+      "upstream_repository": "ml-explore/mlx-lm",
+      "upstream_pr": 1926,
+      "upstream_url": "https://github.com/ml-explore/mlx-lm/pull/1926",
+      "shared_target": "mlx_lm/models/falcon_h1.py::FalconH1Model.__call__",
+      "shared_behavior": "per-layer cache initialization for uncached forward and finite nonzero gradients",
+      "original_vare_allocation": {
+        "task_id": "mlxlm-1926-falcon-cache-gradient",
+        "split": "heldout",
+        "baseline_revision": "87b7b583a697537aa68f47130b40884700b5f55f",
+        "certified_fix_revision": "3051e26bc72b8ab426af17d14c5599447eb306a5",
+        "historical_status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE"
+      },
+      "sprint_iv_exposure": {
+        "task_id": "mlx-lm-1926-falcon-h1-uncached-behavior-v2",
+        "split_used_by_campaign": "development",
+        "baseline_revision": "87b7b583a697537aa68f47130b40884700b5f55f",
+        "known_fix_revision": "ebba55f5176fe451b94f04212e975f052a6d96e0",
+        "model": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+        "localized_attempts": 2,
+        "independent_hidden_passes": 2
+      },
+      "prospective_disposition": "EXCLUDE_UPSTREAM_FAMILY_FROM_FUTURE_BLIND_HELDOUT",
+      "counting": {
+        "retain_historical_certificate": true,
+        "count_as_future_untouched_heldout": false
+      }
+    },
+    {
+      "family_id": "mlx-lm-minicpm3-left-padding-attention-mask",
+      "upstream_repository": "ml-explore/mlx-lm",
+      "exposed_upstream_pr": 1913,
+      "exposed_upstream_url": "https://github.com/ml-explore/mlx-lm/pull/1913",
+      "exposed_target": "mlx_lm/models/minicpm3.py::MiniCPM3Model.__call__",
+      "exposed_sprint_iv_task": "mlx-lm-1913-minicpm3-left-padding-behavior-v2",
+      "exposed_baseline_revision": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+      "exposed_known_fix_revision": "b4844fd8072b1fc241ce3bb5f81526346b80370f",
+      "observed_model_outcome": {
+        "localized_edits": 2,
+        "public_passes": 2,
+        "independent_hidden_passes": 0
+      },
+      "related_candidate": {
+        "upstream_pr": 1925,
+        "upstream_url": "https://github.com/ml-explore/mlx-lm/pull/1925",
+        "historical_task_id": "mlxlm-1925-minicpm3-phixtral-left-padding",
+        "prior_readiness_disposition": "EXCLUDED_AS_OVERLAPPING_MLXL_1921_CANDIDATE_FAMILY",
+        "overlap_basis": "PR #1913 and the MiniCPM3 part of #1925 target the same model file, __call__ method, cache[0]-derived attention mask, and left-padding equivalence behavior. PR #1925 also includes a distinct Phixtral component, but its composite certificate cannot count as an independent family after exposure of the shared MiniCPM3 component.",
+        "prospective_disposition": "DO_NOT_COUNT_COMPOSITE_PR_1925_AS_AN_INDEPENDENT_BLIND_FAMILY",
+        "phixtral_component": "Not exposed by Sprint IV's MiniCPM3-only candidate source allowlist; could be separately requalified only under a new standalone task, source split, and independent review."
+      },
+      "prospective_disposition": "EXCLUDE_MINICPM3_FAMILY_FROM_FUTURE_BLIND_HELDOUT",
+      "counting": {
+        "retain_sprint_iv_negative_result": true,
+        "count_as_future_untouched_heldout": false
+      }
+    }
+  ],
+  "prospective_inventory_reconciliation": {
+    "previous_source_grader_certified_unique_families": 10,
+    "removed_due_to_sprint_iv_exposure": 1,
+    "current_source_grader_certified_unique_families": 9,
+    "required": 15,
+    "remaining_to_source_grader_certificate_gate": 6,
+    "fully_model_eligible_heldout_total": "UNKNOWN_NOT_ESTABLISHED",
+    "heldout_model_inference_admitted": false,
+    "basis": "The prior 10/15 count included the original held-out #1926 family. Sprint IV exposed that family, so its historical certificate remains in the frozen record but it is removed from the prospective untouched count. The #1913/#1925 family was not included in the prior 10 certified unique families and receives no new independent credit. External pretraining exposure remains unaudited."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "editable_files": [
+      "src/transformers/core_model_loading.py",
+      "test_public.py"
+    ],
+    "split": "development"
+  },
+  "prompt": "Some reverse checkpoint-key conversions match unrelated key names when a conversion pattern uses a capture group. Inspect the mapping logic and repair the reverse matching behavior while preserving existing mapping behavior. Keep the change limited to src/transformers/core_model_loading.py.",
+  "source": {
+    "base_revision": "c0d024fbc873ab0325e1b40fc1bd69069609de65",
+    "calibration_revision": "46db8379cc5f6b9fa3fcda047ddcd9836227e968",
+    "repository": "huggingface/transformers",
+    "upstream_pr": "https://github.com/huggingface/transformers/pull/49772"
+  },
+  "task_id": "transformers-49772-reverse-capture-literal-semantics-v1"
+}

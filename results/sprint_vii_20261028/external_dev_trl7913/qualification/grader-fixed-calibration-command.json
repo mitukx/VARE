@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/tmp/vare-sprint-vii-mlx/bin/python",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/external_dev_trl7913/grader/grade_candidate.py",
+    "--workspace",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/external_dev_trl7913/grader/calibration-fixed-candidate-workspace",
+    "--runtime-template",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/external_dev_trl7913/grader/runtime-template",
+    "--grader-test",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/external_dev_trl7913/grader/test_cpo_trainer.py",
+    "--evidence-dir",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/external_dev_trl7913/qualification/grader-fixed-calibration",
+    "--image",
+    "vare-sprint-vii-trl-grader:v2",
+    "--hub-cache",
+    "/Users/user/.cache/huggingface/hub"
+  ],
+  "elapsed_seconds": 11.238,
+  "exit_code": 0,
+  "stderr": "",
+  "stdout": "{\n  \"status\": \"PASS\",\n  \"candidate_source_sha256\": \"52bad888f7a13128f2a9136e2796437085980b5d7b3021b1bc4e5323ed587f47\",\n  \"candidate_diff_sha256\": \"6840b00f6bc7e2b0eef4dd4dad12b161248dee88e331b91eb0eabfbe61265ef6\",\n  \"changed_paths\": [\n    \"trl/experimental/cpo/cpo_trainer.py\"\n  ],\n  \"scope\": {\n    \"status\": \"PASS\",\n    \"added_filters\": [\n      \"eval_dataset\",\n      \"train_dataset\"\n    ],\n    \"allowed_removals\": [\n      \"known_empty_completion_warning\"\n    ]\n  },\n  \"test_sha256\": \"0fce4be3537a8f6324968f3660aed6d44407d6da95bc6f772caaa713ccce3f43\",\n  \"test_node\": \"test_fully_truncated_completion_examples_dropped\",\n  \"container_image\": \"vare-sprint-vii-trl-grader:v2\",\n  \"container_command\": [\n    \"docker\",\n    \"--context\",\n    \"colima\",\n    \"run\",\n    \"--rm\",\n    \"--read-only\",\n    \"--network\",\n    \"none\",\n    \"--memory=2g\",\n    \"--cpus=2\",\n    \"--cap-drop\",\n    \"ALL\",\n    \"--security-opt\",\n    \"no-new-privileges\",\n    \"--tmpfs\",\n    \"/tmp:rw,exec,nosuid,nodev,size=512m\",\n    \"-v\",\n    \"/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/external_dev_trl7913/qualification/grader-fixed-calibration/runtime:/work:ro\",\n    \"-v\",\n    \"/Users/user/.cache/huggingface/hub:/cache/hub:ro\",\n    \"-e\",\n    \"HOME=/tmp\",\n    \"-e\",\n    \"HF_HOME=/tmp/hf-home\",\n    \"-e\",\n    \"HF_HUB_CACHE=/cache/hub\",\n    \"-e\",\n    \"HF_HUB_OFFLINE=1\",\n    \"-e\",\n    \"TRANSFORMERS_OFFLINE=1\",\n    \"-e\",\n    \"HF_HUB_DISABLE_TELEMETRY=1\",\n    \"-e\",\n    \"PYTHONDONTWRITEBYTECODE=1\",\n    \"-e\",\n    \"PYTHONPATH=/work\",\n    \"-w\",\n    \"/work\",\n    \"vare-sprint-vii-trl-grader:v2\",\n    \"/bin/sh\",\n    \"-c\",\n    \"python -m pytest -q -p no:cacheprovider --junitxml=/tmp/sprint-vii-junit.xml /work/tests/experimental/test_cpo_trainer.py::TestCPOTrainer::test_fully_truncated_completion_examples_dropped; test_rc=$?; cat /tmp/sprint-vii-junit.xml 2>/dev/null || true; exit $test_rc\"\n  ],\n  \"container_exit_code\": 0,\n  \"junit\": {\n    \"testcases\": 1,\n    \"matching_testcases\": 1,\n    \"failures\": 0,\n    \"errors\": 0,\n    \"skipped\": 0\n  }\n}\n"
+}

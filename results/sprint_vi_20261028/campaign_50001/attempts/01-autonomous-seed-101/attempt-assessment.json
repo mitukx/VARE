@@ -1,0 +1,53 @@
+{
+  "abort_reason": null,
+  "accepted_tool_calls": 11,
+  "accepted_tool_names": [
+    "list_files",
+    "read_lines",
+    "search_source",
+    "read_lines",
+    "search_source",
+    "read_lines",
+    "search_source",
+    "search_source",
+    "read_lines",
+    "search_source",
+    "search_source"
+  ],
+  "agent_json_sha256": "76d76d16eea0284fd4f50fe3160c9f5c0cf3793c7e081bb56965d533550f967e",
+  "agent_process_exit_code": 0,
+  "applied_edits": 0,
+  "attempt": {
+    "arm": "A_autonomous",
+    "ordinal": 1,
+    "seed": 101
+  },
+  "candidate_changed_files": [],
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate_scope_valid": true,
+  "candidate_source_sha256": "5cdf4375c93f49032a0853d7aa7f6ed41fbfd4835adc58075d1096ad0da03594",
+  "completed_agent_attempt": false,
+  "edit_attempts": 0,
+  "event_journal_sha256": "87a3e46b989f2099103f558d3eea06b1664a386be191b3289864c00e82b72b96",
+  "failure_class": "editing_or_patch_application",
+  "generated_tokens": 92,
+  "independent_grade": null,
+  "model_and_controller_identity_match": true,
+  "model_output_count": 11,
+  "monitor_status": "completed",
+  "prompt_tokens_total_across_turns": 128612,
+  "protocol_sha256": "7ce283a5b4e07ba1ec52a0a5f512d75fd463d5450e9556375b7204b8a7ad774a",
+  "public_test_tool_calls": 0,
+  "public_test_tool_passes": 0,
+  "rejected_or_invalid_events": [],
+  "resources": {
+    "elapsed_seconds": 480.7,
+    "free_swap_mib_after": 978.12,
+    "free_swap_mib_before": 978.12,
+    "swap_growth_mib": 0.0
+  },
+  "schema_version": 1,
+  "source_read_calls": 4,
+  "source_search_calls": 6,
+  "verified_repair": false
+}

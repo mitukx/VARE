@@ -1,0 +1,187 @@
+{
+  "arms": {
+    "A_control": {
+      "generation_protocol": "schema_slots_v6",
+      "instruction": "Inspect source, apply the smallest correct repair, run the public test, and finish.",
+      "interface": "lease_bound_transactional_navigation_v1"
+    },
+    "B_intervention": {
+      "generation_protocol": "schema_slots_v6",
+      "instruction": "Use one focused search for a distinctive source symbol, then read the smallest contiguous line range needed. Do not repeat a completed search or identical read. A read_lines result is the edit lease: lease only lines you intend to replace, ideally no more than 24 lines; never lease a whole function or file to change a few lines. For separated changes, use separate small leases. Keep the replacement below the per-field generation limit. After an edit, run the public test, use its feedback, and finish only after it passes.",
+      "interface": "lease_bound_transactional_navigation_v1",
+      "intervention": "bounded_navigation_edit_lease_guidance_v1"
+    }
+  },
+  "attempt_order": [
+    {
+      "arm": "A_control",
+      "ordinal": 1,
+      "seed": 2027
+    },
+    {
+      "arm": "B_intervention",
+      "ordinal": 2,
+      "seed": 2027
+    }
+  ],
+  "candidate_manifests": {
+    "autonomous": {
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/sprint-vi-transformers-49772-qwen7b-intervention-v7/pre-inference/autonomous.json",
+      "sha256": "7b7c98a941d4e74f7714cbfde88b8211d3d427cf9b1f4567da7e864eacde0e1a",
+      "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/transformers-49772-agent-campaign-v2/autonomous"
+    },
+    "intervention": {
+      "path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/sprint-vi-transformers-49772-qwen7b-intervention-v7/pre-inference/intervention.json",
+      "sha256": "b6f99e3018a85a4d842c76d3f099f0f04238cd492d476f1ee5fccb0217def806",
+      "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/transformers-49772-agent-campaign-v2/intervention"
+    }
+  },
+  "cheapest_falsification": "One paired attempt per arm on the same task and seed; reject the intervention if it fails to produce an applied edit or if the control does equally well.",
+  "controllers": {
+    "A_control": {
+      "scripts/run_local_agent.py": "a22664eae14fdb210333dc99472cf6189d38e77eeb92d6172b54535b5dfd0461",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_task_contract.py": "e050e7f37bdc1f53e006afc66667f30f3e25f9e9c36961c0df5fe53ebce53570",
+      "src/vare/schema_slot_protocol.py": "53ff6ced0fedb264355ad57db76e3e0b6216a933f51e4f6ccaf72b6fef84f2d7",
+      "src/vare/source_navigation_v2.py": "c6c65592fbc9028551b76b4e3e02b2f4e8f049ef64002cc0c6e31580a110b847"
+    },
+    "B_intervention": {
+      "scripts/run_local_agent.py": "a22664eae14fdb210333dc99472cf6189d38e77eeb92d6172b54535b5dfd0461",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_task_contract.py": "e050e7f37bdc1f53e006afc66667f30f3e25f9e9c36961c0df5fe53ebce53570",
+      "src/vare/schema_slot_protocol.py": "53ff6ced0fedb264355ad57db76e3e0b6216a933f51e4f6ccaf72b6fef84f2d7",
+      "src/vare/source_navigation_v2.py": "c6c65592fbc9028551b76b4e3e02b2f4e8f049ef64002cc0c6e31580a110b847"
+    }
+  },
+  "created_local": "2026-10-27T21:30:29+09:00",
+  "decision_rule": "Descriptive feasibility only: intervention GO for broader prospective testing only if it creates an applied edit and passes the independently executed public+hidden grader; otherwise NO-GO for this instruction. One family cannot support general efficacy.",
+  "executor": {
+    "script_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/execute_sprint_vi_qwen7b_intervention_v7.py",
+    "sha256": "320efb6e53c2e5ed8924b136452b5b8bcd77b51dc816ec89c0e6719df15406e1"
+  },
+  "generation": {
+    "do_sample": true,
+    "edit_format": "structured_replace",
+    "env": {
+      "DOCKER_CONTEXT": "colima",
+      "HF_HUB_OFFLINE": "1",
+      "PYTHONPATH": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/src",
+      "TRANSFORMERS_OFFLINE": "1"
+    },
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_public_test_runs": 2,
+    "max_total_new_tokens": 2048,
+    "max_turns": 12,
+    "public_test_image": "localhost:5000/vare/transformers-50001-grader@sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+    "public_test_memory_mib": 2048,
+    "public_test_timeout_s": 180,
+    "temperature": 0.2,
+    "top_k": 20,
+    "top_p": 0.95,
+    "wall_seconds": 1800
+  },
+  "grader": {
+    "container_digest": "sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+    "control_receipt_sha256": {
+      "baseline": "0efa91118adb8904827e57e634ba2ce3f4d658652a4a0286ac8de7cb295dbd66",
+      "known-fix": "a3456c8b548a138598b9bb5db61dd7f56a8e5203f4b83e1ed026dfaa42184af9",
+      "spoof": "4c49c0572f55262c215f2a2441c5e4a58fb4e3ba144ebf0d415ca0929e89071f",
+      "wrong-mutant": "c7a143fe0a4b9c36a6245963885a45a335bf2f157c8e9554bf5aca5c5b6922e9"
+    },
+    "independently_authored_by": "experimenter from upstream regression behavior; independently executed in read-only network-disabled container; not third-party authored",
+    "qualification_record_sha256": "874ee9747e7d9afc2ad507cd715b861cf1b4fff5620306a22b4ba0ee1c45168f",
+    "script_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/grade_sprint_iii_dev_task_v2.py",
+    "script_sha256": "3f677eb9c65fc924e6153b98058b9bb7e2d640bc13075afeb36a59f1ee759f04"
+  },
+  "hypothesis": "On this fresh Development family, a task-independent instruction that prohibits duplicate navigation and requires minimal edit leases will reduce navigation/edit-budget failures relative to the original instruction under the same Qwen2.5-Coder-7B budget.",
+  "model": {
+    "backend": "MLX",
+    "chat_template_source": "original snapshot, no override",
+    "device": "CPU",
+    "files_sha256": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "README.md": "900637f68349b42803bd0779765ef87bd8ad54e4eba57991336911b3b1655e97",
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+      "model.safetensors.index.json": "23cd562592dd96686d2e799eb02e4b578a4038b6045eaefe860d270cc060e24f",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "posthoc_repair": false,
+    "quantization": "4-bit",
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "snapshot_commit": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80",
+    "tokenizer_config_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+    "tokenizer_json_sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"
+  },
+  "monitor": {
+    "script_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_iv_20261027/external-mlx-lm-two-family-agent-v2/run_monitored_attempt.py",
+    "sha256": "f6b37879127f8642d193abab2957c7f64602c4131cc181e8b1939aff1ede4581"
+  },
+  "primary_metric": "independently verified correct repair per task family at one attempt per arm",
+  "protocol_id": "vare.transformers-49772.qwen7b.bounded-lease-intervention.v7",
+  "resource_limits": {
+    "maximum_process_rss_mib": 8192,
+    "maximum_swap_growth_per_attempt_mib": 512,
+    "maximum_wall_seconds": 1800,
+    "minimum_free_swap_before_each_attempt_mib": 700,
+    "minimum_free_swap_during_attempt_mib": 180,
+    "minimum_memory_free_pct_before_each_attempt": 60
+  },
+  "resources": {
+    "maximum_process_rss_mib": 8192,
+    "maximum_swap_growth_per_attempt_mib": 512,
+    "maximum_wall_seconds": 1800,
+    "minimum_free_swap_during_attempt_mib": 180,
+    "required_free_swap_before_each_attempt_mib": 700
+  },
+  "runtime": {
+    "backend": "MLX",
+    "device": "CPU",
+    "host": "MacBook Pro M1 Pro, 32 GiB unified memory",
+    "hub": "2.2.0",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "mlx_metal": "0.32.4",
+    "paid_compute": false,
+    "python": "3.12.12",
+    "safetensors": "0.8.0",
+    "tokenizers": "0.23.3",
+    "transformers": "5.20.2"
+  },
+  "schema_version": 1,
+  "sha256": "81c756fefa0be6855963a192a28480ef7000788c76b8ba40846c94d84e9054d6",
+  "source_protocol_sha256": "8bbaa4717bd6031feef66975f994130d3ca7ee9b74a328b741e5a00ddb4d6a5b",
+  "statistical_scope": "one Development family; attempts are paired within a family and not independent task observations; no population inference",
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "supersedes_protocol_sha256": "dcbdd0497ee42c9361a69600b158c7bd667d98f34ea1636dd38d7467123a967d",
+  "task": {
+    "base_sha": "c0d024fbc873ab0325e1b40fc1bd69069609de65",
+    "baseline_target_sha256": "0c3b4a8e87341561d9995e0b5fd608db94178ec00d57af43ab91244588a053db",
+    "fixed_sha": "46db8379cc5f6b9fa3fcda047ddcd9836227e968",
+    "fixed_target_sha256": "7ca6ff32c13b91beed0b13e17030f4c95bcbe0265da7762cefe111576627ad2c",
+    "hidden_test_sha256": "449a6ecccc9228da2fcfee2a0690c31ba3ecb173ff6c65b090ff14fc875e436c",
+    "pretraining_exposure": "UNKNOWN",
+    "prior_vare_model_exposure": "No model-facing tools allowed this path in previous campaigns; exposure is development-only; pretraining exposure unknown.",
+    "public_test_sha256": "4eeebd7345d1cb68e50a706f090b43f781855793b8e9606b13c27e8107d6e615",
+    "qualification_record": "outputs/sprint-vi-transformers-49772-agent-v2/qualification-record-v1.json",
+    "qualification_record_sha256": "874ee9747e7d9afc2ad507cd715b861cf1b4fff5620306a22b4ba0ee1c45168f",
+    "repository": "huggingface/transformers",
+    "source_path": "src/transformers/core_model_loading.py",
+    "split": "development",
+    "task_id": "transformers-49772-reverse-capture-literal-semantics-v2",
+    "task_json_sha256": "545996b21a320dbf0f812eedfe89d71b14b18370e35eb67150093e827ffba47f",
+    "task_md_sha256": "45762af24a7921404a8d48bbf1f4619b4beec7a809bee79661e5bb38a4241775",
+    "upstream_pr": "https://github.com/huggingface/transformers/pull/49772"
+  },
+  "task_qualification_record": "outputs/sprint-vi-transformers-49772-agent-v2/qualification-controls/qualification-record-v1.json"
+}

@@ -1,0 +1,107 @@
+{
+  "attempts": [
+    {
+      "arm": "A_autonomous",
+      "candidate_changed": false,
+      "elapsed_seconds": 269.615,
+      "event_chain_status": "VALID",
+      "event_count": 39,
+      "hidden_grader_source_and_case_results_withheld": true,
+      "independent_grade": {
+        "case_count": 6,
+        "passed": false
+      },
+      "patch_bytes": 0,
+      "peak_sampled_process_tree_rss_bytes": 2720235520,
+      "public_test": "NOT_RUN_NO_EDIT",
+      "raw_trajectory_files": [
+        "agent.json",
+        "events.jsonl",
+        "invocation.json",
+        "preflight.json",
+        "resource-samples.jsonl",
+        "candidate.patch",
+        "runtime_snapshot",
+        "stdout.log",
+        "stderr.log"
+      ],
+      "resource_abort": null,
+      "status": "INCOMPLETE_OR_RUNTIME_FAILURE",
+      "stop_reason": "wall_time_exhausted",
+      "swap_growth_bytes": 0,
+      "verified_repair": false
+    },
+    {
+      "arm": "B_progress_aware",
+      "candidate_changed": false,
+      "elapsed_seconds": 288.729,
+      "event_chain_status": "VALID",
+      "event_count": 35,
+      "hidden_grader_source_and_case_results_withheld": true,
+      "independent_grade": {
+        "case_count": 6,
+        "passed": false
+      },
+      "patch_bytes": 0,
+      "peak_sampled_process_tree_rss_bytes": 4755259392,
+      "public_test": "NOT_RUN_NO_EDIT",
+      "raw_trajectory_files": [
+        "agent.json",
+        "events.jsonl",
+        "invocation.json",
+        "preflight.json",
+        "resource-samples.jsonl",
+        "candidate.patch",
+        "runtime_snapshot",
+        "stdout.log",
+        "stderr.log"
+      ],
+      "resource_abort": null,
+      "status": "INCOMPLETE_OR_RUNTIME_FAILURE",
+      "stop_reason": "wall_time_exhausted",
+      "swap_growth_bytes": 0,
+      "verified_repair": false
+    },
+    {
+      "arm": "C_localized",
+      "candidate_changed": false,
+      "elapsed_seconds": 85.463,
+      "event_chain_status": "VALID",
+      "event_count": 16,
+      "hidden_grader_source_and_case_results_withheld": true,
+      "independent_grade": {
+        "case_count": 6,
+        "passed": false
+      },
+      "patch_bytes": 0,
+      "peak_sampled_process_tree_rss_bytes": 4745805824,
+      "public_test": "NOT_RUN_NO_EDIT",
+      "raw_trajectory_files": [
+        "agent.json",
+        "events.jsonl",
+        "invocation.json",
+        "preflight.json",
+        "resource-samples.jsonl",
+        "candidate.patch",
+        "runtime_snapshot",
+        "stdout.log",
+        "stderr.log"
+      ],
+      "resource_abort": null,
+      "status": "INCOMPLETE_OR_RUNTIME_FAILURE",
+      "stop_reason": "argument_slot_token_budget_exhausted",
+      "swap_growth_bytes": 0,
+      "verified_repair": false
+    }
+  ],
+  "claim_boundary": "one consumed Development family; exploratory descriptive only",
+  "hidden_case_details_withheld": true,
+  "independent_correct_repairs_per_family": {
+    "denominator": 1,
+    "numerator": 0
+  },
+  "protocol_id": "vare-sprint-ix-progress-aware-coding-agent-v3",
+  "protocol_sha256": "b2cb492c07dd7a52ad5d6edc878841f8898d43c0a86e9f199b160aa5ede4a57e",
+  "schema_version": 1,
+  "status": "ALL_PREREGISTERED_ARMS_COMPLETED"
+}

@@ -1,0 +1,74 @@
+{
+  "auditor_sha256": "779a267a4be8ebc93a23d46b5825d72a3ac95b3faf4945c1c9b2e85acf057246",
+  "checks": {
+    "adverse_candidate_rejected": true,
+    "campaign_output_manifest": true,
+    "constant_stale_group_not_optimizer_trained": true,
+    "continuation_completed": true,
+    "continuation_runner_and_parent_protocol_hashes": true,
+    "duplicate_optimizer_computation_is_not_double_commit": true,
+    "exact_model_revision": true,
+    "fresh_v1_new_rollout_has_nonconstant_rewards": true,
+    "heldout_synthetic_choice_score_non_decreasing": true,
+    "independent_reference_and_recovered_evaluations_match": true,
+    "memory_caps": true,
+    "no_swap_growth": true,
+    "original_vare_rvl_source_identity": true,
+    "parent_v1_optimizer_commit_exists": true,
+    "parent_worker_was_killed_after_durable_rollout": true,
+    "predeclared_fresh_cohort_not_reused_before_continuation": true,
+    "promotion_pointer_matches_one_checkpoint": true,
+    "real_learner_SIGKILL_after_optimizer": true,
+    "reference_and_recovery_branch_from_same_v1": true,
+    "reference_has_one_commit": true,
+    "rejection_preserves_active_identity": true,
+    "restart_has_one_effective_commit": true,
+    "same_stale_group_accepted_by_naive_sampler": true,
+    "stale_complete_group_rejected_by_VARE": true,
+    "uncommitted_update_has_no_checkpoint": true,
+    "v2_Adam_identity_exact": true,
+    "v2_RNG_identity_exact": true,
+    "v2_adapter_identity_exact": true,
+    "v2_optimizer_state_step_count": true,
+    "wall_cap": true
+  },
+  "checks_passed": 30,
+  "checks_total": 30,
+  "details": {
+    "evaluation_mean_correct_choice_probability": {
+      "adverse": 1.4341356227576263e-10,
+      "recovered_v2": 0.06611747574061155,
+      "reference_v2": 0.06611747574061155,
+      "v1": 0.06505862809717655
+    },
+    "host_ram_available_bytes_after": 15558082560,
+    "host_swap_growth_bytes": 0,
+    "recovery_latency_seconds": 5.70196812498034,
+    "stale_artifact_age_at_admission_seconds": 196.1753830909729,
+    "v2_Adam_identity_exact": {
+      "recovered": "a10147da7fb3fbd6bb9d0377fd96b78341d4ed361062314f347e33d8fccbb752",
+      "reference": "a10147da7fb3fbd6bb9d0377fd96b78341d4ed361062314f347e33d8fccbb752"
+    },
+    "v2_RNG_identity_exact": {
+      "recovered": "de7062258ababbe630dbf110be30165f669e235bfbb2b8cdb4c4cf3822adf3c5",
+      "reference": "de7062258ababbe630dbf110be30165f669e235bfbb2b8cdb4c4cf3822adf3c5"
+    },
+    "v2_adapter_identity_exact": {
+      "recovered": "9859304feae6281da33d10e9a75838de13fe594486013d52eec55605f8a582e3",
+      "reference": "9859304feae6281da33d10e9a75838de13fe594486013d52eec55605f8a582e3"
+    },
+    "v2_recovered_checkpoint_sha256": "81e3efdd8aa58029e49a1e3c4657c2be1929c9c6b625220077d69f1e750e7dc2",
+    "v2_reference_checkpoint_sha256": "81e3efdd8aa58029e49a1e3c4657c2be1929c9c6b625220077d69f1e750e7dc2"
+  },
+  "limitations": [
+    "Synthetic arithmetic rewards and four evaluation tasks only.",
+    "The pretrained Qwen base is frozen; only the output-bias adapter was trained.",
+    "The naive asynchronous arm demonstrated stale admission but did not run optimizer training because all stale-group rewards were zero.",
+    "This is a one-seed, single-host systems result, not long agent trajectories or coding capability."
+  ],
+  "protocol_id": "vare-sprint-xi-qwen025-model-coupled-recovery-continuation-v1",
+  "protocol_sha256": "ce783a3837792c0504110667eab5b35681ce59c3f7b91d5d28b82393db491caf",
+  "result": "PASS",
+  "runner_sha256": "db704017142a39ed0c3fb57fc5b3e7d9e926a9f0904dd3289b5b711c619fa7ec",
+  "schema_version": 1
+}

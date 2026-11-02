@@ -1,0 +1,64 @@
+{
+  "agent_record_sha256": "eeca8312649ee96ec70e01b6a1cf4beee3149b96f072133efc23889232eb9a3b",
+  "applied_edits": 0,
+  "arm": "B_source_read_gate",
+  "automatic_public_test_passes": 0,
+  "automatic_public_test_runs": 0,
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "edit_attempts": 0,
+  "elapsed_seconds": 22.321,
+  "event_chain_final_sha256": "f05526b021a424edfa826f936579dbabc734fd5fdf657b0a28addcc56b24deaa",
+  "event_count": 18,
+  "failure_class": "source_localization_or_read_failure",
+  "generated_tokens": 239,
+  "grade_record_sha256": null,
+  "independent_hidden_pass": null,
+  "independent_public_pass": null,
+  "model_outputs": 4,
+  "peak_process_tree_rss_mib": 1936.453,
+  "prompt_tokens": 10187,
+  "protocol_sha256": "42339be9f478c971114f9037440311605c1923908fc8eef1c96a784a930d9423",
+  "public_test_tool_calls": 0,
+  "raw_artifacts": {
+    "candidate.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "command.json": "9044edb37519a0690afdeccbf8ec0eaf5726fb4f4335537be2b25fa854f4f3e0",
+    "events.jsonl": "2be1dab94ff6c9d319065032f932d87f0de3c5a881361ff3c4b6fd1828a3c693",
+    "resource-monitor.json": "44610a4fdac29b2d1d09e6cf6604b49aa5403ee6f7669b8209565193f81ee44e"
+  },
+  "resource_abort_reason": null,
+  "resource_status": "completed",
+  "run_finished": {
+    "agent_outcome": "schema_slot_validation_failed",
+    "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "elapsed_seconds": 21.005,
+    "event_type": "run_finished",
+    "new_tokens": 239,
+    "sequence": 18,
+    "source_hashes_after": {
+      "src/transformers/generation/utils.py": "06d5969991802b48b819484fa620862a074a77e04667870b3711ae9ceac6ce14",
+      "test_public.py": "b9197596d639b144f88f009fd2ec1f813c7d812244abe9776785caec8da9f384"
+    },
+    "stop_reason": "schema_slot_validation_failed"
+  },
+  "schema_valid_actions": 3,
+  "schema_version": 1,
+  "search_calls": 2,
+  "source_changed": false,
+  "source_read_calls": 0,
+  "source_reads_completed": 0,
+  "source_search_queries": [
+    "\"//src/transformers/generation/utils.py\\nfunction\\s+def\\s+prepare_no_repeat_ngram_penalty\\(self,\\s+encoder_outputs\\):\\n\\s+return\\n\\nfunction\\s+def\\s+prepare_encoder_repetition_penalty\\(self,\\s+encoder_outputs\\):\\n\\s+return\\n\\nfunction\\s+def\\s+prepare_no_repeat_ngram_penalty\\(self,\\s+encoder_outputs,\\s+input_ids\\):\\n\\s+return\\n\\nfunction\\s+def\\s+prepare_encoder_repetition_penalty\\(self,\\s+encoder_outputs,\\s+input_ids\\):\\n\\s+return\\n\"",
+    "\"function\\n\\ndef prepare_no_repeat_ngram_penalty(self, encoder_outputs):\\n\\treturn\\n\\nfunction\\n\\ndef prepare_encoder_repetition_penalty(self, encoder_outputs):\\n\\treturn\\n\\nfunction\\n\\ndef prepare_no_repeat_ngram_penalty(self, encoder_outputs, input_ids):\\n\\treturn\\n\\nfunction\\n\\ndef prepare_encoder_repetition_penalty(self, encoder_outputs, input_ids):\\n\\treturn\\n\""
+  ],
+  "source_sha256_after": "06d5969991802b48b819484fa620862a074a77e04667870b3711ae9ceac6ce14",
+  "source_sha256_before": "06d5969991802b48b819484fa620862a074a77e04667870b3711ae9ceac6ce14",
+  "swap_growth_mib": 0.0,
+  "task_id": "transformers-49696-encoder-sentinel-logits-processors-runtime-v1",
+  "tool_calls_accepted": 3,
+  "tool_names": [
+    "search_source",
+    "list_files",
+    "search_source"
+  ],
+  "verified_repair": false
+}

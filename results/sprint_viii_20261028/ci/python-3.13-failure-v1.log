@@ -1,0 +1,584 @@
+﻿2026-10-28T06:29:37.9301258Z Current runner version: '2.338.0'
+2026-10-28T06:29:37.9318714Z ##[group]Runner Image Provisioner
+2026-10-28T06:29:37.9319247Z Hosted Compute Agent
+2026-10-28T06:29:37.9319721Z Version: 20261021.618
+2026-10-28T06:29:37.9320204Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-28T06:29:37.9320707Z Build Date: 2026-10-21T00:45:21Z
+2026-10-28T06:29:37.9321166Z Worker ID: {36904a80-be95-4ef5-840a-1c4ef21f66b9}
+2026-10-28T06:29:37.9321605Z Region: centralus
+2026-10-28T06:29:37.9322023Z Cloud: Azure
+2026-10-28T06:29:37.9322416Z ##[endgroup]
+2026-10-28T06:29:37.9323224Z ##[group]Operating System
+2026-10-28T06:29:37.9323648Z Ubuntu
+2026-10-28T06:29:37.9324010Z 26.04.1
+2026-10-28T06:29:37.9324559Z LTS
+2026-10-28T06:29:37.9324996Z ##[endgroup]
+2026-10-28T06:29:37.9325360Z ##[group]Runner Image
+2026-10-28T06:29:37.9325738Z Image: ubuntu-26.04
+2026-10-28T06:29:37.9326123Z Version: 20261025.179.1
+2026-10-28T06:29:37.9326956Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261025.179/images/ubuntu/Ubuntu2604-Readme.md
+2026-10-28T06:29:37.9327906Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261025.179
+2026-10-28T06:29:37.9328513Z ##[endgroup]
+2026-10-28T06:29:37.9329217Z ##[group]GITHUB_TOKEN Permissions
+2026-10-28T06:29:37.9330549Z Contents: read
+2026-10-28T06:29:37.9330897Z Metadata: read
+2026-10-28T06:29:37.9331222Z ##[endgroup]
+2026-10-28T06:29:37.9332556Z Secret source: Actions
+2026-10-28T06:29:37.9333079Z Cache mode: write
+2026-10-28T06:29:37.9333596Z Prepare workflow directory
+2026-10-28T06:29:37.9536880Z Prepare all required actions
+2026-10-28T06:29:37.9574783Z Getting action download info
+2026-10-28T06:29:38.1757181Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-28T06:29:38.2742299Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-28T06:29:38.3651385Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-28T06:29:38.5647536Z Complete job name: test (3.13)
+2026-10-28T06:29:38.6275333Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-10-28T06:29:38.6275826Z with:
+2026-10-28T06:29:38.6276050Z   fetch-depth: 0
+2026-10-28T06:29:38.6276288Z   repository: mitukx/VARE
+2026-10-28T06:29:38.6278508Z   token: ***
+2026-10-28T06:29:38.6278730Z   ssh-strict: true
+2026-10-28T06:29:38.6278960Z   ssh-user: git
+2026-10-28T06:29:38.6279196Z   persist-credentials: true
+2026-10-28T06:29:38.6279452Z   clean: true
+2026-10-28T06:29:38.6279692Z   sparse-checkout-cone-mode: true
+2026-10-28T06:29:38.6279967Z   fetch-tags: false
+2026-10-28T06:29:38.6280203Z   show-progress: true
+2026-10-28T06:29:38.6280437Z   lfs: false
+2026-10-28T06:29:38.6280658Z   submodules: false
+2026-10-28T06:29:38.6280903Z   set-safe-directory: true
+2026-10-28T06:29:38.6281172Z   allow-unsafe-pr-checkout: false
+2026-10-28T06:29:38.6281534Z ##[endgroup]
+2026-10-28T06:29:38.8492507Z Syncing repository: mitukx/VARE
+2026-10-28T06:29:38.8494078Z ##[group]Getting Git version info
+2026-10-28T06:29:38.8494847Z Working directory is '/home/runner/work/VARE/VARE'
+2026-10-28T06:29:38.8495438Z [command]/usr/bin/git version
+2026-10-28T06:29:38.8504549Z git version 2.56.0
+2026-10-28T06:29:38.8517901Z ##[endgroup]
+2026-10-28T06:29:38.8528692Z Temporarily overriding HOME='/home/runner/work/_temp/f347d4af-969b-4de9-b0e1-779db725fc85' before making global git config changes
+2026-10-28T06:29:38.8529928Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T06:29:38.8532518Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+2026-10-28T06:29:38.8599466Z Deleting the contents of '/home/runner/work/VARE/VARE'
+2026-10-28T06:29:38.8602789Z ##[group]Initializing the repository
+2026-10-28T06:29:38.8606497Z [command]/usr/bin/git init /home/runner/work/VARE/VARE
+2026-10-28T06:29:38.8705049Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-28T06:29:38.8706017Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-28T06:29:38.8706539Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-28T06:29:38.8706971Z hint: call:
+2026-10-28T06:29:38.8707193Z hint:
+2026-10-28T06:29:38.8707497Z hint: 	git config --global init.defaultBranch <name>
+2026-10-28T06:29:38.8707840Z hint:
+2026-10-28T06:29:38.8708207Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-28T06:29:38.8708787Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-28T06:29:38.8709185Z hint:
+2026-10-28T06:29:38.8709414Z hint: 	git branch -m <name>
+2026-10-28T06:29:38.8709682Z hint:
+2026-10-28T06:29:38.8710020Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-28T06:29:38.8720515Z Initialized empty Git repository in /home/runner/work/VARE/VARE/.git/
+2026-10-28T06:29:38.8729816Z [command]/usr/bin/git remote add origin https://github.com/mitukx/VARE
+2026-10-28T06:29:38.8779653Z ##[endgroup]
+2026-10-28T06:29:38.8780153Z ##[group]Disabling automatic garbage collection
+2026-10-28T06:29:38.8783873Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-28T06:29:38.8819353Z ##[endgroup]
+2026-10-28T06:29:38.8820003Z ##[group]Setting up auth
+2026-10-28T06:29:38.8826707Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T06:29:38.8860742Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T06:29:38.9275046Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T06:29:38.9305427Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T06:29:38.9536020Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T06:29:38.9567030Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T06:29:38.9812661Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-28T06:29:38.9856778Z ##[endgroup]
+2026-10-28T06:29:38.9857274Z ##[group]Fetching the repository
+2026-10-28T06:29:38.9866972Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +316aac3c4dae32cb07975cebba09156bcf54b747:refs/remotes/pull/142/merge
+2026-10-28T06:29:55.5363295Z From https://github.com/mitukx/VARE
+2026-10-28T06:29:55.5364581Z  * [new branch]        codex/4b-mlx-agent-pilot                 -> origin/codex/4b-mlx-agent-pilot
+2026-10-28T06:29:55.5366234Z  * [new branch]        codex/7b-mlsys-independent-reliability   -> origin/codex/7b-mlsys-independent-reliability
+2026-10-28T06:29:55.5367410Z  * [new branch]        codex/async-worker-sqlite-serialization  -> origin/codex/async-worker-sqlite-serialization
+2026-10-28T06:29:55.5368355Z  * [new branch]        codex/coding-reward-provenance-replay-v1 -> origin/codex/coding-reward-provenance-replay-v1
+2026-10-28T06:29:55.5369645Z  * [new branch]        codex/cpu-grpo-preupdate-integrity-20261013 -> origin/codex/cpu-grpo-preupdate-integrity-20261013
+2026-10-28T06:29:55.5370691Z  * [new branch]        codex/dependency-artifact-pilot          -> origin/codex/dependency-artifact-pilot
+2026-10-28T06:29:55.5371297Z  * [new branch]        codex/development-navigation-campaign-v1 -> origin/codex/development-navigation-campaign-v1
+2026-10-28T06:29:55.5371876Z  * [new branch]        codex/durable-agent-trajectories         -> origin/codex/durable-agent-trajectories
+2026-10-28T06:29:55.5372681Z  * [new branch]        codex/durable-runtime-source-pin         -> origin/codex/durable-runtime-source-pin
+2026-10-28T06:29:55.5373203Z  * [new branch]        codex/e2e-rl-continuation-v2             -> origin/codex/e2e-rl-continuation-v2
+2026-10-28T06:29:55.5373724Z  * [new branch]        codex/e2e-rl-pipeline-benchmark          -> origin/codex/e2e-rl-pipeline-benchmark
+2026-10-28T06:29:55.5374551Z  * [new branch]        codex/engine-evaluation-task-lifecycle-20261013 -> origin/codex/engine-evaluation-task-lifecycle-20261013
+2026-10-28T06:29:55.5375460Z  * [new branch]        codex/evidence-manifest-integrity-v1     -> origin/codex/evidence-manifest-integrity-v1
+2026-10-28T06:29:55.5376251Z  * [new branch]        codex/external-diff-export-main-v1       -> origin/codex/external-diff-export-main-v1
+2026-10-28T06:29:55.5376906Z  * [new branch]        codex/failure-triage-e0-20261013         -> origin/codex/failure-triage-e0-20261013
+2026-10-28T06:29:55.5377404Z  * [new branch]        codex/fix-external-diff-export-v1        -> origin/codex/fix-external-diff-export-v1
+2026-10-28T06:29:55.5378064Z  * [new branch]        codex/fix-post-merge-report-state        -> origin/codex/fix-post-merge-report-state
+2026-10-28T06:29:55.5378719Z  * [new branch]        codex/flagship-teacher-gate              -> origin/codex/flagship-teacher-gate
+2026-10-28T06:29:55.5379404Z  * [new branch]        codex/format-comparison-record-audit-20261013 -> origin/codex/format-comparison-record-audit-20261013
+2026-10-28T06:29:55.5379840Z  * [new branch]        codex/fresh-coding-task-cohort           -> origin/codex/fresh-coding-task-cohort
+2026-10-28T06:29:55.5380205Z  * [new branch]        codex/fresh-dev-agent-study-v5           -> origin/codex/fresh-dev-agent-study-v5
+2026-10-28T06:29:55.5380659Z  * [new branch]        codex/fresh-hf-dev-candidates-v1         -> origin/codex/fresh-hf-dev-candidates-v1
+2026-10-28T06:29:55.5381206Z  * [new branch]        codex/fresh-task-qualification-mlx-lm-1910 -> origin/codex/fresh-task-qualification-mlx-lm-1910
+2026-10-28T06:29:55.5381607Z  * [new branch]        codex/grader-owner-loss                  -> origin/codex/grader-owner-loss
+2026-10-28T06:29:55.5382372Z  * [new branch]        codex/grpo-audit-independent-reproduction -> origin/codex/grpo-audit-independent-reproduction
+2026-10-28T06:29:55.5383161Z  * [new branch]        codex/grpo-e2e-correctness               -> origin/codex/grpo-e2e-correctness
+2026-10-28T06:29:55.5383843Z  * [new branch]        codex/grpo-integrity-clean-clone-run-3   -> origin/codex/grpo-integrity-clean-clone-run-3
+2026-10-28T06:29:55.5384717Z  * [new branch]        codex/grpo-reproduction-fail-closed-optimized -> origin/codex/grpo-reproduction-fail-closed-optimized
+2026-10-28T06:29:55.5385525Z  * [new branch]        codex/hash-bound-agent-edit-v1           -> origin/codex/hash-bound-agent-edit-v1
+2026-10-28T06:29:55.5386272Z  * [new branch]        codex/heldout-task-certification-pilot-v1 -> origin/codex/heldout-task-certification-pilot-v1
+2026-10-28T06:29:55.5387038Z  * [new branch]        codex/hf-coding-dev-inference-v2-dual-python -> origin/codex/hf-coding-dev-inference-v2-dual-python
+2026-10-28T06:29:55.5387657Z  * [new branch]        codex/isolated-grader-v1                 -> origin/codex/isolated-grader-v1
+2026-10-28T06:29:55.5388031Z  * [new branch]        codex/lag-shift-domain-validation        -> origin/codex/lag-shift-domain-validation
+2026-10-28T06:29:55.5412782Z  * [new branch]        codex/ledger-concurrent-append-cpu-20261013 -> origin/codex/ledger-concurrent-append-cpu-20261013
+2026-10-28T06:29:55.5413680Z  * [new branch]        codex/mlsys-candidate-manual-qualification-queue-20261022 -> origin/codex/mlsys-candidate-manual-qualification-queue-20261022
+2026-10-28T06:29:55.5414530Z  * [new branch]        codex/mlsys-isolated-harness             -> origin/codex/mlsys-isolated-harness
+2026-10-28T06:29:55.5415118Z  * [new branch]        codex/mlsys-task-candidate-survey        -> origin/codex/mlsys-task-candidate-survey
+2026-10-28T06:29:55.5416036Z  * [new branch]        codex/mlx-core-development-agent-feasibility-v1 -> origin/codex/mlx-core-development-agent-feasibility-v1
+2026-10-28T06:29:55.5416728Z  * [new branch]        codex/mlx-pr4748-qwen3-pilot-v1          -> origin/codex/mlx-pr4748-qwen3-pilot-v1
+2026-10-28T06:29:55.5417284Z  * [new branch]        codex/mlxlm-1912-isolation               -> origin/codex/mlxlm-1912-isolation
+2026-10-28T06:29:55.5417888Z  * [new branch]        codex/mlxlm-1971-attested-calibration    -> origin/codex/mlxlm-1971-attested-calibration
+2026-10-28T06:29:55.5418513Z  * [new branch]        codex/mlxlm-1971-isolation               -> origin/codex/mlxlm-1971-isolation
+2026-10-28T06:29:55.5419095Z  * [new branch]        codex/mlxlm-1971-v10-operator            -> origin/codex/mlxlm-1971-v10-operator
+2026-10-28T06:29:55.5419732Z  * [new branch]        codex/navigation-integrity-fixes-v1      -> origin/codex/navigation-integrity-fixes-v1
+2026-10-28T06:29:55.5420412Z  * [new branch]        codex/navigation-symlink-fix-v1          -> origin/codex/navigation-symlink-fix-v1
+2026-10-28T06:29:55.5421060Z  * [new branch]        codex/phase-a-v6-colima-exit125          -> origin/codex/phase-a-v6-colima-exit125
+2026-10-28T06:29:55.5421804Z  * [new branch]        codex/phase-a-v6-colima-public-tests     -> origin/codex/phase-a-v6-colima-public-tests
+2026-10-28T06:29:55.5422508Z  * [new branch]        codex/promotion-cancellation-ownership   -> origin/codex/promotion-cancellation-ownership
+2026-10-28T06:29:55.5423188Z  * [new branch]        codex/qwen-development-feasibility       -> origin/codex/qwen-development-feasibility
+2026-10-28T06:29:55.5423859Z  * [new branch]        codex/qwen3-deepmath-a100-v1-20261013    -> origin/codex/qwen3-deepmath-a100-v1-20261013
+2026-10-28T06:29:55.5424669Z  * [new branch]        codex/qwengyre-ready-reward-validation   -> origin/codex/qwengyre-ready-reward-validation
+2026-10-28T06:29:55.5425368Z  * [new branch]        codex/readiness-and-next-e2e-plan-20261022 -> origin/codex/readiness-and-next-e2e-plan-20261022
+2026-10-28T06:29:55.5425806Z  * [new branch]        codex/real-agent-interface-v1            -> origin/codex/real-agent-interface-v1
+2026-10-28T06:29:55.5426465Z  * [new branch]        codex/real-model-capability-eval         -> origin/codex/real-model-capability-eval
+2026-10-28T06:29:55.5426977Z  * [new branch]        codex/recovery-integrity-slice           -> origin/codex/recovery-integrity-slice
+2026-10-28T06:29:55.5427475Z  * [new branch]        codex/reject-same-policy-promotion-20261013 -> origin/codex/reject-same-policy-promotion-20261013
+2026-10-28T06:29:55.5427883Z  * [new branch]        codex/repo-coding-task-e2e               -> origin/codex/repo-coding-task-e2e
+2026-10-28T06:29:55.5428265Z  * [new branch]        codex/research-mission-controller-v1     -> origin/codex/research-mission-controller-v1
+2026-10-28T06:29:55.5428685Z  * [new branch]        codex/research-qualification-20261016    -> origin/codex/research-qualification-20261016
+2026-10-28T06:29:55.5429143Z  * [new branch]        codex/research-qualification-refresh-2026-10-15 -> origin/codex/research-qualification-refresh-2026-10-15
+2026-10-28T06:29:55.5429613Z  * [new branch]        codex/rollback-state-restoration-20261013 -> origin/codex/rollback-state-restoration-20261013
+2026-10-28T06:29:55.5430029Z  * [new branch]        codex/rvl-direct-trainer-freshness       -> origin/codex/rvl-direct-trainer-freshness
+2026-10-28T06:29:55.5430421Z  * [new branch]        codex/rvl-evidence-triage-20261013       -> origin/codex/rvl-evidence-triage-20261013
+2026-10-28T06:29:55.5430810Z  * [new branch]        codex/rvl-grpo-group-provenance          -> origin/codex/rvl-grpo-group-provenance
+2026-10-28T06:29:55.5431210Z  * [new branch]        codex/rvl-shared-alias-followup          -> origin/codex/rvl-shared-alias-followup
+2026-10-28T06:29:55.5431609Z  * [new branch]        codex/rvl-trajectory-gradient-parity     -> origin/codex/rvl-trajectory-gradient-parity
+2026-10-28T06:29:55.5432122Z  * [new branch]        codex/seed-aware-pass-at-k-20261013      -> origin/codex/seed-aware-pass-at-k-20261013
+2026-10-28T06:29:55.5432655Z  * [new branch]        codex/source-navigation-v1               -> origin/codex/source-navigation-v1
+2026-10-28T06:29:55.5433027Z  * [new branch]        codex/sprint-iv-evidence-public-v1       -> origin/codex/sprint-iv-evidence-public-v1
+2026-10-28T06:29:55.5433451Z  * [new branch]        codex/stabilize-multiprocess-claim-fixture -> origin/codex/stabilize-multiprocess-claim-fixture
+2026-10-28T06:29:55.5433871Z  * [new branch]        codex/streamed-learner-ingestion         -> origin/codex/streamed-learner-ingestion
+2026-10-28T06:29:55.5434393Z  * [new branch]        codex/structured-edit-agent-v1           -> origin/codex/structured-edit-agent-v1
+2026-10-28T06:29:55.5434819Z  * [new branch]        codex/structured-edit-controller-v2      -> origin/codex/structured-edit-controller-v2
+2026-10-28T06:29:55.5435228Z  * [new branch]        codex/structured-edit-core-standalone    -> origin/codex/structured-edit-core-standalone
+2026-10-28T06:29:55.5435638Z  * [new branch]        codex/trajectory-capture-boundary        -> origin/codex/trajectory-capture-boundary
+2026-10-28T06:29:55.5436036Z  * [new branch]        codex/transformers-45852-isolation       -> origin/codex/transformers-45852-isolation
+2026-10-28T06:29:55.5436454Z  * [new branch]        codex/transformers-47468-qualification-v1 -> origin/codex/transformers-47468-qualification-v1
+2026-10-28T06:29:55.5436880Z  * [new branch]        codex/transformers-47468-qualification-v4 -> origin/codex/transformers-47468-qualification-v4
+2026-10-28T06:29:55.5437300Z  * [new branch]        codex/transformers-49412-qualification   -> origin/codex/transformers-49412-qualification
+2026-10-28T06:29:55.5437697Z  * [new branch]        codex/transformers-49752-repo-task       -> origin/codex/transformers-49752-repo-task
+2026-10-28T06:29:55.5438104Z  * [new branch]        codex/transitive-reference-exposure-v1   -> origin/codex/transitive-reference-exposure-v1
+2026-10-28T06:29:55.5438518Z  * [new branch]        codex/trl-async-stale-resume-cursor      -> origin/codex/trl-async-stale-resume-cursor
+2026-10-28T06:29:55.5438988Z  * [new branch]        codex/trl-grader-alias-v9                -> origin/codex/trl-grader-alias-v9
+2026-10-28T06:29:55.5439360Z  * [new branch]        codex/trusted-scoring-separation         -> origin/codex/trusted-scoring-separation
+2026-10-28T06:29:55.5439744Z  * [new branch]        codex/vare-verified-mlsys-no-go          -> origin/codex/vare-verified-mlsys-no-go
+2026-10-28T06:29:55.5440130Z  * [new branch]        codex/verified-agent-preflight-v3        -> origin/codex/verified-agent-preflight-v3
+2026-10-28T06:29:55.5440542Z  * [new branch]        codex/verifier-consistent-async-grpo-v1  -> origin/codex/verifier-consistent-async-grpo-v1
+2026-10-28T06:29:55.5440968Z  * [new branch]        codex/verifier-drift-multiscenario-v1    -> origin/codex/verifier-drift-multiscenario-v1
+2026-10-28T06:29:55.5441397Z  * [new branch]        codex/verifier-prepare-fencing-evidence  -> origin/codex/verifier-prepare-fencing-evidence
+2026-10-28T06:29:55.5441805Z  * [new branch]        codex/verl-async-staleness-task          -> origin/codex/verl-async-staleness-task
+2026-10-28T06:29:55.5442161Z  * [new branch]        cursor/eval-stats-af75                   -> origin/cursor/eval-stats-af75
+2026-10-28T06:29:55.5442538Z  * [new branch]        cursor/exact-integer-smoke-result-af75   -> origin/cursor/exact-integer-smoke-result-af75
+2026-10-28T06:29:55.5442982Z  * [new branch]        cursor/exact-integer-update-cost-smoke-af75 -> origin/cursor/exact-integer-update-cost-smoke-af75
+2026-10-28T06:29:55.5443415Z  * [new branch]        cursor/format-vs-correctness-v2-af75     -> origin/cursor/format-vs-correctness-v2-af75
+2026-10-28T06:29:55.5443848Z  * [new branch]        cursor/format-vs-correctness-v2-result-af75 -> origin/cursor/format-vs-correctness-v2-result-af75
+2026-10-28T06:29:55.5444453Z  * [new branch]        cursor/heldout-exact-integer-gate-af75   -> origin/cursor/heldout-exact-integer-gate-af75
+2026-10-28T06:29:55.5445000Z  * [new branch]        cursor/heldout-exact-integer-v2-af75     -> origin/cursor/heldout-exact-integer-v2-af75
+2026-10-28T06:29:55.5445427Z  * [new branch]        cursor/heldout-exact-integer-v2-result-af75 -> origin/cursor/heldout-exact-integer-v2-result-af75
+2026-10-28T06:29:55.5445816Z  * [new branch]        cursor/minigrpo-af75                     -> origin/cursor/minigrpo-af75
+2026-10-28T06:29:55.5446157Z  * [new branch]        cursor/minigrpo-colab-af75               -> origin/cursor/minigrpo-colab-af75
+2026-10-28T06:29:55.5446528Z  * [new branch]        cursor/mlsys-coding-agent-e2e-4095       -> origin/cursor/mlsys-coding-agent-e2e-4095
+2026-10-28T06:29:55.5446917Z  * [new branch]        cursor/mlsys-coding-tasks-7d0a           -> origin/cursor/mlsys-coding-tasks-7d0a
+2026-10-28T06:29:55.5447394Z  * [new branch]        cursor/mlsys-comparison-runner-7d0a      -> origin/cursor/mlsys-comparison-runner-7d0a
+2026-10-28T06:29:55.5447795Z  * [new branch]        cursor/mlsys-heldout-expansion-7d0a      -> origin/cursor/mlsys-heldout-expansion-7d0a
+2026-10-28T06:29:55.5448198Z  * [new branch]        cursor/python-executable-ci-af75         -> origin/cursor/python-executable-ci-af75
+2026-10-28T06:29:55.5448591Z  * [new branch]        cursor/readme-question-results-af75      -> origin/cursor/readme-question-results-af75
+2026-10-28T06:29:55.5449017Z  * [new branch]        cursor/rvl-adapter-shared-module-mode-af75 -> origin/cursor/rvl-adapter-shared-module-mode-af75
+2026-10-28T06:29:55.5449468Z  * [new branch]        cursor/rvl-shared-module-mode-adapter-408a -> origin/cursor/rvl-shared-module-mode-adapter-408a
+2026-10-28T06:29:55.5449886Z  * [new branch]        cursor/seed-split-generator-af75         -> origin/cursor/seed-split-generator-af75
+2026-10-28T06:29:55.5450247Z  * [new branch]        cursor/selfimprove-af75                  -> origin/cursor/selfimprove-af75
+2026-10-28T06:29:55.5450630Z  * [new branch]        cursor/separated-candidate-grading-558b  -> origin/cursor/separated-candidate-grading-558b
+2026-10-28T06:29:55.5451036Z  * [new branch]        cursor/tracked-blob-budget-af75          -> origin/cursor/tracked-blob-budget-af75
+2026-10-28T06:29:55.5451781Z  * [new branch]        cursor/two-tier-answer-scoring-af75      -> origin/cursor/two-tier-answer-scoring-af75
+2026-10-28T06:29:55.5452404Z  * [new branch]        cursor/typecheck-lint-ci-af75            -> origin/cursor/typecheck-lint-ci-af75
+2026-10-28T06:29:55.5452859Z  * [new branch]        docs/clarify-architecture-evidence-20261015 -> origin/docs/clarify-architecture-evidence-20261015
+2026-10-28T06:29:55.5453296Z  * [new branch]        docs/restructure-research-navigation     -> origin/docs/restructure-research-navigation
+2026-10-28T06:29:55.5453707Z  * [new branch]        feat/meta-improvement-cpu-v1-20261013    -> origin/feat/meta-improvement-cpu-v1-20261013
+2026-10-28T06:29:55.5454131Z  * [new branch]        feat/owned-command-agent-cancellation-v1 -> origin/feat/owned-command-agent-cancellation-v1
+2026-10-28T06:29:55.5454746Z  * [new branch]        feat/verified-coding-agent-evidence-v2   -> origin/feat/verified-coding-agent-evidence-v2
+2026-10-28T06:29:55.5455304Z  * [new branch]        feature/post-training-reward-audit       -> origin/feature/post-training-reward-audit
+2026-10-28T06:29:55.5455734Z  * [new branch]        feature/trajectory-aware-safety-evaluator -> origin/feature/trajectory-aware-safety-evaluator
+2026-10-28T06:29:55.5456169Z  * [new branch]        fix/durable-step-resume-head-20261022    -> origin/fix/durable-step-resume-head-20261022
+2026-10-28T06:29:55.5456605Z  * [new branch]        fix/replay-group-provenance-fence-20261022 -> origin/fix/replay-group-provenance-fence-20261022
+2026-10-28T06:29:55.5457050Z  * [new branch]        fix/rollout-provenance-and-drain-20261014 -> origin/fix/rollout-provenance-and-drain-20261014
+2026-10-28T06:29:55.5457473Z  * [new branch]        fix/runtime-round-ownership-20261014     -> origin/fix/runtime-round-ownership-20261014
+2026-10-28T06:29:55.5457902Z  * [new branch]        main                                     -> origin/main
+2026-10-28T06:29:55.5458287Z  * [new branch]        research/authenticated-rvl-reward-admission-v1 -> origin/research/authenticated-rvl-reward-admission-v1
+2026-10-28T06:29:55.5458768Z  * [new branch]        research/evaluation-transaction-completion-v1 -> origin/research/evaluation-transaction-completion-v1
+2026-10-28T06:29:55.5459228Z  * [new branch]        research/promotion-publication-recovery-v1 -> origin/research/promotion-publication-recovery-v1
+2026-10-28T06:29:55.5459666Z  * [new branch]        research/rejection-rollback-recovery-v1  -> origin/research/rejection-rollback-recovery-v1
+2026-10-28T06:29:55.5460180Z  * [new branch]        safety/attested-promotion-ledger-precommit -> origin/safety/attested-promotion-ledger-precommit
+2026-10-28T06:29:55.5460713Z  * [new branch]        safety/checkpoint-bound-durable-promotion-v1 -> origin/safety/checkpoint-bound-durable-promotion-v1
+2026-10-28T06:29:55.5461172Z  * [new branch]        safety/docker-trusted-evaluator-isolation-v1 -> origin/safety/docker-trusted-evaluator-isolation-v1
+2026-10-28T06:29:55.5461629Z  * [new branch]        safety/sandboxed-repository-verifier-v1  -> origin/safety/sandboxed-repository-verifier-v1
+2026-10-28T06:29:55.5462057Z  * [new branch]        safety/trusted-checkpoint-store-eval-v1  -> origin/safety/trusted-checkpoint-store-eval-v1
+2026-10-28T06:29:55.5462451Z  * [new tag]           e2e-rl-continuation-v2-20261016          -> e2e-rl-continuation-v2-20261016
+2026-10-28T06:29:55.5462781Z  * [new tag]           grpo-e2e-cpu-20261017                    -> grpo-e2e-cpu-20261017
+2026-10-28T06:29:55.5463099Z  * [new tag]           streamed-grpo-cpu-20261017               -> streamed-grpo-cpu-20261017
+2026-10-28T06:29:55.5463435Z  * [new tag]           streamed-grpo-cpu-v31-20261024           -> streamed-grpo-cpu-v31-20261024
+2026-10-28T06:29:55.5463795Z  * [new tag]           trajectory-runtime-cpu-20261017          -> trajectory-runtime-cpu-20261017
+2026-10-28T06:29:55.5464171Z  * [new tag]           vare-apple-silicon-update-v1-evidence    -> vare-apple-silicon-update-v1-evidence
+2026-10-28T06:29:55.5464839Z  * [new tag]           vare-pr122-grading-images-v1             -> vare-pr122-grading-images-v1
+2026-10-28T06:29:55.5465160Z  * [new ref]           316aac3c4dae32cb07975cebba09156bcf54b747 -> pull/142/merge
+2026-10-28T06:29:55.5466067Z ##[endgroup]
+2026-10-28T06:29:55.5466325Z ##[group]Determining the checkout info
+2026-10-28T06:29:55.5466597Z ##[endgroup]
+2026-10-28T06:29:55.5466761Z [command]/usr/bin/git sparse-checkout disable
+2026-10-28T06:29:55.5467240Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-28T06:29:55.5468133Z ##[group]Checking out the ref
+2026-10-28T06:29:55.5468480Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/142/merge
+2026-10-28T06:29:56.5604145Z Updating files:  13% (1474/10741)
+2026-10-28T06:29:56.7686020Z Updating files:  14% (1504/10741)
+2026-10-28T06:29:57.0045802Z Updating files:  15% (1612/10741)
+2026-10-28T06:29:57.0899171Z Updating files:  16% (1719/10741)
+2026-10-28T06:29:57.1423402Z Updating files:  17% (1826/10741)
+2026-10-28T06:29:57.1457302Z Updating files:  18% (1934/10741)
+2026-10-28T06:29:57.1493051Z Updating files:  19% (2041/10741)
+2026-10-28T06:29:57.1531930Z Updating files:  20% (2149/10741)
+2026-10-28T06:29:57.1564577Z Updating files:  21% (2256/10741)
+2026-10-28T06:29:57.1603100Z Updating files:  22% (2364/10741)
+2026-10-28T06:29:57.1643076Z Updating files:  23% (2471/10741)
+2026-10-28T06:29:57.1676230Z Updating files:  24% (2578/10741)
+2026-10-28T06:29:57.1717270Z Updating files:  25% (2686/10741)
+2026-10-28T06:29:57.1753101Z Updating files:  26% (2793/10741)
+2026-10-28T06:29:57.1800609Z Updating files:  27% (2901/10741)
+2026-10-28T06:29:57.1868082Z Updating files:  28% (3008/10741)
+2026-10-28T06:29:57.1913802Z Updating files:  29% (3115/10741)
+2026-10-28T06:29:57.1973515Z Updating files:  30% (3223/10741)
+2026-10-28T06:29:57.2019062Z Updating files:  31% (3330/10741)
+2026-10-28T06:29:57.2070539Z Updating files:  32% (3438/10741)
+2026-10-28T06:29:57.2111076Z Updating files:  33% (3545/10741)
+2026-10-28T06:29:57.2144503Z Updating files:  34% (3652/10741)
+2026-10-28T06:29:57.2183788Z Updating files:  35% (3760/10741)
+2026-10-28T06:29:57.2276972Z Updating files:  36% (3867/10741)
+2026-10-28T06:29:57.2338444Z Updating files:  37% (3975/10741)
+2026-10-28T06:29:57.2386668Z Updating files:  38% (4082/10741)
+2026-10-28T06:29:57.2421563Z Updating files:  39% (4189/10741)
+2026-10-28T06:29:57.2473622Z Updating files:  40% (4297/10741)
+2026-10-28T06:29:57.2559542Z Updating files:  41% (4404/10741)
+2026-10-28T06:29:57.2645978Z Updating files:  42% (4512/10741)
+2026-10-28T06:29:57.2711984Z Updating files:  43% (4619/10741)
+2026-10-28T06:29:57.2785541Z Updating files:  44% (4727/10741)
+2026-10-28T06:29:57.2850846Z Updating files:  45% (4834/10741)
+2026-10-28T06:29:57.2907118Z Updating files:  46% (4941/10741)
+2026-10-28T06:29:57.2942869Z Updating files:  47% (5049/10741)
+2026-10-28T06:29:57.2975800Z Updating files:  48% (5156/10741)
+2026-10-28T06:29:57.3010826Z Updating files:  49% (5264/10741)
+2026-10-28T06:29:57.3044957Z Updating files:  50% (5371/10741)
+2026-10-28T06:29:57.3080565Z Updating files:  51% (5478/10741)
+2026-10-28T06:29:57.3114776Z Updating files:  52% (5586/10741)
+2026-10-28T06:29:57.3150248Z Updating files:  53% (5693/10741)
+2026-10-28T06:29:57.3188949Z Updating files:  54% (5801/10741)
+2026-10-28T06:29:57.3221011Z Updating files:  55% (5908/10741)
+2026-10-28T06:29:57.3253186Z Updating files:  56% (6015/10741)
+2026-10-28T06:29:57.3285269Z Updating files:  57% (6123/10741)
+2026-10-28T06:29:57.3316874Z Updating files:  58% (6230/10741)
+2026-10-28T06:29:57.3346311Z Updating files:  59% (6338/10741)
+2026-10-28T06:29:57.3429370Z Updating files:  60% (6445/10741)
+2026-10-28T06:29:57.3493261Z Updating files:  61% (6553/10741)
+2026-10-28T06:29:57.3629004Z Updating files:  62% (6660/10741)
+2026-10-28T06:29:57.3701477Z Updating files:  63% (6767/10741)
+2026-10-28T06:29:57.3755625Z Updating files:  64% (6875/10741)
+2026-10-28T06:29:57.3798827Z Updating files:  65% (6982/10741)
+2026-10-28T06:29:57.3833261Z Updating files:  66% (7090/10741)
+2026-10-28T06:29:57.3872104Z Updating files:  67% (7197/10741)
+2026-10-28T06:29:57.3911677Z Updating files:  68% (7304/10741)
+2026-10-28T06:29:57.3980980Z Updating files:  69% (7412/10741)
+2026-10-28T06:29:57.4015550Z Updating files:  70% (7519/10741)
+2026-10-28T06:29:57.4049297Z Updating files:  71% (7627/10741)
+2026-10-28T06:29:57.4092927Z Updating files:  72% (7734/10741)
+2026-10-28T06:29:57.4152791Z Updating files:  73% (7841/10741)
+2026-10-28T06:29:57.4216042Z Updating files:  74% (7949/10741)
+2026-10-28T06:29:57.4285178Z Updating files:  75% (8056/10741)
+2026-10-28T06:29:57.4357468Z Updating files:  76% (8164/10741)
+2026-10-28T06:29:57.4410038Z Updating files:  77% (8271/10741)
+2026-10-28T06:29:57.4507685Z Updating files:  78% (8378/10741)
+2026-10-28T06:29:57.4641829Z Updating files:  79% (8486/10741)
+2026-10-28T06:29:57.4674590Z Updating files:  80% (8593/10741)
+2026-10-28T06:29:57.4720266Z Updating files:  81% (8701/10741)
+2026-10-28T06:29:57.4757384Z Updating files:  82% (8808/10741)
+2026-10-28T06:29:57.4806391Z Updating files:  83% (8916/10741)
+2026-10-28T06:29:57.4837804Z Updating files:  84% (9023/10741)
+2026-10-28T06:29:57.4869148Z Updating files:  85% (9130/10741)
+2026-10-28T06:29:57.4909775Z Updating files:  86% (9238/10741)
+2026-10-28T06:29:57.4946670Z Updating files:  87% (9345/10741)
+2026-10-28T06:29:57.4976957Z Updating files:  88% (9453/10741)
+2026-10-28T06:29:57.5008473Z Updating files:  89% (9560/10741)
+2026-10-28T06:29:57.5046156Z Updating files:  90% (9667/10741)
+2026-10-28T06:29:57.5089414Z Updating files:  91% (9775/10741)
+2026-10-28T06:29:57.5135847Z Updating files:  92% (9882/10741)
+2026-10-28T06:29:57.5171975Z Updating files:  93% (9990/10741)
+2026-10-28T06:29:57.5220520Z Updating files:  94% (10097/10741)
+2026-10-28T06:29:57.5275144Z Updating files:  95% (10204/10741)
+2026-10-28T06:29:57.5326323Z Updating files:  96% (10312/10741)
+2026-10-28T06:29:57.5386154Z Updating files:  97% (10419/10741)
+2026-10-28T06:29:57.5437293Z Updating files:  98% (10527/10741)
+2026-10-28T06:29:57.5487094Z Updating files:  99% (10634/10741)
+2026-10-28T06:29:57.5487247Z Updating files: 100% (10741/10741)
+2026-10-28T06:29:57.5487399Z Updating files: 100% (10741/10741), done.
+2026-10-28T06:29:57.5800548Z Note: switching to 'refs/remotes/pull/142/merge'.
+2026-10-28T06:29:57.5800894Z 
+2026-10-28T06:29:57.5801183Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-28T06:29:57.5802020Z changes and commit them, and you can discard any commits you make in this
+2026-10-28T06:29:57.5802422Z state without impacting any branches by switching back to a branch.
+2026-10-28T06:29:57.5802660Z 
+2026-10-28T06:29:57.5802816Z If you want to create a new branch to retain commits you create, you may
+2026-10-28T06:29:57.5803202Z do so (now or later) by using -c with the switch command. Example:
+2026-10-28T06:29:57.5803411Z 
+2026-10-28T06:29:57.5803527Z   git switch -c <new-branch-name>
+2026-10-28T06:29:57.5803669Z 
+2026-10-28T06:29:57.5803764Z Or undo this operation with:
+2026-10-28T06:29:57.5803895Z 
+2026-10-28T06:29:57.5803984Z   git switch -
+2026-10-28T06:29:57.5804091Z 
+2026-10-28T06:29:57.5804410Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-28T06:29:57.5804664Z 
+2026-10-28T06:29:57.5804948Z HEAD is now at 316aac3c Merge 3ebddfdf39c90680c162cd4c688ae0325d5297e7 into f3ab90a36e8724441b6b9555255f8f75a0a4d529
+2026-10-28T06:29:57.6032409Z ##[endgroup]
+2026-10-28T06:29:57.6072854Z [command]/usr/bin/git log -1 --format=%H
+2026-10-28T06:29:57.6095736Z 316aac3c4dae32cb07975cebba09156bcf54b747
+2026-10-28T06:29:57.7029041Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-10-28T06:29:57.7029269Z with:
+2026-10-28T06:29:57.7029393Z   python-version: 3.13
+2026-10-28T06:29:57.7029532Z   check-latest: false
+2026-10-28T06:29:57.7030846Z   token: ***
+2026-10-28T06:29:57.7030990Z   update-environment: true
+2026-10-28T06:29:57.7031132Z   allow-prereleases: false
+2026-10-28T06:29:57.7031265Z   freethreaded: false
+2026-10-28T06:29:57.7031394Z ##[endgroup]
+2026-10-28T06:29:57.8117205Z ##[group]Installed versions
+2026-10-28T06:29:57.8195064Z (node:2163) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-28T06:29:57.8195588Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-28T06:29:57.8195927Z Successfully set up CPython (3.13.17)
+2026-10-28T06:29:57.8196352Z ##[endgroup]
+2026-10-28T06:29:58.0057363Z ##[group]Run python -m pip install -e . pytest==8.4.2
+2026-10-28T06:29:58.0058167Z [36;1mpython -m pip install -e . pytest==8.4.2[0m
+2026-10-28T06:29:58.0613551Z shell: /usr/bin/bash -e {0}
+2026-10-28T06:29:58.0613770Z env:
+2026-10-28T06:29:58.0613967Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:29:58.0614419Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib/pkgconfig
+2026-10-28T06:29:58.0614689Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:29:58.0614915Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:29:58.0615139Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:29:58.0615367Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib
+2026-10-28T06:29:58.0615559Z ##[endgroup]
+2026-10-28T06:30:01.3788315Z Obtaining file:///home/runner/work/VARE/VARE
+2026-10-28T06:30:01.3800804Z   Installing build dependencies: started
+2026-10-28T06:30:02.2733646Z   Installing build dependencies: finished with status 'done'
+2026-10-28T06:30:02.2738266Z   Checking if build backend supports build_editable: started
+2026-10-28T06:30:02.6033801Z   Checking if build backend supports build_editable: finished with status 'done'
+2026-10-28T06:30:02.6040292Z   Getting requirements to build editable: started
+2026-10-28T06:30:02.8461919Z   Getting requirements to build editable: finished with status 'done'
+2026-10-28T06:30:02.8469241Z   Preparing editable metadata (pyproject.toml): started
+2026-10-28T06:30:02.9899484Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2026-10-28T06:30:03.0652195Z Collecting pytest==8.4.2
+2026-10-28T06:30:03.1229051Z   Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+2026-10-28T06:30:03.1428116Z Collecting iniconfig>=1 (from pytest==8.4.2)
+2026-10-28T06:30:03.1575980Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+2026-10-28T06:30:03.1638359Z Collecting packaging>=20 (from pytest==8.4.2)
+2026-10-28T06:30:03.1646020Z   Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-10-28T06:30:03.1811686Z Collecting pluggy<2,>=1.5 (from pytest==8.4.2)
+2026-10-28T06:30:03.1960142Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+2026-10-28T06:30:03.2178606Z Collecting pygments>=2.7.2 (from pytest==8.4.2)
+2026-10-28T06:30:03.2327617Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-10-28T06:30:03.2503857Z Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+2026-10-28T06:30:03.3126150Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-10-28T06:30:03.3296121Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-10-28T06:30:03.3319164Z Using cached packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-28T06:30:03.3467499Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-28T06:30:03.3774013Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 38.5 MB/s  0:00:00
+2026-10-28T06:30:03.3874596Z Building wheels for collected packages: vare-rl
+2026-10-28T06:30:03.3880298Z   Building editable for vare-rl (pyproject.toml): started
+2026-10-28T06:30:03.5438865Z   Building editable for vare-rl (pyproject.toml): finished with status 'done'
+2026-10-28T06:30:03.5442904Z   Created wheel for vare-rl: filename=vare_rl-0.4.0-0.editable-py3-none-any.whl size=9755 sha256=2c371807f0903e80e93fbc31f6549184935db25b21c427a0b7cc01a111d3ba45
+2026-10-28T06:30:03.5443751Z   Stored in directory: /tmp/pip-ephem-wheel-cache-4yq4usyt/wheels/15/74/ab/6815670d1614c1dbb6ad510bc55cbc72021822800769da1438
+2026-10-28T06:30:03.5464877Z Successfully built vare-rl
+2026-10-28T06:30:03.5593805Z Installing collected packages: vare-rl, pygments, pluggy, packaging, iniconfig, pytest
+2026-10-28T06:30:05.0255688Z 
+2026-10-28T06:30:05.0268262Z Successfully installed iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pytest-8.4.2 vare-rl-0.4.0
+2026-10-28T06:30:05.1063063Z ##[group]Run docker pull python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1
+2026-10-28T06:30:05.1063522Z [36;1mdocker pull python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1[0m
+2026-10-28T06:30:05.1091440Z shell: /usr/bin/bash -e {0}
+2026-10-28T06:30:05.1091590Z env:
+2026-10-28T06:30:05.1091752Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:30:05.1092002Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib/pkgconfig
+2026-10-28T06:30:05.1092247Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:30:05.1092478Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:30:05.1092693Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:30:05.1092910Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib
+2026-10-28T06:30:05.1093100Z ##[endgroup]
+2026-10-28T06:30:06.6228049Z docker.io/library/python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1: Pulling from library/python
+2026-10-28T06:30:07.8171985Z bbc5a1223747: Pulling fs layer
+2026-10-28T06:30:07.8172343Z ecc510c1e359: Pulling fs layer
+2026-10-28T06:30:07.8173169Z 6912e23eb445: Pulling fs layer
+2026-10-28T06:30:07.8173371Z 75b6a36c64a1: Pulling fs layer
+2026-10-28T06:30:08.2570852Z bbc5a1223747: Download complete
+2026-10-28T06:30:08.4570434Z 75b6a36c64a1: Download complete
+2026-10-28T06:30:09.0575438Z ecc510c1e359: Download complete
+2026-10-28T06:30:09.1576301Z 6912e23eb445: Download complete
+2026-10-28T06:30:10.1571663Z 611ca50ea732: Download complete
+2026-10-28T06:30:10.3567168Z 97c6e8c8dabe: Download complete
+2026-10-28T06:30:10.5609785Z ecc510c1e359: Pull complete
+2026-10-28T06:30:10.6582556Z 75b6a36c64a1: Pull complete
+2026-10-28T06:30:10.7994450Z bbc5a1223747: Pull complete
+2026-10-28T06:30:10.8000689Z 6912e23eb445: Pull complete
+2026-10-28T06:30:10.8001110Z Digest: sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1
+2026-10-28T06:30:10.8001714Z Status: Downloaded newer image for python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1
+2026-10-28T06:30:10.8006020Z docker.io/library/python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1
+2026-10-28T06:30:10.8093142Z ##[group]Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+2026-10-28T06:30:10.8093797Z [36;1mpython -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py[0m
+2026-10-28T06:30:10.8128263Z shell: /usr/bin/bash -e {0}
+2026-10-28T06:30:10.8128518Z env:
+2026-10-28T06:30:10.8128755Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:30:10.8129029Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib/pkgconfig
+2026-10-28T06:30:10.8129425Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:30:10.8129775Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:30:10.8130112Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:30:10.8130464Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib
+2026-10-28T06:30:10.8130935Z   VARE_TEST_DIAGNOSTICS_DIR: /home/runner/work/_temp/durable-test-diagnostics
+2026-10-28T06:30:10.8131241Z ##[endgroup]
+2026-10-28T06:30:17.8533171Z .............................sssssss.................................... [  4%]
+2026-10-28T06:30:41.7947424Z ........................................................................ [  9%]
+2026-10-28T06:30:50.8683779Z .........................................sssssssssssssssssssssssssssssss [ 13%]
+2026-10-28T06:30:52.7049080Z s......sssssssssssssssssssss.ssssssssssssssss.ssssssss.................. [ 18%]
+2026-10-28T06:30:56.4308317Z ........................................................................ [ 23%]
+2026-10-28T06:31:09.8033157Z ........................................................................ [ 27%]
+2026-10-28T06:31:10.9404121Z .....................................................s.................. [ 32%]
+2026-10-28T06:31:44.6221421Z ...ss......s............ss...ss......................................... [ 36%]
+2026-10-28T06:31:50.1213857Z ......................................................................ss [ 41%]
+2026-10-28T06:32:27.7040146Z ssss....s.ssssss......s................................................. [ 46%]
+2026-10-28T06:32:28.4750911Z ...............ss....................................................... [ 50%]
+2026-10-28T06:32:30.6129889Z ........................................................................ [ 55%]
+2026-10-28T06:32:35.6793507Z ........................................................................ [ 59%]
+2026-10-28T06:32:36.7341181Z .....................................................................s.. [ 64%]
+2026-10-28T06:32:37.6768040Z ........................................................................ [ 69%]
+2026-10-28T06:32:41.4925041Z ........................................................................ [ 73%]
+2026-10-28T06:33:14.6289992Z ........................................FF.......s...................... [ 78%]
+2026-10-28T06:33:24.0935479Z ........................................................................ [ 82%]
+2026-10-28T06:33:26.3388262Z ........................................................................ [ 87%]
+2026-10-28T06:33:29.2251036Z ........................................................................ [ 92%]
+2026-10-28T06:33:34.1500945Z ........................................................................ [ 96%]
+2026-10-28T06:33:36.2296986Z ....................................................                     [100%]
+2026-10-28T06:33:36.2297820Z =================================== FAILURES ===================================
+2026-10-28T06:33:36.2298194Z ____________ test_task_exposure_events_are_durable_and_append_only _____________
+2026-10-28T06:33:36.2298460Z 
+2026-10-28T06:33:36.2298622Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_task_exposure_events_are_0')
+2026-10-28T06:33:36.2298987Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x748ac1a5af20>
+2026-10-28T06:33:36.2299244Z 
+2026-10-28T06:33:36.2299439Z     def test_task_exposure_events_are_durable_and_append_only(tmp_path, monkeypatch):
+2026-10-28T06:33:36.2300073Z >       runner = _load_runner()
+2026-10-28T06:33:36.2300283Z                  ^^^^^^^^^^^^^^
+2026-10-28T06:33:36.2300415Z 
+2026-10-28T06:33:36.2300528Z tests/test_sprint_viii_campaign_exposure.py:26: 
+2026-10-28T06:33:36.2300835Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2026-10-28T06:33:36.2301173Z tests/test_sprint_viii_campaign_exposure.py:21: in _load_runner
+2026-10-28T06:33:36.2301480Z     spec.loader.exec_module(module)
+2026-10-28T06:33:36.2301757Z <frozen importlib._bootstrap_external>:1027: in exec_module
+2026-10-28T06:33:36.2302029Z     ???
+2026-10-28T06:33:36.2302255Z <frozen importlib._bootstrap>:488: in _call_with_frames_removed
+2026-10-28T06:33:36.2302532Z     ???
+2026-10-28T06:33:36.2302737Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2026-10-28T06:33:36.2302937Z 
+2026-10-28T06:33:36.2303035Z     from __future__ import annotations
+2026-10-28T06:33:36.2303262Z     
+2026-10-28T06:33:36.2303435Z     import hashlib
+2026-10-28T06:33:36.2303616Z     import json
+2026-10-28T06:33:36.2303799Z     import os
+2026-10-28T06:33:36.2304000Z     from pathlib import Path
+2026-10-28T06:33:36.2304221Z     import shutil
+2026-10-28T06:33:36.2304626Z     import subprocess
+2026-10-28T06:33:36.2304825Z     import sys
+2026-10-28T06:33:36.2305000Z     import time
+2026-10-28T06:33:36.2305204Z     from typing import Any
+2026-10-28T06:33:36.2305411Z     
+2026-10-28T06:33:36.2305597Z >   import psutil
+2026-10-28T06:33:36.2305822Z E   ModuleNotFoundError: No module named 'psutil'
+2026-10-28T06:33:36.2306027Z 
+2026-10-28T06:33:36.2306294Z results/sprint_viii_20261028/external_transformers_49703/run_campaign_v5.py:13: ModuleNotFoundError
+2026-10-28T06:33:36.2306829Z _________ test_campaign_protocol_shape_rejects_missing_decoding_fields _________
+2026-10-28T06:33:36.2307109Z 
+2026-10-28T06:33:36.2307281Z     def test_campaign_protocol_shape_rejects_missing_decoding_fields():
+2026-10-28T06:33:36.2307617Z >       runner = _load_runner()
+2026-10-28T06:33:36.2307843Z                  ^^^^^^^^^^^^^^
+2026-10-28T06:33:36.2307978Z 
+2026-10-28T06:33:36.2308094Z tests/test_sprint_viii_campaign_exposure.py:47: 
+2026-10-28T06:33:36.2308417Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2026-10-28T06:33:36.2308761Z tests/test_sprint_viii_campaign_exposure.py:21: in _load_runner
+2026-10-28T06:33:36.2308977Z     spec.loader.exec_module(module)
+2026-10-28T06:33:36.2309170Z <frozen importlib._bootstrap_external>:1027: in exec_module
+2026-10-28T06:33:36.2309354Z     ???
+2026-10-28T06:33:36.2309507Z <frozen importlib._bootstrap>:488: in _call_with_frames_removed
+2026-10-28T06:33:36.2309692Z     ???
+2026-10-28T06:33:36.2309830Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2026-10-28T06:33:36.2309969Z 
+2026-10-28T06:33:36.2310029Z     from __future__ import annotations
+2026-10-28T06:33:36.2310181Z     
+2026-10-28T06:33:36.2310293Z     import hashlib
+2026-10-28T06:33:36.2310414Z     import json
+2026-10-28T06:33:36.2310533Z     import os
+2026-10-28T06:33:36.2310662Z     from pathlib import Path
+2026-10-28T06:33:36.2310801Z     import shutil
+2026-10-28T06:33:36.2310922Z     import subprocess
+2026-10-28T06:33:36.2311047Z     import sys
+2026-10-28T06:33:36.2311161Z     import time
+2026-10-28T06:33:36.2311282Z     from typing import Any
+2026-10-28T06:33:36.2311584Z     
+2026-10-28T06:33:36.2311697Z >   import psutil
+2026-10-28T06:33:36.2311842Z E   ModuleNotFoundError: No module named 'psutil'
+2026-10-28T06:33:36.2311964Z 
+2026-10-28T06:33:36.2312129Z results/sprint_viii_20261028/external_transformers_49703/run_campaign_v5.py:13: ModuleNotFoundError
+2026-10-28T06:33:36.2312431Z =========================== short test summary info ============================
+2026-10-28T06:33:36.2312893Z FAILED tests/test_sprint_viii_campaign_exposure.py::test_task_exposure_events_are_durable_and_append_only - ModuleNotFoundError: No module named 'psutil'
+2026-10-28T06:33:36.2313576Z FAILED tests/test_sprint_viii_campaign_exposure.py::test_campaign_protocol_shape_rejects_missing_decoding_fields - ModuleNotFoundError: No module named 'psutil'
+2026-10-28T06:33:36.2313975Z 2 failed, 1452 passed, 111 skipped in 204.51s (0:03:24)
+2026-10-28T06:33:36.4413737Z ##[error]Process completed with exit code 1.
+2026-10-28T06:33:36.4475747Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-28T06:33:36.4476000Z with:
+2026-10-28T06:33:36.4476134Z   name: durable-test-diagnostics-3.13
+2026-10-28T06:33:36.4476332Z   path: /home/runner/work/_temp/durable-test-diagnostics
+2026-10-28T06:33:36.4476526Z   if-no-files-found: ignore
+2026-10-28T06:33:36.4476669Z   compression-level: 6
+2026-10-28T06:33:36.4476800Z   overwrite: false
+2026-10-28T06:33:36.4476928Z   include-hidden-files: false
+2026-10-28T06:33:36.4477068Z env:
+2026-10-28T06:33:36.4477231Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:33:36.4477476Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib/pkgconfig
+2026-10-28T06:33:36.4477717Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:33:36.4477935Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:33:36.4478155Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.17/x64
+2026-10-28T06:33:36.4478410Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.17/x64/lib
+2026-10-28T06:33:36.4478601Z ##[endgroup]
+2026-10-28T06:33:36.5643194Z (node:18434) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-28T06:33:36.5643958Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-28T06:33:36.5654935Z No files were found with the provided path: /home/runner/work/_temp/durable-test-diagnostics. No artifacts will be uploaded.
+2026-10-28T06:33:36.6022156Z Post job cleanup.
+2026-10-28T06:33:36.6639221Z [command]/usr/bin/git version
+2026-10-28T06:33:36.6667869Z git version 2.56.0
+2026-10-28T06:33:36.6693122Z Temporarily overriding HOME='/home/runner/work/_temp/6b8bfcec-34cc-4c2e-9d5f-d5153b15555e' before making global git config changes
+2026-10-28T06:33:36.6693878Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T06:33:36.6697420Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+2026-10-28T06:33:36.6735713Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T06:33:36.6772036Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T06:33:36.7053848Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T06:33:36.7082654Z http.https://github.com/.extraheader
+2026-10-28T06:33:36.7092347Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-28T06:33:36.7128904Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T06:33:36.7403252Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T06:33:36.7436024Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T06:33:36.7833330Z Cleaning up orphan processes
+2026-10-28T06:33:36.8092499Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

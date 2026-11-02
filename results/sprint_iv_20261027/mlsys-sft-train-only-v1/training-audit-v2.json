@@ -1,0 +1,313 @@
+{
+  "audit_version": 2,
+  "protocol_sha256": "2243ee5bf6273140172e015fdee9c5d2671749c61b4393bf49ea0f3fa14e9e9d",
+  "training": {
+    "status": "completed",
+    "iterations_logged": 20,
+    "trainable_parameters": "0.733M / 494.033M",
+    "loss_values": [
+      0.628,
+      0.635,
+      0.618,
+      0.385,
+      0.395,
+      0.5,
+      0.483,
+      0.323,
+      0.272,
+      0.328,
+      0.351,
+      0.23,
+      0.306,
+      0.234,
+      0.186,
+      0.166,
+      0.178,
+      0.223,
+      0.214,
+      0.15
+    ],
+    "loss_initial": 0.628,
+    "loss_final": 0.15,
+    "interpretation": "training objective only; not independent task success or capability evidence"
+  },
+  "resources": {
+    "elapsed_seconds": 18.25,
+    "peak_rss_mib": 1220.77,
+    "initial_free_swap_mib": 433.12,
+    "final_free_swap_mib": 441.12,
+    "resource_samples": 18,
+    "abort_reason": null,
+    "exit_code": 0
+  },
+  "checkpoint": {
+    "file": "adapter/adapters.safetensors",
+    "sha256": "d3865fdcfcc14deadf05663285fa166d21b19c19104b13657690dd997205eb03",
+    "size_bytes": 2938645,
+    "adapter_config_sha256": "4919a6fb777f5b8ed5271ca91452b01e214d82e9e43c51714c26b9ef79e4c76a",
+    "lora_b_tensor_count": 28,
+    "lora_b_nonzero_elements": 405504,
+    "lora_b_squared_norm_sum": 0.15714246576489502,
+    "lora_b_tensors": [
+      {
+        "name": "model.layers.23.self_attn.q_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.04734136536717415
+      },
+      {
+        "name": "model.layers.23.self_attn.v_proj.lora_b",
+        "shape": [
+          8,
+          128
+        ],
+        "nonzero": 1024,
+        "l2_norm": 0.019552070647478104
+      },
+      {
+        "name": "model.layers.23.self_attn.o_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.052188850939273834
+      },
+      {
+        "name": "model.layers.23.self_attn.k_proj.lora_b",
+        "shape": [
+          8,
+          128
+        ],
+        "nonzero": 1024,
+        "l2_norm": 0.016874058172106743
+      },
+      {
+        "name": "model.layers.22.self_attn.v_proj.lora_b",
+        "shape": [
+          8,
+          128
+        ],
+        "nonzero": 1024,
+        "l2_norm": 0.019847450777888298
+      },
+      {
+        "name": "model.layers.22.self_attn.q_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.04444262757897377
+      },
+      {
+        "name": "model.layers.22.self_attn.k_proj.lora_b",
+        "shape": [
+          8,
+          128
+        ],
+        "nonzero": 1024,
+        "l2_norm": 0.017102491110563278
+      },
+      {
+        "name": "model.layers.22.mlp.up_proj.lora_b",
+        "shape": [
+          8,
+          4864
+        ],
+        "nonzero": 38912,
+        "l2_norm": 0.12234640121459961
+      },
+      {
+        "name": "model.layers.22.mlp.down_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.05432182550430298
+      },
+      {
+        "name": "model.layers.20.mlp.gate_proj.lora_b",
+        "shape": [
+          8,
+          4864
+        ],
+        "nonzero": 38912,
+        "l2_norm": 0.12639175355434418
+      },
+      {
+        "name": "model.layers.22.mlp.gate_proj.lora_b",
+        "shape": [
+          8,
+          4864
+        ],
+        "nonzero": 38912,
+        "l2_norm": 0.1206146627664566
+      },
+      {
+        "name": "model.layers.21.self_attn.v_proj.lora_b",
+        "shape": [
+          8,
+          128
+        ],
+        "nonzero": 1024,
+        "l2_norm": 0.020090607926249504
+      },
+      {
+        "name": "model.layers.22.self_attn.o_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.049478232860565186
+      },
+      {
+        "name": "model.layers.23.mlp.gate_proj.lora_b",
+        "shape": [
+          8,
+          4864
+        ],
+        "nonzero": 38912,
+        "l2_norm": 0.12560051679611206
+      },
+      {
+        "name": "model.layers.21.self_attn.q_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.049546193331480026
+      },
+      {
+        "name": "model.layers.21.self_attn.o_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.054618943482637405
+      },
+      {
+        "name": "model.layers.21.mlp.up_proj.lora_b",
+        "shape": [
+          8,
+          4864
+        ],
+        "nonzero": 38912,
+        "l2_norm": 0.12745574116706848
+      },
+      {
+        "name": "model.layers.23.mlp.down_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.05382341518998146
+      },
+      {
+        "name": "model.layers.21.mlp.gate_proj.lora_b",
+        "shape": [
+          8,
+          4864
+        ],
+        "nonzero": 38912,
+        "l2_norm": 0.11954443901777267
+      },
+      {
+        "name": "model.layers.20.self_attn.v_proj.lora_b",
+        "shape": [
+          8,
+          128
+        ],
+        "nonzero": 1024,
+        "l2_norm": 0.020055625587701797
+      },
+      {
+        "name": "model.layers.21.mlp.down_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.051968157291412354
+      },
+      {
+        "name": "model.layers.20.self_attn.q_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.04901399835944176
+      },
+      {
+        "name": "model.layers.20.mlp.up_proj.lora_b",
+        "shape": [
+          8,
+          4864
+        ],
+        "nonzero": 38912,
+        "l2_norm": 0.1274009495973587
+      },
+      {
+        "name": "model.layers.21.self_attn.k_proj.lora_b",
+        "shape": [
+          8,
+          128
+        ],
+        "nonzero": 1024,
+        "l2_norm": 0.018927594646811485
+      },
+      {
+        "name": "model.layers.23.mlp.up_proj.lora_b",
+        "shape": [
+          8,
+          4864
+        ],
+        "nonzero": 38912,
+        "l2_norm": 0.11972641944885254
+      },
+      {
+        "name": "model.layers.20.self_attn.o_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.05401419475674629
+      },
+      {
+        "name": "model.layers.20.self_attn.k_proj.lora_b",
+        "shape": [
+          8,
+          128
+        ],
+        "nonzero": 1024,
+        "l2_norm": 0.01848222129046917
+      },
+      {
+        "name": "model.layers.20.mlp.down_proj.lora_b",
+        "shape": [
+          8,
+          896
+        ],
+        "nonzero": 7168,
+        "l2_norm": 0.05675007775425911
+      }
+    ],
+    "optimizer_state_checkpointed_by_stock_mlx_lm_cli": false
+  },
+  "evaluation": {
+    "heldout_run": false,
+    "independent_grading_run": false,
+    "capability_improvement_claimed": false,
+    "grpo_run": false
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "protocol_id": "sprint-iv-mlsys-train-only-sft-v1-execution",
+  "frozen_before_training": true,
+  "purpose": "Bounded LoRA/SFT training feasibility on fixed VARE MLSys train split; no capability or held-out claim.",
+  "training_data_policy": "Use only the five task prompts, flawed subject sources, and known-fix oracle source files from benchmarks/mlsys_coding_v1. Oracle patches are target completions. No Development task from the fresh MLX-LM campaign is included.",
+  "partition": {
+    "train_tasks": [
+      "mlsys-v1-grad-accum-tail",
+      "mlsys-v1-paired-shuffle-loader",
+      "mlsys-v1-range-sums",
+      "mlsys-v1-row-log-softmax",
+      "mlsys-v1-warmup-cosine"
+    ],
+    "heldout_tasks": "not loaded, not evaluated, and excluded from dataset"
+  },
+  "training_examples": [
+    {
+      "task_id": "mlsys-v1-grad-accum-tail",
+      "split": "train",
+      "prompt_sha256": "c8a58acdb87ebbace467b322d9758fc95b5e117fcba10dcb4b5a29003652ed9c",
+      "subject_path": "benchmarks/mlsys_coding_v1/tasks/grad_accum_tail/subject/grad_accum.py",
+      "subject_sha256": "8fbc5c8b3ef5a3f4852f15db10f346f26d27a7b579de5a35a8cfaec5ff85138d",
+      "oracle_path": "benchmarks/mlsys_coding_v1/tasks/grad_accum_tail/evaluator/oracle/grad_accum.py",
+      "oracle_sha256": "1e03fb69b1ae921cd3a7c2e66c0f2fd990da667e67392e050a3401c479e1284c",
+      "patch_sha256": "a226aab44694e8f7b514cb74f573a7e11e79a7b9d50803107495d35b3da01827",
+      "train_example_tokens": null
+    },
+    {
+      "task_id": "mlsys-v1-paired-shuffle-loader",
+      "split": "train",
+      "prompt_sha256": "a64d3c018e29d5cdacc2070e09e6cff469ee00b0b0361e2ecf514cc67cd430b9",
+      "subject_path": "benchmarks/mlsys_coding_v1/tasks/paired_shuffle_loader/subject/paired_loader.py",
+      "subject_sha256": "3966015b28394d20b5535643bb16ff10549e5adfb3d1bd9c1eb480fc52c9e9c5",
+      "oracle_path": "benchmarks/mlsys_coding_v1/tasks/paired_shuffle_loader/evaluator/oracle/paired_loader.py",
+      "oracle_sha256": "305935a35345f22934e676adf64225168c2cea82fe307c08c46107bf1e84ba05",
+      "patch_sha256": "86588219e59bd3fd6449710dd3baff6d1c21c8e34ea3f13857361f1b4e4b9ad8",
+      "train_example_tokens": null
+    },
+    {
+      "task_id": "mlsys-v1-range-sums",
+      "split": "train",
+      "prompt_sha256": "85c44f317f6ee05f98b19d937f8438456208b71c331fed0d0a79f077f92f96a6",
+      "subject_path": "benchmarks/mlsys_coding_v1/tasks/range_sums/subject/range_sums.py",
+      "subject_sha256": "6f12297c2cf44bce9c25f5c35ded73b4062f9e3c0b2afa3d45ef4c0dbe8bfebf",
+      "oracle_path": "benchmarks/mlsys_coding_v1/tasks/range_sums/evaluator/oracle/range_sums.py",
+      "oracle_sha256": "5cc7bcc5c5d8712d0252159fb469138b72a032b1bb906f867304a5c6c5aa2ed0",
+      "patch_sha256": "aaa4c8facd8e5178a7ba37b0c85d7984103f9f7cdeb4642c06e6b0557768b685",
+      "train_example_tokens": null
+    },
+    {
+      "task_id": "mlsys-v1-row-log-softmax",
+      "split": "train",
+      "prompt_sha256": "795b13537be6100e0d085cfd092445ccc4d7e5424c031c1e063eda01551f9b18",
+      "subject_path": "benchmarks/mlsys_coding_v1/tasks/row_log_softmax/subject/row_log_softmax.py",
+      "subject_sha256": "4e1a22faed75bf1899e1f36e483babd6bc9247c3fbc706ffe64cba26f8ac62e8",
+      "oracle_path": "benchmarks/mlsys_coding_v1/tasks/row_log_softmax/evaluator/oracle/row_log_softmax.py",
+      "oracle_sha256": "95ade6d2daaef233099f943eaf660dfb5caa596cce7d79fc999f23e3ae0de250",
+      "patch_sha256": "ccd217245d12e324cddd94707a0a3494d72dceaf06e0da2df6977c47c83a6ecc",
+      "train_example_tokens": null
+    },
+    {
+      "task_id": "mlsys-v1-warmup-cosine",
+      "split": "train",
+      "prompt_sha256": "bde9049879ec27d27161eec183fae4053182a2b65dd015751df5d809d3b67778",
+      "subject_path": "benchmarks/mlsys_coding_v1/tasks/warmup_cosine/subject/warmup_cosine.py",
+      "subject_sha256": "21173545ada9cda73009996e541b7fbad2dd0200d03dd016587c91c6df2148de",
+      "oracle_path": "benchmarks/mlsys_coding_v1/tasks/warmup_cosine/evaluator/oracle/warmup_cosine.py",
+      "oracle_sha256": "fe6e7b82b45bf9dd281fafbc4292f3b0c826794b72a10fcf859a4a48fe1c0be7",
+      "patch_sha256": "357c27c4a1d79959031eb3c1fdf531dfdef288d4bca0040a3cc7acb46dc8244d",
+      "train_example_tokens": null
+    }
+  ],
+  "dataset_path": "data/train.jsonl",
+  "dataset_sha256": "2fa24d0ca4118bddfee311e214b0f8936750fc943e137631940a7500a99d295e",
+  "model": {
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "files": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+    },
+    "runtime": "MLX",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2"
+  },
+  "training": {
+    "method": "MLX-LM LoRA supervised fine-tuning",
+    "optimizer": "Adam",
+    "learning_rate": 1e-05,
+    "seed": 20261027,
+    "steps": 20,
+    "batch_size": 1,
+    "gradient_accumulation_steps": 1,
+    "num_layers": 4,
+    "mask_prompt": true,
+    "max_sequence_length": 2048,
+    "temperature": "not applicable",
+    "status_before_run": "not_started",
+    "reported_train_loss": "descriptive only; do not interpret as task accuracy"
+  },
+  "compute_limits": {
+    "wall_seconds": 1800,
+    "process_rss_mib_max": 8192,
+    "free_swap_mib_min": 220,
+    "preflight_free_swap_mib": 433.12,
+    "preflight_memory_pressure_report": "The system has 34359738368 (2097152 pages with a page size of 16384).\n\nStats: \nPages free: 65315 \nPages purgeable: 24619 \nPages purged: 3334249 \n\nSwap I/O:\nSwapins: 42362 \nSwapouts: 244212 \n\nPage Q counts:\nPages active: 723372 \nPages inactive: 780661 \nPages speculative: 1273 \nPages throttled: 0 \nPages wired down: 192951 \n\nCompressor Stats:\nPages used by compressor: 281423 \nPages decompressed: 31044129 \nPages compressed: 35883538 \n\nFile I/O:\nPageins: 45824562 \nPageouts: 7023 \n\nSystem-wide memory free percentage: 76%",
+    "preflight_swap_report": "vm.swapusage: total = 3072.00M  used = 2638.88M  free = 433.12M  (encrypted)"
+  },
+  "evaluation": {
+    "heldout": "prohibited in this run; existing 4-task V1 held-out pack fails the frozen 15-family eligibility gate and its candidate namespace has previously read hidden grader canaries.",
+    "training_loss": "descriptive optimization diagnostic only, not an independent capability outcome",
+    "post_update_independent_grading": "not run",
+    "grpo": "not run; no valid nonconstant model-sampled rewards"
+  },
+  "stopping_rule": "Stop on wall time, process RSS, or free-swap threshold. Do not raise caps. If training fails, retain logs and partial checkpoint, classify as resource/implementation failure.",
+  "artifacts": {
+    "adapter_weights": "local result folder only; do not commit as ordinary Git blobs",
+    "raw_stdout": "train.stdout.log",
+    "raw_stderr": "train.stderr.log",
+    "resource_samples": "resources.jsonl"
+  },
+  "supersedes_protocol_sha256": "5829a1fa1f2d6df9d45dcbe0de4413afdb0240a3d2d15cb85aff201abd0856de",
+  "dataset_tokens_by_example": [
+    854,
+    937,
+    734,
+    750,
+    1218
+  ],
+  "max_dataset_sequence_tokens": 1218,
+  "execution_command": [
+    "/Users/user/.cache/vare-mlx-venv/bin/python",
+    "-m",
+    "mlx_lm.lora",
+    "--model",
+    "/Users/user/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+    "--train",
+    "--data",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_iv_20261027/mlsys-train-only-sft-v1/data",
+    "--fine-tune-type",
+    "lora",
+    "--optimizer",
+    "adam",
+    "--batch-size",
+    "1",
+    "--iters",
+    "20",
+    "--learning-rate",
+    "0.00001",
+    "--steps-per-report",
+    "1",
+    "--steps-per-eval",
+    "100",
+    "--num-layers",
+    "4",
+    "--mask-prompt",
+    "--adapter-path",
+    "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_iv_20261027/mlsys-train-only-sft-v1/adapter",
+    "--save-every",
+    "20",
+    "--max-seq-length",
+    "2048",
+    "--seed",
+    "20261027"
+  ],
+  "environment": {
+    "HF_HUB_OFFLINE": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTHONUNBUFFERED": "1",
+    "device": "MLX default device; Apple Metal allowed"
+  }
+}

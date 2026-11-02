@@ -1,0 +1,140 @@
+{
+  "schema": "vare.sprint-vii.root-cause-matrix.v1",
+  "created_utc": "2026-10-28",
+  "historical_source": "../VARE-sprint-iv-evidence-public/docs/sprint-vi-research-and-integration-results-20261028.md",
+  "historical_records_mutated": false,
+  "rows": [
+    {
+      "attempt": "Sprint VI Transformers #49696 autonomous",
+      "model": "Qwen2.5-3B-Instruct-4bit / MLX Metal",
+      "stage": "generation contract",
+      "raw_evidence": "campaign_49696/attempts/01-A_autonomous/agent.json",
+      "outcome": "argument_slot_token_budget_exhausted after 512 generated tokens in one turn; no tool call, read, edit, test, or grader.",
+      "root_cause": "tool argument slot was unable to complete within frozen generation budget; source localization was never reached.",
+      "resource": "completed; about 2.04GB recorded RSS; no resource abort."
+    },
+    {
+      "attempt": "Sprint VI Transformers #49696 source-read gate",
+      "model": "Qwen2.5-3B-Instruct-4bit / MLX Metal",
+      "stage": "tool argument validation / localization",
+      "raw_evidence": "campaign_49696/attempts/02-B_source_read_gate/agent.json",
+      "outcome": "239 generated tokens; malformed quoted multiline-regex search_source query rejected as invalid_query; later list_files and another invalid query; no source read or edit.",
+      "root_cause": "prompt/source-localization contract invited copied task text and multiline regex even though search is bounded line-oriented; JSON schema validity did not make query semantically useful.",
+      "resource": "completed; about 2.05GB recorded RSS; no resource abort."
+    },
+    {
+      "attempt": "Sprint VI Transformers #49975 autonomous + localized",
+      "model": "Qwen2.5-3B-Instruct-4bit / MLX Metal",
+      "stage": "generation/tool-controller interface",
+      "raw_evidence": "campaign_49975/attempts/*/attempt-assessment.json and campaign summary",
+      "outcome": "two model attempts consumed 512 generated tokens each and stopped before edit; archived bundle has no agent.json for either attempt, so exact raw tool/action boundary cannot be reconstructed from the published bundle.",
+      "root_cause": "classified by the frozen assessment as tool/controller-interface failure; finer parser-versus-model attribution is not supported by retained attempt outputs.",
+      "resource": "one separate feasibility attempt stopped at memory preflight before model inference."
+    },
+    {
+      "attempt": "Sprint VI Transformers #50001 autonomous",
+      "model": "Qwen2.5-Coder-7B-Instruct-4bit / MLX CPU requested (CPU-only not independently established)",
+      "stage": "source localization / context management",
+      "raw_evidence": "campaign_50001/attempts/01-autonomous-seed-101/{agent.json,events.jsonl}",
+      "outcome": "11 tool calls: six searches mostly repeating `import BasicTokenizer`, four reads repeatedly covering lines 1-100, plus initial inventory; 92 generated tokens; no edit/tests; context_budget_exhausted.",
+      "root_cause": "agent failed to follow a search hit into a narrow relevant read and kept repeating navigation; cumulative prompt processing reached the controller context stop, not the per-stage 8192-token cap.",
+      "resource": "completed; no swap growth; no resource abort."
+    },
+    {
+      "attempt": "Sprint VI Transformers #50001 localized",
+      "model": "Qwen2.5-Coder-7B-Instruct-4bit / MLX CPU requested",
+      "stage": "generation contract",
+      "raw_evidence": "campaign_50001/attempts/02-localized-seed-101/agent.json",
+      "outcome": "528 generated tokens in two turns; one source read then argument_slot_token_budget_exhausted; no edit/tests.",
+      "root_cause": "body generation did not complete within the frozen argument slot budget.",
+      "resource": "completed; no resource abort."
+    },
+    {
+      "attempt": "Sprint VI Transformers #49900 autonomous",
+      "model": "Qwen2.5-Coder-14B-Instruct-4bit / MLX",
+      "stage": "generation contract / localization",
+      "raw_evidence": "campaign_49900/attempts/v1.1r1-01-A_autonomous-seed-2028/{agent.json,candidate.diff,campaign-postprocessing-failure.json}",
+      "outcome": "541 generated tokens across three calls; source search/read only; no edit; argument_slot_token_budget_exhausted. Historical postprocessor then mishandled empty Git stdout and manufactured a false nonempty diff.",
+      "root_cause": "agent failed to transition from read to edit; separately, evaluator wrapper was byte-incorrect. Append-only reconciliation recomputed the candidate from source bytes and excludes the false diff/grade.",
+      "resource": "completed; no resource abort."
+    },
+    {
+      "attempt": "Sprint VI Transformers #49900 intervention",
+      "model": "Qwen2.5-Coder-14B-Instruct-4bit / MLX",
+      "stage": "generation contract / evaluator boundary",
+      "raw_evidence": "campaign_49900/attempts/v1.2r1-01-B_progress_guard-seed-2028/{agent.json,attempt-assessment.json}",
+      "outcome": "541 generated tokens; no source edit; argument_slot_token_budget_exhausted. Independent grade FAIL was a candidate-scope rejection against an unchanged source after canonical-byte reconciliation.",
+      "root_cause": "no model edit; postprocessor artifact invalidated historical synthetic diff. Canonical diff now uses raw Git bytes with external diff/textconv disabled.",
+      "resource": "completed; no resource abort."
+    },
+    {
+      "attempt": "Sprint VI Transformers #49842 autonomous (prior-exposed; excluded)",
+      "model": "Qwen2.5-Coder-14B-Instruct-4bit / MLX Metal activity observed; CPU-only not established",
+      "stage": "edit validation/application",
+      "raw_evidence": "campaign_49842_musicgen_melody/attempts/01-A_autonomous-seed-2029/{agent.json,events.jsonl}",
+      "outcome": "12 schema-valid turns; four replacements included Python fences while normalization was `none`; full-file syntax gate rejected each; baseline public test failed as expected; candidate unchanged, hidden grader not run.",
+      "root_cause": "edit-format mismatch and insufficient error recovery, not parser/schema failure. Historical task family already exposed in Sprint II and excluded from fresh-task claims.",
+      "resource": "autonomous arm completed within cap; paired localized arm was aborted at 653.5MiB swap growth above unchanged 512MiB cap."
+    },
+    {
+      "attempt": "Sprint VII synthetic tool-interface comparison",
+      "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit snapshot 019cc73c45c770444708a6dd8690c66243cc5c80 / MLX Metal",
+      "stage": "edit applied; termination incomplete",
+      "raw_evidence": "results/sprint_vii_20261028/model_compat_run_02/campaign-summary.json; postrun-integrity-audit.json",
+      "outcome": "string-body v1 and array-body v2 each generated a valid hash-bound `return value + 2` edit and received independent AST grader PASS; 8/8 turns used per arm, then repeated list_functions instead of finish; no public tests, synthetic task only.",
+      "root_cause": "edit interfaces are compatible with model generation and trusted edit application; post-edit policy did not stop repeated inventory calls on these function-editor interfaces.",
+      "resource": "111.478s / 4.56GB RSS and 114.411s / 4.77GB RSS; swap growth 0."
+    },
+    {
+      "attempt": "Sprint VII external TRL #7913 CPO filter Development pilot",
+      "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit snapshot 019cc73c45c770444708a6dd8690c66243cc5c80 / MLX Metal",
+      "stage": "source localization / repeated action selection",
+      "raw_evidence": "results/sprint_vii_20261028/external_dev_trl7913/attempt_001/{agent.json,events.jsonl,attempt-classification-v1.json}",
+      "outcome": "14/14 schema-valid actions; one file inventory, two reads of lines 1-100, one quoted multi-term no-hit search, then the same search repeated ten times and rejected as duplicate_query. 144 generated tokens; stop at 14-turn budget; candidate byte-identical, no edit; public tests and independent candidate grader not run.",
+      "root_cause": "v1 transactional guidance gave only generic search/read instruction. Model ignored duplicate_query feedback; repeated prompt/tool outputs consumed turns. Per-stage prompt max 4919 below 8192; 98665 is cumulative across independent constrained-decoding stages, not a context-window measurement.",
+      "resource": "362.222s, peak process-tree RSS 4,381,933,568 bytes, minimum sampled available RAM 6,296,272,896 bytes, swap growth 0; no resource abort."
+    }
+  ],
+  "prospective_intervention": {
+    "name": "transactional navigation guidance v2",
+    "source_commit": "ec6f37cefb72be0e1d4d9753493eaab448e5a2a7",
+    "effect": "explicit single short search term, same-line matching, one shorter retry, no duplicate query, narrow hit-centered read; preserves lease-bound transactional replacement, explicit normalization, syntax gate, and fail-closed behavior.",
+    "default_changed": false,
+    "model_validation": "NOT_RUN; external task was consumed and no additional task was exposed."
+  },
+  "deterministic_edit_gate": {
+    "protocol": "vare.sprint-vii.e0-edit-acceptance.v3",
+    "status": "PASS",
+    "result_sha256": "6ca6cf1d4c56324f7c20cc2072b1788e7e7f71537229f9af0b717b50aa820b6b",
+    "protocol_sha256": "b45ddc7fbfb74edd7a560b75d39a72775e8096e421b7057bead9646380bf4cce",
+    "model_inference": "NOT_RUN"
+  },
+  "external_task": {
+    "task_id": "trl-7913-cpo-truncated-completion-development-v1",
+    "upstream": "https://github.com/huggingface/trl/pull/7913",
+    "baseline_revision": "1374d6956419455864dd642911c7d4a0334e60b0",
+    "known_fix_revision": "3ed1ae5ac17076ff67d4be24cbd303c528081b4d",
+    "fix_merge_revision": "33b871b5eee4d7a51dcc42c1b5454a4d0364339a",
+    "candidate_source_sha256": "41a52900b1761949b02d3bb13975fcbad9a69edb4b7f5fc23eec7b6c39d3568d",
+    "known_fix_source_sha256": "52bad888f7a13128f2a9136e2796437085980b5d7b3021b1bc4e5323ed587f47",
+    "wrong_mutant_source_sha256": "92c9724214f4c74a95ddd4a9d712191b90cae1d641fa606ee85bed22a25d8f22",
+    "qualification": "baseline FAIL; upstream fix PASS; wrong mutant FAIL; isolated strict-scope grader calibrated known fix PASS and rejected wrong mutant before execution.",
+    "split": "development; consumed by one attempt; pretrained model exposure UNKNOWN; not held out."
+  },
+  "hashes": {
+    "external_protocol_v2_sha256": "3c4ac0ee5040abb88b18f2262ee248a8165eb8af75210e64ab858a9b9766ef86",
+    "model_interface_protocol_sha256": "27796d62cd20a5764ba5191804df499c8a161b61d87afe55ad46378442490303",
+    "external_attempt_event_journal_sha256": "6a2961c05918d916bf9f4e9d1c689347bddba3bb397d30f45bed773eeb3b22e6",
+    "external_attempt_agent_record_sha256": "5dfa9336ec3c32528b5694a11c98751adc9074a5d103949ee99d1b6dea9cf02c",
+    "external_attempt_classification_sha256": "cfd4487336dbcfc1e6001b5043c966777aed240c03c4ee058e94d580982f4cf2",
+    "external_attempt_grader_status_sha256": "43b9e92ad98612bb53fb2ea031254a178ac70bc13b461990fa651639b32d1cbf",
+    "external_campaign_manifest_sha256": "84829dc6f910a9529a3bf7a772d3c4569d95f9072c553855333863723ab43b61",
+    "model_interface_protocol_path": "results/sprint_vii_20261028/protocols/model_interface_v3.json"
+  },
+  "limits": [
+    "no independently verified external repair",
+    "no coding-reward training or held-out evaluation",
+    "no model-coupled long-horizon fault/recovery comparison",
+    "no RSI loop measured"
+  ]
+}

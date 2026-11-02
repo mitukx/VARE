@@ -1,0 +1,12 @@
+{
+  "development_task_consumed": false,
+  "evidence": "campaign_v4 output directory does not exist; no task exposure event was written.",
+  "exception": "unsupported external campaign protocol",
+  "model_inference_started": false,
+  "preservation": "Keep protocol v4 unchanged. Protocol v5 adds a no-model end-to-end preflight-only mode.",
+  "protocol_sha256": "103320a4127db8dad9ac841b78758d1738758dbc295ebec0e408b85e1daccc40",
+  "record_id": "transformers-49703-campaign-v4-preinference-runner-failure",
+  "recorded_at_utc": "2026-10-28T06:09:03.593091+00:00",
+  "root_cause": "Runner protocol-id guard still named v3 after freezing v4. Rejection occurred immediately after loading protocol; output directory and model process were not created.",
+  "status": "RUNNER_REJECTED_BEFORE_MODEL_INFERENCE"
+}

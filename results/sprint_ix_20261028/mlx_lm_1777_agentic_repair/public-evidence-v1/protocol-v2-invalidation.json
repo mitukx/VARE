@@ -1,0 +1,14 @@
+{
+  "cause": "Launcher used runtime.python (version string) instead of runtime.execution_python (absolute executable path).",
+  "correction": "v3 runner selects runtime.execution_python and preflight verifies the executable path plus a no-model Python probe.",
+  "created_at_utc": "2026-10-28T07:56:12.867005+00:00",
+  "generation_started": false,
+  "model_process_started": false,
+  "model_weights_loaded": false,
+  "observed_error": "FileNotFoundError: [Errno 2] No such file or directory: 3.12.12",
+  "protocol_id": "vare-sprint-ix-progress-aware-coding-agent-v2",
+  "protocol_sha256": "3d488de73ecca6f26df417fa3ca927847e3639c2e79ac0a1940467c927ff09bd",
+  "schema_version": 1,
+  "status": "INVALIDATED_BEFORE_MODEL_PROCESS_START",
+  "task_attempt_consumed": false
+}

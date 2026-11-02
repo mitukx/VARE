@@ -1,0 +1,7 @@
+--- baseline/src/transformers/data/data_collator.py
++++ candidate/src/transformers/data/data_collator.py
+@@ -1374,4 +1374,4 @@
+             if k not in self._py_int_keys:
+                 batch[k] = data_cls(v, dtype=dtype_64 if k in self._int_64_keys else dtype_32)
+ 
+-        return batch+        return batch

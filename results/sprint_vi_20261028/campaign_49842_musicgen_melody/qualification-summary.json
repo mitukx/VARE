@@ -1,0 +1,121 @@
+{
+  "baseline_revision": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+  "baseline_source_sha256": "5b27dea955c5f5c64c1c16d8564a51ce38be3ac655b73db6f5c7fee100988b82",
+  "calibration_revision": "3a3c3ff20527981fd3934da91526ddd62fed5c49",
+  "candidate_commit_count": 1,
+  "candidate_contains_fixed_source": false,
+  "candidate_contains_hidden_grader": false,
+  "candidate_visible_file_policy": "target source and bounded public test only; fixed source, hidden grader, and task solution excluded",
+  "container_image": "localhost:5000/vare/transformers-50001-grader@sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+  "controls": {
+    "control-baseline": {
+      "case_count": 6,
+      "case_results": [
+        {
+          "passed": false,
+          "reason": "receipt_or_candidate_error"
+        },
+        {
+          "passed": false,
+          "reason": "receipt_or_candidate_error"
+        },
+        {
+          "passed": true,
+          "reason": null
+        },
+        {
+          "passed": true,
+          "reason": null
+        },
+        {
+          "passed": false,
+          "reason": "receipt_or_candidate_error"
+        },
+        {
+          "passed": true,
+          "reason": null
+        }
+      ],
+      "passed": false,
+      "receipt_sha256": "8f138f7ee88a3a7fbdde1834a1c336842e9a5cbe68c5b2b260bc96b1855259c1",
+      "source_sha256": "5b27dea955c5f5c64c1c16d8564a51ce38be3ac655b73db6f5c7fee100988b82"
+    },
+    "control-known-fix": {
+      "case_count": 6,
+      "case_results": [
+        {
+          "passed": true,
+          "reason": null
+        },
+        {
+          "passed": true,
+          "reason": null
+        },
+        {
+          "passed": true,
+          "reason": null
+        },
+        {
+          "passed": true,
+          "reason": null
+        },
+        {
+          "passed": true,
+          "reason": null
+        },
+        {
+          "passed": true,
+          "reason": null
+        }
+      ],
+      "passed": true,
+      "receipt_sha256": "efc4ddef766f3455aa2bd2238c201bd5530858e463611be0eccd5f023339afd5",
+      "source_sha256": "44f92eff2dd74282ae42c1ec79311dc0448dbd0b230759e5dba1b222df861c7a"
+    },
+    "control-wrong-mutant": {
+      "case_count": 6,
+      "case_results": [
+        {
+          "passed": false,
+          "reason": "receipt_or_candidate_error"
+        },
+        {
+          "passed": false,
+          "reason": "receipt_or_candidate_error"
+        },
+        {
+          "passed": true,
+          "reason": null
+        },
+        {
+          "passed": true,
+          "reason": null
+        },
+        {
+          "passed": false,
+          "reason": "receipt_or_candidate_error"
+        },
+        {
+          "passed": true,
+          "reason": null
+        }
+      ],
+      "passed": false,
+      "receipt_sha256": "d95a080168cb1c0e7dc1bc8a7671bfa7385c961c8453a79bc16b0977151f7a35",
+      "source_sha256": "826fccb3a02c56960d56cac63f8b90305939b89757471b9608f650970b5b4b92"
+    }
+  },
+  "fresh_development_family_eligible": false,
+  "grader_sha256": "4dc2e5e65aa3da5353007f1008ff1f51fe1c46f8c94608348a0585b8082122a8",
+  "heldout_eligible": false,
+  "known_fix_source_sha256": "44f92eff2dd74282ae42c1ec79311dc0448dbd0b230759e5dba1b222df861c7a",
+  "prior_vare_exposure": "VARE model exposure is confirmed by Sprint II evidence for the same source-fix family. Public-model pretraining exposure remains UNKNOWN.",
+  "qualification_status_for_fresh_cohort": "DISQUALIFIED_PRIOR_TO_SPRINT_VI_MODEL_GENERATION; current 14B run is exploratory repeat exposure only",
+  "repository": "huggingface/transformers",
+  "schema_version": 1,
+  "split": "development",
+  "target_path": "src/transformers/models/musicgen_melody/modeling_musicgen_melody.py",
+  "task_id": "transformers-49842-musicgen-melody-long-cache-position-v1",
+  "upstream_issue_or_pr": "https://github.com/huggingface/transformers/pull/49842",
+  "wrong_mutant_source_sha256": "826fccb3a02c56960d56cac63f8b90305939b89757471b9608f650970b5b4b92"
+}

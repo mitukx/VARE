@@ -1,0 +1,394 @@
+{
+  "captured_utc": "2026-10-28T13:25:46.430391+00:00",
+  "draft_pr_count": 9,
+  "listed_collaborators": [
+    {
+      "login": "mitukx",
+      "permissions": {
+        "admin": true,
+        "maintain": true,
+        "pull": true,
+        "push": true,
+        "triage": true
+      }
+    }
+  ],
+  "main_protection": {
+    "enforce_admins": true,
+    "required_approving_review_count": 1
+  },
+  "main_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "open_pr_count": 18,
+  "operation_summary": {
+    "closed": [],
+    "merged": [],
+    "updated_this_sprint": [
+      139,
+      142
+    ]
+  },
+  "prs": [
+    {
+      "base_ref": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 19,
+        "total": 19
+      },
+      "disposition": "MERGE-CANDIDATE",
+      "draft": false,
+      "head_ref": "codex/external-diff-export-main-v1",
+      "head_sha": "6266ec0a10920ae9ef95ccb528145ef14a452e39",
+      "merge_state": "BLOCKED",
+      "number": 143,
+      "rationale": "Main-based; visible CI green; required independent approval remains.",
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Export candidate diffs from pinned workspaces",
+      "url": "https://github.com/mitukx/VARE/pull/143"
+    },
+    {
+      "base_ref": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 19,
+        "total": 19
+      },
+      "disposition": "RESEARCH-EVIDENCE",
+      "draft": true,
+      "head_ref": "codex/sprint-iv-evidence-public-v1",
+      "head_sha": "5fa0d8c553387e86fcf3bc9115a6ea85e243aee3",
+      "merge_state": "BLOCKED",
+      "number": 142,
+      "rationale": "Draft evidence archive; keep raw runs and add this sprint without treating it as implementation approval.",
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Publish verified external repair campaign evidence",
+      "url": "https://github.com/mitukx/VARE/pull/142"
+    },
+    {
+      "base_ref": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 19,
+        "total": 19
+      },
+      "disposition": "MERGE-CANDIDATE",
+      "draft": false,
+      "head_ref": "codex/evidence-manifest-integrity-v1",
+      "head_sha": "34f972eb2a300711f36fd81a72b6948528dfebad",
+      "merge_state": "BLOCKED",
+      "number": 140,
+      "rationale": "Main-based; manifest/symlink fixes and regressions are present; independent review confirmation remains.",
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Reject empty coding-agent evidence manifests",
+      "url": "https://github.com/mitukx/VARE/pull/140"
+    },
+    {
+      "base_ref": "codex/navigation-integrity-fixes-v1",
+      "base_sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1",
+      "checks": {
+        "failure": 0,
+        "pending": 7,
+        "success": 13,
+        "total": 20
+      },
+      "disposition": "BLOCKED",
+      "draft": true,
+      "head_ref": "codex/development-navigation-campaign-v1",
+      "head_sha": "df0a360ead3927f72d33972634251469b50c2368",
+      "merge_state": "UNSTABLE",
+      "number": 139,
+      "rationale": "Draft stacked on #137; exact-head CI must complete and dependency order must be preserved.",
+      "review_decision": "",
+      "title": "Fix navigation regressions and measure fresh Development agent failures",
+      "url": "https://github.com/mitukx/VARE/pull/139"
+    },
+    {
+      "base_ref": "codex/navigation-symlink-fix-v1",
+      "base_sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f",
+      "checks": {
+        "failure": 1,
+        "pending": 0,
+        "success": 28,
+        "total": 29
+      },
+      "disposition": "MERGE-CANDIDATE",
+      "draft": false,
+      "head_ref": "codex/navigation-integrity-fixes-v1",
+      "head_sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1",
+      "merge_state": "CLEAN",
+      "number": 137,
+      "rationale": "Navigation integrity successor; merge only after #136 is integrated and review gates pass.",
+      "review_decision": "",
+      "title": "Fix source-navigation review findings",
+      "url": "https://github.com/mitukx/VARE/pull/137"
+    },
+    {
+      "base_ref": "codex/source-navigation-v1",
+      "base_sha": "a65d59e5704b84a934a49385551a8d2311a01575",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 19,
+        "total": 19
+      },
+      "disposition": "MERGE-CANDIDATE",
+      "draft": false,
+      "head_ref": "codex/navigation-symlink-fix-v1",
+      "head_sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f",
+      "merge_state": "CLEAN",
+      "number": 136,
+      "rationale": "Navigation syntax/symlink successor; depends on #133.",
+      "review_decision": "",
+      "title": "Harden source navigation syntax checks",
+      "url": "https://github.com/mitukx/VARE/pull/136"
+    },
+    {
+      "base_ref": "codex/transformers-47468-qualification-v1",
+      "base_sha": "d8636def094cd83a2010980570a5c4804725166a",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 19,
+        "total": 19
+      },
+      "disposition": "BLOCKED",
+      "draft": true,
+      "head_ref": "codex/transformers-47468-qualification-v4",
+      "head_sha": "b258c69fc0295e421eab3aaae965d70b693cd1e6",
+      "merge_state": "CLEAN",
+      "number": 135,
+      "rationale": "Draft uses a separate older qualification base; resolve parent lineage and task eligibility before integration.",
+      "review_decision": "",
+      "title": "Add process-creation boundary preflight for 47468 v4",
+      "url": "https://github.com/mitukx/VARE/pull/135"
+    },
+    {
+      "base_ref": "codex/mlx-pr4748-qwen3-pilot-v1",
+      "base_sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 20,
+        "total": 20
+      },
+      "disposition": "REPAIR-FIRST",
+      "draft": false,
+      "head_ref": "codex/source-navigation-v1",
+      "head_sha": "e8ab4705b84d82cd79e2883c391083087e82b4e8",
+      "merge_state": "CLEAN",
+      "number": 133,
+      "rationale": "Two P2 source-navigation findings are fixed with regressions on its head; independent reviewer confirmation is still needed.",
+      "review_decision": "",
+      "title": "Add bounded source navigation for repair agents",
+      "url": "https://github.com/mitukx/VARE/pull/133"
+    },
+    {
+      "base_ref": "codex/mlx-core-development-agent-feasibility-v1",
+      "base_sha": "071352981ad2e6bb1601ae50f935600f28aba8fc",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 20,
+        "total": 20
+      },
+      "disposition": "RESEARCH-EVIDENCE",
+      "draft": true,
+      "head_ref": "codex/hash-bound-agent-edit-v1",
+      "head_sha": "139de5381989531691673be08e906233dd00468c",
+      "merge_state": "CLEAN",
+      "number": 131,
+      "rationale": "Draft recovery/source-inventory experiment; preserve its pinned historical record.",
+      "review_decision": "",
+      "title": "Measure deterministic edit replay and recovery; pin E2E inventories",
+      "url": "https://github.com/mitukx/VARE/pull/131"
+    },
+    {
+      "base_ref": "codex/real-agent-interface-v1",
+      "base_sha": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 20,
+        "total": 20
+      },
+      "disposition": "RESEARCH-EVIDENCE",
+      "draft": false,
+      "head_ref": "codex/verifier-consistent-async-grpo-v1",
+      "head_sha": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48",
+      "merge_state": "CLEAN",
+      "number": 126,
+      "rationale": "Verifier-aware async GRPO evidence is unique and stacked; retain as evidence until parent lineage is integrated.",
+      "review_decision": "",
+      "title": "Measure verifier-version-aware GRPO under drift and crashes",
+      "url": "https://github.com/mitukx/VARE/pull/126"
+    },
+    {
+      "base_ref": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 28,
+        "total": 28
+      },
+      "disposition": "MERGE-CANDIDATE",
+      "draft": false,
+      "head_ref": "codex/flagship-teacher-gate",
+      "head_sha": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+      "merge_state": "BLOCKED",
+      "number": 122,
+      "rationale": "Main-based and visible checks green; requires independent review.",
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Close installed-repair leakage and record the 7B teacher NO-GO",
+      "url": "https://github.com/mitukx/VARE/pull/122"
+    },
+    {
+      "base_ref": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 19,
+        "total": 19
+      },
+      "disposition": "MERGE-CANDIDATE",
+      "draft": false,
+      "head_ref": "codex/transformers-49412-qualification",
+      "head_sha": "a937f4ad6eacb63d679952f7a05d39d04afab59a",
+      "merge_state": "BLOCKED",
+      "number": 121,
+      "rationale": "Main-based source-replay qualification; requires independent review.",
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Add independent source replay for Transformers fusion registration",
+      "url": "https://github.com/mitukx/VARE/pull/121"
+    },
+    {
+      "base_ref": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 20,
+        "total": 20
+      },
+      "disposition": "REPAIR-FIRST",
+      "draft": false,
+      "head_ref": "codex/fresh-task-qualification-mlx-lm-1910",
+      "head_sha": "8aacae54d0f8893580a77cb8bb831e7621a2403a",
+      "merge_state": "BLOCKED",
+      "number": 120,
+      "rationale": "Evaluator completion spoof finding still awaits reviewer confirmation; empty-inventory fix was extracted to #140.",
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Record real-model coding-agent feasibility and tool-boundary fixes",
+      "url": "https://github.com/mitukx/VARE/pull/120"
+    },
+    {
+      "base_ref": "codex/transformers-49752-repo-task",
+      "base_sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 20,
+        "total": 20
+      },
+      "disposition": "EXTRACT",
+      "draft": true,
+      "head_ref": "codex/structured-edit-core-standalone",
+      "head_sha": "552d6f61187926d78719aad8c4c7ec9e8663c242",
+      "merge_state": "CLEAN",
+      "number": 118,
+      "rationale": "Structured edit library is an extraction, but its source/task parent branch must be resolved first.",
+      "review_decision": "",
+      "title": "Extract hash-checked structured edit library without changing frozen agent runtime",
+      "url": "https://github.com/mitukx/VARE/pull/118"
+    },
+    {
+      "base_ref": "codex/mlxlm-1971-attested-calibration",
+      "base_sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 19,
+        "total": 19
+      },
+      "disposition": "RESEARCH-EVIDENCE",
+      "draft": true,
+      "head_ref": "codex/mlxlm-1971-v10-operator",
+      "head_sha": "6709aed996ce5ec315cf7a87930350dca6c0ee20",
+      "merge_state": "CLEAN",
+      "number": 117,
+      "rationale": "Draft snapshot-isolation/export work in the MLX-LM qualification stack.",
+      "review_decision": "",
+      "title": "Isolate MLX-LM source snapshots before trusted export",
+      "url": "https://github.com/mitukx/VARE/pull/117"
+    },
+    {
+      "base_ref": "codex/mlxlm-1971-isolation",
+      "base_sha": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 19,
+        "total": 19
+      },
+      "disposition": "RESEARCH-EVIDENCE",
+      "draft": true,
+      "head_ref": "codex/mlxlm-1971-attested-calibration",
+      "head_sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "merge_state": "CLEAN",
+      "number": 114,
+      "rationale": "Draft attested calibration/publication-failure evidence; preserve ancestry.",
+      "review_decision": "",
+      "title": "Preserve attested MLX-LM calibration evidence on publication failure",
+      "url": "https://github.com/mitukx/VARE/pull/114"
+    },
+    {
+      "base_ref": "codex/fresh-hf-dev-candidates-v1",
+      "base_sha": "ab8d7c0b55d5b1c28365f2f002509ce3a37df501",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 19,
+        "total": 19
+      },
+      "disposition": "RESEARCH-EVIDENCE",
+      "draft": true,
+      "head_ref": "codex/hf-coding-dev-inference-v2-dual-python",
+      "head_sha": "710dbc0d28aa33a78521a29f067c9a9493f6c56d",
+      "merge_state": "CLEAN",
+      "number": 108,
+      "rationale": "Draft dual-Python protocol; recheck fresh-task exposure before reuse.",
+      "review_decision": "",
+      "title": "Add dual-Python HF Coding Development protocol v2",
+      "url": "https://github.com/mitukx/VARE/pull/108"
+    },
+    {
+      "base_ref": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "failure": 0,
+        "pending": 0,
+        "success": 20,
+        "total": 20
+      },
+      "disposition": "RESEARCH-EVIDENCE",
+      "draft": true,
+      "head_ref": "codex/mlxlm-1971-isolation",
+      "head_sha": "762a5a65598756014d957a206ba1548cb19a348f",
+      "merge_state": "BLOCKED",
+      "number": 99,
+      "rationale": "Draft MLX-LM qualification history; do not reuse without eligibility and exposure review.",
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Calibrate isolated MLX-LM 1971 Development task",
+      "url": "https://github.com/mitukx/VARE/pull/99"
+    }
+  ],
+  "repository": "https://github.com/mitukx/VARE",
+  "schema_version": 1
+}
