@@ -150,7 +150,7 @@ def test_scripted_agent_edit_is_snapshotted_and_independently_graded(tmp_path, m
     generation = iter((
         ("list_files", {}),
         ("read_file", {"path": "solve.py"}),
-        ("replace_from_read", None),
+        ("replace_lines_from_read", None),
         ("check_syntax", {"path": "solve.py"}),
         ("run_public_tests", {}),
         ("finish", {"summary": "Square request.n."}),
@@ -159,7 +159,7 @@ def test_scripted_agent_edit_is_snapshotted_and_independently_graded(tmp_path, m
 
     def scripted_generate(_backend, _model, _tokenizer, messages, _tools, *, limit, args):
         name, arguments = next(generation)
-        if name == "replace_from_read":
+        if name == "replace_lines_from_read":
             read_result = next(
                 json.loads(message["content"])
                 for message in reversed(messages)
@@ -169,8 +169,9 @@ def test_scripted_agent_edit_is_snapshotted_and_independently_graded(tmp_path, m
             arguments = {
                 "path": "solve.py",
                 "source_handle": read_result["source_handle"],
-                "old_text": "request['n']",
-                "new_text": "request['n'] ** 2",
+                "start_line": 3,
+                "end_line": 3,
+                "new_text": "print(json.dumps({'value': request['n'] ** 2}))",
             }
         raw = "<tool_call>" + json.dumps(
             {"name": name, "arguments": arguments}, separators=(",", ":"),
@@ -222,8 +223,11 @@ def test_scripted_agent_edit_is_snapshotted_and_independently_graded(tmp_path, m
     assert len(observed_read_results) == 1
     assert observed_read_results[0]["source_handle"].startswith("source-")
     assert "response_truncated" not in observed_read_results[0]
+    assert observed_read_results[0]["complete_line_range"] == [1, 3]
     assert observed_read_results[0]["next_cursor"] is not None
     assert len(observed_read_results[0]["content"]) > 10_000
+    receipt = next(iter(record["source_read_receipts"].values()))
+    assert receipt["complete_line_range"] == [1, 3]
     assert record["candidate_diff"]
     assert "request['n'] ** 2" in record["candidate_diff"]
     assert record["source_hashes_before"] != record["source_hashes_after"]

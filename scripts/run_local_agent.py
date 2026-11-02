@@ -16,7 +16,7 @@ import sys
 import tempfile
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping, NamedTuple
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -33,11 +33,12 @@ MAX_TOOL_RESULT_BYTES = 12_000
 MAX_TOOL_RESULT_TOKENS = 2_048
 MAX_SEARCH_MATCHES = 80
 MAX_SEARCH_SNIPPET_CHARS = 500
+MAX_SOURCE_REPLACEMENT_CHARS = 6_000
 CONTEXT_COMPACTION_NOTE = (
     'Earlier tool interactions were removed to fit the configured context window. '
     'The source workspace retains its current state; reread files if needed and do not repeat edits.'
 )
-TOOLS = [
+TOOLS: list[dict[str, Any]] = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List exact source paths available in this task workspace. Results are paginated; use next_offset as offset to continue.', 'parameters': {'type': 'object', 'properties': {'offset': {'type': 'integer', 'minimum': 0}}, 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns at most 180 lines. Pass inclusive start_line/end_line to inspect an exact range; a completed explicit range has no next_cursor even when later file lines exist. Follow next_cursor only when the returned page was truncated by a line or response limit. The result includes the resolved path and full-file SHA-256.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a case-sensitive literal in allowed task source files, optionally restricted to one exact allowed path. Zero matches means the literal is absent; do not retry longer variants. Returns at most 80 matches in a hard 12,000-byte and 2,048-token response; use offset from next_offset to continue.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}, 'path': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}}, 'required': ['query'], 'additionalProperties': False}}},
@@ -94,6 +95,39 @@ SOURCE_BOUND_REPLACE_TOOL = {
         },
     },
 }
+SOURCE_BOUND_LINES_REPLACE_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'replace_lines_from_read',
+        'description': (
+            'Replace a complete inclusive line range from one allowlisted file read. Copy path, '
+            'source_handle, and complete_line_range from the same read_file result. Set start_line '
+            'and end_line to the range values; provide full replacement lines in new_text. Only '
+            'complete lines returned by that read are editable. '
+            'The controller checks the full-file hash and exact read range before applying the edit. '
+            'Use apply_patch for multi-file or multi-hunk changes.'
+        ),
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'path': {'type': 'string'},
+                'source_handle': {'type': 'string', 'pattern': '^source-[0-9a-f]{16}$'},
+                'start_line': {'type': 'integer', 'minimum': 1},
+                'end_line': {'type': 'integer', 'minimum': 1},
+                'new_text': {'type': 'string', 'maxLength': MAX_SOURCE_REPLACEMENT_CHARS},
+            },
+            'required': ['path', 'source_handle', 'start_line', 'end_line', 'new_text'],
+            'additionalProperties': False,
+        },
+    },
+}
+
+
+class SourceReadReceipt(NamedTuple):
+    path: str
+    source_sha256: str
+    complete_start_line: int
+    complete_end_line: int
 
 
 LEGACY_SEARCH_TEXT_TOOL = {
@@ -133,7 +167,7 @@ def tools_for(
         raise ValueError('source read handles require navigation tools')
     if include_read_handles and edit_format != 'unified_diff':
         raise ValueError('source read handles require unified-diff edit mode')
-    tools = []
+    tools: list[dict[str, Any]] = []
     for item in TOOLS:
         name = item['function']['name']
         if not include_navigation and name == 'list_symbols':
@@ -151,7 +185,8 @@ def tools_for(
                     **item['function'],
                     'description': item['function']['description'] + (
                         ' When source-read handles are enabled, the result also includes a short '
-                        'source_handle bound to this exact path and full-file SHA-256.'
+                        'source_handle bound to this exact path and full-file SHA-256, plus '
+                        'complete_line_range for safe whole-line replacement.'
                     ),
                 },
             }
@@ -163,6 +198,8 @@ def tools_for(
         tools.append(item)
     if public_tests:
         tools.insert(-1, PUBLIC_TEST_TOOL)
+    if include_read_handles:
+        tools.insert(-1, SOURCE_BOUND_LINES_REPLACE_TOOL)
     return tools
 
 
@@ -413,6 +450,21 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
     return {'applied': True, 'paths': list(applied.paths), 'format_parse_failure': None}
 
 
+def source_unified_diff(path: str, original: str, updated: str) -> str:
+    """Build a one-file diff, marking final lines that lack a newline."""
+    diff = difflib.unified_diff(
+        original.splitlines(keepends=True), updated.splitlines(keepends=True),
+        fromfile=f'a/{path}', tofile=f'b/{path}', n=3,
+    )
+    output: list[str] = []
+    for line in diff:
+        if line and line[0] in {' ', '+', '-'} and not line.endswith(('\n', '\r')):
+            output.extend((line + '\n', '\\ No newline at end of file\n'))
+        else:
+            output.append(line)
+    return ''.join(output)
+
+
 def attempt_exact_text_replacement(
     workspace: Path, path: str, old_text: str, new_text: str, allowed: set[str],
     *, expected_source_sha256: str, max_snippet_chars: int = 6_000,
@@ -452,10 +504,7 @@ def attempt_exact_text_replacement(
             'match_count': count,
         }
     updated = original.replace(old_text, new_text, 1)
-    patch = ''.join(difflib.unified_diff(
-        original.splitlines(keepends=True), updated.splitlines(keepends=True),
-        fromfile=f'a/{resolved}', tofile=f'b/{resolved}', n=3,
-    ))
+    patch = source_unified_diff(resolved, original, updated)
     if not patch:
         return {'applied': False, 'error': 'replacement does not change the source'}
     result = attempt_configured_edit(workspace, patch, 'unified_diff', allowed)
@@ -485,7 +534,7 @@ def attempt_exact_text_replacement(
 
 def attempt_read_bound_text_replacement(
     workspace: Path, path: str, source_handle: str, old_text: str, new_text: str,
-    allowed: set[str], source_reads: dict[str, tuple[str, str]],
+    allowed: set[str], source_reads: Mapping[str, tuple[str, str] | SourceReadReceipt],
 ) -> dict[str, Any]:
     """Replace an exact snippet using a short handle for a previously read file hash."""
     resolved = resolve_allowed_path(path, allowed)
@@ -496,7 +545,7 @@ def attempt_read_bound_text_replacement(
     receipt = source_reads.get(source_handle)
     if receipt is None:
         return {'applied': False, 'error': 'source_handle is unknown; read the file before editing'}
-    read_path, read_sha256 = receipt
+    read_path, read_sha256 = receipt[0], receipt[1]
     if read_path != resolved:
         return {
             'applied': False,
@@ -507,6 +556,151 @@ def attempt_read_bound_text_replacement(
         expected_source_sha256=read_sha256,
     )
     result['source_handle'] = source_handle
+    return result
+
+
+def complete_source_line_range(
+    page: dict[str, Any], *, requested_char_offset: int = 0,
+) -> tuple[int, int]:
+    """Return the inclusive line span fully present in one bounded source page."""
+    start_line = page.get('start_line')
+    end_line = page.get('end_line')
+    if (type(start_line) is not int or type(end_line) is not int
+            or start_line < 1 or end_line < start_line):
+        return 1, 0
+    if type(requested_char_offset) is not int or requested_char_offset < 0:
+        return 1, 0
+
+    complete_start = start_line + (requested_char_offset > 0)
+    complete_end = end_line
+    cursor = page.get('next_cursor')
+    if (isinstance(cursor, dict)
+            and cursor.get('start_line') == end_line
+            and type(cursor.get('char_offset')) is int
+            and cursor['char_offset'] > 0):
+        complete_end -= 1
+    return complete_start, complete_end
+
+
+def attempt_read_bound_line_replacement(
+    workspace: Path, path: str, source_handle: str, start_line: Any,
+    end_line: Any, new_text: str, allowed: set[str],
+    source_reads: Mapping[str, tuple[str, str, int, int]],
+) -> dict[str, Any]:
+    """Replace only complete source lines exposed by a matching read receipt."""
+    resolved = resolve_allowed_path(path, allowed)
+    if resolved is None:
+        return {'applied': False, 'error': 'path is not an exact allowlisted source file'}
+    if not isinstance(source_handle, str):
+        return {'applied': False, 'error': 'source_handle must come from a read_file result'}
+    receipt = source_reads.get(source_handle)
+    if receipt is None:
+        return {'applied': False, 'error': 'source_handle is unknown; read the file before editing'}
+    if receipt[0] != resolved:
+        return {
+            'applied': False,
+            'error': 'source_handle belongs to a different path; read the exact file before editing',
+        }
+    if len(receipt) < 4:
+        return {
+            'applied': False,
+            'error': 'source_handle has no complete-line range; reread the requested lines before editing',
+        }
+    if (type(start_line) is not int or type(end_line) is not int
+            or start_line < 1 or end_line < start_line):
+        return {'applied': False, 'error': 'start_line and end_line must be valid inclusive line numbers'}
+    if not (receipt[2] <= start_line <= end_line <= receipt[3]):
+        return {
+            'applied': False,
+            'error': 'line range was not fully returned by this source_handle; reread those complete lines',
+            'read_line_range': [receipt[2], receipt[3]],
+        }
+    if not isinstance(new_text, str):
+        return {'applied': False, 'error': 'new_text must be a string'}
+    if len(new_text) > MAX_SOURCE_REPLACEMENT_CHARS:
+        return {
+            'applied': False,
+            'error': f'new_text exceeds the {MAX_SOURCE_REPLACEMENT_CHARS}-character limit',
+        }
+    if '\x00' in new_text:
+        return {'applied': False, 'error': 'new_text must not contain NUL characters'}
+
+    try:
+        original_bytes = read_regular_source(workspace, resolved)
+        original = original_bytes.decode('utf-8')
+    except (OSError, UnicodeDecodeError, ValueError) as exc:
+        return {'applied': False, 'error': f'could not read allowlisted source: {type(exc).__name__}'}
+    if b'\r' in original_bytes:
+        return {
+            'applied': False,
+            'error': 'line-based replacement currently requires LF-only source line endings',
+        }
+    actual_source_sha256 = hashlib.sha256(original_bytes).hexdigest()
+    if actual_source_sha256 != receipt[1]:
+        return {
+            'applied': False,
+            'stale_source': True,
+            'expected_source_sha256': receipt[1],
+            'actual_source_sha256': actual_source_sha256,
+            'error': 'source changed since read_file; reread the current file and rebuild the edit',
+        }
+
+    lines = original.splitlines(keepends=True)
+    if end_line > len(lines):
+        return {'applied': False, 'error': 'line range exceeds the current source length'}
+    replaced = lines[start_line - 1:end_line]
+    if not replaced:
+        return {'applied': False, 'error': 'line range contains no source lines'}
+
+    line_ending = next(
+        (ending for line in replaced
+         for ending in ('\r\n', '\n', '\r') if line.endswith(ending)),
+        '\n',
+    )
+    replacement = new_text.replace('\r\n', '\n').replace('\r', '\n')
+    replacement = replacement.replace('\n', line_ending)
+    source_ends_with_newline = bool(lines and lines[-1].endswith(('\n', '\r')))
+    replaces_eof = end_line == len(lines)
+    if replacement and (not replaces_eof or source_ends_with_newline):
+        if not replacement.endswith(line_ending):
+            replacement += line_ending
+    elif replacement and replaces_eof and not source_ends_with_newline:
+        if replacement.endswith(line_ending):
+            replacement = replacement[:-len(line_ending)]
+
+    updated = ''.join(lines[:start_line - 1]) + replacement + ''.join(lines[end_line:])
+    if replaces_eof and updated:
+        updated_ends_with_newline = updated.endswith(line_ending)
+        if source_ends_with_newline and not updated_ends_with_newline:
+            updated += line_ending
+        elif not source_ends_with_newline and updated_ends_with_newline:
+            updated = updated[:-len(line_ending)]
+    if updated == original:
+        return {'applied': False, 'error': 'replacement does not change the source'}
+    patch = source_unified_diff(resolved, original, updated)
+    result = attempt_configured_edit(workspace, patch, 'unified_diff', allowed)
+    result.update({
+        'edit_mode': 'read_bound_line_replacement',
+        'source_handle': source_handle,
+        'line_range': [start_line, end_line],
+    })
+    if result.get('applied') is True:
+        try:
+            actual_after = read_regular_source(workspace, resolved)
+        except (OSError, ValueError) as exc:
+            result.update({
+                'applied': False,
+                'error': f'could not verify replacement postimage: {type(exc).__name__}',
+            })
+            return result
+        result['source_sha256_before'] = actual_source_sha256
+        result['source_sha256_after'] = hashlib.sha256(actual_after).hexdigest()
+        result['postimage_matches_replacement'] = actual_after == updated.encode('utf-8')
+        if not result['postimage_matches_replacement']:
+            result.update({
+                'applied': False,
+                'error': 'workspace source changed while applying the replacement; inspect current source',
+            })
     return result
 
 
@@ -524,8 +718,9 @@ def malformed_edit_retry_feedback(
         'The source changed during the rejected edit; stop and inspect the current source before another edit.'
     )
     focused_edit_instruction = (
-        'call read_file again, copy its current source_handle and exact old_text, then use '
-        'replace_from_read. The controller binds that handle to the source hash from the read. '
+        'call read_file again, then use replace_lines_from_read with the current source_handle, '
+        'a complete inclusive line range from that read, and full replacement lines. Use '
+        'replace_from_read only when you can copy a short exact old_text snippet. '
         if source_read_handles else
         'call read_file again, copy its current source_sha256 and exact old_text, '
         'then use replace_text with expected_source_sha256. '
@@ -946,7 +1141,8 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
                 'to end with </tool_call>.'
             )
         focused_edit_instruction = (
-            'replace_from_read with the short source_handle and old_text from the same read_file result. '
+            'replace_lines_from_read with the short source_handle and complete inclusive line range from the same read_file result. '
+            'If copying an exact snippet is easier, use replace_from_read with its source_handle and old_text. '
             if source_read_handles else
             'replace_text with a short exact old_text snippet and its complete new_text. '
         )
@@ -1125,9 +1321,10 @@ def main() -> int:
     elif args.source_read_handles:
         edit_sentence = (
             'Read the source path named in the user instruction, then use tools to inspect and edit. '
-            'For one focused change, prefer replace_from_read: copy the short source_handle and exact '
-            'old_text from the same read_file result, then provide the full new_text. The controller '
-            'binds the handle to the current source hash and requires a unique exact snippet. Use apply_patch '
+            'For one focused change, prefer replace_lines_from_read: copy the source_handle and a complete '
+            'inclusive line range from the same read_file result, then provide the full replacement lines. '
+            'The controller checks that the lines were returned by that read and that the full-file hash '
+            'is unchanged. Use replace_from_read when you can copy a short exact snippet. Use apply_patch '
             'for multi-hunk changes; never rewrite a whole file. '
             'The apply_patch patch argument must be a complete unified diff, not replacement source code. '
             'Use exact headers and hunk syntax, with no Markdown fence: '
@@ -1143,9 +1340,12 @@ def main() -> int:
         )
     source_identity_instruction = (
         'read_file results include a short source_handle bound by the controller to that exact path and '
-        'full-file SHA-256. For one focused change, use replace_from_read with the handle and exact old_text '
-        'from the same read result; do not copy a long hash into an edit call. A changed file makes an old '
-        'handle stale, so reread before another exact replacement. '
+        'full-file SHA-256. For one focused change, prefer replace_lines_from_read: copy the handle and '
+        'set start_line/end_line to the two complete_line_range values from the same read result, and '
+        'provide the complete replacement lines. If complete_line_range is null, reread a smaller range. '
+        'The controller rejects partial lines and any range outside that read. Use replace_from_read when '
+        'you can copy a short exact old_text snippet. A changed file makes an old handle stale, so reread '
+        'before another replacement. '
         if args.source_read_handles else
         'The full-file SHA-256 and resolved path identify the source used for each page. '
         'replace_text requires that exact current SHA-256. '
@@ -1183,7 +1383,7 @@ def main() -> int:
     no_tool_retries = 0
     controller_retry_count = 0
     search_guard = SearchLoopGuard(empty_search_limit=3)
-    source_read_receipts: dict[str, tuple[str, str]] = {}
+    source_read_receipts: dict[str, SourceReadReceipt] = {}
     edit_attempted = False
     edit_applied = False
     public_test_hash = sha256(workspace / next(iter(test_files))) if test_files else None
@@ -1373,11 +1573,13 @@ def main() -> int:
                             'source_sha256': source_sha256,
                         }
                         source_handle = None
+                        read_output_reserve = 0
                         if args.source_read_handles:
                             source_handle = f'source-{secrets.token_hex(8)}'
                             while source_handle in source_read_receipts:
                                 source_handle = f'source-{secrets.token_hex(8)}'
                             source_identity['source_handle'] = source_handle
+                            read_output_reserve = 256
                         result = bounded_source_page(
                             text,
                             start_line=arguments.get('start_line', 1),
@@ -1385,9 +1587,23 @@ def main() -> int:
                             char_offset=arguments.get('char_offset', 0),
                             source_identity=source_identity,
                             tokenizer=tokenizer,
+                            max_output_bytes=MAX_TOOL_RESULT_BYTES - read_output_reserve,
+                            max_output_tokens=(
+                                MAX_TOOL_RESULT_TOKENS - 32
+                                if source_handle is not None else MAX_TOOL_RESULT_TOKENS
+                            ),
                         )
                         if source_handle is not None:
-                            source_read_receipts[source_handle] = (path, source_sha256)
+                            complete_start, complete_end = complete_source_line_range(
+                                result, requested_char_offset=arguments.get('char_offset', 0),
+                            )
+                            result['complete_line_range'] = (
+                                [complete_start, complete_end]
+                                if complete_start <= complete_end else None
+                            )
+                            source_read_receipts[source_handle] = SourceReadReceipt(
+                                path, source_sha256, complete_start, complete_end,
+                            )
                         search_guard.reset()
                 elif name == 'search_text':
                     query = arguments.get('query', '')
@@ -1516,6 +1732,26 @@ def main() -> int:
                         if public_test_result is not None:
                             entry['automatic_public_test'] = public_test_result
                             result = {**result, 'automatic_public_test': public_test_result}
+                elif name == 'replace_lines_from_read':
+                    result = attempt_read_bound_line_replacement(
+                        workspace,
+                        arguments.get('path', ''),
+                        arguments.get('source_handle', ''),
+                        arguments.get('start_line'),
+                        arguments.get('end_line'),
+                        arguments.get('new_text', ''),
+                        editable,
+                        source_read_receipts,
+                    )
+                    note_edit(result)
+                    if result.get('applied') is True:
+                        search_guard.reset()
+                        public_test_result = refresh_public_tests_after_edit(
+                            result, workspace, args.public_test_image, public_test_hash,
+                        )
+                        if public_test_result is not None:
+                            entry['automatic_public_test'] = public_test_result
+                            result = {**result, 'automatic_public_test': public_test_result}
                 elif name == 'write_file':
                     result = attempt_configured_edit(
                         workspace,
@@ -1594,8 +1830,15 @@ def main() -> int:
         'schema_version': 1, 'navigation_tools_enabled': True,
         'source_read_handles_enabled': args.source_read_handles,
         'source_read_receipts': {
-            handle: {'path': path, 'source_sha256': source_sha256}
-            for handle, (path, source_sha256) in source_read_receipts.items()
+            handle: {
+                'path': receipt.path,
+                'source_sha256': receipt.source_sha256,
+                'complete_line_range': (
+                    [receipt.complete_start_line, receipt.complete_end_line]
+                    if receipt.complete_start_line <= receipt.complete_end_line else None
+                ),
+            }
+            for handle, receipt in source_read_receipts.items()
         },
         'task_id': contract.task_id, 'task_schema': contract.schema,
         'seed': args.seed,
