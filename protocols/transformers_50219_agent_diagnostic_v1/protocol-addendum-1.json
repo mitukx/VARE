@@ -1,0 +1,46 @@
+{
+  "addendum_id": "mlsys-fresh-transformers-50219-agent-diagnostic-v1-addendum-1",
+  "authorized_retry": {
+    "attempt_id": "transformers-50219-posix-paths-agent-diagnostic-002",
+    "count": 1,
+    "maximum_process_tree_rss_bytes": 8589934592,
+    "maximum_wall_seconds": 600,
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "same_task_prompt_and_candidate_base": true,
+    "stop_on_any_retry_failure": true
+  },
+  "boundary_changes": {
+    "network_access": "still denied",
+    "new_file_access": "Read-only literal allowances for exactly the two pinned snapshot symlink targets: model.safetensors blob SHA-256 2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f and tokenizer.json blob SHA-256 aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4.",
+    "other_candidate_grader_task_permissions": "unchanged",
+    "profile_rule_kind": "file-read* literal parameters only; no new directory/subpath grant and no executable mapping grant"
+  },
+  "frozen_parent": {
+    "attempt_001_record": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/attempt-001-incomplete.json",
+    "attempt_001_record_sha256": "8982c89272556d4d5354963e7921fed6151922fb95c032f3cb9d7b79ff175383",
+    "failed_attempt_log_sha256": "ec93a3e45bba0fdd7f435d45651d6f30405c13c2b2273b58e4460dcdf88c4e9a",
+    "parent_protocol_commit": "f48f364f65becf2dc198b584caad049239c7057a",
+    "parent_protocol_sha256": "7c9253faee08cee2f3573c359b4f7f9bc01655dce72fd64ffde71a53c3e822b3"
+  },
+  "interpretation_limits": {
+    "does_not_establish": [
+      "task freshness or held-out eligibility",
+      "generalization",
+      "policy improvement",
+      "reinforcement learning",
+      "benchmark-level coding performance"
+    ],
+    "task_eligibility": "NOT_ESTABLISHED",
+    "task_split": "UNASSIGNED_DIAGNOSTIC_ONLY",
+    "this_attempt_can_establish_at_most": "one real model-generated source edit and one independently graded single-task outcome",
+    "training_or_optimizer_updates": 0
+  },
+  "preflight": {
+    "probe_scope": "The finalized profile compiled under sandbox-exec; read-only 8-byte open probes of each pinned symlink target passed using system od and the pinned runtime's built-in os.open. These probes did not load MLX/model weights or run inference.",
+    "profile_sha256": "9942e5c41b944b0f9d9f346fcd82a411b2a456d8d18abcba61d22ea1dc08f385",
+    "python_mmap_import_probe": "An ancillary import of Python's mmap module was denied during module discovery before opening either target; this is not treated as evidence of model-load or inference behavior."
+  },
+  "protocol_id": "mlsys-fresh-transformers-50219-agent-diagnostic-v1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_RETRY_MODEL_INFERENCE"
+}

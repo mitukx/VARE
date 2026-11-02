@@ -1,0 +1,37 @@
+{
+  "attempt_id": "transformers-50219-posix-paths-agent-diagnostic-001",
+  "candidate": {
+    "base_commit": "0a13f794b2d4f474cfebb3be5b9c59420dc44aeb",
+    "tracked_workspace_unchanged": true
+  },
+  "failure": {
+    "category": "MODEL_LOAD_FILE_OPEN_DENIED_BY_SANDBOX",
+    "detail": "The frozen snapshot's model.safetensors is a symlink into a shared Hugging Face blob directory outside the model-repository subpath allowlist. The pinned MLX loader failed to open the target.",
+    "generation_started": false,
+    "grader_run": false,
+    "model_prompt_sent": false,
+    "model_weights_loaded": false,
+    "task_prompt_rendered": false
+  },
+  "model": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "raw_scratch_evidence": {
+    "bounded_agent_json_sha256": "9167cfa4861e39c865afeefb8bc3c90c3a0517e4284144d8528fcd3e87d940b6",
+    "bounded_agent_log_sha256": "ec93a3e45bba0fdd7f435d45651d6f30405c13c2b2273b58e4460dcdf88c4e9a",
+    "retention": "Raw scratch records are retained outside the public repository; the hashed log contains local paths and is not published."
+  },
+  "resource_observation": {
+    "elapsed_seconds": 2.094,
+    "exit_code": 1,
+    "os_wait4_child_max_rss_bytes": 92422144,
+    "sampled_process_tree_rss_max_bytes": 92389376,
+    "status": "COMPLETED_WITH_NONZERO_EXIT_BEFORE_GENERATION"
+  },
+  "schema_version": 1,
+  "source_protocol_commit": "f48f364f65becf2dc198b584caad049239c7057a",
+  "source_protocol_sha256": "7c9253faee08cee2f3573c359b4f7f9bc01655dce72fd64ffde71a53c3e822b3",
+  "status": "INCOMPLETE_PRE_GENERATION_FAILURE_EXCLUDED_FROM_MODEL_OUTCOMES",
+  "task_id": "transformers-50219-posix-paths-agent-diagnostic-001"
+}
