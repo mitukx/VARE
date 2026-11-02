@@ -1,0 +1,11 @@
+{
+  "after": "return sorted(str(path.relative_to(PATH_TO_REPO)) for path in repo_utils_dir.glob(\"test_*.py\"))",
+  "before": "return sorted(path.relative_to(PATH_TO_REPO).as_posix() for path in repo_utils_dir.glob(\"test_*.py\"))",
+  "expected_occurrences": 1,
+  "fixed_source_sha256": "f2a7d2ea821befe5037a47f2e2b39cfb48c1b9a77739d6f333f15555eef9d579",
+  "function": "get_repo_utils_tests",
+  "mutation_id": "transformers-50219-wrong-mutant-restore-native-relative-string",
+  "path": "utils/tests_fetcher.py",
+  "schema_version": 1,
+  "wrong_mutant_source_sha256": "52e077a05b4c6f491af702ee547b7f085a74ebcd8276842d29bfeb2adf699da2"
+}
