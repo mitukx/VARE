@@ -1,0 +1,44 @@
+{
+  "assigned_at_utc": "2026-11-02T15:07:13Z",
+  "attempts_authorized": 1,
+  "authorization": {
+    "grader_feedback_to_model": false,
+    "heldout_access": false,
+    "one_independent_grade_after_agent_record_is_durable": true,
+    "one_local_model_attempt_after_protocol_commit_and_push": true,
+    "paid_compute_or_api": false,
+    "retry_after_generation_begins": false,
+    "training": false
+  },
+  "consumption_rule": "Any inference consumes the task; never assign it to train/development/heldout or reuse its outcome for training.",
+  "event_id": "transformers-50219-agent-diagnostic-001",
+  "event_type": "prospective_single_task_diagnostic_assignment",
+  "exposure_before_assignment": {
+    "historical_vare_model_or_controller_exposure": "NOT_ESTABLISHED",
+    "researcher_source_and_test_exposure": true,
+    "this_run": "NOT_YET_EXPOSED; no inference has started"
+  },
+  "model": {
+    "public_pretraining_exposure": "UNKNOWN",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "model_hidden_inputs": [
+    "trusted test",
+    "independent grader",
+    "grader outputs",
+    "source-qualification results"
+  ],
+  "model_visible_inputs": [
+    "task.json prompt",
+    "utils/tests_fetcher.py",
+    "VARE local-agent tool schemas"
+  ],
+  "repository": "huggingface/transformers",
+  "schema_version": 1,
+  "source_revision": "044aa4c823b367b3ea8988977e69202e378d8903",
+  "split": null,
+  "split_status": "UNASSIGNED_DIAGNOSTIC_ONLY",
+  "task_family_independence": "NOT_ESTABLISHED",
+  "task_id": "transformers-50219-posix-paths-agent-diagnostic-001"
+}

@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "editable_files": [
+      "utils/tests_fetcher.py"
+    ],
+    "evidence_level": "single-task diagnostic",
+    "grader_visibility": "hidden",
+    "split_assignment": null,
+    "upstream_task": "https://github.com/huggingface/transformers/pull/50219"
+  },
+  "prompt": "Make the test-fetcher paths returned by utils/tests_fetcher.py use forward-slash path separators on every supported operating system. Preserve which tests are found and keep the fix scoped to utils/tests_fetcher.py. Do not use platform-specific separators in returned repository-relative paths.",
+  "schema_version": 1,
+  "source": {
+    "base_revision": "0a13f794b2d4f474cfebb3be5b9c59420dc44aeb",
+    "calibration_revision": "a8f6bda51d955846152cc84d59a3fd2d7b806f2a",
+    "repository": "huggingface/transformers"
+  },
+  "task_id": "transformers-50219-posix-paths-agent-diagnostic-001",
+  "title": "Make test-fetcher paths portable across operating systems"
+}

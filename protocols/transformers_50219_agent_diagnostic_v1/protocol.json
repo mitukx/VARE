@@ -1,0 +1,236 @@
+{
+  "assignment": {
+    "attempts_authorized": 1,
+    "consumption_rule": "Any model prompt/inference consumes this task; do not reuse it for development, held-out, or training evidence.",
+    "event_type": "prospective_single_task_diagnostic_assignment",
+    "grader_feedback_to_model": false,
+    "heldout_access": false,
+    "model_or_controller_exposure_before_this_run": "No prior inference on this task in this experiment. Full historical VARE exposure is NOT_ESTABLISHED.",
+    "public_pretraining_exposure": "UNKNOWN",
+    "researcher_source_and_test_exposure": true,
+    "retry_after_generation_begins": false,
+    "split": null,
+    "split_assignment": "NONE; diagnostic-only task, not Train, Development, or Heldout",
+    "task_family_independence": "NOT_ESTABLISHED",
+    "training_or_policy_update": false
+  },
+  "coding_agent": {
+    "backend": "mlx",
+    "do_sample": false,
+    "edit_format": "unified_diff",
+    "incomplete_tool_retry_tokens": 1024,
+    "instruction": "Implement the requested code change in the one allowed production file.",
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_total_new_tokens": 3072,
+    "max_turns": 12,
+    "public_test_tool": false,
+    "repository_commit": "0c9b0fe01fb29d8182a8e2a1f97049c905d3f3f7",
+    "runner": "scripts/run_local_agent.py",
+    "runner_and_dependency_hashes": {
+      "scripts/pinned_workspace_git.py": "d6708e706ca3e153bde2cc21f7d0b72483b0e7157b3936004f1eb8c5cedddc3b",
+      "scripts/run_bounded_local_agent_attempt.py": "fa3105bbbe1ecbdffba0c6c3886d9d38b38e009db34f96a972b2a030f986e114",
+      "scripts/run_local_agent.py": "b81b11644e9bd4c6f5b518ef33f8b756b89c2557c51af1f01e5066e43d36db22",
+      "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+      "src/vare/agent_navigation.py": "ef12f87eacdf10ca530669f0c8563d90539a07915d502a44f855ab962a279b91",
+      "src/vare/agent_task_contract.py": "bd5f9b3f6008d4e03f25664ca3248f50ecc52d0095228977118a12abd049e9aa"
+    },
+    "seed": 50219,
+    "source_read_handles": true,
+    "temperature": 0.0,
+    "top_k": 0,
+    "top_p": 0.0,
+    "wall_seconds": 600
+  },
+  "created_at_utc": "2026-11-02T15:07:13Z",
+  "immutable_outputs": {
+    "agent_diff": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/candidate.patch",
+    "agent_record": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/agent-attempt-001.json",
+    "exposure_append": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/exposure-append.json",
+    "independent_grade": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/independent-grade-001.json"
+  },
+  "independent_grader": {
+    "candidate_module_imported_or_executed": "No; grader extracts only the selected source functions from AST and uses fake Windows Path objects.",
+    "grade_attempts_authorized": 1,
+    "grader_feedback_to_model": false,
+    "license_path": "protocols/transformers_50219_agent_diagnostic_v1/trusted/LICENSE.apache-2.0",
+    "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+    "qualification_helpers_path": "scripts/run_transformers_50219_source_qualification_arm.py",
+    "qualification_helpers_sha256": "2bb58cede057b6f51a19dbcd9ab85435a1f92964dce845ba377de8e0fa6f9cf2",
+    "runner_path": "scripts/grade_transformers_50219_agent_candidate_v1.py",
+    "runner_sha256": "93318ff0c28253ad2dc0d001e9707b996213b055fb430cbb4ff3edfbb1be944e",
+    "success_criterion": "Agent diff applies, agent record is internally consistent, and all three independent checks PASS on the exact source hash persisted by the agent run.",
+    "tests": [
+      "TestFetcherTester.test_no_windows_path_patterns_in_fetcher",
+      "windows_posix_outputs.get_repo_utils_tests",
+      "windows_posix_outputs.get_conftest_tests"
+    ],
+    "trusted_test_path": "protocols/transformers_50219_agent_diagnostic_v1/trusted/upstream-fixed-test.py",
+    "trusted_test_sha256": "d61b904a44f89da35578b4db22391c0e4e79aa18957617725b7f24f4326d87e1"
+  },
+  "interpretation_limit": "One diagnostic task can demonstrate a model-generated edit and single-task independently graded repair only. It cannot establish task freshness, split eligibility, generalization, policy improvement, RL learning, or benchmark performance.",
+  "isolation": {
+    "grader_sandbox_profile": {
+      "path": "protocols/transformers_50219_agent_diagnostic_v1/grader.sb",
+      "sha256": "639bb4c73f99ab3249d81080126b174277a4ee37d786310dcce90a5dd83302c4"
+    },
+    "local_scratch_layout": "<ATTEMPT_ROOT>/{candidate,task,output,home,tmp}",
+    "model_hidden_inputs": [
+      "trusted upstream regression test",
+      "independent behavior grader",
+      "grader runner",
+      "source-qualification results",
+      "grader output"
+    ],
+    "model_sandbox": "network denied; user-home file reads denied except the pinned Qwen3 repository and VARE agent source; candidate and task roots are readable, only candidate/output/temp roots are writable; VARE experiment root/grader denied, with only the exact MLX wrapper file allowed.",
+    "model_sandbox_profile": {
+      "path": "protocols/transformers_50219_agent_diagnostic_v1/model-agent.sb",
+      "sha256": "2ae5f31a452c19f9ce2d95a2a1be588e9b9b93130a504c2a75a8d84841cd7923"
+    },
+    "model_visible_inputs": [
+      "task prompt",
+      "the one allowlisted source file",
+      "controller tool schemas and tool outputs"
+    ]
+  },
+  "model": {
+    "network_downloads": false,
+    "paid_api": false,
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "runtime": {
+      "device": "Apple M1 Pro / Metal",
+      "mlx": "0.32.4",
+      "mlx_lm": "0.32.2",
+      "numpy": "2.5.4",
+      "python": "3.12.12",
+      "transformers": "5.22.1"
+    },
+    "snapshot_file_manifest": [
+      {
+        "bytes": 1570,
+        "name": ".gitattributes",
+        "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930"
+      },
+      {
+        "bytes": 969,
+        "name": "README.md",
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657"
+      },
+      {
+        "bytes": 707,
+        "name": "added_tokens.json",
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+      },
+      {
+        "bytes": 4040,
+        "name": "chat_template.jinja",
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541"
+      },
+      {
+        "bytes": 938,
+        "name": "config.json",
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849"
+      },
+      {
+        "bytes": 238,
+        "name": "generation_config.json",
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48"
+      },
+      {
+        "bytes": 1671853,
+        "name": "merges.txt",
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+      },
+      {
+        "bytes": 2263022417,
+        "name": "model.safetensors",
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+      },
+      {
+        "bytes": 63964,
+        "name": "model.safetensors.index.json",
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777"
+      },
+      {
+        "bytes": 613,
+        "name": "special_tokens_map.json",
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+      },
+      {
+        "bytes": 11422654,
+        "name": "tokenizer.json",
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      {
+        "bytes": 5440,
+        "name": "tokenizer_config.json",
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9"
+      },
+      {
+        "bytes": 2776833,
+        "name": "vocab.json",
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      }
+    ],
+    "snapshot_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "protocol_id": "mlsys-fresh-transformers-50219-agent-diagnostic-v1",
+  "repository": {
+    "experiment_branch": "research/task-qual-transformers-50219",
+    "main_sha_observed": "85a0cfedcb602b9e1476d1bed8cf2210b59d728b",
+    "name": "mitukx/VARE"
+  },
+  "resource_controls": {
+    "disk_preflight": "1.7 GiB available; snapshot is already cached and no model files will be downloaded or copied.",
+    "lease_rule": "Atomically create the lease file before model load; if it exists or another MLX/Metal model process is active, do not launch. Remove only the lease created by this attempt after the model process exits.",
+    "memory_preflight": "MLX device reports Apple M1 Pro, 32 GiB memory, 26.8 GiB max recommended working set; system memory-pressure free percentage observed at 77% in preliminary preflight.",
+    "mlx_graph_memory_limit_bytes": 8589934592,
+    "mlx_graph_memory_limit_kind": "MLX guideline; not a hard physical-memory ceiling",
+    "mlx_wired_limit_kind": "per-process MLX wired-memory limit; below 32 GiB system memory and 26.8 GiB recommended working set",
+    "mlx_wired_memory_limit_bytes": 8589934592,
+    "model_attempt_outer_wall_seconds": 600,
+    "model_attempt_process_tree_rss_limit_bytes": 8589934592,
+    "model_attempt_rss_scope": "sampled process-tree total plus OS direct-child high-water; transient aggregate descendant peaks are not excluded",
+    "shared_lease_path": "/tmp/vare-mlx-metal.lease"
+  },
+  "schema_version": 1,
+  "source_qualification": {
+    "calibrated_arms": [
+      "baseline",
+      "wrong-mutant",
+      "upstream-fixed"
+    ],
+    "initial_baseline_attempt": "INCOMPLETE_RUNNER_FAILURE; excluded from outcomes",
+    "manifest_commit": "33249f425fa1a114e9d1b044aecbd0cdbb018b28",
+    "manifest_path": "results/mlsys-fresh-transformers-50219-source-qualification-v1/qualification-manifest.json",
+    "stage": "SOURCE_AND_GRADER_CALIBRATION",
+    "status": "PASS"
+  },
+  "status": "FROZEN_BEFORE_ANY_MODEL_OR_AGENT_INFERENCE",
+  "task": {
+    "agent_instruction": "Implement the requested code change in the one allowed production file.",
+    "baseline_source_blob_sha1": "9517ce15cb04bd4ca6e06179248118959e717226",
+    "baseline_source_sha256": "92aacdd92a461b7e7894a5f5781b4b5d44e9e676ec4bbded2eaf8b0b50e60cac",
+    "candidate_task_descriptor": {
+      "path": "protocols/transformers_50219_agent_diagnostic_v1/task.json",
+      "sha256": "4f394510aa08141f318a0d1e18a20a5fd3b50eb2175e6618f163ba8b913a3b6d"
+    },
+    "candidate_workspace_base_revision": "0a13f794b2d4f474cfebb3be5b9c59420dc44aeb",
+    "candidate_workspace_tracked_files": [
+      "utils/tests_fetcher.py"
+    ],
+    "editable_files": [
+      "utils/tests_fetcher.py"
+    ],
+    "grader_and_tests_visible_to_model": false,
+    "source_path": "utils/tests_fetcher.py",
+    "task_id": "transformers-50219-posix-paths-agent-diagnostic-001",
+    "task_prompt_sha256": "bfd9511d1fff721873d1fa062b8786a23bc5a4f4a537ef43eb983e5d74628dfd",
+    "title": "Make test-fetcher paths portable across operating systems",
+    "upstream": "https://github.com/huggingface/transformers/pull/50219",
+    "upstream_base_revision": "044aa4c823b367b3ea8988977e69202e378d8903",
+    "upstream_fixed_revision": "a8f6bda51d955846152cc84d59a3fd2d7b806f2a",
+    "upstream_repository": "huggingface/transformers"
+  }
+}
