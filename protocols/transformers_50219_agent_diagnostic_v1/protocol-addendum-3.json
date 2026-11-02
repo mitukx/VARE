@@ -1,0 +1,69 @@
+{
+  "addendum_id": "mlsys-fresh-transformers-50219-agent-diagnostic-v1-addendum-3",
+  "authorized_attempt": {
+    "attempt_id": "transformers-50219-posix-paths-agent-diagnostic-004",
+    "count": 1,
+    "maximum_process_tree_rss_bytes": 8589934592,
+    "maximum_wall_seconds": 600,
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "stop_after_any_failure": true,
+    "working_directory": "isolated candidate workspace root"
+  },
+  "boundary_changes": {
+    "file_access": "unchanged from addendum 1 exact model-blob reads and existing candidate/task/output/agent roots",
+    "grader_access": "denied to model process",
+    "network_access": "denied",
+    "new_operation": "allow process-fork",
+    "profile_path": "protocols/transformers_50219_agent_diagnostic_v1/model-agent-v3.sb",
+    "profile_sha256": "78c0253e3c7e12dd680189b45dab22bf5d387833139fed84824fe271639ee9e3",
+    "reason": "The frozen controller uses subprocess.run for local pinned Git revision/status checks and for git apply --check / git apply patch validation and application.",
+    "scope_note": "process-fork is a process-wide Seatbelt operation; process-exec was already allowed. The model receives no arbitrary command or shell tool. The only subprocesses reachable through this task controller are the fixed pinned Git commands and git apply calls. Public tests are disabled."
+  },
+  "interpretation_limits": {
+    "does_not_establish": [
+      "task freshness or held-out eligibility",
+      "generalization",
+      "policy improvement",
+      "reinforcement learning",
+      "benchmark-level coding performance"
+    ],
+    "maximum_claim_if_successful": "one real model-generated edit and one independently graded single-task outcome",
+    "split": "UNASSIGNED_DIAGNOSTIC_ONLY",
+    "task_eligibility": "NOT_ESTABLISHED",
+    "training_or_optimizer_updates": 0
+  },
+  "preflight": {
+    "git_apply_check": "PASS on a temporary proposed edit to the allowed source path using --check only; candidate remained unchanged",
+    "grader_source_read": "DENIED under the updated profile",
+    "model_generation": "not run during preflight",
+    "model_weights_loaded": "false during preflight",
+    "pinned_git_rev_parse_and_status": "PASS under the updated profile, from the candidate workspace root, with the frozen candidate head and clean status",
+    "profile_compile": "PASS",
+    "working_directory": "candidate workspace root; this is an existing allowlisted path"
+  },
+  "previous_addendum_disposition": "Addendum 2 authorized exactly attempt 003 and its stop condition was honored. This separate append-only addendum prospectively authorizes one attempt after confirming the specific pinned-Git subprocess boundary and testing that path without model inference.",
+  "prior_attempts": {
+    "attempt_001": {
+      "model_prompt_sent": false,
+      "record": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/attempt-001-incomplete.json",
+      "weights_loaded": false
+    },
+    "attempt_002": {
+      "model_prompt_sent": false,
+      "record": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/attempt-002-incomplete.json",
+      "weights_loaded": false
+    },
+    "attempt_003": {
+      "generation_started": false,
+      "model_weights_loaded": true,
+      "prompt_submitted_to_model_generation": false,
+      "record": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/attempt-003-incomplete.json",
+      "record_sha256": "85103cf6af95385a8fd991811f76d41d90ba2737cd2b073e92fe880473a42611",
+      "task_prompt_constructed_in_controller": true
+    }
+  },
+  "protocol_id": "mlsys-fresh-transformers-50219-agent-diagnostic-v1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_ATTEMPT_004_MODEL_INFERENCE",
+  "task_reuse_basis": "The task prompt was assembled in controller memory during attempt 003 but was not tokenized or passed to the model generation call; no output tokens were generated and no agent record was created. The task remains diagnostic-only, unassigned to a split, and ineligible for training or held-out claims."
+}
