@@ -1,0 +1,71 @@
+{
+  "agent_source": {
+    "commit": "0c9b0fe01fb29d8182a8e2a1f97049c905d3f3f7",
+    "frozen_file_hashes_match": true,
+    "worktree_clean": true
+  },
+  "candidate": {
+    "base_commit": "0a13f794b2d4f474cfebb3be5b9c59420dc44aeb",
+    "tracked_files": [
+      "utils/tests_fetcher.py"
+    ],
+    "working_tree_clean": true
+  },
+  "captured_at_utc": "2026-11-02T15:19:57Z",
+  "experiment_branch": {
+    "head": "44607a4d57214f79a326570ce9a9a0745fc90203",
+    "remote_matches": true
+  },
+  "model_snapshot": {
+    "all_13_files_match_frozen_hashes": true,
+    "hash_verification_time_utc": "2026-11-02T15:17:13Z",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "no_model_or_agent_processes_active": true,
+  "observations": {
+    "attempt_001": "Recorded as an incomplete pre-generation sandbox open failure; its model prompt was not sent and no weights were loaded.",
+    "final_profile_compile": "PASS",
+    "fixed_runtime_exact_target_open": "PASS for 8 bytes from each pinned snapshot symlink target; no model load or inference",
+    "grader_source_read": "DENIED under the model profile",
+    "python_mmap_import_probe": "Blocked during Python module discovery before target access; not a model or inference result",
+    "system_od_exact_target_open": "PASS for 8 bytes from each pinned snapshot symlink target"
+  },
+  "protocol": {
+    "addendum_commit": "44607a4d57214f79a326570ce9a9a0745fc90203",
+    "addendum_sha256": "fb1092189f38497c8470cd0c3bfd79c1d3f82b176cb964dac2595a844b5d0ee4",
+    "base_protocol_commit": "f48f364f65becf2dc198b584caad049239c7057a",
+    "profile_sha256": "9942e5c41b944b0f9d9f346fcd82a411b2a456d8d18abcba61d22ea1dc08f385"
+  },
+  "resources": {
+    "disk_available_1k_blocks": 4358160,
+    "disk_available_bytes": 4462755840,
+    "memory_pressure_free_percent": 77,
+    "physical_memory_bytes": 34359738368,
+    "swap_free": "1462.50M",
+    "swap_total": "3072.00M",
+    "swap_used": "1609.50M"
+  },
+  "runtime": {
+    "device": "Apple M1 Pro / Metal",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "numpy": "2.5.4",
+    "python": "3.12.12",
+    "transformers": "5.22.1"
+  },
+  "schema_version": 1,
+  "shared_lease": {
+    "expires_after_seconds": 900,
+    "lease_id": "transformers-50219-agent-diagnostic-v1-002",
+    "path": "/tmp/vare-mlx-metal.lease",
+    "sha256": "c316f98d9db37156dd8e91126999e8a7c76035d260c1b3046ab706f4a7ef5900"
+  },
+  "task": {
+    "id": "transformers-50219-posix-paths-agent-diagnostic-002",
+    "source_and_grader_calibration": "PASS",
+    "task_sha256": "4f394510aa08141f318a0d1e18a20a5fd3b50eb2175e6618f163ba8b913a3b6d",
+    "eligibility": "NOT_ESTABLISHED",
+    "split": "UNASSIGNED_DIAGNOSTIC_ONLY"
+  },
+  "status": "READY_FOR_ONE_BOUNDED_MODEL_ATTEMPT"
+}
