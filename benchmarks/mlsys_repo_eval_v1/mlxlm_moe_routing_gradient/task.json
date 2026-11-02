@@ -1,0 +1,25 @@
+{
+  "task_id": "mlxlm-moe-routing-backward-train-01",
+  "title": "Restore backward propagation through routed expert blocks",
+  "prompt": "Training a few mixture-of-experts models fails during backward propagation through top-k expert routing. Correct the routing behavior in the three provided model implementations so discrete routing choices do not interrupt gradient computation, while preserving forward routing and gradients for the selected expert computation.",
+  "family": "moe-routing-gradient-indices",
+  "source": {
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "base_revision": "77c33b14373ac70d7abd6f82af15962852adadbb",
+    "calibration_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+    "license_status": "verified from the pinned upstream LICENSE file",
+    "license_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01"
+  },
+  "metadata": {
+    "editable_files": [
+      "mlx_lm/models/granitemoe.py",
+      "mlx_lm/models/granitemoehybrid.py",
+      "mlx_lm/models/lfm2_moe.py"
+    ],
+    "split": "train",
+    "task_family": "moe-routing-gradient-indices",
+    "prior_model_attempts": 0,
+    "pretraining_exposure": "unknown",
+    "grader_visibility": "hidden-from-agent-runtime"
+  }
+}

@@ -388,12 +388,29 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
     return grads, diag
 
 
+def behavior_ratio_within_tolerance(max_abs_log_ratio: float, tolerance: float) -> bool:
+    """Return whether recomputed and stored behavior log-probabilities align.
+
+    Invalid or negative values raise instead of authorizing a training update.
+    """
+    if (isinstance(max_abs_log_ratio, bool) or not isinstance(max_abs_log_ratio, (int, float))
+            or not math.isfinite(max_abs_log_ratio) or max_abs_log_ratio < 0):
+        raise ValueError("maximum absolute log-ratio must be finite and non-negative")
+    if (isinstance(tolerance, bool) or not isinstance(tolerance, (int, float))
+            or not math.isfinite(tolerance) or tolerance < 0):
+        raise ValueError("behavior-ratio tolerance must be finite and non-negative")
+    return max_abs_log_ratio <= tolerance
+
+
 def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, policy_checkpoint_id: str,
-               policy_step: int, pad_id: int = 0, after_sample: Callable[[], None] | None = None) -> dict[str, Any]:
+               policy_step: int, pad_id: int = 0, after_sample: Callable[[], None] | None = None,
+               max_abs_log_ratio_tolerance: float | None = None) -> dict[str, Any]:
     """One GRPO update on whole groups. Returns a JSON-serializable record."""
     import mlx.core as mx
     import mlx.optimizers as optim
 
+    if max_abs_log_ratio_tolerance is not None:
+        behavior_ratio_within_tolerance(0.0, max_abs_log_ratio_tolerance)
     groups = group_samples(samples, group_size=cfg.group_size)
     lag = check_policy_lag(samples, policy_checkpoint_id=policy_checkpoint_id, policy_step=policy_step,
                            max_policy_lag=cfg.max_policy_lag)
@@ -427,6 +444,22 @@ def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, 
         grads, gn = optim.clip_grad_norm(grads, cfg.max_grad_norm)
         grad_norm = float(gn)
     before = trainable_digest(model)
+    if (max_abs_log_ratio_tolerance is not None
+            and not behavior_ratio_within_tolerance(diag["max_abs_log_ratio"], max_abs_log_ratio_tolerance)):
+        step_value = optimizer.state.get("step", 0)
+        step_before = int(step_value.item()) if hasattr(step_value, "item") else int(step_value)
+        record.update(
+            update_applied=False,
+            reason="behavior_logprob_ratio_out_of_tolerance",
+            grad_norm_preclip=grad_norm,
+            **diag,
+            params_digest_before=before,
+            params_digest_after=before,
+            params_changed=False,
+            optimizer_step=step_before,
+            max_abs_log_ratio_tolerance=max_abs_log_ratio_tolerance,
+        )
+        return record
     optimizer.update(model, grads)
     mx.eval(model.parameters(), optimizer.state)
     after = trainable_digest(model)
@@ -434,6 +467,8 @@ def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, 
         update_applied=True, grad_norm_preclip=grad_norm, **diag, params_digest_before=before, params_digest_after=after,
         params_changed=before != after, optimizer_step=int(optimizer.state["step"].item()),
     )
+    if max_abs_log_ratio_tolerance is not None:
+        record["max_abs_log_ratio_tolerance"] = max_abs_log_ratio_tolerance
     return record
 
 
