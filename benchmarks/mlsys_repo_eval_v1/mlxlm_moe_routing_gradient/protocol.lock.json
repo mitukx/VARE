@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v13",
+  "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v14",
   "supersedes": {
-    "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v12",
-    "protocol_lock_sha256": "0f5687a75638825f7660b2e31fd20cbdecfbab600e23d867365eebb58a7f3b49",
-    "reason": "Four model-generated attempts were made on the task under v12. Post-run audit reproduced candidate reads of grader tests and installed MLX-LM implementation artifacts, and showed pytest output could be forged; all historical v14 grades are invalid.",
+    "protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v13",
+    "protocol_lock_sha256": "b1567ff4210afa0571685a785f1b09c52cfceeacd647d12cac91c01b12aa211f",
+    "reason": "A source-only audit found that v13 AST normalization ignored keyword expressions and did not require a single assignment target at the expected route-index detach. A copied-source fixture demonstrated an accepted empty keyword-unpack expression whose side effect executes. V14 binds a prospective correction only; the task remains consumed, the four historical attempts remain invalid, and no calibration or regrade is authorized or recorded.",
     "prior_outcomes_or_model_exposure": "Attempts 1 and 2 produced no usable source diff; attempts 3 and 4 produced source diffs, with two historical TEST_FAIL records under the invalid grader. No independent grades are valid, and no optimizer update occurred."
   },
   "status": "POST_EXPOSURE_SECURITY_CORRECTION",
@@ -32,7 +32,7 @@
   },
   "grader": {
     "path": "evaluator/grade.py",
-    "sha256": "47d98e43e5cbe85ba8746f9ff5e2e69957277f90b16dc10633c20d8f6329a8e8",
+    "sha256": "3268ba973843594c311c9a7a3017ea6cb7301d2408ebe76b4bf78766b721d184",
     "upstream_file": "tests/test_tuner_trainer.py",
     "upstream_test_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
     "upstream_test_sha256": "92c8954f802681b8ddecc4874f3cc60f2379e568580b6b4e959846c99e8c6f17",
@@ -41,9 +41,13 @@
       "TestTunerTrainer::test_granitemoehybrid_backward",
       "TestTunerTrainer::test_lfm2_moe_backward"
     ],
-    "success": "All three pinned model cases load from the candidate source, produce finite logits matching a fresh trusted-baseline forward pass, produce finite nonzero selected-expert and router gradients, and contain only the exact pinned route-index stop-gradient AST edit. The upstream pytest test is not imported or executed; its hash and selectors are retained for provenance only.",
+    "success": "Candidate forward logits match a fresh trusted-baseline forward pass; candidate gradient summaries contain finite nonzero selected-expert and router gradients; and source changes are limited to the pinned route-index detach. The restricted patch-contract requires exactly one simple assignment target, exactly one positional argument, and no keyword arguments at each accepted mx.stop_gradient call. Equivalent source shapes outside this contract may be rejected, so this is not a general repository-repair success metric. The upstream pytest test is not imported or executed; its hash and selectors are retained for provenance only.",
     "worker_path": "evaluator/candidate_worker.py",
-    "worker_sha256": "089600a47be2113a76e230c066ec91d2a3e07de56a8a68c67cac0f7f60eebfd2"
+    "worker_sha256": "089600a47be2113a76e230c066ec91d2a3e07de56a8a68c67cac0f7f60eebfd2",
+    "contract_class": "restricted_patch_contract",
+    "keyword_arguments_to_stop_gradient": "rejected",
+    "worker_report_authenticated": false,
+    "report_nonce_semantics": "request correlation only; not authentication"
   },
   "calibration": {
     "required_arms_in_order": [
@@ -90,7 +94,7 @@
     "runner_sha256": "7133345ffd2629dfaa5fb9568e351ac7f28ef72bd314214c32f1eae41545ebaa",
     "status": "NOT_RUN_TASK_CONSUMED",
     "upstream_test_executed": false,
-    "note": "Calibration on this task is permanently ineligible after candidate/model exposure; these expectations are for a fresh, independently identified task only."
+    "note": "Calibration on this task is permanently ineligible after candidate/model exposure; these expectations are for a fresh, independently identified task only. V14 is a security-only correction to the consumed task; its calibration status remains NOT_RUN_TASK_CONSUMED."
   },
   "isolation": {
     "platform": "macOS Seatbelt sandbox-exec",
@@ -111,7 +115,8 @@
     "pytest_verdict_parser_used": false,
     "upstream_test_execution": "not executed; pinned test hash/selectors are provenance only",
     "protected_path_denials": "Task/grader files, original candidate workspace and its .git, trusted baseline, trusted known-fix source, reference source, installed MLX-LM source/bytecode/metadata/archive locations are denied after broad read allows.",
-    "worker_output": "Strict single-JSON schema with request nonce; no pytest text or count parser; candidate never receives baseline reference outputs."
+    "worker_output": "Strict single-JSON schema with request nonce; the nonce is request correlation, not output authentication. Candidate-process output remains untrusted and is compared with trusted parent-computed references; no pytest text or count parser is used, and the candidate never receives baseline reference outputs.",
+    "source_patch_contract": "Only the pinned detach shape is normalized: a single-name assignment, one positional mx.stop_gradient argument, and no keyword arguments. Other equivalent source shapes may be rejected; report this evaluator as a restricted patch-contract grader."
   },
   "exposure": {
     "task_model_or_controller_attempts_before_protocol": 4,
@@ -122,7 +127,8 @@
     "independently_valid_grades": 0,
     "optimizer_updates": 0,
     "v14_evidence_directory": "work/mlxlm-moe-task-20261103-v14/results/",
-    "grader_isolation_audit_directory": "work/grader-isolation-audit/"
+    "grader_isolation_audit_directory": "work/grader-isolation-audit/",
+    "security_audit_v14": "Copied-source audit only: all three expected detach sites accepted injected empty keyword-unpack expressions under v13, and isolated stubs confirmed the expressions executed. No model, MLX worker, calibration, grader invocation, or historical attempt was run. See work/grader-ast-keyword-bypass-20261103-v1/."
   },
   "runtime": {
     "python": "3.12.12",

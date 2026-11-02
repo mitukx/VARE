@@ -69,8 +69,18 @@ def test_candidate_prompt_does_not_disclose_grader_or_patch_identifier():
 def test_protocol_lock_binds_task_definition_and_independent_grader():
     lock = json.loads((TASK_ROOT / "protocol.lock.json").read_text(encoding="utf-8"))
     assert lock["status"] == "POST_EXPOSURE_SECURITY_CORRECTION"
-    assert lock["protocol_id"] == "mlxlm-moe-routing-gradient-independent-grader-v13"
+    assert lock["protocol_id"] == "mlxlm-moe-routing-gradient-independent-grader-v14"
+    assert _sha256(TASK_ROOT / "protocol.lock.v14.json") == _sha256(
+        TASK_ROOT / "protocol.lock.json"
+    )
+    v13_lock = json.loads(
+        (TASK_ROOT / "protocol.lock.v13.json").read_text(encoding="utf-8")
+    )
+    assert lock["supersedes"]["protocol_id"] == v13_lock["protocol_id"]
     assert lock["supersedes"]["protocol_lock_sha256"] == _sha256(
+        TASK_ROOT / "protocol.lock.v13.json"
+    )
+    assert v13_lock["supersedes"]["protocol_lock_sha256"] == _sha256(
         TASK_ROOT / "protocol.lock.v12.json"
     )
     assert _sha256(TASK_ROOT / "protocol.lock.v12.json") == (
@@ -160,6 +170,12 @@ def test_protocol_lock_binds_task_definition_and_independent_grader():
     )
     assert lock["task_definition"]["task_md_sha256"] == _sha256(TASK_ROOT / "TASK.md")
     assert lock["grader"]["sha256"] == _sha256(GRADER)
+    assert lock["grader"]["contract_class"] == "restricted_patch_contract"
+    assert lock["grader"]["keyword_arguments_to_stop_gradient"] == "rejected"
+    assert lock["grader"]["worker_report_authenticated"] is False
+    assert lock["grader"]["report_nonce_semantics"] == (
+        "request correlation only; not authentication"
+    )
     assert lock["grader"]["worker_sha256"] == _sha256(
         TASK_ROOT / "evaluator/candidate_worker.py"
     )
@@ -195,9 +211,12 @@ def test_protocol_lock_binds_task_definition_and_independent_grader():
     assert lock["exposure"]["optimizer_updates"] == 0
     assert lock["exposure"]["historical_v14_grades_valid"] is False
     assert lock["grader"]["success"].find("not imported or executed") >= 0
-    loaded_lock, lock_hash = _grader_module()._load_lock(TASK_ROOT)
+    grader = _grader_module()
+    loaded_lock, lock_hash = grader._load_lock(TASK_ROOT)
     assert loaded_lock == lock
     assert lock_hash == _sha256(TASK_ROOT / "protocol.lock.json")
+    with pytest.raises(RuntimeError, match="consumed"):
+        grader._assert_task_eligible(loaded_lock)
 
 
 def test_signal_pilot_v13_supersedes_prior_selector_protocol():
@@ -316,11 +335,24 @@ def test_pilot_v15_preserves_consumed_task_nogo():
     prior_path = ROOT / "protocols/mlxlm_moe_routing_signal_pilot_v14.json"
     protocol = json.loads(path.read_text(encoding="utf-8"))
     prior = json.loads(prior_path.read_text(encoding="utf-8"))
-    lock = json.loads((TASK_ROOT / "protocol.lock.json").read_text(encoding="utf-8"))
+    lock = json.loads(
+        (TASK_ROOT / "protocol.lock.v13.json").read_text(encoding="utf-8")
+    )
+    current_lock = json.loads(
+        (TASK_ROOT / "protocol.lock.json").read_text(encoding="utf-8")
+    )
     assert protocol["status"] == "NO_GO_TASK_CONSUMED_GRADER_INVALID"
     assert protocol["experiment_id"] == "mlxlm-moe-routing-train-signal-pilot-v15"
     assert protocol["supersedes"]["protocol_sha256"] == _sha256(prior_path)
+    # The consumed v15 pilot remains bound to its frozen v13 lock. V14 is a
+    # later security-only correction and must not rewrite that historical link.
     assert protocol["task"]["grader_protocol_id"] == lock["protocol_id"]
+    assert current_lock["protocol_id"] == (
+        "mlxlm-moe-routing-gradient-independent-grader-v14"
+    )
+    assert current_lock["supersedes"]["protocol_lock_sha256"] == _sha256(
+        TASK_ROOT / "protocol.lock.v13.json"
+    )
     assert protocol["outcome"]["model_generated_attempts"] == 4
     assert protocol["outcome"]["independently_valid_grades"] == 0
     assert protocol["outcome"]["optimizer_updates"] == 0
@@ -562,6 +594,44 @@ def test_worker_protocol_rejects_pytest_verdicts_and_forged_fields():
         )
 
 
+def test_nonce_and_schema_do_not_attest_worker_report_truth():
+    grader = _grader_module()
+    nonce = "a" * 64
+    fabricated = {
+        "schema_version": 1,
+        "model": "granitemoe",
+        "nonce": nonce,
+        "module_origin": "/tmp/candidate/granitemoe.py",
+        "logits": [[1.0]],
+        "logits_finite": True,
+        "loss": 0.0,
+        "loss_finite": True,
+        "gradients": [
+            {
+                "name": "switch_mlp.weight",
+                "shape": [1],
+                "finite": True,
+                "nonzero_count": 1,
+                "max_abs": 1.0,
+            },
+            {
+                "name": "router.layer.weight",
+                "shape": [1],
+                "finite": True,
+                "nonzero_count": 1,
+                "max_abs": 1.0,
+            },
+        ],
+    }
+    parsed = grader._parse_worker_report(
+        json.dumps(fabricated).encode(),
+        expected_model="granitemoe",
+        expected_nonce=nonce,
+        expects_gradients=True,
+    )
+    assert parsed == fabricated
+
+
 def test_routing_ast_contract_rejects_decoy_stop_gradient(tmp_path):
     grader = _grader_module()
     baseline_root = tmp_path / "baseline"
@@ -626,6 +696,50 @@ def test_routing_ast_contract_rejects_decoy_stop_gradient(tmp_path):
         "granitemoehybrid": [],
         "lfm2_moe": [],
     }
+
+    # Keyword-unpack expressions run before the wrapped call, even when they
+    # return an empty mapping. The restricted patch contract must not erase
+    # candidate-controlled expressions while normalizing the expected detach.
+    for model, text in valid.items():
+        marker = repr(f"{model}.marker")
+        side_effect = f"**(__import__('pathlib').Path({marker}).touch() or {{}})"
+        if model == "lfm2_moe":
+            injected = text.replace(
+                "inds = mx.stop_gradient(inds)",
+                f"inds = mx.stop_gradient(inds, {side_effect})",
+                1,
+            )
+        else:
+            expected_call = "mx.stop_gradient(mx.argpartition(x, kth=-2)[..., -2:])"
+            injected_call = (
+                f"mx.stop_gradient(mx.argpartition(x, kth=-2)[..., -2:], {side_effect})"
+            )
+            injected = text.replace(expected_call, injected_call, 1)
+        assert injected != text
+        (model_dir / f"{model}.py").write_text(injected, encoding="utf-8")
+
+    failures = grader._routing_fix_failures(source_root, baseline_root)
+    assert all(failures[model] for model in valid)
+
+    (model_dir / "lfm2_moe.py").write_text(
+        valid["lfm2_moe"].replace(
+            "inds = mx.stop_gradient(inds)",
+            "inds, other = mx.stop_gradient(inds)",
+            1,
+        ),
+        encoding="utf-8",
+    )
+    (model_dir / "granitemoe.py").write_text(
+        valid["granitemoe"].replace(
+            "top_k_idx = mx.stop_gradient(",
+            "top_k_idx, other = mx.stop_gradient(",
+            1,
+        ),
+        encoding="utf-8",
+    )
+    failures = grader._routing_fix_failures(source_root, baseline_root)
+    assert failures["lfm2_moe"] == ["routing_indices_not_detached_at_selection"]
+    assert failures["granitemoe"] == ["routing_indices_not_detached_at_selection"]
 
     (model_dir / "granitemoe.py").write_text(
         "class GraniteMoeTopKGating:\n"
@@ -697,9 +811,7 @@ def test_routing_patch_contract_documents_equivalent_rejection_and_wrong_mutants
         "    top_k_idx = mx.stop_gradient(top_k_idx)\n"
         "    return mx.take_along_axis(x, top_k_idx, axis=-1)\n"
     )
-    (model_dir / "granitemoe.py").write_text(
-        equivalent_but_rejected, encoding="utf-8"
-    )
+    (model_dir / "granitemoe.py").write_text(equivalent_but_rejected, encoding="utf-8")
     assert grader._routing_fix_failures(source_root, baseline_root)["granitemoe"]
 
     alias_implementation = (

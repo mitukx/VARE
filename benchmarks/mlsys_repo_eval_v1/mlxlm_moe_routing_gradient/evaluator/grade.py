@@ -580,6 +580,18 @@ def _target_names(node: ast.AST) -> set[str]:
     return set()
 
 
+def _has_single_name_target(node: ast.AST, name: str) -> bool:
+    if isinstance(node, ast.Assign):
+        return (
+            len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == name
+        )
+    if isinstance(node, ast.AnnAssign):
+        return isinstance(node.target, ast.Name) and node.target.id == name
+    return False
+
+
 def _is_mx_call(node: ast.AST | None, name: str) -> TypeGuard[ast.Call]:
     return (
         isinstance(node, ast.Call)
@@ -642,20 +654,21 @@ class _RoutingFixNormalizer(ast.NodeTransformer):
     def visit_Assign(self, node: ast.Assign) -> ast.AST | None:
         if not self.in_target_method:
             return self.generic_visit(node)
-        names = set().union(*(_target_names(target) for target in node.targets))
         if (
             self.index_name == "top_k_idx"
-            and self.index_name in names
+            and _has_single_name_target(node, self.index_name)
             and _contains_mx_call(node.value, "argpartition")
             and _is_mx_call(node.value, "stop_gradient")
-            and node.value.args
+            and len(node.value.args) == 1
+            and not node.value.keywords
         ):
             node.value = node.value.args[0]
         elif (
             self.index_name == "inds"
-            and self.index_name in names
+            and _has_single_name_target(node, self.index_name)
             and _is_mx_call(node.value, "stop_gradient")
-            and node.value.args
+            and len(node.value.args) == 1
+            and not node.value.keywords
             and isinstance(node.value.args[0], ast.Name)
             and node.value.args[0].id == "inds"
         ):
@@ -716,16 +729,10 @@ def _routing_fix_failures(
                     node
                     for node in nodes
                     if isinstance(node, (ast.Assign, ast.AnnAssign))
-                    and any(
-                        "inds" in _target_names(target)
-                        for target in (
-                            node.targets
-                            if isinstance(node, ast.Assign)
-                            else [node.target]
-                        )
-                    )
+                    and _has_single_name_target(node, "inds")
                     and _is_mx_call(node.value, "stop_gradient")
-                    and node.value.args
+                    and len(node.value.args) == 1
+                    and not node.value.keywords
                     and isinstance(node.value.args[0], ast.Name)
                     and node.value.args[0].id == "inds"
                 ]
@@ -757,7 +764,10 @@ def _routing_fix_failures(
                 detached = [
                     node
                     for node in partition_assignments
-                    if _is_mx_call(node.value, "stop_gradient")
+                    if _has_single_name_target(node, index_name)
+                    and _is_mx_call(node.value, "stop_gradient")
+                    and len(node.value.args) == 1
+                    and not node.value.keywords
                     and _contains_mx_call(node.value, "argpartition")
                 ]
                 if (
@@ -1326,12 +1336,14 @@ def grade_candidate(
         "grader_status": "PASS"
         if passed
         else ("TEST_FAIL" if infrastructure_ok else "INFRASTRUCTURE_FAIL"),
-        "evaluation_mode": "static source contract plus isolated MLX worker and trusted parent comparison",
+        "evaluation_mode": "restricted patch-contract plus isolated MLX worker and trusted parent comparison",
         "pytest_output_parser_used": False,
         "upstream_test_executed": False,
         "upstream_test_selectors_for_provenance": list(TEST_SELECTORS),
         "source_ast_delta": "only pinned top-k route-index detach edits are admitted",
-        "worker_report_nonce_bound": True,
+        "worker_report_nonce_matches_request": True,
+        "worker_report_authenticated": False,
+        "candidate_process_report_trusted": False,
         "candidate_received_grader_tests": False,
         "candidate_received_reference_outputs": False,
         "candidate_original_workspace_visible": False,
