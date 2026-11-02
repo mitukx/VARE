@@ -1,0 +1,56 @@
+{
+  "agent_source": {
+    "commit": "0c9b0fe01fb29d8182a8e2a1f97049c905d3f3f7",
+    "frozen_hashes_match": true,
+    "worktree_clean": true
+  },
+  "branch": {
+    "head_before_record_commit": "1f7c5d7451131b37f4bd55c72a0db206c1c27f92",
+    "remote_matches": true
+  },
+  "candidate": {
+    "base_commit": "0a13f794b2d4f474cfebb3be5b9c59420dc44aeb",
+    "working_tree_clean": true
+  },
+  "captured_at_utc": "2026-11-02T15:25:32Z",
+  "main_sha": "85a0cfedcb602b9e1476d1bed8cf2210b59d728b",
+  "model": {
+    "all_13_snapshot_files_match_frozen_hashes": true,
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "pre_inference_state": {
+    "generation_started": false,
+    "grader_run": false,
+    "task_prompt_sent": false,
+    "weights_loaded": false
+  },
+  "resources": {
+    "active_heavy_model_processes": 0,
+    "disk_available_1k_blocks": 4357340,
+    "disk_available_bytes": 4461916160,
+    "memory_pressure_free_percent": 77,
+    "physical_memory_bytes": 34359738368,
+    "swap_snapshot": "vm.swapusage: total = 3072.00M  used = 1609.50M  free = 1462.50M  (encrypted)"
+  },
+  "sandbox": {
+    "grader_read_denied": true,
+    "network_denied": true,
+    "only_new_runtime_change": "process cwd is the already-allowlisted candidate workspace root",
+    "profile_sha256": "9942e5c41b944b0f9d9f346fcd82a411b2a456d8d18abcba61d22ea1dc08f385"
+  },
+  "schema_version": 1,
+  "shared_lease": {
+    "lease_id": "transformers-50219-agent-diagnostic-v1-attempt-003",
+    "lease_sha256": "313963c7b4e797a11cc7a6fd46cfe6ab16e3ca58f1f2e2d5adaf2ed26bef2a8e",
+    "max_model_wall_seconds": 600,
+    "ttl_seconds": 900
+  },
+  "status": "READY_FOR_ONE_BOUNDED_MODEL_ATTEMPT",
+  "task": {
+    "eligibility": "NOT_ESTABLISHED",
+    "id": "transformers-50219-posix-paths-agent-diagnostic-003",
+    "sha256": "4f394510aa08141f318a0d1e18a20a5fd3b50eb2175e6618f163ba8b913a3b6d",
+    "split": "UNASSIGNED_DIAGNOSTIC_ONLY"
+  }
+}
