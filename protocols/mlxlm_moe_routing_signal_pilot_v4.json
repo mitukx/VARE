@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "experiment_id": "mlxlm-moe-routing-train-signal-pilot-v4",
+  "status": "PREREGISTERED_NOT_EXECUTED",
+  "hypothesis": "Four independently sampled trajectories on one qualified Train task may yield an informative exact-prompt GRPO group and an exact on-policy behavior-ratio update. This is a feasibility pilot, not a held-out capability comparison.",
+  "task": {
+    "task_id": "mlxlm-moe-routing-backward-train-01",
+    "split": "train",
+    "source_revision": "77c33b14373ac70d7abd6f82af15962852adadbb",
+    "task_pack": "benchmarks/mlsys_repo_eval_v1/mlxlm_moe_routing_gradient",
+    "grader_protocol": "mlsys_repo_eval_v1/mlxlm_moe_routing_gradient/protocol.lock.json",
+    "grader_protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v4",
+    "task_units": "one source task; no development or held-out claim",
+    "reward": "1 only when the isolated independent grader passes all three pinned backward tests; otherwise 0. Infrastructure-ungraded attempts abort the whole group."
+  },
+  "policy": {
+    "model_id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "starting_adapter": null,
+    "backend": "MLX/Metal",
+    "local_files_only": true,
+    "controller": "scripts/run_local_agent.py",
+    "controller_source_read_handles": true,
+    "trace_mode": "stream_generate with exact prompt/completion token IDs and selected-token behavior log-probabilities"
+  },
+  "arms": [
+    "no_update_rollouts",
+    "one_conditional_grpo_update"
+  ],
+  "sampling": {
+    "seeds": [
+      202611031,
+      202611032,
+      202611033,
+      202611034
+    ],
+    "group_size": 4,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "top_k": 0,
+    "min_p": 0.0,
+    "max_turns_per_attempt": 12,
+    "max_new_tokens_per_turn": 512,
+    "max_total_new_tokens_per_attempt": 4096,
+    "max_context_tokens": 8192,
+    "max_wall_seconds_per_attempt": 900,
+    "max_no_tool_retries": 2,
+    "edit_format": "unified_diff",
+    "grader_feedback_during_sampling": false,
+    "grade_all_attempts_after_rollouts_complete": true
+  },
+  "update": {
+    "objective": "existing vare.grpo_mlx.train_step on the first-turn completions, grouped only when the exact prompt token sequences match",
+    "reward_assignment": "terminal independently graded outcome for the full coding trajectory",
+    "max_updates": 1,
+    "minimum_informative_groups": 1,
+    "group_relative_advantages": true,
+    "grpo_temperature": 1.0,
+    "clip_eps_low": 0.2,
+    "clip_eps_high": 0.2,
+    "max_policy_lag": 0,
+    "max_grad_norm": 1.0,
+    "max_abs_log_ratio_tolerance": 0.001,
+    "lora": {
+      "num_layers": 8,
+      "rank": 8,
+      "scale": 20.0,
+      "dropout": 0.0
+    },
+    "optimizer": {
+      "name": "mlx.optimizers.Adam",
+      "learning_rate": 1e-05
+    },
+    "checkpoint": "save adapter, optimizer state, RNG schedule, and verify reload identity before accepting the update"
+  },
+  "resource_limits": {
+    "hardware": "Apple Silicon M1 Pro, 32 GiB unified memory",
+    "concurrent_model_runs": 1,
+    "shared_lease_required": true,
+    "minimum_free_disk_bytes": 8589934592,
+    "minimum_available_memory_bytes": 8589934592,
+    "maximum_swap_fraction_at_start": 0.94,
+    "maximum_process_tree_rss_bytes": 8589934592,
+    "maximum_total_wall_seconds": 5400,
+    "model_downloads": 0,
+    "paid_apis": 0
+  },
+  "primary_metric": "none; one-task Train feasibility only",
+  "acceptance_criteria": {
+    "informative_group": "all four trajectories independently graded and exact first-turn prompt IDs match; binary rewards have nonzero variance",
+    "update": "one optimizer update, parameters change, behavior max-absolute log-ratio is at most 0.001, checkpoint save/reload identities match",
+    "otherwise": "retain all evidence and record NO_GO without forcing reward variance or an optimizer update"
+  },
+  "claim_limits": [
+    "Do not report held-out improvement, generalization, or a coding RL efficacy result from this one Train task.",
+    "A changed LoRA parameter digest establishes an update, not independent capability improvement.",
+    "Do not use the grader test, grader output, task, or any trajectories as held-out evidence.",
+    "No model run is authorized until the task-specific grader passes baseline/known-fix/wrong-mutant calibration and the shared resource preflight meets every frozen limit."
+  ],
+  "stopping_rule": "Stop before inference on a failed grader, unavailable shared lease, missing local model/runtime, less than 8 GiB free disk or available memory, swap above 0.94, or inability to enforce isolation; stop before update on constant rewards, partial groups, infra grading, token/log-probability mismatch, stale policy, or ratio-tolerance failure.",
+  "outputs": "work/mlxlm-moe-task-20261103-v1/results/",
+  "heldout_feedback_used": false,
+  "supersedes": {
+    "experiment_id": "mlxlm-moe-routing-train-signal-pilot-v3",
+    "protocol_sha256": "ff81fda1b9675a30a1eedfd3c3ad247ea9c884cea3d164684ce1d0d048acedea",
+    "reason": "This prospective pilot requires the exact clean source snapshots and known-fix file hashes in grader protocol v4.",
+    "prior_outcomes_or_model_exposure": "none"
+  }
+}

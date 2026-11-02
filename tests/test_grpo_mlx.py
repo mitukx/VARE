@@ -286,7 +286,8 @@ def test_stale_policy_ratio_and_rejection():
     with pytest.raises(G.StalePolicyError):  # on-policy default refuses reuse
         G.train_step(m, opt, samples, cfg, policy_checkpoint_id="c1", policy_step=1)
     lagged = G.GRPOConfig(max_grad_norm=None, max_policy_lag=1)
-    rec1 = G.train_step(m, opt, samples, lagged, policy_checkpoint_id="c1", policy_step=1)
+    rec1 = G.train_step(m, opt, samples, lagged, policy_checkpoint_id="c1", policy_step=1,
+                        max_abs_log_ratio_tolerance=10.0)
     assert rec1["max_observed_lag"] == 1
     assert rec1["ratio_max"] > 1.2 and rec1["clip_fraction"] > 0  # importance ratio is live and clipped
 

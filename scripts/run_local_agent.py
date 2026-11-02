@@ -7,6 +7,7 @@ import asyncio
 import difflib
 import hashlib
 import json
+import math
 import os
 import platform
 import re
@@ -37,7 +38,7 @@ CONTEXT_COMPACTION_NOTE = (
     'Earlier tool interactions were removed to fit the configured context window. '
     'The source workspace retains its current state; reread files if needed and do not repeat edits.'
 )
-TOOLS = [
+TOOLS: list[dict[str, Any]] = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List exact source paths available in this task workspace. Results are paginated; use next_offset as offset to continue.', 'parameters': {'type': 'object', 'properties': {'offset': {'type': 'integer', 'minimum': 0}}, 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns at most 180 lines. Pass inclusive start_line/end_line to inspect an exact range; a completed explicit range has no next_cursor even when later file lines exist. Follow next_cursor only when the returned page was truncated by a line or response limit. The result includes the resolved path and full-file SHA-256.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a case-sensitive literal in allowed task source files, optionally restricted to one exact allowed path. Zero matches means the literal is absent; do not retry longer variants. Returns at most 80 matches in a hard 12,000-byte and 2,048-token response; use offset from next_offset to continue.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}, 'path': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}}, 'required': ['query'], 'additionalProperties': False}}},
@@ -170,11 +171,79 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
                   tools: list[dict[str, Any]], *, limit: int, args: argparse.Namespace) -> tuple[str, int, int, int]:
     """Generate one bounded assistant response using a locally loaded backend."""
     prompt = render_chat_prompt(tokenizer, messages, tools)
-    prompt_tokens = len(tokenizer.encode(prompt, add_special_tokens=False))
+    trace_on_policy = backend == 'mlx' and getattr(args, 'trace_on_policy', False)
+    prompt_ids = mlx_stream_prompt_ids(tokenizer, prompt) if trace_on_policy else None
+    prompt_tokens = len(prompt_ids) if prompt_ids is not None else len(
+        tokenizer.encode(prompt, add_special_tokens=False),
+    )
     if prompt_tokens >= args.max_context_tokens:
         raise ValueError('context_budget_exhausted')
     limit = min(limit, args.max_context_tokens - prompt_tokens)
     if backend == 'mlx':
+        if getattr(args, 'trace_on_policy', False):
+            args._trace_last_generation = None
+            if (not args.do_sample or args.temperature != 1.0
+                    or args.top_p != 1.0 or args.top_k != 0):
+                raise ValueError('on-policy trace requires stochastic temperature=1, top_p=1, top_k=0')
+            from mlx_lm import stream_generate
+            from mlx_lm.sample_utils import make_sampler
+
+            if prompt_ids is None:
+                raise RuntimeError('on-policy trace did not retain exact prompt token IDs')
+            sampler = make_sampler(temp=1.0, top_p=1.0, min_p=0.0, top_k=0)
+            completion_ids: list[int] = []
+            behavior_logprobs: list[float] = []
+            raw = ''
+            finish_reason = None
+            started = time.perf_counter()
+            for response in stream_generate(
+                model, tokenizer, prompt=prompt_ids, max_tokens=limit, sampler=sampler,
+            ):
+                token = int(response.token)
+                logprobs = getattr(response, 'logprobs', None)
+                if logprobs is None:
+                    raise RuntimeError('mlx-lm stream response omitted sampling log-probabilities')
+                value = logprobs[token]
+                selected_logprob = float(value.item() if hasattr(value, 'item') else value)
+                if not math.isfinite(selected_logprob):
+                    raise RuntimeError('mlx-lm returned a non-finite sampling log-probability')
+                completion_ids.append(token)
+                behavior_logprobs.append(selected_logprob)
+                raw += response.text
+                if getattr(response, 'finish_reason', None) is not None:
+                    finish_reason = str(response.finish_reason)
+            if not completion_ids or len(completion_ids) != len(behavior_logprobs):
+                raise RuntimeError('on-policy trace has missing or misaligned completion data')
+            trace = {
+                'schema_version': 1,
+                'sampler': {
+                    'temperature': 1.0,
+                    'top_p': 1.0,
+                    'top_k': 0,
+                    'min_p': 0.0,
+                    'do_sample': True,
+                    'distribution': 'untruncated_model_softmax',
+                },
+                'prompt_token_ids': prompt_ids,
+                'prompt_token_count': len(prompt_ids),
+                'completion_token_ids': completion_ids,
+                'behavior_logprobs': behavior_logprobs,
+                'behavior_logprob_count': len(behavior_logprobs),
+                'finish_reason': finish_reason,
+                'generation_seconds': round(time.perf_counter() - started, 6),
+            }
+            trace['prompt_token_ids_sha256'] = hashlib.sha256(
+                json.dumps(prompt_ids, separators=(',', ':')).encode('ascii'),
+            ).hexdigest()
+            trace['completion_token_ids_sha256'] = hashlib.sha256(
+                json.dumps(completion_ids, separators=(',', ':')).encode('ascii'),
+            ).hexdigest()
+            trace['behavior_logprobs_sha256'] = hashlib.sha256(
+                json.dumps(behavior_logprobs, separators=(',', ':'), allow_nan=False).encode('ascii'),
+            ).hexdigest()
+            args._trace_last_generation = trace
+            return raw, len(completion_ids), len(prompt_ids), limit
+
         from mlx_lm import generate
         from mlx_lm.sample_utils import make_sampler
 
@@ -234,6 +303,13 @@ def render_chat_prompt(tokenizer: Any, messages: list[dict[str, Any]],
         messages, tools=tools, tokenize=False, add_generation_prompt=True,
         enable_thinking=False,
     )
+
+
+def mlx_stream_prompt_ids(tokenizer: Any, prompt: str) -> list[int]:
+    """Mirror mlx-lm stream_generate's string-prompt BOS decision exactly."""
+    bos_token = getattr(tokenizer, 'bos_token', None)
+    add_special_tokens = bos_token is None or not prompt.startswith(bos_token)
+    return [int(token) for token in tokenizer.encode(prompt, add_special_tokens=add_special_tokens)]
 
 
 def compact_tool_context(
@@ -1040,6 +1116,10 @@ def main() -> int:
     parser.add_argument('--top-p', type=float, default=0.95)
     parser.add_argument('--top-k', type=int, default=20)
     parser.add_argument('--do-sample', action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument(
+        '--trace-on-policy', action='store_true',
+        help='Persist exact MLX token IDs and selected-token behavior log-probabilities; requires temperature=1, top_p=1, top_k=0',
+    )
     parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file'), default='unified_diff')
     parser.add_argument('--require-split', choices=('train', 'development', 'heldout'))
     parser.add_argument(
@@ -1057,6 +1137,12 @@ def main() -> int:
             parser.error('--incomplete-tool-retry-tokens cannot exceed --max-total-new-tokens')
     if args.source_read_handles and args.edit_format != 'unified_diff':
         parser.error('--source-read-handles requires --edit-format unified_diff')
+    if args.trace_on_policy:
+        if args.backend != 'mlx':
+            parser.error('--trace-on-policy requires --backend mlx')
+        if (not args.do_sample or args.temperature != 1.0
+                or args.top_p != 1.0 or args.top_k != 0):
+            parser.error('--trace-on-policy requires --do-sample --temperature 1 --top-p 1 --top-k 0')
 
     model_dir = args.model_path.resolve()
     if not model_dir.is_dir():
@@ -1246,6 +1332,13 @@ def main() -> int:
                                  'generation_token_limit': limit,
                                  'prompt_tokens': prompt_tokens,
                                  'generation_seconds': round(generation_elapsed, 6)}
+        if args.trace_on_policy:
+            trace = getattr(args, '_trace_last_generation', None)
+            if not isinstance(trace, dict):
+                raise RuntimeError('on-policy trace mode did not persist a token-aligned generation record')
+            if trace['behavior_logprob_count'] != len(trace['completion_token_ids']):
+                raise RuntimeError('on-policy trace token/log-probability alignment failed')
+            entry['on_policy_trace'] = trace
         if was_incomplete_tool_retry and limit > args.max_new_tokens_per_turn:
             expanded_incomplete_retry_turns.append(turn + 1)
         tool_call_status = classify_incomplete_tool_call(
@@ -1642,6 +1735,9 @@ def main() -> int:
         'wall_budget_checked_between_generations': True,
         'claim_limit': 'One small cached model on one historical task; not frontier-agent performance or novel fix discovery.',
     }
+    if args.trace_on_policy:
+        result['on_policy_trace_enabled'] = True
+        result['budgets']['trace_on_policy'] = True
     result_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         with result_path.open('x', encoding='utf-8') as stream:

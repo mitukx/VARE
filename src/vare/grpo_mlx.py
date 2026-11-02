@@ -72,6 +72,7 @@ class TruncatedSamplingError(ValueError):
 # The exact-ratio objective models behavior log-probs as log_softmax(logits / T)
 # over the full vocabulary, so sampling must not truncate the distribution.
 EXACT_RATIO_TOP_P = 1.0
+DEFAULT_MAX_ABS_LOG_RATIO_TOLERANCE = 1e-3
 
 
 def check_exact_ratio_sampling(*, temperature: float, top_p: float, top_k: int = 0, min_p: float = 0.0) -> None:
@@ -298,32 +299,63 @@ def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -
     return [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
 
 
+def validate_behavior_logprob_alignment(recorded: Sequence[float], recomputed: Sequence[float], *,
+                                        tolerance: float = DEFAULT_MAX_ABS_LOG_RATIO_TOLERANCE) -> float:
+    """Check recorded sampling log-probs against a model recomputation."""
+    if not recorded or len(recorded) != len(recomputed):
+        raise ValueError("recorded and recomputed behavior log-probabilities must have equal non-zero lengths")
+    for values in (recorded, recomputed):
+        if any(isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value)
+               for value in values):
+            raise ValueError("behavior log-probabilities must be finite numbers")
+    max_abs_error = max(
+        abs(float(actual) - float(expected)) for actual, expected in zip(recorded, recomputed)
+    )
+    if not behavior_ratio_within_tolerance(max_abs_error, tolerance):
+        raise ValueError(
+            f"recorded behavior log-probabilities disagree with model recomputation: "
+            f"{max_abs_error} > {tolerance}"
+        )
+    return max_abs_error
+
+
 def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig | None = None, *,
                               temperature: float | None = None, pad_id: int = 0,
-                              after_sample: Callable[[], None] | None = None) -> None:
-    """Fill ``behavior_logprobs`` with the current (behavior) parameters using
-    the exact traced computation that ``policy_gradient`` differentiates, so a
-    lag-0 ratio is exactly 1. Call before any update that uses these samples,
-    under the same execution context (e.g. gradient checkpointing) as the
-    update. Measured on the 4B MLX bf16 model, an untraced forward differs from
-    the differentiated one by up to 0.13 nats per token; the traced pass is
-    deterministic, so the gradients it also produces are discarded."""
+                              after_sample: Callable[[], None] | None = None,
+                              max_abs_log_ratio_tolerance: float = DEFAULT_MAX_ABS_LOG_RATIO_TOLERANCE) -> None:
+    """Fill missing behavior log-probs and validate any recorded rollout values.
+
+    Existing sampling log-probs are retained and checked before training. This
+    prevents a current-policy recomputation from silently replacing evidence
+    about the distribution that actually generated a completion.
+    """
     import mlx.core as mx
 
+    behavior_ratio_within_tolerance(0.0, max_abs_log_ratio_tolerance)
     if cfg is None:
         if temperature is None:
             raise ValueError("pass cfg or temperature")
         cfg = GRPOConfig(temperature=temperature)
     value_and_grad = _value_and_grad(model, cfg, n_tokens=1)
-    for s in samples:
+    sample_list = list(samples)
+    recomputed_rows: list[list[float]] = []
+    for s in sample_list:
         tokens, mask, start = sample_tensors(s, pad_id)
         zeros = mx.zeros(mask.shape, dtype=mx.float32)
         (_, (_, lp)), g = value_and_grad(tokens, mask, start, mx.zeros((1,), dtype=mx.float32), zeros)
         mx.eval(lp, g)
         del g
-        s.behavior_logprobs = [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
+        recomputed = [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
+        if s.behavior_logprobs is not None:
+            validate_behavior_logprob_alignment(
+                s.behavior_logprobs, recomputed, tolerance=max_abs_log_ratio_tolerance,
+            )
+        recomputed_rows.append(recomputed)
         if after_sample is not None:
             after_sample()
+    for s, recomputed in zip(sample_list, recomputed_rows):
+        if s.behavior_logprobs is None:
+            s.behavior_logprobs = recomputed
 
 
 # ------------------------------------------------------------------ update
@@ -388,12 +420,28 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
     return grads, diag
 
 
+def behavior_ratio_within_tolerance(max_abs_log_ratio: float, tolerance: float) -> bool:
+    """Return whether recomputed and stored behavior log-probabilities align.
+
+    Invalid or negative values raise instead of authorizing a training update.
+    """
+    if (isinstance(max_abs_log_ratio, bool) or not isinstance(max_abs_log_ratio, (int, float))
+            or not math.isfinite(max_abs_log_ratio) or max_abs_log_ratio < 0):
+        raise ValueError("maximum absolute log-ratio must be finite and non-negative")
+    if (isinstance(tolerance, bool) or not isinstance(tolerance, (int, float))
+            or not math.isfinite(tolerance) or tolerance < 0):
+        raise ValueError("behavior-ratio tolerance must be finite and non-negative")
+    return max_abs_log_ratio <= tolerance
+
+
 def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, policy_checkpoint_id: str,
-               policy_step: int, pad_id: int = 0, after_sample: Callable[[], None] | None = None) -> dict[str, Any]:
+               policy_step: int, pad_id: int = 0, after_sample: Callable[[], None] | None = None,
+               max_abs_log_ratio_tolerance: float = DEFAULT_MAX_ABS_LOG_RATIO_TOLERANCE) -> dict[str, Any]:
     """One GRPO update on whole groups. Returns a JSON-serializable record."""
     import mlx.core as mx
     import mlx.optimizers as optim
 
+    behavior_ratio_within_tolerance(0.0, max_abs_log_ratio_tolerance)
     groups = group_samples(samples, group_size=cfg.group_size)
     lag = check_policy_lag(samples, policy_checkpoint_id=policy_checkpoint_id, policy_step=policy_step,
                            max_policy_lag=cfg.max_policy_lag)
@@ -427,6 +475,21 @@ def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, 
         grads, gn = optim.clip_grad_norm(grads, cfg.max_grad_norm)
         grad_norm = float(gn)
     before = trainable_digest(model)
+    if not behavior_ratio_within_tolerance(diag["max_abs_log_ratio"], max_abs_log_ratio_tolerance):
+        step_value = optimizer.state.get("step", 0)
+        step_before = int(step_value.item()) if hasattr(step_value, "item") else int(step_value)
+        record.update(
+            update_applied=False,
+            reason="behavior_logprob_ratio_out_of_tolerance",
+            grad_norm_preclip=grad_norm,
+            **diag,
+            params_digest_before=before,
+            params_digest_after=before,
+            params_changed=False,
+            optimizer_step=step_before,
+            max_abs_log_ratio_tolerance=max_abs_log_ratio_tolerance,
+        )
+        return record
     optimizer.update(model, grads)
     mx.eval(model.parameters(), optimizer.state)
     after = trainable_digest(model)
@@ -434,6 +497,7 @@ def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, 
         update_applied=True, grad_norm_preclip=grad_norm, **diag, params_digest_before=before, params_digest_after=after,
         params_changed=before != after, optimizer_step=int(optimizer.state["step"].item()),
     )
+    record["max_abs_log_ratio_tolerance"] = max_abs_log_ratio_tolerance
     return record
 
 

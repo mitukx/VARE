@@ -1,0 +1,136 @@
+{
+  "acceptance_criteria": {
+    "informative_group": "all four trajectories independently graded and exact first-turn prompt IDs match; binary rewards have nonzero variance",
+    "otherwise": "retain all evidence and record NO_GO without forcing reward variance or an optimizer update",
+    "update": "one optimizer update, parameters change, behavior max-absolute log-ratio is at most 0.001, checkpoint save/reload identities match"
+  },
+  "arms": [
+    "no_update_rollouts",
+    "one_conditional_grpo_update"
+  ],
+  "claim_limits": [
+    "Do not report held-out improvement, generalization, or a coding RL efficacy result from this one Train task.",
+    "A changed LoRA parameter digest establishes an update, not independent capability improvement.",
+    "Do not use the grader test, grader output, task, or any trajectories as held-out evidence.",
+    "No model run is authorized until the task-specific grader passes baseline/known-fix/wrong-mutant calibration and the shared resource preflight meets every frozen limit.",
+    "The four v14 model-generated attempts were exposed to a grader boundary later shown to be invalid; their historical grades are void.",
+    "Do not recalibrate or rerun this consumed task under corrected grader rules; create a fresh task identity and preregister it before candidate/model exposure."
+  ],
+  "execution_gate": {
+    "calibration": "NOT_RUN",
+    "free_disk_gate": "PASS at audit (>8 GiB available); resource capacity does not override task ineligibility.",
+    "model_process_active_at_audit": false,
+    "reason": "Consumed task identity and invalid historical grader are hard NO_GO gates.",
+    "shared_metal_lease_present_at_audit": false,
+    "task_eligible": false
+  },
+  "experiment_id": "mlxlm-moe-routing-train-signal-pilot-v15",
+  "heldout_feedback_used": false,
+  "hypothesis": "Terminal audit record for the consumed Train task; no new inference or calibration is authorized under this task identity.",
+  "outcome": {
+    "attempts_with_source_diff": 2,
+    "attempts_without_usable_source_diff": 2,
+    "calibration": "NOT_RUN_TASK_CONSUMED",
+    "heldout_results": 0,
+    "historical_grade_records": 2,
+    "historical_grade_status": "TEST_FAIL for both source-edit attempts under the invalid v12 grader; void and not independent",
+    "independently_valid_grades": 0,
+    "model_generated_attempts": 4,
+    "new_inference_or_grading_started": false,
+    "new_model_execution": false,
+    "optimizer_updates": 0,
+    "reason": "Post-exposure security audit reproduced grader-test and installed-library source access and forged pytest-pass acceptance in the old boundary."
+  },
+  "outputs": "work/mlxlm-moe-task-20261103-v14/results/ (frozen historical evidence; no v15 run directory created)",
+  "policy": {
+    "backend": "MLX/Metal",
+    "controller": "scripts/run_local_agent.py",
+    "controller_source_read_handles": true,
+    "controller_source_sha256": "72772121e72ac25434bf67018229392b075cf4df0d3637565909021172c1ca5b",
+    "local_files_only": true,
+    "model_id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "python_environment_requirement": "Preserve the configured virtual-environment Python entrypoint verbatim; do not resolve its symlinks. Before any rollout, verify mlx.core and mlx_lm import successfully under the exact rollout environment and confirm the MLX device.",
+    "starting_adapter": null,
+    "trace_mode": "stream_generate with exact prompt/completion token IDs and selected-token behavior log-probabilities"
+  },
+  "primary_metric": "none; one-task Train feasibility only",
+  "resource_limits": {
+    "concurrent_model_runs": 1,
+    "hardware": "Apple Silicon M1 Pro, 32 GiB unified memory",
+    "maximum_process_tree_rss_bytes": 8589934592,
+    "maximum_swap_fraction_at_start": 0.94,
+    "maximum_total_wall_seconds": 5400,
+    "minimum_available_memory_bytes": 8589934592,
+    "minimum_free_disk_bytes": 8589934592,
+    "model_downloads": 0,
+    "paid_apis": 0,
+    "shared_lease_required": true
+  },
+  "sampling": {
+    "edit_format": "unified_diff",
+    "grade_all_attempts_after_rollouts_complete": true,
+    "grader_feedback_during_sampling": false,
+    "group_size": 4,
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 2,
+    "max_total_new_tokens_per_attempt": 4096,
+    "max_turns_per_attempt": 12,
+    "max_wall_seconds_per_attempt": 900,
+    "min_p": 0.0,
+    "seeds": [
+      202611031,
+      202611032,
+      202611033,
+      202611034
+    ],
+    "temperature": 1.0,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "schema_version": 1,
+  "status": "NO_GO_TASK_CONSUMED_GRADER_INVALID",
+  "stopping_rule": "Terminal NO_GO: task identity was consumed before the grader isolation correction. Do not grade or calibrate historical candidates, and do not start another model run for this task.",
+  "supersedes": {
+    "experiment_id": "mlxlm-moe-routing-train-signal-pilot-v14",
+    "prior_outcomes_or_model_exposure": "Four v14 attempts occurred: two had no usable source diff; two had source diffs and were historically marked TEST_FAIL by the invalid pytest-based grader. Zero independent valid grades, zero optimizer updates, zero heldout results. Frozen raw evidence is retained.",
+    "protocol_sha256": "c413a6f3cede064d47df7e02ae663d8716e06d957dde6c6b7b619f2bee45115d",
+    "reason": "Append-only correction after post-exposure audit invalidated the v12 grader boundary. Records four exposed model-generated attempts and closes this task with NO_GO; no attempt is regraded under changed rules."
+  },
+  "task": {
+    "grader_protocol": "mlsys_repo_eval_v1/mlxlm_moe_routing_gradient/protocol.lock.json",
+    "grader_protocol_id": "mlxlm-moe-routing-gradient-independent-grader-v13",
+    "reward": "No valid reward can be assigned to the four historical attempts because the grader isolation boundary was invalid; this pilot records zero independent grades.",
+    "source_revision": "77c33b14373ac70d7abd6f82af15962852adadbb",
+    "split": "train",
+    "task_id": "mlxlm-moe-routing-backward-train-01",
+    "task_pack": "benchmarks/mlsys_repo_eval_v1/mlxlm_moe_routing_gradient",
+    "task_units": "one source task; no development or held-out claim"
+  },
+  "update": {
+    "checkpoint": "save adapter, optimizer state, RNG schedule, and verify reload identity before accepting the update",
+    "clip_eps_high": 0.2,
+    "clip_eps_low": 0.2,
+    "group_relative_advantages": true,
+    "grpo_temperature": 1.0,
+    "lora": {
+      "dropout": 0.0,
+      "num_layers": 8,
+      "rank": 8,
+      "scale": 20.0
+    },
+    "max_abs_log_ratio_tolerance": 0.001,
+    "max_grad_norm": 1.0,
+    "max_policy_lag": 0,
+    "max_updates": 1,
+    "minimum_informative_groups": 1,
+    "objective": "existing vare.grpo_mlx.train_step on the first-turn completions, grouped only when the exact prompt token sequences match",
+    "optimizer": {
+      "learning_rate": 1e-05,
+      "name": "mlx.optimizers.Adam"
+    },
+    "reward_assignment": "terminal independently graded outcome for the full coding trajectory",
+    "trainer_source_sha256": "98e6150c14c00ed95809a1f7ca5fc1ec8258aa858d75a30f63b8caa51d0ae0e1"
+  }
+}
