@@ -1,0 +1,70 @@
+{
+  "agent_source": {
+    "commit": "0c9b0fe01fb29d8182a8e2a1f97049c905d3f3f7",
+    "frozen_hashes_match": true,
+    "worktree_clean": true
+  },
+  "candidate": {
+    "base_commit": "0a13f794b2d4f474cfebb3be5b9c59420dc44aeb",
+    "tracked_files": [
+      "utils/tests_fetcher.py"
+    ],
+    "workspace_clean": true
+  },
+  "captured_at_utc": "2026-11-02T15:24:40Z",
+  "experiment_branch": {
+    "head": "dd8da2c2b5d42538b7a5c0cf77cb6229fcfe9292",
+    "remote_matches": true
+  },
+  "import_preflight_lease": {
+    "lease_id": "transformers-50219-agent-diagnostic-import-preflight-003",
+    "lease_sha256": "66d9d10a1c12c28dd4ad4cb6ac2a09e7f1547c61623ccd90cdeb7968871bda9b",
+    "released_after_import_probe": true
+  },
+  "main_sha": "85a0cfedcb602b9e1476d1bed8cf2210b59d728b",
+  "model_snapshot": {
+    "all_13_files_match_frozen_hashes": true,
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "preflight": {
+    "candidate_cwd_import_probe": "PASS; pinned MLX and Transformers imports, Metal device initialization, platform.platform(), and candidate-root Path(\"src\").resolve() all succeeded under the unchanged profile",
+    "generation_started": false,
+    "grader_source_read": "DENIED under the unchanged model profile",
+    "model_prompt_sent": false,
+    "network": "DENIED by profile",
+    "previous_attempts": "Both incomplete pre-generation failures are retained append-only; no task prompt was sent to model.",
+    "weights_loaded": false
+  },
+  "protocol": {
+    "addendum_path": "protocols/transformers_50219_agent_diagnostic_v1/protocol-addendum-2.json",
+    "addendum_sha256": "2ec8ee5b4072f813020a5a866a971de3362ca97d47b2b8d092e8428b61c497d5",
+    "base_commit": "f48f364f65becf2dc198b584caad049239c7057a",
+    "profile_sha256": "9942e5c41b944b0f9d9f346fcd82a411b2a456d8d18abcba61d22ea1dc08f385"
+  },
+  "resources": {
+    "active_heavy_model_processes": 0,
+    "disk_available_1k_blocks": 4357864,
+    "disk_available_bytes": 4462452736,
+    "memory_pressure_free_percent": 77,
+    "physical_memory_bytes": 34359738368,
+    "swap_free": "1462.50M",
+    "swap_total": "3072.00M",
+    "swap_used": "1609.50M"
+  },
+  "runtime": {
+    "device": "Apple M1 Pro / Metal",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "numpy": "2.5.4",
+    "python": "3.12.12",
+    "transformers": "5.22.1"
+  },
+  "schema_version": 1,
+  "status": "READY_FOR_ONE_BOUNDED_ATTEMPT",
+  "task": {
+    "eligibility": "NOT_ESTABLISHED",
+    "id": "transformers-50219-posix-paths-agent-diagnostic-003",
+    "split": "UNASSIGNED_DIAGNOSTIC_ONLY",
+    "task_json_sha256": "4f394510aa08141f318a0d1e18a20a5fd3b50eb2175e6618f163ba8b913a3b6d"
+  }
+}

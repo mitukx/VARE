@@ -1,0 +1,57 @@
+{
+  "addendum_id": "mlsys-fresh-transformers-50219-agent-diagnostic-v1-addendum-2",
+  "authorization": {
+    "attempt_id": "transformers-50219-posix-paths-agent-diagnostic-003",
+    "count": 1,
+    "maximum_process_tree_rss_bytes": 8589934592,
+    "maximum_wall_seconds": 600,
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "stop_on_any_failure": true
+  },
+  "boundary_changes": {
+    "all_other_task_model_runtime_and_token_budget_parameters": "unchanged",
+    "grader_access": "denied to the model; independent grader remains separately sandboxed",
+    "model_sandbox_profile": "unchanged; exact SHA-256 9942e5c41b944b0f9d9f346fcd82a411b2a456d8d18abcba61d22ea1dc08f385",
+    "network_access": "denied",
+    "working_directory": "the isolated candidate workspace root, which is already explicitly readable/writable by the model process"
+  },
+  "interpretation_limits": {
+    "at_most": "one model-generated edit and one independently graded single-task result if the attempt reaches generation and passes grading",
+    "does_not_establish": [
+      "task freshness or held-out eligibility",
+      "generalization",
+      "policy improvement",
+      "reinforcement learning",
+      "benchmark-level coding performance"
+    ],
+    "split": "UNASSIGNED_DIAGNOSTIC_ONLY",
+    "task_eligibility": "NOT_ESTABLISHED",
+    "training_or_optimizer_updates": 0
+  },
+  "preflight": {
+    "grader_read_denied": "PASS under the unchanged model profile",
+    "profile_sha256": "9942e5c41b944b0f9d9f346fcd82a411b2a456d8d18abcba61d22ea1dc08f385",
+    "snapshot_hashes": "All 13 pinned snapshot files rechecked against the frozen manifest and matched.",
+    "working_directory_boundary": "No sandbox permission was added; the CWD is an existing candidate-root allowlist.",
+    "working_directory_import_probe": "PASS: from the candidate workspace root, the pinned runtime imported mlx.core and mlx_lm.load, imported Transformers, initialized the Metal device, resolved Path(\"src\") under the candidate root, and called platform.platform(). It did not call load(), open model weights, read the task prompt into model messages, or generate tokens."
+  },
+  "previous_addendum_disposition": "Addendum 1 authorized exactly attempt 002 and its stop condition was honored. Attempt 003 is prospectively authorized in this separate append-only addendum after the pre-generation working-directory root cause was identified.",
+  "prior_attempts": {
+    "attempt_001": {
+      "model_prompt_sent": false,
+      "record": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/attempt-001-incomplete.json",
+      "record_sha256": "8982c89272556d4d5354963e7921fed6151922fb95c032f3cb9d7b79ff175383",
+      "weights_loaded": false
+    },
+    "attempt_002": {
+      "model_prompt_sent": false,
+      "record": "results/mlsys-fresh-transformers-50219-agent-diagnostic-v1/attempt-002-incomplete.json",
+      "record_sha256": "c8d7f7612d0081a69cb32b4ac6311adbfe15fd35147ccd170047cff90cd66c45",
+      "weights_loaded": false
+    }
+  },
+  "protocol_id": "mlsys-fresh-transformers-50219-agent-diagnostic-v1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_ATTEMPT_003_MODEL_INFERENCE",
+  "task_reuse_basis": "Neither earlier process sent the task prompt to the model, loaded model weights, generated tokens, or wrote an agent result. The task remains diagnostic-only, unassigned to a split, and not eligible for model-learning claims."
+}
