@@ -1,0 +1,58 @@
+{
+  "arm": "upstream-fixed",
+  "captured_at_utc": "2026-11-02T14:49:08.368949+00:00",
+  "elapsed_seconds": 0.04196366699999998,
+  "execution_error": null,
+  "independent_windows_path_behavior": [
+    {
+      "actual": [
+        "tests/repo_utils/test_alpha.py",
+        "tests/repo_utils/test_beta.py"
+      ],
+      "error": null,
+      "expected": [
+        "tests/repo_utils/test_alpha.py",
+        "tests/repo_utils/test_beta.py"
+      ],
+      "status": "PASS",
+      "test_id": "windows_posix_outputs.get_repo_utils_tests"
+    },
+    {
+      "actual": [
+        "tests/conftest_tests/test_alpha.py",
+        "tests/conftest_tests/test_beta.py"
+      ],
+      "error": null,
+      "expected": [
+        "tests/conftest_tests/test_alpha.py",
+        "tests/conftest_tests/test_beta.py"
+      ],
+      "status": "PASS",
+      "test_id": "windows_posix_outputs.get_conftest_tests"
+    }
+  ],
+  "limits": {
+    "cpu_seconds": 540,
+    "observed_peak_rss_bytes_max": 4294967296,
+    "rss_enforcement": "post-run measurement; no RLIMIT_AS, RLIMIT_RSS, or RLIMIT_DATA limit is claimed",
+    "wall_seconds": 600
+  },
+  "peak_rss_bytes": 23560192,
+  "resource_breach": false,
+  "runtime": {
+    "executable": "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "platform": "darwin",
+    "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]"
+  },
+  "schema_version": 1,
+  "source_sha256": "f2a7d2ea821befe5037a47f2e2b39cfb48c1b9a77739d6f333f15555eef9d579",
+  "task_id": "transformers-50219-tests-fetcher-posix-paths",
+  "trusted_test_selector": "TestFetcherTester.test_no_windows_path_patterns_in_fetcher",
+  "trusted_test_sha256": "d61b904a44f89da35578b4db22391c0e4e79aa18957617725b7f24f4326d87e1",
+  "upstream_regression": {
+    "error": null,
+    "status": "PASS",
+    "test_id": "test_no_windows_path_patterns_in_fetcher"
+  },
+  "workspace_source_path": "utils/tests_fetcher.py"
+}
