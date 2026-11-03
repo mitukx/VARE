@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "task_id": "transformers-mxfp4-target-dtype-train-01",
+  "split": "train",
+  "freeze_status": "FROZEN_BEFORE_FINAL_CPU_CONFIRMATION",
+  "freeze_time_utc": "2026-11-03T01:40:22Z",
+  "confirmation_run": "calibration-v1",
+  "prior_exploration_disclosure": {
+    "status": "EXPLORATORY_NOT_PREREGISTERED",
+    "description": "A prototype calibration and a report-forgery counterexample were run before this exact protocol was frozen. Their outputs are retained separately. This protocol is a frozen confirmation; it is not represented as a preregistered first observation.",
+    "exploratory_calibration_sha256": "8b668290f6ca436fe19deb2a32ec46293549ee9997f85dc063996a59d45e7c6d",
+    "exploratory_runner_sha256": "5e02e28b9c7ec35fc5aef043bea8026fdb3df7eb81545c960f69d695c63730d5",
+    "behavior_only_report_forgery_result": "The forged report passed behavior-only parent comparison under the prototype, then failed its restricted source contract. The final evaluator now rejects unsupported source forms before any worker launch."
+  },
+  "pre_freeze_sandbox_shakedown": {
+    "status": "PASS_ENGINEERING_SHAKEDOWN",
+    "profile_sha256": "86353b442fd0cc164611a2fd3be43e6aa76797bba46a8234dddfedfa20375c87",
+    "description": "A real Seatbelt probe confirmed allowed candidate-source read and scratch write; denied task protocol, grader, known-fix source, original checkout, installed Transformers source, candidate Git metadata, network, outside write, and unexpected process execution. The frozen confirmation repeats these checks."
+  },
+  "pre_freeze_workspace_shakedown": {
+    "status": "PASS_ENGINEERING_SHAKEDOWN",
+    "method": "Fetched the exact baseline SHA at depth 1 with blob filtering, then checked out only the editable source path and removed its remote.",
+    "baseline_revision": "b47ec788c4ea3051b207afd94281fb75594b0205",
+    "editable_source_sha256": "ec83a032b49ae7bbc7dce3de04b45dab2b715187e84b0806eeb3a73738780bb5",
+    "known_fix_commit_in_candidate_object_database": false,
+    "shallow": true,
+    "remotes": []
+  },
+  "hypothesis": "The baseline MXFP4 conversion does not preserve non-float32 destination parameter dtypes; the upstream correction and an independently written equivalent should preserve dtype, shape, and decoded FP4 values for both projection names.",
+  "source": {
+    "repository": "https://github.com/huggingface/transformers",
+    "baseline_revision": "b47ec788c4ea3051b207afd94281fb75594b0205",
+    "known_fix_revision": "676859711989dd9178fbbe8968e5a1f86d519712",
+    "target_path": "src/transformers/integrations/mxfp4.py",
+    "baseline_source_sha256": "ec83a032b49ae7bbc7dce3de04b45dab2b715187e84b0806eeb3a73738780bb5",
+    "known_fix_source_sha256": "9516b3eb647ad937c766109bfe1792aa936326414ec88787447f43a10c52271e",
+    "known_fix_test_sha256": "9453dd3059a42415717af2b9f4259145801599bddccf107b336b3f4277a1fa6a",
+    "license": "Apache-2.0",
+    "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049"
+  },
+  "candidate_task": {
+    "prompt_file": "TASK.md",
+    "editable_path_allowlist": [
+      "src/transformers/integrations/mxfp4.py"
+    ],
+    "solution_visibility": "The candidate workspace is a shallow sparse clone at the pinned baseline and contains the editable source file only. It has no remote or known-fix commit object. Known-fix source, the new regression test, hidden task data, evaluator, protocol, local evidence, and installed Transformers source are outside the candidate workspace and denied to the worker.",
+    "pretraining_exposure": "UNKNOWN"
+  },
+  "evaluator": {
+    "type": "restricted_patch_contract_with_independent_behavioral_checks",
+    "limitation": "Only five pre-reviewed AST forms (baseline, two correct forms, and two wrong mutants) are admitted to the worker. Other semantically correct source forms are false-rejected as SECURITY_FAIL. This is not a general repository-repair success metric.",
+    "oracle": "Parent-side pure-Python FP4 nibble/exponent decoder. Candidate source is parsed and copied as bytes but never imported in the privileged grader process.",
+    "worker_output": "Untrusted; nonce is correlation only. Parent validates exact schema, case identity, dtype, shape, and values against its independent reference. Unsupported source forms are rejected before execution.",
+    "case_matrix": {
+      "projection_names": ["gate_up_proj", "down_proj"],
+      "destination_dtypes": ["float32", "bfloat16", "float16", "float64"],
+      "case_count": 8,
+      "shape": [2, 96, 4],
+      "packed_bytes": "Seeded random uint8 nibbles",
+      "scales": "Seeded uint8 exponent bytes in [117, 129]"
+    },
+    "numeric_tolerance": {
+      "relative": 1e-6,
+      "absolute": 1e-6
+    },
+    "calibration_seed": 20261104
+  },
+  "calibration_arms": [
+    {"name": "baseline", "expected": "TEST_FAIL", "case_failures": 6},
+    {"name": "known_fix", "expected": "PASS", "case_passes": 8},
+    {"name": "alternate_correct", "expected": "PASS", "case_passes": 8},
+    {"name": "wrong_hardcoded_float32", "expected": "TEST_FAIL", "case_failures": 6},
+    {"name": "wrong_zero_values", "expected": "TEST_FAIL", "case_failures": 8},
+    {"name": "import_time_report_forgery", "expected": "SECURITY_FAIL", "worker_launches": 0}
+  ],
+  "runtime": {
+    "os": "macOS",
+    "architecture": "arm64",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "device": "CPU only; no Metal, CUDA, or model weights"
+  },
+  "sandbox": {
+    "mechanism": "/usr/bin/sandbox-exec with macOS Seatbelt deny-default profile",
+    "network": "DENY",
+    "process_fork": "DENY",
+    "process_exec": "Only the locked Python interpreter is allowlisted for worker startup; unexpected process-group members fail the grade and are killed.",
+    "read_denials": [
+      "candidate workspace and its .git metadata",
+      "task protocol, grader, and hidden calibration inputs",
+      "known-fix source and local source-selection evidence",
+      "protected original VARE checkout",
+      "installed transformers package and model cache"
+    ],
+    "write_allowlist": ["per-run scratch directory"],
+    "wall_seconds": 60,
+    "sampled_process_group_rss_bytes": 2147483648,
+    "combined_output_bytes": 1000000
+  },
+  "acceptance": {
+    "calibration_success": "All six arm statuses match the declared outcomes; all five worker runs exit 0, produce no unexpected process, remain within time/memory/output limits, and use the same runtime and Seatbelt boundary.",
+    "no_model_before_calibration": true,
+    "no_optimizer_update_authorized_by_this_cpu_calibration": true,
+    "status_vocabulary": ["PASS", "TEST_FAIL", "INFRASTRUCTURE_FAIL", "SECURITY_FAIL", "INDETERMINATE"]
+  },
+  "model_pilot": {
+    "authorization": "Only after calibration passes, runtime/model preflight passes, and the shared Metal lease is available.",
+    "maximum_initial_group": 4,
+    "maximum_optimizer_updates": 1,
+    "condition": "No model inference if MLX or the shared Metal lease is unavailable. No downloads or dependency installation."
+  },
+  "evidence_limit": "This protocol can establish source qualification and historical CPU grader calibration only. It does not establish model-generated coding success, valid reward groups, a policy update, or held-out improvement."
+}
