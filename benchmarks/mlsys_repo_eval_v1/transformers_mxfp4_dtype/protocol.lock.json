@@ -1,0 +1,78 @@
+{
+  "calibration": {
+    "combined_output_bytes": 1000000,
+    "expected_arm_statuses": {
+      "alternate_correct": "PASS",
+      "baseline": "TEST_FAIL",
+      "import_time_report_forgery": "SECURITY_FAIL",
+      "known_fix": "PASS",
+      "wrong_hardcoded_float32": "TEST_FAIL",
+      "wrong_zero_values": "TEST_FAIL"
+    },
+    "runner": "scripts/calibrate_transformers_mxfp4_dtype_grader.py",
+    "sampled_process_group_rss_bytes": 2147483648,
+    "seed": 20261104,
+    "wall_seconds": 60.0
+  },
+  "evaluator": {
+    "ast_runtime": "CPython 3.12.12",
+    "baseline_normalized_ast_sha256": "a55146e53e0911bc9893a1a96d83be31a9327461b7787f3d68780465a7f332d5",
+    "nonce_is_correlation_only": true,
+    "supported_target_ast_pairs": [
+      [
+        "1d304b931fce5f4534be6089182198067b37be473513fb2b268559e9f3b1fa41",
+        "d844a3ca84cf6fdb368ef7db11c42fe3028f0bef6c33a8fc624168ca9ea7ad70"
+      ],
+      [
+        "53d50c3fcba22b4c54fea3ae5a6751e7f7cea23b62494057e0d597b2623d2a13",
+        "f4067c181b37fe50ad095d72a94485f7396915e28dc33d4261093a3d0b13a543"
+      ],
+      [
+        "983778491b79a25737dbbcfb0fcbeb67a0d86917f5b47962c7285cf7ce0d1120",
+        "d844a3ca84cf6fdb368ef7db11c42fe3028f0bef6c33a8fc624168ca9ea7ad70"
+      ],
+      [
+        "ee28aa83b9102669201f9b04dc641184dda445e1353548e56732ca5d81563e10",
+        "5b5c12245bdfe3d871ac05c0079e51a2eb8e19122150d9d5b9e91f7d9080b657"
+      ],
+      [
+        "ee28aa83b9102669201f9b04dc641184dda445e1353548e56732ca5d81563e10",
+        "f4067c181b37fe50ad095d72a94485f7396915e28dc33d4261093a3d0b13a543"
+      ]
+    ],
+    "type": "restricted_patch_contract_with_independent_behavioral_checks",
+    "worker_output_authenticated": false
+  },
+  "files": {
+    "TASK.md": "ba163f7a96ddf89fcfbd52a93d3f0ef08ac95a1525231e523fd0193925ed7859",
+    "baseline_input.py": "ec83a032b49ae7bbc7dce3de04b45dab2b715187e84b0806eeb3a73738780bb5",
+    "calibration_runner.py": "f6804289fb8b39bcfe16bc7e05a172089f9c87e15deeb0fa010fc37c714ff8d4",
+    "candidate_worker.py": "a15326fb2b34ec3203d7ad6cdc3859c655f9c23313f5262ceb7b2805945bc781",
+    "grade.py": "3a392e2f40cc01dd841c7e65ac7322ca9bb35d4e38ff6de6184eda4f0333fe5e",
+    "known_fix_input.py": "9516b3eb647ad937c766109bfe1792aa936326414ec88787447f43a10c52271e",
+    "protocol.json": "10a60853d507b5f27c425009d8127e019d40d66dbdd3fc4a7893abe67e40d3a9",
+    "qualification.json": "151b76705e18d2be2a287642eb493c2f51391a780d9a59fca76279c9396eb831",
+    "report_forgery_fixture.py": "b9ed3e5295fa023be7087e8dc34c2972d83a73f9c4aadb2200f9e28297356016",
+    "task.json": "dce5ae5f31224f20a2981d9f573d6cebf94ae0fa993f59a3fe336c57521cfe33",
+    "task_test.py": "579bfbb3f78763767bf642589b0f49ad64cba9517bcfec2eabe57af405f29fbb",
+    "workspace_preparer.py": "bacbad53d7a9df60208e61bb222d7d432961dac8b1c1f8fc2fa1e59f8ffc0d80"
+  },
+  "frozen_at_utc": "2026-11-03T01:40:22Z",
+  "qualification": {
+    "exposure_audit_sha256": "b5c4c36dceaabc9addfc47aafc0ef8b5f75f0e6126d469f7dfa27268235a4c86",
+    "pretraining_exposure": "UNKNOWN",
+    "source_selection_protocol_sha256": "c2cf1ec76beb21b3f80966d233d2a932759e118ad2b8f0f6de9f931007162624"
+  },
+  "schema_version": 1,
+  "source": {
+    "baseline_revision": "b47ec788c4ea3051b207afd94281fb75594b0205",
+    "baseline_source_sha256": "ec83a032b49ae7bbc7dce3de04b45dab2b715187e84b0806eeb3a73738780bb5",
+    "known_fix_revision": "676859711989dd9178fbbe8968e5a1f86d519712",
+    "known_fix_source_sha256": "9516b3eb647ad937c766109bfe1792aa936326414ec88787447f43a10c52271e",
+    "known_fix_test_sha256": "9453dd3059a42415717af2b9f4259145801599bddccf107b336b3f4277a1fa6a",
+    "license": "Apache-2.0",
+    "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+    "repository": "huggingface/transformers"
+  },
+  "task_id": "transformers-mxfp4-target-dtype-train-01"
+}

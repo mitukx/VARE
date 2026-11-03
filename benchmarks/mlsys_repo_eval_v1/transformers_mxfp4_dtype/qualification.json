@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "transformers-mxfp4-target-dtype-train-01",
+  "selection_protocol": {
+    "sha256": "c2cf1ec76beb21b3f80966d233d2a932759e118ad2b8f0f6de9f931007162624",
+    "addendum_sha256": "8f4ac767c0370e366359fc1a97141d2949956ea155ea127a3b1241a824cd1d78",
+    "source_exposure_manifest_sha256": "245cd76898bc00115000e52afbca84b3264559827c6e8cf6f07fc13292ddf18c",
+    "candidate_inventory_sha256": "cfd9e454320499b3ee2405546fda6a4031e1a9fce1862df1f3daa6f97ab640f9",
+    "ranked_screen_sha256": "4e327ec6b5cf3b2c86bfb4ce74e4fadb1d5e687dd992051ec0cd51a4047eee76",
+    "exposure_audit_sha256": "b5c4c36dceaabc9addfc47aafc0ef8b5f75f0e6126d469f7dfa27268235a4c86"
+  },
+  "selection": {
+    "rank": 2,
+    "candidate": "huggingface/transformers#50256",
+    "title": "Dequantize MXFP4 experts to the requested dtype",
+    "merge_revision": "676859711989dd9178fbbe8968e5a1f86d519712",
+    "actual_merge_parent_baseline": "b47ec788c4ea3051b207afd94281fb75594b0205",
+    "metadata_snapshot_base_was_stale": true,
+    "comparison_result": "One upstream commit; two changed files: source and regression test.",
+    "license": "Apache-2.0",
+    "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049"
+  },
+  "overlap_audit": {
+    "frozen_source_records_checked": 58,
+    "direct_candidate_identity_matches": 0,
+    "mxfp4_or_dequantization_family_matches": 0,
+    "previous_transformers_task": "Transformers#45852 tokenization utility; different file and repair family.",
+    "consumed_moe_task_overlap": "The earlier MLX-LM router-gradient task shares broad MoE terminology only; it is a different repository, file, and repair behavior.",
+    "pretraining_exposure": "UNKNOWN"
+  },
+  "screening": {
+    "rank_1_rejected": "vllm-project/vllm#65178 was a GPU/CuTeDSL distributed DCP change and outside the bounded local CPU evaluator.",
+    "candidate_visible_solution": "The candidate workspace is a shallow sparse checkout containing the target source file only. It has no remote and no known-fix commit object. The known-fix revision, newly added regression test, hidden reference, protocol, evaluator, and grading outputs are outside that checkout and denied to the worker."
+  },
+  "qualification_status": "SOURCE_QUALIFIED_PENDING_FROZEN_CPU_CONFIRMATION"
+}
