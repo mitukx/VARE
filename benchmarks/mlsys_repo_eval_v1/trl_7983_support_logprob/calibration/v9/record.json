@@ -1,0 +1,252 @@
+{
+  "aggregate_arm_wall_seconds": 14.619865,
+  "challenge": {
+    "case_names": [
+      "excluded_global_max",
+      "support_max_rises_across_chunk"
+    ],
+    "seed": 4063986546,
+    "sha256": "651b05235dee9de5e559676a21923bf1608b0d193f586cc65aad21160fef0e50"
+  },
+  "max_sampled_process_tree_rss_bytes": 212697088,
+  "model_or_agent_run": false,
+  "optimizer_update": false,
+  "path_redaction": "This public projection omits host-specific absolute run paths; the local as-run records remain unchanged.",
+  "production_entry_rejections": {
+    "behaviorally_equivalent_alternate": {
+      "behavior_arm_status": "PASS",
+      "production_gate_status": "TEST_FAIL",
+      "rejected_before_worker": true,
+      "worker_started": false
+    },
+    "incorrect_report_forger": {
+      "production_gate_status": "TEST_FAIL",
+      "rejected_before_worker": true,
+      "worker_started": false
+    }
+  },
+  "protocol_id": "trl-7983-source-contract-three-arm-v9",
+  "raw_evidence_hashes": {
+    "frozen_protocol_sha256": "8940ad6cdd324bbcef401e048a7f622f25205382265e1f9abdcc713d62cf9636",
+    "local_bundle_id": "trl-7983-source-qualification-v9",
+    "raw_results_sha256sums_sha256": "fb90b2632fd8bb4d1c3af6022f52111f5ed00d67a4f3ea4de002d17709b3268b",
+    "raw_summary_sha256": "c2c46e286e8782bc28ef8e49c1548e00c59bcc650984ec243bcf24a4c0acf4cd",
+    "task_protocol_lock_snapshot_sha256": "aab8272062b16887bd3cf3cb3722a86986f3f08df82dc9d613cf7b2b0c639086"
+  },
+  "record_scope": "fixed-source CPU calibration; not a model or agent success result",
+  "runtime": {
+    "device": "CPU",
+    "mlx_or_metal": false,
+    "package_installation": false,
+    "python_sha256": "295b2fd03b2b05f12b6f4887d70dbf43e5358173f8eec0909c121c9bdec2756f",
+    "python_version": "3.9.6",
+    "related_installed_artifacts": {
+      "mlx_lm": "NOT_INSTALLED",
+      "trl": "NOT_INSTALLED"
+    },
+    "threads": 1,
+    "torch_version": "2.8.0"
+  },
+  "sandbox_assurance": {
+    "mismatches": {},
+    "observed": {
+      "candidate_source": "ALLOW",
+      "candidate_workspace_grader": "DENY",
+      "child_process": "DENY",
+      "git_metadata": "DENY",
+      "network": "DENY",
+      "original_dirty_checkout": "DENY",
+      "outside_write": "DENY",
+      "pinned_upstream_fix": "DENY",
+      "prior_hidden_reference": "DENY",
+      "runtime_import": "ALLOW",
+      "scratch_write": "ALLOW",
+      "trusted_pr_grader": "DENY"
+    },
+    "status": "PASS"
+  },
+  "schema": "vare.trl-source-calibration-record.v1",
+  "source_arms": {
+    "alternate_masked_fill": {
+      "case_results": [
+        {
+          "case": "excluded_global_max",
+          "gradient_ok": true,
+          "pass": true,
+          "value_ok": true
+        },
+        {
+          "case": "support_max_rises_across_chunk",
+          "gradient_ok": true,
+          "pass": true,
+          "value_ok": true
+        }
+      ],
+      "elapsed_seconds": 2.085364,
+      "expected_status": "PASS",
+      "observed_status": "PASS",
+      "sampled_peak_process_tree_rss_bytes": 204161024,
+      "source_sha256": "e102189de9a2055e088bfa9604ca84b693fca183c0756f5dae8d278fb5ae2419",
+      "status_match": true,
+      "worker_returncode": 0
+    },
+    "baseline": {
+      "case_results": [
+        {
+          "case": "excluded_global_max",
+          "gradient_ok": false,
+          "pass": false,
+          "value_ok": false
+        },
+        {
+          "case": "support_max_rises_across_chunk",
+          "gradient_ok": true,
+          "pass": true,
+          "value_ok": true
+        }
+      ],
+      "elapsed_seconds": 2.087135,
+      "expected_status": "TEST_FAIL",
+      "observed_status": "TEST_FAIL",
+      "sampled_peak_process_tree_rss_bytes": 212697088,
+      "source_sha256": "94406ca26854f77a71f45ca98c370ce76525c67fcb2f153951f723cc2a66dac8",
+      "status_match": true,
+      "worker_returncode": 0
+    },
+    "known_fix": {
+      "case_results": [
+        {
+          "case": "excluded_global_max",
+          "gradient_ok": true,
+          "pass": true,
+          "value_ok": true
+        },
+        {
+          "case": "support_max_rises_across_chunk",
+          "gradient_ok": true,
+          "pass": true,
+          "value_ok": true
+        }
+      ],
+      "elapsed_seconds": 2.085784,
+      "expected_status": "PASS",
+      "observed_status": "PASS",
+      "sampled_peak_process_tree_rss_bytes": 211435520,
+      "source_sha256": "7f4d852ada631d784b29e77e4289a19d32dbe6e042f72fe52426fdc3853b932e",
+      "status_match": true,
+      "worker_returncode": 0
+    },
+    "mutant_includes_target_in_other_mass": {
+      "case_results": [
+        {
+          "case": "excluded_global_max",
+          "gradient_ok": false,
+          "pass": false,
+          "value_ok": false
+        },
+        {
+          "case": "support_max_rises_across_chunk",
+          "gradient_ok": false,
+          "pass": false,
+          "value_ok": false
+        }
+      ],
+      "elapsed_seconds": 2.081898,
+      "expected_status": "TEST_FAIL",
+      "observed_status": "TEST_FAIL",
+      "sampled_peak_process_tree_rss_bytes": 202997760,
+      "source_sha256": "32748481a05399f411ff6cb0066f6f92fa6fa3fb7eea6222d8f1c40cb5f9dcd6",
+      "status_match": true,
+      "worker_returncode": 0
+    },
+    "mutant_missing_support_rescale": {
+      "case_results": [
+        {
+          "case": "excluded_global_max",
+          "gradient_ok": true,
+          "pass": true,
+          "value_ok": true
+        },
+        {
+          "case": "support_max_rises_across_chunk",
+          "gradient_ok": false,
+          "pass": false,
+          "value_ok": true
+        }
+      ],
+      "elapsed_seconds": 2.090043,
+      "expected_status": "TEST_FAIL",
+      "observed_status": "TEST_FAIL",
+      "sampled_peak_process_tree_rss_bytes": 212418560,
+      "source_sha256": "baa7f2d1ac337756738df4dc6f6971aedc745a98f927306d22357efd13dfe9eb",
+      "status_match": true,
+      "worker_returncode": 0
+    },
+    "mutant_uses_full_vocabulary_max": {
+      "case_results": [
+        {
+          "case": "excluded_global_max",
+          "gradient_ok": false,
+          "pass": false,
+          "value_ok": false
+        },
+        {
+          "case": "support_max_rises_across_chunk",
+          "gradient_ok": true,
+          "pass": true,
+          "value_ok": true
+        }
+      ],
+      "elapsed_seconds": 2.092764,
+      "expected_status": "TEST_FAIL",
+      "observed_status": "TEST_FAIL",
+      "sampled_peak_process_tree_rss_bytes": 210124800,
+      "source_sha256": "d7dfadbaf69ead327fcba2923c7866988b16a3c740dd8df2719b07c36593961a",
+      "status_match": true,
+      "worker_returncode": 0
+    },
+    "wrong_mutant": {
+      "case_results": [
+        {
+          "case": "excluded_global_max",
+          "gradient_ok": true,
+          "pass": true,
+          "value_ok": true
+        },
+        {
+          "case": "support_max_rises_across_chunk",
+          "gradient_ok": false,
+          "pass": false,
+          "value_ok": false
+        }
+      ],
+      "elapsed_seconds": 2.096877,
+      "expected_status": "TEST_FAIL",
+      "observed_status": "TEST_FAIL",
+      "sampled_peak_process_tree_rss_bytes": 210681856,
+      "source_sha256": "71773d0b25ec3098c72e49ad2e7a04d62390551cd3eeea228be4836baa0af7b0",
+      "status_match": true,
+      "worker_returncode": 0
+    }
+  },
+  "status": "PASS_SOURCE_QUALIFICATION_ONLY",
+  "task": {
+    "base_source_sha256": "94406ca26854f77a71f45ca98c370ce76525c67fcb2f153951f723cc2a66dac8",
+    "baseline_revision": "514970af3b839ae20549be47851376d416236e8a",
+    "id": "trl-7983-support-constrained-logprob-source-qualification-v1",
+    "known_fix_ast_sha256_canonical_v1": "12adfb24b211ed808b88e52e7bb1b037cb1f3bbc79515b2ec5a3e2c7d83c96b8",
+    "known_fix_revision": "eed00a53d3a0752c714b00f2fad4de5f10ce0848",
+    "known_fix_source_sha256": "7f4d852ada631d784b29e77e4289a19d32dbe6e042f72fe52426fdc3853b932e",
+    "license": "Apache-2.0",
+    "source_path": "trl/kernels/chunked_logprob.py",
+    "upstream_pull_request": 7983,
+    "upstream_repository": "huggingface/trl"
+  },
+  "trust_limits": {
+    "candidate_level_train_eligibility": "NOT_ESTABLISHED",
+    "grader_class": "restricted_patch_contract",
+    "pretraining_exposure": "UNKNOWN",
+    "semantically_equivalent_source_false_reject_demonstrated": true,
+    "worker_report_authenticated": false
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "behavioral_contract": {
+    "properties": [
+      "support log-probability and analytical gradient match an independent parent oracle when an excluded global maximum dominates",
+      "support accumulator rescales correctly when the support maximum rises across a chunk"
+    ],
+    "required_arms": {
+      "baseline": "TEST_FAIL",
+      "forged_worker_report": "REJECT_BEFORE_EXECUTION",
+      "known_fix": "PASS",
+      "wrong_mutant": "TEST_FAIL"
+    },
+    "tolerances": {
+      "gradient_atol": 1e-09,
+      "gradient_rtol": 0.0001,
+      "value_atol": 1e-08,
+      "value_rtol": 1e-05
+    }
+  },
+  "calibration_history": {
+    "trl-7983-source-contract-three-arm-v7": {
+      "baseline_raw_values": "non-finite gradient under excluded-global-maximum case",
+      "baseline_raw_worker_status": "EXECUTED",
+      "completed_arms": [
+        "sandbox_assurance",
+        "baseline"
+      ],
+      "grader_classification": "INFRASTRUCTURE_FAIL (incorrect; corrected in current source)",
+      "model_or_agent_run": false,
+      "protocol_sha256": "d61128fa27aa372577ffc6a1bac9ee0eea93a87824b691c8032a9bb597fdf507",
+      "status": "NO_GO",
+      "stop_rule": "stopped before known-fix arm after first unexpected outcome",
+      "summary_sha256": "e7fef46e6c9ba04ba89beb3c67d236a76776029fed02d6dd55fc55cb605b593c"
+    },
+    "trl-7983-source-contract-three-arm-v8": {
+      "baseline_status": "TEST_FAIL",
+      "completed_stages": [
+        "sandbox_assurance",
+        "baseline"
+      ],
+      "model_or_agent_run": false,
+      "protocol_sha256": "b95e5451aa25ce13bde104a4b4a831c7a8a90b7e795908bd93f170876881bb82",
+      "results_sums_sha256": "d5c19d946d2f0aee543cec44314d7f6412b599a40bf57d35215cfa381988a0ff",
+      "status": "NO_GO",
+      "stop_reason": "known-fix AST preflight differed across Python 3.9 and 3.12 because ast.dump serialization included the added empty type_params field",
+      "summary_sha256": "84566148ce3e200cad36ba5ee2bf6839148a66aadf6986dba57863e5cc0cc487"
+    },
+    "trl-7983-source-contract-three-arm-v9": {
+      "alternate_equivalent_form": "behaviorally_PASS_but_production_gate_rejected_before_worker",
+      "closure_sha256": "76c2115d925dabc6fdc2fb8884f72c3dc59f2b1d0464bbf34c75ccafb9139104",
+      "completed_stages": [
+        "sandbox_assurance",
+        "baseline",
+        "known_fix",
+        "wrong_mutant",
+        "alternate_masked_fill",
+        "three_additional_wrong_mutants",
+        "production_source_gate_rejections"
+      ],
+      "model_or_agent_run": false,
+      "observed_arm_statuses": {
+        "alternate_masked_fill": "PASS",
+        "baseline": "TEST_FAIL",
+        "known_fix": "PASS",
+        "mutant_includes_target_in_other_mass": "TEST_FAIL",
+        "mutant_missing_support_rescale": "TEST_FAIL",
+        "mutant_uses_full_vocabulary_max": "TEST_FAIL",
+        "wrong_mutant": "TEST_FAIL"
+      },
+      "optimizer_update": false,
+      "protocol_sha256": "8940ad6cdd324bbcef401e048a7f622f25205382265e1f9abdcc713d62cf9636",
+      "public_record_path": "calibration/v9/record.json",
+      "public_record_sha256": "f234878beac9d2b1045fb6b59dc04166313b2c1664d02a8199855d0f0055025d",
+      "report_forger": "rejected_before_worker",
+      "results_sums_sha256": "fb90b2632fd8bb4d1c3af6022f52111f5ed00d67a4f3ea4de002d17709b3268b",
+      "sandbox_assurance": "PASS",
+      "status": "PASS_SOURCE_QUALIFICATION_ONLY",
+      "summary_sha256": "c2c46e286e8782bc28ef8e49c1548e00c59bcc650984ec243bcf24a4c0acf4cd",
+      "task_protocol_lock_snapshot_sha256": "aab8272062b16887bd3cf3cb3722a86986f3f08df82dc9d613cf7b2b0c639086",
+      "train_eligibility": "NOT_ESTABLISHED",
+      "worker_report_authenticated": false
+    }
+  },
+  "decision_boundary": {
+    "model_or_agent_run_authorized": false,
+    "next_gate": "Obtain a candidate-specific privacy-filtered Train eligibility receipt and qualify a behaviorally general grader that accepts equivalent correct source forms while rejecting forged results.",
+    "optimizer_update_authorized": false,
+    "train_allocation_authorized": false
+  },
+  "exposure": {
+    "candidate_level_train_eligibility": "NOT_ESTABLISHED",
+    "heldout_identifiers_opened": false,
+    "model_or_agent_attempts": 0,
+    "pretraining_exposure": "UNKNOWN",
+    "prior_use_receipt": "CLEAR_FOR_SOURCE_QUALIFICATION_ONLY"
+  },
+  "grader": {
+    "ast_digest_algorithm": "canonical_ast_v1: ordered AST node/field tree; parser locations omitted; empty type_params omitted for Python 3.9/3.12 compatibility; nonempty type_params retained",
+    "contract_class": "restricted_patch_contract",
+    "false_reject_limit": "Semantically equivalent source forms outside the pinned AST are rejected by design.",
+    "security_finding": "V7 real Seatbelt probes denied tested hidden source/reference/Git paths, outside writes, network, and child processes. V7 stopped when non-finite candidate values were incorrectly classified as INFRASTRUCTURE_FAIL; V8 verified the classification fix and baseline TEST_FAIL, then stopped before the known-fix arm because ast.dump hashes differed between Python 3.9 and 3.12. Both failures are preserved as NO_GO evidence. V9 source-only calibration passed all seven behavior arms and the tested Seatbelt allow/deny probes; a semantically equivalent alternate passed the behavioral oracle but was intentionally rejected by the restricted production gate, and the report-forger source was rejected before worker launch. This remains non-Train evidence with an unauthenticated worker report.",
+    "source_check": "Parse candidate source without importing it; compare canonical_ast_v1 to the pinned known-fix AST digest.",
+    "source_sha256": {
+      "candidate_worker.py": "9ad2df12834782ba5c32f78d52e022d86bfc145c18e6f6362df9b3b921083a35",
+      "grade.py": "aacca637b3a65bd1723f312d09337a91a0f2458a929b1ad53dcb343a1d9a891d",
+      "runner.py": "88c2136804201c8f3ebe5d7d47484fde7f101d5aaa90155e17ab49135b3b8ae9",
+      "source_contract.py": "25f9deccead1bfc149a7a6132054c21f5ace0d7cd65070434e74b1f83427c19a"
+    },
+    "trust_basis": "The accepted source AST is pinned to the reviewed known-fix implementation and the parent checks numeric outputs against an analytical oracle; worker output remains unauthenticated.",
+    "worker_execution": "Only a source passing the restricted contract may reach the behavior worker.",
+    "worker_report_authenticated": false
+  },
+  "protocol_id": "trl-7983-support-constrained-logprob-source-contract-v1",
+  "resource_limits": {
+    "output_bytes": 1048576,
+    "process_tree_rss_bytes": 2684354560,
+    "retries_or_tolerance_changes": false,
+    "stop_after_first_infrastructure_or_security_failure": true,
+    "wall_seconds_per_arm": 600
+  },
+  "runtime": {
+    "device": "CPU",
+    "mlx_or_metal": false,
+    "network": "DENY",
+    "package_installation": false,
+    "python": "3.9.6",
+    "threads": 1,
+    "torch": "2.8.0"
+  },
+  "schema": "vare.mlsys-repository-task.protocol.v1",
+  "source": {
+    "ast_digest_algorithm": "canonical_ast_v1: ordered AST node/field tree; parser locations omitted; empty type_params omitted for Python 3.9/3.12 compatibility; nonempty type_params retained",
+    "base_revision": "514970af3b839ae20549be47851376d416236e8a",
+    "base_source_sha256": "94406ca26854f77a71f45ca98c370ce76525c67fcb2f153951f723cc2a66dac8",
+    "known_fix_ast_sha256_canonical_v1": "12adfb24b211ed808b88e52e7bb1b037cb1f3bbc79515b2ec5a3e2c7d83c96b8",
+    "known_fix_revision": "eed00a53d3a0752c714b00f2fad4de5f10ce0848",
+    "known_fix_source_sha256": "7f4d852ada631d784b29e77e4289a19d32dbe6e042f72fe52426fdc3853b932e",
+    "license": "Apache-2.0",
+    "pull_request": 7983,
+    "repository": "huggingface/trl",
+    "source_path": "trl/kernels/chunked_logprob.py"
+  },
+  "status": "SOURCE_QUALIFICATION_ONLY_NO_TRAIN_ALLOCATION",
+  "task_definition_sha256": "d2e85fb7c3e8fc662ea3f17b3e7bbd032fc9e965d300953527289a1ec85e3851",
+  "task_id": "trl-7983-support-constrained-logprob-source-qualification-v1"
+}

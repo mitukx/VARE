@@ -1,0 +1,30 @@
+{
+  "task_id": "trl-7983-support-constrained-logprob-source-qualification-v1",
+  "title": "Stabilize support-constrained chunked log-probabilities",
+  "task_type": "historical_source_repair",
+  "task_family": "support_constrained_logprob_gradient_numerics",
+  "source": {
+    "repository": "huggingface/trl",
+    "pull_request": 7983,
+    "base_revision": "514970af3b839ae20549be47851376d416236e8a",
+    "known_fix_revision": "eed00a53d3a0752c714b00f2fad4de5f10ce0848",
+    "editable_file": "trl/kernels/chunked_logprob.py",
+    "license": "Apache-2.0"
+  },
+  "allocation": {
+    "status": "SOURCE_QUALIFICATION_ONLY",
+    "train_eligible": false,
+    "development_eligible": false,
+    "heldout_eligible": false,
+    "pretraining_exposure": "UNKNOWN"
+  },
+  "evaluation": {
+    "contract": "restricted_patch_contract",
+    "behavioral_properties": [
+      "support log-probability and analytical gradient remain correct when an excluded global maximum dominates",
+      "support maximum rescaling remains correct when the support maximum rises across a chunk"
+    ],
+    "alternate_equivalent_source_forms_may_be_rejected": true,
+    "worker_report_authenticated": false
+  }
+}
