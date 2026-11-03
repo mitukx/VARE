@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 from pathlib import Path
 import subprocess
+import sys
 
 import pytest
 
@@ -34,6 +35,10 @@ def test_frozen_protocol_hashes_match_all_task_files() -> None:
     ).hexdigest()
 
 
+@pytest.mark.skipif(
+    sys.version_info[:2] != (3, 12),
+    reason="restricted AST digests are frozen against the task's CPython 3.12 runtime",
+)
 def test_locked_source_forms_include_baseline_both_fixes_and_wrong_mutants() -> None:
     baseline = (TASK_ROOT / "calibration_inputs/mxfp4.py.baseline").read_bytes()
     known_fix = (TASK_ROOT / "calibration_inputs/mxfp4.py.known_fix").read_bytes()

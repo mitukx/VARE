@@ -1,0 +1,224 @@
+{
+  "amendment": {
+    "change": "Skip only the AST-digest source-form assertion outside Python 3.12. The grader, frozen patch forms, behavioral oracle, task, and acceptance thresholds are unchanged.",
+    "local_python311_pytest": "Unavailable; pytest is not installed for local Python 3.11. The direct Python 3.11 contract check was not considered a pytest run; the Python 3.11 CI matrix is the decisive suite check.",
+    "prior_calibration_v1_lock_sha256": "5e93af126d23490965f8ff8dc5389c254436e341fbfe00e685c84f8f75c7f7e1",
+    "reason": "The first PR CI run executed CPython 3.12-pinned AST-form assertions under Python 3.11, whose AST fingerprint differs; the runtime guard already rejects non-pinned grader execution.",
+    "superseded_ast_normalization_trial_raw_sha256": "9be80136af8c370509f0a38287e803ecc405f9e0c7f0bdd58a752c2ff157d91a",
+    "superseded_trial_reason": "A temporary AST canonicalization attempt omitted type_params and could widen acceptance for CPython 3.12 syntax; it was discarded, retained locally, and is not used by this grader."
+  },
+  "arms": {
+    "alternate_correct": {
+      "case_count": 8,
+      "elapsed_seconds": 0.912,
+      "expected_status": "PASS",
+      "failed_cases": 0,
+      "output_limit_exceeded": false,
+      "passed_cases": 8,
+      "peak_process_tree_rss_bytes": 205357056,
+      "rss_limit_exceeded": false,
+      "source_sha256": "0247bd6a6030534f3f6eb0b0f7000c03d2d97e49382e82c85d4c0d6b537e8171",
+      "status": "PASS",
+      "timed_out": false,
+      "unexpected_process_count": 0,
+      "worker_launches": 1,
+      "worker_output_sha256": "74430021bcbb7321bd0042b3b785b1b9b4eae5f79d1a8f75c582668f62ed813e",
+      "worker_report_authenticated": false,
+      "worker_returncode": 0
+    },
+    "baseline": {
+      "case_count": 8,
+      "elapsed_seconds": 1.643,
+      "expected_status": "TEST_FAIL",
+      "failed_cases": 6,
+      "output_limit_exceeded": false,
+      "passed_cases": 2,
+      "peak_process_tree_rss_bytes": 207273984,
+      "rss_limit_exceeded": false,
+      "source_sha256": "ec83a032b49ae7bbc7dce3de04b45dab2b715187e84b0806eeb3a73738780bb5",
+      "status": "TEST_FAIL",
+      "timed_out": false,
+      "unexpected_process_count": 0,
+      "worker_launches": 1,
+      "worker_output_sha256": "42fa4a938e73134331b3ff70cb9641a5f2365b1c8cd742d19fecdc57eaa326b0",
+      "worker_report_authenticated": false,
+      "worker_returncode": 0
+    },
+    "import_time_report_forgery": {
+      "case_count": 0,
+      "elapsed_seconds": null,
+      "expected_status": "SECURITY_FAIL",
+      "failed_cases": 0,
+      "output_limit_exceeded": false,
+      "passed_cases": 0,
+      "peak_process_tree_rss_bytes": null,
+      "rss_limit_exceeded": false,
+      "source_sha256": "b9ed3e5295fa023be7087e8dc34c2972d83a73f9c4aadb2200f9e28297356016",
+      "status": "SECURITY_FAIL",
+      "timed_out": false,
+      "unexpected_process_count": 0,
+      "worker_launches": 0,
+      "worker_output_sha256": null,
+      "worker_report_authenticated": false,
+      "worker_returncode": null
+    },
+    "known_fix": {
+      "case_count": 8,
+      "elapsed_seconds": 0.905,
+      "expected_status": "PASS",
+      "failed_cases": 0,
+      "output_limit_exceeded": false,
+      "passed_cases": 8,
+      "peak_process_tree_rss_bytes": 206962688,
+      "rss_limit_exceeded": false,
+      "source_sha256": "9516b3eb647ad937c766109bfe1792aa936326414ec88787447f43a10c52271e",
+      "status": "PASS",
+      "timed_out": false,
+      "unexpected_process_count": 0,
+      "worker_launches": 1,
+      "worker_output_sha256": "865ed06def41865b3eda1b0de1489ee779f22f5a59dd7a779127c48665c01f6e",
+      "worker_report_authenticated": false,
+      "worker_returncode": 0
+    },
+    "wrong_hardcoded_float32": {
+      "case_count": 8,
+      "elapsed_seconds": 0.899,
+      "expected_status": "TEST_FAIL",
+      "failed_cases": 6,
+      "output_limit_exceeded": false,
+      "passed_cases": 2,
+      "peak_process_tree_rss_bytes": 206192640,
+      "rss_limit_exceeded": false,
+      "source_sha256": "2641a3e514b6d5577806302f3f4da260e3359f203957b9db58b3517ed661fc74",
+      "status": "TEST_FAIL",
+      "timed_out": false,
+      "unexpected_process_count": 0,
+      "worker_launches": 1,
+      "worker_output_sha256": "bc3748da254722e86e76835d6651acb1da31c9f2b1967ab2761100042c05b3fb",
+      "worker_report_authenticated": false,
+      "worker_returncode": 0
+    },
+    "wrong_zero_values": {
+      "case_count": 8,
+      "elapsed_seconds": 0.901,
+      "expected_status": "TEST_FAIL",
+      "failed_cases": 8,
+      "output_limit_exceeded": false,
+      "passed_cases": 0,
+      "peak_process_tree_rss_bytes": 203882496,
+      "rss_limit_exceeded": false,
+      "source_sha256": "7979bf17de5adc88545a6d5415450eba152278060bee18429ba56cb54d5bd03d",
+      "status": "TEST_FAIL",
+      "timed_out": false,
+      "unexpected_process_count": 0,
+      "worker_launches": 1,
+      "worker_output_sha256": "93ae77e6d0b3dde1ee6076e7b72ba3d542b53381fc51a9669dc5cb89e54adc63",
+      "worker_report_authenticated": false,
+      "worker_returncode": 0
+    }
+  },
+  "calibration_run": "calibration-v3-python-matrix-test-harness-reconfirmation",
+  "calibration_seed": 20261104,
+  "calibration_status": "PASS",
+  "candidate_workspace": {
+    "baseline_revision": "b47ec788c4ea3051b207afd94281fb75594b0205",
+    "baseline_source_sha256": "ec83a032b49ae7bbc7dce3de04b45dab2b715187e84b0806eeb3a73738780bb5",
+    "known_fix_commit_present": false,
+    "known_fix_source_blob_present": false,
+    "remotes": "",
+    "shallow": "true"
+  },
+  "checks": {
+    "all_worker_processes_valid": true,
+    "case_counts_match": true,
+    "outcomes_match": true,
+    "real_seatbelt_probe_passed": true,
+    "report_forgery_rejected_before_worker_launch": true
+  },
+  "integrity": {
+    "grader_sha256": "3a392e2f40cc01dd841c7e65ac7322ca9bb35d4e38ff6de6184eda4f0333fe5e",
+    "protocol_lock_sha256": "c3dbcbcf5de0acf6dc48ee88b961bbc8e2084c62b221aacb03c002b1a3213c29",
+    "raw_calibration_sha256": "7923ee836705351eb2e4e78afd9be5c7996dfdcc3f7f51343090924ec79ad589",
+    "runner_sha256": "f6804289fb8b39bcfe16bc7e05a172089f9c87e15deeb0fa010fc37c714ff8d4",
+    "test_sha256": "da2760671d80064e07564e03f2e76fd21f54317b16d01f1ebb69823a2052fe12",
+    "worker_sha256": "a15326fb2b34ec3203d7ad6cdc3859c655f9c23313f5262ceb7b2805945bc781"
+  },
+  "limits": [
+    "The grader admits only five pre-reviewed source AST forms; other correct forms may be rejected.",
+    "Worker output is untrusted; its nonce is correlation only.",
+    "This CPU calibration does not establish real model-generated edits, rewards, policy updates, or held-out improvement."
+  ],
+  "model_inference_performed": false,
+  "optimizer_updates": 0,
+  "protocol_frozen_utc": "2026-11-03T01:40:22Z",
+  "protocol_lock_sha256": "c3dbcbcf5de0acf6dc48ee88b961bbc8e2084c62b221aacb03c002b1a3213c29",
+  "runtime": {
+    "architecture": "arm64",
+    "device": "CPU only; no Metal or CUDA",
+    "macos": "27.0.1",
+    "os": "Darwin",
+    "python": "3.12.12",
+    "torch": "2.9.1"
+  },
+  "sandbox_audit": {
+    "probe_source_sha256": "22e93a1b0b7f94983a5a78f7ba62d690ce9fbfd3e77e7dbf06c335723f91cc46",
+    "probes": {
+      "candidate_git_head": {
+        "errno": 1,
+        "error": "PermissionError",
+        "result": "DENY"
+      },
+      "candidate_source_read": {
+        "result": "ALLOW"
+      },
+      "hidden_grader_definition": {
+        "errno": 1,
+        "error": "PermissionError",
+        "result": "DENY"
+      },
+      "installed_transformers_source": {
+        "errno": 1,
+        "error": "PermissionError",
+        "result": "DENY"
+      },
+      "known_fix_source": {
+        "errno": 1,
+        "error": "PermissionError",
+        "result": "DENY"
+      },
+      "network_connect": {
+        "errno": 1,
+        "error": "PermissionError",
+        "result": "DENY"
+      },
+      "original_dirty_checkout": {
+        "errno": 1,
+        "error": "PermissionError",
+        "result": "DENY"
+      },
+      "outside_write": {
+        "errno": 1,
+        "error": "PermissionError",
+        "result": "DENY"
+      },
+      "scratch_write": {
+        "result": "ALLOW"
+      },
+      "task_protocol": {
+        "errno": 1,
+        "error": "PermissionError",
+        "result": "DENY"
+      },
+      "unexpected_process": {
+        "errno": 1,
+        "error": "PermissionError",
+        "result": "DENY"
+      }
+    },
+    "profile_sha256": "919b97f81be63e542b6ea4f8712886548df0f189339c61baf43090b5fd1f56aa",
+    "returncode": 0,
+    "status": "PASS"
+  },
+  "schema_version": 1,
+  "task_id": "transformers-mxfp4-target-dtype-train-01"
+}
