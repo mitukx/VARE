@@ -1,0 +1,234 @@
+{
+  "expectations_met": true,
+  "git_revision": "85a0cfedcb602b9e1476d1bed8cf2210b59d728b",
+  "note": "Known-good controls calibrate the grader. They are not autonomous agent successes and do not authorize training.",
+  "schema": "vare.research_lab.calibration.v1",
+  "suite_sha256": "d8a5571db7867fffc1fb4233cea4e02fbdc76c7086531794de01e3d4ae5bee0f",
+  "tasks": [
+    {
+      "cases": {
+        "baseline": {
+          "classification": "fail_correctness",
+          "correctness_evaluated": true,
+          "correctness_passed": false,
+          "expected_pass": false,
+          "failures": [
+            "hidden gradient residual exceeds tolerance"
+          ],
+          "matches_expectation": true,
+          "metrics": {
+            "max_abs_error": 0.22430569864934274
+          },
+          "passed": false,
+          "peak_rss_kb": 11072,
+          "performance_evaluated": false,
+          "performance_passed": null,
+          "source_hashes": {
+            "accum.py": "90f6800a1463c05feb8e699a940507c37be5cb19ec84dcaef5468f9b35010b35"
+          },
+          "wall_s": 0.02385886899992329
+        },
+        "incorrect": {
+          "classification": "fail_correctness",
+          "correctness_evaluated": true,
+          "correctness_passed": false,
+          "expected_pass": false,
+          "failures": [
+            "hidden gradient residual exceeds tolerance"
+          ],
+          "matches_expectation": true,
+          "metrics": {
+            "max_abs_error": 0.2666305105925444
+          },
+          "passed": false,
+          "peak_rss_kb": 11060,
+          "performance_evaluated": false,
+          "performance_passed": null,
+          "source_hashes": {
+            "accum.py": "001d72bcb715922c674ed35ac23bcc2101c6780f5ec7d2dcf30e6382301bfff2"
+          },
+          "wall_s": 0.023248455999919315
+        },
+        "known_good": {
+          "classification": "pass",
+          "correctness_evaluated": true,
+          "correctness_passed": true,
+          "expected_pass": true,
+          "failures": [],
+          "matches_expectation": true,
+          "metrics": {
+            "max_abs_error": 5.551115123125783e-17
+          },
+          "passed": true,
+          "peak_rss_kb": 11076,
+          "performance_evaluated": false,
+          "performance_passed": null,
+          "source_hashes": {
+            "accum.py": "5f64993f54e58130a9998de5dd358608014c6172a92765c79dc07dd6286cb083"
+          },
+          "wall_s": 0.02370429100005822
+        }
+      },
+      "matches_expectation": true,
+      "spec_sha256": "28d64adaf0f9cf2e42e7be92edb5cd415ac3d900a155f3faa39a00d7225a317f",
+      "task_id": "grad_accum_scale_v1",
+      "task_type": "training_correctness"
+    },
+    {
+      "cases": {
+        "baseline": {
+          "classification": "fail_performance",
+          "correctness_evaluated": true,
+          "correctness_passed": true,
+          "expected_pass": false,
+          "failures": [
+            "speedup does not clear measurement noise and the 2x gate"
+          ],
+          "matches_expectation": true,
+          "metrics": {
+            "aa_median_s": 0.006694015999983094,
+            "aa_relative": 0.021275152322985543,
+            "baseline_median_s": 0.006839528000000428,
+            "candidate_median_s": 0.0066418699998394,
+            "max_abs_error": 1.1102230246251565e-16,
+            "speedup": 1.0297593900762596
+          },
+          "passed": false,
+          "peak_rss_kb": 12036,
+          "performance_evaluated": true,
+          "performance_passed": false,
+          "source_hashes": {
+            "project.py": "73b0b395c4cc2ad2830ebc37f354fd09f29acfebb5e168ba9590f70aeb0dfdbb"
+          },
+          "wall_s": 0.16972417800002404
+        },
+        "incorrect": {
+          "classification": "fail_correctness",
+          "correctness_evaluated": true,
+          "correctness_passed": false,
+          "expected_pass": false,
+          "failures": [
+            "score residual exceeds tolerance"
+          ],
+          "matches_expectation": true,
+          "metrics": {
+            "max_abs_error": 0.6462103203345213
+          },
+          "passed": false,
+          "peak_rss_kb": 11988,
+          "performance_evaluated": false,
+          "performance_passed": null,
+          "source_hashes": {
+            "project.py": "14579c50fe7ee086a051df42aef5e1ac88e1039ca90a4f493652d5cf3d8a59c2"
+          },
+          "wall_s": 0.06411209399993822
+        },
+        "known_good": {
+          "classification": "pass",
+          "correctness_evaluated": true,
+          "correctness_passed": true,
+          "expected_pass": true,
+          "failures": [],
+          "matches_expectation": true,
+          "metrics": {
+            "aa_median_s": 0.00709357200003069,
+            "aa_relative": 0.004120625181928162,
+            "baseline_median_s": 0.007064462000016647,
+            "candidate_median_s": 0.0011650980000013078,
+            "max_abs_error": 1.1102230246251565e-16,
+            "speedup": 6.063405825096874
+          },
+          "passed": true,
+          "peak_rss_kb": 12028,
+          "performance_evaluated": true,
+          "performance_passed": true,
+          "source_hashes": {
+            "project.py": "9e920a4dba5c0a1c5703ff9239519ced90cc4b8a3dda59f5762a04dc032eb762"
+          },
+          "wall_s": 0.13827820500000598
+        }
+      },
+      "matches_expectation": true,
+      "spec_sha256": "d112a5b7fff44be783d738678a5f1bd8c35254b42614403c3fb99f9f77f4abe4",
+      "task_id": "loop_invariant_score_v1",
+      "task_type": "performance"
+    },
+    {
+      "cases": {
+        "baseline": {
+          "classification": "fail_correctness",
+          "correctness_evaluated": true,
+          "correctness_passed": false,
+          "expected_pass": false,
+          "failures": [
+            "held-out affine fit missed the acceptance region",
+            "gradient step does not match the mean-reduced descent step"
+          ],
+          "matches_expectation": true,
+          "metrics": {
+            "max_param_abs_error": 1698.795417082016,
+            "max_recomputed_mse": 1755054.2628824234,
+            "max_step_abs_error": 0.486333289652679
+          },
+          "passed": false,
+          "peak_rss_kb": 11016,
+          "performance_evaluated": false,
+          "performance_passed": null,
+          "source_hashes": {
+            "experiment.py": "a2e9dc6195b91230cff020ed912a1660f12e63aacb466e89387f35302050bd99"
+          },
+          "wall_s": 0.02365511199991488
+        },
+        "incorrect": {
+          "classification": "fail_correctness",
+          "correctness_evaluated": true,
+          "correctness_passed": false,
+          "expected_pass": false,
+          "failures": [
+            "held-out affine fit missed the acceptance region",
+            "gradient step does not match the mean-reduced descent step"
+          ],
+          "matches_expectation": true,
+          "metrics": {
+            "max_param_abs_error": 19.416711804971907,
+            "max_recomputed_mse": 231.08585353525098,
+            "max_step_abs_error": 0.486333289652679
+          },
+          "passed": false,
+          "peak_rss_kb": 11084,
+          "performance_evaluated": false,
+          "performance_passed": null,
+          "source_hashes": {
+            "experiment.py": "5d970d4713d01d89a0de20c5e7d294c6fe420013d60e2b17d780e3815532b47e"
+          },
+          "wall_s": 0.02327329399986411
+        },
+        "known_good": {
+          "classification": "pass",
+          "correctness_evaluated": true,
+          "correctness_passed": true,
+          "expected_pass": true,
+          "failures": [],
+          "matches_expectation": true,
+          "metrics": {
+            "max_param_abs_error": 1.852144345315665e-05,
+            "max_recomputed_mse": 1.0888440264189218e-10,
+            "max_step_abs_error": 0.0
+          },
+          "passed": true,
+          "peak_rss_kb": 11080,
+          "performance_evaluated": false,
+          "performance_passed": null,
+          "source_hashes": {
+            "experiment.py": "9b61c6cf38fd792d1effdce11136c54f0ae14c906f5ec75b1a7223e480c3075f"
+          },
+          "wall_s": 0.023531455000011192
+        }
+      },
+      "matches_expectation": true,
+      "spec_sha256": "68aab1c43895e22c094e06c7625162bcdeb94359449877d2fcc4d3a62c2fba81",
+      "task_id": "descent_sign_debug_v1",
+      "task_type": "experiment_debug"
+    }
+  ]
+}
