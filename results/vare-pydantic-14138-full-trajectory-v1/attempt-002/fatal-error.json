@@ -1,0 +1,6 @@
+{
+  "error": "resource guard stopped training rollout generation or grading",
+  "error_type": "RuntimeError",
+  "recorded_at_utc": "2026-11-05T21:10:42Z",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-11-05/files-pasted-by-the-user-vare/work/VARE-rsi-integration-20261105/experiments/run_vare_pydantic_14138_full_trajectory_continuation.py\", line 1937, in main\n    return run_experiment()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-11-05/files-pasted-by-the-user-vare/work/VARE-rsi-integration-20261105/experiments/run_vare_pydantic_14138_full_trajectory_continuation.py\", line 1765, in run_experiment\n    raise RuntimeError(\"resource guard stopped training rollout generation or grading\")\nRuntimeError: resource guard stopped training rollout generation or grading\n"
+}

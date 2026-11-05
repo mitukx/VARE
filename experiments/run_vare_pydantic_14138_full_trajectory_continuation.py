@@ -36,9 +36,9 @@ def find_experiment_root() -> Path:
 ROOT = find_experiment_root()
 WORK = ROOT / "work/vare-rsi-qwen3-4b-mlx-20261106"
 OUTPUTS = ROOT / "outputs/vare-rsi-heldout-qualification-v2-20261105"
-RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-002"
-ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v11-pydantic-14138-resource-recovery.json"
-RUN_LOCK_PATH = OUTPUTS / "real-model-run-v19-14138-full-trajectory-resource-recovery.lock.json"
+RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-003"
+ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v12-pydantic-14138-tool-adapter.json"
+RUN_LOCK_PATH = OUTPUTS / "real-model-run-v20-14138-tool-adapter-grpo-group.lock.json"
 MODEL_PATH = WORK / "model"
 MODEL_MANIFEST_PATH = WORK / "model-manifest.json"
 INTEGRATION = ROOT / "work/VARE-rsi-integration-20261105"
@@ -52,10 +52,10 @@ BASE_SEED = 20261106
 TEMPERATURE = 0.8
 GROUP_SIZE = 8
 NEW_ROLLOUT_COUNT = 8
-NEW_ROLLOUT_START_INDEX = 1
+NEW_ROLLOUT_START_INDEX = 7
 MAX_TURNS = 16
 MAX_TOTAL_TOKENS = 4096
-MAX_ACTION_TOKENS = 384
+MAX_ACTION_TOKENS = 512
 MAX_PROMPT_TOKENS = 4096
 MAX_WALL_SECONDS = 900
 DEV_TEMPERATURE = 0.0
@@ -101,9 +101,14 @@ TOOL_HELP = (
     "Search is already scoped to the editable path; do not add a paths member.\n"
     "read_file: path must be exactly one editable path; start_line and end_line are positive "
     "source line numbers. Read at most 15–20 adjacent lines and reduce the window if truncated.\n"
-    "apply_patch: provide one complete unified diff for existing editable files only, using "
-    "--- a/path and +++ b/path plus accurate @@ hunk headers and exact copied context. Do not "
-    "use context-diff syntax such as 235c235. JSON-escape patch newlines normally.\n"
+    "apply_patch arguments must be a JSON object with path and patch string fields. For example: "
+    "{\"tool\":\"apply_patch\",\"arguments\":{\"path\":\"pydantic/example.py\","
+    "\"patch\":\"--- a/pydantic/example.py\\n+++ b/pydantic/example.py\\n"
+    "@@ -10,1 +10,1 @@\\n-old\\n+new\\n\"}}. Put the complete unified diff under patch; "
+    "include --- a/path, +++ b/path, and accurate @@ hunk headers with exact copied context. "
+    "Do not use hunk as the argument key or context-diff syntax such as 235c235. JSON-escape "
+    "newlines normally and leave apostrophes unescaped. Escape every double quote that appears "
+    "inside the patch string.\n"
     "compile_file: path must be editable. show_changes: no arguments. finish: summarize only "
     "the actual change. If a patch fails, inspect its error and source context, then write a "
     "different minimal unified diff instead of resending it."
@@ -501,6 +506,74 @@ def safe_source_path(directory: Path, value: str) -> Path:
     return path
 
 
+def decode_loose_json_string(value: str) -> str:
+    """Decode JSON escapes while preserving unescaped quotes in recovered patch text."""
+    output: list[str] = []
+    escapes = {
+        '"': '"', "\\": "\\", "/": "/", "b": "\b",
+        "f": "\f", "n": "\n", "r": "\r", "t": "\t", "'": "'",
+    }
+    index = 0
+    while index < len(value):
+        if value[index] != "\\" or index + 1 >= len(value):
+            output.append(value[index])
+            index += 1
+            continue
+        escape = value[index + 1]
+        if escape == "u" and index + 5 < len(value):
+            digits = value[index + 2 : index + 6]
+            try:
+                output.append(chr(int(digits, 16)))
+                index += 6
+                continue
+            except ValueError:
+                pass
+        if escape in escapes:
+            output.append(escapes[escape])
+            index += 2
+            continue
+        output.extend(("\\", escape))
+        index += 2
+    return "".join(output)
+
+
+def salvage_malformed_apply_patch_action(raw: str) -> dict[str, Any] | None:
+    """Recover only apply_patch calls whose JSON string body is malformed or truncated."""
+    content = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL)
+    tool_match = re.search(r'"tool"\s*:\s*"apply_patch"', content)
+    if tool_match is None:
+        return None
+    arguments_match = re.search(r'"arguments"\s*:\s*\{', content[tool_match.end() :])
+    if arguments_match is None:
+        return None
+    arguments_start = tool_match.end() + arguments_match.end()
+    patch_match = re.search(r'"(patch|hunk)"\s*:\s*"', content[arguments_start:])
+    if patch_match is None:
+        return None
+    patch_key = patch_match.group(1)
+    value_start = arguments_start + patch_match.end()
+    prefix = content[arguments_start:value_start]
+    path_match = re.search(r'"path"\s*:\s*"([^"\r\n]+)"', prefix)
+    closing = re.search(r'"\s*\}\}\s*$', content[value_start:])
+    incomplete = closing is None
+    patch_body = (
+        content[value_start : value_start + closing.start()]
+        if closing is not None
+        else content[value_start:]
+    )
+    arguments: dict[str, Any] = {patch_key: decode_loose_json_string(patch_body)}
+    if path_match is not None:
+        arguments["path"] = path_match.group(1)
+    action: dict[str, Any] = {
+        "tool": "apply_patch",
+        "arguments": arguments,
+        "output_normalization": "malformed_apply_patch_json_salvaged",
+    }
+    if incomplete:
+        action["output_normalization"] += "_incomplete"
+    return action
+
+
 def action_from_text(raw: str) -> tuple[dict[str, Any] | None, str | None]:
     content = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL)
     decoder = json.JSONDecoder()
@@ -548,6 +621,9 @@ def action_from_text(raw: str) -> tuple[dict[str, Any] | None, str | None]:
         if argument_normalization:
             action["argument_normalization"] = argument_normalization
         return action, None
+    salvaged = salvage_malformed_apply_patch_action(content)
+    if salvaged is not None:
+        return salvaged, None
     return None, "model output did not contain one valid tool-action JSON object"
 
 
@@ -688,6 +764,89 @@ def apply_source_patch(directory: Path, patch: str, allowed: set[str]) -> dict[s
     }
 
 
+def normalize_unified_hunk_counts(patch: str) -> tuple[str, bool]:
+    """Recount old and new lines in complete unified hunks before Git validation."""
+    lines = patch.splitlines()
+    header_pattern = re.compile(
+        r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(.*)$"
+    )
+    changed = False
+    for index, header in enumerate(lines):
+        match = header_pattern.match(header)
+        if match is None:
+            continue
+        old_start, new_start, context = match.group(1), match.group(3), match.group(5)
+        old_count = 0
+        new_count = 0
+        cursor = index + 1
+        while cursor < len(lines):
+            line = lines[cursor]
+            if header_pattern.match(line) or line.startswith("diff --git "):
+                break
+            if line.startswith(("--- a/", "+++ b/")):
+                break
+            if line.startswith(" "):
+                old_count += 1
+                new_count += 1
+            elif line.startswith("-"):
+                old_count += 1
+            elif line.startswith("+"):
+                new_count += 1
+            elif line.startswith("\\"):
+                pass
+            else:
+                break
+            cursor += 1
+        corrected = (
+            f"@@ -{old_start},{old_count} +{new_start},{new_count} @@{context}"
+        )
+        if corrected != header:
+            lines[index] = corrected
+            changed = True
+    return "\n".join(lines) + ("\n" if patch.endswith("\n") else ""), changed
+
+
+def normalize_patch_arguments(
+    arguments: dict[str, Any], allowed: set[str]
+) -> tuple[str, str, list[str]]:
+    """Normalize the narrow patch-call variants emitted by the pretrained policy."""
+    normalizations: list[str] = []
+    patch = arguments.get("patch")
+    if not isinstance(patch, str) or not patch.strip():
+        hunk = arguments.get("hunk")
+        if isinstance(hunk, str) and hunk.strip():
+            patch = hunk
+            normalizations.append("hunk_argument_aliased_to_patch")
+    if not isinstance(patch, str) or not patch.strip():
+        raise ValueError("apply_patch requires a non-empty patch string")
+
+    path = arguments.get("path")
+    if not isinstance(path, str) or not path.strip():
+        if len(allowed) != 1:
+            raise ValueError("apply_patch requires an exact editable source path")
+        path = next(iter(allowed))
+        normalizations.append("single_editable_path_inferred")
+    if path not in allowed:
+        raise ValueError("apply_patch accepts only the exact task editable source path")
+
+    lines = patch.splitlines()
+    has_old_header = any(line.startswith("--- ") for line in lines)
+    has_new_header = any(line.startswith("+++ ") for line in lines)
+    if not has_old_header and not has_new_header and any(
+        line.startswith("@@") for line in lines
+    ):
+        headers = [f"--- a/{path}", f"+++ b/{path}"]
+        if lines and lines[0].startswith("diff --git "):
+            patch = "\n".join([lines[0], *headers, *lines[1:]]) + "\n"
+        else:
+            patch = "\n".join([*headers, *lines]) + "\n"
+        normalizations.append("unified_diff_file_headers_synthesized_for_allowlisted_path")
+    patch, counts_changed = normalize_unified_hunk_counts(patch)
+    if counts_changed:
+        normalizations.append("unified_diff_hunk_line_counts_recomputed")
+    return path, patch, normalizations
+
+
 def changed_files(directory: Path, allowed: set[str], baseline: Path | None = None) -> list[str]:
     result: list[str] = []
     for relative in sorted(allowed):
@@ -739,7 +898,12 @@ def execute_tool(
         if name == "read_file":
             return bounded_result(read_source(directory, args, allowed), max_chars=3200)
         if name == "apply_patch":
-            return bounded_result(apply_source_patch(directory, str(args.get("patch", "")), allowed))
+            path, patch, normalizations = normalize_patch_arguments(args, allowed)
+            result = apply_source_patch(directory, patch, allowed)
+            result["path"] = path
+            if normalizations:
+                result["argument_normalizations"] = normalizations
+            return bounded_result(result)
         if name == "compile_file":
             path = str(args.get("path", ""))
             if path not in allowed:
@@ -1721,8 +1885,9 @@ def run_experiment() -> int:
         "authorized_train_rollout_exposure_budget": NEW_ROLLOUT_COUNT,
         "task_cumulative_exposure_cap": NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT,
         "new_training_sample_indices": list(range(NEW_ROLLOUT_START_INDEX, NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT)),
-        "prior_negative_train_experiment_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
-        "prompt_policy_version": "pydantic-14138-prompt-v1-explicit-tool-contract-continuation",
+        "prior_negative_train_experiment_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-002/abort.json",
+        "prompt_policy_version": "pydantic-14138-prompt-v2-explicit-patch-schema",
+        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v2",
         "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
         "credit_assignment": assignment["training"]["credit_assignment"],
     }

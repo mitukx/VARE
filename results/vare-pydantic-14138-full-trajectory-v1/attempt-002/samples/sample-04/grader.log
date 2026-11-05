@@ -1,0 +1,44 @@
+F
+=================================== FAILURES ===================================
+______________ test_direct_schema_matches_general_union[members0] ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xee7d66f2f800>
+members = (<class 'str'>, <class 'bytes'>)
+
+    @pytest.mark.parametrize('members', [*permutations(SIMPLE_TYPES, 2), *permutations(SIMPLE_TYPES, 3)])
+    def test_direct_schema_matches_general_union(monkeypatch: pytest.MonkeyPatch, members: tuple[type, ...]) -> None:
+        annotation = members[0] | members[1]
+        for member in members[2:]:
+            annotation |= member
+        general = GenerateSchema(ConfigWrapper({}))._union_schema(annotation)
+    
+        def unexpected_fallback(self: GenerateSchema, annotation: Any) -> core_schema.CoreSchema:
+            raise AssertionError('simple unions must use the direct path')
+    
+        monkeypatch.setattr(GenerateSchema, '_union_schema', unexpected_fallback)
+>       direct = GenerateSchema(ConfigWrapper({})).generate_schema(annotation)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/types/unions/test_direct_schema.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pydantic/_internal/_generate_schema.py:824: in generate_schema
+    schema = self._generate_schema_inner(obj, origin)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic/_internal/_generate_schema.py:1090: in _generate_schema_inner
+    return self._union_schema(obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pydantic._internal._generate_schema.GenerateSchema object at 0xee7d656d7c40>
+annotation = str | bytes
+
+    def unexpected_fallback(self: GenerateSchema, annotation: Any) -> core_schema.CoreSchema:
+>       raise AssertionError('simple unions must use the direct path')
+E       AssertionError: simple unions must use the direct path
+
+tests/types/unions/test_direct_schema.py:53: AssertionError
+=========================== short test summary info ============================
+FAILED tests/types/unions/test_direct_schema.py::test_direct_schema_matches_general_union[members0]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 0.33s
+QUAL_MEMORY_PEAK_BYTES=61112320
