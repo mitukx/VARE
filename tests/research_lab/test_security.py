@@ -1,5 +1,6 @@
 import json
 import resource
+import socket
 import sys
 from pathlib import Path
 
@@ -144,6 +145,53 @@ def test_candidate_cannot_import_grader_package(tmp_path: Path):
     result = grade(task, workspace)
     assert result["passed"] is False
     assert result["correctness_passed"] is False
+
+
+def test_memory_budget_is_post_hoc_vmhwm_and_is_not_applied(tmp_path: Path):
+    """A tiny budget does not stop the child. The label is applied afterward."""
+    execution = run_bounded(
+        [sys.executable, "-c", "import time; time.sleep(0.3); print('alive')"],
+        cwd=tmp_path,
+        stdin=b"",
+        limits=_limits(memory_mb=1, wall_time_s=5, cpu_time_s=5),
+    )
+    assert execution.memory_limit_applied is False
+    assert execution.peak_rss_kb is not None
+    assert execution.peak_rss_kb > 1024
+    assert execution.returncode == 0
+    assert execution.timed_out is False
+    assert execution.classification == "memory_budget"
+
+
+def test_child_shares_the_caller_network_namespace(tmp_path: Path):
+    """A connect to the parent is residual risk, not a blocked network attempt."""
+    server = socket.socket()
+    server.bind(("127.0.0.1", 0))
+    server.listen(1)
+    server.settimeout(2)
+    port = server.getsockname()[1]
+    try:
+        execution = run_bounded(
+            [sys.executable, "-c",
+             "import socket\n"
+             f"s = socket.create_connection(('127.0.0.1', {port}), timeout=1)\n"
+             "s.sendall(b'ping')\n"
+             "s.close()\n"],
+            cwd=tmp_path,
+            stdin=b"",
+            limits=_limits(),
+        )
+        conn, _addr = server.accept()
+        try:
+            data = conn.recv(8)
+        finally:
+            conn.close()
+    finally:
+        server.close()
+    assert data == b"ping"
+    assert execution.classification == "ok"
+    assert execution.returncode == 0
+    assert execution.memory_limit_applied is False
 
 
 def test_shell_action_is_rejected_without_success(tmp_path: Path):
