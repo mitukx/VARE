@@ -255,6 +255,10 @@ INVENTORY_V8_SOURCES = INVENTORY_V7_SOURCES | frozenset({
     "src/vare/research_lab/store.py",
     "src/vare/research_lab/workspace.py",
 })
+# The bubblewrap grade adapter is a new runtime module. Keep v1-v8 immutable.
+INVENTORY_V9_SOURCES = INVENTORY_V8_SOURCES | frozenset({
+    "src/vare/research_lab/isolation.py",
+})
 # Exact-match registry; a campaign is identified by its complete source set.
 SOURCE_INVENTORIES = {
     "v1-pinned": LEGACY_EXPECTED_SOURCES,
@@ -265,11 +269,12 @@ SOURCE_INVENTORIES = {
     "v6": INVENTORY_V6_SOURCES,
     "v7": INVENTORY_V7_SOURCES,
     "v8": INVENTORY_V8_SOURCES,
+    "v9": INVENTORY_V9_SOURCES,
 }
-CURRENT_SOURCE_INVENTORY = "v8"
+CURRENT_SOURCE_INVENTORY = "v9"
 EXPECTED_SOURCES = SOURCE_INVENTORIES[CURRENT_SOURCE_INVENTORY]
 # Versions whose campaigns record the recovery endpoint at the resumed-round end.
-EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5", "v6", "v7", "v8"})
+EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5", "v6", "v7", "v8", "v9"})
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.

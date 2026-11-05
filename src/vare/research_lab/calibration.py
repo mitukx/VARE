@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .evaluation import grade
+from .isolation import isolation_summary
 from .spec import ResearchTask, load_catalog, repo_root, suite_manifest
 from .workspace import materialize, overlay_control
 
@@ -70,8 +71,10 @@ def run_calibration(work_root: Path, catalog_root: Path | None = None) -> dict[s
         "suite_sha256": manifest["manifest_sha256"],
         "expectations_met": all(row["matches_expectation"] for row in rows),
         "tasks": rows,
+        "isolation": isolation_summary(),
         "note": (
             "Known-good controls calibrate the grader. "
-            "They are not autonomous agent successes and do not authorize training."
+            "They are not autonomous agent successes and do not authorize training. "
+            "The isolation gate is not a trusted security sandbox."
         ),
     }
