@@ -20,14 +20,12 @@ def _baseline(tmp_path: Path, task_id: str = "grad_accum_scale_v1") -> tuple[obj
     return task, workspace
 
 
-def test_metric_file_and_forged_report_do_not_pass(tmp_path: Path):
+def test_metric_file_edit_does_not_pass(tmp_path: Path):
+    # result.json forgery is covered by test_security.py. This case is the
+    # separate metrics file the grader must also ignore.
     task, workspace = _baseline(tmp_path)
     (workspace / "metrics.json").write_text(
         '{"passed": true, "max_abs_error": 0}\n',
-        encoding="utf-8",
-    )
-    (workspace / "result.json").write_text(
-        '{"passed": true, "classification": "pass"}\n',
         encoding="utf-8",
     )
     result = grade(task, workspace)
