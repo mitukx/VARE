@@ -89,6 +89,11 @@ def test_group_validation():
         G.group_samples([S("a", 0, [3], 1, prompt=(1, 2)), S("a", 1, [4], 0, prompt=(1, 3))])
     with pytest.raises(G.GroupError, match="finite numbers"):
         G.group_advantages([1.0, math.nan])
+    invalid_logprobs = [S("a", 0, [3], 1), S("a", 1, [4], 0)]
+    invalid_logprobs[0].behavior_logprobs = [0.1]
+    invalid_logprobs[1].behavior_logprobs = [-0.5]
+    with pytest.raises(G.GroupError, match="finite nonpositive numbers"):
+        G.group_samples(invalid_logprobs)
     g = G.group_samples([S("a", 0, [3], 1), S("a", 0, [3], 1, ckpt="c1"), S("b", 0, [3], 0)])
     assert set(g) == {("a", "c0"), ("a", "c1"), ("b", "c0")}  # behavior policy is part of the group key
 
@@ -103,6 +108,16 @@ def test_policy_lag_rules():
     assert G.check_policy_lag(on, policy_checkpoint_id="c6", policy_step=6, max_policy_lag=1) == 1
     with pytest.raises(G.StalePolicyError, match="future"):
         G.check_policy_lag(on, policy_checkpoint_id="c4", policy_step=4, max_policy_lag=3)
+
+
+def test_lag_zero_behavior_logprob_guard_fails_closed():
+    assert G.check_on_policy_log_ratio(0, 0.0) is None
+    assert G.check_on_policy_log_ratio(0, G.ON_POLICY_LOG_RATIO_TOLERANCE) is None
+    assert G.check_on_policy_log_ratio(1, 0.5) is None  # off-policy ratios remain active
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior log-probabilities"):
+        G.check_on_policy_log_ratio(0, 0.5)
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior log-probabilities"):
+        G.check_on_policy_log_ratio(0, math.nan)
 
 
 # -------------------------------------------------------------- toy models
@@ -241,7 +256,7 @@ def test_on_policy_gradient_matches_float64_reference():
             work += list(zip(g, adv))
     n = sum(len(s.completion_ids) for s, _ in work)
     assert n == 6  # group b is zero-variance: excluded from the token denominator
-    grads, diag = G.policy_gradient(m, work, cfg, n_tokens=n)
+    grads, diag = G.policy_gradient(m, work, cfg, n_tokens=n, policy_step=0)
     assert diag["ratio_mean"] == pytest.approx(1.0, abs=1e-6) and diag["clip_fraction"] == 0.0
     ref = np.zeros_like(W)
     for s, a in work:
@@ -326,6 +341,47 @@ def test_stale_policy_ratio_and_rejection():
     rec1 = G.train_step(m, opt, samples, lagged, policy_checkpoint_id="c1", policy_step=1)
     assert rec1["max_observed_lag"] == 1
     assert rec1["ratio_max"] > 1.2 and rec1["clip_fraction"] > 0  # importance ratio is live and clipped
+
+
+@needs_mlx
+def test_lag_zero_behavior_logprob_mismatch_aborts_before_optimizer_update():
+    import mlx.optimizers as optim
+
+    m = _bigram()
+    samples = _samples_with_lp(m, [S("a", 0, [3], 1), S("a", 1, [4], 0)])
+    samples[0].behavior_logprobs[0] -= 0.5
+    before = G.trainable_digest(m)
+    optimizer = optim.Adam(learning_rate=0.1)
+
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior log-probabilities"):
+        G.train_step(m, optimizer, samples, G.GRPOConfig(group_size=2),
+                     policy_checkpoint_id="c0", policy_step=0)
+
+    assert G.trainable_digest(m) == before
+    assert int(optimizer.state["step"].item()) == 0
+
+
+@needs_mlx
+def test_mixed_lag_batch_checks_each_lag_zero_sample_before_update():
+    import mlx.optimizers as optim
+
+    m = _bigram()
+    samples = _samples_with_lp(m, [
+        S("current", 0, [3], 1, ckpt="c2", step=2),
+        S("current", 1, [4], 0, ckpt="c2", step=2),
+        S("stale", 0, [3], 1, ckpt="c1", step=1),
+        S("stale", 1, [4], 0, ckpt="c1", step=1),
+    ])
+    samples[0].behavior_logprobs[0] -= 0.5
+    before = G.trainable_digest(m)
+    optimizer = optim.Adam(learning_rate=0.1)
+
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior log-probabilities"):
+        G.train_step(m, optimizer, samples, G.GRPOConfig(max_policy_lag=1, group_size=2),
+                     policy_checkpoint_id="c2", policy_step=2)
+
+    assert G.trainable_digest(m) == before
+    assert int(optimizer.state["step"].item()) == 0
 
 
 def test_informative_samples_selects_mixed_groups_only():
@@ -646,8 +702,9 @@ def test_after_sample_hook_does_not_change_gradient_and_runs_per_microbatch():
     adv, _ = G.group_advantages([s.reward for s in samples])
     work = list(zip(samples, adv))
     calls = []
-    plain, d0 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6)
-    hooked, d1 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6, after_sample=lambda: calls.append(1))
+    plain, d0 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6, policy_step=0)
+    hooked, d1 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6, policy_step=0,
+                                   after_sample=lambda: calls.append(1))
     assert len(calls) == len(work) and d0 == d1
     assert np.array_equal(np.asarray(plain["table"]["weight"]), np.asarray(hooked["table"]["weight"]))
 

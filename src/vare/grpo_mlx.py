@@ -73,6 +73,7 @@ class TruncatedSamplingError(ValueError):
 # The exact-ratio objective models behavior log-probs as log_softmax(logits / T)
 # over the full vocabulary, so sampling must not truncate the distribution.
 EXACT_RATIO_TOP_P = 1.0
+ON_POLICY_LOG_RATIO_TOLERANCE = 1e-6
 
 
 def check_exact_ratio_sampling(*, temperature: float, top_p: float, top_k: int = 0, min_p: float = 0.0) -> None:
@@ -221,8 +222,9 @@ def group_samples(samples: Iterable[Sample], *, group_size: int | None = None) -
             if s.behavior_logprobs is not None:
                 if len(s.behavior_logprobs) != len(s.completion_ids):
                     raise GroupError(f"behavior log-probability length mismatch in group {key}")
-                if any(not math.isfinite(value) for value in s.behavior_logprobs):
-                    raise GroupError(f"behavior log-probabilities must be finite in group {key}")
+                if any(isinstance(value, bool) or not isinstance(value, (int, float))
+                       or not math.isfinite(value) or value > 0 for value in s.behavior_logprobs):
+                    raise GroupError(f"behavior log-probabilities must be finite nonpositive numbers in group {key}")
     return groups
 
 
@@ -240,6 +242,27 @@ def check_policy_lag(samples: Iterable[Sample], *, policy_checkpoint_id: str, po
             raise StalePolicyError(f"policy lag {lag} > max_policy_lag {max_policy_lag}")
         worst = max(worst, lag)
     return worst
+
+
+def check_on_policy_log_ratio(policy_lag: int, max_abs_log_ratio: float) -> None:
+    """Fail closed when a lag-zero sample's behavior log-probs mismatch.
+
+    A checkpoint ID is caller-supplied provenance, not proof that the stored
+    behavior log-probabilities came from that checkpoint. The differentiated
+    current-policy pass must reproduce each lag-zero sample's stored
+    probabilities within floating-point tolerance before any optimizer state
+    can change. Stale samples retain the configured importance-ratio behavior.
+    """
+    if policy_lag != 0:
+        return
+    if (isinstance(max_abs_log_ratio, bool) or not isinstance(max_abs_log_ratio, (int, float))
+            or not math.isfinite(max_abs_log_ratio) or max_abs_log_ratio < 0
+            or max_abs_log_ratio > ON_POLICY_LOG_RATIO_TOLERANCE):
+        raise StalePolicyError(
+            "lag-zero behavior log-probabilities do not match the current policy: "
+            f"max_abs_log_ratio={max_abs_log_ratio!r}, "
+            f"tolerance={ON_POLICY_LOG_RATIO_TOLERANCE}"
+        )
 
 
 # ---------------------------------------------------------------- tensors
@@ -406,7 +429,8 @@ def _value_and_grad(model, cfg: GRPOConfig, *, n_tokens: int):
 
 
 def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig, *, n_tokens: int,
-                    pad_id: int = 0, after_sample: Callable[[], None] | None = None) -> tuple[Any, dict[str, float]]:
+                    policy_step: int, pad_id: int = 0,
+                    after_sample: Callable[[], None] | None = None) -> tuple[Any, dict[str, float]]:
     """Gradient of the step loss w.r.t. trainable parameters, accumulated one
     sample at a time; equals the gradient of the full-batch token-mean loss.
 
@@ -425,8 +449,10 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
         tokens, mask, start = sample_tensors(s, pad_id)
         blp = mx.array([s.behavior_logprobs], dtype=mx.float32)
         (loss, (st, _lp)), g = value_and_grad(tokens, mask, start, mx.array([a], dtype=mx.float32), blp)
+        mx.eval(loss, st, g)
+        check_on_policy_log_ratio(policy_step - s.behavior_step, float(st["max_abs_log_ratio"]))
         grads = g if grads is None else tree_map(lambda x, y: x + y, grads, g)
-        mx.eval(loss, st, grads)
+        mx.eval(grads)
         loss_total += float(loss)
         clipped += float(st["clipped_tokens"])
         ratio_sum += float(st["ratio_sum"])
@@ -474,7 +500,8 @@ def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, 
         record.update(update_applied=False, reason="no_informative_group")
         return record
 
-    grads, diag = policy_gradient(model, work, cfg, n_tokens=n_tokens, pad_id=pad_id, after_sample=after_sample)
+    grads, diag = policy_gradient(model, work, cfg, n_tokens=n_tokens, policy_step=policy_step, pad_id=pad_id,
+                                  after_sample=after_sample)
     grad_norm = None
     if cfg.max_grad_norm is not None:
         grads, gn = optim.clip_grad_norm(grads, cfg.max_grad_norm)
