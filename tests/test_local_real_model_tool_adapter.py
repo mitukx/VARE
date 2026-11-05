@@ -90,6 +90,47 @@ def test_read_file_marks_the_twenty_line_cap_as_truncated(tmp_path, monkeypatch)
     assert result["next_start_line"] == 21
 
 
+def test_repeated_oversized_read_auto_pages_instead_of_repeating(tmp_path, monkeypatch):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+    workspace = tmp_path / "candidate"
+    source = workspace / "pydantic" / "example.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("".join(f"value_{i} = {i}\n" for i in range(50)))
+    allowed = {"pydantic/example.py"}
+    action = {
+        "tool": "read_file",
+        "arguments": {
+            "path": "pydantic/example.py",
+            "start_line": 1,
+            "end_line": 45,
+        },
+    }
+    cursors = {}
+
+    first = runner["execute_tool"](
+        workspace, workspace, allowed, action, read_cursors=cursors
+    )
+    second = runner["execute_tool"](
+        workspace, workspace, allowed, action, read_cursors=cursors
+    )
+    third = runner["execute_tool"](
+        workspace, workspace, allowed, action, read_cursors=cursors
+    )
+    repeated_after_completion = runner["execute_tool"](
+        workspace, workspace, allowed, action, read_cursors=cursors
+    )
+
+    assert [
+        (first["start_line"], first["end_line"]),
+        (second["start_line"], second["end_line"]),
+        (third["start_line"], third["end_line"]),
+    ] == [(1, 20), (21, 40), (41, 45)]
+    assert first["content_truncated"] is True
+    assert second["auto_paged"] is True
+    assert third["content_truncated"] is False
+    assert repeated_after_completion["already_paged"] is True
+
+
 def test_patch_normalization_adds_missing_terminal_newline(tmp_path, monkeypatch):
     runner = _runner_namespace(tmp_path, monkeypatch)
 

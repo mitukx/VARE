@@ -36,9 +36,9 @@ def find_experiment_root() -> Path:
 ROOT = find_experiment_root()
 WORK = ROOT / "work/vare-rsi-qwen3-4b-mlx-20261106"
 OUTPUTS = ROOT / "outputs/vare-rsi-heldout-qualification-v2-20261105"
-RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-005"
-ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v14-pydantic-14138-system-resource-recovery.json"
-RUN_LOCK_PATH = OUTPUTS / "real-model-run-v22-14138-system-resource-recovery-grpo-group.lock.json"
+RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-006"
+ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v15-pydantic-14138-tool-pagination.json"
+RUN_LOCK_PATH = OUTPUTS / "real-model-run-v23-14138-tool-pagination-grpo-group.lock.json"
 MODEL_PATH = WORK / "model"
 MODEL_MANIFEST_PATH = WORK / "model-manifest.json"
 INTEGRATION = ROOT / "work/VARE-rsi-integration-20261105"
@@ -52,7 +52,7 @@ BASE_SEED = 20261106
 TEMPERATURE = 0.8
 GROUP_SIZE = 8
 NEW_ROLLOUT_COUNT = 8
-NEW_ROLLOUT_START_INDEX = 10
+NEW_ROLLOUT_START_INDEX = 18
 MAX_TURNS = 16
 MAX_TOTAL_TOKENS = 4096
 MAX_ACTION_TOKENS = 512
@@ -101,8 +101,11 @@ TOOL_HELP = (
     "Search is already scoped to the editable path; do not add a paths member.\n"
     "read_file: path must be exactly one editable path; start_line and end_line are positive "
     "source line numbers. Each response returns at most 20 lines. If content_truncated is true, "
-    "the returned end_line is authoritative; use next_start_line for more context and do not "
-    "repeat the oversized range.\n"
+    "the returned start_line/end_line identify the page and next_start_line is authoritative. "
+    "Repeating the exact same oversized path/start_line/end_line automatically returns the next "
+    "page of that requested range; inspect the actual returned lines and continue from there. "
+    "After the range is fully paged, a repeated request returns an already-paged notice. To "
+    "reread earlier context, request a new narrower range.\n"
     "apply_patch arguments must be a JSON object with path and patch string fields. For example: "
     "{\"tool\":\"apply_patch\",\"arguments\":{\"path\":\"pydantic/example.py\","
     "\"patch\":\"--- a/pydantic/example.py\\n+++ b/pydantic/example.py\\n"
@@ -905,20 +908,64 @@ def execute_tool(
     baseline: Path,
     allowed: set[str],
     action: dict[str, Any],
+    *,
+    read_cursors: dict[tuple[str, str, str], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     name = action["tool"]
     args = action["arguments"]
+    cursors = read_cursors if read_cursors is not None else {}
     try:
         if name == "search_code":
             return bounded_result(search_source(directory, str(args.get("query", "")), allowed))
         if name == "read_file":
-            return bounded_result(read_source(directory, args, allowed), max_chars=3200)
+            requested_start = args.get("start_line", 1)
+            requested_end = args.get("end_line")
+            key = (
+                str(args.get("path", "")),
+                repr(requested_start),
+                repr(requested_end),
+            )
+            cursor = cursors.get(key)
+            if cursor and cursor.get("complete"):
+                return {
+                    "error": (
+                        "this requested range was already paged completely; "
+                        "request a new or narrower range"
+                    ),
+                    "requested_start_line": requested_start,
+                    "requested_end_line": requested_end,
+                    "next_start_line": cursor.get("next_start_line"),
+                    "already_paged": True,
+                }
+            read_args = dict(args)
+            auto_paged = cursor is not None
+            if cursor is not None:
+                read_args["start_line"] = cursor["next_start_line"]
+            result = read_source(directory, read_args, allowed)
+            result["requested_start_line"] = requested_start
+            result["requested_end_line"] = requested_end
+            result["auto_paged"] = auto_paged
+            if auto_paged and not result["content_truncated"]:
+                cursors[key] = {
+                    "complete": True,
+                    "next_start_line": result["next_start_line"],
+                }
+            elif "line_limit" in result["truncation_reasons"]:
+                cursors[key] = {
+                    "complete": False,
+                    "next_start_line": result["next_start_line"],
+                }
+            else:
+                cursors.pop(key, None)
+            return bounded_result(result, max_chars=3200)
         if name == "apply_patch":
             path, patch, normalizations = normalize_patch_arguments(args, allowed)
             result = apply_source_patch(directory, patch, allowed)
             result["path"] = path
             if normalizations:
                 result["argument_normalizations"] = normalizations
+            if result.get("applied"):
+                cursors.clear()
             return bounded_result(result)
         if name == "compile_file":
             path = str(args.get("path", ""))
@@ -1060,10 +1107,31 @@ def compact_action_summary(turns: list[dict[str, Any]]) -> str:
             )
             rows.append(f"turn {row.get('turn')}: searched {query!r}; locations={locations or 'none'}")
         elif tool == "read_file":
-            rows.append(
-                f"turn {row.get('turn')}: read {args.get('path')} lines "
-                f"{args.get('start_line', 1)}-{args.get('end_line', 'default')}"
-            )
+            if isinstance(result, dict) and result.get("already_paged"):
+                rows.append(
+                    f"turn {row.get('turn')}: requested {args.get('path')} lines "
+                    f"{args.get('start_line', 1)}-{args.get('end_line', 'default')}; "
+                    "that range was already paged completely"
+                )
+            else:
+                actual_start = (
+                    result.get("start_line", args.get("start_line", 1))
+                    if isinstance(result, dict)
+                    else args.get("start_line", 1)
+                )
+                actual_end = (
+                    result.get("end_line", args.get("end_line", "default"))
+                    if isinstance(result, dict)
+                    else args.get("end_line", "default")
+                )
+                page = "; auto-paged" if isinstance(result, dict) and result.get("auto_paged") else ""
+                next_line = result.get("next_start_line") if isinstance(result, dict) else None
+                continuation = f"; next_start_line={next_line}" if next_line is not None else ""
+                rows.append(
+                    f"turn {row.get('turn')}: read {args.get('path')} requested "
+                    f"{args.get('start_line', 1)}-{args.get('end_line', 'default')}; "
+                    f"returned {actual_start}-{actual_end}{page}{continuation}"
+                )
         elif tool == "apply_patch":
             if isinstance(result, dict) and result.get("applied"):
                 rows.append(f"turn {row.get('turn')}: patch applied; changed={result.get('changed_files', [])}")
@@ -1102,6 +1170,7 @@ def run_agent(
             raise RuntimeError(f"editable source path is absent: {rel}")
     messages = make_agent_messages(task)
     turns: list[dict[str, Any]] = []
+    read_cursors: dict[tuple[str, str, str], dict[str, Any]] = {}
     total_tokens = 0
     first_prompt_ids: list[int] = []
     first_completion_ids: list[int] = []
@@ -1183,7 +1252,13 @@ def run_agent(
             stop_reason = "submitted"
             break
         else:
-            result = execute_tool(baseline, task["baseline_root"], allowed, action)
+            result = execute_tool(
+                baseline,
+                task["baseline_root"],
+                allowed,
+                action,
+                read_cursors=read_cursors,
+            )
             row["tool_result"] = result
         turns.append(row)
         # Retain the task, a short summary of earlier tool turns, and the complete
@@ -1901,9 +1976,9 @@ def run_experiment() -> int:
         "authorized_train_rollout_exposure_budget": NEW_ROLLOUT_COUNT,
         "task_cumulative_exposure_cap": NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT,
         "new_training_sample_indices": list(range(NEW_ROLLOUT_START_INDEX, NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT)),
-        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-004/summary.json",
-        "prompt_policy_version": "pydantic-14138-prompt-v3-reliable-read-patch-tool",
-        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v3",
+        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-005/summary.json",
+        "prompt_policy_version": "pydantic-14138-prompt-v4-direct-scalar-fastpath",
+        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v4-auto-paging",
         "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
         "credit_assignment": assignment["training"]["credit_assignment"],
     }

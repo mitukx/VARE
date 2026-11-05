@@ -1,0 +1,60 @@
+{
+  "assignment_sha256": "88f8f049700c4a850310f954c591e2b4cf4f9290bc69229d818f34dc93b4d922",
+  "authorized_train_rollout_exposure_budget": 8,
+  "credit_assignment": "Use the new full-trajectory terminal-reward path. Preserve every action segment prompt/token/log-probability/tool trace. Recompute each segment under the behavior policy, match sampling-time log-probabilities within 1e-6, and apply the same independent terminal reward advantage to all action tokens. This implements trajectory-level credit assignment; it does not establish successful Long-Horizon RL.",
+  "development_exposed_before_training": false,
+  "development_task_ids": [
+    "pydantic-13997-explicit-json-schema-by-alias-override",
+    "pydantic-14103-ignore-internal-dataclass-extras"
+  ],
+  "disk_free_bytes_at_start": 51773583360,
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14138-system-resource-recovery-v14",
+  "grpo_mlx_sha256": "597528e82e88e5666ff855a89f81dd6e4847c20f21aa48eb604f1661a36f7044",
+  "model": {
+    "files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
+  "new_training_sample_indices": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ],
+  "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-004/summary.json",
+  "prior_train_rollouts_attempted": 10,
+  "prompt_policy_version": "pydantic-14138-prompt-v3-reliable-read-patch-tool",
+  "resource_baseline": {
+    "memory_pressure_free_pct": 57.0,
+    "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 57%",
+    "swap_output": "vm.swapusage: total = 3072.00M  used = 2212.62M  free = 859.38M  (encrypted)",
+    "swap_used_bytes": 2320100229
+  },
+  "run_lock_sha256": "7f581caf31d9602b3070530df424aca642c66df0ba240730175e5e45a892f0cb",
+  "runner_sha256": "0d610248ebf88421fd2a2acf33db3f319730a6a2c8406aeb6640264587072fc3",
+  "runtime": {
+    "device": "Device(gpu, 0)",
+    "metal_available": true,
+    "mlx_module_version": "0.32.4",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "versions": {
+      "huggingface-hub": "2.4.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.0",
+      "numpy": "2.5.4"
+    }
+  },
+  "schema": "vare_real_model_train_dev_run_v1",
+  "started_at_utc": "2026-11-05T22:50:42Z",
+  "task_cumulative_exposure_cap": 18,
+  "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v3",
+  "train_task_ids": [
+    "pydantic-14138-direct-builtin-scalar-union-schema"
+  ]
+}
