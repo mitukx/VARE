@@ -7,6 +7,7 @@ them loads a pretrained model.
 from __future__ import annotations
 
 import importlib.util
+import json
 import math
 
 import pytest
@@ -497,6 +498,35 @@ def test_checkpoint_rejects_different_base_model_identity(tmp_path):
     with pytest.raises(ValueError, match="base model identity mismatch"):
         G.load_checkpoint(path, target, target_optimizer, base_model_id="toy/qwen3@revision-b")
     assert G.trainable_digest(target) == before
+
+
+@needs_mlx
+def test_checkpoint_rejects_inconsistent_optimizer_manifest_without_partial_restore(tmp_path):
+    import mlx.optimizers as optim
+
+    source = _bigram(seed=0)
+    source_optimizer = optim.Adam(learning_rate=0.1)
+    samples = _samples_with_lp(source, [S("task", 0, [3], 1), S("task", 1, [4], 0)])
+    G.train_step(source, source_optimizer, samples, G.GRPOConfig(group_size=2),
+                 policy_checkpoint_id="c0", policy_step=0)
+    path = tmp_path / "checkpoint"
+    G.save_checkpoint(path, source, source_optimizer, base_model_id="toy/bigram@v1", step=1,
+                      base_seed=7)
+
+    manifest_path = path / "checkpoint.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["optimizer_step"] = 2
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    target = _bigram(seed=1)
+    target_optimizer = optim.Adam(learning_rate=0.1)
+    model_before = G.trainable_digest(target)
+    optimizer_step_before = int(target_optimizer.state["step"].item())
+    with pytest.raises(ValueError, match="update count"):
+        G.load_checkpoint(path, target, target_optimizer, base_model_id="toy/bigram@v1")
+
+    assert G.trainable_digest(target) == model_before
+    assert int(target_optimizer.state["step"].item()) == optimizer_step_before
 
 
 @needs_mlx

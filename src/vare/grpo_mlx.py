@@ -375,16 +375,21 @@ def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig 
 
 
 # ------------------------------------------------------------------ update
-def trainable_digest(model) -> str:
+def _trainable_digest_from_flat(items: Iterable[tuple[str, Any]]) -> str:
     import mlx.core as mx
     import numpy as np
-    from mlx.utils import tree_flatten
 
     h = hashlib.sha256()
-    for k, v in sorted(tree_flatten(model.trainable_parameters())):
+    for k, v in sorted(items):
         h.update(k.encode())
         h.update(np.asarray(v.astype(mx.float32)).tobytes())
     return h.hexdigest()
+
+
+def trainable_digest(model) -> str:
+    from mlx.utils import tree_flatten
+
+    return _trainable_digest_from_flat(tree_flatten(model.trainable_parameters()))
 
 
 def _value_and_grad(model, cfg: GRPOConfig, *, n_tokens: int):
@@ -572,39 +577,86 @@ def save_checkpoint(path: Path, model, optimizer, *, base_model_id: str, step: i
 
 def load_checkpoint(path: Path, model, optimizer, *, base_model_id: str) -> dict[str, Any]:
     """Restore a checkpoint written by ``save_checkpoint``; verifies hashes,
-    base model identity, exact trainable key set and restored parameter digest."""
+    base model identity, exact trainable key set and restored parameter digest.
+
+    Validate every persisted state component before mutating the model or optimizer,
+    so an internally inconsistent checkpoint cannot leave a partial restore behind.
+    """
     import mlx.core as mx
     from mlx.utils import tree_flatten, tree_unflatten
 
     base_model_id = _validate_base_model_id(base_model_id)
     path = Path(path)
     manifest = json.loads((path / "checkpoint.json").read_text())
+    if not isinstance(manifest, dict):
+        raise ValueError("checkpoint manifest must be an object")
     if manifest.get("schema") != CHECKPOINT_SCHEMA:
         raise ValueError("unknown checkpoint schema")
     if manifest.get("base_model_id") != base_model_id:
         raise ValueError("checkpoint base model identity mismatch")
-    if set(manifest.get("files", {})) != {"adapters.safetensors", "optimizer.safetensors"}:
+    files = manifest.get("files")
+    if not isinstance(files, dict) or set(files) != {"adapters.safetensors", "optimizer.safetensors"}:
         raise ValueError("checkpoint file set is incomplete or unexpected")
     allowed_files = {"checkpoint.json", "adapters.safetensors", "optimizer.safetensors"}
     actual_files = {item.name for item in path.iterdir()}
     if actual_files != allowed_files or any(not (path / name).is_file() for name in allowed_files):
         raise ValueError("checkpoint directory contains missing or unexpected files")
-    for name, digest in manifest["files"].items():
+    for name, digest in files.items():
         if _sha256(path / name) != digest:
             raise ValueError(f"checkpoint file hash mismatch: {name}")
+
     adapters = mx.load(str(path / "adapters.safetensors"))
-    expected = {k for k, _ in tree_flatten(model.trainable_parameters())}
-    if set(adapters) != expected:
+    expected = dict(tree_flatten(model.trainable_parameters()))
+    if set(adapters) != set(expected):
         raise ValueError("checkpoint trainable keys differ from model")
-    model.load_weights(list(adapters.items()), strict=False)
-    optimizer.state = tree_unflatten(list(mx.load(str(path / "optimizer.safetensors")).items()))
-    mx.eval(model.parameters(), optimizer.state)
-    optimizer_step = int(optimizer.state["step"].item())
-    if manifest.get("optimizer_step") != optimizer_step or manifest.get("step") != optimizer_step:
+
+    for key, value in adapters.items():
+        if not isinstance(value, mx.array):
+            raise ValueError(f"checkpoint parameter is not an MLX array: {key}")
+        target = expected[key]
+        if value.shape != target.shape or value.dtype != target.dtype:
+            raise ValueError(f"checkpoint parameter shape or dtype differs from model: {key}")
+
+    optimizer_arrays = mx.load(str(path / "optimizer.safetensors"))
+    if not optimizer_arrays or any(not isinstance(value, mx.array) for value in optimizer_arrays.values()):
+        raise ValueError("checkpoint optimizer state contains invalid values")
+    restored_optimizer_state = tree_unflatten(list(optimizer_arrays.items()))
+    try:
+        optimizer_step = int(restored_optimizer_state["step"].item())
+    except (KeyError, AttributeError, TypeError, ValueError) as exc:
+        raise ValueError("checkpoint optimizer state has no valid step") from exc
+
+    step = manifest.get("step")
+    manifest_optimizer_step = manifest.get("optimizer_step")
+    if (type(step) is not int or step < 0 or type(manifest_optimizer_step) is not int
+            or manifest_optimizer_step != optimizer_step or step != optimizer_step):
         raise ValueError("checkpoint update count differs from restored optimizer state")
-    reseed(manifest["rng"]["base_seed"], manifest["rng"]["step"])
-    if trainable_digest(model) != manifest["trainable_digest"]:
+
+    rng = manifest.get("rng")
+    if (not isinstance(rng, dict) or type(rng.get("base_seed")) is not int
+            or rng.get("step") != step
+            or rng.get("derivation") != "sha256(f'{base_seed}:{step}')[:8]"):
+        raise ValueError("checkpoint RNG state is invalid")
+    expected_digest = manifest.get("trainable_digest")
+    if not isinstance(expected_digest, str) or _trainable_digest_from_flat(adapters.items()) != expected_digest:
         raise ValueError("restored parameters do not match checkpoint digest")
+
+    mx.eval(adapters, restored_optimizer_state)
+    original_parameters = dict(tree_flatten(model.trainable_parameters()))
+    original_optimizer_state = optimizer.state
+    try:
+        model.load_weights(list(adapters.items()), strict=False)
+        optimizer.state = restored_optimizer_state
+        mx.eval(model.parameters(), optimizer.state)
+        if trainable_digest(model) != expected_digest:
+            raise ValueError("restored parameters do not match checkpoint digest")
+    except Exception:
+        model.load_weights(list(original_parameters.items()), strict=False)
+        optimizer.state = original_optimizer_state
+        mx.eval(model.parameters(), optimizer.state)
+        raise
+
+    reseed(rng["base_seed"], rng["step"])
     return manifest
 
 
