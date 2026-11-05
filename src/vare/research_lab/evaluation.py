@@ -209,9 +209,10 @@ def _invoke(
         "returncode": execution.returncode,
     }
     if execution.classification == ISOLATION_UNVERIFIED:
+        detail = execution.stderr.strip() or ISOLATION_UNVERIFIED
         return None, _failure(
             ISOLATION_UNVERIFIED,
-            failures=[ISOLATION_UNVERIFIED],
+            failures=[detail[:500]],
             hashes=hashes,
             wall_s=execution.wall_s,
             peak_rss_kb=execution.peak_rss_kb,

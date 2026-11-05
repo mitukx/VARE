@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import shutil
 import signal
 import subprocess
 import sys
@@ -65,25 +66,49 @@ def _module() -> Any:
     return module
 
 
+def _interpreter_prefix() -> Path | None:
+    """Return ``sys.prefix`` when its ``bin/python`` stays inside that prefix.
+
+    Bubblewrap bind-mounts the venv at its own path and only ``/usr`` besides
+    that. A symlink to ``/opt/hostedtoolcache`` would dangle. A prefix whose
+    interpreter resolves inside itself, such as a GitHub Actions toolcache,
+    can be mounted whole.
+    """
+    prefix = Path(sys.prefix).resolve()
+    python = prefix / "bin" / "python"
+    if not python.exists():
+        return None
+    try:
+        resolved = python.resolve()
+    except OSError:
+        return None
+    if resolved == prefix or prefix in resolved.parents:
+        return prefix
+    return None
+
+
 def _stdlib_venv() -> Path:
+    prefix = _interpreter_prefix()
+    if prefix is not None:
+        return prefix
     root = Path(tempfile.gettempdir()) / "vare-researchgym-stdlib-venv"
     bindir = root / "bin"
     bindir.mkdir(parents=True, exist_ok=True)
-    link = bindir / "python"
+    dest = bindir / "python"
     target = Path(sys.executable).resolve()
-    if link.is_symlink():
+    # Copy the binary into the bind. Dynamic libraries remain on the
+    # read-only ``/usr`` mount that ``BwrapBackend`` already adds.
+    needs_copy = dest.is_symlink() or not dest.is_file()
+    if not needs_copy:
         try:
-            current = link.resolve()
+            needs_copy = dest.stat().st_size != target.stat().st_size
         except OSError:
-            current = None
-        if current != target:
-            link.unlink()
-            link.symlink_to(target)
-    elif link.exists():
-        link.unlink()
-        link.symlink_to(target)
-    else:
-        link.symlink_to(target)
+            needs_copy = True
+    if needs_copy:
+        if dest.exists() or dest.is_symlink():
+            dest.unlink()
+        shutil.copy2(target, dest)
+        dest.chmod(0o755)
     return root
 
 
