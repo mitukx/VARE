@@ -102,6 +102,8 @@ python -m pip install -e '.[dev]'
 python -m vare --help
 ```
 
+実モデル経路のローカル要件は `vare rsi preflight` で確認できます。この確認はタスク割当、graderの独立性、学習結果を判定しません。対象範囲と終了コードは[日本語の運用ガイド](docs/rsi-preflight-ja.md)に記載しています。
+
 Run focused CPU correctness checks:
 
 ```bash
