@@ -233,34 +233,44 @@ def group_samples(samples: Iterable[Sample], *, group_size: int | None = None) -
         if group_size is not None and len(g) != group_size:
             raise GroupError(f"partial group {key}: {len(g)} != {group_size}")
         for s in g:
-            segments: Sequence[Sample | TrajectorySegment] = (
-                s.trajectory_segments if s.trajectory_segments is not None else (s,)
-            )
+            segments: Sequence[
+                tuple[
+                    Sequence[int],
+                    Sequence[int],
+                    Sequence[float] | None,
+                    Sequence[float] | None,
+                ]
+            ]
+            if s.trajectory_segments is None:
+                segments = ((s.prompt_ids, s.completion_ids, s.behavior_logprobs, None),)
+            else:
+                segments = tuple(
+                    (
+                        segment.prompt_ids,
+                        segment.completion_ids,
+                        segment.sampling_behavior_logprobs,
+                        segment.behavior_logprobs,
+                    )
+                    for segment in s.trajectory_segments
+                )
             if not segments:
                 raise GroupError(f"empty trajectory in group {key}")
             if s.trajectory_segments is not None and (
-                segments[0].prompt_ids != s.prompt_ids
-                or segments[0].completion_ids != s.completion_ids
+                segments[0][0] != s.prompt_ids
+                or segments[0][1] != s.completion_ids
             ):
                 raise GroupError(f"first trajectory segment differs from the sample action in group {key}")
-            for segment in segments:
-                if not segment.completion_ids:
+            for prompt_ids, completion_ids, sampling_logprobs, behavior_logprobs in segments:
+                if not completion_ids:
                     raise GroupError(f"empty completion in group {key}")
-                if not segment.prompt_ids or any(
-                    type(token) is not int for token in (*segment.prompt_ids, *segment.completion_ids)
+                if not prompt_ids or any(
+                    type(token) is not int for token in (*prompt_ids, *completion_ids)
                 ):
                     raise GroupError(f"prompt and completion tokens must be integer IDs in group {key}")
-                logprob_sets = []
-                if s.trajectory_segments is None:
-                    if s.behavior_logprobs is not None:
-                        logprob_sets.append(s.behavior_logprobs)
-                else:
-                    if segment.sampling_behavior_logprobs is not None:
-                        logprob_sets.append(segment.sampling_behavior_logprobs)
-                    if segment.behavior_logprobs is not None:
-                        logprob_sets.append(segment.behavior_logprobs)
-                for values in logprob_sets:
-                    if len(values) != len(segment.completion_ids):
+                for values in (sampling_logprobs, behavior_logprobs):
+                    if values is None:
+                        continue
+                    if len(values) != len(completion_ids):
                         raise GroupError(f"behavior log-probability length mismatch in group {key}")
                     if any(
                         isinstance(value, bool) or not isinstance(value, (int, float))
