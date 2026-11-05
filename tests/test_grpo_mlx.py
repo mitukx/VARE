@@ -530,6 +530,54 @@ def test_checkpoint_rejects_inconsistent_optimizer_manifest_without_partial_rest
 
 
 @needs_mlx
+def test_checkpoint_rejects_different_optimizer_without_partial_restore(tmp_path):
+    import mlx.optimizers as optim
+
+    source = _bigram(seed=0)
+    source_optimizer = optim.Adam(learning_rate=0.1)
+    samples = _samples_with_lp(source, [S("task", 0, [3], 1), S("task", 1, [4], 0)])
+    G.train_step(source, source_optimizer, samples, G.GRPOConfig(group_size=2),
+                 policy_checkpoint_id="c0", policy_step=0)
+    path = tmp_path / "checkpoint"
+    G.save_checkpoint(path, source, source_optimizer, base_model_id="toy/bigram@v1", step=1,
+                      base_seed=7)
+
+    target = _bigram(seed=1)
+    target_optimizer = optim.SGD(learning_rate=0.1)
+    model_before = G.trainable_digest(target)
+    optimizer_step_before = int(target_optimizer.state["step"].item())
+    with pytest.raises(ValueError, match="optimizer identity mismatch"):
+        G.load_checkpoint(path, target, target_optimizer, base_model_id="toy/bigram@v1")
+
+    assert G.trainable_digest(target) == model_before
+    assert int(target_optimizer.state["step"].item()) == optimizer_step_before
+
+
+@needs_mlx
+def test_checkpoint_rejects_optimizer_configuration_mismatch_without_partial_restore(tmp_path):
+    import mlx.optimizers as optim
+
+    source = _bigram(seed=0)
+    source_optimizer = optim.Adam(learning_rate=0.1, eps=1e-8)
+    samples = _samples_with_lp(source, [S("task", 0, [3], 1), S("task", 1, [4], 0)])
+    G.train_step(source, source_optimizer, samples, G.GRPOConfig(group_size=2),
+                 policy_checkpoint_id="c0", policy_step=0)
+    path = tmp_path / "checkpoint"
+    G.save_checkpoint(path, source, source_optimizer, base_model_id="toy/bigram@v1", step=1,
+                      base_seed=7)
+
+    target = _bigram(seed=1)
+    target_optimizer = optim.Adam(learning_rate=0.1, eps=1e-6)
+    model_before = G.trainable_digest(target)
+    optimizer_step_before = int(target_optimizer.state["step"].item())
+    with pytest.raises(ValueError, match="optimizer identity mismatch"):
+        G.load_checkpoint(path, target, target_optimizer, base_model_id="toy/bigram@v1")
+
+    assert G.trainable_digest(target) == model_before
+    assert int(target_optimizer.state["step"].item()) == optimizer_step_before
+
+
+@needs_mlx
 def test_checkpoint_update_count_matches_optimizer_and_destinations_are_immutable(tmp_path):
     import mlx.optimizers as optim
 

@@ -55,7 +55,7 @@ import shutil
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 SCHEMA = "vare.learning_pipeline.grpo_step/v1"
-CHECKPOINT_SCHEMA = "vare.learning_pipeline.grpo_checkpoint/v2"
+CHECKPOINT_SCHEMA = "vare.learning_pipeline.grpo_checkpoint/v3"
 
 
 class StalePolicyError(ValueError):
@@ -519,6 +519,22 @@ def _validate_base_model_id(base_model_id: str) -> str:
     return base_model_id
 
 
+def _optimizer_identity(optimizer) -> dict[str, Any]:
+    optimizer_type = type(optimizer)
+    configuration = {
+        key: value for key, value in vars(optimizer).items()
+        if not key.startswith("_") and key != "state"
+    }
+    try:
+        normalized_configuration = json.loads(json.dumps(configuration, sort_keys=True, allow_nan=False))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("optimizer configuration is not JSON-serializable") from exc
+    return {
+        "class": f"{optimizer_type.__module__}.{optimizer_type.__qualname__}",
+        "configuration": normalized_configuration,
+    }
+
+
 def save_checkpoint(path: Path, model, optimizer, *, base_model_id: str, step: int, base_seed: int,
                     extra: Mapping[str, Any] | None = None) -> dict[str, Any]:
     """Atomically write adapters, optimizer state and the RNG schedule to
@@ -534,6 +550,7 @@ def save_checkpoint(path: Path, model, optimizer, *, base_model_id: str, step: i
     optimizer_step = int(optimizer.state["step"].item())
     if type(step) is not int or step < 0 or optimizer_step != step:
         raise ValueError(f"checkpoint step {step!r} does not match optimizer step {optimizer_step}")
+    optimizer_identity = _optimizer_identity(optimizer)
     tmp = path.with_name(path.name + ".tmp")
     if tmp.exists():
         shutil.rmtree(tmp)
@@ -546,6 +563,7 @@ def save_checkpoint(path: Path, model, optimizer, *, base_model_id: str, step: i
     mx.save_safetensors(str(tmp / "optimizer.safetensors"), opt)
     files = {n: _sha256(tmp / n) for n in ("adapters.safetensors", "optimizer.safetensors")}
     manifest = {"schema": CHECKPOINT_SCHEMA, "base_model_id": base_model_id,
+                "optimizer_identity": optimizer_identity,
                 "step": step, "optimizer_step": optimizer_step, "files": files,
                 "rng": {"base_seed": base_seed, "step": step, "derivation": "sha256(f'{base_seed}:{step}')[:8]"},
                 "trainable_digest": trainable_digest(model), "extra": dict(extra or {})}
@@ -594,6 +612,8 @@ def load_checkpoint(path: Path, model, optimizer, *, base_model_id: str) -> dict
         raise ValueError("unknown checkpoint schema")
     if manifest.get("base_model_id") != base_model_id:
         raise ValueError("checkpoint base model identity mismatch")
+    if manifest.get("optimizer_identity") != _optimizer_identity(optimizer):
+        raise ValueError("checkpoint optimizer identity mismatch")
     files = manifest.get("files")
     if not isinstance(files, dict) or set(files) != {"adapters.safetensors", "optimizer.safetensors"}:
         raise ValueError("checkpoint file set is incomplete or unexpected")
