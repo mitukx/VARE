@@ -1,9 +1,16 @@
 {
   "expectations_met": true,
-  "git_revision": "a9903296433a10ad553d9289ad6dba93a792940d",
-  "note": "Known-good controls calibrate the grader. They are not autonomous agent successes and do not authorize training.",
+  "git_revision": "da265873b40943b7cca170255fb9b6712b891974",
+  "isolation": {
+    "attestation_ok": true,
+    "backend": "bwrap",
+    "failures": [],
+    "not_a_trusted_sandbox": true,
+    "note": "Bubblewrap namespace and mount flags reused from the learning-pipeline grader. This is not a trusted security sandbox: a passed probe does not certify the kernel, the host runtime, or a candidate sharing the worker interpreter. A missing backend or a probe that is not fully denied fails closed and does not fall back to a same-user process group."
+  },
+  "note": "Known-good controls calibrate the grader. They are not autonomous agent successes and do not authorize training. The isolation gate is not a trusted security sandbox.",
   "schema": "vare.research_lab.calibration.v1",
-  "suite_sha256": "a309981b8933a0012f3f160876522c21e29c0cfd56877939ebc742416474bfc7",
+  "suite_sha256": "3d27402ca5a4b69ecd41beace24d6a774e682fa4abd0c4570d72fa3a53265766",
   "tasks": [
     {
       "cases": {
@@ -20,13 +27,13 @@
             "max_abs_error": 0.22430569864934274
           },
           "passed": false,
-          "peak_rss_kb": 10792,
+          "peak_rss_kb": null,
           "performance_evaluated": false,
           "performance_passed": null,
           "source_hashes": {
             "accum.py": "90f6800a1463c05feb8e699a940507c37be5cb19ec84dcaef5468f9b35010b35"
           },
-          "wall_s": 0.0237208290000126
+          "wall_s": 0.021510671999976694
         },
         "incorrect": {
           "classification": "fail_correctness",
@@ -41,13 +48,13 @@
             "max_abs_error": 0.2666305105925444
           },
           "passed": false,
-          "peak_rss_kb": 10988,
+          "peak_rss_kb": null,
           "performance_evaluated": false,
           "performance_passed": null,
           "source_hashes": {
             "accum.py": "001d72bcb715922c674ed35ac23bcc2101c6780f5ec7d2dcf30e6382301bfff2"
           },
-          "wall_s": 0.023106563000055758
+          "wall_s": 0.0205261219998647
         },
         "known_good": {
           "classification": "pass",
@@ -60,13 +67,13 @@
             "max_abs_error": 5.551115123125783e-17
           },
           "passed": true,
-          "peak_rss_kb": 10860,
+          "peak_rss_kb": null,
           "performance_evaluated": false,
           "performance_passed": null,
           "source_hashes": {
             "accum.py": "5f64993f54e58130a9998de5dd358608014c6172a92765c79dc07dd6286cb083"
           },
-          "wall_s": 0.023004686999911428
+          "wall_s": 0.020612920000075974
         }
       },
       "matches_expectation": true,
@@ -86,30 +93,30 @@
           ],
           "matches_expectation": true,
           "metrics": {
-            "aa_abs_high_s": 0.0012464047858302895,
-            "aa_abs_low_s": -0.00027478918567436103,
-            "aa_abs_mean_s": 0.0004858078000779642,
-            "aa_median_s": 0.006856361000018296,
-            "aa_relative": 0.011098343623576614,
-            "baseline_median_s": 0.006781101999877137,
-            "candidate_median_s": 0.0068571100000554,
-            "gain_high_s": 0.001107651075959282,
-            "gain_low_s": -0.0008531730759712699,
-            "gain_mean_s": 0.000127238999994006,
+            "aa_abs_high_s": 0.0002342094752614028,
+            "aa_abs_low_s": -7.678667533148455e-05,
+            "aa_abs_mean_s": 7.871139996495913e-05,
+            "aa_median_s": 0.006733154999892577,
+            "aa_relative": 0.0077592532664316725,
+            "baseline_median_s": 0.00668131300017194,
+            "candidate_median_s": 0.006680158000108349,
+            "gain_high_s": 0.00015556732552949755,
+            "gain_low_s": -9.312252552417407e-05,
+            "gain_mean_s": 3.1222400002661745e-05,
             "max_abs_error": 1.1102230246251565e-16,
-            "noise_floor_s": 0.0012464047858302895,
+            "noise_floor_s": 0.0002342094752614028,
             "performance_gate": "paired_ci_exceeds_aa_noise",
             "performance_passed": false,
-            "speedup": 0.9889154468606092
+            "speedup": 1.00017290011158
           },
           "passed": false,
-          "peak_rss_kb": 12008,
+          "peak_rss_kb": null,
           "performance_evaluated": true,
           "performance_passed": false,
           "source_hashes": {
             "project.py": "73b0b395c4cc2ad2830ebc37f354fd09f29acfebb5e168ba9590f70aeb0dfdbb"
           },
-          "wall_s": 0.17085607400008485
+          "wall_s": 0.16075755100018796
         },
         "incorrect": {
           "classification": "fail_correctness",
@@ -124,13 +131,13 @@
             "max_abs_error": 0.6462103203345213
           },
           "passed": false,
-          "peak_rss_kb": 11976,
+          "peak_rss_kb": null,
           "performance_evaluated": false,
           "performance_passed": null,
           "source_hashes": {
             "project.py": "14579c50fe7ee086a051df42aef5e1ac88e1039ca90a4f493652d5cf3d8a59c2"
           },
-          "wall_s": 0.06508628799997496
+          "wall_s": 0.05922436800005926
         },
         "known_good": {
           "classification": "pass",
@@ -140,30 +147,30 @@
           "failures": [],
           "matches_expectation": true,
           "metrics": {
-            "aa_abs_high_s": 0.003481483771071388,
-            "aa_abs_low_s": -0.0012200353710854217,
-            "aa_abs_mean_s": 0.001130724199992983,
-            "aa_median_s": 0.011494308999999703,
-            "aa_relative": 0.02202468904965203,
-            "baseline_median_s": 0.011246605999986059,
-            "candidate_median_s": 0.001271379999934652,
-            "gain_high_s": 0.011348609585887369,
-            "gain_low_s": 0.00663569761402565,
-            "gain_mean_s": 0.008992153599956509,
+            "aa_abs_high_s": 0.00010084534177647927,
+            "aa_abs_low_s": 6.7982581728903994e-06,
+            "aa_abs_mean_s": 5.3821799974684835e-05,
+            "aa_median_s": 0.006587986999875284,
+            "aa_relative": 0.015017867452428854,
+            "baseline_median_s": 0.006688433000135774,
+            "candidate_median_s": 0.0010922700000719487,
+            "gain_high_s": 0.0056584413221481625,
+            "gain_low_s": 0.005418889877737358,
+            "gain_mean_s": 0.00553866559994276,
             "max_abs_error": 1.1102230246251565e-16,
-            "noise_floor_s": 0.003481483771071388,
+            "noise_floor_s": 0.00010084534177647927,
             "performance_gate": "paired_ci_exceeds_aa_noise",
             "performance_passed": true,
-            "speedup": 8.845983105416261
+            "speedup": 6.123424610851897
           },
           "passed": true,
-          "peak_rss_kb": 12036,
+          "peak_rss_kb": null,
           "performance_evaluated": true,
           "performance_passed": true,
           "source_hashes": {
             "project.py": "9e920a4dba5c0a1c5703ff9239519ced90cc4b8a3dda59f5762a04dc032eb762"
           },
-          "wall_s": 0.18978722799988645
+          "wall_s": 0.12533087100018747
         }
       },
       "matches_expectation": true,
@@ -189,13 +196,13 @@
             "max_step_abs_error": 0.486333289652679
           },
           "passed": false,
-          "peak_rss_kb": 11064,
+          "peak_rss_kb": null,
           "performance_evaluated": false,
           "performance_passed": null,
           "source_hashes": {
             "experiment.py": "a2e9dc6195b91230cff020ed912a1660f12e63aacb466e89387f35302050bd99"
           },
-          "wall_s": 0.02318074400000114
+          "wall_s": 0.019739615999924354
         },
         "incorrect": {
           "classification": "fail_correctness",
@@ -213,13 +220,13 @@
             "max_step_abs_error": 0.486333289652679
           },
           "passed": false,
-          "peak_rss_kb": 11072,
+          "peak_rss_kb": null,
           "performance_evaluated": false,
           "performance_passed": null,
           "source_hashes": {
             "experiment.py": "5d970d4713d01d89a0de20c5e7d294c6fe420013d60e2b17d780e3815532b47e"
           },
-          "wall_s": 0.02331768900012321
+          "wall_s": 0.02045930400004181
         },
         "known_good": {
           "classification": "pass",
@@ -234,13 +241,13 @@
             "max_step_abs_error": 0.0
           },
           "passed": true,
-          "peak_rss_kb": 11152,
+          "peak_rss_kb": null,
           "performance_evaluated": false,
           "performance_passed": null,
           "source_hashes": {
             "experiment.py": "9b61c6cf38fd792d1effdce11136c54f0ae14c906f5ec75b1a7223e480c3075f"
           },
-          "wall_s": 0.023693701999945915
+          "wall_s": 0.020462535999968168
         }
       },
       "matches_expectation": true,
