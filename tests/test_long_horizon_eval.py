@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import dataclasses
 import os
 import signal
 import sqlite3
@@ -11,11 +12,13 @@ import subprocess
 import sys
 import textwrap
 import time
+import types
 from pathlib import Path
 
 import pytest
 
 from scripts import long_horizon_eval as lh
+from vare.learning_pipeline.policy import MLXPolicy
 from vare.trajectory_store import PolicyCheckpoint, TrajectoryStore
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -116,6 +119,126 @@ def test_full_controller_metrics_on_fixture(tmp_path):
     agg = result["aggregate"]
     assert agg["episodes"] == 2 and agg["completion_rate"] == 1.0 and agg["final_success_rate"] == 1.0
     assert agg["synthetic"] is True
+
+
+def test_mlx_policy_keeps_exact_prompt_and_completion_token_ids(monkeypatch):
+    events = [
+        types.SimpleNamespace(text="A", token=10, generation_tokens=1, finish_reason=None),
+        types.SimpleNamespace(text="B", token=11, generation_tokens=2, finish_reason="stop"),
+    ]
+    sampler_arguments = {}
+
+    def stream_generate(_model, _tokenizer, prompt_ids, *, max_tokens, sampler):
+        assert prompt_ids == [101, 102]
+        assert max_tokens == 8
+        assert sampler == "sampler"
+        yield from events
+
+    def make_sampler(**kwargs):
+        sampler_arguments.update(kwargs)
+        return "sampler"
+
+    mlx_lm = types.ModuleType("mlx_lm")
+    mlx_lm.__path__ = []
+    mlx_lm.stream_generate = stream_generate
+    sample_utils = types.ModuleType("mlx_lm.sample_utils")
+    sample_utils.make_sampler = make_sampler
+    monkeypatch.setitem(sys.modules, "mlx_lm", mlx_lm)
+    monkeypatch.setitem(sys.modules, "mlx_lm.sample_utils", sample_utils)
+
+    policy = MLXPolicy.__new__(MLXPolicy)
+    policy._mx = types.SimpleNamespace(random=types.SimpleNamespace(seed=lambda _seed: None))
+    policy.model = object()
+    policy.tokenizer = types.SimpleNamespace(
+        apply_chat_template=lambda _messages, **_kwargs: [101, 102],
+    )
+    policy.max_prompt_tokens = 32
+    generation = policy.generate(
+        [{"role": "user", "content": "task"}], max_tokens=8,
+        temperature=0.7, top_p=1.0, seed=4,
+    )
+
+    assert generation.text == "AB"
+    assert generation.prompt_ids == [101, 102]
+    assert generation.completion_ids == [10, 11]
+    assert generation.prompt_tokens == 2 and generation.completion_tokens == 2
+    assert generation.sampling_temperature == 0.7 and generation.sampling_top_p == 1.0
+    assert sampler_arguments == {"temp": 0.7, "top_p": 1.0, "min_p": 0.0, "top_k": 0}
+
+
+def test_verified_grpo_group_extracts_only_shared_initial_action(tmp_path):
+    task = dataclasses.replace(
+        lh.fixture_task(), synthetic=False, source_revision="d" * 40,
+        workspace_patch_sha256="e" * 64,
+    )
+    script = list(lh.FIXTURE_SCRIPT)
+    bad_script = list(script)
+    bad_script[5] = lh._call(
+        "replace_text", path="calc/ops.py", old_text="return a - b",
+        new_text="return a * b", expected_source_sha256=lh.FIXTURE_OPS_SHA256,
+    )
+
+    class TracePolicy(lh.ScriptedPolicy):
+        synthetic = False
+
+        def generate(self, messages, *, max_tokens, temperature, top_p, seed, task=None):
+            sample_seed = seed // 4096
+            self.calls += 1
+            index = sum(message["role"] == "assistant" for message in messages)
+            selected = bad_script if sample_seed == 1 else script
+            text = selected[index] if index < len(selected) else "I have nothing further."
+            if len(text.split()) > max_tokens:
+                text = " ".join(text.split()[:max_tokens])
+            return lh.Generation(
+                text, 2, 2, 0.0, "stop",
+                prompt_ids=[101, 102], completion_ids=[200, 300 + sample_seed],
+                sampling_temperature=temperature, sampling_top_p=top_p,
+            )
+
+    policy = TracePolicy(script, policy_id="trace-policy")
+    arm = lh.PolicyArm("base", policy, PolicyCheckpoint("base", 0, policy.checkpoint_sha256()))
+    controller = dataclasses.replace(lh.CONTROLLER_PRESETS["full"], name="grpo-train", temperature=0.7)
+    grader = FakeGrader()
+    root = tmp_path / "grpo-group"
+    harness = lh.EpisodeHarness(
+        root, arm, controller, factories={task.task_id: lh.write_fixture},
+        public_tests={task.task_id: lh.fixture_public_tests},
+        grader_for=lambda _task: grader,
+    )
+    ids = harness.enroll_grpo_group(
+        [lh.EpisodeSpec(task, seed) for seed in (0, 1)], group_id="train:fixture:group-0",
+    )
+    harness.run()
+
+    metrics = lh.run_metrics(root)
+    assert [episode["seed"] for episode in metrics["episodes"]] == [0, 1]
+    assert [episode["final_success"] for episode in metrics["episodes"]] == [True, False]
+    store = TrajectoryStore(root / "trajectories.sqlite", audit_only=True)
+    samples = lh.grpo_samples_from_verified_group(store, "train:fixture:group-0")
+    assert len(samples) == 2
+    assert [sample.reward for sample in samples] == [1.0, 0.0]
+    assert [sample.sample_index for sample in samples] == [0, 1]
+    assert samples[0].prompt_ids == samples[1].prompt_ids == [101, 102]
+    assert samples[0].completion_ids != samples[1].completion_ids
+    assert samples[0].behavior_checkpoint_id == samples[1].behavior_checkpoint_id
+    assert all(sample.behavior_logprobs is None for sample in samples)
+    assert set(ids) == {row["id"] for row in store.group("train:fixture:group-0")}
+
+
+def test_grpo_group_rejects_truncated_sampler_before_enrollment(tmp_path):
+    task = dataclasses.replace(lh.fixture_task(), synthetic=False)
+    arm = stub_arm()
+    controller = dataclasses.replace(
+        lh.CONTROLLER_PRESETS["full"], name="truncated", temperature=0.7, top_p=0.9,
+    )
+    harness = lh.EpisodeHarness(
+        tmp_path / "truncated", arm, controller, factories={task.task_id: lh.write_fixture},
+    )
+    with pytest.raises(ValueError, match="top_p == 1.0"):
+        harness.enroll_grpo_group(
+            [lh.EpisodeSpec(task, seed) for seed in (0, 1)], group_id="train:fixture:truncated",
+        )
+    assert harness.store.group("train:fixture:truncated") == []
 
 
 def test_budget_stop_requires_public_and_trusted_grade_for_success(tmp_path):

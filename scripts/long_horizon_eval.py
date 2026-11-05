@@ -39,6 +39,7 @@ import dataclasses
 from dataclasses import dataclass, field
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -829,6 +830,65 @@ class EpisodeHarness:
             ids.append(ident)
         return ids
 
+    def enroll_grpo_group(self, specs: Sequence[EpisodeSpec], *, group_id: str) -> list[str]:
+        """Enroll one complete, same-task group for first-turn GRPO.
+
+        The shared task metadata contains the ordered member seeds, so the
+        trajectory store can verify that every member has the same task while
+        the worker still recovers the right per-member sampling seed.
+        """
+        from vare.trajectory_store import identity
+
+        specs = tuple(specs)
+        identity(group_id)
+        if len(specs) < 2:
+            raise ValueError("GRPO groups require at least two episodes")
+        temperature, top_p = self.controller.temperature, self.controller.top_p
+        if (isinstance(temperature, bool) or not isinstance(temperature, (int, float))
+                or not math.isfinite(temperature) or temperature <= 0
+                or isinstance(top_p, bool) or not isinstance(top_p, (int, float))
+                or not math.isfinite(top_p) or top_p != 1.0):
+            raise ValueError("GRPO rollouts require temperature > 0 and top_p == 1.0")
+        if self.fault_injection:
+            raise ValueError("GRPO groups cannot enroll with fault injection")
+        first = specs[0]
+        if first.task.split != "train":
+            raise ValueError("GRPO rollouts may use only Train tasks")
+        if any(spec.task.sha256() != first.task.sha256() for spec in specs):
+            raise ValueError("GRPO group members must use one immutable task")
+        seeds = [spec.seed for spec in specs]
+        if any(type(seed) is not int or seed < 0 for seed in seeds) or len(set(seeds)) != len(seeds):
+            raise ValueError("GRPO group seeds must be unique nonnegative integers")
+
+        common_meta = {
+            "schema": SCHEMA, "arm": self.arm.name, "group_seeds": seeds,
+            "grpo_group_id": group_id,
+            "controller": self.controller.to_dict(), "controller_sha256": self.controller.sha256(),
+            "task_sha256": first.task.sha256(), "repository": first.task.repository,
+            "task_split": first.task.split, "source_revision": first.task.source_revision,
+            "workspace_patch_sha256": first.task.workspace_patch_sha256,
+            "protocol_sha256": self.protocol_sha256,
+            "target_files": list(first.task.target_files),
+            "policy": dataclasses.asdict(self.arm.checkpoint), "fault_injection": {},
+            "synthetic_policy": bool(getattr(self.arm.policy, "synthetic", True)),
+            "synthetic_task": first.task.synthetic,
+            "public_tests": first.task.task_id in self.public_tests,
+        }
+        task = Task(id=first.task.task_id, prompt=first.task.issue,
+                    family=first.task.repository, metadata=common_meta)
+        ids = []
+        group_suffix = hashlib.sha256(group_id.encode("utf-8")).hexdigest()[:16]
+        for member, spec in enumerate(specs):
+            base = spec.episode_id(self.arm.name, self.controller)
+            ident = f"{base[:140]}:g{group_suffix}"
+            self.store.submit(ident, task, expected_steps=self.controller.max_turns,
+                              group_id=group_id, member=member, group_size=len(specs),
+                              max_attempts=self.max_attempts, lifetime_seconds=86400,
+                              now=self.clock())
+            self.tasks[ident] = spec.task
+            ids.append(ident)
+        return ids
+
     # ---- workspace reconstruction
     def _workspace(self, ident: str) -> Path:
         return self.root / "workspaces" / ident.replace(":", "_")
@@ -898,7 +958,13 @@ class EpisodeHarness:
         runtime, steps = self.rebuild(ident)
         controller = self.controller
         policy = self.arm.policy
-        seed = meta["seed"]
+        if "group_seeds" in meta:
+            member = int(self.store.trajectory(ident)["member"])
+            if member < 0 or member >= len(meta["group_seeds"]):
+                raise ResumeMismatchError(f"{ident} has an invalid group member seed")
+            seed = meta["group_seeds"][member]
+        else:
+            seed = meta["seed"]
         messages: list[dict[str, str]] = [
             {"role": "system", "content": system_prompt(task, runtime, controller)},
             {"role": "user", "content": "Begin. First call list_files."},
@@ -1041,6 +1107,30 @@ class EpisodeHarness:
                                  "completion_tokens": int(generation.completion_tokens),
                                  "finish": generation.finish, "max_tokens": limit},
                   "controller": assists, "calls": calls, "calls_dropped": dropped}
+        if index == 0 and generation.prompt_ids is not None and generation.completion_ids is not None:
+            prompt_ids = list(generation.prompt_ids)
+            completion_ids = list(generation.completion_ids)
+            if (prompt_ids and completion_ids
+                    and all(type(token) is int and token >= 0 for token in prompt_ids)
+                    and all(type(token) is int and token >= 0 for token in completion_ids)):
+                temperature = generation.sampling_temperature
+                top_p = generation.sampling_top_p
+                distribution = (
+                    "untruncated_softmax_temperature"
+                    if isinstance(temperature, (int, float)) and not isinstance(temperature, bool)
+                    and temperature > 0 and top_p == 1.0
+                    else "greedy" if temperature == 0
+                    else "truncated_or_unverified"
+                )
+                action["behavior_trace"] = {
+                    "schema": "vare_long_horizon_behavior_trace_v1",
+                    "prompt_ids": prompt_ids, "completion_ids": completion_ids,
+                    "prompt_ids_sha256": sha256_json(prompt_ids),
+                    "completion_ids_sha256": sha256_json(completion_ids),
+                    "response_sha256": hashlib.sha256(raw.encode("utf-8")).hexdigest(),
+                    "temperature": temperature, "top_p": top_p,
+                    "distribution": distribution,
+                }
         if calls:
             action.update(operation_id=f"{ident}:op:{index}", semantics="at_least_once")
         return state, action
@@ -1218,11 +1308,18 @@ def episode_metrics(store: TrajectoryStore, ident: str) -> dict[str, Any]:
         require_task_binding=meta.get("schema") == SCHEMA,
     )
     attempts = _execute_claims(store, ident)
+    member = int(row["member"])
+    if isinstance(meta.get("group_seeds"), list):
+        if member >= len(meta["group_seeds"]):
+            raise ValueError("trajectory member has no enrolled seed")
+        seed = meta["group_seeds"][member]
+    else:
+        seed = meta["seed"]
     return {
         "episode_id": ident, "task_id": spec["task"]["id"], "repository": meta["repository"],
         "arm": meta["arm"], "controller": meta["controller"]["name"], "controller_sha256": meta["controller_sha256"],
         "protocol_sha256": meta.get("protocol_sha256"),
-        "seed": meta["seed"], "synthetic_policy": meta["synthetic_policy"], "synthetic_task": meta["synthetic_task"],
+        "seed": seed, "synthetic_policy": meta["synthetic_policy"], "synthetic_task": meta["synthetic_task"],
         "store_state": row["state"], "completed": row["state"] in TERMINAL_STORE_STATES,
         "stop_reason": stop_reason, "turns": len(real), "padding_steps": len(steps) - len(real) - len(terminal),
         "execute_attempts": attempts, "resumed": attempts > 1,
@@ -1279,6 +1376,153 @@ def episode_metrics(store: TrajectoryStore, ident: str) -> dict[str, Any]:
         "final_success": final_success,
         "trajectory_head": row["head"],
     }
+
+
+def grpo_samples_from_verified_group(store: TrajectoryStore, group_id: str) -> list[Any]:
+    """Convert one intact trusted Train group into first-turn GRPO samples.
+
+    GRPO's current prompt-group contract requires identical input tokens. The
+    first turn is the only shared state across independently executed episodes;
+    later turns depend on each member's tool observations. Reward is the final
+    trusted episode outcome, including required public checks. Behavior log
+    probabilities are intentionally recomputed by the existing on-policy
+    trainer from the exact token trace and checkpoint before the optimizer step.
+    """
+    from vare.grpo_mlx import Sample, group_samples
+
+    audit = audit_trajectory_store(store.path)
+    if audit.get("pass") is not True:
+        raise ValueError("trajectory store integrity audit did not pass")
+    rows = store.group(group_id)
+    if not rows:
+        raise ValueError("empty trajectory group")
+    group_size = int(rows[0]["group_size"])
+    if (len(rows) != group_size or [int(row["member"]) for row in rows] != list(range(group_size))
+            or any(row["group_size"] != group_size or row["state"] != "verified" for row in rows)):
+        raise ValueError("GRPO requires a complete verified trajectory group")
+
+    samples = []
+    shared_identity: tuple[Any, ...] | None = None
+    shared_prompt_ids: list[int] | None = None
+    for row in rows:
+        task_record = json.loads(row["task"])
+        task = task_record["task"]
+        meta = task["metadata"]
+        if (meta.get("schema") != SCHEMA or meta.get("task_split") != "train"
+                or meta.get("synthetic_policy") is not False or meta.get("synthetic_task") is not False):
+            raise ValueError("GRPO source must be a real-policy, real Train trajectory")
+        if meta.get("grpo_group_id") != group_id:
+            raise ValueError("trajectory group identity differs from its enrollment")
+        if not isinstance(meta.get("group_seeds"), list) or len(meta["group_seeds"]) != group_size:
+            raise ValueError("GRPO group seed manifest is missing or incomplete")
+        if (any(type(seed) is not int or seed < 0 for seed in meta["group_seeds"])
+                or len(set(meta["group_seeds"])) != group_size):
+            raise ValueError("GRPO group seed manifest is invalid")
+        if (not isinstance(meta.get("task_sha256"), str)
+                or re.fullmatch(r"[0-9a-f]{64}", meta["task_sha256"]) is None
+                or not isinstance(meta.get("source_revision"), str)
+                or re.fullmatch(r"[0-9a-f]{40}", meta["source_revision"]) is None
+                or not isinstance(meta.get("workspace_patch_sha256"), str)
+                or re.fullmatch(r"[0-9a-f]{64}", meta["workspace_patch_sha256"]) is None):
+            raise ValueError("GRPO task lacks immutable source and patch provenance")
+
+        verification = json.loads(row["verification"] or "null")
+        if (not isinstance(verification, dict) or verification.get("trusted") is not True
+                or type(verification.get("passed")) is not bool
+                or not isinstance(verification.get("metadata"), dict)
+                or verification["metadata"].get("trajectory_sha256") != row["head"]):
+            raise ValueError("GRPO group contains an untrusted or unbound verifier result")
+        verifier_config = None
+        with store.connection() as db:
+            verifier_row = db.execute(
+                "SELECT config FROM verifiers WHERE name=? AND version=?",
+                (verification["verifier_name"], verification["verifier_version"]),
+            ).fetchone()
+        if verifier_row is not None:
+            verifier_config = verifier_row[0]
+        if verifier_config is None or verification["metadata"].get("verifier_config_sha256") != verifier_config:
+            raise ValueError("GRPO verifier identity is not registered and source-bound")
+
+        steps = list(store.iter_steps(row["id"]))
+        if not steps or steps[0]["index"] != 0:
+            raise ValueError("GRPO trajectory lacks its first committed action")
+        initial_hashes = steps[0].get("state", {}).get("initial_file_sha256")
+        if (not isinstance(initial_hashes, dict) or not initial_hashes
+                or any(not isinstance(name, str) or not isinstance(digest, str)
+                       or re.fullmatch(r"[0-9a-f]{64}", digest) is None
+                       for name, digest in initial_hashes.items())):
+            raise ValueError("GRPO trajectory lacks valid initial source hashes")
+        action = steps[0]["action"]
+        trace = action.get("behavior_trace")
+        if not isinstance(trace, dict) or trace.get("schema") != "vare_long_horizon_behavior_trace_v1":
+            raise ValueError("GRPO trajectory lacks an exact first-turn behavior trace")
+        prompt_ids, completion_ids = trace.get("prompt_ids"), trace.get("completion_ids")
+        if (not isinstance(prompt_ids, list) or not prompt_ids
+                or any(type(token) is not int or token < 0 for token in prompt_ids)
+                or not isinstance(completion_ids, list) or not completion_ids
+                or any(type(token) is not int or token < 0 for token in completion_ids)):
+            raise ValueError("GRPO behavior trace token IDs are invalid")
+        if (trace.get("prompt_ids_sha256") != sha256_json(prompt_ids)
+                or trace.get("completion_ids_sha256") != sha256_json(completion_ids)
+                or trace.get("response_sha256") != hashlib.sha256(
+                    str(action.get("model_output", "")).encode("utf-8")).hexdigest()):
+            raise ValueError("GRPO behavior trace content digest mismatch")
+        if (action.get("generation", {}).get("prompt_tokens") != len(prompt_ids)
+                or action.get("generation", {}).get("completion_tokens") != len(completion_ids)):
+            raise ValueError("GRPO behavior trace token counts differ from the action record")
+        controller = meta.get("controller", {})
+        temperature, top_p = trace.get("temperature"), trace.get("top_p")
+        if (trace.get("distribution") != "untruncated_softmax_temperature"
+                or isinstance(temperature, bool) or not isinstance(temperature, (int, float))
+                or not math.isfinite(temperature) or temperature <= 0
+                or isinstance(top_p, bool) or not isinstance(top_p, (int, float))
+                or not math.isfinite(top_p) or top_p != 1.0 or controller.get("temperature") != temperature
+                or controller.get("top_p") != top_p):
+            raise ValueError("GRPO behavior sampler is not the exact untruncated temperature policy")
+
+        policy = steps[0].get("policy")
+        if policy != meta.get("policy") or not isinstance(policy, dict):
+            raise ValueError("GRPO behavior checkpoint differs from the enrolled policy")
+        policy_id, policy_version, checkpoint_sha256 = (
+            policy.get("policy_id"), policy.get("version"), policy.get("checkpoint_sha256"))
+        if (not isinstance(policy_id, str) or type(policy_version) is not int
+                or not isinstance(checkpoint_sha256, str)
+                or re.fullmatch(r"[0-9a-f]{64}", checkpoint_sha256) is None):
+            raise ValueError("GRPO behavior checkpoint identity is invalid")
+        initial_hashes_sha256 = sha256_json(initial_hashes)
+        identity = (task["id"], meta["task_sha256"], meta["source_revision"],
+                    meta["workspace_patch_sha256"], initial_hashes_sha256,
+                    policy_id, policy_version, checkpoint_sha256, verification["verifier_name"],
+                    verification["verifier_version"], verifier_config, temperature, top_p,
+                    meta.get("controller_sha256"))
+        if shared_identity is None:
+            shared_identity = identity
+            shared_prompt_ids = list(prompt_ids)
+        elif identity != shared_identity or prompt_ids != shared_prompt_ids:
+            raise ValueError("GRPO group mixes task, policy, verifier, sampler, controller, or prompt identity")
+
+        metrics = episode_metrics(store, row["id"])
+        samples.append(Sample(
+            instance_id=group_id,
+            behavior_checkpoint_id=f"{policy_id}:v{policy_version}:{checkpoint_sha256}",
+            behavior_step=policy_version,
+            prompt_ids=list(prompt_ids), completion_ids=list(completion_ids),
+            reward=float(bool(metrics["final_success"])),
+            verifier=f"{verification['verifier_name']}:v{verification['verifier_version']}:{verifier_config}",
+            sample_index=int(row["member"]), behavior_logprobs=None,
+            meta={"trajectory_id": row["id"], "trajectory_sha256": row["head"],
+                  "task_id": task["id"], "task_sha256": meta["task_sha256"],
+                  "source_revision": meta["source_revision"],
+                  "initial_source_hashes_sha256": initial_hashes_sha256,
+                  "policy_checkpoint_sha256": checkpoint_sha256,
+                  "behavior_temperature": float(temperature), "behavior_top_p": float(top_p),
+                  "final_success": bool(metrics["final_success"])},
+        ))
+
+    group_samples(samples, group_size=group_size)
+    if len({sample.verifier for sample in samples}) != 1:
+        raise ValueError("GRPO group mixes verifier identities")
+    return samples
 
 
 def _category(name: Any) -> str:
