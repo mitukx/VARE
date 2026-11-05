@@ -233,7 +233,9 @@ def group_samples(samples: Iterable[Sample], *, group_size: int | None = None) -
         if group_size is not None and len(g) != group_size:
             raise GroupError(f"partial group {key}: {len(g)} != {group_size}")
         for s in g:
-            segments = s.trajectory_segments if s.trajectory_segments is not None else [s]
+            segments: Sequence[Sample | TrajectorySegment] = (
+                s.trajectory_segments if s.trajectory_segments is not None else (s,)
+            )
             if not segments:
                 raise GroupError(f"empty trajectory in group {key}")
             if s.trajectory_segments is not None and (
@@ -400,8 +402,8 @@ def informative_samples(samples: Sequence[Sample], cfg: GRPOConfig) -> list[Samp
     return out
 
 
-def _sample_segments(sample: Sample) -> list[Sample | TrajectorySegment]:
-    return sample.trajectory_segments if sample.trajectory_segments is not None else [sample]
+def _sample_segments(sample: Sample) -> Sequence[Sample | TrajectorySegment]:
+    return sample.trajectory_segments if sample.trajectory_segments is not None else (sample,)
 
 
 def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -> list[float]:
