@@ -36,9 +36,9 @@ def find_experiment_root() -> Path:
 ROOT = find_experiment_root()
 WORK = ROOT / "work/vare-rsi-qwen3-4b-mlx-20261106"
 OUTPUTS = ROOT / "outputs/vare-rsi-heldout-qualification-v2-20261105"
-RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-004"
-ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v13-pydantic-14138-interface-recovery.json"
-RUN_LOCK_PATH = OUTPUTS / "real-model-run-v21-14138-interface-recovery-grpo-group.lock.json"
+RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-005"
+ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v14-pydantic-14138-system-resource-recovery.json"
+RUN_LOCK_PATH = OUTPUTS / "real-model-run-v22-14138-system-resource-recovery-grpo-group.lock.json"
 MODEL_PATH = WORK / "model"
 MODEL_MANIFEST_PATH = WORK / "model-manifest.json"
 INTEGRATION = ROOT / "work/VARE-rsi-integration-20261105"
@@ -52,7 +52,7 @@ BASE_SEED = 20261106
 TEMPERATURE = 0.8
 GROUP_SIZE = 8
 NEW_ROLLOUT_COUNT = 8
-NEW_ROLLOUT_START_INDEX = 9
+NEW_ROLLOUT_START_INDEX = 10
 MAX_TURNS = 16
 MAX_TOTAL_TOKENS = 4096
 MAX_ACTION_TOKENS = 512
@@ -1901,7 +1901,7 @@ def run_experiment() -> int:
         "authorized_train_rollout_exposure_budget": NEW_ROLLOUT_COUNT,
         "task_cumulative_exposure_cap": NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT,
         "new_training_sample_indices": list(range(NEW_ROLLOUT_START_INDEX, NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT)),
-        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-003/summary.json",
+        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-004/summary.json",
         "prompt_policy_version": "pydantic-14138-prompt-v3-reliable-read-patch-tool",
         "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v3",
         "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
