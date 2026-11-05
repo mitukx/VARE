@@ -236,6 +236,67 @@ def _samples_with_lp(model, samples, temperature=1.0):
 
 
 @needs_mlx
+def test_full_trajectory_grpo_credits_later_actions_with_distinct_contexts():
+    import mlx.optimizers as optim
+
+    m = _bigram()
+    prompt0 = [0]
+    completion0 = [3]
+    later_prompt_good = [0, 3, 1]
+    later_prompt_bad = [0, 3, 2]
+
+    samples = [
+        G.Sample(
+            instance_id="task",
+            behavior_checkpoint_id="c0",
+            behavior_step=0,
+            prompt_ids=prompt0,
+            completion_ids=completion0,
+            reward=1.0,
+            verifier="v1",
+            sample_index=0,
+            trajectory_segments=[
+                G.TrajectorySegment(prompt_ids=prompt0, completion_ids=completion0),
+                G.TrajectorySegment(prompt_ids=later_prompt_good, completion_ids=[4]),
+            ],
+        ),
+        G.Sample(
+            instance_id="task",
+            behavior_checkpoint_id="c0",
+            behavior_step=0,
+            prompt_ids=prompt0,
+            completion_ids=completion0,
+            reward=0.0,
+            verifier="v1",
+            sample_index=1,
+            trajectory_segments=[
+                G.TrajectorySegment(prompt_ids=prompt0, completion_ids=completion0),
+                G.TrajectorySegment(prompt_ids=later_prompt_bad, completion_ids=[5]),
+            ],
+        ),
+    ]
+    G.compute_behavior_logprobs(m, samples, temperature=1.0)
+    before_good = G.forward_logprobs(m, samples[0], temperature=1.0)[1]
+    before_bad = G.forward_logprobs(m, samples[1], temperature=1.0)[1]
+    record = G.train_step(
+        m,
+        optim.SGD(learning_rate=0.2),
+        samples,
+        G.GRPOConfig(max_grad_norm=None, group_size=2),
+        policy_checkpoint_id="c0",
+        policy_step=0,
+    )
+    after_good = G.forward_logprobs(m, samples[0], temperature=1.0)[1]
+    after_bad = G.forward_logprobs(m, samples[1], temperature=1.0)[1]
+
+    assert record["update_applied"] and record["params_changed"]
+    assert record["n_trained_action_segments"] == 4
+    assert record["n_tokens"] == 4
+    assert after_good > before_good
+    assert after_bad < before_bad
+
+
+@needs_mlx
 def test_on_policy_gradient_matches_float64_reference():
     """On-policy (rho == 1) gradient == -(1/N) sum_i A_i sum_t grad log pi."""
     import numpy as np

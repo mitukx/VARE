@@ -13,8 +13,10 @@ rollout groups:
   excluded from the loss denominator, so it changes neither the gradient nor
   the normalization of the other groups. A step with no informative group
   applies no optimizer update.
-* Log-probabilities are computed on completion tokens only (prompt and padding
-  are masked out) from ``logits / temperature``.
+* Log-probabilities are computed on policy-generated completion tokens only
+  (prompt and padding are masked out) from ``logits / temperature``. A Sample
+  may contain multiple independently conditioned trajectory segments; the same
+  group-relative terminal advantage is then applied to every action segment.
 * The objective is the PPO/GRPO clipped surrogate
   ``min(rho * A, clip(rho, 1 - eps_low, 1 + eps_high) * A)`` with
   ``rho = exp(logp_current - logp_behavior)``, averaged over all completion
@@ -162,6 +164,16 @@ class GRPOConfig:
 
 
 @dataclass
+class TrajectorySegment:
+    """One policy-generated action with its actual conditioning context."""
+
+    prompt_ids: list[int]
+    completion_ids: list[int]
+    sampling_behavior_logprobs: list[float] | None = None
+    behavior_logprobs: list[float] | None = None
+
+
+@dataclass
 class Sample:
     instance_id: str
     behavior_checkpoint_id: str
@@ -173,6 +185,10 @@ class Sample:
     sample_index: int = 0
     behavior_logprobs: list[float] | None = None
     meta: dict[str, Any] = field(default_factory=dict)
+    # When present, terminal reward is assigned to every policy action token
+    # across these independently conditioned turns. The first segment must
+    # match prompt_ids/completion_ids for backward-compatible grouping.
+    trajectory_segments: list[TrajectorySegment] | None = None
 
     @property
     def group_key(self) -> tuple[str, str]:
@@ -212,19 +228,46 @@ def group_samples(samples: Iterable[Sample], *, group_size: int | None = None) -
             raise GroupError(f"mixed verifier versions in group {key}")
         if len({s.behavior_step for s in g}) != 1:
             raise GroupError(f"mixed behavior steps in group {key}")
+        if len({s.trajectory_segments is not None for s in g}) != 1:
+            raise GroupError(f"mixed single-sequence and trajectory samples in group {key}")
         if group_size is not None and len(g) != group_size:
             raise GroupError(f"partial group {key}: {len(g)} != {group_size}")
         for s in g:
-            if not s.completion_ids:
-                raise GroupError(f"empty completion in group {key}")
-            if not s.prompt_ids or any(type(token) is not int for token in (*s.prompt_ids, *s.completion_ids)):
-                raise GroupError(f"prompt and completion tokens must be integer IDs in group {key}")
-            if s.behavior_logprobs is not None:
-                if len(s.behavior_logprobs) != len(s.completion_ids):
-                    raise GroupError(f"behavior log-probability length mismatch in group {key}")
-                if any(isinstance(value, bool) or not isinstance(value, (int, float))
-                       or not math.isfinite(value) or value > 0 for value in s.behavior_logprobs):
-                    raise GroupError(f"behavior log-probabilities must be finite nonpositive numbers in group {key}")
+            segments = s.trajectory_segments if s.trajectory_segments is not None else [s]
+            if not segments:
+                raise GroupError(f"empty trajectory in group {key}")
+            if s.trajectory_segments is not None and (
+                segments[0].prompt_ids != s.prompt_ids
+                or segments[0].completion_ids != s.completion_ids
+            ):
+                raise GroupError(f"first trajectory segment differs from the sample action in group {key}")
+            for segment in segments:
+                if not segment.completion_ids:
+                    raise GroupError(f"empty completion in group {key}")
+                if not segment.prompt_ids or any(
+                    type(token) is not int for token in (*segment.prompt_ids, *segment.completion_ids)
+                ):
+                    raise GroupError(f"prompt and completion tokens must be integer IDs in group {key}")
+                logprob_sets = []
+                if s.trajectory_segments is None:
+                    if s.behavior_logprobs is not None:
+                        logprob_sets.append(s.behavior_logprobs)
+                else:
+                    if segment.sampling_behavior_logprobs is not None:
+                        logprob_sets.append(segment.sampling_behavior_logprobs)
+                    if segment.behavior_logprobs is not None:
+                        logprob_sets.append(segment.behavior_logprobs)
+                for values in logprob_sets:
+                    if len(values) != len(segment.completion_ids):
+                        raise GroupError(f"behavior log-probability length mismatch in group {key}")
+                    if any(
+                        isinstance(value, bool) or not isinstance(value, (int, float))
+                        or not math.isfinite(value) or value > 0
+                        for value in values
+                    ):
+                        raise GroupError(
+                            f"behavior log-probabilities must be finite nonpositive numbers in group {key}"
+                        )
     return groups
 
 
@@ -342,7 +385,7 @@ def clipped_surrogate(logp, behavior_logp, advantages, mask, *, eps_low: float, 
     return loss, stats
 
 
-def sample_tensors(s: Sample, pad_id: int):
+def sample_tensors(s: Sample | TrajectorySegment, pad_id: int):
     tokens, mask = build_batch([(s.prompt_ids, s.completion_ids)], pad_id)
     start = len(s.prompt_ids) - 1
     return tokens, mask[:, start:], start
@@ -357,16 +400,23 @@ def informative_samples(samples: Sequence[Sample], cfg: GRPOConfig) -> list[Samp
     return out
 
 
+def _sample_segments(sample: Sample) -> list[Sample | TrajectorySegment]:
+    return sample.trajectory_segments if sample.trajectory_segments is not None else [sample]
+
+
 def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -> list[float]:
     """Plain (untraced) forward log-probs of ``s``'s completion tokens. Not used
     for the ratio: on Metal/bf16 it can differ from the differentiated forward
     by ~0.1 nats on single tokens (see ``compute_behavior_logprobs``)."""
     import mlx.core as mx
 
-    tokens, _, start = sample_tensors(s, pad_id)
-    lp = token_logprobs(model, tokens, temperature=temperature, start=start)
-    mx.eval(lp)
-    return [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
+    result: list[float] = []
+    for segment in _sample_segments(s):
+        tokens, _, start = sample_tensors(segment, pad_id)
+        lp = token_logprobs(model, tokens, temperature=temperature, start=start)
+        mx.eval(lp)
+        result.extend(float(x) for x in lp[0, : len(segment.completion_ids)].tolist())
+    return result
 
 
 def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig | None = None, *,
@@ -387,14 +437,21 @@ def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig 
         cfg = GRPOConfig(temperature=temperature)
     value_and_grad = _value_and_grad(model, cfg, n_tokens=1)
     for s in samples:
-        tokens, mask, start = sample_tensors(s, pad_id)
-        zeros = mx.zeros(mask.shape, dtype=mx.float32)
-        (_, (_, lp)), g = value_and_grad(tokens, mask, start, mx.zeros((1,), dtype=mx.float32), zeros)
-        mx.eval(lp, g)
-        del g
-        s.behavior_logprobs = [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
-        if after_sample is not None:
-            after_sample()
+        for index, segment in enumerate(_sample_segments(s)):
+            tokens, mask, start = sample_tensors(segment, pad_id)
+            zeros = mx.zeros(mask.shape, dtype=mx.float32)
+            (_, (_, lp)), g = value_and_grad(tokens, mask, start, mx.zeros((1,), dtype=mx.float32), zeros)
+            mx.eval(lp, g)
+            del g
+            values = [float(x) for x in lp[0, : len(segment.completion_ids)].tolist()]
+            if s.trajectory_segments is not None:
+                segment.behavior_logprobs = values
+                if index == 0:
+                    s.behavior_logprobs = values
+            else:
+                s.behavior_logprobs = values
+            if after_sample is not None:
+                after_sample()
 
 
 # ------------------------------------------------------------------ update
@@ -444,23 +501,31 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
     grads: Any = None
     loss_total = clipped = ratio_sum = kl_sum = ratio_max = max_lr = 0.0
     for s, a in work:
-        if s.behavior_logprobs is None:
-            raise ValueError("missing behavior log-probs")
-        tokens, mask, start = sample_tensors(s, pad_id)
-        blp = mx.array([s.behavior_logprobs], dtype=mx.float32)
-        (loss, (st, _lp)), g = value_and_grad(tokens, mask, start, mx.array([a], dtype=mx.float32), blp)
-        mx.eval(loss, st, g)
-        check_on_policy_log_ratio(policy_step - s.behavior_step, float(st["max_abs_log_ratio"]))
-        grads = g if grads is None else tree_map(lambda x, y: x + y, grads, g)
-        mx.eval(grads)
-        loss_total += float(loss)
-        clipped += float(st["clipped_tokens"])
-        ratio_sum += float(st["ratio_sum"])
-        kl_sum += float(st["kl_sum"])
-        ratio_max = max(ratio_max, float(st["ratio_max"]))
-        max_lr = max(max_lr, float(st["max_abs_log_ratio"]))
-        if after_sample is not None:
-            after_sample()
+        for segment in _sample_segments(s):
+            behavior_logprobs = (
+                segment.behavior_logprobs
+                if s.trajectory_segments is not None
+                else s.behavior_logprobs
+            )
+            if behavior_logprobs is None:
+                raise ValueError("missing behavior log-probs")
+            tokens, mask, start = sample_tensors(segment, pad_id)
+            blp = mx.array([behavior_logprobs], dtype=mx.float32)
+            (loss, (st, _lp)), g = value_and_grad(
+                tokens, mask, start, mx.array([a], dtype=mx.float32), blp
+            )
+            mx.eval(loss, st, g)
+            check_on_policy_log_ratio(policy_step - s.behavior_step, float(st["max_abs_log_ratio"]))
+            grads = g if grads is None else tree_map(lambda x, y: x + y, grads, g)
+            mx.eval(grads)
+            loss_total += float(loss)
+            clipped += float(st["clipped_tokens"])
+            ratio_sum += float(st["ratio_sum"])
+            kl_sum += float(st["kl_sum"])
+            ratio_max = max(ratio_max, float(st["ratio_max"]))
+            max_lr = max(max_lr, float(st["max_abs_log_ratio"]))
+            if after_sample is not None:
+                after_sample()
     diag = {"loss": loss_total, "clip_fraction": clipped / n_tokens, "ratio_mean": ratio_sum / n_tokens,
             "ratio_max": ratio_max, "approx_kl": kl_sum / n_tokens,
             "max_abs_log_ratio": max_lr}
@@ -490,11 +555,27 @@ def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, 
         "max_observed_lag": lag, "config": cfg.to_dict(), "groups": group_rows,
         "n_groups": len(group_rows), "n_informative_groups": sum(r["informative"] for r in group_rows),
         "n_samples": len(samples), "n_trained_samples": len(work),
+        "n_trained_action_segments": sum(len(_sample_segments(s)) for s, _ in work),
+        "credit_assignment": (
+            "full_trajectory_terminal_reward"
+            if samples and samples[0].trajectory_segments is not None
+            else "single_sequence_terminal_reward"
+        ),
     }
     for s, _ in work:  # zero-advantage samples need no log-probs
-        if s.behavior_logprobs is None or len(s.behavior_logprobs) != len(s.completion_ids):
-            raise ValueError(f"missing behavior log-probs for {s.instance_id}#{s.sample_index}")
-    n_tokens = sum(len(s.completion_ids) for s, _ in work)
+        for segment in _sample_segments(s):
+            behavior_logprobs = (
+                segment.behavior_logprobs
+                if s.trajectory_segments is not None
+                else s.behavior_logprobs
+            )
+            if behavior_logprobs is None or len(behavior_logprobs) != len(segment.completion_ids):
+                raise ValueError(f"missing behavior log-probs for {s.instance_id}#{s.sample_index}")
+    n_tokens = sum(
+        len(segment.completion_ids)
+        for s, _ in work
+        for segment in _sample_segments(s)
+    )
     record["n_tokens"] = n_tokens
     if not work:
         record.update(update_applied=False, reason="no_informative_group")
