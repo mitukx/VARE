@@ -56,7 +56,11 @@ _SCORE_PASSES = 6
 _BENCH_ROWS = 48
 _BENCH_COLS = 48
 _BENCH_WIDTH = 16
-_BENCH_REPEATS = 5
+# Index-aligned samples are only paired if they are taken in one interleaved
+# pass. A single burst of five repeats, then a later baseline burst, lets a
+# busy host inflate the A/A bound above the time-saved bound even when the
+# median ratio is large. The predicate remains gain_low > noise_floor.
+_BENCH_REPEATS = 12
 _PUBLIC_BENCH_ROWS = 36
 _PUBLIC_BENCH_COLS = 36
 _PUBLIC_BENCH_WIDTH = 12
@@ -399,6 +403,52 @@ def _public_score(task: ResearchTask, workspace: Path) -> dict[str, Any]:
     }
 
 
+def _one_bench_sample(
+    task: ResearchTask,
+    workspace: Path,
+    rows: list,
+    cols: list,
+) -> tuple[float | None, dict[str, Any] | None, float, int | None]:
+    """Time one repetition. Returns sample, failure, wall seconds, peak rss."""
+    bundle, failed = _invoke(task, workspace, [{
+        "id": "bench",
+        "op": "bench",
+        "module": "project",
+        "function": "score_matrix",
+        "args": [rows, cols, _SCORE_PASSES],
+        "warmup": 1,
+        "repeats": 1,
+    }])
+    if failed:
+        return None, failed, float(failed.get("wall_s") or 0.0), failed.get("peak_rss_kb")
+    assert bundle is not None
+    row = bundle["results"].get("bench")
+    elapsed = row.get("elapsed_s") if isinstance(row, dict) else None
+    wall = float(bundle["wall_s"])
+    peak = bundle["peak_rss_kb"]
+    if not isinstance(elapsed, list) or len(elapsed) != 1:
+        return None, _failure(
+            "malformed_output",
+            failures=["timing sample missing"],
+            hashes=bundle["hashes"],
+            wall_s=wall,
+            peak_rss_kb=peak,
+        ), wall, peak
+    try:
+        sample = float(elapsed[0])
+    except (TypeError, ValueError):
+        sample = float("nan")
+    if not math.isfinite(sample) or sample <= 0.0:
+        return None, _failure(
+            "unstable_measurement",
+            failures=["timing sample is not a positive finite duration"],
+            hashes=bundle["hashes"],
+            wall_s=wall,
+            peak_rss_kb=peak,
+        ), wall, peak
+    return sample, None, wall, peak
+
+
 def _grade_score(
     task: ResearchTask,
     workspace: Path,
@@ -424,15 +474,6 @@ def _grade_score(
                 "function": "score_matrix",
                 "args": [small_rows, small_cols, 1],
             },
-            {
-                "id": "bench",
-                "op": "bench",
-                "module": "project",
-                "function": "score_matrix",
-                "args": [bench_rows, bench_cols, _SCORE_PASSES],
-                "warmup": 1,
-                "repeats": _BENCH_REPEATS,
-            },
         ],
         expected_hashes=expected_hashes,
     )
@@ -450,8 +491,6 @@ def _grade_score(
     if worst > _SCORE_ATOL:
         failures.append("score residual exceeds tolerance")
     correctness_passed = not failures
-    bench = candidate["results"].get("bench")
-    elapsed = bench.get("elapsed_s") if isinstance(bench, dict) else None
     if not correctness_passed:
         return {
             "passed": False,
@@ -466,63 +505,43 @@ def _grade_score(
             "wall_s": candidate["wall_s"],
             "peak_rss_kb": candidate["peak_rss_kb"],
         }
-    if not isinstance(elapsed, list) or len(elapsed) != _BENCH_REPEATS:
-        return _failure(
-            "malformed_output",
-            failures=["timing samples missing"],
-            hashes=candidate["hashes"],
-            wall_s=candidate["wall_s"],
-            peak_rss_kb=candidate["peak_rss_kb"],
-            correctness_evaluated=True,
-            metrics={"max_abs_error": worst},
-        )
     baseline_workspace = task.root / "workspace"
-    baseline, base_failed = _invoke(task, baseline_workspace, [
-        {
-            "id": "bench-a",
-            "op": "bench",
-            "module": "project",
-            "function": "score_matrix",
-            "args": [bench_rows, bench_cols, _SCORE_PASSES],
-            "warmup": 1,
-            "repeats": _BENCH_REPEATS,
-        },
-        {
-            "id": "bench-b",
-            "op": "bench",
-            "module": "project",
-            "function": "score_matrix",
-            "args": [bench_rows, bench_cols, _SCORE_PASSES],
-            "warmup": 1,
-            "repeats": _BENCH_REPEATS,
-        },
-    ])
-    if base_failed:
-        base_failed["classification"] = "infrastructure_error"
-        base_failed["failures"] = ["baseline timing did not run"]
-        return base_failed
-    assert baseline is not None
-    series_a = baseline["results"]["bench-a"].get("elapsed_s")
-    series_b = baseline["results"]["bench-b"].get("elapsed_s")
-    if not isinstance(series_a, list) or not isinstance(series_b, list):
-        return _failure(
-            "infrastructure_error",
-            failures=["baseline timing malformed"],
-            hashes=candidate["hashes"],
-        )
+    series_a: list[float] = []
+    series_b: list[float] = []
+    elapsed: list[float] = []
+    timing_wall = float(candidate["wall_s"])
+    peak = candidate["peak_rss_kb"]
+    # One index is baseline, candidate, baseline again, so the A/A pair and
+    # the saved-time pair see the same host interval.
+    for _index in range(_BENCH_REPEATS):
+        for dest, timed_workspace in (
+            (series_a, baseline_workspace),
+            (elapsed, workspace),
+            (series_b, baseline_workspace),
+        ):
+            sample, sample_failed, sample_wall, sample_peak = _one_bench_sample(
+                task, timed_workspace, bench_rows, bench_cols,
+            )
+            timing_wall += sample_wall
+            if isinstance(sample_peak, int):
+                peak = sample_peak if peak is None else max(peak, sample_peak)
+            if sample_failed is not None:
+                sample_failed["source_hashes"] = candidate["hashes"]
+                sample_failed["wall_s"] = timing_wall
+                sample_failed["correctness_evaluated"] = True
+                sample_failed["metrics"] = {"max_abs_error": worst}
+                return sample_failed
+            assert sample is not None
+            dest.append(sample)
     try:
-        gate = paired_speed_gate(
-            [float(item) for item in series_a],
-            [float(item) for item in series_b],
-            [float(item) for item in elapsed],
-        )
+        gate = paired_speed_gate(series_a, series_b, elapsed)
     except (TypeError, ValueError):
         return _failure(
             "unstable_measurement",
             failures=["paired timing interval is undefined"],
             hashes=candidate["hashes"],
-            wall_s=candidate["wall_s"] + baseline["wall_s"],
-            peak_rss_kb=candidate["peak_rss_kb"],
+            wall_s=timing_wall,
+            peak_rss_kb=peak,
             correctness_evaluated=True,
             metrics={"max_abs_error": worst},
         )
@@ -541,11 +560,8 @@ def _grade_score(
         "metrics": metrics,
         "failures": failures,
         "source_hashes": candidate["hashes"],
-        "wall_s": candidate["wall_s"] + baseline["wall_s"],
-        "peak_rss_kb": max(
-            [value for value in (candidate["peak_rss_kb"], baseline["peak_rss_kb"]) if value is not None],
-            default=None,
-        ),
+        "wall_s": timing_wall,
+        "peak_rss_kb": peak,
     }
 
 

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from vare.research_lab.calibration import run_calibration
 from vare.research_lab.evaluation import grade
@@ -30,9 +31,38 @@ def accumulated_gradient(batches, params):
 '''
 
 
+def _expectation_mismatches(payload: dict[str, Any]) -> list[str]:
+    """Name each control that disagreed. Does not change the acceptance rule."""
+    lines: list[str] = []
+    for row in payload.get("tasks") or []:
+        task_id = row.get("task_id")
+        cases = row.get("cases") or {}
+        for name, case in cases.items():
+            if case.get("matches_expectation") is True:
+                continue
+            metrics = case.get("metrics") or {}
+            line = (
+                f"{task_id} {name}: expected_pass={case.get('expected_pass')} "
+                f"passed={case.get('passed')} classification={case.get('classification')}"
+            )
+            if task_id == "loop_invariant_score_v1" or "gain_low_s" in metrics or "noise_floor_s" in metrics:
+                line += (
+                    f" gain_low_s={metrics.get('gain_low_s')} "
+                    f"noise_floor_s={metrics.get('noise_floor_s')}"
+                )
+            failures = case.get("failures") or []
+            if failures:
+                line += f" failures={failures}"
+            lines.append(line)
+    return lines
+
+
 def test_calibration_distinguishes_baseline_known_good_and_incorrect(tmp_path: Path):
     payload = run_calibration(tmp_path / "work")
-    assert payload["expectations_met"] is True
+    mismatches = _expectation_mismatches(payload)
+    assert payload["expectations_met"] is True, (
+        "calibration expectations failed:\n" + "\n".join(mismatches)
+    )
     by_id = {row["task_id"]: row for row in payload["tasks"]}
     assert set(by_id) == {
         "grad_accum_scale_v1",
@@ -47,6 +77,39 @@ def test_calibration_distinguishes_baseline_known_good_and_incorrect(tmp_path: P
     assert good["performance_gate"] == "paired_ci_exceeds_aa_noise"
     assert good["gain_low_s"] > good["noise_floor_s"]
     assert score["incorrect"]["correctness_passed"] is False
+
+
+def test_expectation_mismatch_message_names_the_timing_bounds() -> None:
+    payload = {
+        "expectations_met": False,
+        "tasks": [{
+            "task_id": "loop_invariant_score_v1",
+            "cases": {
+                "baseline": {
+                    "matches_expectation": True,
+                    "expected_pass": False,
+                    "passed": False,
+                },
+                "known_good": {
+                    "matches_expectation": False,
+                    "expected_pass": True,
+                    "passed": False,
+                    "classification": "fail_performance",
+                    "metrics": {"gain_low_s": 0.001, "noise_floor_s": 0.002},
+                    "failures": [
+                        "paired time-saved lower bound does not exceed the A/A noise upper bound",
+                    ],
+                },
+            },
+        }],
+    }
+    text = "\n".join(_expectation_mismatches(payload))
+    assert "loop_invariant_score_v1 known_good" in text
+    assert "expected_pass=True" in text
+    assert "passed=False" in text
+    assert "gain_low_s=0.001" in text
+    assert "noise_floor_s=0.002" in text
+    assert "baseline" not in text
 
 
 def test_behavior_equivalent_gradient_passes_without_source_match(tmp_path: Path):
