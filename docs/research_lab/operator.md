@@ -4,10 +4,26 @@ ResearchGym runs small CPU machine-learning repairs. The controller records
 every committed experiment. Resume reads that journal and does not execute a
 committed experiment id again.
 
-The process boundary is a same-user process group with a wall-clock limit.
-It is not a container sandbox, a network namespace, or a second user. Do not
-treat it as one. Candidate code is imported only in the child. Expected
-values stay in the parent.
+## Isolation, fail closed
+
+The worker is a same-user subprocess in its own process group, with a
+wall-clock kill and a CPU rlimit. It is not a trusted OS sandbox. There is
+no container, no second user, no chroot, no network namespace, and no hard
+address-space limit. `IS_TRUSTED_OS_SANDBOX`,
+`HARD_ADDRESS_SPACE_LIMIT_APPLIED`, and `NETWORK_NAMESPACE_APPLIED` are
+false. `memory_limit_applied` stays false: `memory_mb` is a recorded budget,
+and a post-hoc `VmHWM` sample does not stop an allocation.
+
+Candidate code that runs can open a socket. The controller rejects a
+`shell` or `network` action before launch. That rejection does not confine
+code already executing inside the worker. A passing grade does not mean
+network access or memory use was prevented. Expected values stay in the
+parent. Commands are not taken from the candidate. A timeout is `timeout`,
+not a correctness failure.
+
+Do not read a Xeon CPU record as a Metal or M1 measurement.
+`counts_as_autonomous_model_success` stays false unless a real model-backed
+run is recorded, and this package does not start one.
 
 ## Commands
 

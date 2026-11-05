@@ -1,6 +1,6 @@
 {
-  "git_revision": "85a0cfedcb602b9e1476d1bed8cf2210b59d728b",
-  "note": "Compact journal. File bodies are omitted. Host paths are omitted. Oracle and first-hypothesis rows are controls.",
+  "git_revision": "a9903296433a10ad553d9289ad6dba93a792940d",
+  "note": "Compact journal. File bodies are omitted. Host paths are omitted. Oracle and first-hypothesis rows are controls. Performance acceptance is the paired confidence bound against A/A noise, not a fixed ratio. counts_as_autonomous_model_success is false. These timings are from a CPU guest, not Apple Silicon.",
   "runs": [
     {
       "actions": [
@@ -16,7 +16,7 @@
             "scale_ratio": 0.22585653985370344
           },
           "next_suggested_action": "extra_normalization",
-          "peak_rss_kb": 11084,
+          "peak_rss_kb": 11016,
           "seq": 1,
           "source_hashes": {
             "accum.py": "90f6800a1463c05feb8e699a940507c37be5cb19ec84dcaef5468f9b35010b35"
@@ -24,7 +24,7 @@
           "status": "baseline",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.023120476000030976
+          "wall_s": 0.023358558999916568
         },
         {
           "action_type": "edit",
@@ -38,7 +38,7 @@
             "scale_ratio": 0.05646413496342586
           },
           "next_suggested_action": "hoist_accumulation_scale",
-          "peak_rss_kb": 11080,
+          "peak_rss_kb": 11008,
           "seq": 2,
           "source_hashes": {
             "accum.py": "001d72bcb715922c674ed35ac23bcc2101c6780f5ec7d2dcf30e6382301bfff2"
@@ -46,7 +46,7 @@
           "status": "rejected",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.02331026199999542
+          "wall_s": 0.023081363999835958
         },
         {
           "action_type": "edit",
@@ -60,7 +60,7 @@
             "scale_ratio": 1.0
           },
           "next_suggested_action": "submit",
-          "peak_rss_kb": 11072,
+          "peak_rss_kb": 10924,
           "seq": 3,
           "source_hashes": {
             "accum.py": "5f64993f54e58130a9998de5dd358608014c6172a92765c79dc07dd6286cb083"
@@ -68,7 +68,7 @@
           "status": "supported",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.023215600999947128
+          "wall_s": 0.02311202900000353
         },
         {
           "action_type": "submit",
@@ -81,7 +81,7 @@
             "max_abs_error": 5.551115123125783e-17
           },
           "next_suggested_action": null,
-          "peak_rss_kb": 11068,
+          "peak_rss_kb": 11136,
           "seq": 4,
           "source_hashes": {
             "accum.py": "5f64993f54e58130a9998de5dd358608014c6172a92765c79dc07dd6286cb083"
@@ -89,7 +89,7 @@
           "status": "accepted",
           "verification_classification": "pass",
           "verification_passed": true,
-          "wall_s": 0.023225066999884802
+          "wall_s": 0.023737520000167933
         }
       ],
       "spec_sha256": "28d64adaf0f9cf2e42e7be92edb5cd415ac3d900a155f3faa39a00d7225a317f",
@@ -97,7 +97,7 @@
         "actions": 4,
         "counts_as_autonomous_model_success": false,
         "does_not_establish": "Passing this task shows a numerical repair of a fixed accumulator. It does not show that a learned model improved, and it does not authorize training.",
-        "journal_sha256": "9a5580fd105cc900203410eac1d98137b33146a517d3eb6bab299688976ae671",
+        "journal_sha256": "696f2379714502f894024e950df5e48369860d96ed27841296847e2519fb82e6",
         "model_backed": false,
         "oracle_calibration_passed": false,
         "proposer_kind": "diagnostic_policy",
@@ -126,10 +126,10 @@
           "hypothesis_id": "baseline",
           "metrics": {
             "max_abs_error": 0.0,
-            "median_elapsed_s": 0.004323008000028494
+            "median_elapsed_s": 0.004190911000023334
           },
           "next_suggested_action": "off_by_one_average",
-          "peak_rss_kb": 11824,
+          "peak_rss_kb": 11848,
           "seq": 1,
           "source_hashes": {
             "project.py": "73b0b395c4cc2ad2830ebc37f354fd09f29acfebb5e168ba9590f70aeb0dfdbb"
@@ -137,7 +137,7 @@
           "status": "baseline",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.043713151000019934
+          "wall_s": 0.04408817600005932
         },
         {
           "action_type": "edit",
@@ -149,10 +149,10 @@
           "hypothesis_id": "off_by_one_average",
           "metrics": {
             "max_abs_error": 0.18328340202422388,
-            "median_elapsed_s": 0.0042064450001362275
+            "median_elapsed_s": 0.004225125999937518
           },
           "next_suggested_action": "hoist_identical_passes",
-          "peak_rss_kb": 11928,
+          "peak_rss_kb": 11840,
           "seq": 2,
           "source_hashes": {
             "project.py": "14579c50fe7ee086a051df42aef5e1ac88e1039ca90a4f493652d5cf3d8a59c2"
@@ -160,7 +160,7 @@
           "status": "rejected",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.04385089600009451
+          "wall_s": 0.044069857000067714
         },
         {
           "action_type": "edit",
@@ -172,10 +172,10 @@
           "hypothesis_id": "hoist_identical_passes",
           "metrics": {
             "max_abs_error": 0.0,
-            "median_elapsed_s": 0.0005516599999282334
+            "median_elapsed_s": 0.0005754320000050939
           },
           "next_suggested_action": "submit",
-          "peak_rss_kb": 11044,
+          "peak_rss_kb": 11020,
           "seq": 3,
           "source_hashes": {
             "project.py": "9e920a4dba5c0a1c5703ff9239519ced90cc4b8a3dda59f5762a04dc032eb762"
@@ -183,7 +183,7 @@
           "status": "supported",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.023131129999910627
+          "wall_s": 0.0229729990001033
         },
         {
           "action_type": "submit",
@@ -194,15 +194,24 @@
           "failure_reason": "",
           "hypothesis_id": "submit",
           "metrics": {
-            "aa_median_s": 0.0067453999999997905,
-            "aa_relative": 0.011982846672458988,
-            "baseline_median_s": 0.006665527999984988,
-            "candidate_median_s": 0.0011808710000877909,
+            "aa_abs_high_s": 0.0011022588314848324,
+            "aa_abs_low_s": 0.00042110796836244854,
+            "aa_abs_mean_s": 0.0007616833999236405,
+            "aa_median_s": 0.0073857390000284795,
+            "aa_relative": 0.11849059313704952,
+            "baseline_median_s": 0.006603308999956425,
+            "candidate_median_s": 0.0012275470000986388,
+            "gain_high_s": 0.005641191855502364,
+            "gain_low_s": 0.005219855344475839,
+            "gain_mean_s": 0.005430523599989101,
             "max_abs_error": 1.1102230246251565e-16,
-            "speedup": 5.644586072051431
+            "noise_floor_s": 0.0011022588314848324,
+            "performance_gate": "paired_ci_exceeds_aa_noise",
+            "performance_passed": true,
+            "speedup": 5.379271831893867
           },
           "next_suggested_action": null,
-          "peak_rss_kb": 11996,
+          "peak_rss_kb": 11992,
           "seq": 4,
           "source_hashes": {
             "project.py": "9e920a4dba5c0a1c5703ff9239519ced90cc4b8a3dda59f5762a04dc032eb762"
@@ -210,15 +219,15 @@
           "status": "accepted",
           "verification_classification": "pass",
           "verification_passed": true,
-          "wall_s": 0.138791738000009
+          "wall_s": 0.13912933200003863
         }
       ],
-      "spec_sha256": "d112a5b7fff44be783d738678a5f1bd8c35254b42614403c3fb99f9f77f4abe4",
+      "spec_sha256": "49e74e4363b33ca1d4535d8c8c2860151bf62ec583fcaa2246a9d42f3d54ae76",
       "summary": {
         "actions": 4,
         "counts_as_autonomous_model_success": false,
         "does_not_establish": "A passing timing gate is a CPU microbenchmark of this function. It is not a hardware-scaling result and it does not authorize training.",
-        "journal_sha256": "8512c72768ecffdd798a7bb7f6287ee6aaf328b371b3f7ce11cc35616d69321f",
+        "journal_sha256": "deda7a74b81c997dfcfb5d473e786ca2958537a63931d391add1ade7ea879730",
         "model_backed": false,
         "oracle_calibration_passed": false,
         "proposer_kind": "diagnostic_policy",
@@ -251,7 +260,7 @@
             "recomputed_mse": 1570316.5558856968
           },
           "next_suggested_action": "shrink_learning_rate",
-          "peak_rss_kb": 11080,
+          "peak_rss_kb": 11004,
           "seq": 1,
           "source_hashes": {
             "experiment.py": "a2e9dc6195b91230cff020ed912a1660f12e63aacb466e89387f35302050bd99"
@@ -259,7 +268,7 @@
           "status": "baseline",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.023499778000086735
+          "wall_s": 0.023957244000030187
         },
         {
           "action_type": "edit",
@@ -275,7 +284,7 @@
             "recomputed_mse": 162.69397418393197
           },
           "next_suggested_action": "restore_descent_sign",
-          "peak_rss_kb": 11068,
+          "peak_rss_kb": 11052,
           "seq": 2,
           "source_hashes": {
             "experiment.py": "5d970d4713d01d89a0de20c5e7d294c6fe420013d60e2b17d780e3815532b47e"
@@ -283,7 +292,7 @@
           "status": "rejected",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.02312556499987295
+          "wall_s": 0.023360987999922145
         },
         {
           "action_type": "edit",
@@ -299,7 +308,7 @@
             "recomputed_mse": 1.3722669133256646e-11
           },
           "next_suggested_action": "submit",
-          "peak_rss_kb": 11076,
+          "peak_rss_kb": 11032,
           "seq": 3,
           "source_hashes": {
             "experiment.py": "9b61c6cf38fd792d1effdce11136c54f0ae14c906f5ec75b1a7223e480c3075f"
@@ -307,7 +316,7 @@
           "status": "supported",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.023215550000031726
+          "wall_s": 0.0236973629998829
         },
         {
           "action_type": "submit",
@@ -323,7 +332,7 @@
             "max_step_abs_error": 0.0
           },
           "next_suggested_action": null,
-          "peak_rss_kb": 11088,
+          "peak_rss_kb": 11016,
           "seq": 4,
           "source_hashes": {
             "experiment.py": "9b61c6cf38fd792d1effdce11136c54f0ae14c906f5ec75b1a7223e480c3075f"
@@ -331,7 +340,7 @@
           "status": "accepted",
           "verification_classification": "pass",
           "verification_passed": true,
-          "wall_s": 0.023432916000047044
+          "wall_s": 0.023388066000052277
         }
       ],
       "spec_sha256": "68aab1c43895e22c094e06c7625162bcdeb94359449877d2fcc4d3a62c2fba81",
@@ -339,7 +348,7 @@
         "actions": 4,
         "counts_as_autonomous_model_success": false,
         "does_not_establish": "A passing debug run shows this CPU fit was repaired. It does not show model learning, checkpoint recovery, or an authorized training update.",
-        "journal_sha256": "fb7aa44c337d5fbd9ddd12e78f9e767e72ffd111627b26261c4d8ec21c33824e",
+        "journal_sha256": "4a0c070857eb2f5c4488e2e2a40fe7a37db81ad62b6927bfdf938642ae127d19",
         "model_backed": false,
         "oracle_calibration_passed": false,
         "proposer_kind": "diagnostic_policy",
@@ -372,7 +381,7 @@
             "recomputed_mse": 1570316.5558856968
           },
           "next_suggested_action": "shrink_learning_rate",
-          "peak_rss_kb": 11068,
+          "peak_rss_kb": 10864,
           "seq": 1,
           "source_hashes": {
             "experiment.py": "a2e9dc6195b91230cff020ed912a1660f12e63aacb466e89387f35302050bd99"
@@ -380,7 +389,7 @@
           "status": "baseline",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.02314060799994877
+          "wall_s": 0.02326921499980017
         },
         {
           "action_type": "edit",
@@ -396,7 +405,7 @@
             "recomputed_mse": 162.69397418393197
           },
           "next_suggested_action": "submit",
-          "peak_rss_kb": 11080,
+          "peak_rss_kb": 11056,
           "seq": 2,
           "source_hashes": {
             "experiment.py": "5d970d4713d01d89a0de20c5e7d294c6fe420013d60e2b17d780e3815532b47e"
@@ -404,7 +413,7 @@
           "status": "rejected",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.023450537999906373
+          "wall_s": 0.023708773000180372
         },
         {
           "action_type": "submit",
@@ -420,7 +429,7 @@
             "max_step_abs_error": 0.486333289652679
           },
           "next_suggested_action": null,
-          "peak_rss_kb": 11672,
+          "peak_rss_kb": 11092,
           "seq": 3,
           "source_hashes": {
             "experiment.py": "5d970d4713d01d89a0de20c5e7d294c6fe420013d60e2b17d780e3815532b47e"
@@ -428,7 +437,7 @@
           "status": "rejected",
           "verification_classification": "fail_correctness",
           "verification_passed": false,
-          "wall_s": 0.03445112899999003
+          "wall_s": 0.02377659700005097
         }
       ],
       "spec_sha256": "68aab1c43895e22c094e06c7625162bcdeb94359449877d2fcc4d3a62c2fba81",
@@ -436,7 +445,7 @@
         "actions": 3,
         "counts_as_autonomous_model_success": false,
         "does_not_establish": "A passing debug run shows this CPU fit was repaired. It does not show model learning, checkpoint recovery, or an authorized training update.",
-        "journal_sha256": "20cbd23ff0eea3a1acbbde3701f08d8b46f04413263a71e08c3c9d946bda1c2f",
+        "journal_sha256": "e9f8ca050a134b364e9b5584fcf6b0992d7dce51f4d626ee5e82d09d7b85a151",
         "model_backed": false,
         "oracle_calibration_passed": false,
         "proposer_kind": "single_attempt_control",
@@ -468,7 +477,7 @@
             "scale_ratio": 0.22585653985370344
           },
           "next_suggested_action": "oracle_known_good",
-          "peak_rss_kb": 11292,
+          "peak_rss_kb": 11060,
           "seq": 1,
           "source_hashes": {
             "accum.py": "90f6800a1463c05feb8e699a940507c37be5cb19ec84dcaef5468f9b35010b35"
@@ -476,7 +485,7 @@
           "status": "baseline",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.041828036000197244
+          "wall_s": 0.02375468699983685
         },
         {
           "action_type": "edit",
@@ -490,7 +499,7 @@
             "scale_ratio": 1.0
           },
           "next_suggested_action": "submit",
-          "peak_rss_kb": 11616,
+          "peak_rss_kb": 11040,
           "seq": 2,
           "source_hashes": {
             "accum.py": "5f64993f54e58130a9998de5dd358608014c6172a92765c79dc07dd6286cb083"
@@ -498,7 +507,7 @@
           "status": "supported",
           "verification_classification": null,
           "verification_passed": null,
-          "wall_s": 0.04345566500001041
+          "wall_s": 0.02338200099984533
         },
         {
           "action_type": "submit",
@@ -511,7 +520,7 @@
             "max_abs_error": 5.551115123125783e-17
           },
           "next_suggested_action": null,
-          "peak_rss_kb": 11612,
+          "peak_rss_kb": 11076,
           "seq": 3,
           "source_hashes": {
             "accum.py": "5f64993f54e58130a9998de5dd358608014c6172a92765c79dc07dd6286cb083"
@@ -519,7 +528,7 @@
           "status": "accepted",
           "verification_classification": "pass",
           "verification_passed": true,
-          "wall_s": 0.03696736899996722
+          "wall_s": 0.023454229999970266
         }
       ],
       "spec_sha256": "28d64adaf0f9cf2e42e7be92edb5cd415ac3d900a155f3faa39a00d7225a317f",
@@ -527,7 +536,7 @@
         "actions": 3,
         "counts_as_autonomous_model_success": false,
         "does_not_establish": "Passing this task shows a numerical repair of a fixed accumulator. It does not show that a learned model improved, and it does not authorize training.",
-        "journal_sha256": "8fb96271e1a24e04289541df630e51d7a1e042d72325d32432438b360106fc0b",
+        "journal_sha256": "0ba353b3d8fcc34b862a01cbe1e38c169827191306d99d07552e7f0e4e885850",
         "model_backed": false,
         "oracle_calibration_passed": true,
         "proposer_kind": "oracle_control",
@@ -544,5 +553,5 @@
     }
   ],
   "schema": "vare.research_lab.retained_runs.v1",
-  "suite_sha256": "d8a5571db7867fffc1fb4233cea4e02fbdc76c7086531794de01e3d4ae5bee0f"
+  "suite_sha256": "a309981b8933a0012f3f160876522c21e29c0cfd56877939ebc742416474bfc7"
 }

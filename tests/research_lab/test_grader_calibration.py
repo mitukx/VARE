@@ -43,7 +43,9 @@ def test_calibration_distinguishes_baseline_known_good_and_incorrect(tmp_path: P
     assert score["baseline"]["correctness_passed"] is True
     assert score["baseline"]["performance_passed"] is False
     assert score["known_good"]["performance_passed"] is True
-    assert score["known_good"]["metrics"]["speedup"] >= 2.0
+    good = score["known_good"]["metrics"]
+    assert good["performance_gate"] == "paired_ci_exceeds_aa_noise"
+    assert good["gain_low_s"] > good["noise_floor_s"]
     assert score["incorrect"]["correctness_passed"] is False
 
 

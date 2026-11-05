@@ -1,3 +1,5 @@
+import json
+import resource
 import sys
 from pathlib import Path
 
@@ -7,7 +9,14 @@ from vare.environments.spec import ResourceLimits
 from vare.research_lab.controller import create_run
 from vare.research_lab.edits import apply_edits
 from vare.research_lab.evaluation import grade
-from vare.research_lab.execute import parse_worker_stdout, run_bounded, run_worker
+from vare.research_lab.execute import (
+    HARD_ADDRESS_SPACE_LIMIT_APPLIED,
+    IS_TRUSTED_OS_SANDBOX,
+    NETWORK_NAMESPACE_APPLIED,
+    parse_worker_stdout,
+    run_bounded,
+    run_worker,
+)
 from vare.research_lab.paths import PathViolation
 from vare.research_lab.spec import load_catalog, suite_manifest
 from vare.research_lab.workspace import IntegrityError, materialize, stage_subject
@@ -154,3 +163,58 @@ def test_shell_action_is_rejected_without_success(tmp_path: Path):
     assert record.get("verification") is None
     text = (run_dir / "journal.jsonl").read_text(encoding="utf-8")
     assert "https://example.invalid" not in text
+    blocked = controller.apply({"type": "network", "hypothesis_id": "dial"})
+    assert blocked["status"] == "stopped"
+    assert blocked["failure_reason"] == "disallowed_action"
+
+
+def test_runner_does_not_apply_an_address_space_cap(tmp_path: Path):
+    assert IS_TRUSTED_OS_SANDBOX is False
+    assert HARD_ADDRESS_SPACE_LIMIT_APPLIED is False
+    parent = resource.getrlimit(resource.RLIMIT_AS)
+    execution = run_bounded(
+        [sys.executable, "-c", "import json,resource; print(json.dumps(resource.getrlimit(resource.RLIMIT_AS)))"],
+        cwd=tmp_path,
+        stdin=b"",
+        limits=_limits(memory_mb=1024),
+    )
+    assert execution.memory_limit_applied is False
+    assert execution.classification == "ok"
+    assert tuple(json.loads(execution.stdout)) == parent
+
+
+def test_worker_can_open_a_socket_and_a_wrong_answer_still_fails(tmp_path: Path):
+    """Residual: no network namespace. Socket creation is not a passing grade."""
+    assert NETWORK_NAMESPACE_APPLIED is False
+    subject = tmp_path / "subject"
+    subject.mkdir()
+    (subject / "probe.py").write_text(
+        "import socket\n"
+        "def probe():\n"
+        "    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n"
+        "    sock.close()\n"
+        "    return 1\n",
+        encoding="utf-8",
+    )
+    execution = run_worker(
+        subject,
+        [{"id": "net", "op": "call", "module": "probe", "function": "probe", "args": []}],
+        _limits(),
+    )
+    assert execution.classification == "ok"
+    assert execution.payload is not None
+    assert execution.payload["results"][0]["value"] == 1
+    task = load_catalog()["grad_accum_scale_v1"]
+    workspace = tmp_path / "workspace"
+    materialize(task, workspace)
+    (workspace / "accum.py").write_text(
+        "import socket\n"
+        "def accumulated_gradient(batches, params):\n"
+        "    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n"
+        "    sock.close()\n"
+        "    return [0.0 for _ in params]\n",
+        encoding="utf-8",
+    )
+    result = grade(task, workspace)
+    assert result["passed"] is False
+    assert result["classification"] == "fail_correctness"

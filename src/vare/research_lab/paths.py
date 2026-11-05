@@ -1,7 +1,9 @@
 """Workspace path checks for ResearchGym edits and staging.
 
-These checks stop path escapes in the controller's edit API. They are not an
-operating-system sandbox: a launched worker is still a same-user process.
+These checks stop path escapes in the controller's edit API. They are not a
+trusted OS sandbox. A launched worker is still a same-user process with the
+host network and no address-space cap. Rejecting an edit path does not
+confine code that is already running.
 """
 
 from __future__ import annotations

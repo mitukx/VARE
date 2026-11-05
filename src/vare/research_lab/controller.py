@@ -41,6 +41,8 @@ def _json_safe(value: Any) -> Any:
 
 def _metric(metrics: dict[str, Any], key: str) -> float:
     value = metrics.get(key)
+    if isinstance(value, bool) or not isinstance(value, (int, float, str)):
+        return math.inf
     try:
         number = float(value)
     except (TypeError, ValueError):

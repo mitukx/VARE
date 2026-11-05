@@ -3,13 +3,23 @@
 Public probes return measurements the controller may see. Hidden grading uses
 different seeds, recomputes metrics in the parent, and ignores any JSON the
 candidate writes into the workspace. Expected values are never sent to the worker.
+
+The worker is a same-user subprocess, not a trusted OS sandbox. A passing
+grade does not mean memory or network access was confined.
+
+The performance gate is a paired Student-t interval: the lower 95% bound on
+time saved must exceed the upper 95% bound of absolute A/A differences. A
+fixed speedup ratio is recorded and is not the acceptance rule.
 """
 
 from __future__ import annotations
 
+import math
 import tempfile
 from pathlib import Path
 from typing import Any
+
+from vare.isolated_candidate import CandidateHarnessError, paired_difference_ci
 
 from .execute import (
     CLASS_MALFORMED,
@@ -56,8 +66,51 @@ _MSE_LIMIT = 1e-6
 _PARAM_LIMIT = 1e-3
 _GRAD_ATOL = 1e-8
 _SCORE_ATOL = 1e-8
-_MIN_SPEEDUP = 2.0
-_MAX_AA_RELATIVE = 0.75
+
+
+def paired_speed_gate(
+    baseline_a: list[float],
+    baseline_b: list[float],
+    candidate: list[float],
+) -> dict[str, float | bool | str]:
+    """Accept a speedup only when its confidence bound clears A/A noise.
+
+    ``baseline_a`` and ``baseline_b`` are two timings of the untouched
+    implementation. ``candidate`` is timed the same way. The descriptive
+    median ratio is not the gate.
+    """
+    if len(baseline_a) != len(baseline_b) or len(baseline_a) != len(candidate) or len(baseline_a) < 2:
+        raise ValueError("paired timing needs at least two matched samples")
+    samples = (*baseline_a, *baseline_b, *candidate)
+    if not all(math.isfinite(value) and value > 0.0 for value in samples):
+        raise ValueError("timing samples must be finite and positive")
+    aa_abs = [abs(left - right) for left, right in zip(baseline_a, baseline_b)]
+    gain = [left - right for left, right in zip(baseline_a, candidate)]
+    try:
+        aa_mean, aa_low, aa_high, _, _ = paired_difference_ci(aa_abs)
+        gain_mean, gain_low, gain_high, _, _ = paired_difference_ci(gain)
+    except CandidateHarnessError as exc:
+        raise ValueError("paired interval is undefined") from exc
+    noise_floor = max(aa_high, 0.0)
+    med_a = median(baseline_a)
+    med_b = median(baseline_b)
+    med_c = median(candidate)
+    return {
+        "performance_passed": gain_low > noise_floor,
+        "gain_mean_s": gain_mean,
+        "gain_low_s": gain_low,
+        "gain_high_s": gain_high,
+        "aa_abs_mean_s": aa_mean,
+        "aa_abs_low_s": aa_low,
+        "aa_abs_high_s": aa_high,
+        "noise_floor_s": noise_floor,
+        "baseline_median_s": med_a,
+        "aa_median_s": med_b,
+        "candidate_median_s": med_c,
+        "aa_relative": abs(med_a - med_b) / max(med_a, 1e-12),
+        "speedup": med_a / max(med_c, 1e-12),
+        "performance_gate": "paired_ci_exceeds_aa_noise",
+    }
 
 
 def _failure(
@@ -457,35 +510,27 @@ def _grade_score(
             failures=["baseline timing malformed"],
             hashes=candidate["hashes"],
         )
-    med_a = median([float(item) for item in series_a])
-    med_b = median([float(item) for item in series_b])
-    aa_relative = abs(med_a - med_b) / max(med_a, 1e-12)
-    med_candidate = median([float(item) for item in elapsed])
-    speedup = med_a / max(med_candidate, 1e-12)
-    metrics = {
-        "max_abs_error": worst,
-        "baseline_median_s": med_a,
-        "candidate_median_s": med_candidate,
-        "aa_median_s": med_b,
-        "aa_relative": aa_relative,
-        "speedup": speedup,
-    }
-    if aa_relative > _MAX_AA_RELATIVE:
-        return {
-            "passed": False,
-            "classification": "unstable_measurement",
-            "correctness_evaluated": True,
-            "correctness_passed": True,
-            "performance_evaluated": False,
-            "performance_passed": None,
-            "metrics": metrics,
-            "failures": ["A/A timing noise exceeds the acceptance band"],
-            "source_hashes": candidate["hashes"],
-            "wall_s": candidate["wall_s"] + baseline["wall_s"],
-            "peak_rss_kb": candidate["peak_rss_kb"],
-        }
-    performance_passed = speedup >= _MIN_SPEEDUP and med_candidate < med_a
-    failures = [] if performance_passed else ["speedup does not clear measurement noise and the 2x gate"]
+    try:
+        gate = paired_speed_gate(
+            [float(item) for item in series_a],
+            [float(item) for item in series_b],
+            [float(item) for item in elapsed],
+        )
+    except (TypeError, ValueError):
+        return _failure(
+            "unstable_measurement",
+            failures=["paired timing interval is undefined"],
+            hashes=candidate["hashes"],
+            wall_s=candidate["wall_s"] + baseline["wall_s"],
+            peak_rss_kb=candidate["peak_rss_kb"],
+            correctness_evaluated=True,
+            metrics={"max_abs_error": worst},
+        )
+    performance_passed = gate["performance_passed"] is True
+    metrics = {"max_abs_error": worst, **gate}
+    failures = [] if performance_passed else [
+        "paired time-saved lower bound does not exceed the A/A noise upper bound",
+    ]
     return {
         "passed": performance_passed,
         "classification": "pass" if performance_passed else "fail_performance",

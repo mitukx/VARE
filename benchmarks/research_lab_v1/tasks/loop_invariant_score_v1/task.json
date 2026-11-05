@@ -1,7 +1,7 @@
 {
   "task_id": "loop_invariant_score_v1",
   "task_type": "performance",
-  "objective": "Speed up score_matrix without changing its values. Entry [i][j] is the dot product of rows[i] and cols[j]. The passes argument repeats that identical calculation and averages it, so the mathematical result does not depend on passes when passes is a positive integer. A correct speedup must keep the values and beat the untouched baseline by at least 2x under paired timing whose A/A noise stays inside the grader band.",
+  "objective": "Speed up score_matrix without changing its values. Entry [i][j] is the dot product of rows[i] and cols[j]. The passes argument repeats that identical calculation and averages it, so the mathematical result does not depend on passes when passes is a positive integer. A correct speedup must keep the values. The hidden grader accepts it only when the lower 95% bound on paired time saved exceeds the upper 95% bound of absolute A/A differences. A fixed ratio such as 2x is not the gate.",
   "editable_files": ["project.py"],
   "graded_functions": ["score_matrix"],
   "max_iterations": 8,

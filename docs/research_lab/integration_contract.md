@@ -25,4 +25,6 @@ here grants that step.
 
 Eligible inputs are ResearchGym runs whose task id is one of the
 `research_lab_v1` pack. Passing verification means the hidden grader accepted
-that candidate. It does not mean the trajectory is training data.
+that candidate. It does not mean the trajectory is training data, that a
+model produced it, or that the same-user worker was an OS sandbox. The
+worker does not apply a hard address-space limit or a network namespace.

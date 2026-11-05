@@ -1,10 +1,17 @@
 """Bounded worker execution for untrusted candidate functions.
 
 The parent owns expected values. The child imports only the staged subject
-and returns JSON values. This process group is not a hostile-code sandbox:
-there is no separate user, network namespace, or filesystem jail. Commands
-are not taken from the candidate. A timeout is reported as ``timeout`` and
-is not rewritten into a correctness failure.
+and returns JSON values. Commands are not taken from the candidate. A
+timeout is reported as ``timeout`` and is not rewritten into a correctness
+failure.
+
+This is a same-user subprocess in its own process group. It is not a trusted
+OS sandbox. It does not apply an address-space rlimit, a network namespace,
+a user namespace, a chroot, or a container. Candidate code that runs can
+open sockets and can allocate until the host intervenes. A passing grade
+does not mean those effects were prevented. ``memory_limit_applied`` stays
+false: ``memory_mb`` is recorded, and a post-hoc ``VmHWM`` sample is not a
+hard cap.
 """
 
 from __future__ import annotations
@@ -21,6 +28,11 @@ from pathlib import Path
 from typing import Any
 
 from vare.environments.spec import ResourceLimits
+
+# Fail closed on these claims until an actual OS sandbox exists.
+IS_TRUSTED_OS_SANDBOX = False
+HARD_ADDRESS_SPACE_LIMIT_APPLIED = False
+NETWORK_NAMESPACE_APPLIED = False
 
 CLASS_OK = "ok"
 CLASS_TIMEOUT = "timeout"
@@ -147,8 +159,9 @@ def _preexec(limits: ResourceLimits):
                 resource.RLIMIT_CPU,
                 (int(limits.cpu_time_s), int(limits.cpu_time_s) + 1),
             )
-        # RLIMIT_AS is a poor fit for CPython's virtual map and is not applied.
-        # Peak resident set is sampled from the parent instead.
+        # Do not set RLIMIT_AS. CPython's virtual map makes that limit a
+        # crash, not a useful budget, and this runner has no hard memory cap.
+        # Peak resident set is only sampled from the parent after the fact.
 
     return apply
 
