@@ -446,13 +446,14 @@ def test_checkpoint_roundtrip_is_bit_identical(tmp_path):
     b = _lora_qwen3()
     ob = optim.Adam(learning_rate=1e-2)
     run(b, ob, 0)
-    man = G.save_checkpoint(tmp_path / "ck", b, ob, step=1, base_seed=42, extra={"data_cursor": 1})
+    man = G.save_checkpoint(tmp_path / "ck", b, ob, base_model_id="toy/qwen3@fixed-test",
+                            step=1, base_seed=42, extra={"data_cursor": 1})
     del b, ob
 
     c = _lora_qwen3(lora_seed=5)  # different LoRA init: must be fully overwritten by the checkpoint
     oc = optim.Adam(learning_rate=1e-2)
     mx.random.seed(999)
-    got = G.load_checkpoint(tmp_path / "ck", c, oc)
+    got = G.load_checkpoint(tmp_path / "ck", c, oc, base_model_id="toy/qwen3@fixed-test")
     assert got["step"] == 1 and got["extra"] == {"data_cursor": 1} and got == man
     assert float(mx.random.uniform(shape=(1,)).item()) == expect_next  # RNG schedule restored
     assert int(oc.state["step"].item()) == 1
@@ -465,7 +466,37 @@ def test_checkpoint_roundtrip_is_bit_identical(tmp_path):
     raw[-1] ^= 0xFF
     f.write_bytes(bytes(raw))
     with pytest.raises(ValueError, match="hash mismatch"):
-        G.load_checkpoint(tmp_path / "ck", _lora_qwen3(), optim.Adam(learning_rate=1e-2))
+        G.load_checkpoint(tmp_path / "ck", _lora_qwen3(), optim.Adam(learning_rate=1e-2),
+                          base_model_id="toy/qwen3@fixed-test")
+
+
+@needs_mlx
+def test_checkpoint_rejects_different_base_model_identity(tmp_path):
+    import mlx.optimizers as optim
+
+    source = _qwen3(seed=0)
+    G.make_lora_policy(source, num_layers=2, rank=4, scale=10.0, seed=3)
+    target = _qwen3(seed=1)
+    G.make_lora_policy(target, num_layers=2, rank=4, scale=10.0, seed=3)
+    from mlx.utils import tree_flatten
+
+    source_base = {key: value for key, value in tree_flatten(source.parameters()) if "lora_" not in key}
+    target_base = {key: value for key, value in tree_flatten(target.parameters()) if "lora_" not in key}
+    assert any((source_base[key] != target_base[key]).any().item() for key in source_base)
+    source_optimizer = optim.Adam(learning_rate=1e-2)
+    target_optimizer = optim.Adam(learning_rate=1e-2)
+    samples = _samples_with_lp(source, [S("task", 0, [3], 1, ckpt="source"),
+                                        S("task", 1, [4], 0, ckpt="source")])
+    G.train_step(source, source_optimizer, samples, G.GRPOConfig(),
+                 policy_checkpoint_id="source", policy_step=0)
+    path = tmp_path / "checkpoint"
+    G.save_checkpoint(path, source, source_optimizer, base_model_id="toy/qwen3@revision-a",
+                      step=1, base_seed=7)
+
+    before = G.trainable_digest(target)
+    with pytest.raises(ValueError, match="base model identity mismatch"):
+        G.load_checkpoint(path, target, target_optimizer, base_model_id="toy/qwen3@revision-b")
+    assert G.trainable_digest(target) == before
 
 
 @needs_mlx
@@ -479,11 +510,11 @@ def test_checkpoint_update_count_matches_optimizer_and_destinations_are_immutabl
                  policy_checkpoint_id="c0", policy_step=0)
     path = tmp_path / "checkpoint-1"
     with pytest.raises(ValueError, match="does not match optimizer step"):
-        G.save_checkpoint(path, model, optimizer, step=2, base_seed=7)
+        G.save_checkpoint(path, model, optimizer, base_model_id="toy/bigram@v1", step=2, base_seed=7)
     assert not path.exists()
-    G.save_checkpoint(path, model, optimizer, step=1, base_seed=7)
+    G.save_checkpoint(path, model, optimizer, base_model_id="toy/bigram@v1", step=1, base_seed=7)
     with pytest.raises(FileExistsError, match="already exists"):
-        G.save_checkpoint(path, model, optimizer, step=1, base_seed=7)
+        G.save_checkpoint(path, model, optimizer, base_model_id="toy/bigram@v1", step=1, base_seed=7)
 
 
 # ---------------------------------------------------------------- C1 Option A: exact-ratio sampling

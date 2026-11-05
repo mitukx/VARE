@@ -36,7 +36,8 @@ rollout groups:
   is divided by the step-wide token count, the accumulated gradient equals the
   full-batch gradient.
 
-Checkpoints hold the trainable (LoRA) parameters and the full optimizer state.
+Checkpoints hold the trainable (LoRA) parameters and the full optimizer state,
+and require the pinned identity of the frozen base model on save and reload.
 MLX 0.32 exposes no setter for its global RNG key, so randomness is instead
 derived from an explicit ``(base_seed, step)`` schedule (``reseed``) that is
 stored in the checkpoint and re-applied on load; with LoRA dropout 0 the update
@@ -54,7 +55,7 @@ import shutil
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 SCHEMA = "vare.learning_pipeline.grpo_step/v1"
-CHECKPOINT_SCHEMA = "vare.learning_pipeline.grpo_checkpoint/v1"
+CHECKPOINT_SCHEMA = "vare.learning_pipeline.grpo_checkpoint/v2"
 
 
 class StalePolicyError(ValueError):
@@ -506,13 +507,22 @@ def reseed(base_seed: int, step: int) -> int:
     return seed
 
 
-def save_checkpoint(path: Path, model, optimizer, *, step: int, base_seed: int,
+def _validate_base_model_id(base_model_id: str) -> str:
+    if (not isinstance(base_model_id, str) or not base_model_id.strip()
+            or len(base_model_id) > 512):
+        raise ValueError("base_model_id must be a nonempty string of at most 512 characters")
+    return base_model_id
+
+
+def save_checkpoint(path: Path, model, optimizer, *, base_model_id: str, step: int, base_seed: int,
                     extra: Mapping[str, Any] | None = None) -> dict[str, Any]:
     """Atomically write adapters, optimizer state and the RNG schedule to
-    ``path``. ``step`` is the number of completed updates."""
+    ``path``. ``base_model_id`` binds adapters to their frozen base model;
+    ``step`` is the number of completed updates."""
     import mlx.core as mx
     from mlx.utils import tree_flatten
 
+    base_model_id = _validate_base_model_id(base_model_id)
     path = Path(path)
     if path.exists():
         raise FileExistsError(f"checkpoint destination already exists: {path}")
@@ -530,7 +540,8 @@ def save_checkpoint(path: Path, model, optimizer, *, step: int, base_seed: int,
     mx.save_safetensors(str(tmp / "adapters.safetensors"), adapters)
     mx.save_safetensors(str(tmp / "optimizer.safetensors"), opt)
     files = {n: _sha256(tmp / n) for n in ("adapters.safetensors", "optimizer.safetensors")}
-    manifest = {"schema": CHECKPOINT_SCHEMA, "step": step, "optimizer_step": optimizer_step, "files": files,
+    manifest = {"schema": CHECKPOINT_SCHEMA, "base_model_id": base_model_id,
+                "step": step, "optimizer_step": optimizer_step, "files": files,
                 "rng": {"base_seed": base_seed, "step": step, "derivation": "sha256(f'{base_seed}:{step}')[:8]"},
                 "trainable_digest": trainable_digest(model), "extra": dict(extra or {})}
     with (tmp / "checkpoint.json").open("w", encoding="utf-8") as stream:
@@ -559,16 +570,19 @@ def save_checkpoint(path: Path, model, optimizer, *, step: int, base_seed: int,
     return manifest
 
 
-def load_checkpoint(path: Path, model, optimizer) -> dict[str, Any]:
+def load_checkpoint(path: Path, model, optimizer, *, base_model_id: str) -> dict[str, Any]:
     """Restore a checkpoint written by ``save_checkpoint``; verifies hashes,
-    the exact trainable key set and the restored parameter digest."""
+    base model identity, exact trainable key set and restored parameter digest."""
     import mlx.core as mx
     from mlx.utils import tree_flatten, tree_unflatten
 
+    base_model_id = _validate_base_model_id(base_model_id)
     path = Path(path)
     manifest = json.loads((path / "checkpoint.json").read_text())
     if manifest.get("schema") != CHECKPOINT_SCHEMA:
         raise ValueError("unknown checkpoint schema")
+    if manifest.get("base_model_id") != base_model_id:
+        raise ValueError("checkpoint base model identity mismatch")
     if set(manifest.get("files", {})) != {"adapters.safetensors", "optimizer.safetensors"}:
         raise ValueError("checkpoint file set is incomplete or unexpected")
     allowed_files = {"checkpoint.json", "adapters.safetensors", "optimizer.safetensors"}
