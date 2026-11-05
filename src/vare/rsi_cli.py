@@ -155,25 +155,104 @@ def _swap_usage() -> dict[str, float] | None:
     }
 
 
-def _docker_server_version(timeout_s: float = 5.0) -> tuple[str | None, str]:
+def _docker_server_version(
+    timeout_s: float = 5.0,
+) -> tuple[str | None, str, str | None]:
     docker = shutil.which("docker")
     if docker is None:
-        return None, "docker_cli_missing"
+        return None, "docker_cli_missing", None
+
+    failure_reason = "docker_daemon_unavailable"
+
+    def server_version(*, context: str | None = None) -> str | None:
+        nonlocal failure_reason
+        argv = [docker]
+        if context is not None:
+            argv.extend(["--context", context])
+        argv.extend(["info", "--format", "{{.ServerVersion}}"])
+        try:
+            result = subprocess.run(
+                argv,
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=timeout_s,
+            )
+        except subprocess.TimeoutExpired:
+            failure_reason = "docker_daemon_check_timed_out"
+            return None
+        except OSError:
+            failure_reason = "docker_cli_unavailable"
+            return None
+        if result.returncode != 0 or not result.stdout.strip():
+            return None
+        return result.stdout.strip()
+
+    # First honor the CLI's active configuration exactly as a later `docker`
+    # invocation would.  If it is unavailable, inspect named contexts but only
+    # try Unix socket endpoints: a remote context may not be able to mount the
+    # local candidate workspace even when its daemon responds.
     try:
-        result = subprocess.run(
-            [docker, "info", "--format", "{{.ServerVersion}}"],
+        active = subprocess.run(
+            [docker, "context", "show"],
             check=False,
             capture_output=True,
             text=True,
             timeout=timeout_s,
         )
     except subprocess.TimeoutExpired:
-        return None, "docker_daemon_check_timed_out"
+        active = None
     except OSError:
-        return None, "docker_cli_unavailable"
-    if result.returncode != 0 or not result.stdout.strip():
-        return None, "docker_daemon_unavailable"
-    return result.stdout.strip(), "docker_daemon_available"
+        return None, "docker_cli_unavailable", None
+
+    active_context = (
+        active.stdout.strip()
+        if active is not None and active.returncode == 0 and active.stdout.strip()
+        else None
+    )
+    version = server_version()
+    if version is not None:
+        return version, "docker_daemon_available", active_context
+
+    try:
+        contexts = subprocess.run(
+            [docker, "context", "ls", "--format", "{{json .}}"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=timeout_s,
+        )
+    except subprocess.TimeoutExpired:
+        return None, "docker_daemon_check_timed_out", None
+    except OSError:
+        return None, "docker_cli_unavailable", None
+    if contexts.returncode != 0:
+        return None, "docker_daemon_unavailable", None
+
+    candidates: list[tuple[str, str]] = []
+    for line in contexts.stdout.splitlines():
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(entry, dict):
+            continue
+        name = entry.get("Name")
+        endpoint = entry.get("DockerEndpoint")
+        if (
+            isinstance(name, str)
+            and name
+            and name != active_context
+            and isinstance(endpoint, str)
+            and endpoint.startswith("unix://")
+        ):
+            candidates.append((name, endpoint))
+
+    for context, _endpoint in sorted(candidates):
+        version = server_version(context=context)
+        if version is not None:
+            return version, "docker_daemon_available", context
+    return None, failure_reason, None
 
 
 def build_preflight(
@@ -361,13 +440,13 @@ def build_preflight(
         )
     )
 
-    docker_version, docker_reason = _docker_server_version()
+    docker_version, docker_reason, docker_context = _docker_server_version()
     docker_ready = docker_version is not None
     checks.append(
         _check(
             "docker_candidate_worker",
             "pass" if docker_ready else "blocked",
-            {"server_version": docker_version},
+            {"server_version": docker_version, "context": docker_context},
             {
                 "docker_cli_missing": "docker CLI が見つかりません",
                 "docker_cli_unavailable": "docker CLI を実行できません",

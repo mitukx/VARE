@@ -49,6 +49,79 @@ def test_model_snapshot_rejects_arbitrary_local_model_path(tmp_path):
     assert ready is False
 
 
+def test_docker_probe_finds_available_local_unix_context(monkeypatch):
+    docker = "/usr/bin/docker"
+    monkeypatch.setattr(rsi_cli.shutil, "which", lambda _name: docker)
+    calls = []
+
+    def run(argv, **_kwargs):
+        calls.append(argv)
+        if argv == [docker, "context", "show"]:
+            return SimpleNamespace(returncode=0, stdout="default\n", stderr="")
+        if argv == [docker, "info", "--format", "{{.ServerVersion}}"]:
+            return SimpleNamespace(returncode=1, stdout="", stderr="unavailable")
+        if argv == [docker, "context", "ls", "--format", "{{json .}}"]:
+            rows = [
+                {"Name": "remote", "DockerEndpoint": "tcp://example.invalid:2376"},
+                {"Name": "default", "DockerEndpoint": "unix:///var/run/docker.sock"},
+                {
+                    "Name": "colima",
+                    "DockerEndpoint": "unix:///Users/user/.colima/default/docker.sock",
+                },
+            ]
+            return SimpleNamespace(
+                returncode=0,
+                stdout="".join(json.dumps(row) + "\n" for row in rows),
+                stderr="",
+            )
+        if argv == [
+            docker,
+            "--context",
+            "colima",
+            "info",
+            "--format",
+            "{{.ServerVersion}}",
+        ]:
+            return SimpleNamespace(returncode=0, stdout="29.5.2\n", stderr="")
+        raise AssertionError(f"unexpected command: {argv}")
+
+    monkeypatch.setattr(rsi_cli.subprocess, "run", run)
+
+    version, reason, context = rsi_cli._docker_server_version()
+
+    assert (version, reason, context) == ("29.5.2", "docker_daemon_available", "colima")
+    assert not any("remote" in call for call in calls)
+
+
+def test_docker_probe_does_not_accept_remote_only_context(monkeypatch):
+    docker = "/usr/bin/docker"
+    monkeypatch.setattr(rsi_cli.shutil, "which", lambda _name: docker)
+
+    def run(argv, **_kwargs):
+        if argv == [docker, "context", "show"]:
+            return SimpleNamespace(returncode=0, stdout="default\n", stderr="")
+        if argv == [docker, "info", "--format", "{{.ServerVersion}}"]:
+            return SimpleNamespace(returncode=1, stdout="", stderr="unavailable")
+        if argv == [docker, "context", "ls", "--format", "{{json .}}"]:
+            return SimpleNamespace(
+                returncode=0,
+                stdout=json.dumps(
+                    {"Name": "remote", "DockerEndpoint": "tcp://example.invalid:2376"}
+                )
+                + "\n",
+                stderr="",
+            )
+        raise AssertionError(f"unexpected command: {argv}")
+
+    monkeypatch.setattr(rsi_cli.subprocess, "run", run)
+
+    version, reason, context = rsi_cli._docker_server_version()
+
+    assert version is None
+    assert reason == "docker_daemon_unavailable"
+    assert context is None
+
+
 def test_macos_resource_parsers_read_memory_pressure_and_swap(monkeypatch):
     outputs = {
         "vm_stat": (
