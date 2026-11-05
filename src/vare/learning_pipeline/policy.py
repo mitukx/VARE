@@ -23,13 +23,6 @@ class Generation:
     completion_tokens: int
     seconds: float
     finish: str  # "stop" | "length" | "prompt_too_long"
-    # Optional exact trace for policies that expose their tokenizer output.
-    # Synthetic and legacy policies may leave these unset; such generations
-    # remain usable for evaluation but cannot enter the GRPO bridge.
-    prompt_ids: list[int] | None = None
-    completion_ids: list[int] | None = None
-    sampling_temperature: float | None = None
-    sampling_top_p: float | None = None
 
 
 class Policy(Protocol):
@@ -66,26 +59,19 @@ class MLXPolicy:
         from mlx_lm import stream_generate
         from mlx_lm.sample_utils import make_sampler
 
-        ids = [int(token) for token in self.prompt_ids(messages)]
+        ids = self.prompt_ids(messages)
         if len(ids) > self.max_prompt_tokens:
-            return Generation("", len(ids), 0, 0.0, "prompt_too_long",
-                              prompt_ids=ids, completion_ids=[],
-                              sampling_temperature=float(temperature), sampling_top_p=float(top_p))
+            return Generation("", len(ids), 0, 0.0, "prompt_too_long")
         self._mx.random.seed(seed)
-        sampler = make_sampler(temp=temperature, top_p=top_p if temperature > 0 else 0.0,
-                               min_p=0.0, top_k=0)
+        sampler = make_sampler(temp=temperature, top_p=top_p if temperature > 0 else 0.0)
         t0 = time.time()
         text, n, finish = "", 0, "length"
-        completion_ids: list[int] = []
         for resp in stream_generate(self.model, self.tokenizer, ids, max_tokens=max_tokens, sampler=sampler):
             text += resp.text
             n = resp.generation_tokens
-            completion_ids.append(int(resp.token))
             if resp.finish_reason:
                 finish = "stop" if resp.finish_reason == "stop" else "length"
-        return Generation(text, len(ids), n, round(time.time() - t0, 3), finish,
-                          prompt_ids=ids, completion_ids=completion_ids,
-                          sampling_temperature=float(temperature), sampling_top_p=float(top_p))
+        return Generation(text, len(ids), n, round(time.time() - t0, 3), finish)
 
     def peak_memory_bytes(self):
         return int(self._mx.get_peak_memory())

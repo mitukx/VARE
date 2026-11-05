@@ -18,7 +18,6 @@ from pathlib import Path
 import pytest
 
 from scripts import long_horizon_eval as lh
-from vare.learning_pipeline.policy import MLXPolicy
 from vare.trajectory_store import PolicyCheckpoint, TrajectoryStore
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -146,7 +145,7 @@ def test_mlx_policy_keeps_exact_prompt_and_completion_token_ids(monkeypatch):
     monkeypatch.setitem(sys.modules, "mlx_lm", mlx_lm)
     monkeypatch.setitem(sys.modules, "mlx_lm.sample_utils", sample_utils)
 
-    policy = MLXPolicy.__new__(MLXPolicy)
+    policy = lh.TraceableMLXPolicy.__new__(lh.TraceableMLXPolicy)
     policy._mx = types.SimpleNamespace(random=types.SimpleNamespace(seed=lambda _seed: None))
     policy.model = object()
     policy.tokenizer = types.SimpleNamespace(
@@ -189,7 +188,7 @@ def test_verified_grpo_group_extracts_only_shared_initial_action(tmp_path):
             text = selected[index] if index < len(selected) else "I have nothing further."
             if len(text.split()) > max_tokens:
                 text = " ".join(text.split()[:max_tokens])
-            return lh.Generation(
+            return lh.TraceGeneration(
                 text, 2, 2, 0.0, "stop",
                 prompt_ids=[101, 102], completion_ids=[200, 300 + sample_seed],
                 sampling_temperature=temperature, sampling_top_p=top_p,

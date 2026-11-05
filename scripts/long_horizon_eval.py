@@ -60,7 +60,7 @@ from scripts import run_local_agent as rla  # noqa: E402
 from vare.agent_edit_format import ParseFailure, parse_submission  # noqa: E402
 from vare.eval_stats import mcnemar_exact, paired_bootstrap_interval  # noqa: E402
 from vare.evidence import sha256_json  # noqa: E402
-from vare.learning_pipeline.policy import Generation, Policy  # noqa: E402
+from vare.learning_pipeline.policy import Generation, MLXPolicy, Policy  # noqa: E402
 from vare.trajectory_store import (  # noqa: E402
     AgentStep,
     PolicyCheckpoint,
@@ -83,6 +83,45 @@ _TEST_PATH = re.compile(r"(^|/)(tests?|testing)(/|$)|(^|/)test_[^/]*\.py$|_test\
 
 class ResumeMismatchError(RuntimeError):
     """Replaying committed edits did not reproduce the recorded workspace."""
+
+
+@dataclass
+class TraceGeneration(Generation):
+    """Generation plus exact behavior tokens for the long-horizon GRPO bridge."""
+
+    prompt_ids: list[int] | None = None
+    completion_ids: list[int] | None = None
+    sampling_temperature: float | None = None
+    sampling_top_p: float | None = None
+
+
+class TraceableMLXPolicy(MLXPolicy):
+    """MLXPolicy variant that retains token IDs without changing frozen policy code."""
+
+    def generate(self, messages, *, max_tokens, temperature, top_p, seed, task=None) -> TraceGeneration:
+        from mlx_lm import stream_generate
+        from mlx_lm.sample_utils import make_sampler
+
+        ids = [int(token) for token in self.prompt_ids(messages)]
+        if len(ids) > self.max_prompt_tokens:
+            return TraceGeneration("", len(ids), 0, 0.0, "prompt_too_long",
+                                   prompt_ids=ids, completion_ids=[],
+                                   sampling_temperature=float(temperature), sampling_top_p=float(top_p))
+        self._mx.random.seed(seed)
+        sampler = make_sampler(temp=temperature, top_p=top_p if temperature > 0 else 0.0,
+                               min_p=0.0, top_k=0)
+        t0 = time.time()
+        text, n, finish = "", 0, "length"
+        completion_ids: list[int] = []
+        for resp in stream_generate(self.model, self.tokenizer, ids, max_tokens=max_tokens, sampler=sampler):
+            text += resp.text
+            n = resp.generation_tokens
+            completion_ids.append(int(resp.token))
+            if resp.finish_reason:
+                finish = "stop" if resp.finish_reason == "stop" else "length"
+        return TraceGeneration(text, len(ids), n, round(time.time() - t0, 3), finish,
+                               prompt_ids=ids, completion_ids=completion_ids,
+                               sampling_temperature=float(temperature), sampling_top_p=float(top_p))
 
 
 # --------------------------------------------------------------------------
@@ -470,10 +509,8 @@ class ScriptedPolicy:
 
 
 def mlx_policy(model: str, adapter_path: str | None = None, **kwargs: Any) -> Policy:
-    """Lazy hook for the Mac: the same MLXPolicy the single-turn pipeline uses."""
-    from vare.learning_pipeline.policy import MLXPolicy
-
-    return MLXPolicy(model, adapter_path, **kwargs)
+    """Lazy hook for the Mac: MLXPolicy with trajectory token tracing."""
+    return TraceableMLXPolicy(model, adapter_path, **kwargs)
 
 
 def directory_sha256(path: Path) -> str:
@@ -1107,14 +1144,16 @@ class EpisodeHarness:
                                  "completion_tokens": int(generation.completion_tokens),
                                  "finish": generation.finish, "max_tokens": limit},
                   "controller": assists, "calls": calls, "calls_dropped": dropped}
-        if index == 0 and generation.prompt_ids is not None and generation.completion_ids is not None:
-            prompt_ids = list(generation.prompt_ids)
-            completion_ids = list(generation.completion_ids)
+        trace_prompt_ids = getattr(generation, "prompt_ids", None)
+        trace_completion_ids = getattr(generation, "completion_ids", None)
+        if index == 0 and trace_prompt_ids is not None and trace_completion_ids is not None:
+            prompt_ids = list(trace_prompt_ids)
+            completion_ids = list(trace_completion_ids)
             if (prompt_ids and completion_ids
                     and all(type(token) is int and token >= 0 for token in prompt_ids)
                     and all(type(token) is int and token >= 0 for token in completion_ids)):
-                temperature = generation.sampling_temperature
-                top_p = generation.sampling_top_p
+                temperature = getattr(generation, "sampling_temperature", None)
+                top_p = getattr(generation, "sampling_top_p", None)
                 distribution = (
                     "untruncated_softmax_temperature"
                     if isinstance(temperature, (int, float)) and not isinstance(temperature, bool)
