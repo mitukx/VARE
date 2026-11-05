@@ -4,8 +4,9 @@ Public probes return measurements the controller may see. Hidden grading uses
 different seeds, recomputes metrics in the parent, and ignores any JSON the
 candidate writes into the workspace. Expected values are never sent to the worker.
 
-The worker is a same-user subprocess, not a trusted OS sandbox. A passing
-grade does not mean memory or network access was confined.
+Hidden grading launches the worker only through the bubblewrap adapter.
+That adapter is not a trusted security sandbox. If the probe is missing or
+not fully denied, the result is ``isolation_unverified`` and is not a pass.
 
 The performance gate is a paired Student-t interval: the lower 95% bound on
 time saved must exceed the upper 95% bound of absolute A/A differences. A
@@ -14,6 +15,7 @@ fixed speedup ratio is recorded and is not the acceptance rule.
 
 from __future__ import annotations
 
+import hashlib
 import math
 import tempfile
 from pathlib import Path
@@ -28,8 +30,9 @@ from .execute import (
     CLASS_OUTPUT_LIMIT,
     CLASS_TIMEOUT,
     limits_from_task,
-    run_worker,
 )
+from . import isolation
+from .isolation import ISOLATION_UNVERIFIED, launch_worker
 from .reference import (
     accumulated_gradient,
     affine_series,
@@ -138,6 +141,30 @@ def _failure(
     }
 
 
+def _grader_files() -> tuple[Path, ...]:
+    """Files the candidate must not be able to change during a grade."""
+    from . import execute as execute_mod
+    from . import reference as reference_mod
+
+    paths = [
+        Path(__file__).resolve(),
+        Path(reference_mod.__file__).resolve(),
+        Path(execute_mod.__file__).resolve(),
+        Path(isolation.__file__).resolve(),
+    ]
+    return tuple(paths)
+
+
+def _snapshot(paths: tuple[Path, ...]) -> dict[str, str] | None:
+    digests: dict[str, str] = {}
+    for path in paths:
+        if path.is_symlink() or not path.is_file():
+            return None
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        digests[str(path)] = digest
+    return digests
+
+
 def _invoke(
     task: ResearchTask,
     workspace: Path,
@@ -163,13 +190,32 @@ def _invoke(
             stage_subject(workspace, task.editable_files, subject)
         except (IntegrityError, OSError, ValueError) as exc:
             return None, _failure("integrity", failures=[str(exc)], hashes=hashes)
-        execution = run_worker(subject, calls, active_limits)
+        protected = _grader_files()
+        before = _snapshot(protected)
+        execution = launch_worker(subject, calls, active_limits)
+        after = _snapshot(protected)
+        if before is None or after is None or before != after:
+            return None, _failure(
+                "evaluator_modified",
+                failures=["grader file changed during evaluation"],
+                hashes=hashes,
+                wall_s=execution.wall_s,
+                peak_rss_kb=execution.peak_rss_kb,
+            )
     summary = {
         "classification": execution.classification,
         "wall_s": execution.wall_s,
         "peak_rss_kb": execution.peak_rss_kb,
         "returncode": execution.returncode,
     }
+    if execution.classification == ISOLATION_UNVERIFIED:
+        return None, _failure(
+            ISOLATION_UNVERIFIED,
+            failures=[ISOLATION_UNVERIFIED],
+            hashes=hashes,
+            wall_s=execution.wall_s,
+            peak_rss_kb=execution.peak_rss_kb,
+        )
     if execution.classification in {CLASS_TIMEOUT, CLASS_OUTPUT_LIMIT, CLASS_MEMORY}:
         return None, _failure(
             execution.classification,

@@ -6,18 +6,28 @@ committed experiment id again.
 
 ## Isolation, fail closed
 
-The worker is a same-user subprocess in its own process group, with a
-wall-clock kill and a CPU rlimit. It is not a trusted OS sandbox. There is
-no container, no second user, no chroot, no network namespace, and no hard
-address-space limit. `IS_TRUSTED_OS_SANDBOX`,
-`HARD_ADDRESS_SPACE_LIMIT_APPLIED`, and `NETWORK_NAMESPACE_APPLIED` are
-false. `memory_limit_applied` stays false: `memory_mb` is a recorded budget,
-and a post-hoc `VmHWM` sample does not stop an allocation.
+Hidden grading launches the worker through `vare.research_lab.isolation`,
+which reuses the learning-pipeline `BwrapBackend` probe and argv. That
+adapter is not a trusted security sandbox. A passed probe does not certify
+the kernel, the host runtime, or a candidate that shares the worker
+interpreter. If bubblewrap is missing or the probe is not fully denied, the
+grade is `isolation_unverified` and is not a pass. There is no fallback to a
+same-user process group.
 
-Candidate code that runs can open a socket. The controller rejects a
-`shell` or `network` action before launch. That rejection does not confine
-code already executing inside the worker. A passing grade does not mean
-network access or memory use was prevented. Expected values stay in the
+`run_bounded` is a same-user subprocess in its own process group, with a
+wall-clock kill and a CPU rlimit. It is not the hidden-grade boundary and it
+is not a trusted OS sandbox. There is no container, no second user, no
+chroot, no network namespace, and no hard address-space limit.
+`IS_TRUSTED_OS_SANDBOX`, `HARD_ADDRESS_SPACE_LIMIT_APPLIED`, and
+`NETWORK_NAMESPACE_APPLIED` are false. `memory_limit_applied` stays false:
+`memory_mb` is a recorded budget, and a post-hoc `VmHWM` sample does not stop
+an allocation.
+
+On that process-group helper, candidate code can open a socket. The
+controller rejects a `shell` or `network` action before launch. That
+rejection does not confine code already executing inside a worker that was
+started without the bubblewrap gate. A passing grade does not mean a trusted
+sandbox prevented network access or memory use. Expected values stay in the
 parent. Commands are not taken from the candidate. A timeout is `timeout`,
 not a correctness failure.
 
