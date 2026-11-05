@@ -1,0 +1,13 @@
+{
+  "task_id": "loop_invariant_score_v1",
+  "task_type": "performance",
+  "objective": "Speed up score_matrix without changing its values. Entry [i][j] is the dot product of rows[i] and cols[j]. The passes argument repeats that identical calculation and averages it, so the mathematical result does not depend on passes when passes is a positive integer. A correct speedup must keep the values and beat the untouched baseline by at least 2x under paired timing whose A/A noise stays inside the grader band.",
+  "editable_files": ["project.py"],
+  "graded_functions": ["score_matrix"],
+  "max_iterations": 8,
+  "does_not_establish": "A passing timing gate is a CPU microbenchmark of this function. It is not a hardware-scaling result and it does not authorize training.",
+  "compute": {"wall_time_s": 30, "cpu_time_s": 25, "memory_mb": 1024, "max_output_bytes": 800000},
+  "budget": {"max_experiments": 8, "max_wall_s": 180},
+  "safety": {"network": "disallowed", "editable_only": true},
+  "reproducibility": {"public_seed": 11011}
+}
