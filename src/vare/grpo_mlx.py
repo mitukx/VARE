@@ -108,6 +108,53 @@ class GRPOConfig:
     max_grad_norm: float | None = 1.0
     group_size: int | None = None  # if set, every group must have exactly this many samples
 
+    def __post_init__(self) -> None:
+        for name in ("clip_eps_low", "clip_eps_high", "temperature"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise ValueError(f"{name} must be a finite number")
+            try:
+                finite = math.isfinite(value)
+            except OverflowError:
+                finite = False
+            if not finite:
+                raise ValueError(f"{name} must be a finite number")
+
+        if not 0 <= self.clip_eps_low < 1:
+            raise ValueError("clip_eps_low must be in [0, 1)")
+        if self.clip_eps_high < 0:
+            raise ValueError("clip_eps_high must be nonnegative")
+        if self.temperature <= 0:
+            raise ValueError("temperature must be positive")
+        if not isinstance(self.normalize_std, bool):
+            raise ValueError("normalize_std must be a bool")
+        if (
+            isinstance(self.max_policy_lag, bool)
+            or not isinstance(self.max_policy_lag, int)
+            or self.max_policy_lag < 0
+        ):
+            raise ValueError("max_policy_lag must be a nonnegative integer")
+        if self.max_grad_norm is not None:
+            value = self.max_grad_norm
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise ValueError(
+                    "max_grad_norm must be a finite nonnegative number or None"
+                )
+            try:
+                finite = math.isfinite(value)
+            except OverflowError:
+                finite = False
+            if not finite or value < 0:
+                raise ValueError(
+                    "max_grad_norm must be a finite nonnegative number or None"
+                )
+        if self.group_size is not None and (
+            isinstance(self.group_size, bool)
+            or not isinstance(self.group_size, int)
+            or self.group_size < 1
+        ):
+            raise ValueError("group_size must be a positive integer or None")
+
     def to_dict(self) -> dict[str, Any]:
         return {k: getattr(self, k) for k in self.__dataclass_fields__}
 

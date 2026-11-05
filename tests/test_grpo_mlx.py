@@ -23,6 +23,42 @@ def S(iid, idx, comp, reward, *, ckpt="c0", step=0, prompt=(1, 2), verifier="v1"
 
 
 # ------------------------------------------------------------ pure python
+@pytest.mark.parametrize(("kwargs", "message"), [
+    ({"clip_eps_low": -0.1}, "clip_eps_low"),
+    ({"clip_eps_low": 1.0}, "clip_eps_low"),
+    ({"clip_eps_high": math.nan}, "clip_eps_high"),
+    ({"clip_eps_high": -0.1}, "clip_eps_high"),
+    ({"temperature": 0.0}, "temperature"),
+    ({"temperature": -1.0}, "temperature"),
+    ({"temperature": math.nan}, "temperature"),
+    ({"temperature": True}, "temperature"),
+    ({"normalize_std": 1}, "normalize_std"),
+    ({"max_policy_lag": -1}, "max_policy_lag"),
+    ({"max_policy_lag": True}, "max_policy_lag"),
+    ({"max_grad_norm": -0.1}, "max_grad_norm"),
+    ({"max_grad_norm": math.inf}, "max_grad_norm"),
+    ({"max_grad_norm": True}, "max_grad_norm"),
+    ({"group_size": 0}, "group_size"),
+    ({"group_size": True}, "group_size"),
+])
+def test_grpo_config_rejects_invalid_values(kwargs, message):
+    with pytest.raises(ValueError, match=message):
+        G.GRPOConfig(**kwargs)
+
+
+def test_grpo_config_accepts_valid_boundaries():
+    cfg = G.GRPOConfig(
+        clip_eps_low=0.0,
+        clip_eps_high=0.0,
+        normalize_std=False,
+        temperature=0.01,
+        max_policy_lag=0,
+        max_grad_norm=0.0,
+        group_size=2,
+    )
+    assert cfg.to_dict()["group_size"] == 2
+
+
 def test_group_advantages_normalized_and_centered():
     adv, inf = G.group_advantages([1, 0, 0, 0])
     std = math.sqrt(0.1875)
