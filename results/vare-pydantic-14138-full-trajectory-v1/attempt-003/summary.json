@@ -1,0 +1,104 @@
+{
+  "abort_artifact_sha256": "8385c02238c14f2f4d7e6d2ae35514be229175d40e0f79e7f3ad11b4ee7bc789",
+  "agent_interface_findings": {
+    "apply_patch_model_output_had_double_escaped_newline_markers": true,
+    "double_escaped_newline_sequences_in_model_patch": 5,
+    "read_file_reported_content_truncated_false_despite_hard_20_line_cap": true,
+    "repeated_oversized_read_requests_sample_07": 8,
+    "sample_07_patch_missing_final_newline": true,
+    "v13_final_newline_replay_result": "Adding the missing terminal newline and recounting hunk lines makes the archived patch syntactically parseable; git apply --check then reports a source-context mismatch. No source was changed."
+  },
+  "assignment_sha256": "22867ef202de5fe10c346c9154be86c7e353873b17c7eab63bdcbc659060e41b",
+  "attempt": 3,
+  "authorized_new_sample_indices": [
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "checkpoint_reload_verified": false,
+  "checkpoint_written": false,
+  "completed_sample": {
+    "changed_files": [],
+    "generated_tokens": 1439,
+    "grade_status": "candidate_failure",
+    "grader_identity": "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096",
+    "grader_image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+    "reward": 0.0,
+    "sample_index": 7,
+    "sample_result_sha256": "c80e80f8ac41044befecd628b216aae737c31e1f381d4064862945f9d0b56d6f",
+    "stop_reason": "turn_budget_exhausted",
+    "submitted": false,
+    "tool_turns": 16,
+    "trajectory_file_sha256": "be06495b17a26a1ce773c0bac783eeffda4dbf45fd4daaaf02cb670d0aae6254",
+    "trusted_grade_sha256": "1effdb7e5da2edad111d2c48d8ce30ce96f86cf1c1861be793728f24b9b2d7a0"
+  },
+  "completed_sample_indices": [
+    7
+  ],
+  "development_evaluations": 0,
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14138-full-trajectory-tool-adapter-v12",
+  "exposed_sample_indices": [
+    7,
+    8
+  ],
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_evaluation": false,
+  "integration_head_sha": "022833add8bce30144e6cc7871d5b7ba74a1e34d",
+  "model": {
+    "files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "optimizer_updates": 0,
+  "partial_sample": {
+    "generated_tokens": 762,
+    "sample_index": 8,
+    "tool_turns": 9,
+    "trajectory_file_sha256": "d3cb32d6c8ba2d4b370322fc8bfa14ae7fc12d09f8df3c69a4093b0fe42d42f9",
+    "trusted_grade_produced": false
+  },
+  "partial_sample_indices": [
+    8
+  ],
+  "resource_baseline": {
+    "memory_pressure_free_pct": 50.0,
+    "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 50%",
+    "swap_output": "vm.swapusage: total = 2048.00M  used = 1115.44M  free = 932.56M  (encrypted)",
+    "swap_used_bytes": 1169623613
+  },
+  "resource_stop": {
+    "allowed_growth_bytes": 268435456,
+    "baseline_swap_used_bytes": 1169623613,
+    "generated_tokens": 762,
+    "graded": false,
+    "memory_pressure_free_pct": 34.0,
+    "observed_growth_bytes": 324922245,
+    "reason": "swap_growth_exceeded_allowance",
+    "sample_index": 8,
+    "stop_reason": "resource_stop",
+    "tool_turns": 9
+  },
+  "run_lock_sha256": "709adc9bb373be468bdda823c96dfe917efe5b00c6e7e8aff85c04ae02fb8fe9",
+  "runtime": {
+    "device": "Device(gpu, 0)",
+    "metal_available": true,
+    "mlx_module_version": "0.32.4",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "versions": {
+      "huggingface-hub": "2.4.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.0",
+      "numpy": "2.5.4"
+    }
+  },
+  "schema": "vare_real_model_train_dev_attempt_summary_v1",
+  "status": "resource_stop_before_complete_group"
+}

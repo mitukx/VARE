@@ -36,9 +36,9 @@ def find_experiment_root() -> Path:
 ROOT = find_experiment_root()
 WORK = ROOT / "work/vare-rsi-qwen3-4b-mlx-20261106"
 OUTPUTS = ROOT / "outputs/vare-rsi-heldout-qualification-v2-20261105"
-RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-003"
-ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v12-pydantic-14138-tool-adapter.json"
-RUN_LOCK_PATH = OUTPUTS / "real-model-run-v20-14138-tool-adapter-grpo-group.lock.json"
+RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-004"
+ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v13-pydantic-14138-interface-recovery.json"
+RUN_LOCK_PATH = OUTPUTS / "real-model-run-v21-14138-interface-recovery-grpo-group.lock.json"
 MODEL_PATH = WORK / "model"
 MODEL_MANIFEST_PATH = WORK / "model-manifest.json"
 INTEGRATION = ROOT / "work/VARE-rsi-integration-20261105"
@@ -52,7 +52,7 @@ BASE_SEED = 20261106
 TEMPERATURE = 0.8
 GROUP_SIZE = 8
 NEW_ROLLOUT_COUNT = 8
-NEW_ROLLOUT_START_INDEX = 7
+NEW_ROLLOUT_START_INDEX = 9
 MAX_TURNS = 16
 MAX_TOTAL_TOKENS = 4096
 MAX_ACTION_TOKENS = 512
@@ -100,7 +100,9 @@ TOOL_HELP = (
     "search_code: query must be an exact identifier or expression present in an editable file. "
     "Search is already scoped to the editable path; do not add a paths member.\n"
     "read_file: path must be exactly one editable path; start_line and end_line are positive "
-    "source line numbers. Read at most 15–20 adjacent lines and reduce the window if truncated.\n"
+    "source line numbers. Each response returns at most 20 lines. If content_truncated is true, "
+    "the returned end_line is authoritative; use next_start_line for more context and do not "
+    "repeat the oversized range.\n"
     "apply_patch arguments must be a JSON object with path and patch string fields. For example: "
     "{\"tool\":\"apply_patch\",\"arguments\":{\"path\":\"pydantic/example.py\","
     "\"patch\":\"--- a/pydantic/example.py\\n+++ b/pydantic/example.py\\n"
@@ -687,10 +689,13 @@ def read_source(directory: Path, args: dict[str, Any], allowed: set[str]) -> dic
         raise ValueError("start_line must be a positive integer")
     if end is not None and (isinstance(end, bool) or not isinstance(end, int) or end < start):
         raise ValueError("end_line must be an integer at least start_line")
-    stop = min(end if end is not None else start + 19, start + 19, len(lines))
+    requested_stop = min(end if end is not None else start + 19, len(lines))
+    stop = min(requested_stop, start + 19)
+    line_limit_truncated = stop < requested_stop
     selected = lines[start - 1 : stop]
     full_text = "\n".join(f"{idx}: {line}" for idx, line in enumerate(selected, start))
-    content_truncated = len(full_text) > 2600
+    character_limit_truncated = len(full_text) > 2600
+    content_truncated = line_limit_truncated or character_limit_truncated
     text = full_text[:2600]
     return {
         "path": path.relative_to(directory).as_posix(),
@@ -700,6 +705,14 @@ def read_source(directory: Path, args: dict[str, Any], allowed: set[str]) -> dic
         "total_lines": len(lines),
         "content": text,
         "content_truncated": content_truncated,
+        "truncation_reasons": [
+            reason
+            for condition, reason in (
+                (line_limit_truncated, "line_limit"),
+                (character_limit_truncated, "character_limit"),
+            )
+            if condition
+        ],
         "next_start_line": stop + 1 if stop < len(lines) else None,
     }
 
@@ -841,6 +854,9 @@ def normalize_patch_arguments(
         else:
             patch = "\n".join([*headers, *lines]) + "\n"
         normalizations.append("unified_diff_file_headers_synthesized_for_allowlisted_path")
+    if not patch.endswith("\n"):
+        patch += "\n"
+        normalizations.append("patch_final_newline_added")
     patch, counts_changed = normalize_unified_hunk_counts(patch)
     if counts_changed:
         normalizations.append("unified_diff_hunk_line_counts_recomputed")
@@ -1885,9 +1901,9 @@ def run_experiment() -> int:
         "authorized_train_rollout_exposure_budget": NEW_ROLLOUT_COUNT,
         "task_cumulative_exposure_cap": NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT,
         "new_training_sample_indices": list(range(NEW_ROLLOUT_START_INDEX, NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT)),
-        "prior_negative_train_experiment_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-002/abort.json",
-        "prompt_policy_version": "pydantic-14138-prompt-v2-explicit-patch-schema",
-        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v2",
+        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-003/summary.json",
+        "prompt_policy_version": "pydantic-14138-prompt-v3-reliable-read-patch-tool",
+        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v3",
         "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
         "credit_assignment": assignment["training"]["credit_assignment"],
     }

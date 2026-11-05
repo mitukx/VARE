@@ -69,3 +69,40 @@ def test_salvage_truncated_patch_json_requires_allowlisted_path(tmp_path, monkey
     )
     runner["validate_patch"](patch, {"pydantic/example.py"})
     assert path == "pydantic/example.py"
+
+
+def test_read_file_marks_the_twenty_line_cap_as_truncated(tmp_path, monkeypatch):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+    workspace = tmp_path / "candidate"
+    source = workspace / "pydantic" / "example.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("".join(f"value_{i} = {i}\n" for i in range(30)))
+
+    result = runner["read_source"](
+        workspace,
+        {"path": "pydantic/example.py", "start_line": 1, "end_line": 25},
+        {"pydantic/example.py"},
+    )
+
+    assert result["end_line"] == 20
+    assert result["content_truncated"] is True
+    assert result["truncation_reasons"] == ["line_limit"]
+    assert result["next_start_line"] == 21
+
+
+def test_patch_normalization_adds_missing_terminal_newline(tmp_path, monkeypatch):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+
+    path, patch, normalizations = runner["normalize_patch_arguments"](
+        {
+            "path": "pydantic/example.py",
+            "patch": "--- a/pydantic/example.py\n+++ b/pydantic/example.py\n"
+            "@@ -1 +1 @@\n-old = 1\n+new = 1",
+        },
+        {"pydantic/example.py"},
+    )
+
+    runner["validate_patch"](patch, {"pydantic/example.py"})
+    assert path == "pydantic/example.py"
+    assert patch.endswith("\n")
+    assert "patch_final_newline_added" in normalizations

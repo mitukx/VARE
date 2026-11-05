@@ -1,0 +1,139 @@
+{
+  "assignment_manifest_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/train-dev-assignment-v13-pydantic-14138-interface-recovery.json",
+  "assignment_manifest_sha256": "bc426112ecbada31d3365f82dc8a56a6cd03c7d336cd838a3833f5a3a79e6103",
+  "experiment_protocol_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/vare-rsi-fresh-train-dev-real-model-grpo-v7-14138-interface-recovery.json",
+  "experiment_protocol_sha256": "bafd0353a5848031e192df62667e17d95f820d2b0532b8e862ede651752630b0",
+  "frozen_at_utc": "2026-11-05T22:14:08Z",
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_evaluation": false,
+  "model_or_agent_exposure_before_freeze": true,
+  "new_group_prompt_exposure_before_freeze": false,
+  "no_go_gate_path": "work/VARE-rsi-integration-20261105/protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "prior_attempt_summary_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-003/summary.json",
+  "prior_attempt_summary_sha256": "446862b383be84f5a4c29daed4870372adbedc3fc77c0ce1b02759e33885cc74",
+  "prior_completed_zero_reward_rollouts": [
+    {
+      "grade_sha256": "c8dc50dcf9c4fbbe0bb2bdd630904136d42a34071e8a002599b88b4e25124347",
+      "reward": 0,
+      "sample_index": 1,
+      "trajectory_artifact_sha256": "cb7a09066933872896f1983769d2c5e5ccccbefbc7396fc0e9007ec58d6e4738"
+    },
+    {
+      "grade_sha256": "e936452e1f0a90c09aea2b0996ff193f37fa863e47c69228fde160862984b89e",
+      "reward": 0,
+      "sample_index": 2,
+      "trajectory_artifact_sha256": "06aee76d79529be2aeacca6e837e9464d0f10b53c62790b98adcfe64d1a295e8"
+    },
+    {
+      "grade_sha256": "2926b371e563683420f7a9900be5510da64700f6badc445c88dc4f805c4be12f",
+      "reward": 0,
+      "sample_index": 3,
+      "trajectory_artifact_sha256": "e1a9af9df4e86fc8a076f9cbab7ecb76e5c5508d7ef260d52fddf3721dddf196"
+    },
+    {
+      "grade_sha256": "22a409aac0fa54bbec01bb62a066574cdcfaa56d660c48da23f4ec7c0aac42ac",
+      "reward": 0,
+      "sample_index": 4,
+      "trajectory_artifact_sha256": "812f082881286bb03c4a3c0c7c96b341cd842d03b1ed5f48ee9adc5c116297e8"
+    },
+    {
+      "grade_sha256": "212ab08bc9431665243a36ce7295422a2e8196fbf424cc9a16d93b9509e1b162",
+      "reward": 0,
+      "sample_index": 5,
+      "trajectory_artifact_sha256": "72b426f6f4afedbb2a2f09d8fd2c0abad69417e49b9d159f07a1926c09fe6a6b"
+    },
+    {
+      "grade_sha256": "1effdb7e5da2edad111d2c48d8ce30ce96f86cf1c1861be793728f24b9b2d7a0",
+      "reward": 0,
+      "sample_index": 7,
+      "trajectory_artifact_sha256": "658da68ab5e5518cabc5d1424d6038218591948b2e6f4fa034d54c0b20199955"
+    }
+  ],
+  "prior_partial_exposure": {
+    "abort_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
+    "abort_sha256": "5acc10f1992028bbcc56776704bf059a6837d4a582dc75321836dbd221c097c2",
+    "completed_rollout": false,
+    "independent_grade_produced": false,
+    "optimizer_updates": 0,
+    "partial_tool_turns": 3,
+    "prior_run_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/real-model-run-v18-14138-full-trajectory-grpo-group.lock.json",
+    "prior_run_lock_sha256": "9d033771dc98b04e3b1e50e2d9582e5d4be22c1f28b525872c4682afe5935759",
+    "resource_stop_reason": "swap growth of 7277117 bytes exceeded the frozen zero-byte allowance while system-wide memory free remained 34 percent",
+    "sample_index": 0,
+    "trajectory_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/training/pydantic-14138-direct-builtin-scalar-union-schema/sample-00/trajectory.json",
+    "trajectory_sha256": "b7700fe8c14b403ff7514035f2ef94f9a42b36bb2d8c477da924dcd09fded0aa"
+  },
+  "prior_partial_exposures": [
+    {
+      "attempt": 1,
+      "independent_grade_produced": false,
+      "optimizer_updates": 0,
+      "resource_stop_reason": "7,277,117 bytes swap growth exceeded zero-byte allowance while free memory was 34 percent",
+      "sample_index": 0,
+      "tool_turns": 3,
+      "trajectory_artifact_sha256": "b7700fe8c14b403ff7514035f2ef94f9a42b36bb2d8c477da924dcd09fded0aa",
+      "trajectory_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/training/pydantic-14138-direct-builtin-scalar-union-schema/sample-00/trajectory.json"
+    },
+    {
+      "attempt": 2,
+      "independent_grade_produced": false,
+      "optimizer_updates": 0,
+      "resource_stop_reason": "184,612,291 bytes swap growth exceeded 67,108,864-byte allowance while free memory was 35 percent",
+      "sample_index": 6,
+      "tool_turns": 13,
+      "trajectory_artifact_sha256": "50715f691929178003a9b59783564c80c23dc7c7b9a85d8e2eb69e04fd3c332c",
+      "trajectory_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-002/samples/sample-06/trajectory.json"
+    },
+    {
+      "attempt": 3,
+      "independent_grade_produced": false,
+      "optimizer_updates": 0,
+      "resource_stop_reason": "324,922,245 bytes swap growth exceeded the 268,435,456-byte allowance while free memory was 34 percent; sample stopped after nine tool turns",
+      "sample_index": 8,
+      "tool_turns": 9,
+      "trajectory_artifact_sha256": "6542e74769ce939dc1dcf20274880cd7e6bd8457c41e62bc84c1ebe6ecd5837e",
+      "trajectory_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-003/samples/sample-08/trajectory.json"
+    }
+  ],
+  "protocol_id": "vare-rsi-assignment-environment-binding-v13-14138-interface-recovery",
+  "qualification_bindings": [
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14138/attempt-001/summary.json",
+      "qualification_summary_sha256": "94c5c4e9bb43c5afa2f77133607ee977a5060ce391753f7cee5c8580025b3df1",
+      "task_id": "pydantic-14138-direct-builtin-scalar-union-schema"
+    },
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-13997-v1.json",
+      "environment_lock_sha256": "96f4cbcf61ff6c22bcb8cf28ea38731ebd441d5f66ab5eefd5210299725b7a6a",
+      "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-13997/attempt-001/summary.json",
+      "qualification_summary_sha256": "62cb54f6b4a569e0ebbf87e80c1d1351304324905e5669a1c2aaafe6ecf74b1c",
+      "task_id": "pydantic-13997-explicit-json-schema-by-alias-override"
+    },
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14103/attempt-001/summary.json",
+      "qualification_summary_sha256": "4edcd9e7205622b26c6c8989823db10012cd5096ed3e127c9b6a1a3bc77d0a2c",
+      "task_id": "pydantic-14103-ignore-internal-dataclass-extras"
+    }
+  ],
+  "sample_index_allocation_changed": true,
+  "schema_version": 1,
+  "task_assignment_changed": false,
+  "task_membership": {
+    "development": [
+      "pydantic-13997-explicit-json-schema-by-alias-override",
+      "pydantic-14103-ignore-internal-dataclass-extras"
+    ],
+    "train": [
+      "pydantic-14138-direct-builtin-scalar-union-schema"
+    ]
+  }
+}
