@@ -1,6 +1,6 @@
 {
   "expectations_met": true,
-  "git_revision": "a9457636fb2c4c40217f289ff943c58421a07f20",
+  "git_revision": "8d811edb55821b08a3acc8c371c2352349690470",
   "isolation": {
     "attestation_ok": true,
     "backend": "bwrap",
@@ -33,7 +33,7 @@
           "source_hashes": {
             "accum.py": "90f6800a1463c05feb8e699a940507c37be5cb19ec84dcaef5468f9b35010b35"
           },
-          "wall_s": 0.04551225600016551
+          "wall_s": 0.02090391699994143
         },
         "incorrect": {
           "classification": "fail_correctness",
@@ -54,7 +54,7 @@
           "source_hashes": {
             "accum.py": "001d72bcb715922c674ed35ac23bcc2101c6780f5ec7d2dcf30e6382301bfff2"
           },
-          "wall_s": 0.020972780999727547
+          "wall_s": 0.018609169999763253
         },
         "known_good": {
           "classification": "pass",
@@ -73,7 +73,7 @@
           "source_hashes": {
             "accum.py": "5f64993f54e58130a9998de5dd358608014c6172a92765c79dc07dd6286cb083"
           },
-          "wall_s": 0.02185814999984359
+          "wall_s": 0.019724445000065316
         }
       },
       "matches_expectation": true,
@@ -93,21 +93,21 @@
           ],
           "matches_expectation": true,
           "metrics": {
-            "aa_abs_high_s": 0.0001240936407130272,
-            "aa_abs_low_s": 2.96395983511443e-06,
-            "aa_abs_mean_s": 6.352880027407081e-05,
-            "aa_median_s": 0.006626387999858707,
-            "aa_relative": 0.022045487797851756,
-            "baseline_median_s": 0.006775763000405277,
-            "candidate_median_s": 0.00674832200002129,
-            "gain_high_s": 0.0002012183132460219,
-            "gain_low_s": -0.00025411191285045295,
-            "gain_mean_s": -2.6446799802215536e-05,
+            "aa_abs_high_s": 0.00035610678471427026,
+            "aa_abs_low_s": -8.614318496553543e-05,
+            "aa_abs_mean_s": 0.00013498179987436743,
+            "aa_median_s": 0.006661223000264727,
+            "aa_relative": 0.004083256501195195,
+            "baseline_median_s": 0.006688534000204527,
+            "candidate_median_s": 0.006646765999903437,
+            "gain_high_s": 0.00026545701563438634,
+            "gain_low_s": -6.239061564403817e-05,
+            "gain_mean_s": 0.00010153319999517407,
             "max_abs_error": 1.1102230246251565e-16,
-            "noise_floor_s": 0.0001240936407130272,
+            "noise_floor_s": 0.00035610678471427026,
             "performance_gate": "paired_ci_exceeds_aa_noise",
             "performance_passed": false,
-            "speedup": 1.0040663442532678
+            "speedup": 1.0062839582891434
           },
           "passed": false,
           "peak_rss_kb": null,
@@ -116,7 +116,7 @@
           "source_hashes": {
             "project.py": "73b0b395c4cc2ad2830ebc37f354fd09f29acfebb5e168ba9590f70aeb0dfdbb"
           },
-          "wall_s": 0.16215403199976208
+          "wall_s": 0.16020683999977336
         },
         "incorrect": {
           "classification": "fail_correctness",
@@ -137,7 +137,7 @@
           "source_hashes": {
             "project.py": "14579c50fe7ee086a051df42aef5e1ac88e1039ca90a4f493652d5cf3d8a59c2"
           },
-          "wall_s": 0.05991744799985099
+          "wall_s": 0.05916772599994147
         },
         "known_good": {
           "classification": "pass",
@@ -147,21 +147,21 @@
           "failures": [],
           "matches_expectation": true,
           "metrics": {
-            "aa_abs_high_s": 0.0014779925894703844,
-            "aa_abs_low_s": -0.0005018653890960629,
-            "aa_abs_mean_s": 0.0004880636001871608,
-            "aa_median_s": 0.006619249999857857,
-            "aa_relative": 0.0030941839521202064,
-            "baseline_median_s": 0.006598831999781396,
-            "candidate_median_s": 0.0011050930002056703,
-            "gain_high_s": 0.005878746210746602,
-            "gain_low_s": 0.005268405389088013,
-            "gain_mean_s": 0.005573575799917308,
+            "aa_abs_high_s": 0.00022483042623254527,
+            "aa_abs_low_s": 6.777037386153301e-05,
+            "aa_abs_mean_s": 0.00014630040004703915,
+            "aa_median_s": 0.0066442040001675196,
+            "aa_relative": 0.009760357143924474,
+            "baseline_median_s": 0.006709693000175321,
+            "candidate_median_s": 0.0011307569998280087,
+            "gain_high_s": 0.005685211598886336,
+            "gain_low_s": 0.005454637601230833,
+            "gain_mean_s": 0.005569924600058585,
             "max_abs_error": 1.1102230246251565e-16,
-            "noise_floor_s": 0.0014779925894703844,
+            "noise_floor_s": 0.00022483042623254527,
             "performance_gate": "paired_ci_exceeds_aa_noise",
             "performance_passed": true,
-            "speedup": 5.971291102697491
+            "speedup": 5.933806291887544
           },
           "passed": true,
           "peak_rss_kb": null,
@@ -170,7 +170,7 @@
           "source_hashes": {
             "project.py": "9e920a4dba5c0a1c5703ff9239519ced90cc4b8a3dda59f5762a04dc032eb762"
           },
-          "wall_s": 0.1302805829996032
+          "wall_s": 0.1262498730002335
         }
       },
       "matches_expectation": true,
@@ -202,7 +202,7 @@
           "source_hashes": {
             "experiment.py": "a2e9dc6195b91230cff020ed912a1660f12e63aacb466e89387f35302050bd99"
           },
-          "wall_s": 0.01930555999979333
+          "wall_s": 0.019061885999690276
         },
         "incorrect": {
           "classification": "fail_correctness",
@@ -226,7 +226,7 @@
           "source_hashes": {
             "experiment.py": "5d970d4713d01d89a0de20c5e7d294c6fe420013d60e2b17d780e3815532b47e"
           },
-          "wall_s": 0.02055659999996351
+          "wall_s": 0.019505625999954646
         },
         "known_good": {
           "classification": "pass",
@@ -247,7 +247,7 @@
           "source_hashes": {
             "experiment.py": "9b61c6cf38fd792d1effdce11136c54f0ae14c906f5ec75b1a7223e480c3075f"
           },
-          "wall_s": 0.02030620400000771
+          "wall_s": 0.02017378300024575
         }
       },
       "matches_expectation": true,
