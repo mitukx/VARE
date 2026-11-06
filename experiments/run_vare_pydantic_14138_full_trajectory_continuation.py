@@ -2074,9 +2074,9 @@ def run_experiment() -> int:
         "authorized_train_rollout_exposure_budget": NEW_ROLLOUT_COUNT,
         "task_cumulative_exposure_cap": NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT,
         "new_training_sample_indices": list(range(NEW_ROLLOUT_START_INDEX, NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT)),
-        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-006/summary.json",
-        "prompt_policy_version": "pydantic-14138-prompt-v5-read-coverage",
-        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v5-read-coverage",
+        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-007/summary.json",
+        "prompt_policy_version": "pydantic-14138-prompt-v6-context-replay",
+        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v6-context-replay",
         "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
         "credit_assignment": assignment["training"]["credit_assignment"],
     }
