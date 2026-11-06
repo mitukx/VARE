@@ -84,8 +84,8 @@ OPTIMIZER_CONFIG = {"name": "mlx.optimizers.Adam", "learning_rate": 1e-5}
 GIB = 1024**3
 
 TASK_ARM_DIRS = {
-    "pydantic-13972-decimal-whole-digit-after-validator":
-        ROOT / "work/fresh-train-dev/task-arms-v3/pydantic-13972/baseline",
+    "pydantic-13994-generic-model-cross-module-pickling":
+        ROOT / "work/fresh-train-dev/task-arms-v14/pydantic-13994/baseline",
     "pydantic-14195-model-config-annotation-non-evaluation":
         ROOT / "work/fresh-train-dev/task-arms-v10/pydantic-14195/baseline",
     "pydantic-14103-ignore-internal-dataclass-extras":

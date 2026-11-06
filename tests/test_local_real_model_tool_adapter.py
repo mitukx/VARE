@@ -12,6 +12,19 @@ def _runner_namespace(tmp_path: Path, monkeypatch):
     return runpy.run_path(str(runner))
 
 
+def test_task_arm_map_uses_qualified_13994_and_excludes_exposed_13972(
+    tmp_path, monkeypatch
+):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+
+    assert runner["TASK_ARM_DIRS"][
+        "pydantic-13994-generic-model-cross-module-pickling"
+    ] == tmp_path / "work/fresh-train-dev/task-arms-v14/pydantic-13994/baseline"
+    assert "pydantic-13972-decimal-whole-digit-after-validator" not in runner[
+        "TASK_ARM_DIRS"
+    ]
+
+
 def test_baseline_source_hashes_normalizes_single_file_task_manifest(
     tmp_path, monkeypatch
 ):
