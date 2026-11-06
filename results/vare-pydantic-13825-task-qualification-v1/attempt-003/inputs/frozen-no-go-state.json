@@ -1,0 +1,15 @@
+{
+  "protocol": "mlsys-actual-model-update-readiness-no-go-v2",
+  "path": "protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+  "sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "status": "NO_GO",
+  "eligible_unique_heldout_tasks": 0,
+  "required_unique_heldout_tasks": 15,
+  "training_or_new_rollouts_if_gate_fails": false,
+  "gate_reasons": [
+    "no fresh task inventory after prior-use exclusions",
+    "no frozen 15-task confirmation split",
+    "no Development base-feasibility result under the pinned model pairing"
+  ],
+  "gate_modified": false
+}

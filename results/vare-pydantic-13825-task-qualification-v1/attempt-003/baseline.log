@@ -1,0 +1,96 @@
+.FF.FFF.                                                                 [100%]
+=================================== FAILURES ===================================
+___________________ test_generate_schema_deprecation_warning ___________________
+
+    def test_generate_schema_deprecation_warning() -> None:
+        with pytest.warns(
+            PydanticDeprecatedSince210, match='The `schema_generator` setting has been deprecated since v2.10.'
+        ) as all_warnings:
+    
+            class Model(BaseModel):
+                model_config = ConfigDict(schema_generator=GenerateSchema)
+    
+                a: int
+    
+        # The notice is emitted once per config, not once per core config build:
+>       assert len(all_warnings) == 1
+E       assert 2 == 1
+E        +  where 2 = len(WarningsChecker(record=True))
+
+tests/test_config.py:985: AssertionError
+__________________ test_user_error_on_alias_settings_is_eager __________________
+
+    def test_user_error_on_alias_settings_is_eager() -> None:
+        # The configuration is invalid on its own, so the error doesn't wait for the
+        # core schema to be built:
+>       with pytest.raises(
+            PydanticUserError, match='At least one of `validate_by_alias` or `validate_by_name` must be set to True.'
+        ):
+E       Failed: DID NOT RAISE <class 'pydantic.errors.PydanticUserError'>
+
+tests/test_config.py:1012: Failed
+___________________ test_derived_alias_config_not_inherited ____________________
+
+    def test_derived_alias_config_not_inherited() -> None:
+        """https://github.com/pydantic/pydantic/issues/13786"""
+    
+        class Parent(BaseModel):
+            model_config = ConfigDict(populate_by_name=True)
+    
+        class Child(Parent):
+            model_config = ConfigDict(populate_by_name=False)
+    
+            a: int = Field(alias='A')
+    
+        # The `validate_by_name` value derived from the parent's `populate_by_name`
+        # must not take precedence over the child's explicit `populate_by_name`:
+        assert Child.model_validate({'A': 1}).a == 1
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'pydantic_core._pydantic_core.ValidationError'>
+
+tests/test_config.py:1055: Failed
+___________________________ test_config_not_mutated ____________________________
+
+    def test_config_not_mutated() -> None:
+        config = ConfigDict(populate_by_name=True)
+    
+        class Model(BaseModel):
+            model_config = config
+    
+>       assert Model.model_config == {'populate_by_name': True}
+E       AssertionError: assert {'populate_by...y_name': True} == {'populate_by_name': True}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Left contains 2 more items:
+E         {'validate_by_alias': True, 'validate_by_name': True}
+E         Use -v to get more diff
+
+tests/test_config.py:1065: AssertionError
+___________________________ test_config_not_mutated ____________________________
+
+    def test_config_not_mutated():
+        config = dict(title='Testing')
+    
+        @validate_arguments(config=config)
+        def foo(a: int):
+            return a
+    
+        assert foo(1) == 1
+        # `extra='forbid'` is set internally, but shouldn't leak into the provided config:
+>       assert config == {'title': 'Testing'}
+E       AssertionError: assert {'extra': 'fo...e': 'Testing'} == {'title': 'Testing'}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Left contains 1 more item:
+E         {'extra': 'forbid'}
+E         Use -v to get more diff
+
+tests/test_deprecated_validate_arguments.py:326: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_config.py::test_generate_schema_deprecation_warning - asser...
+FAILED tests/test_config.py::test_user_error_on_alias_settings_is_eager - Fai...
+FAILED tests/test_config.py::test_derived_alias_config_not_inherited - Failed...
+FAILED tests/test_config.py::test_config_not_mutated - AssertionError: assert...
+FAILED tests/test_deprecated_validate_arguments.py::test_config_not_mutated
+5 failed, 3 passed, 3 warnings in 0.33s

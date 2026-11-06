@@ -1,5 +1,17 @@
 # Roadmap
 
+## Coding RL readiness follow-up — 2026-11-06
+
+Pydantic #13825 passed a frozen source/test qualification: five of eight selected
+tests failed on baseline, one failed on a targeted mutation, and all eight passed
+on fixed source. It is a prospective Train candidate only; it has not been
+assigned or shown to a model. The frozen update-readiness gate remains NO-GO at
+0/15 eligible held-out tasks and explicitly prohibits training or new agent
+rollouts while it fails. The gate is unchanged. Do not expose held-out tasks or
+use this qualification as permission to start a rollout. See the
+[qualification bundle](../results/vare-pydantic-13825-task-qualification-v1/attempt-003/)
+and the [frozen NO-GO lock](../protocols/mlsys_actual_model_update_no_go_v2.lock.json).
+
 ## Repository-patch grading gate — 2026-10-21
 
 A narrow Train-task adapter now exports a pinned MLX-LM baseline without Git

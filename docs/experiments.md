@@ -25,6 +25,19 @@ the [readiness report](mlsys-actual-model-update-no-go-v1-report.md),
 [audit](../results/mlsys-actual-model-update-readiness-v1/audit.json). This
 NO-GO does not test whether SFT or GRPO can improve task success.
 
+## Coding-agent task qualification follow-up — 2026-11-06
+
+Pydantic #13825 is a newly qualified prospective Train candidate. Across eight
+frozen upstream selectors, the baseline failed five, a targeted config-aliasing
+mutation failed one, and fixed source passed all eight. The run used an offline
+Python 3.12 ARM64 image with the exact `pydantic-core` 2.49.0 required by the
+source revision. This qualifies the task/grader pair only; no assignment, model
+prompt exposure, optimizer update, or Development evaluation occurred. The
+frozen v2 NO-GO remains 0/15 and forbids new training/agent rollouts while it
+fails, so this Train candidate does not open the model path. See the
+[qualification bundle](../results/vare-pydantic-13825-task-qualification-v1/attempt-003/)
+and [unchanged gate](../protocols/mlsys_actual_model_update_no_go_v2.lock.json).
+
 ## MLSys coding pack — adapter and draft comparison v2, 2026-10-20
 
 Graders call a thin adapter and read `task_type` from trusted metadata. The

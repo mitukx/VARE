@@ -1,0 +1,26 @@
+{
+  "baseline_revision": "617abdb1bb95b6a5d7808937cac7ef2fdbe918d9",
+  "fixed_revision": "35cf49014399220c0cb089e4d1090c0b6e4ee742",
+  "shared_test_revision": "35cf49014399220c0cb089e4d1090c0b6e4ee742",
+  "changed_test_files": [
+    "tests/test_config.py",
+    "tests/test_deprecated_validate_arguments.py",
+    "tests/test_model_signature.py"
+  ],
+  "support_harness_files": [
+    "tests/__init__.py",
+    "tests/conftest.py"
+  ],
+  "tree_sha256": {
+    "baseline": "1b241d848eec121cee7a65dc416eff419264288640b4dcae71594989906d7d7d",
+    "targeted_mutant": "a2455a256d9888a8d146f6893b16a812ca6e9f6d4c94d5b2040f6dd3e9756d87",
+    "fixed": "fbb93242c64131dd396d1b409046db5453973f0c34d4e173a8e0f05252c911c9"
+  },
+  "file_count": {
+    "baseline": 112,
+    "targeted_mutant": 112,
+    "fixed": 112
+  },
+  "targeted_mutant_rule": "Starting from exact fixed production source, remove only the new dict copy in prepare_config; all arms use identical fixed upstream tests and test harness.",
+  "arm_manifest_sha256": "8be35e24080f9b5d3d55efa4faa9763d659814a04de48fc1d8b3831127abc0d3"
+}

@@ -1,5 +1,16 @@
 # Calibration evidence
 
+## Pydantic #13825 prospective Train-task qualification — 2026-11-06
+
+Eight exact upstream selectors were run in baseline, targeted-mutation, and
+fixed arms with a pinned offline environment. Baseline passed 3 and failed 5;
+the mutation passed 7 and failed 1; fixed source passed all 8. This is task and
+grader qualification only: no assignment, model exposure, optimizer update, or
+Development evaluation occurred. The unchanged 0/15 NO-GO gate still prohibits
+new rollouts. The [bundle](../results/vare-pydantic-13825-task-qualification-v1/attempt-003/)
+retains raw qualification logs, hashes, the environment lock, and rejected
+preflight summaries.
+
 ## Async trajectory worker SQLite serialization — 2026-10-18
 
 On Apple M1 Pro / Python 3.12.12, a locked paused-reader test fails 3/3 before

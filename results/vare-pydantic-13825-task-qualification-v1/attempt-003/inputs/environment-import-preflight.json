@@ -1,0 +1,30 @@
+{
+  "protocol_sha256": "425fd73a8a03b49e87e78a1d5413d0e1ff102021a63da33357e532bde1906134",
+  "image_id": "sha256:248c8e271b0a09c5d2133b76bc67cebe45295840cdf7d7a9757cc74559040fd6",
+  "completed_at_utc": "2026-11-06T09:24:18.004375Z",
+  "stage": "import_preflight_only_no_pytest",
+  "all_passed": true,
+  "arms": [
+    {
+      "arm": "baseline",
+      "exit_code": 0,
+      "output": "2.14.0b2 2.49.0",
+      "candidate_imports_and_core_compatibility": true
+    },
+    {
+      "arm": "targeted_mutant",
+      "exit_code": 0,
+      "output": "2.14.0b2 2.49.0",
+      "candidate_imports_and_core_compatibility": true
+    },
+    {
+      "arm": "fixed",
+      "exit_code": 0,
+      "output": "2.14.0b2 2.49.0",
+      "candidate_imports_and_core_compatibility": true
+    }
+  ],
+  "pytest_invoked": false,
+  "heldout_access": false,
+  "model_exposure": false
+}

@@ -1,0 +1,46 @@
+{
+  "protocol_id": "vare-rsi-pydantic-13825-qualification-environment-v2",
+  "environment_lock_sha256": "32fb13576d1a51a12d7614eb5688be8622b7cdfb64761fe86bc9920d369f71a4",
+  "image_id": "sha256:248c8e271b0a09c5d2133b76bc67cebe45295840cdf7d7a9757cc74559040fd6",
+  "platform": "linux/arm64",
+  "runtime": "Python 3.12; CPU only; network none during build, probe, and tests",
+  "base_image_chain": [
+    "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+    "sha256:f76a3740b7549c8ccf7ab4a55feca9bc6fdced74fe516c1d1b7cdc2e278c6d76",
+    "sha256:248c8e271b0a09c5d2133b76bc67cebe45295840cdf7d7a9757cc74559040fd6"
+  ],
+  "packages": {
+    "pytest": "8.4.2",
+    "dirty-equals": "0.9.0",
+    "pydantic-core": "2.49.0",
+    "typing-inspection": "0.4.5",
+    "typing-extensions": "4.16.0"
+  },
+  "wheels": [
+    {
+      "package": "dirty-equals",
+      "version": "0.9.0",
+      "sha256": "ff4d027f5cfa1b69573af00f7ba9043ea652dbdce3fe5cbe828e478c7346db9c",
+      "url": "https://files.pythonhosted.org/packages/77/0c/03cc99bf3b6328604b10829de3460f2b2ad3373200c45665c38508e550c6/dirty_equals-0.9.0-py3-none-any.whl"
+    },
+    {
+      "package": "pydantic-core",
+      "version": "2.49.0",
+      "sha256": "3928d009bdedbfe7eff17f1ec75871612b91786106c529137ea58d70770d02cf",
+      "url": "https://files.pythonhosted.org/packages/2a/60/3d7d48466a29ddaf4c309738aac30351999a1e4e4c67fb7a60d2811cec28/pydantic_core-2.49.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl"
+    }
+  ],
+  "network_during_tests": "none",
+  "caps": {
+    "cpus": 2,
+    "memory_bytes": 3040333824,
+    "memory_swap_bytes": 3040333824,
+    "pids": 128,
+    "read_only_root": true,
+    "tmpfs_bytes": 536870912,
+    "timeout_seconds_per_arm": 180
+  },
+  "qualification_import_preflight": "3/3 arms loaded candidate source with pydantic-core 2.49.0",
+  "heldout_access": false,
+  "model_exposure": false
+}

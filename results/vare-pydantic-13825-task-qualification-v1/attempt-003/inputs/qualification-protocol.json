@@ -1,0 +1,52 @@
+{
+  "protocol_id": "vare-rsi-source-test-qualification-pydantic-13825-v20",
+  "protocol_sha256": "425fd73a8a03b49e87e78a1d5413d0e1ff102021a63da33357e532bde1906134",
+  "status": "frozen_before_attempt_003",
+  "candidate_id": "pydantic/pydantic#13825",
+  "task_id": "pydantic-13825-model-config-no-mutation",
+  "proposed_split": "prospective_train_candidate_only",
+  "baseline_revision": "617abdb1bb95b6a5d7808937cac7ef2fdbe918d9",
+  "fixed_revision": "35cf49014399220c0cb089e4d1090c0b6e4ee742",
+  "changed_paths": [
+    "pydantic/_internal/_config.py",
+    "pydantic/_internal/_dataclasses.py",
+    "pydantic/_internal/_model_construction.py",
+    "pydantic/_internal/_signature.py",
+    "pydantic/config.py",
+    "pydantic/deprecated/decorator.py",
+    "tests/test_config.py",
+    "tests/test_deprecated_validate_arguments.py",
+    "tests/test_model_signature.py"
+  ],
+  "selectors": [
+    "tests/test_config.py::test_config_wrapper_match",
+    "tests/test_config.py::test_generate_schema_deprecation_warning",
+    "tests/test_config.py::test_user_error_on_alias_settings_is_eager",
+    "tests/test_config.py::test_dynamic_default",
+    "tests/test_config.py::test_derived_alias_config_not_inherited",
+    "tests/test_config.py::test_config_not_mutated",
+    "tests/test_deprecated_validate_arguments.py::test_config_not_mutated",
+    "tests/test_model_signature.py::test_populate_by_name_overrides_validate_by_alias"
+  ],
+  "arm_order": [
+    "baseline",
+    "targeted_mutant",
+    "fixed"
+  ],
+  "expected_exit_codes": {
+    "baseline": 1,
+    "targeted_mutant": 1,
+    "fixed": 0
+  },
+  "acceptance_rule": "All eight selectors are collected and executed. Baseline and targeted mutant must fail; fixed must pass. Every arm must finish without timeout and Docker State.OOMKilled must be false. Any mismatch makes the task unqualified; do not alter selectors or inputs.",
+  "targeted_mutant_rule": "Starting from exact fixed production source, remove only the new dict copy in prepare_config; all arms use identical fixed upstream tests and test harness.",
+  "source_test_scope_sha256": "fdff0f7b95fe7b98a8ff21ea729760c0e50d4ff2b1d060a7b47cf63de3ffbd3c",
+  "arm_manifest_sha256": "8be35e24080f9b5d3d55efa4faa9763d659814a04de48fc1d8b3831127abc0d3",
+  "environment_lock_sha256": "32fb13576d1a51a12d7614eb5688be8622b7cdfb64761fe86bc9920d369f71a4",
+  "preflight_sha256": "89aef70d5d0b791e570b4d9976d187eb30d91e83cbddfd8541dcd0dade6fe635",
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "model_exposure": false,
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_evaluation": false
+}
