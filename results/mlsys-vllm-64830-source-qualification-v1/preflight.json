@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "task_id": "vllm-64830-v1-runner-unsupported-feature-checks",
+  "protocol_path": "protocols/mlsys_vllm_64830_source_qualification_v1.json",
+  "protocol_sha256": "f54a7c6e0c142429090dd0ba15dd1ca0be1566690f8bf66a19f47fe70b0b3c79",
+  "metadata_correction_addendum": "protocols/mlsys_vllm_64830_source_qualification_v1_addendum_1.json",
+  "captured_at_utc": "2026-11-06T16:14:48Z",
+  "status": "STOPPED_BEFORE_TASK_TEST_EXECUTION",
+  "candidate_metadata": {
+    "pr_head_sha": "9800451ab0e78104971592315e5b26546c5e9993",
+    "pr_head_parent_sha": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "selection_record_merge_base_sha": "17550580e932f15e772185847382d3ae4211f5ec",
+    "later_squash_merge_parent_sha": "17550580e932f15e772185847382d3ae4211f5ec",
+    "verified_pr_branch_base_sha": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "verified_compare_status": "ahead_by_1_behind_by_0",
+    "verified_common_ancestor_sha": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "license_spdx": "Apache-2.0",
+    "frozen_changed_paths_match": true
+  },
+  "process_deviation": {
+    "metadata_and_file_patch_fetches_were_batched": true,
+    "patch_content_was_accessed_before_metadata_verification_completed": true,
+    "protocol_ordering_followed": false,
+    "candidate_test_execution_followed": false,
+    "model_or_agent_exposure": false,
+    "heldout_access": false,
+    "disposition": "Preserve this deviation; the task is not qualified. Do not execute task tests until exact selectors and hashes are frozen in a later committed addendum."
+  },
+  "environment_preflight": {
+    "docker_default_context": "unavailable: /var/run/docker.sock absent",
+    "colima_context": "running; read-only image listing succeeded",
+    "qualification_container_started": false,
+    "candidate_test_started": false
+  },
+  "frozen_readiness_gate": {
+    "path": "protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+    "sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+    "status": "NO_GO",
+    "eligible_unique_heldout_tasks": 0,
+    "required_unique_heldout_tasks": 15,
+    "modified": false
+  },
+  "qualification_result": "NOT_QUALIFIED",
+  "split_assignment": "NOT_ASSIGNED",
+  "training_authorized": false,
+  "model_inference_authorized": false,
+  "heldout_access": false,
+  "claim_boundary": "Metadata correction and preflight only. No source-level task qualification, coding-agent capability, or learning evidence is established."
+}
