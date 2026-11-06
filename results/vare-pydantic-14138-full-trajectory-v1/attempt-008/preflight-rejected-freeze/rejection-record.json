@@ -1,0 +1,18 @@
+{
+  "artifact_sha256": {
+    "assignment": "3110481767488ba84c61bdbc6fcc223d5872fa711590338d315d2bd7669a5c2a",
+    "binding": "5b6837c1df4ca1f133c8b4dced4673eaab9beda662e22ccc461a9e5f3ae35d60",
+    "protocol": "64b0332de56c44a5be5a593ed151759dc2d93e8b49ebae5a935ff4a6105559f3",
+    "run_lock": "f933ad4927cf98abdcfccf1a1ec45551b13a51282af9f06978de8fae1297f225"
+  },
+  "candidate_prompt_exposed": false,
+  "corrective_action": "Preserve this rejected freeze. Rebind the unchanged v17 prospective Train/Development allocation and re-run frozen-input, resource, and MLX Metal preflight with the pinned work/vare-mlx-runtime-20261106/bin/python interpreter.",
+  "error": "No package metadata was found for mlx",
+  "error_type": "PackageNotFoundError",
+  "heldout_access": false,
+  "model_loaded": false,
+  "protocol_repository_copy_sha256": "64b0332de56c44a5be5a593ed151759dc2d93e8b49ebae5a935ff4a6105559f3",
+  "reason": "Read-only pre-exposure preflight attempted to resolve MLX package versions using host Python 3.9 instead of the frozen MLX Python 3.12 environment; importlib.metadata raised PackageNotFoundError: mlx.",
+  "rejected_at_utc": "2026-11-06T01:19:25Z",
+  "schema": "vare_preflight_rejection_v1"
+}

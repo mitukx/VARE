@@ -1,0 +1,15 @@
+{
+  "actual_runtime_interpreter_path": "/Users/user/Documents/Codex/2026-11-05/files-pasted-by-the-user-vare/work/vare-mlx-runtime-20261105/bin/python",
+  "candidate_prompt_exposed": false,
+  "correction": "The initial rejection record named a nonexistent 20261106 runtime directory. The actual frozen MLX runtime interpreter is work/vare-mlx-runtime-20261105/bin/python.",
+  "corrective_action": "Run all MLX version/device and frozen-input checks with the existing pinned 20261105 interpreter; preserve both the host-Python rejection and this path-resolution addendum.",
+  "corrects_record_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/preflight-rejected-freeze-v17-host-python/rejection-record.json",
+  "failed_path_attempt": "work/vare-mlx-runtime-20261106/bin/python",
+  "failed_path_attempt_exit_code": 127,
+  "heldout_access": false,
+  "model_loaded": false,
+  "prior_rejection_record_sha256": "270dba4935442080b9c4bd109a5b2a758935ef130d644f1694197750bbbf64c8",
+  "python_process_started": false,
+  "recorded_at_utc": "2026-11-06T01:20:42Z",
+  "schema": "vare_preflight_rejection_correction_v1"
+}

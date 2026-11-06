@@ -36,9 +36,9 @@ def find_experiment_root() -> Path:
 ROOT = find_experiment_root()
 WORK = ROOT / "work/vare-rsi-qwen3-4b-mlx-20261106"
 OUTPUTS = ROOT / "outputs/vare-rsi-heldout-qualification-v2-20261105"
-RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-008"
-ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v17-pydantic-14138-context-replay.json"
-RUN_LOCK_PATH = OUTPUTS / "real-model-run-v25-14138-context-replay-grpo-group.lock.json"
+RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-009"
+ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v18-pydantic-14138-scope-directed.json"
+RUN_LOCK_PATH = OUTPUTS / "real-model-run-v26-14138-scope-directed-grpo-group.lock.json"
 MODEL_PATH = WORK / "model"
 MODEL_MANIFEST_PATH = WORK / "model-manifest.json"
 INTEGRATION = ROOT / "work/VARE-rsi-integration-20261105"
@@ -52,7 +52,7 @@ BASE_SEED = 20261106
 TEMPERATURE = 0.8
 GROUP_SIZE = 8
 NEW_ROLLOUT_COUNT = 8
-NEW_ROLLOUT_START_INDEX = 34
+NEW_ROLLOUT_START_INDEX = 42
 MAX_TURNS = 16
 MAX_TOTAL_TOKENS = 4096
 MAX_ACTION_TOKENS = 512
@@ -2074,8 +2074,8 @@ def run_experiment() -> int:
         "authorized_train_rollout_exposure_budget": NEW_ROLLOUT_COUNT,
         "task_cumulative_exposure_cap": NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT,
         "new_training_sample_indices": list(range(NEW_ROLLOUT_START_INDEX, NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT)),
-        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-007/summary.json",
-        "prompt_policy_version": "pydantic-14138-prompt-v6-context-replay",
+        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-008/summary.json",
+        "prompt_policy_version": "pydantic-14138-prompt-v7-scope-directed",
         "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v6-context-replay",
         "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
         "credit_assignment": assignment["training"]["credit_assignment"],
