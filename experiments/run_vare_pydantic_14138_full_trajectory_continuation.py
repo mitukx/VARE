@@ -36,23 +36,40 @@ def find_experiment_root() -> Path:
 ROOT = find_experiment_root()
 WORK = ROOT / "work/vare-rsi-qwen3-4b-mlx-20261106"
 OUTPUTS = ROOT / "outputs/vare-rsi-heldout-qualification-v2-20261105"
-RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-010"
-ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v19-pydantic-14138-scope-guard.json"
-RUN_LOCK_PATH = OUTPUTS / "real-model-run-v27-14138-scope-guard-grpo-group.lock.json"
+
+
+def configured_path(name: str, default: Path) -> Path:
+    value = Path(os.environ.get(name) or str(default)).expanduser()
+    return (ROOT / value).resolve() if not value.is_absolute() else value.resolve()
+
+
+RUN_DIR = configured_path(
+    "VARE_RUN_DIR", OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-010"
+)
+ASSIGNMENT_PATH = configured_path(
+    "VARE_ASSIGNMENT_PATH",
+    OUTPUTS / "train-dev-assignment-v19-pydantic-14138-scope-guard.json",
+)
+RUN_LOCK_PATH = configured_path(
+    "VARE_RUN_LOCK_PATH",
+    OUTPUTS / "real-model-run-v27-14138-scope-guard-grpo-group.lock.json",
+)
 MODEL_PATH = WORK / "model"
 MODEL_MANIFEST_PATH = WORK / "model-manifest.json"
 INTEGRATION = ROOT / "work/VARE-rsi-integration-20261105"
 GRPO_PATH = INTEGRATION / "src/vare/grpo_mlx.py"
 CONTAINER_RUNNER = ROOT / "work/container_pytest_runner.py"
-TRAIN_TASK_ID = "pydantic-14138-direct-builtin-scalar-union-schema"
+TRAIN_TASK_ID = os.environ.get(
+    "VARE_TRAIN_TASK_ID", "pydantic-14138-direct-builtin-scalar-union-schema"
+)
 MODEL_ID = "mlx-community/Qwen3-4B-Instruct-2507-4bit"
 MODEL_REVISION = "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
 BASE_MODEL_ID = f"{MODEL_ID}@{MODEL_REVISION}"
 BASE_SEED = 20261106
 TEMPERATURE = 0.8
 GROUP_SIZE = 8
-NEW_ROLLOUT_COUNT = 8
-NEW_ROLLOUT_START_INDEX = 48
+NEW_ROLLOUT_COUNT = int(os.environ.get("VARE_NEW_ROLLOUT_COUNT", "8"))
+NEW_ROLLOUT_START_INDEX = int(os.environ.get("VARE_NEW_ROLLOUT_START_INDEX", "48"))
 MAX_TURNS = 16
 MAX_TOTAL_TOKENS = 4096
 MAX_ACTION_TOKENS = 512
@@ -75,6 +92,8 @@ TASK_ARM_DIRS = {
         ROOT / "work/fresh-train-dev/task-arms-v3/pydantic-14138/baseline",
     "pydantic-13997-explicit-json-schema-by-alias-override":
         ROOT / "work/fresh-train-dev/task-arms-v3/pydantic-13997-correct/baseline",
+    "pydantic-13995-jsonvalue-python-inf-nan-serialization":
+        ROOT / "work/fresh-train-dev/task-arms-v3/pydantic-13995/baseline",
 }
 TASK_ENV_LOCK_OVERRIDES = {}
 
@@ -2158,8 +2177,13 @@ def run_experiment() -> int:
         "authorized_train_rollout_exposure_budget": NEW_ROLLOUT_COUNT,
         "task_cumulative_exposure_cap": NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT,
         "new_training_sample_indices": list(range(NEW_ROLLOUT_START_INDEX, NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT)),
-        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-009/summary.json",
-        "prompt_policy_version": "pydantic-14138-prompt-v7-scope-directed",
+        "prior_negative_train_experiment_path": lock.get(
+            "prior_negative_train_experiment_path",
+            "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-009/summary.json",
+        ),
+        "prompt_policy_version": lock.get(
+            "prompt_policy_version", "pydantic-14138-prompt-v7-scope-directed"
+        ),
         "tool_adapter_version": TOOL_ADAPTER_VERSION,
         "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
         "credit_assignment": assignment["training"]["credit_assignment"],

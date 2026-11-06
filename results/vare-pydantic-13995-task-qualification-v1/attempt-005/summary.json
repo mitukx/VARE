@@ -1,0 +1,37 @@
+{
+  "arms": {
+    "baseline": {
+      "attempted": false,
+      "grade_status": "not_run",
+      "reward": null
+    },
+    "fixed": {
+      "attempted": false,
+      "grade_status": "not_run",
+      "reward": null
+    },
+    "mutant-v3": {
+      "attempted": false,
+      "grade_status": "not_run",
+      "reward": null
+    }
+  },
+  "attempt": 5,
+  "candidate_or_model_prompt_exposure": false,
+  "container_launched": false,
+  "development_evaluation": false,
+  "expected_freeze_field": "mutant_v3_hash_record_sha256",
+  "freeze_sha256": "b7f23cdf6e3294232fa997e68cf2b2b39464840b33d402f56bd5bfb6562f32a9",
+  "heldout_access": false,
+  "preflight_error_class": "KeyError",
+  "preflight_error_field": "mutant_v3_file_hash_record_sha256",
+  "qualification_adapter_sha256": "7e1cb8aea82207bd5db40ab72515d0c9357def57090c064a0467d31166e3028f",
+  "raw_grader_logs_or_commands_created": false,
+  "schema": "vare_pydantic_task_qualification_attempt_v1",
+  "source_head_sha": "c2f21919df0baec0a208a18fec64a4040feffef8",
+  "status": "PREFLIGHT_REJECTED_BEFORE_ARM_EXECUTION",
+  "stop_reason": "The frozen adapter referenced a non-existent hash field in the freeze manifest. Preflight stopped before any grader arm or container was launched; no reward was assigned.",
+  "task_id": "pydantic-13995-jsonvalue-python-inf-nan-serialization",
+  "task_prompt_exposure": false,
+  "training_or_optimizer_update": false
+}

@@ -1,0 +1,55 @@
+{
+  "arm_integrity_preflight": {
+    "all_arms_target_source_and_selector_test_hashes_match_frozen_definition": true,
+    "baseline_and_fixed_differ_from_manifest_only_at": "pydantic/types.py",
+    "file_count_each_arm": 108,
+    "mutant_v2_full_file_manifest_match": true
+  },
+  "arms": [
+    "baseline",
+    "mutant-v2",
+    "fixed"
+  ],
+  "attempt": 3,
+  "candidate_id": "pydantic/pydantic#13995",
+  "created_at_utc": "2026-11-06T03:53:58+00:00",
+  "development_evaluation": false,
+  "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+  "exact_selector_parser": "Exact frozen selector anchored at line start; permits pytest parameter text and optional reason suffix after the selector.",
+  "freeze_id": "vare-rsi-pydantic-13995-task-qualification-attempt-003-v1",
+  "frozen_arm_tree_sha256": {
+    "baseline": "6975c0055b091bc13715003ae5ea6ac8c8d46888884ccca8eed08fe6a6ff5160",
+    "fixed": "0398c710408cad85bf46233e2906428209db875ba664c6fcc380f9d9ec225a30",
+    "mutant_v2": "41543ac5d6a2a6478efb9289ab82a53960163add10d279e17c1fbdfa2f4afcc9"
+  },
+  "grader_command_template_sha256": "c578a05a580eae9ab96128b5bcbcab001ed6400369e90c3e150f2c7d3f3c112e",
+  "grader_image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+  "grader_image_pull_policy": "never",
+  "grader_network": "none",
+  "heldout_access": false,
+  "model_prompt_exposure": false,
+  "mutant_v2_file_hash_record_sha256": "65ddb66609ee39b32caccf3493d179b8fd03b5a643a6ad9506834fc28de51f31",
+  "per_arm_timeout_seconds": 180,
+  "pre_exposure_exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "cpu_evidence_run_id": 42157664769,
+    "optimizer_recovery_run_id": 42157664747,
+    "pull_request_run_id": 42157664733,
+    "push_run_id": 42157658859
+  },
+  "prior_attempt_002_public_summary_sha256": "c63ac5d52589dba47eec8dfd8e4df419b588d7c86f90fa64deeec014bb084842",
+  "private_run_directory": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-13995-qualification-attempt-003",
+  "protocol": "Prospective Train/Development task qualification only; no held-out allocation.",
+  "qualification_rule": "Baseline and mutant-v2 must fail the exact anchored selector; fixed must pass. Environment errors, timeout, OOM, or unrelated failure are untrusted and do not receive reward.",
+  "qualification_selector": "tests/test_types.py::test_json_value_inf_nan_serialization",
+  "qualification_test_sha256": "8cbbfbd64f72551f083ee6d628b477ac5826b9e465e61c26988eab5b5923b990",
+  "raw_grader_logs_and_commands_private": true,
+  "runner_sha256": "a557a24f997398307962e506acb93ef636bd1a570d58eff35b3ec5876abbbd34",
+  "schema": "vare_pydantic_task_qualification_run_lock_v1",
+  "source_head_sha": "c2f21919df0baec0a208a18fec64a4040feffef8",
+  "task_definition_sha256": "d3824a232fc7f2d94a1c3a5669b8a339d850139707b29c30283aae006124ff17",
+  "task_id": "pydantic-13995-jsonvalue-python-inf-nan-serialization",
+  "task_mutation_addendum_sha256": "f2136cd8d0361e21b501012a408977ec50c502d3ae0f939a12dd3db237f7cd51",
+  "training_or_optimizer_update": false
+}
