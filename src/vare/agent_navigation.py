@@ -14,10 +14,39 @@ from typing import Any
 
 _QUERY_WORD = re.compile(r"[A-Za-z][A-Za-z0-9_]*")
 _GENERIC_QUERY_WORDS = {
-    "a", "an", "and", "are", "as", "at", "before", "by", "does", "for",
+    "a", "an", "and", "are", "as", "at", "before", "by", "class", "does", "def", "for",
     "from", "in", "is", "it", "of", "on", "or", "that", "the", "then",
     "this", "to", "use", "where", "with",
 }
+
+
+def _normalized_words(text: str) -> list[str]:
+    """Split identifiers and normalize common inflections for search-loop matching."""
+    camel_split = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text)
+    words: list[str] = []
+    for raw in _QUERY_WORD.findall(camel_split):
+        parts = raw.split("_")
+        for part in parts:
+            word = part.lower()
+            if not word:
+                continue
+            if word == "deferred":
+                word = "defer"
+            elif word.endswith("ies") and len(word) > 4:
+                word = word[:-3] + "y"
+            elif word.endswith("ing") and len(word) > 5:
+                word = word[:-3]
+                if len(word) > 2 and word[-1] == word[-2]:
+                    word = word[:-1]
+            elif word.endswith("ed") and len(word) > 4:
+                word = word[:-2]
+                if len(word) > 2 and word[-1] == word[-2]:
+                    word = word[:-1]
+            elif word.endswith("s") and not word.endswith("ss") and len(word) > 3:
+                word = word[:-1]
+            if word and word not in _GENERIC_QUERY_WORDS:
+                words.append(word)
+    return words
 
 
 @dataclass(frozen=True)
@@ -29,11 +58,12 @@ class _SearchFocus:
 
 
 class SearchLoopGuard:
-    """Detect repeated semantically similar literal searches with no matches.
+    """Detect repeated no-match searches before the agent reads source.
 
-    After ``empty_search_limit`` related empty searches, the last result carries
-    navigation alternatives. Further related searches are intercepted until a
-    source read, symbol lookup, or successful edit changes the agent's context.
+    When a path is supplied, misses in that task-owned file share one budget even
+    if the model keeps rephrasing the query. Without a path, semantic similarity
+    is used. Further related searches are intercepted until source is read, symbol
+    context changes, or an edit succeeds.
     Positive or unrelated searches start a new sequence.
     """
 
@@ -46,15 +76,11 @@ class SearchLoopGuard:
 
     @staticmethod
     def _focus(query: str, path: str | None) -> _SearchFocus:
+        words = frozenset(_normalized_words(query))
         identifiers = [word.lower() for word in _QUERY_WORD.findall(query)]
-        words = frozenset(
-            part
-            for identifier in identifiers
-            for part in identifier.split("_")
-            if part and part not in _GENERIC_QUERY_WORDS
-        )
         strong = frozenset(
-            identifier for identifier in identifiers
+            "_".join(_normalized_words(identifier))
+            for identifier in identifiers
             if "_" in identifier or len(identifier) >= 14
         )
         return _SearchFocus(query=query, path=path, words=words, strong_identifiers=strong)
@@ -63,6 +89,11 @@ class SearchLoopGuard:
     def _related(left: _SearchFocus, right: _SearchFocus) -> bool:
         if left.path is not None and right.path is not None and left.path != right.path:
             return False
+        if left.path is not None and right.path is not None:
+            # Searches are already scoped to one task-owned source file. After
+            # several misses, changing the wording without reading source is not
+            # new evidence and should not restart the search budget.
+            return True
         if left.strong_identifiers & right.strong_identifiers:
             return True
         if not left.words or not right.words:

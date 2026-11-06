@@ -1,0 +1,14 @@
+{
+  "diagnostic_protocol_sha256": "d9ae2ce2e45997df07f0c88784070c94f39e0aec8887179637294a9226b4cab6",
+  "frozen_at_utc": "2026-11-06T11:30:57+00:00",
+  "heldout_access": false,
+  "original_historical_environment_lock_modified": false,
+  "protocol_id": "vare-pydantic-14115-navigation-diagnostic-v1",
+  "reason": "Original task image fails Pydantic import before collecting the qualified selector because pydantic-core 2.50.0 is incompatible with required 2.50.4.",
+  "replacement_lock_path": "results/vare-agent-navigation-diagnostic-v1/attempt-001/grader-environment-lock.json",
+  "replacement_lock_sha256": "cf26191d069c333d91f1e566a6a8f70b343f4c6c4b48a9268f4aa3c8f1d2d989",
+  "schema": "vare_agent_navigation_diagnostic_environment_addendum_v1",
+  "status": "FROZEN_BEFORE_MODEL_PROMPT_EXPOSURE",
+  "supersedes_only": "grader environment selection in diagnostic protocol; no task, model, prompt, controller, or rollout budget change",
+  "training_or_evaluation": false
+}

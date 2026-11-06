@@ -1,0 +1,129 @@
+{
+  "agent": {
+    "agent_prompt_sha256": "9cfb31f4418cc49609bf37cb98fa9e33ccd875722a52c51ab465b1f869993731",
+    "navigation_module_path": "src/vare/agent_navigation.py",
+    "navigation_module_sha256": "8b468ccbc5e2bd8747f690175c1387396960a192abb2da9b54c1a1b571420b26",
+    "regression_test_path": "tests/test_local_real_model_tool_adapter.py",
+    "regression_test_result": "10 targeted tests passed",
+    "regression_test_sha256": "9c3cd828f7dd6d7dad3d10428336e913dcac46e453a0629af9e87b08870c40c1",
+    "runner_path": "experiments/run_vare_pydantic_14138_full_trajectory_continuation.py",
+    "runner_sha256": "b4d92beab2231e16de35654026320bf26fc1627ed74328d80e604f8602696dd4",
+    "system_prompt_sha256": "30410cf7d97f2ce82eade4071c225db22a93407e048c2dd656ccc056a0ae2ad7",
+    "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v15-parseable-ranked-context",
+    "tool_help_sha256": "62c46c24b4f0f946ae25e89f5c103c5dda8cb026b704020137bda7a3e0404ada"
+  },
+  "authorization": {
+    "not_authorized": [
+      "GRPO/SFT training",
+      "optimizer update",
+      "checkpoint save or reload",
+      "Development evaluation",
+      "held-out task access or evaluation",
+      "using this rollout as independent evaluation evidence"
+    ],
+    "scope": "One additional local MLX inference-only sample after the v15 navigation and prompt corrections, on the already-exposed historical Train task #14115 for debugging the tool-use path. It does not qualify a fresh Train task, Development task, evaluation task, or held-out task.",
+    "source": "User instruction dated 2026-11-06 authorizing a small prospective diagnostic to test whether valid edit and submission rates improve after targeted corrections."
+  },
+  "budget": {
+    "max_action_tokens": 512,
+    "max_generated_tokens": 4096,
+    "max_prompt_tokens": 4096,
+    "max_tool_turns": 16,
+    "max_wall_seconds": 900,
+    "samples": 1,
+    "stop_on_memory_pressure_free_below_pct": 15.0,
+    "swap_growth_allowed_bytes": 0
+  },
+  "decision_rule": "One descriptive inference-only diagnostic. Stop additional local coding-model rollout on this consumed task if this sample again produces zero valid edit calls or no submission. This is not independent evaluation or a statistical improvement claim.",
+  "deterministic_replay": {
+    "historical_escaped_preview_search_turns": [
+      4,
+      8
+    ],
+    "path": "results/vare-agent-navigation-diagnostic-v1/attempt-006/deterministic-replay-qwen25-v5-actions.json",
+    "replayed_escaped_preview_search_turns": [],
+    "sha256": "5ad8bc7fa344012281d07fd6f5645f09e2694366e718aa97c20492d41c7dd12f"
+  },
+  "frozen_at_utc": "2026-11-06T12:50:03Z",
+  "gate_boundary": {
+    "eligible_unique_heldout_tasks": 0,
+    "frozen_gate_path": "protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+    "frozen_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+    "gate_modified": false,
+    "heldout_access": false,
+    "required_unique_heldout_tasks": 15,
+    "status": "NO_GO"
+  },
+  "hypothesis": "Returning a bounded ranked declaration as parseable JSON and making already-read context explicit in both prompts will reduce repeated navigation and tool-output loss, increasing valid edit or submission counts relative to attempt-005.",
+  "model": {
+    "adapter": "none",
+    "chat_template_sha256": "d5495a1e5db0611132a97e46a65dbb64a642a499421228b9c8b93229097fa9a4",
+    "downloaded_before_prompt_exposure": true,
+    "id": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "local_only_after_download": true,
+    "mlx_lm_version": "0.32.0",
+    "mlx_version": "0.32.4",
+    "model_manifest_path": "work/vare-rsi-qwen3-4b-mlx-20261106/model-qwen2.5-coder-7b-4bit-manifest.json",
+    "model_manifest_sha256": "f11b3ec481a66e1f0ee8804336cf6da016dec1e669254c8c3a4a7415c7a73a0c",
+    "model_tree_sha256": "86b7c8c4c733a803327b8648f3a731f95ec7774782f5cc10a647b25ad2b1d575",
+    "parameters": "7B",
+    "quantization": "4-bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80"
+  },
+  "outputs": "results/vare-agent-navigation-diagnostic-v1/attempt-006/rollout-001",
+  "prior_diagnostic": {
+    "protocol_path": "results/vare-agent-navigation-diagnostic-v1/attempt-005/protocol.json",
+    "protocol_sha256": "5866e706e3b3ce38ceb0b21bf6d8250142981d007c97d631be83b1e072e85826",
+    "result_path": "results/vare-agent-navigation-diagnostic-v1/attempt-005/rollout-001/summary.json",
+    "result_sha256": "c71fc40dc2fa241d34653b0951fdd93dda28e8fb4c55759a74dcb4d3dcf4a1bd",
+    "result_status": "candidate_failure",
+    "reward": 0.0,
+    "submitted": false,
+    "valid_edit_calls": 0
+  },
+  "protocol_id": "vare-pydantic-14115-navigation-diagnostic-v6-qwen25-parseable-context",
+  "rollout": {
+    "device": "M1 Pro, 32 GiB unified memory",
+    "max_action_tokens": 512,
+    "max_generated_tokens": 4096,
+    "max_prompt_tokens": 4096,
+    "max_tool_turns": 16,
+    "max_wall_seconds": 900,
+    "sample_index": 0,
+    "samples": 1,
+    "seed": 2646432876,
+    "temperature": 0.8,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "schema": "vare_agent_navigation_diagnostic_protocol_v6",
+  "status": "FROZEN_BEFORE_MODEL_PROMPT_EXPOSURE",
+  "task": {
+    "agent_visible_prompt_sha256": "9cfb31f4418cc49609bf37cb98fa9e33ccd875722a52c51ab465b1f869993731",
+    "baseline_source_path": "pydantic/_internal/_mock_val_ser.py",
+    "baseline_source_sha256": "56a6ec20e81e9e841088cf8db05325f6e63b8ad8094ae3cda5754a698ec0d293",
+    "editable_paths": [
+      "pydantic/_internal/_mock_val_ser.py"
+    ],
+    "grader_selector": "tests/test_config.py::test_copy_defer_build_mocks",
+    "grader_test_path": "tests/test_config.py",
+    "grader_test_sha256": "e48c8d12d47548829e6b243a7704f60cc82aac4bdc9bba38d0eecd0feec2effa",
+    "prior_prompt_exposure": true,
+    "split": "diagnostic_only_previous_train_task",
+    "task_definition_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-definition-pydantic-14115-v3.json",
+    "task_definition_sha256": "f4f206bf228422d286a62bf6af9d9626d485450592d8f853d2bbd152d97775f8",
+    "task_family": "deferred_build_mock_copy_unpickle",
+    "task_id": "pydantic-14115-deferred-model-copy-and-unpickle",
+    "task_prompt_variant_path": "results/vare-pydantic-14115-full-trajectory-v1/attempt-001/inputs/task-prompt-variant.json",
+    "task_prompt_variant_sha256": "1948203cc6374102ce5a0565460a72184d4ae557d8f6d8f6ce24072b46ad4388",
+    "use_as_independent_evaluation_evidence": false
+  },
+  "trusted_grader": {
+    "candidate_feedback": false,
+    "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-14115-v2.json",
+    "environment_lock_sha256": "63854ce64cd785c2021de71e529fe1c5cdeb0fc6bed8113ea8c163e2afc1c07a",
+    "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+    "network": "none",
+    "reward_use": "diagnostic reporting only; not training or evaluation evidence"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "agent": {
+    "agent_prompt_sha256": "249cc3b77275abaaf0b1fef5fea30e540444bed24deeccf625f46a48238f7c8d",
+    "navigation_module_path": "src/vare/agent_navigation.py",
+    "navigation_module_sha256": "8b468ccbc5e2bd8747f690175c1387396960a192abb2da9b54c1a1b571420b26",
+    "regression_test_path": "tests/test_local_real_model_tool_adapter.py",
+    "regression_test_result": "8 passed",
+    "runner_path": "experiments/run_vare_pydantic_14138_full_trajectory_continuation.py",
+    "runner_sha256": "a76c9c81ee19b4dd1255b7dccd55b90849ed64dccf5779e435d892b6024c5d8c",
+    "system_prompt_sha256": "a7769da26a3dcc4db66160fd28fb5cbdce17ae0e7ef30705988e1064051f114a",
+    "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v14-ranked-declaration-context",
+    "tool_help_sha256": "a55202ca5e258a20d033ef453e376a114415e2093edb7bab7a182e324f8fdce4"
+  },
+  "authorization": {
+    "not_authorized": [
+      "GRPO/SFT training",
+      "optimizer update",
+      "checkpoint save or reload",
+      "Development evaluation",
+      "held-out task access or evaluation",
+      "using this rollout as independent evaluation evidence"
+    ],
+    "scope": "One single-rollout local MLX diagnostic after a deterministic finding that the previous compact-action summary omitted complete source context. Same previously exposed Train task #14115 only; not fresh Train evidence, Development evaluation, held-out evaluation, or independent generalization evidence.",
+    "source": "User instruction dated 2026-11-06 to continue targeted implementation and diagnostics, using a stronger locally feasible coding model only on a diagnostic task when Qwen3-4B remains ineffective."
+  },
+  "code_change_under_test": "Carry the latest complete task-ranked source declaration through compacted prior-tool context, including after navigation_stop and later search/read actions.",
+  "frozen_at_utc": "2026-11-06T12:23:50+00:00",
+  "gate_boundary": {
+    "eligible_unique_heldout_tasks": 0,
+    "frozen_gate_path": "protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+    "frozen_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+    "gate_modified": false,
+    "heldout_access": false,
+    "required_unique_heldout_tasks": 15,
+    "status": "NO_GO"
+  },
+  "model": {
+    "adapter": "none",
+    "chat_template_sha256": "d5495a1e5db0611132a97e46a65dbb64a642a499421228b9c8b93229097fa9a4",
+    "downloaded_before_prompt_exposure": true,
+    "id": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "local_only_after_download": true,
+    "mlx_lm_version": "0.32.0",
+    "mlx_version": "0.32.4",
+    "model_manifest_path": "work/vare-rsi-qwen3-4b-mlx-20261106/model-qwen2.5-coder-7b-4bit-manifest.json",
+    "model_manifest_sha256": "f11b3ec481a66e1f0ee8804336cf6da016dec1e669254c8c3a4a7415c7a73a0c",
+    "model_tree_sha256": "86b7c8c4c733a803327b8648f3a731f95ec7774782f5cc10a647b25ad2b1d575",
+    "parameters": "7B",
+    "quantization": "4-bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80"
+  },
+  "outputs": "results/vare-agent-navigation-diagnostic-v1/attempt-005/rollout-001",
+  "prior_diagnostic": {
+    "context_replay_path": "results/vare-agent-navigation-diagnostic-v1/attempt-005/deterministic-replay-qwen25-v14-context.json",
+    "context_replay_sha256": "391051d21e2d538d4afd6c81cd3d8d3b90cfc21f27b47056f40895ca8fafae68",
+    "context_retention": "15/15 subsequent prompt summaries retain the complete 1780-character MockValSer declaration",
+    "protocol_path": "results/vare-agent-navigation-diagnostic-v1/attempt-004/protocol.json",
+    "protocol_sha256": "f2b461441f6ad477ba607da185cb31294ad5482c250c60255089c57d90711c0a",
+    "result_path": "results/vare-agent-navigation-diagnostic-v1/attempt-004/rollout-001/summary.json",
+    "result_sha256": "d8b9d9d2947f7c4ab2b38dfb2a245986277d4679f48956400a566337958955c8",
+    "result_status": "candidate_failure",
+    "reward": 0.0
+  },
+  "protocol_id": "vare-pydantic-14115-navigation-diagnostic-v5-qwen25-context-retention",
+  "rollout": {
+    "device": "M1 Pro, 32 GiB unified memory",
+    "max_action_tokens": 512,
+    "max_generated_tokens": 4096,
+    "max_prompt_tokens": 4096,
+    "max_tool_turns": 16,
+    "max_wall_seconds": 900,
+    "sample_index": 0,
+    "samples": 1,
+    "seed": 2646432876,
+    "temperature": 0.8,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "schema": "vare_agent_navigation_diagnostic_protocol_v5",
+  "status": "FROZEN_BEFORE_MODEL_PROMPT_EXPOSURE",
+  "task": {
+    "baseline_source_path": "pydantic/_internal/_mock_val_ser.py",
+    "baseline_source_sha256": "56a6ec20e81e9e841088cf8db05325f6e63b8ad8094ae3cda5754a698ec0d293",
+    "editable_paths": [
+      "pydantic/_internal/_mock_val_ser.py"
+    ],
+    "grader_selector": "tests/test_config.py::test_copy_defer_build_mocks",
+    "grader_test_path": "tests/test_config.py",
+    "grader_test_sha256": "e48c8d12d47548829e6b243a7704f60cc82aac4bdc9bba38d0eecd0feec2effa",
+    "prior_prompt_exposure": true,
+    "split": "diagnostic_only_previous_train_task",
+    "task_definition_sha256": "f4f206bf228422d286a62bf6af9d9626d485450592d8f853d2bbd152d97775f8",
+    "task_id": "pydantic-14115-deferred-model-copy-and-unpickle",
+    "task_prompt_variant_path": "results/vare-pydantic-14115-full-trajectory-v1/attempt-001/inputs/task-prompt-variant.json",
+    "task_prompt_variant_sha256": "1948203cc6374102ce5a0565460a72184d4ae557d8f6d8f6ce24072b46ad4388"
+  },
+  "trusted_grader": {
+    "candidate_feedback": false,
+    "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-14115-v2.json",
+    "environment_lock_sha256": "63854ce64cd785c2021de71e529fe1c5cdeb0fc6bed8113ea8c163e2afc1c07a",
+    "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+    "network": "none",
+    "reward_use": "diagnostic reporting only; not training data or evaluation evidence"
+  }
+}

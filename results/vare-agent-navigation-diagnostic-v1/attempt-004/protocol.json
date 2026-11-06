@@ -1,0 +1,104 @@
+{
+  "agent": {
+    "agent_prompt_sha256": "249cc3b77275abaaf0b1fef5fea30e540444bed24deeccf625f46a48238f7c8d",
+    "navigation_module_path": "src/vare/agent_navigation.py",
+    "navigation_module_sha256": "8b468ccbc5e2bd8747f690175c1387396960a192abb2da9b54c1a1b571420b26",
+    "regression_test_path": "tests/test_local_real_model_tool_adapter.py",
+    "regression_test_result": "7 passed",
+    "regression_test_selection": "task_ranked or deferred_validator_task or recorded_deferred or jsonvalue_declaration_prefix or runtime_declaration or generic_model_search",
+    "runner_path": "experiments/run_vare_pydantic_14138_full_trajectory_continuation.py",
+    "runner_sha256": "85c235822e6ed603588356444c022e9065c821c4de400d18c7d3a1d11f8077ed",
+    "system_prompt_sha256": "a7769da26a3dcc4db66160fd28fb5cbdce17ae0e7ef30705988e1064051f114a",
+    "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v14-ranked-declaration-context",
+    "tool_help_sha256": "a55202ca5e258a20d033ef453e376a114415e2093edb7bab7a182e324f8fdce4"
+  },
+  "authorization": {
+    "not_authorized": [
+      "GRPO/SFT training",
+      "optimizer update",
+      "checkpoint save or reload",
+      "Development evaluation",
+      "held-out task access or evaluation",
+      "using this rollout as independent evaluation evidence"
+    ],
+    "scope": "One further single-rollout diagnostic using the already downloaded pinned Qwen2.5-Coder-7B model and previously exposed Train task #14115, specifically testing complete task-ranked declaration context and copy/unpickle guidance after the prior 7B run edited an unrelated annotation without reading __getattr__. This is diagnostic only and is not fresh Train evidence, Development evaluation, or independent generalization evidence.",
+    "source": "User instruction dated 2026-11-06 to continue small prospective diagnostics, compare a stronger locally feasible coding model when Qwen3-4B remains ineffective, and implement the smallest justified correction after diagnosed failures."
+  },
+  "code_change_under_test": "Return the complete task-ranked declaration (up to 48 lines, 2400 characters) alongside search results, record it as read source, and stop unrelated source reads until the agent searches a new concept. Prompt directs copy/unpickle work on slot-based objects to inspect __slots__, __getattr__, and copy/pickle hooks.",
+  "frozen_at_utc": "2026-11-06T12:16:36+00:00",
+  "gate_boundary": {
+    "eligible_unique_heldout_tasks": 0,
+    "frozen_gate_path": "protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+    "frozen_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+    "gate_modified": false,
+    "heldout_access": false,
+    "required_unique_heldout_tasks": 15,
+    "status": "NO_GO"
+  },
+  "model": {
+    "adapter": "none",
+    "chat_template_sha256": "d5495a1e5db0611132a97e46a65dbb64a642a499421228b9c8b93229097fa9a4",
+    "downloaded_before_prompt_exposure": true,
+    "id": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "local_only_after_download": true,
+    "mlx_lm_version": "0.32.0",
+    "mlx_version": "0.32.4",
+    "model_manifest_path": "work/vare-rsi-qwen3-4b-mlx-20261106/model-qwen2.5-coder-7b-4bit-manifest.json",
+    "model_manifest_sha256": "f11b3ec481a66e1f0ee8804336cf6da016dec1e669254c8c3a4a7415c7a73a0c",
+    "model_tree_sha256": "86b7c8c4c733a803327b8648f3a731f95ec7774782f5cc10a647b25ad2b1d575",
+    "parameters": "7B",
+    "quantization": "4-bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80"
+  },
+  "outputs": "results/vare-agent-navigation-diagnostic-v1/attempt-004/rollout-001",
+  "prior_diagnostic": {
+    "failure_observation": "Only 20 lines from MockValSer were read; the model edited an unrelated constructor annotation and never inspected the relevant __getattr__ body.",
+    "protocol_path": "results/vare-agent-navigation-diagnostic-v1/attempt-003/protocol.json",
+    "protocol_sha256": "24873c1854962fee322976a8fae5477fb84f18bcc2a6aa328a2ee9d6473154a4",
+    "result_path": "results/vare-agent-navigation-diagnostic-v1/attempt-003/rollout-001/summary.json",
+    "result_sha256": "58413b242797d11b83b7d64a17d005f83ecce6965f25601fcae3cb93202fdbb7",
+    "result_status": "candidate_failure",
+    "reward": 0.0
+  },
+  "protocol_id": "vare-pydantic-14115-navigation-diagnostic-v4-qwen25-ranked-context",
+  "rollout": {
+    "device": "M1 Pro, 32 GiB unified memory",
+    "max_action_tokens": 512,
+    "max_generated_tokens": 4096,
+    "max_prompt_tokens": 4096,
+    "max_tool_turns": 16,
+    "max_wall_seconds": 900,
+    "sample_index": 0,
+    "samples": 1,
+    "seed": 2646432876,
+    "temperature": 0.8,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "schema": "vare_agent_navigation_diagnostic_protocol_v4",
+  "status": "FROZEN_BEFORE_MODEL_PROMPT_EXPOSURE",
+  "task": {
+    "baseline_source_path": "pydantic/_internal/_mock_val_ser.py",
+    "baseline_source_sha256": "56a6ec20e81e9e841088cf8db05325f6e63b8ad8094ae3cda5754a698ec0d293",
+    "editable_paths": [
+      "pydantic/_internal/_mock_val_ser.py"
+    ],
+    "grader_selector": "tests/test_config.py::test_copy_defer_build_mocks",
+    "grader_test_path": "tests/test_config.py",
+    "grader_test_sha256": "e48c8d12d47548829e6b243a7704f60cc82aac4bdc9bba38d0eecd0feec2effa",
+    "prior_prompt_exposure": true,
+    "split": "diagnostic_only_previous_train_task",
+    "task_definition_sha256": "f4f206bf228422d286a62bf6af9d9626d485450592d8f853d2bbd152d97775f8",
+    "task_id": "pydantic-14115-deferred-model-copy-and-unpickle",
+    "task_prompt_variant_path": "results/vare-pydantic-14115-full-trajectory-v1/attempt-001/inputs/task-prompt-variant.json",
+    "task_prompt_variant_sha256": "1948203cc6374102ce5a0565460a72184d4ae557d8f6d8f6ce24072b46ad4388"
+  },
+  "trusted_grader": {
+    "candidate_feedback": false,
+    "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-14115-v2.json",
+    "environment_lock_sha256": "63854ce64cd785c2021de71e529fe1c5cdeb0fc6bed8113ea8c163e2afc1c07a",
+    "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+    "network": "none",
+    "reward_use": "diagnostic reporting only; not training data or evaluation evidence"
+  }
+}

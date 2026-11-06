@@ -19,6 +19,8 @@ import time
 from datetime import datetime, timezone
 from typing import Any
 
+from vare.agent_navigation import SearchLoopGuard
+
 
 def find_experiment_root() -> Path:
     configured = os.environ.get("VARE_EXPERIMENT_ROOT")
@@ -77,7 +79,7 @@ MAX_PROMPT_TOKENS = 4096
 MAX_WALL_SECONDS = 900
 READ_FILE_PAGE_LINES = 20
 TASK_SCOPE_GUARD_TASK_ID = "pydantic-14138-direct-builtin-scalar-union-schema"
-TOOL_ADAPTER_VERSION = "mlx-local-coding-agent-tool-adapter-v10-task-ranked-symbol-hints"
+TOOL_ADAPTER_VERSION = "mlx-local-coding-agent-tool-adapter-v16-identifier-safe-search"
 DEV_TEMPERATURE = 0.0
 LORA = {"num_layers": 8, "rank": 8, "scale": 20.0, "dropout": 0.0}
 OPTIMIZER_CONFIG = {"name": "mlx.optimizers.Adam", "learning_rate": 1e-5}
@@ -112,7 +114,11 @@ SYSTEM_PROMPT = (
     "production source and edit only the exact path or paths listed in the task. Search is "
     "restricted to those editable paths. Search with a distinctive bare identifier, not a "
     "declaration prefix such as class or def. If search returns no matches and includes "
-    "source symbol hints, read the first task-ranked declaration before searching again. Do not "
+    "source symbol hints, treat ranked_declaration_context as already-read source and use it; "
+    "do not reread that declaration. If only symbol hints are returned without source context, "
+    "read the first task-ranked declaration before searching again. After three related empty "
+    "searches, the controller redirects further related searches until you act on the returned "
+    "source context. Do not "
     "page sequentially from the file start to find a symbol. Start with an exact nested JSON "
     "tool call whose "
     "arguments value is always an object, never a string. Read only short relevant source "
@@ -123,6 +129,11 @@ SYSTEM_PROMPT = (
     "Use apply_patch only when a literal replacement is unsuitable. If apply_patch fails, "
     "switch to replace_text with exact source text instead of resending a diff. After a "
     "successful edit, compile_file and show_changes before finishing. "
+    "If the controller returns navigation_stop after a task-ranked declaration is fully read, "
+    "search another task concept or edit; do not continue broad sequential pagination. "
+    "For copy/deep-copy or unpickling bugs in slot-based objects, inspect the complete class, "
+    "especially __slots__, __getattr__, and copy/pickle hooks, before editing; avoid annotation-only "
+    "changes unless the task is about typing. "
     "Do not claim changes you did not make. On every turn return exactly one JSON object with "
     "keys tool and arguments, no Markdown or prose. Use one tool action per assistant turn. "
     "Available tools: search_code, read_file, replace_text, apply_patch, compile_file, "
@@ -139,8 +150,11 @@ TOOL_HELP = (
     "search_code: query is a literal substring and is already scoped to editable paths; do not "
     "add a paths member. Prefer a distinctive bare identifier without syntax words such as "
     "class or def. If the result reports a fallback match, read the reported line. If there are "
-    "no matches and symbol hints are returned, read the first task-ranked declaration before "
-    "searching again. Do not page "
+    "no matches and ranked_declaration_context is returned, treat that complete declaration as "
+    "already read; do not call read_file for the same declaration. If only symbol hints are "
+    "returned without source context, read the first task-ranked declaration before searching "
+    "again. After three related empty searches, the controller redirects further related "
+    "searches until you act on the returned source context. Do not page "
     "consecutively from line 1 to locate a symbol.\n"
     "read_file: path must be exactly one editable path; start_line and end_line are positive "
     "source line numbers. Each response returns at most 20 lines. For a request wider than "
@@ -149,7 +163,12 @@ TOOL_HELP = (
     "Use the actual returned start_line/end_line and next_start_line; do not request already "
     "seen lines again. If an oversized range is fully read already, the first 20 lines are "
     "replayed with an already-read marker so source context survives compaction. Requests of "
-    "20 or fewer lines may be reread for patch context.\n"
+    "20 or fewer lines may be reread for patch context. If read_file returns navigation_stop "
+    "after a task-ranked declaration is fully read, search another relevant concept or edit "
+    "instead of paging onward. Search results may include ranked_declaration_context with the "
+    "full bounded declaration; use it as source you have read. For slot-based copy/deep-copy or "
+    "unpickling issues, inspect __slots__, __getattr__, and copy/pickle hooks before editing; "
+    "avoid annotation-only changes unless the task is about typing.\n"
     "apply_patch arguments must be a JSON object with path and patch string fields. For example: "
     "{\"tool\":\"apply_patch\",\"arguments\":{\"path\":\"pydantic/example.py\","
     "\"patch\":\"--- a/pydantic/example.py\\n+++ b/pydantic/example.py\\n"
@@ -699,6 +718,24 @@ def action_from_text(raw: str) -> tuple[dict[str, Any] | None, str | None]:
 
 def bounded_result(value: dict[str, Any], max_chars: int = 1800) -> dict[str, Any]:
     encoded = json.dumps(value, ensure_ascii=False)
+    ranked_context = value.get("ranked_declaration_context")
+    if isinstance(ranked_context, dict):
+        # Keep the full source and strongest navigation signal parseable. A
+        # preview string containing escaped, truncated JSON hides both from the
+        # model even when the useful declaration itself is bounded.
+        value = dict(value)
+        matches = value.get("matches")
+        if isinstance(matches, list) and len(matches) > 1:
+            value["matches_total"] = len(matches)
+            value["matches"] = matches[:1]
+            value["matches_truncated"] = True
+        hints = value.get("symbol_hints")
+        if isinstance(hints, list) and len(hints) > 1:
+            value["symbol_hints_total"] = len(hints)
+            value["symbol_hints"] = hints[:1]
+            value["symbol_hints_truncated"] = True
+        encoded = json.dumps(value, ensure_ascii=False)
+        max_chars = max(max_chars, 5000)
     if len(encoded) <= max_chars:
         return value
     return {
@@ -731,59 +768,164 @@ def source_symbol_index(
     max_symbols: int = 24,
     max_symbols_per_file: int = 12,
 ) -> list[dict[str, Any]]:
-    """List declarations from candidate-visible production files after a search miss."""
+    """List task-ranked declarations using AST names and their source context."""
+    stop_words = {
+        "a", "about", "after", "also", "an", "and", "are", "before", "both",
+        "by", "class", "classes", "different", "does", "for", "from", "in",
+        "into", "is", "it", "of", "on", "other", "pydantic", "should", "that",
+        "the", "their", "this", "those", "to", "type", "types", "with", "without",
+    }
+
+    def words(text: str) -> set[str]:
+        text = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text)
+        result: set[str] = set()
+        for raw in re.findall(r"[A-Za-z]+", text):
+            token = raw.casefold()
+            if token in {"pickling", "pickled"}:
+                token = "pickle"
+            elif token.startswith(("parametriz", "parameteriz")):
+                token = "parameterize"
+            elif token == "deferred":
+                token = "defer"
+            elif token.endswith("ies") and len(token) > 4:
+                token = token[:-3] + "y"
+            elif token.endswith("ing") and len(token) > 5:
+                token = token[:-3]
+            elif token.endswith("ed") and len(token) > 4:
+                token = token[:-2]
+            elif token.endswith("s") and not token.endswith("ss") and len(token) > 3:
+                token = token[:-1]
+            if token and token not in stop_words:
+                result.add(token)
+        return result
+
+    task_terms = words(task_prompt or "")
     symbols: list[dict[str, Any]] = []
     for relative in sorted(allowed):
-        symbols_in_file = 0
         path = safe_source_path(directory, relative)
         if not path.is_file() or path.is_symlink():
             continue
         try:
-            lines = path.read_text(encoding="utf-8").splitlines()
-        except UnicodeDecodeError:
+            source = path.read_text(encoding="utf-8")
+            tree = ast.parse(source, filename=relative)
+        except (UnicodeDecodeError, SyntaxError):
             continue
-        for line_no, line in enumerate(lines, 1):
-            stripped = line.lstrip()
-            if len(line) - len(stripped) > 4:
-                continue
-            match = re.match(
-                r"(?:async\s+)?(?:def|class)\s+([A-Za-z_][A-Za-z0-9_]*)\b",
-                stripped,
-            )
-            if match:
-                symbols.append(
-                    {"path": relative, "line": line_no, "symbol": match.group(1)}
+
+        declarations: list[ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef] = []
+
+        def visit_body(body: list[ast.stmt], depth: int = 0) -> None:
+            for node in body:
+                if isinstance(node, ast.ClassDef):
+                    declarations.append(node)
+                    if depth == 0:
+                        visit_body(node.body, depth + 1)
+                elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    declarations.append(node)
+
+        visit_body(tree.body)
+        declaration_rows: list[dict[str, Any]] = []
+        for node in declarations:
+            segment = ast.get_source_segment(source, node) or node.name
+            name_words = words(node.name)
+            doc_words = words(ast.get_docstring(node) or "")
+            signature_parts: list[str] = []
+            if isinstance(node, ast.ClassDef):
+                signature_parts.extend(
+                    ast.unparse(base) for base in node.bases
                 )
-                symbols_in_file += 1
-                if len(symbols) >= max_symbols:
-                    break
-                if symbols_in_file >= max_symbols_per_file:
-                    break
-        if len(symbols) >= max_symbols:
-            break
-    if task_prompt and symbols:
-        stop_words = {
-            "about", "after", "also", "and", "are", "before", "class", "classes",
-            "does", "from", "into", "module", "other", "preserve",
-            "pydantic", "should", "that", "their", "this", "those", "with",
+                for member in node.body:
+                    if isinstance(member, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                        signature_parts.append(member.name)
+                        signature_parts.extend(
+                            ast.unparse(arg.annotation)
+                            for arg in (*member.args.posonlyargs, *member.args.args, *member.args.kwonlyargs)
+                            if arg.annotation is not None
+                        )
+                        if member.returns is not None:
+                            signature_parts.append(ast.unparse(member.returns))
+                    elif isinstance(member, ast.AnnAssign):
+                        signature_parts.append(ast.unparse(member.target))
+                        signature_parts.append(ast.unparse(member.annotation))
+            else:
+                signature_parts.extend(
+                    arg.arg for arg in (
+                        *node.args.posonlyargs,
+                        *node.args.args,
+                        *node.args.kwonlyargs,
+                    )
+                )
+                signature_parts.extend(
+                    ast.unparse(arg.annotation)
+                    for arg in (
+                        *node.args.posonlyargs,
+                        *node.args.args,
+                        *node.args.kwonlyargs,
+                    )
+                    if arg.annotation is not None
+                )
+                if node.returns is not None:
+                    signature_parts.append(ast.unparse(node.returns))
+                signature_parts.extend(ast.unparse(item) for item in node.decorator_list)
+            signature_words = words(" ".join(signature_parts))
+            joined_name = "".join(name_words)
+            declaration_rows.append({
+                "node": node,
+                "name_words": name_words,
+                "doc_words": doc_words,
+                "signature_words": signature_words,
+                "body_words": words(segment),
+                "joined_name": joined_name,
+            })
+
+        term_document_frequency = {
+            term: sum(term in row["body_words"] for row in declaration_rows)
+            for term in task_terms
         }
-        task_terms = {
-            term.casefold()
-            for term in re.findall(r"[A-Za-z0-9_]+", task_prompt)
-            if len(term) >= 3 and term.casefold() not in stop_words
-        }
-        ranked = []
-        for index, row in enumerate(symbols):
-            identifier = row["symbol"].casefold().replace("_", " ")
-            score = sum(term in identifier for term in task_terms)
-            ranked.append((score, index, row))
-        best_score = max(score for score, _, _ in ranked)
-        if best_score:
-            return [
-                {**row, "task_relevance_score": score}
-                for score, _, row in sorted(ranked, key=lambda item: (-item[0], item[1]))
-            ]
-    return symbols
+        file_symbols: list[dict[str, Any]] = []
+        for row in declaration_rows:
+            score = 0.0
+            for term in task_terms:
+                document_frequency = term_document_frequency[term]
+                weight = 1.0 + math.log(
+                    (len(declaration_rows) + 1) / (document_frequency + 1)
+                )
+                if term in row["name_words"]:
+                    score += 3.0 * weight
+                if term in row["doc_words"]:
+                    score += 3.5 * weight
+                if term in row["signature_words"]:
+                    score += 1.5 * weight
+                if term in row["body_words"] and term not in (
+                    row["name_words"] | row["doc_words"] | row["signature_words"]
+                ):
+                    body_weight = 1.5 if document_frequency <= 2 else 0.35
+                    score += body_weight * weight
+                if (
+                    term not in row["name_words"]
+                    and len(term) >= 4
+                    and term in row["joined_name"]
+                ):
+                    score += weight
+            node = row["node"]
+            hint = {"path": relative, "line": node.lineno, "symbol": node.name}
+            hint["end_line"] = getattr(node, "end_lineno", node.lineno)
+            if task_prompt and score:
+                hint["task_relevance_score"] = round(score, 3)
+            file_symbols.append(hint)
+
+        if task_prompt and any(row.get("task_relevance_score") for row in file_symbols):
+            file_symbols.sort(
+                key=lambda row: (-row.get("task_relevance_score", 0), row["line"])
+            )
+        else:
+            file_symbols.sort(key=lambda row: row["line"])
+        symbols.extend(file_symbols[:max_symbols_per_file])
+
+    if task_prompt and any(row.get("task_relevance_score") for row in symbols):
+        symbols.sort(
+            key=lambda row: (-row.get("task_relevance_score", 0), row["path"], row["line"])
+        )
+    return symbols[:max_symbols]
 
 
 def search_source(
@@ -798,26 +940,64 @@ def search_source(
 
     def find_matches(needle: str) -> tuple[list[dict[str, Any]], bool]:
         matches: list[dict[str, Any]] = []
+        total = 0
+        escaped_needle = re.escape(needle.strip())
         for relative in sorted(allowed):
             path = safe_source_path(directory, relative)
             if not path.is_file() or path.is_symlink():
                 continue
             try:
-                lines = path.read_text(encoding="utf-8").splitlines()
+                source = path.read_text(encoding="utf-8")
+                lines = source.splitlines()
             except UnicodeDecodeError:
                 continue
+
+            type_checking_ranges: list[tuple[int, int]] = []
+            try:
+                tree = ast.parse(source, filename=relative)
+            except SyntaxError:
+                tree = None
+            if tree is not None:
+                for node in ast.walk(tree):
+                    if not isinstance(node, ast.If):
+                        continue
+                    test = ast.unparse(node.test) if hasattr(ast, "unparse") else ""
+                    if test not in {"TYPE_CHECKING", "typing.TYPE_CHECKING"}:
+                        continue
+                    body_end = max(
+                        (getattr(child, "end_lineno", child.lineno) for child in node.body),
+                        default=node.lineno,
+                    )
+                    type_checking_ranges.append((node.lineno + 1, body_end))
+
             for line_no, line in enumerate(lines, 1):
                 if needle in line:
+                    total += 1
+                    declaration = bool(
+                        re.match(
+                            rf"^\s*(?:(?:async\s+)?(?:class|def)\s+)?{escaped_needle}"
+                            rf"\b\s*(?:\(|:|=)",
+                            line,
+                        )
+                    )
+                    in_type_checking = any(
+                        start <= line_no <= end for start, end in type_checking_ranges
+                    )
+                    relevance = (8 if declaration else 0) - (7 if in_type_checking else 0)
                     matches.append(
                         {
                             "path": path.relative_to(directory).as_posix(),
                             "line": line_no,
                             "text": line[:180],
+                            "_relevance": relevance,
                         }
                     )
-                    if len(matches) >= 12:
-                        return matches, True
-        return matches, False
+        matches.sort(key=lambda row: (-row["_relevance"], row["line"], row["path"]))
+        truncated = total > 12
+        selected = matches[:12]
+        for row in selected:
+            row.pop("_relevance", None)
+        return selected, truncated
 
     results, truncated = find_matches(query)
     if results:
@@ -828,12 +1008,20 @@ def search_source(
         "if", "in", "is", "none", "not", "null", "or", "pass", "return", "self",
         "true", "type", "while", "with",
     }
+    # Fallback is only useful for a short identifier with an optional Python
+    # declaration prefix (for example, "class JsonValue"). Picking a token
+    # from a natural-language sentence can turn a failed search into a false
+    # positive such as "Pydantic" matching an unrelated annotation.
+    simple_identifier_query = re.fullmatch(
+        r"(?:async\s+)?(?:(?:class|def)\s+)?[A-Za-z_][A-Za-z0-9_]*",
+        query.strip(),
+    )
     fallback_terms = sorted(
         {
             token
             for token in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", query)
             if token.lower() not in syntax_words and len(token) >= 3
-        },
+        } if simple_identifier_query else set(),
         key=lambda token: (-len(token), token),
     )
     for term in fallback_terms:
@@ -1203,23 +1391,214 @@ def execute_tool(
     task_id: str | None = None,
     task_prompt: str | None = None,
     read_cursors: dict[tuple[str, str, str], dict[str, Any]] | None = None,
+    search_loop_guard: SearchLoopGuard | None = None,
+    search_targets: dict[str, list[dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
     name = action["tool"]
     args = action["arguments"]
     cursors = read_cursors if read_cursors is not None else {}
+
+    def record_symbol_targets(hints: list[dict[str, Any]]) -> None:
+        if search_targets is None:
+            return
+        search_targets.clear()
+        for hint in hints:
+            relative = hint.get("path")
+            line = hint.get("line")
+            if relative not in allowed or type(line) is not int or line < 1:
+                continue
+            target = dict(hint)
+            target["focus_line"] = line
+            target["end_line"] = hint.get("end_line", line)
+            target["target_kind"] = "task_ranked_declaration"
+            search_targets.setdefault(relative, []).append(target)
+            return
+
+    def attach_ranked_declaration_context(
+        result: dict[str, Any], hints: list[dict[str, Any]]
+    ) -> dict[str, Any]:
+        for hint in hints:
+            relative = hint.get("path")
+            start_line = hint.get("line")
+            end_line = hint.get("end_line", start_line)
+            if (
+                relative not in allowed
+                or type(start_line) is not int
+                or type(end_line) is not int
+                or start_line < 1
+                or end_line < start_line
+                or end_line - start_line + 1 > 48
+            ):
+                continue
+            source_path = safe_source_path(directory, relative)
+            source_lines = source_path.read_text(encoding="utf-8").splitlines()
+            if end_line > len(source_lines):
+                continue
+            content = "\n".join(
+                f"{line}: {source_lines[line - 1]}"
+                for line in range(start_line, end_line + 1)
+            )
+            if len(content) > 2400:
+                continue
+            source_sha256 = sha256_file(source_path)
+            result["ranked_declaration_context"] = {
+                "path": relative,
+                "symbol": hint.get("symbol"),
+                "start_line": start_line,
+                "end_line": end_line,
+                "source_sha256": source_sha256,
+                "content": content,
+            }
+            result["next_step_hint"] = (
+                "The complete first task-ranked declaration is included above. Treat it as "
+                "already-read source; do not reread it. Search another task concept or make "
+                "a focused edit."
+            )
+            coverage_key = ("__read_coverage__", relative, "lines")
+            coverage = cursors.get(coverage_key)
+            if not isinstance(coverage, dict) or coverage.get("source_sha256") != source_sha256:
+                coverage = {"source_sha256": source_sha256, "seen_lines": set()}
+                cursors[coverage_key] = coverage
+            coverage["seen_lines"].update(range(start_line, end_line + 1))
+            cursors[("__ranked_symbol_context__", relative, "completed")] = {
+                "source_sha256": source_sha256,
+                "symbol": hint.get("symbol"),
+                "start_line": start_line,
+                "end_line": end_line,
+                "last_read_end": end_line,
+            }
+            if search_targets is not None:
+                search_targets.pop(relative, None)
+            return result
+        return result
+
     try:
         if name == "search_code":
-            return bounded_result(
-                search_source(
-                    directory,
-                    str(args.get("query", "")),
-                    allowed,
-                    task_prompt=task_prompt,
-                )
+            query = str(args.get("query", ""))
+            search_path = next(iter(allowed)) if len(allowed) == 1 else None
+            if search_path is not None:
+                cursors.pop(("__ranked_symbol_context__", search_path, "completed"), None)
+            if search_loop_guard is not None:
+                redirect = search_loop_guard.intercept(query, search_path)
+                if redirect is not None:
+                    redirect["alternatives"] = [
+                        "Use the included ranked declaration context before another search.",
+                        "Search another task concept if the included declaration is not sufficient.",
+                    ]
+                    hints = source_symbol_index(
+                        directory, allowed, task_prompt=task_prompt
+                    )[:6]
+                    record_symbol_targets(hints)
+                    payload = {
+                        "matches": [],
+                        "search_loop_redirect": redirect,
+                        "symbol_hints": hints,
+                        "next_step_hint": (
+                            "The complete task-ranked declaration is included above. Treat it "
+                            "as already-read source; do not reread it. Search another task "
+                            "concept or make a focused edit."
+                        ),
+                    }
+                    payload = attach_ranked_declaration_context(payload, hints)
+                    return bounded_result(payload, max_chars=3200)
+            result = search_source(
+                directory,
+                query,
+                allowed,
+                task_prompt=task_prompt,
             )
+            ranked_symbols: list[dict[str, Any]] = []
+            if result.get("matches") and task_prompt:
+                ranked_symbols = source_symbol_index(
+                    directory, allowed, task_prompt=task_prompt
+                )
+
+                def enclosing_task_symbol(match: dict[str, Any]) -> dict[str, Any] | None:
+                    line = match.get("line")
+                    path = match.get("path")
+                    if type(line) is not int or not isinstance(path, str):
+                        return None
+                    enclosing = [
+                        symbol
+                        for symbol in ranked_symbols
+                        if symbol.get("path") == path
+                        and type(symbol.get("line")) is int
+                        and type(symbol.get("end_line")) is int
+                        and symbol["line"] <= line <= symbol["end_line"]
+                    ]
+                    return max(
+                        enclosing,
+                        key=lambda symbol: float(symbol.get("task_relevance_score", 0.0)),
+                        default=None,
+                    )
+
+                def task_rank(match: dict[str, Any]) -> float:
+                    symbol = enclosing_task_symbol(match)
+                    return float(symbol.get("task_relevance_score", 0.0)) if symbol else 0.0
+
+                result["matches"].sort(key=task_rank, reverse=True)
+            if len(result.get("matches", [])) > 6:
+                result["matches"] = result["matches"][:6]
+                result["truncated"] = True
+            if len(result.get("symbol_hints", [])) > 6:
+                result["symbol_hints"] = result["symbol_hints"][:6]
+                result["symbol_hints_truncated"] = True
+            if search_targets is not None and result.get("matches"):
+                search_targets.clear()
+                # Route only to the single highest-ranked hit. Carrying every
+                # literal occurrence forward caused later reads to jump to
+                # stale, unrelated matches after the useful window was read.
+                for match in result["matches"][:1]:
+                    path = match.get("path")
+                    line = match.get("line")
+                    if path in allowed and type(line) is int and line > 0:
+                        symbol = enclosing_task_symbol(match) if task_prompt else None
+                        target = dict(match)
+                        target["focus_line"] = symbol["line"] if symbol else line
+                        target["end_line"] = symbol["end_line"] if symbol else line
+                        if symbol:
+                            target["symbol"] = symbol["symbol"]
+                            target["task_relevance_score"] = symbol.get(
+                                "task_relevance_score", 0.0
+                            )
+                        target["target_kind"] = "task_ranked_declaration" if symbol else "literal_match"
+                        search_targets.setdefault(path, []).append(target)
+            if task_prompt and result.get("matches"):
+                best_symbol = enclosing_task_symbol(result["matches"][0])
+                if best_symbol is not None:
+                    result = attach_ranked_declaration_context(result, [best_symbol])
+            if search_loop_guard is not None:
+                redirect = search_loop_guard.observe(
+                    query, len(result.get("matches", [])), search_path
+                )
+                if redirect is not None:
+                    redirect["alternatives"] = [
+                        "Read the first task-ranked symbol hint with read_file.",
+                        "Search again only after using the returned source context.",
+                    ]
+                    result["search_loop_redirect"] = redirect
+                    result["next_step_hint"] = (
+                        "Related searches returned no matches. The complete task-ranked "
+                        "declaration is included above and counts as read source. Do not "
+                        "repeat the query or reread it; use the source or search a different "
+                        "task concept."
+                    )
+                    record_symbol_targets(result.get("symbol_hints", []))
+                    result = attach_ranked_declaration_context(
+                        result, result.get("symbol_hints", [])
+                    )
+                    return bounded_result(result, max_chars=3200)
+            if not result.get("matches"):
+                record_symbol_targets(result.get("symbol_hints", []))
+                result = attach_ranked_declaration_context(
+                    result, result.get("symbol_hints", [])
+                )
+            return bounded_result(result, max_chars=3200 if result.get("ranked_declaration_context") else 1800)
         if name == "read_file":
             requested_start = args.get("start_line", 1)
             requested_end = args.get("end_line")
+            original_requested_start = requested_start
+            original_requested_end = requested_end
             requested_path = str(args.get("path", ""))
             if (
                 isinstance(requested_start, bool)
@@ -1238,6 +1617,52 @@ def execute_tool(
 
             source_path = safe_source_path(directory, requested_path)
             source_lines = source_path.read_text(encoding="utf-8").splitlines()
+            navigation_redirect: dict[str, Any] | None = None
+            target_rows = (search_targets or {}).get(requested_path, [])
+            target_to_consume: dict[str, Any] | None = None
+            if target_rows:
+                target = target_rows[0]
+                target_line = target.get("line")
+                focus_line = target.get("focus_line", target_line)
+                target_end_line = target.get("end_line", target_line)
+                if (
+                    type(target_line) is int
+                    and type(focus_line) is int
+                    and type(target_end_line) is int
+                    and 1 <= focus_line <= target_end_line <= len(source_lines)
+                ):
+                    original_last = min(
+                        original_requested_end
+                        if original_requested_end is not None
+                        else original_requested_start + READ_FILE_PAGE_LINES - 1,
+                        len(source_lines),
+                    )
+                    if target_end_line < original_requested_start or focus_line > original_last:
+                        if target.get("target_kind") == "task_ranked_declaration":
+                            focus_start = focus_line
+                        else:
+                            focus_start = max(1, focus_line - READ_FILE_PAGE_LINES // 2)
+                        focus_end = min(
+                            len(source_lines), focus_start + READ_FILE_PAGE_LINES - 1
+                        )
+                        focus_start = max(1, focus_end - READ_FILE_PAGE_LINES + 1)
+                        navigation_redirect = {
+                            "reason": "read_window_around_search_match",
+                            "requested_start_line": original_requested_start,
+                            "requested_end_line": original_requested_end,
+                            "matched_line": target_line,
+                            "focus_start_line": focus_line,
+                            "focus_end_line": target_end_line,
+                            "symbol": target.get("symbol"),
+                        }
+                        requested_start = focus_start
+                        requested_end = focus_end
+                        args = {
+                            **args,
+                            "start_line": requested_start,
+                            "end_line": requested_end,
+                        }
+                    target_to_consume = target
             source_sha256 = sha256_file(source_path)
             coverage_key = ("__read_coverage__", requested_path, "lines")
             coverage = cursors.get(coverage_key)
@@ -1257,6 +1682,53 @@ def execute_tool(
                 if requested_end is not None
                 else READ_FILE_PAGE_LINES
             )
+            completed_context_key = (
+                "__ranked_symbol_context__", requested_path, "completed"
+            )
+            completed_context = cursors.get(completed_context_key)
+            if isinstance(completed_context, dict):
+                context_start = completed_context.get("start_line", 1)
+                context_end = completed_context.get("end_line", 0)
+                effective_last = min(
+                    requested_end
+                    if requested_end is not None
+                    else requested_start + READ_FILE_PAGE_LINES - 1,
+                    len(source_lines),
+                )
+                overlaps_context = (
+                    requested_start <= context_end and effective_last >= context_start
+                )
+                contains_context_page = (
+                    requested_start >= context_start and effective_last <= context_end
+                )
+            else:
+                overlaps_context = True
+                contains_context_page = True
+            if (
+                isinstance(completed_context, dict)
+                and completed_context.get("source_sha256") == source_sha256
+                and (
+                    not overlaps_context
+                    or (requested_width > READ_FILE_PAGE_LINES and not contains_context_page)
+                )
+            ):
+                return bounded_result({
+                    "path": requested_path,
+                    "requested_start_line": original_requested_start,
+                    "requested_end_line": original_requested_end,
+                    "content": "",
+                    "content_truncated": False,
+                    "navigation_stop": {
+                        "reason": "task_ranked_declaration_read_complete",
+                        "symbol": completed_context.get("symbol"),
+                        "start_line": completed_context.get("start_line"),
+                        "end_line": completed_context.get("end_line"),
+                    },
+                    "next_step_hint": (
+                        "The task-ranked declaration was read in full. Stop broad sequential "
+                        "pagination; search for another task concept or make a focused edit."
+                    ),
+                }, max_chars=3200)
             read_args = dict(args)
             page_start = requested_start
             auto_paged = False
@@ -1317,9 +1789,11 @@ def execute_tool(
                 auto_paged = page_start != requested_start
 
             result = read_source(directory, read_args, allowed)
-            result["requested_start_line"] = requested_start
-            result["requested_end_line"] = requested_end
+            result["requested_start_line"] = original_requested_start
+            result["requested_end_line"] = original_requested_end
             result["auto_paged"] = auto_paged
+            if navigation_redirect is not None:
+                result["navigation_redirect"] = navigation_redirect
             if result["end_line"] >= result["start_line"]:
                 seen_lines.update(range(result["start_line"], result["end_line"] + 1))
             if oversized:
@@ -1340,11 +1814,49 @@ def execute_tool(
                     result["next_start_line"] = next_unread
                 else:
                     result["next_start_line"] = None
+            if search_loop_guard is not None and not result.get("error"):
+                search_loop_guard.reset()
+            if target_to_consume is not None and search_targets is not None:
+                focus_line = target_to_consume.get(
+                    "focus_line", target_to_consume.get("line")
+                )
+                focus_end_line = target_to_consume.get(
+                    "end_line", target_to_consume.get("line")
+                )
+                declaration_complete = (
+                    type(focus_line) is int
+                    and type(focus_end_line) is int
+                    and all(
+                        line in seen_lines
+                        for line in range(focus_line, focus_end_line + 1)
+                    )
+                )
+                if declaration_complete:
+                    if target_to_consume.get("target_kind") == "task_ranked_declaration":
+                        cursors[completed_context_key] = {
+                            "source_sha256": source_sha256,
+                            "symbol": target_to_consume.get("symbol"),
+                            "start_line": focus_line,
+                            "end_line": focus_end_line,
+                            "last_read_end": result["end_line"],
+                        }
+                    remaining_targets = [
+                        target for target in search_targets.get(requested_path, [])
+                        if target is not target_to_consume
+                    ]
+                    if remaining_targets:
+                        search_targets[requested_path] = remaining_targets
+                    else:
+                        search_targets.pop(requested_path, None)
             return bounded_result(result, max_chars=3200)
         if name == "replace_text":
             result = replace_source_text(directory, args, allowed)
             if result.get("applied"):
                 cursors.clear()
+                if search_loop_guard is not None:
+                    search_loop_guard.reset()
+                if search_targets is not None:
+                    search_targets.clear()
             return bounded_result(result)
         if name == "apply_patch":
             path, patch, normalizations = normalize_patch_arguments(args, allowed)
@@ -1356,6 +1868,10 @@ def execute_tool(
                 result["argument_normalizations"] = normalizations
             if result.get("applied"):
                 cursors.clear()
+                if search_loop_guard is not None:
+                    search_loop_guard.reset()
+                if search_targets is not None:
+                    search_targets.clear()
             return bounded_result(result)
         if name == "compile_file":
             path = str(args.get("path", ""))
@@ -1481,15 +1997,23 @@ def make_agent_messages(
 
 
 def compact_action_summary(turns: list[dict[str, Any]]) -> str:
-    """Summarize prior tool events while retaining the latest source page."""
+    """Summarize tool events while retaining a complete task-ranked declaration."""
     rows: list[str] = []
     last_source_page: str | None = None
+    last_ranked_declaration: str | None = None
     for row in turns:
         action = row.get("action") or {}
         tool = action.get("tool", "invalid_action") if isinstance(action, dict) else "invalid_action"
         args = action.get("arguments", {}) if isinstance(action, dict) else {}
         result = row.get("tool_result") or {}
         if tool == "search_code":
+            ranked_context = result.get("ranked_declaration_context") if isinstance(result, dict) else None
+            if isinstance(ranked_context, dict) and ranked_context.get("content"):
+                last_ranked_declaration = (
+                    f"{ranked_context.get('path')}:{ranked_context.get('start_line')}"
+                    f"-{ranked_context.get('end_line')} ({ranked_context.get('symbol')})\n"
+                    + str(ranked_context["content"])
+                )
             query = str(args.get("query", ""))[:80]
             matches = result.get("matches", []) if isinstance(result, dict) else []
             locations = ", ".join(
@@ -1498,7 +2022,15 @@ def compact_action_summary(turns: list[dict[str, Any]]) -> str:
             )
             rows.append(f"turn {row.get('turn')}: searched {query!r}; locations={locations or 'none'}")
         elif tool == "read_file":
-            if isinstance(result, dict) and result.get("content"):
+            if isinstance(result, dict) and result.get("navigation_stop"):
+                stop = result["navigation_stop"]
+                rows.append(
+                    f"turn {row.get('turn')}: controller stopped sequential paging after "
+                    f"reading task-ranked declaration {stop.get('symbol')} "
+                    f"({stop.get('start_line')}-{stop.get('end_line')}); "
+                    "search another task concept or make a focused edit"
+                )
+            elif isinstance(result, dict) and result.get("content"):
                 last_source_page = (
                     f"{result.get('path')}:{result.get('start_line')}-{result.get('end_line')}\n"
                     + str(result["content"])[:1250]
@@ -1556,6 +2088,12 @@ def compact_action_summary(turns: list[dict[str, Any]]) -> str:
             rows.append(f"turn {row.get('turn')}: current changed paths={changed}")
         else:
             rows.append(f"turn {row.get('turn')}: {tool} completed")
+    if last_ranked_declaration:
+        return (
+            "Complete task-ranked source declaration retained from earlier tool output; "
+            "treat it as source already read:\n"
+            + last_ranked_declaration
+        )[-2600:]
     summary = "\n".join(rows)
     if last_source_page:
         summary = summary[-450:] + "\nLast visible source page:\n" + last_source_page
@@ -1584,6 +2122,8 @@ def run_agent(
     messages = make_agent_messages(task)
     turns: list[dict[str, Any]] = []
     read_cursors: dict[tuple[str, str, str], dict[str, Any]] = {}
+    search_loop_guard = SearchLoopGuard(empty_search_limit=3)
+    search_targets: dict[str, list[dict[str, Any]]] = {}
     total_tokens = 0
     first_prompt_ids: list[int] = []
     first_completion_ids: list[int] = []
@@ -1673,6 +2213,8 @@ def run_agent(
                 task_id=task["record"]["task_id"],
                 task_prompt=task["prompt"],
                 read_cursors=read_cursors,
+                search_loop_guard=search_loop_guard,
+                search_targets=search_targets,
             )
             row["tool_result"] = result
         turns.append(row)
@@ -1738,7 +2280,7 @@ def run_agent(
         "tool_turns": len(turns),
         "context_compaction_policy": {
             "strategy": "frozen task plus prior tool-event summary plus latest full exchange",
-            "prior_summary_character_cap": 1800,
+            "prior_summary_character_cap": 2600,
             "full_tool_trace_preserved": True,
         },
         "generated_tokens": total_tokens,

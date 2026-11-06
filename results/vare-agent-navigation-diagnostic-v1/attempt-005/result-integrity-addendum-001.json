@@ -1,0 +1,22 @@
+{
+  "candidate_feedback": false,
+  "corrected_successful_edit_calls": 0,
+  "corrected_value_matches_prior_summary": true,
+  "edit_tool_calls": 5,
+  "edit_turns": [
+    6,
+    7,
+    11,
+    13,
+    14
+  ],
+  "finding": "The attempt-005 summary counter checked a nonexistent tool_result.edited field. The runner reports successful patch application as tool_result.applied. Recounting the five attempted edit calls from the raw trajectory yields zero applied edits, so the reported value 0 remains numerically correct.",
+  "grader_reward": 0.0,
+  "protocol_path": "results/vare-agent-navigation-diagnostic-v1/attempt-005/protocol.json",
+  "protocol_sha256": "5866e706e3b3ce38ceb0b21bf6d8250142981d007c97d631be83b1e072e85826",
+  "schema": "vare_agent_navigation_result_integrity_addendum_v1",
+  "summary_path": "results/vare-agent-navigation-diagnostic-v1/attempt-005/rollout-001/summary.json",
+  "summary_sha256": "c71fc40dc2fa241d34653b0951fdd93dda28e8fb4c55759a74dcb4d3dcf4a1bd",
+  "trajectory_path": "results/vare-agent-navigation-diagnostic-v1/attempt-005/rollout-001/trajectory.json",
+  "trajectory_sha256": "fba57cc4aa9865cb250a0745b881a1eaef51e6a1f57f3a865ff356b82c7977b9"
+}
