@@ -619,6 +619,15 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     return matches[0] if len(matches) == 1 else None
 
 
+def resolve_search_guard_path(raw_path: str | None, allowed: set[str]) -> str | None:
+    """Return the file scope for loop detection when a search omits its path."""
+    if raw_path is not None:
+        return resolve_allowed_path(raw_path, allowed)
+    if len(allowed) == 1:
+        return next(iter(allowed))
+    return None
+
+
 def check_syntax_source(workspace: Path, raw_path: str, allowed: set[str]) -> dict[str, Any]:
     """Parse an allowlisted Python source without following workspace symlinks."""
     path = resolve_allowed_path(raw_path, allowed)
@@ -1397,9 +1406,8 @@ def main() -> int:
                         result = {'error': 'query must be a string'}
                     else:
                         raw_search_path = arguments.get('path')
-                        search_path = None
+                        search_path = resolve_search_guard_path(raw_search_path, allowed)
                         if raw_search_path is not None:
-                            search_path = resolve_allowed_path(raw_search_path, allowed)
                             if search_path is None:
                                 result = {'error': 'path is not an exact allowlisted source file'}
                         redirect = (
