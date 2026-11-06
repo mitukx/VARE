@@ -1,0 +1,100 @@
+{
+  "attempt": 9,
+  "evaluation": {
+    "development_tasks": [],
+    "evaluations": 0,
+    "heldout_access": false
+  },
+  "exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "head_sha": "ac0648973185166081377eba5f8ebe490a0b5690",
+    "workflows": [
+      42145949817,
+      42145955723,
+      42145955804,
+      42145955696
+    ]
+  },
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14138-scope-directed-v18",
+  "failure_diagnosis": [
+    "Indices42-46 produced five independently trusted reward-zero grades. All five exhausted the 16-tool-turn cap without a valid task patch.",
+    "Index47 completed as a trajectory and changed a candidate workspace, but the candidate compile_file tool reported SyntaxError at line1359. The independent grader exited with code4 without exact-selector failure evidence. Its result is untrusted and excluded; no reward was assigned.",
+    "The run stopped at the first untrusted grader result. This preserves the frozen trust rule; the sample was not manually relabelled. Indices48-49 were never exposed.",
+    "The model's patch at index47 changed the post-loop union assembly instead of the for-arg fallback; that placement also put an else before a later elif. The minimal prospective correction is to reject out-of-loop patches before mutation and return a task-scope error; no tests, selector or expected values are exposed."
+  ],
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_evaluation": false,
+  "integration_head_sha": "ac0648973185166081377eba5f8ebe490a0b5690",
+  "long_horizon_rl_claim": "not claimed",
+  "model": {
+    "backend": "MLX Metal",
+    "device": "M1 Pro 32 GiB",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.0",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "trainable_parameters_before_sha256": "1454f0400439bda28f6a0d4736ccfc9c7400c252acc5612b1dbdcfbe6d7fa724"
+  },
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "optimizer": {
+    "checkpoint_reloaded": false,
+    "checkpoint_saved": false,
+    "parameter_delta": null,
+    "update_applied": false,
+    "updates": 0
+  },
+  "raw_grader_logs_private": true,
+  "resource_stop": false,
+  "schema": "vare_real_model_train_dev_interrupted_result_v1",
+  "task_readiness": {
+    "eligible_heldout_tasks": 0,
+    "heldout_task_cohort_size": 15,
+    "qualified_development_tasks": 2,
+    "qualified_train_tasks_in_current_allocation": 1
+  },
+  "training": {
+    "all_completed_logprobs_finite_and_aligned": true,
+    "all_completed_token_ids_behavior_logprobs_tool_traces_preserved": true,
+    "allocated_group_size": 8,
+    "candidate_feedback_from_grader": false,
+    "completed_trajectories": 6,
+    "files_changed_in_candidate_workspaces": [
+      47
+    ],
+    "indices_exposed": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+    ],
+    "indices_unexposed": [
+      48,
+      49
+    ],
+    "trajectory_action_tokens_total": 9880,
+    "trajectory_tool_turns_total": 96,
+    "trusted_grades": 5,
+    "trusted_rewards": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "untrusted_grade": {
+      "candidate_compile_feedback": "SyntaxError: invalid syntax (_generate_schema.py, line 1359)",
+      "completion_marker": true,
+      "exact_selector_failure": false,
+      "exit_code": 4,
+      "fail_summary": true,
+      "grader_command_sha256": "5f6f09fb0233b3125da782882f5b2a541aadfa3f0da2413fac19d00ce54046eb",
+      "grader_log_sha256": "f0f98b98eadfa12236e1100658cd0f3299ad3a73919dfd275da57a068ba7c729",
+      "raw_grader_log_in_public_bundle": false,
+      "sample_index": 47
+    }
+  }
+}

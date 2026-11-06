@@ -36,9 +36,9 @@ def find_experiment_root() -> Path:
 ROOT = find_experiment_root()
 WORK = ROOT / "work/vare-rsi-qwen3-4b-mlx-20261106"
 OUTPUTS = ROOT / "outputs/vare-rsi-heldout-qualification-v2-20261105"
-RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-009"
-ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v18-pydantic-14138-scope-directed.json"
-RUN_LOCK_PATH = OUTPUTS / "real-model-run-v26-14138-scope-directed-grpo-group.lock.json"
+RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-010"
+ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v19-pydantic-14138-scope-guard.json"
+RUN_LOCK_PATH = OUTPUTS / "real-model-run-v27-14138-scope-guard-grpo-group.lock.json"
 MODEL_PATH = WORK / "model"
 MODEL_MANIFEST_PATH = WORK / "model-manifest.json"
 INTEGRATION = ROOT / "work/VARE-rsi-integration-20261105"
@@ -52,13 +52,15 @@ BASE_SEED = 20261106
 TEMPERATURE = 0.8
 GROUP_SIZE = 8
 NEW_ROLLOUT_COUNT = 8
-NEW_ROLLOUT_START_INDEX = 42
+NEW_ROLLOUT_START_INDEX = 48
 MAX_TURNS = 16
 MAX_TOTAL_TOKENS = 4096
 MAX_ACTION_TOKENS = 512
 MAX_PROMPT_TOKENS = 4096
 MAX_WALL_SECONDS = 900
 READ_FILE_PAGE_LINES = 20
+TASK_SCOPE_GUARD_TASK_ID = "pydantic-14138-direct-builtin-scalar-union-schema"
+TOOL_ADAPTER_VERSION = "mlx-local-coding-agent-tool-adapter-v7-union-loop-scope"
 DEV_TEMPERATURE = 0.0
 LORA = {"num_layers": 8, "rank": 8, "scale": 20.0, "dropout": 0.0}
 OPTIMIZER_CONFIG = {"name": "mlx.optimizers.Adam", "learning_rate": 1e-5}
@@ -785,6 +787,81 @@ def apply_source_patch(directory: Path, patch: str, allowed: set[str]) -> dict[s
     }
 
 
+def validate_pydantic_union_patch_scope(
+    directory: Path, baseline: Path, patch: str
+) -> None:
+    """Keep the pydantic-14138 fast path inside its requested loop."""
+    relative = "pydantic/_internal/_generate_schema.py"
+    current_source = (directory / relative).read_text(encoding="utf-8")
+    try:
+        tree = ast.parse(current_source, filename=relative)
+    except SyntaxError:
+        tree = ast.parse((baseline / relative).read_text(encoding="utf-8"), filename=relative)
+    method = next(
+        (
+            node
+            for cls in ast.walk(tree)
+            if isinstance(cls, ast.ClassDef) and cls.name == "GenerateSchema"
+            for node in cls.body
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.name == "_union_schema"
+        ),
+        None,
+    )
+    if method is None:
+        raise ValueError("task-scope validation could not locate GenerateSchema._union_schema")
+    loops = [
+        node
+        for node in ast.walk(method)
+        if isinstance(node, ast.For)
+        and isinstance(node.target, ast.Name)
+        and node.target.id == "arg"
+        and isinstance(node.iter, ast.Name)
+        and node.iter.id == "args"
+        and node.end_lineno is not None
+    ]
+    if len(loops) != 1:
+        raise ValueError("task-scope validation could not uniquely locate the for arg in args loop")
+    first_line, last_line = loops[0].lineno, loops[0].end_lineno
+    hunk = re.compile(r"^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@")
+    old_line: int | None = None
+    changed_old_lines: list[int] = []
+    insertion_anchors: list[int] = []
+    for line in patch.splitlines():
+        match = hunk.match(line)
+        if match:
+            old_line = int(match.group(1))
+            continue
+        if old_line is None:
+            continue
+        if line.startswith(" "):
+            old_line += 1
+        elif line.startswith("-") and not line.startswith("--- "):
+            changed_old_lines.append(old_line)
+            old_line += 1
+        elif line.startswith("+") and not line.startswith("+++ "):
+            insertion_anchors.append(old_line)
+        elif line.startswith("\\"):
+            continue
+        elif line.startswith(("diff --git ", "--- ", "+++ ")):
+            old_line = None
+        else:
+            old_line = None
+    outside = [
+        line_number
+        for line_number in changed_old_lines + insertion_anchors
+        if not first_line <= line_number <= last_line
+    ]
+    if not changed_old_lines and not insertion_anchors:
+        raise ValueError("task-scope validation found no changed source lines")
+    if outside:
+        raise ValueError(
+            "task-scope violation: changed lines must stay inside "
+            f"GenerateSchema._union_schema's for arg in args loop (baseline lines "
+            f"{first_line}-{last_line}); the post-loop union assembly is out of scope"
+        )
+
+
 def normalize_unified_hunk_counts(patch: str) -> tuple[str, bool]:
     """Recount old and new lines in complete unified hunks before Git validation."""
     lines = patch.splitlines()
@@ -914,6 +991,7 @@ def execute_tool(
     allowed: set[str],
     action: dict[str, Any],
     *,
+    task_id: str | None = None,
     read_cursors: dict[tuple[str, str, str], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     name = action["tool"]
@@ -1048,6 +1126,8 @@ def execute_tool(
             return bounded_result(result, max_chars=3200)
         if name == "apply_patch":
             path, patch, normalizations = normalize_patch_arguments(args, allowed)
+            if task_id == TASK_SCOPE_GUARD_TASK_ID:
+                validate_pydantic_union_patch_scope(directory, baseline, patch)
             result = apply_source_patch(directory, patch, allowed)
             result["path"] = path
             if normalizations:
@@ -1355,6 +1435,7 @@ def run_agent(
                 task["baseline_root"],
                 allowed,
                 action,
+                task_id=task["record"]["task_id"],
                 read_cursors=read_cursors,
             )
             row["tool_result"] = result
@@ -2074,9 +2155,9 @@ def run_experiment() -> int:
         "authorized_train_rollout_exposure_budget": NEW_ROLLOUT_COUNT,
         "task_cumulative_exposure_cap": NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT,
         "new_training_sample_indices": list(range(NEW_ROLLOUT_START_INDEX, NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT)),
-        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-008/summary.json",
+        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-009/summary.json",
         "prompt_policy_version": "pydantic-14138-prompt-v7-scope-directed",
-        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v6-context-replay",
+        "tool_adapter_version": TOOL_ADAPTER_VERSION,
         "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
         "credit_assignment": assignment["training"]["credit_assignment"],
     }
