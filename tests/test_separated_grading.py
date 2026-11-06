@@ -815,10 +815,21 @@ def test_memory_parsers_and_mount_failure_are_distinct_from_the_gates(monkeypatc
     assert module.mem_available_from_vm_stat(vm_stat) == (1000 + 500) * 16384
     with pytest.raises(RuntimeError, match="Pages free"):
         module.mem_available_from_vm_stat("Mach Virtual Memory Statistics: (page size of 4096 bytes)\n")
-    if Path("/proc/meminfo").is_file():
-        assert module.mem_available_bytes() == module.mem_available_from_meminfo(
-            Path("/proc/meminfo").read_text(encoding="utf-8"),
-        )
+    meminfo = "MemAvailable: 1048576 kB\n"
+
+    class FixedMemInfoPath:
+        def __init__(self, path):
+            assert path == "/proc/meminfo"
+
+        def is_file(self):
+            return True
+
+        def read_text(self, encoding):
+            assert encoding == "utf-8"
+            return meminfo
+
+    monkeypatch.setattr(module, "Path", FixedMemInfoPath)
+    assert module.mem_available_bytes() == 1048576 * 1024
     assert module.container_environment_error([0, 0]) is None
     assert "not an E0 expectation mismatch" in module.container_environment_error([125])
     assert module.container_environment_error([0], "mounts denied: /tmp/vare")
