@@ -455,6 +455,23 @@ def load_task(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def baseline_source_hashes(source_test: dict[str, Any]) -> dict[str, str] | None:
+    """Normalize the qualified task manifests' baseline source hash shapes."""
+    source_hashes = source_test.get("source_hashes", {}).get("baseline")
+    if isinstance(source_hashes, str):
+        editable_path = source_test.get("editable_path")
+        if editable_path:
+            return {editable_path: source_hashes}
+        return None
+    if isinstance(source_hashes, dict):
+        return source_hashes
+    baseline_hash = source_test.get("baseline_source_sha256")
+    editable_path = source_test.get("editable_path")
+    if baseline_hash and editable_path:
+        return {editable_path: baseline_hash}
+    return None
+
+
 def verify_task_workspace(task: dict[str, Any]) -> None:
     baseline = task["baseline_root"]
     if not (baseline / "pydantic").is_dir() or not (baseline / task["test_path"]).is_file():
@@ -462,9 +479,7 @@ def verify_task_workspace(task: dict[str, Any]) -> None:
     source_test = task["source_test"]
     if sha256_file(baseline / task["test_path"]) != task["test_sha256"]:
         raise RuntimeError(f"frozen grader test changed: {task['record']['task_id']}")
-    source_hashes = source_test.get("source_hashes", {}).get("baseline")
-    if not source_hashes and "baseline_source_sha256" in source_test:
-        source_hashes = {source_test["editable_path"]: source_test["baseline_source_sha256"]}
+    source_hashes = baseline_source_hashes(source_test)
     if not isinstance(source_hashes, dict):
         raise RuntimeError(f"missing baseline source hash binding: {task['record']['task_id']}")
     for rel, expected in source_hashes.items():

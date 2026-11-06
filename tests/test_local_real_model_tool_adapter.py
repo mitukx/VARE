@@ -12,6 +12,22 @@ def _runner_namespace(tmp_path: Path, monkeypatch):
     return runpy.run_path(str(runner))
 
 
+def test_baseline_source_hashes_normalizes_single_file_task_manifest(
+    tmp_path, monkeypatch
+):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+
+    normalized = runner["baseline_source_hashes"](
+        {
+            "editable_path": "pydantic/_internal/_mock_val_ser.py",
+            "baseline_source_sha256": "abc123",
+            "source_hashes": {"baseline": "abc123"},
+        }
+    )
+
+    assert normalized == {"pydantic/_internal/_mock_val_ser.py": "abc123"}
+
+
 def test_recover_recorded_mlx_hunk_and_unescaped_patch_quotes(tmp_path, monkeypatch):
     runner = _runner_namespace(tmp_path, monkeypatch)
     raw = r'''{"tool":"apply_patch","arguments":{"path":"pydantic/example.py",'''
