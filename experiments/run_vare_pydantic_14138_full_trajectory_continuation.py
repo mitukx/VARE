@@ -36,9 +36,9 @@ def find_experiment_root() -> Path:
 ROOT = find_experiment_root()
 WORK = ROOT / "work/vare-rsi-qwen3-4b-mlx-20261106"
 OUTPUTS = ROOT / "outputs/vare-rsi-heldout-qualification-v2-20261105"
-RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-006"
-ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v15-pydantic-14138-tool-pagination.json"
-RUN_LOCK_PATH = OUTPUTS / "real-model-run-v23-14138-tool-pagination-grpo-group.lock.json"
+RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-007"
+ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v16-pydantic-14138-read-coverage.json"
+RUN_LOCK_PATH = OUTPUTS / "real-model-run-v24-14138-read-coverage-grpo-group.lock.json"
 MODEL_PATH = WORK / "model"
 MODEL_MANIFEST_PATH = WORK / "model-manifest.json"
 INTEGRATION = ROOT / "work/VARE-rsi-integration-20261105"
@@ -52,12 +52,13 @@ BASE_SEED = 20261106
 TEMPERATURE = 0.8
 GROUP_SIZE = 8
 NEW_ROLLOUT_COUNT = 8
-NEW_ROLLOUT_START_INDEX = 18
+NEW_ROLLOUT_START_INDEX = 26
 MAX_TURNS = 16
 MAX_TOTAL_TOKENS = 4096
 MAX_ACTION_TOKENS = 512
 MAX_PROMPT_TOKENS = 4096
 MAX_WALL_SECONDS = 900
+READ_FILE_PAGE_LINES = 20
 DEV_TEMPERATURE = 0.0
 LORA = {"num_layers": 8, "rank": 8, "scale": 20.0, "dropout": 0.0}
 OPTIMIZER_CONFIG = {"name": "mlx.optimizers.Adam", "learning_rate": 1e-5}
@@ -100,12 +101,12 @@ TOOL_HELP = (
     "search_code: query must be an exact identifier or expression present in an editable file. "
     "Search is already scoped to the editable path; do not add a paths member.\n"
     "read_file: path must be exactly one editable path; start_line and end_line are positive "
-    "source line numbers. Each response returns at most 20 lines. If content_truncated is true, "
-    "the returned start_line/end_line identify the page and next_start_line is authoritative. "
-    "Repeating the exact same oversized path/start_line/end_line automatically returns the next "
-    "page of that requested range; inspect the actual returned lines and continue from there. "
-    "After the range is fully paged, a repeated request returns an already-paged notice. To "
-    "reread earlier context, request a new narrower range.\n"
+    "source line numbers. Each response returns at most 20 lines. For a request wider than "
+    "20 lines, the reader tracks lines already returned from that file and gives the next "
+    "contiguous unread page, even when the new request overlaps or widens an earlier one. "
+    "Use the actual returned start_line/end_line and next_start_line; do not request already "
+    "seen lines again. A fully read range returns an already-read notice. Requests of 20 or "
+    "fewer lines may be reread for patch context.\n"
     "apply_patch arguments must be a JSON object with path and patch string fields. For example: "
     "{\"tool\":\"apply_patch\",\"arguments\":{\"path\":\"pydantic/example.py\","
     "\"patch\":\"--- a/pydantic/example.py\\n+++ b/pydantic/example.py\\n"
@@ -692,8 +693,11 @@ def read_source(directory: Path, args: dict[str, Any], allowed: set[str]) -> dic
         raise ValueError("start_line must be a positive integer")
     if end is not None and (isinstance(end, bool) or not isinstance(end, int) or end < start):
         raise ValueError("end_line must be an integer at least start_line")
-    requested_stop = min(end if end is not None else start + 19, len(lines))
-    stop = min(requested_stop, start + 19)
+    requested_stop = min(
+        end if end is not None else start + READ_FILE_PAGE_LINES - 1,
+        len(lines),
+    )
+    stop = min(requested_stop, start + READ_FILE_PAGE_LINES - 1)
     line_limit_truncated = stop < requested_stop
     selected = lines[start - 1 : stop]
     full_text = "\n".join(f"{idx}: {line}" for idx, line in enumerate(selected, start))
@@ -920,43 +924,110 @@ def execute_tool(
         if name == "read_file":
             requested_start = args.get("start_line", 1)
             requested_end = args.get("end_line")
-            key = (
-                str(args.get("path", "")),
-                repr(requested_start),
-                repr(requested_end),
+            requested_path = str(args.get("path", ""))
+            if (
+                isinstance(requested_start, bool)
+                or not isinstance(requested_start, int)
+                or requested_start < 1
+            ):
+                raise ValueError("start_line must be a positive integer")
+            if requested_end is not None and (
+                isinstance(requested_end, bool)
+                or not isinstance(requested_end, int)
+                or requested_end < requested_start
+            ):
+                raise ValueError("end_line must be an integer at least start_line")
+            if requested_path not in allowed:
+                raise ValueError("read_file accepts only the task editable source path")
+
+            source_path = safe_source_path(directory, requested_path)
+            source_lines = source_path.read_text(encoding="utf-8").splitlines()
+            source_sha256 = sha256_file(source_path)
+            coverage_key = ("__read_coverage__", requested_path, "lines")
+            coverage = cursors.get(coverage_key)
+            if not isinstance(coverage, dict) or coverage.get("source_sha256") != source_sha256:
+                coverage = {"source_sha256": source_sha256, "seen_lines": set()}
+                cursors[coverage_key] = coverage
+            seen_lines = coverage["seen_lines"]
+
+            requested_last = min(
+                requested_end
+                if requested_end is not None
+                else requested_start + READ_FILE_PAGE_LINES - 1,
+                len(source_lines),
             )
-            cursor = cursors.get(key)
-            if cursor and cursor.get("complete"):
-                return {
-                    "error": (
-                        "this requested range was already paged completely; "
-                        "request a new or narrower range"
-                    ),
-                    "requested_start_line": requested_start,
-                    "requested_end_line": requested_end,
-                    "next_start_line": cursor.get("next_start_line"),
-                    "already_paged": True,
-                }
+            requested_width = (
+                requested_end - requested_start + 1
+                if requested_end is not None
+                else READ_FILE_PAGE_LINES
+            )
             read_args = dict(args)
-            auto_paged = cursor is not None
-            if cursor is not None:
-                read_args["start_line"] = cursor["next_start_line"]
+            page_start = requested_start
+            auto_paged = False
+            oversized = requested_width > READ_FILE_PAGE_LINES
+            if requested_last < requested_start:
+                result = read_source(directory, read_args, allowed)
+                result["requested_start_line"] = requested_start
+                result["requested_end_line"] = requested_end
+                result["auto_paged"] = False
+                return bounded_result(result, max_chars=3200)
+            if oversized:
+                page_start = next(
+                    (
+                        line_number
+                        for line_number in range(requested_start, requested_last + 1)
+                        if line_number not in seen_lines
+                    ),
+                    None,
+                )
+                if page_start is None:
+                    return {
+                        "error": "this requested range has already been read; use the existing context or choose unread lines",
+                        "requested_start_line": requested_start,
+                        "requested_end_line": requested_end,
+                        "next_start_line": None,
+                        "already_read": True,
+                        "already_paged": True,
+                    }
+                page_end = min(requested_last, page_start + READ_FILE_PAGE_LINES - 1)
+                next_covered = next(
+                    (
+                        line_number
+                        for line_number in range(page_start, page_end + 1)
+                        if line_number in seen_lines
+                    ),
+                    None,
+                )
+                if next_covered is not None:
+                    page_end = next_covered - 1
+                read_args["start_line"] = page_start
+                read_args["end_line"] = page_end
+                auto_paged = page_start != requested_start
+
             result = read_source(directory, read_args, allowed)
             result["requested_start_line"] = requested_start
             result["requested_end_line"] = requested_end
             result["auto_paged"] = auto_paged
-            if auto_paged and not result["content_truncated"]:
-                cursors[key] = {
-                    "complete": True,
-                    "next_start_line": result["next_start_line"],
-                }
-            elif "line_limit" in result["truncation_reasons"]:
-                cursors[key] = {
-                    "complete": False,
-                    "next_start_line": result["next_start_line"],
-                }
-            else:
-                cursors.pop(key, None)
+            if result["end_line"] >= result["start_line"]:
+                seen_lines.update(range(result["start_line"], result["end_line"] + 1))
+            if oversized:
+                next_unread = next(
+                    (
+                        line_number
+                        for line_number in range(result["end_line"] + 1, requested_last + 1)
+                        if line_number not in seen_lines
+                    ),
+                    None,
+                )
+                if next_unread is not None:
+                    result["content_truncated"] = True
+                    reasons = list(result["truncation_reasons"])
+                    if "unread_page" not in reasons:
+                        reasons.append("unread_page")
+                    result["truncation_reasons"] = reasons
+                    result["next_start_line"] = next_unread
+                else:
+                    result["next_start_line"] = None
             return bounded_result(result, max_chars=3200)
         if name == "apply_patch":
             path, patch, normalizations = normalize_patch_arguments(args, allowed)
@@ -1107,11 +1178,13 @@ def compact_action_summary(turns: list[dict[str, Any]]) -> str:
             )
             rows.append(f"turn {row.get('turn')}: searched {query!r}; locations={locations or 'none'}")
         elif tool == "read_file":
-            if isinstance(result, dict) and result.get("already_paged"):
+            if isinstance(result, dict) and (
+                result.get("already_paged") or result.get("already_read")
+            ):
                 rows.append(
                     f"turn {row.get('turn')}: requested {args.get('path')} lines "
                     f"{args.get('start_line', 1)}-{args.get('end_line', 'default')}; "
-                    "that range was already paged completely"
+                    "that range was already read completely"
                 )
             else:
                 actual_start = (
@@ -1976,9 +2049,9 @@ def run_experiment() -> int:
         "authorized_train_rollout_exposure_budget": NEW_ROLLOUT_COUNT,
         "task_cumulative_exposure_cap": NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT,
         "new_training_sample_indices": list(range(NEW_ROLLOUT_START_INDEX, NEW_ROLLOUT_START_INDEX + NEW_ROLLOUT_COUNT)),
-        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-005/summary.json",
-        "prompt_policy_version": "pydantic-14138-prompt-v4-direct-scalar-fastpath",
-        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v4-auto-paging",
+        "prior_negative_train_experiment_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-006/summary.json",
+        "prompt_policy_version": "pydantic-14138-prompt-v5-read-coverage",
+        "tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v5-read-coverage",
         "network_policy": "model weights local; rollout agent has no shell/network tools; graders use Docker --network=none",
         "credit_assignment": assignment["training"]["credit_assignment"],
     }

@@ -1,0 +1,12 @@
+{
+  "assignment_sha256": "7e2d96c8abf0ef04416badd079bd31d05fe503f0f138db07e262456ce70202af",
+  "binding_sha256": "0c3f7df90dbc3004c010e89a85a489cf5fffbfb7d2c926f73f3a9c07652f0ec2",
+  "candidate_prompt_exposed": false,
+  "corrective_action": "Recompute candidate-visible prompt hashes for Train and both Development records under the same v4 system/tool prompt, then update assignment, binding, protocol, and run lock hashes.",
+  "first_freeze_at_utc": "2026-11-05T23:31:32Z",
+  "protocol_sha256": "b280d6c132ce2f60324c2f47410b0dea2e3d3abd526d763c0f86d693c333be24",
+  "reason": "Frozen-input preflight detected that changing the shared tool help also changes the candidate-visible Development prompt hashes. Development text remained unexposed; the first v15 draft was rejected before any model prompt. Rebind the exact v4 candidate-visible prompt digests and freeze again.",
+  "run_lock_sha256": "d2d054b4e319d7e47a32f91ee9fecf7b16892cc6d9d2c8310e036d8b499aa398",
+  "schema": "vare_preflight_rejected_freeze_v1",
+  "status": "REJECTED_BEFORE_MODEL_PROMPT_EXPOSURE"
+}

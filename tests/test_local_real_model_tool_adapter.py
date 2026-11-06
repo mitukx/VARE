@@ -131,6 +131,51 @@ def test_repeated_oversized_read_auto_pages_instead_of_repeating(tmp_path, monke
     assert repeated_after_completion["already_paged"] is True
 
 
+def test_overlapping_oversized_reads_return_next_unseen_page(tmp_path, monkeypatch):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+    workspace = tmp_path / "candidate"
+    source = workspace / "pydantic" / "example.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("".join(f"value_{i} = {i}\n" for i in range(80)))
+    allowed = {"pydantic/example.py"}
+    cursors = {}
+
+    def read(start, end):
+        return runner["execute_tool"](
+            workspace,
+            workspace,
+            allowed,
+            {
+                "tool": "read_file",
+                "arguments": {
+                    "path": "pydantic/example.py",
+                    "start_line": start,
+                    "end_line": end,
+                },
+            },
+            read_cursors=cursors,
+        )
+
+    first = read(1, 21)
+    second = read(21, 41)
+    overlapping = read(10, 61)
+    final_unseen = read(10, 61)
+    already_read = read(10, 61)
+    narrow_reread = read(10, 15)
+
+    assert [
+        (first["start_line"], first["end_line"]),
+        (second["start_line"], second["end_line"]),
+        (overlapping["start_line"], overlapping["end_line"]),
+        (final_unseen["start_line"], final_unseen["end_line"]),
+    ] == [(1, 20), (21, 40), (41, 60), (61, 61)]
+    assert overlapping["requested_start_line"] == 10
+    assert overlapping["auto_paged"] is True
+    assert already_read["already_read"] is True
+    assert narrow_reread["start_line"] == 10
+    assert narrow_reread["end_line"] == 15
+
+
 def test_patch_normalization_adds_missing_terminal_newline(tmp_path, monkeypatch):
     runner = _runner_namespace(tmp_path, monkeypatch)
 
