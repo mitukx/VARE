@@ -637,12 +637,14 @@ def test_resume_after_kill_has_no_duplicated_or_lost_steps(tmp_path, stage, inde
 
 def test_resume_waits_for_expired_verification_lease(tmp_path):
     run = tmp_path / "verify-recovery"
-    initial = harness(run, lease_seconds=0.35, worker_id="worker-before-crash")
+    initial = harness(run, worker_id="worker-before-crash")
     initial.run()  # Finish execution but leave verification queued.
     abandoned = initial.store.claim("verify", "worker-crashed", lease_seconds=0.35)
     assert abandoned is not None
 
-    resumed = harness(run, grader=FakeGrader(), lease_seconds=0.35, worker_id="worker-after-crash")
+    # Keep the deliberately abandoned lease short, but give the resumed worker
+    # a normal lease so CI load cannot expire it while recording its result.
+    resumed = harness(run, grader=FakeGrader(), worker_id="worker-after-crash")
     started = time.monotonic()
     resumed.run(wait_for_expired=True, poll_seconds=0.01)
     elapsed = time.monotonic() - started
