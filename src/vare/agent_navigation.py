@@ -235,7 +235,10 @@ def list_python_symbols(
                 visit_body(node.body, (*parents, node.name))
 
     visit_body(tree.body)
-    terms = {part.lower() for part in _QUERY_WORD.findall(query)}
+    # Tool callers often send a short natural-language question, not a single
+    # identifier. Ignore generic words and split camel-case identifiers so a
+    # query such as "Where is cache factory?" can locate ``CacheFactory``.
+    terms = set(_normalized_words(query))
     if terms:
         def matches(entry: dict[str, Any]) -> bool:
             searchable = [entry["name"]]

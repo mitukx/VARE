@@ -433,6 +433,24 @@ def test_list_symbols_schema_and_ast_index_ground_request_model_fields():
     assert request['methods'] == ['validate_tools']
 
 
+def test_list_symbols_ignores_natural_language_stop_words_and_splits_identifiers():
+    source = (
+        'class CacheFactory:\n'
+        '    def build_cache(self):\n'
+        '        return {}\n'
+        '\n'
+        'class CacheStore:\n'
+        '    pass\n'
+    )
+
+    result = list_python_symbols(source, query='Where is cache factory?')
+
+    assert result['total_symbols'] == 2
+    assert [item['name'] for item in result['symbols']] == [
+        'CacheFactory', 'CacheFactory.build_cache',
+    ]
+
+
 def test_search_loop_guard_redirects_exact_recorded_repeated_empty_queries():
     root = Path(__file__).resolve().parents[1]
     attempt = json.loads((root / (
