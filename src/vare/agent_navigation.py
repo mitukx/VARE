@@ -89,11 +89,6 @@ class SearchLoopGuard:
     def _related(left: _SearchFocus, right: _SearchFocus) -> bool:
         if left.path is not None and right.path is not None and left.path != right.path:
             return False
-        if left.path is not None and right.path is not None:
-            # Searches are already scoped to one task-owned source file. After
-            # several misses, changing the wording without reading source is not
-            # new evidence and should not restart the search budget.
-            return True
         if left.strong_identifiers & right.strong_identifiers:
             return True
         if not left.words or not right.words:

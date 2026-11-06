@@ -120,6 +120,59 @@ def test_full_controller_metrics_on_fixture(tmp_path):
     assert agg["synthetic"] is True
 
 
+def test_tool_runtime_read_resets_guard_and_search_stays_task_scoped(tmp_path):
+    source_path = "src/allowed.py"
+    source = "class NeedleToken:\n    pass\n"
+    workspace = tmp_path / "candidate"
+    file_path = workspace / source_path
+    file_path.parent.mkdir(parents=True)
+    file_path.write_text(source, encoding="utf-8")
+    lh.git_snapshot(workspace)
+    task = lh.EpisodeTask(
+        task_id="guard-scope",
+        repository="local-fixture",
+        split="train",
+        issue="Inspect and update the allowlisted source file.",
+        readable_files=(source_path,),
+        editable_files=(source_path,),
+        target_files=(source_path,),
+    )
+    runtime = lh.ToolRuntime(
+        workspace,
+        task,
+        public_tests=None,
+        base_hashes={source_path: hashlib.sha256(source.encode()).hexdigest()},
+    )
+    for _ in range(3):
+        runtime.search_guard.observe("missing cache factory", 0, source_path)
+    assert runtime.search_guard.intercept("missing cache factory", source_path) is not None
+
+    read = runtime.execute(
+        "read_file",
+        {"path": source_path, "start_line": 1, "end_line": 2},
+        public_passed=None,
+        finish_gate=False,
+    )
+    assert "NeedleToken" in read["content"]
+    assert runtime.search_guard.intercept("missing cache factory", source_path) is None
+
+    outside = runtime.execute(
+        "search_text",
+        {"query": "NeedleToken", "path": "../private.py"},
+        public_passed=None,
+        finish_gate=False,
+    )
+    assert "allowlisted" in outside["error"]
+    useful = runtime.execute(
+        "search_text",
+        {"query": "NeedleToken", "path": source_path},
+        public_passed=None,
+        finish_gate=False,
+    )
+    assert useful["match_count"] == 1
+    assert useful["matches"][0]["path"] == source_path
+
+
 def test_mlx_policy_keeps_exact_prompt_and_completion_token_ids(monkeypatch):
     events = [
         types.SimpleNamespace(text="A", token=10, generation_tokens=1, finish_reason=None),

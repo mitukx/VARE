@@ -527,9 +527,32 @@ def test_single_file_global_search_scope_stops_historical_14115_loop():
                 redirects += 1
 
     assert searches == 15
-    assert executed == 4
-    assert intercepted == 11
+    assert executed == 6
+    assert intercepted == 9
     assert redirects == 1
+
+
+def test_search_loop_guard_allows_unrelated_query_in_same_file():
+    path = "src/cache.py"
+    guard = SearchLoopGuard(empty_search_limit=2)
+    guard.observe("missing cache factory", 0, path)
+    hint = guard.observe("missing cache factory", 0, path)
+
+    assert hint is not None
+    assert guard.intercept("serialize request headers", path) is None
+    assert guard.observe("serialize request headers", 0, path) is None
+    assert guard.intercept("serialize request headers", path) is None
+    assert guard.intercept("missing cache factory", path) is None
+
+
+def test_search_guard_path_inference_respects_single_and_multiple_file_allowlists():
+    first = "pkg/cache.py"
+    second = "pkg/codec.py"
+
+    assert resolve_search_guard_path(None, {first}) == first
+    assert resolve_search_guard_path(None, {first, second}) is None
+    assert resolve_search_guard_path(second, {first, second}) == second
+    assert resolve_search_guard_path("pkg/private.py", {first, second}) is None
 
 
 def test_search_loop_guard_resets_after_new_source_context_or_positive_result():

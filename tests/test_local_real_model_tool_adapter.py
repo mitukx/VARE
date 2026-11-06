@@ -590,8 +590,8 @@ def test_historical_14115_search_trace_is_stopped_by_controller_guard():
                 redirects += 1
 
     assert searches == 15
-    assert executed == 4
-    assert intercepted == 11
+    assert executed == 6
+    assert intercepted == 9
     assert redirects == 1
 
 
