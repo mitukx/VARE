@@ -1,0 +1,48 @@
+{
+  "arms": [
+    {
+      "arm": "baseline",
+      "exit_code": 1,
+      "grade_status": "candidate_failure",
+      "grader_command_sha256": "6529095e59302ccc52b1d0393bcc6e0a3cb2045caae908b83c535b12115414f4",
+      "grader_identity": "1ed9e1b7cdba29b3aa402edc20acd80c14b1d3863966457e8d39020e608c5717",
+      "grader_log_sha256": "8efadf0c8520b5554eb081496e4583be7375e43c026af5a20db105366740c3ea",
+      "reward": 0.0,
+      "wall_seconds": 0.685
+    },
+    {
+      "arm": "mutant",
+      "exit_code": 1,
+      "grade_status": "candidate_failure",
+      "grader_command_sha256": "57da02e5dba1cb9a487c720320674132df0f571dbd54c0ee9d59c8a50f692126",
+      "grader_identity": "1ed9e1b7cdba29b3aa402edc20acd80c14b1d3863966457e8d39020e608c5717",
+      "grader_log_sha256": "c3158748c0eab1a8d1b10f796528650839574d56657872aef6a89784fe63945a",
+      "reward": 0.0,
+      "wall_seconds": 0.646
+    },
+    {
+      "arm": "fixed",
+      "exit_code": 0,
+      "grade_status": "pass",
+      "grader_command_sha256": "8ee42ff0c8791e5bb887951a5fc95bd06ddd59f47fe41a3cdd1e69956b2a0676",
+      "grader_identity": "1ed9e1b7cdba29b3aa402edc20acd80c14b1d3863966457e8d39020e608c5717",
+      "grader_log_sha256": "78bbecca669f96d2d58b05c2ccce78f49b9039f307fd8a5c6b216ec4bf224d0a",
+      "reward": 1.0,
+      "wall_seconds": 0.619
+    }
+  ],
+  "attempt": 1,
+  "candidate_or_model_prompt_exposure": false,
+  "development_evaluation": false,
+  "first_parent_path_audit_sha256": "36e837a29c5ea4f5f2a4c42ce290df63ed3300a44a1ccda4413d0dc72001407a",
+  "freeze_sha256": "e56cccd3f0a3018e324fc6b5a3768b99ace4597b1c4769149406bb3d9b8c2892",
+  "heldout_access": false,
+  "qualification_pass": true,
+  "raw_grader_logs_and_commands_private": true,
+  "schema": "vare_pydantic_task_qualification_attempt_v1",
+  "status": "QUALIFIED_FOR_PROSPECTIVE_TRAIN_ASSIGNMENT",
+  "task_assignment_status": "UNASSIGNED_PENDING_TRAIN_DEV_FREEZE",
+  "task_definition_sha256": "f050d5a29e4807b2215f82149e5f0b0d111f68048114b50dd471bf6ceb2b1564",
+  "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+  "training_or_optimizer_update": false
+}

@@ -90,6 +90,29 @@ def test_read_file_marks_the_twenty_line_cap_as_truncated(tmp_path, monkeypatch)
     assert result["next_start_line"] == 21
 
 
+def test_search_code_falls_back_to_bare_identifier_and_guides_after_miss(
+    tmp_path, monkeypatch
+):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+    workspace = tmp_path / "candidate"
+    source = workspace / "pydantic" / "example.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("JsonValue = int | str\n")
+    allowed = {"pydantic/example.py"}
+
+    fallback = runner["search_source"](workspace, "class JsonValue", allowed)
+    assert fallback["query_fallback"] is True
+    assert fallback["requested_query"] == "class JsonValue"
+    assert fallback["matched_query"] == "JsonValue"
+    assert fallback["matches"][0]["line"] == 1
+    assert "focused source window" in fallback["next_step_hint"]
+
+    missing = runner["search_source"](workspace, "NoSuchSymbol", allowed)
+    assert missing["matches"] == []
+    assert "retry with a distinctive bare identifier" in missing["next_step_hint"].lower()
+    assert "do not page consecutively" in missing["next_step_hint"].lower()
+
+
 def test_repeated_oversized_read_auto_pages_instead_of_repeating(tmp_path, monkeypatch):
     runner = _runner_namespace(tmp_path, monkeypatch)
     workspace = tmp_path / "candidate"

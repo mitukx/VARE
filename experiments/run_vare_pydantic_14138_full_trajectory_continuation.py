@@ -94,6 +94,8 @@ TASK_ARM_DIRS = {
         ROOT / "work/fresh-train-dev/task-arms-v3/pydantic-13997-correct/baseline",
     "pydantic-13995-jsonvalue-python-inf-nan-serialization":
         ROOT / "work/fresh-train-dev/task-arms-v3/pydantic-13995/baseline",
+    "pydantic-14213-use-entry-points-api-plugin-loader":
+        ROOT / "work/fresh-train-dev/task-arms-v11/pydantic-14213/baseline",
 }
 TASK_ENV_LOCK_OVERRIDES = {}
 
@@ -101,7 +103,10 @@ SYSTEM_PROMPT = (
     "You are an autonomous coding agent in a clean constrained checkout. Implement the "
     "requested change with a small correct patch. Tests are unavailable. You may inspect "
     "production source and edit only the exact path or paths listed in the task. Search is "
-    "restricted to those editable paths. Start with an exact nested JSON tool call whose "
+    "restricted to those editable paths. Search with a distinctive bare identifier, not a "
+    "declaration prefix such as class or def. If search returns no matches, retry with the "
+    "most distinctive identifier from the task; do not page sequentially from the file start "
+    "to find a symbol. Start with an exact nested JSON tool call whose "
     "arguments value is always an object, never a string. Read only short relevant source "
     "windows. Never patch source lines you have not read. Use standard unified diff syntax "
     "only, with exact file headers and accurate @@ hunk counts; never use context-diff syntax. "
@@ -119,8 +124,11 @@ TOOL_HELP = (
     "Return one JSON object with keys tool and arguments. The arguments value must always be "
     "a JSON object, never a string. Use real values; do not copy placeholders. Example search "
     "call: {{\"tool\":\"search_code\",\"arguments\":{{\"query\":\"get_model_type_hints\"}}}}.\n"
-    "search_code: query must be an exact identifier or expression present in an editable file. "
-    "Search is already scoped to the editable path; do not add a paths member.\n"
+    "search_code: query is a literal substring and is already scoped to editable paths; do not "
+    "add a paths member. Prefer a distinctive bare identifier without syntax words such as "
+    "class or def. If the result reports a fallback match, read the reported line. If there are "
+    "no matches, retry with a distinctive exact identifier before reading source. Do not page "
+    "consecutively from line 1 to locate a symbol.\n"
     "read_file: path must be exactly one editable path; start_line and end_line are positive "
     "source line numbers. Each response returns at most 20 lines. For a request wider than "
     "20 lines, the reader tracks lines already returned from that file and gives the next "
@@ -684,23 +692,63 @@ def list_source_files(directory: Path, rel: str) -> dict[str, Any]:
 def search_source(directory: Path, query: str, allowed: set[str]) -> dict[str, Any]:
     if not query or len(query) > 200:
         raise ValueError("search query must contain 1 to 200 characters")
-    results: list[dict[str, Any]] = []
-    for relative in sorted(allowed):
-        path = safe_source_path(directory, relative)
-        if not path.is_file() or path.is_symlink():
-            continue
-        try:
-            lines = path.read_text(encoding="utf-8").splitlines()
-        except UnicodeDecodeError:
-            continue
-        for line_no, line in enumerate(lines, 1):
-            if query in line:
-                results.append(
-                    {"path": path.relative_to(directory).as_posix(), "line": line_no, "text": line[:180]}
-                )
-                if len(results) >= 12:
-                    return {"matches": results, "truncated": True}
-    return {"matches": results, "truncated": False}
+
+    def find_matches(needle: str) -> tuple[list[dict[str, Any]], bool]:
+        matches: list[dict[str, Any]] = []
+        for relative in sorted(allowed):
+            path = safe_source_path(directory, relative)
+            if not path.is_file() or path.is_symlink():
+                continue
+            try:
+                lines = path.read_text(encoding="utf-8").splitlines()
+            except UnicodeDecodeError:
+                continue
+            for line_no, line in enumerate(lines, 1):
+                if needle in line:
+                    matches.append(
+                        {
+                            "path": path.relative_to(directory).as_posix(),
+                            "line": line_no,
+                            "text": line[:180],
+                        }
+                    )
+                    if len(matches) >= 12:
+                        return matches, True
+        return matches, False
+
+    results, truncated = find_matches(query)
+    if results:
+        return {"matches": results, "truncated": truncated}
+
+    syntax_words = {
+        "and", "async", "await", "class", "def", "else", "false", "for", "from",
+        "if", "in", "is", "none", "not", "null", "or", "pass", "return", "self",
+        "true", "type", "while", "with",
+    }
+    fallback_terms = sorted(
+        {
+            token
+            for token in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", query)
+            if token.lower() not in syntax_words and len(token) >= 3
+        },
+        key=lambda token: (-len(token), token),
+    )
+    for term in fallback_terms:
+        fallback_matches, fallback_truncated = find_matches(term)
+        if fallback_matches:
+            return {
+                "matches": fallback_matches,
+                "truncated": fallback_truncated,
+                "requested_query": query,
+                "matched_query": term,
+                "query_fallback": True,
+                "next_step_hint": "Read a focused source window around a reported line; do not page from line 1.",
+            }
+    return {
+        "matches": [],
+        "truncated": False,
+        "next_step_hint": "No literal match. Retry with a distinctive bare identifier from the task before reading source; do not page consecutively from line 1.",
+    }
 
 
 def read_source(directory: Path, args: dict[str, Any], allowed: set[str]) -> dict[str, Any]:
