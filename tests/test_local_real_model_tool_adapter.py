@@ -125,8 +125,36 @@ def test_search_code_falls_back_to_bare_identifier_and_guides_after_miss(
 
     missing = runner["search_source"](workspace, "NoSuchSymbol", allowed)
     assert missing["matches"] == []
-    assert "retry with a distinctive bare identifier" in missing["next_step_hint"].lower()
+    assert "read the most relevant declaration" in missing["next_step_hint"].lower()
     assert "do not page consecutively" in missing["next_step_hint"].lower()
+
+
+def test_search_code_no_match_returns_allowlisted_symbol_hints(tmp_path, monkeypatch):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+    workspace = tmp_path / "candidate"
+    source = workspace / "pydantic" / "example.py"
+    source.parent.mkdir(parents=True)
+    source.write_text(
+        "class MockValSer:\n"
+        "    def __deepcopy__(self):\n"
+        "        return self\n"
+        "\n"
+        "def rebuild_validator():\n"
+        "    return None\n"
+    )
+
+    result = runner["search_source"](
+        workspace, "defer_build", {"pydantic/example.py"}
+    )
+
+    assert result["matches"] == []
+    assert result["symbol_hints"] == [
+        {"path": "pydantic/example.py", "line": 1, "symbol": "MockValSer"},
+        {"path": "pydantic/example.py", "line": 2, "symbol": "__deepcopy__"},
+        {"path": "pydantic/example.py", "line": 5, "symbol": "rebuild_validator"},
+    ]
+    assert "symbol_hints" in result["next_step_hint"]
+    assert all(row["path"] == "pydantic/example.py" for row in result["symbol_hints"])
 
 
 def test_repeated_oversized_read_auto_pages_instead_of_repeating(tmp_path, monkeypatch):

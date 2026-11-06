@@ -1,0 +1,7 @@
+{
+  "base_task_definition_sha256": "f4f206bf228422d286a62bf6af9d9626d485450592d8f853d2bbd152d97775f8",
+  "prompt_version": "copy-deepcopy-only-v1",
+  "schema": "vare_task_prompt_variant_v1",
+  "task_id": "pydantic-14115-deferred-model-copy-and-unpickle",
+  "task_prompt": "Fix the RecursionError raised when copying or deep-copying Pydantic models configured with defer_build. Copying their validators or serializers should preserve the deferred state without recursing."
+}

@@ -1,0 +1,65 @@
+{
+  "files": [
+    {
+      "artifact": "base-policy.json",
+      "sha256": "3002eedefb191520041627558524959ef5c74d1717c5cdeb7f727ae4f7fef098"
+    },
+    {
+      "artifact": "environment-binding.json",
+      "sha256": "2b80090b812a86fcb8e93cf8967c973b83394d2e12c256f8f6cf12e6209eadfb"
+    },
+    {
+      "artifact": "model-manifest.json",
+      "sha256": "956513b153d2b4ef16953c226e455fe43aea90cd09ecb7b212d2ccaa0b2c994a"
+    },
+    {
+      "artifact": "pre-exposure-preflight.json",
+      "sha256": "0eb6ff85d67fdd79974be07bf1e39755bf695242372ee7b404f957495b7315e7"
+    },
+    {
+      "artifact": "protocol.json",
+      "sha256": "9d544330d7d20c5c19cb118a696f58acc77401286176ceda61b0bc5ac1927224"
+    },
+    {
+      "artifact": "qualification-attempt-001-summary.json",
+      "sha256": "2c1afbd3ae6a4d2d9c0f95e281b68ad38cbfa5e4743a0276d057a1a922aabc38"
+    },
+    {
+      "artifact": "qualification-attempt-002-summary.json",
+      "sha256": "e957080266d96592fc1dd373a9aba0b47080e3d86e40ebb0e29c97de0501f703"
+    },
+    {
+      "artifact": "qualification-attempt-003-summary.json",
+      "sha256": "e723a258af94a44a98d82be4e666bf9c37280a285d6ba3d31b5fe4110362a285"
+    },
+    {
+      "artifact": "run-lock.json",
+      "sha256": "c3d286126d8ec440fc14952e74e5d9402b9b7a6d8f64a96a4f26f03a279db73f"
+    },
+    {
+      "artifact": "run-meta.json",
+      "sha256": "9613e51a83c438030df8df2a70940bedc5bd379f11b6e8612aa8eebe1d8382bd"
+    },
+    {
+      "artifact": "task-definition.json",
+      "sha256": "f4f206bf228422d286a62bf6af9d9626d485450592d8f853d2bbd152d97775f8"
+    },
+    {
+      "artifact": "task-prompt-variant.json",
+      "sha256": "1948203cc6374102ce5a0565460a72184d4ae557d8f6d8f6ce24072b46ad4388"
+    },
+    {
+      "artifact": "train-dev-assignment.json",
+      "sha256": "cc2c51619c0a41e10e9453085eaf69fdc7089acc7fa8e35f67119e653f9b697e"
+    },
+    {
+      "artifact": "train-environment-lock.json",
+      "sha256": "63854ce64cd785c2021de71e529fe1c5cdeb0fc6bed8113ea8c163e2afc1c07a"
+    }
+  ],
+  "public_redactions": [
+    "Frozen protocol, assignment, run lock, environment binding, preflight, run metadata, and task definition are represented by their exact SHA-256 hashes only; Development task identities and grader selector details remain sealed."
+  ],
+  "schema": "vare_frozen_input_hashes_redacted_v1",
+  "source_experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14115-full-trajectory-v16"
+}

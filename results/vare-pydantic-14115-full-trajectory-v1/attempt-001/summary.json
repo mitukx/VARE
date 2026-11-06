@@ -1,0 +1,149 @@
+{
+  "completed_at_utc": "2026-11-06T06:56:42Z",
+  "credit_assignment": {
+    "claim_boundary": "Executable full-trajectory terminal-reward code path; this negative constant-reward run does not establish completed Long-Horizon RL.",
+    "configured": "full_trajectory_terminal_reward",
+    "update_executed": false
+  },
+  "development_evaluation": {
+    "matched_budget_result": null,
+    "performed": false,
+    "promotion": false,
+    "prompts_seen_by_model": false,
+    "reason": "valid optimizer update precondition was not met; Development prompts remained sealed",
+    "sealed": true,
+    "task_count": 2
+  },
+  "exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "duplicate_push_ci": {
+      "run_id": 42175656463,
+      "run_number": 2493,
+      "status": "success",
+      "url": "https://github.com/mitukx/VARE/actions/runs/42175656463"
+    },
+    "head_sha": "435b71fd817d10c8f2f09d51d240b50d31643074",
+    "pull_request": 199,
+    "required_workflows": [
+      {
+        "name": "ci",
+        "run_id": 42175662147,
+        "run_number": 2494,
+        "status": "success",
+        "url": "https://github.com/mitukx/VARE/actions/runs/42175662147"
+      },
+      {
+        "name": "cpu-evidence",
+        "run_id": 42175662121,
+        "run_number": 945,
+        "status": "success",
+        "url": "https://github.com/mitukx/VARE/actions/runs/42175662121"
+      },
+      {
+        "name": "e2e-system-cpu",
+        "run_id": 42175662132,
+        "run_number": 471,
+        "status": "success",
+        "url": "https://github.com/mitukx/VARE/actions/runs/42175662132"
+      }
+    ],
+    "verified_at_utc": "2026-11-06T06:48:40Z"
+  },
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14115-full-trajectory-v16",
+  "heldout": {
+    "access": false,
+    "assignment": false,
+    "eligible_tasks": 0,
+    "evaluation": false,
+    "frozen_no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4"
+  },
+  "integration_head_sha": "435b71fd817d10c8f2f09d51d240b50d31643074",
+  "model": {
+    "architecture": "Apple M1 Pro; 32 GiB unified memory",
+    "device": "Device(gpu, 0)",
+    "files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "initial_trainable_parameters_sha256": "1454f0400439bda28f6a",
+    "metal_available": true,
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.0",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "optimizer": {
+    "checkpoint_reload_verified": false,
+    "checkpoint_saved": false,
+    "optimizer_updates": 0,
+    "parameter_delta": "not computed because constant-reward gate skipped optimization",
+    "reason": "no_variable_trusted_rewards",
+    "update_applied": false
+  },
+  "pre_exposure_preflight_sha256": "0eb6ff85d67fdd79974be07bf1e39755bf695242372ee7b404f957495b7315e7",
+  "public_redactions": [
+    "Development task identifiers and grader selector details omitted; frozen input SHA-256 values retained in inputs/frozen-input-hashes.json."
+  ],
+  "public_training_samples_gzip_sha256": "031e042d1f5431ea37d81d668588def6a8e84bbe683704e377ad424d2d7951d5",
+  "raw_training_samples_sha256": "26b16209839c8fc027bbbcafcc082cc9cceb44ca8edd666968d9783115b9fa81",
+  "run_exit_code": 2,
+  "schema": "vare_real_model_train_dev_result_v1",
+  "source_unredacted_summary_sha256": "7ec77a550d5fe33cfc13c89023a874a463a68998cd0a6295521a0536c0fda35b",
+  "started_at_utc": "2026-11-06T06:49:01Z",
+  "status": "NO_UPDATE_ZERO_REWARD_GROUP",
+  "task": {
+    "candidate_id": "pydantic/pydantic#14115",
+    "prompt_variant_sha256": "1948203cc6374102ce5a0565460a72184d4ae557d8f6d8f6ce24072b46ad4388",
+    "qualification": "baseline failure, fixed pass, targeted mutant failure; model/prompt exposure false",
+    "qualification_attempt_003_sha256": "e723a258af94a44a98d82be4e666bf9c37280a285d6ba3d31b5fe4110362a285",
+    "split": "train",
+    "task_definition_sha256": "f4f206bf228422d286a62bf6af9d9626d485450592d8f853d2bbd152d97775f8",
+    "task_family": "deferred_build_mock_copy_unpickle",
+    "task_id": "pydantic-14115-deferred-model-copy-and-unpickle"
+  },
+  "training": {
+    "all_behavior_logprobs_finite": true,
+    "all_rollout_hashes_match_sample_records": true,
+    "changed_files_total": 0,
+    "grader_log_sha256": [
+      "613f7c6206f3e7fd3c458b577cc9272e6923e2c648ed48e0623dfef71d94a6b0",
+      "fd84019afa2ac93e7bf671150e74ae1267884981b8d792f3dce918081d22fa95",
+      "7a35a424bd0d2bd56b806a138688801f1a476907061719c1ad1a638b162c5869",
+      "4bb1634e14b89cc0e64cb168e1e8c2aeb70c9ca8142395ee5a60def5f8b2c0fe",
+      "ffbb19b2e26a26bd7823e9baea5f491bd0c3f087d10e83325dbd9827a3b38661",
+      "feaf33d03c742c8c8a71a46522eb91f650538b1ba330fc1ba5a76a23dfb43058",
+      "5371e3e2e614d61e2ad53ebaedabf763aa63357877dde3ceeb8c62fc038a02b6",
+      "daefcaaec6da18769876a30c9b70f10079151205b568337f87361441df880404"
+    ],
+    "group_size": 8,
+    "nonfinite_behavior_logprob_entries": 0,
+    "reward_counts": {
+      "0": 8,
+      "1": 0
+    },
+    "rollouts": 8,
+    "token_and_behavior_logprob_counts_match": true,
+    "tool_counts": {
+      "read_file": 1,
+      "search_code": 127
+    },
+    "tool_turns": 128,
+    "total_generated_token_ids": 2028,
+    "total_rollout_wall_seconds": 445.933248,
+    "total_sampling_behavior_logprob_entries": 2028,
+    "trajectory_file_sha256": [
+      "b744124a8d7f0976554a4908a1ad36a05b547a8cbb3f4b612426a6a1f131f8db",
+      "4e3f39d708ff045733adbb376bf522dc8650e1788c92b6a1226588c66d3972ef",
+      "1fed704e09915ba31a250b3996005d6e3bc3b80478fa72f4f1c9f61037a12cce",
+      "f0bbafd7ef50f1e5e93ac05bc59658b5e2f7abf24be58b78d8d4b07e72a464e9",
+      "32271ba54ab2ff109e7cb4fb3c3a83e7652bc1a1b904c39e45eccf18bd23c388",
+      "763a46b7547c8c66dbc29c59b34f1b3ac951ef7e34cc131cf16e43fce3c7a915",
+      "76c3a745c1354299a79b6538d3df5d47cc3ca4c7eafc968855453f3e9c1538e8",
+      "4c1ec673e485a887991d30e1fe383426812c9ecd276f2eb5a93f47e7648d03a1"
+    ],
+    "trusted_grade_status_counts": {
+      "candidate_failure": 8
+    },
+    "zero_match_search_calls": 127
+  },
+  "training_rollout_summary_sha256": "af77b803bf04a8a97748b1f60c81fe1eda017695d9124a87614b1b1b74001c97",
+  "training_update_sha256": "d17e3b294d8a1b36ba674cb09ead29621271ebec76e618fa3baf243fcd83c19e"
+}

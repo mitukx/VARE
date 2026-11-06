@@ -77,13 +77,15 @@ MAX_PROMPT_TOKENS = 4096
 MAX_WALL_SECONDS = 900
 READ_FILE_PAGE_LINES = 20
 TASK_SCOPE_GUARD_TASK_ID = "pydantic-14138-direct-builtin-scalar-union-schema"
-TOOL_ADAPTER_VERSION = "mlx-local-coding-agent-tool-adapter-v8-exact-replacement"
+TOOL_ADAPTER_VERSION = "mlx-local-coding-agent-tool-adapter-v9-symbol-index"
 DEV_TEMPERATURE = 0.0
 LORA = {"num_layers": 8, "rank": 8, "scale": 20.0, "dropout": 0.0}
 OPTIMIZER_CONFIG = {"name": "mlx.optimizers.Adam", "learning_rate": 1e-5}
 GIB = 1024**3
 
 TASK_ARM_DIRS = {
+    "pydantic-13972-decimal-whole-digit-after-validator":
+        ROOT / "work/fresh-train-dev/task-arms-v3/pydantic-13972/baseline",
     "pydantic-14195-model-config-annotation-non-evaluation":
         ROOT / "work/fresh-train-dev/task-arms-v10/pydantic-14195/baseline",
     "pydantic-14103-ignore-internal-dataclass-extras":
@@ -109,9 +111,10 @@ SYSTEM_PROMPT = (
     "requested change with a small correct patch. Tests are unavailable. You may inspect "
     "production source and edit only the exact path or paths listed in the task. Search is "
     "restricted to those editable paths. Search with a distinctive bare identifier, not a "
-    "declaration prefix such as class or def. If search returns no matches, retry with the "
-    "most distinctive identifier from the task; do not page sequentially from the file start "
-    "to find a symbol. Start with an exact nested JSON tool call whose "
+    "declaration prefix such as class or def. If search returns no matches and includes "
+    "source symbol hints, read the most relevant declaration before searching again. Do not "
+    "page sequentially from the file start to find a symbol. Start with an exact nested JSON "
+    "tool call whose "
     "arguments value is always an object, never a string. Read only short relevant source "
     "windows. Never patch source lines you have not read. Use standard unified diff syntax "
     "only, with exact file headers and accurate @@ hunk counts; never use context-diff syntax. "
@@ -136,7 +139,8 @@ TOOL_HELP = (
     "search_code: query is a literal substring and is already scoped to editable paths; do not "
     "add a paths member. Prefer a distinctive bare identifier without syntax words such as "
     "class or def. If the result reports a fallback match, read the reported line. If there are "
-    "no matches, retry with a distinctive exact identifier before reading source. Do not page "
+    "no matches and symbol hints are returned, read the most relevant declaration before "
+    "searching again. Do not page "
     "consecutively from line 1 to locate a symbol.\n"
     "read_file: path must be exactly one editable path; start_line and end_line are positive "
     "source line numbers. Each response returns at most 20 lines. For a request wider than "
@@ -719,6 +723,44 @@ def list_source_files(directory: Path, rel: str) -> dict[str, Any]:
     return {"files": items[:25], "total": len(items), "truncated": len(items) > 25}
 
 
+def source_symbol_index(
+    directory: Path,
+    allowed: set[str],
+    *,
+    max_symbols: int = 24,
+    max_symbols_per_file: int = 12,
+) -> list[dict[str, Any]]:
+    """List declarations from candidate-visible production files after a search miss."""
+    symbols: list[dict[str, Any]] = []
+    for relative in sorted(allowed):
+        symbols_in_file = 0
+        path = safe_source_path(directory, relative)
+        if not path.is_file() or path.is_symlink():
+            continue
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except UnicodeDecodeError:
+            continue
+        for line_no, line in enumerate(lines, 1):
+            stripped = line.lstrip()
+            if len(line) - len(stripped) > 4:
+                continue
+            match = re.match(
+                r"(?:async\s+)?(?:def|class)\s+([A-Za-z_][A-Za-z0-9_]*)\b",
+                stripped,
+            )
+            if match:
+                symbols.append(
+                    {"path": relative, "line": line_no, "symbol": match.group(1)}
+                )
+                symbols_in_file += 1
+                if len(symbols) >= max_symbols:
+                    return symbols
+                if symbols_in_file >= max_symbols_per_file:
+                    break
+    return symbols
+
+
 def search_source(directory: Path, query: str, allowed: set[str]) -> dict[str, Any]:
     if not query or len(query) > 200:
         raise ValueError("search query must contain 1 to 200 characters")
@@ -777,7 +819,8 @@ def search_source(directory: Path, query: str, allowed: set[str]) -> dict[str, A
     return {
         "matches": [],
         "truncated": False,
-        "next_step_hint": "No literal match. Retry with a distinctive bare identifier from the task before reading source; do not page consecutively from line 1.",
+        "symbol_hints": source_symbol_index(directory, allowed),
+        "next_step_hint": "No literal match. Read the most relevant declaration from symbol_hints before searching again; do not page consecutively from line 1.",
     }
 
 

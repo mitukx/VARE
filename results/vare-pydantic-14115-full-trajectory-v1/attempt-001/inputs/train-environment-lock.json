@@ -1,0 +1,51 @@
+{
+  "base_image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+  "build_log": {
+    "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/pydantic-dirty-equals-090-build.log",
+    "sha256": "8c5f82304de2fde20b3eac893f23325d7d3bd58d262ad5d2839b9ff029382a7e"
+  },
+  "build_recipe": {
+    "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/Dockerfile.pydantic-dirty-equals-090",
+    "sha256": "df935f47ba73f16ffcc05a34398bb94435314ed11de3417a5e727b21f30a6512"
+  },
+  "caps": {
+    "cpus": 2,
+    "memory_bytes": 3040333824,
+    "memory_swap_bytes": 3040333824,
+    "no_network": true,
+    "pids": 128,
+    "read_only_root": true,
+    "timeout_seconds_per_arm": 180
+  },
+  "changes_from_base": [
+    "Adds pinned dirty-equals 0.9.0 required to import the upstream tests/test_config.py module; inherits pydantic-core 2.50.0 from the frozen common Train/Development image."
+  ],
+  "exact_wheels": [
+    {
+      "package": "dirty-equals",
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/pydantic-wheelhouse/dirty_equals-0.9.0-py3-none-any.whl",
+      "sha256": "ff4d027f5cfa1b69573af00f7ba9043ea652dbdce3fe5cbe828e478c7346db9c",
+      "version": "0.9.0"
+    }
+  ],
+  "frozen_at_utc": "2026-11-06T06:11:10.027684Z",
+  "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+  "network": "none during build, preflight, and tests",
+  "offline_probe": {
+    "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/pydantic-dirty-equals-090-offline-probe.txt",
+    "sha256": "116e9035c1ed078e97d53011973dd6a8a9bc572e6ae7e630def5a31701606d31"
+  },
+  "parent_environment_lock": {
+    "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+    "sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77"
+  },
+  "pip_freeze": {
+    "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/pydantic-dirty-equals-090-pip-freeze.txt",
+    "sha256": "a81e6bc43f51f04504672114a2266760247add17c0fea61a3a4dba8f843748fe"
+  },
+  "platform": "linux/arm64",
+  "protocol_id": "vare-rsi-pydantic-deferred-copy-grader-environment-v2",
+  "runtime": "Python 3.12 ARM64; CPU only",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_QUALIFICATION_ATTEMPT_002"
+}
