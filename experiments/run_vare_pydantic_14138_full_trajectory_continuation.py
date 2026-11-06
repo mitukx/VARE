@@ -77,7 +77,7 @@ MAX_PROMPT_TOKENS = 4096
 MAX_WALL_SECONDS = 900
 READ_FILE_PAGE_LINES = 20
 TASK_SCOPE_GUARD_TASK_ID = "pydantic-14138-direct-builtin-scalar-union-schema"
-TOOL_ADAPTER_VERSION = "mlx-local-coding-agent-tool-adapter-v9-symbol-index"
+TOOL_ADAPTER_VERSION = "mlx-local-coding-agent-tool-adapter-v10-task-ranked-symbol-hints"
 DEV_TEMPERATURE = 0.0
 LORA = {"num_layers": 8, "rank": 8, "scale": 20.0, "dropout": 0.0}
 OPTIMIZER_CONFIG = {"name": "mlx.optimizers.Adam", "learning_rate": 1e-5}
@@ -112,7 +112,7 @@ SYSTEM_PROMPT = (
     "production source and edit only the exact path or paths listed in the task. Search is "
     "restricted to those editable paths. Search with a distinctive bare identifier, not a "
     "declaration prefix such as class or def. If search returns no matches and includes "
-    "source symbol hints, read the most relevant declaration before searching again. Do not "
+    "source symbol hints, read the first task-ranked declaration before searching again. Do not "
     "page sequentially from the file start to find a symbol. Start with an exact nested JSON "
     "tool call whose "
     "arguments value is always an object, never a string. Read only short relevant source "
@@ -139,7 +139,7 @@ TOOL_HELP = (
     "search_code: query is a literal substring and is already scoped to editable paths; do not "
     "add a paths member. Prefer a distinctive bare identifier without syntax words such as "
     "class or def. If the result reports a fallback match, read the reported line. If there are "
-    "no matches and symbol hints are returned, read the most relevant declaration before "
+    "no matches and symbol hints are returned, read the first task-ranked declaration before "
     "searching again. Do not page "
     "consecutively from line 1 to locate a symbol.\n"
     "read_file: path must be exactly one editable path; start_line and end_line are positive "
@@ -727,6 +727,7 @@ def source_symbol_index(
     directory: Path,
     allowed: set[str],
     *,
+    task_prompt: str | None = None,
     max_symbols: int = 24,
     max_symbols_per_file: int = 12,
 ) -> list[dict[str, Any]]:
@@ -755,13 +756,43 @@ def source_symbol_index(
                 )
                 symbols_in_file += 1
                 if len(symbols) >= max_symbols:
-                    return symbols
+                    break
                 if symbols_in_file >= max_symbols_per_file:
                     break
+        if len(symbols) >= max_symbols:
+            break
+    if task_prompt and symbols:
+        stop_words = {
+            "about", "after", "also", "and", "are", "before", "class", "classes",
+            "does", "from", "into", "module", "other", "preserve",
+            "pydantic", "should", "that", "their", "this", "those", "with",
+        }
+        task_terms = {
+            term.casefold()
+            for term in re.findall(r"[A-Za-z0-9_]+", task_prompt)
+            if len(term) >= 3 and term.casefold() not in stop_words
+        }
+        ranked = []
+        for index, row in enumerate(symbols):
+            identifier = row["symbol"].casefold().replace("_", " ")
+            score = sum(term in identifier for term in task_terms)
+            ranked.append((score, index, row))
+        best_score = max(score for score, _, _ in ranked)
+        if best_score:
+            return [
+                {**row, "task_relevance_score": score}
+                for score, _, row in sorted(ranked, key=lambda item: (-item[0], item[1]))
+            ]
     return symbols
 
 
-def search_source(directory: Path, query: str, allowed: set[str]) -> dict[str, Any]:
+def search_source(
+    directory: Path,
+    query: str,
+    allowed: set[str],
+    *,
+    task_prompt: str | None = None,
+) -> dict[str, Any]:
     if not query or len(query) > 200:
         raise ValueError("search query must contain 1 to 200 characters")
 
@@ -819,8 +850,10 @@ def search_source(directory: Path, query: str, allowed: set[str]) -> dict[str, A
     return {
         "matches": [],
         "truncated": False,
-        "symbol_hints": source_symbol_index(directory, allowed),
-        "next_step_hint": "No literal match. Read the most relevant declaration from symbol_hints before searching again; do not page consecutively from line 1.",
+        "symbol_hints": source_symbol_index(
+            directory, allowed, task_prompt=task_prompt
+        ),
+        "next_step_hint": "No literal match. Read the most relevant declaration first from symbol_hints; hints are task-ranked. Do not search again until reading it, and do not page consecutively from line 1.",
     }
 
 
@@ -1168,6 +1201,7 @@ def execute_tool(
     action: dict[str, Any],
     *,
     task_id: str | None = None,
+    task_prompt: str | None = None,
     read_cursors: dict[tuple[str, str, str], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     name = action["tool"]
@@ -1175,7 +1209,14 @@ def execute_tool(
     cursors = read_cursors if read_cursors is not None else {}
     try:
         if name == "search_code":
-            return bounded_result(search_source(directory, str(args.get("query", "")), allowed))
+            return bounded_result(
+                search_source(
+                    directory,
+                    str(args.get("query", "")),
+                    allowed,
+                    task_prompt=task_prompt,
+                )
+            )
         if name == "read_file":
             requested_start = args.get("start_line", 1)
             requested_end = args.get("end_line")
@@ -1630,6 +1671,7 @@ def run_agent(
                 allowed,
                 action,
                 task_id=task["record"]["task_id"],
+                task_prompt=task["prompt"],
                 read_cursors=read_cursors,
             )
             row["tool_result"] = result

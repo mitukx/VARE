@@ -170,6 +170,37 @@ def test_search_code_no_match_returns_allowlisted_symbol_hints(tmp_path, monkeyp
     assert all(row["path"] == "pydantic/example.py" for row in result["symbol_hints"])
 
 
+def test_no_match_symbol_hints_rank_against_task_prompt(tmp_path, monkeypatch):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+    workspace = tmp_path / "candidate"
+    source = workspace / "pydantic" / "_internal" / "_generics.py"
+    source.parent.mkdir(parents=True)
+    source.write_text(
+        "class PydanticGenericMetadata:\n"
+        "    pass\n"
+        "\n"
+        "def create_generic_submodel():\n"
+        "    return None\n"
+        "\n"
+        "def get_model_typevars_map():\n"
+        "    return {}\n"
+    )
+
+    result = runner["search_source"](
+        workspace,
+        "NoSuchSymbol",
+        {"pydantic/_internal/_generics.py"},
+        task_prompt="Fix pickling for generic Pydantic model classes in another module",
+    )
+
+    assert result["matches"] == []
+    assert result["symbol_hints"][0]["symbol"] == "create_generic_submodel"
+    assert result["symbol_hints"][0]["task_relevance_score"] > result["symbol_hints"][1][
+        "task_relevance_score"
+    ]
+    assert "task-ranked" in result["next_step_hint"]
+
+
 def test_repeated_oversized_read_auto_pages_instead_of_repeating(tmp_path, monkeypatch):
     runner = _runner_namespace(tmp_path, monkeypatch)
     workspace = tmp_path / "candidate"

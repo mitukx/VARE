@@ -1,0 +1,5 @@
+{
+  "schema": "vare_train_task_prompt_evidence_v1",
+  "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+  "task_prompt": "Fix pickling for generic Pydantic model classes parametrized in a different module. A pickle round trip should preserve the parametrized model and nested model types, and the source module should not gain those parametrized classes."
+}
