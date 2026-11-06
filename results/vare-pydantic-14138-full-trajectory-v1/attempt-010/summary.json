@@ -1,0 +1,252 @@
+{
+  "attempt": 10,
+  "credit_assignment": "full_trajectory_terminal_reward",
+  "development_exposed_before_training": false,
+  "development_task_ids": [
+    "pydantic-13997-explicit-json-schema-by-alias-override",
+    "pydantic-14103-ignore-internal-dataclass-extras"
+  ],
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14138-scope-guard-v19",
+  "freeze_integrity_note": {
+    "details": [
+      "Frozen assignment allocation_rule text still describes prior indices34-41 although its authorization and protocol reserve fresh indices48-55.",
+      "Frozen run-lock candidate_environment text names source head f0883a70a564693a70eca84205bf01140562007e while authorization and preflight bind a6c6050c4fbb2e2631c00a3e7919c46d1c09cca0."
+    ],
+    "handling": "Frozen inputs are retained unchanged. Resolve both metadata inconsistencies in a new freeze before any further prompt exposure.",
+    "metadata_mismatch_preserved": true,
+    "preflight_status": "passed"
+  },
+  "frozen_inputs_sha256": {
+    "environment-binding-v19.json": "fb51cea5cf4e7d9ec21fcb8ce931764871527c333e25a33304fa5616faa0adfb",
+    "experiment-protocol-v13.json": "dd57729a408fba7abd837f7b3d439c80b7869115cc153cf567ab9ffae00e9361",
+    "pre-exposure-preflight-v19.json": "963d4dc0b3dd7d13e8d2df6f3436c90aa694769cbc1ddbc5da551796a28eed30",
+    "run-lock-v27.json": "512683265ecc1c20870fe7966c00051da8dc0891369e4650c72237b43cc362a4",
+    "train-dev-assignment-v19.json": "2e6dccc6edffa57db28f7e48dce7ee746987ea13154425117bd405b659d85381",
+    "train-prompt-variant-v3.json": "f5df869c4678d91af8dd96c98c660541cc53dbc6fb21552205fb108f39f994a8"
+  },
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_evaluation": false,
+  "integration_head_sha": "a6c6050c4fbb2e2631c00a3e7919c46d1c09cca0",
+  "long_horizon_rl_claim": "not claimed; no optimizer update occurred",
+  "model": {
+    "files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "optimizer": {
+    "checkpoint_reloaded": false,
+    "checkpoint_saved": false,
+    "development_evaluations": 0,
+    "reason": "no_variable_trusted_rewards",
+    "update_applied": false,
+    "updates": 0
+  },
+  "pre_exposure_exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "duplicate_push_ci": {
+      "run_id": 42150541601,
+      "run_number": 2477,
+      "status": "success"
+    },
+    "head_sha": "a6c6050c4fbb2e2631c00a3e7919c46d1c09cca0",
+    "pull_request": 199,
+    "required_workflows": [
+      {
+        "name": "ci",
+        "run_id": 42150549491,
+        "run_number": 2478,
+        "status": "success"
+      },
+      {
+        "name": "cpu-evidence",
+        "run_id": 42150549462,
+        "run_number": 937,
+        "status": "success"
+      },
+      {
+        "name": "e2e-system-cpu",
+        "run_id": 42150549599,
+        "run_number": 463,
+        "status": "success"
+      }
+    ],
+    "verified_at_utc": "2026-11-06T02:41:07Z"
+  },
+  "pre_exposure_preflight_sha256": "963d4dc0b3dd7d13e8d2df6f3436c90aa694769cbc1ddbc5da551796a28eed30",
+  "protocol_id": "vare-rsi-fresh-train-dev-real-model-grpo-v13-14138-scope-guard",
+  "raw_grader_logs_private": true,
+  "schema": "vare_real_model_train_dev_result_v1",
+  "started_at_utc": "2026-11-06T02:41:45Z",
+  "task_readiness": {
+    "eligible_heldout_tasks": 0,
+    "heldout_task_cohort_size": 15,
+    "qualified_development_tasks": 2,
+    "qualified_train_tasks_in_current_allocation": 1
+  },
+  "training": {
+    "all_action_token_logprobs_finite_and_aligned": true,
+    "all_completed_token_ids_behavior_logprobs_and_tool_traces_preserved": true,
+    "allocated_group_size": 8,
+    "candidate_files_changed": 0,
+    "completed_trajectories": 8,
+    "grade_status_counts": {
+      "candidate_failure": 8
+    },
+    "patch_calls": 35,
+    "sample_indices": [
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "sample_results": [
+      {
+        "action_logprobs_aligned_and_finite": true,
+        "action_tokens": 3170,
+        "changed_files": 0,
+        "grade_sha256": "67b5b60a27aa2c8c6da94e00a040a411b5ec47cbe5bb3b0203cf97db43c81c2b",
+        "grader_identity": "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096",
+        "patch_calls": 6,
+        "sample_index": 48,
+        "scope_rejections": 6,
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "9ca16d5df4d60df3e52d75e3fbc5a29500c358b1ddf885049e2a4c1c14419f2f",
+        "trajectory_file_sha256": "d5cfbe754c30c83a0b9e5a624209cd2a99f29c406f93597856d821478fff9125",
+        "trusted_grade_status": "candidate_failure",
+        "trusted_reward": 0.0
+      },
+      {
+        "action_logprobs_aligned_and_finite": true,
+        "action_tokens": 2722,
+        "changed_files": 0,
+        "grade_sha256": "f3b8a591fd08b4009483a5fdf5bf0067714c00e3c3f34451217e0bc4b89e7a83",
+        "grader_identity": "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096",
+        "patch_calls": 5,
+        "sample_index": 49,
+        "scope_rejections": 5,
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "36aa0fbc0e8ba4e53a0805f3c58b7ef11d801432876f34660d421955e239542d",
+        "trajectory_file_sha256": "35914022609cad661893801b2328525e16aa288c01d2d6b32a9975e6be6a62c2",
+        "trusted_grade_status": "candidate_failure",
+        "trusted_reward": 0.0
+      },
+      {
+        "action_logprobs_aligned_and_finite": true,
+        "action_tokens": 2997,
+        "changed_files": 0,
+        "grade_sha256": "2e49238435cd1f8045ed76dbc9fb11f3a77f7ec0a91c5a3c6cefb231f5e9954f",
+        "grader_identity": "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096",
+        "patch_calls": 6,
+        "sample_index": 50,
+        "scope_rejections": 6,
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "9ee3d1a8be3a61b3d7185e8464f73f0791e10535b425090f66dfbc12acb3f41e",
+        "trajectory_file_sha256": "34a7ab177aaa946b848f3bfc31aff41503bb84c0af8684f1d15ac140cb3cbd71",
+        "trusted_grade_status": "candidate_failure",
+        "trusted_reward": 0.0
+      },
+      {
+        "action_logprobs_aligned_and_finite": true,
+        "action_tokens": 1182,
+        "changed_files": 0,
+        "grade_sha256": "d33383dd678061a27ee93dc53aafbf61f9494ffff311ca11f8fc706b57b27161",
+        "grader_identity": "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096",
+        "patch_calls": 2,
+        "sample_index": 51,
+        "scope_rejections": 2,
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "65b2142e9364e59961e5365fff0c1ec459aaa156b0327a984f7574def6452e9f",
+        "trajectory_file_sha256": "9e698f3535d51deaf93d2ef7f032ef43b7d9ac172e2a7aa2933daf8162c78207",
+        "trusted_grade_status": "candidate_failure",
+        "trusted_reward": 0.0
+      },
+      {
+        "action_logprobs_aligned_and_finite": true,
+        "action_tokens": 3273,
+        "changed_files": 0,
+        "grade_sha256": "1849277cfa9e4aad0a1583ee250d892dbf3a85f3c7e46ab145b27803829f7e5a",
+        "grader_identity": "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096",
+        "patch_calls": 7,
+        "sample_index": 52,
+        "scope_rejections": 7,
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "450cd25c35486b931fcce8f3ff425a3a325f4df85a28c1c6a8576b79d368e7f9",
+        "trajectory_file_sha256": "8018a6493271b4776df2057ba65d2eeac3cdce8a8e4b3364ff755f085ad2bc96",
+        "trusted_grade_status": "candidate_failure",
+        "trusted_reward": 0.0
+      },
+      {
+        "action_logprobs_aligned_and_finite": true,
+        "action_tokens": 1930,
+        "changed_files": 0,
+        "grade_sha256": "33bebf15d3b54d895185570d3cfeb8e51b91d0fe63a2cbc1b2adbc6a859b522f",
+        "grader_identity": "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096",
+        "patch_calls": 3,
+        "sample_index": 53,
+        "scope_rejections": 3,
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "e92c89a4b82d3e2ee2a92ca3c0fe2f730280c5cfb96c2964598bf218d820459e",
+        "trajectory_file_sha256": "5e8f10121bd3f6fc844a92c438fc418646356216aa67be46871c193246d7f3f4",
+        "trusted_grade_status": "candidate_failure",
+        "trusted_reward": 0.0
+      },
+      {
+        "action_logprobs_aligned_and_finite": true,
+        "action_tokens": 1358,
+        "changed_files": 0,
+        "grade_sha256": "01b3102b3c9f15b09b9e9cd854f630ecfad993356d344a78cd0b2d96580bfa2e",
+        "grader_identity": "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096",
+        "patch_calls": 2,
+        "sample_index": 54,
+        "scope_rejections": 2,
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "9f849c2f4c793ee50d2c7a81d15a0bd89e476989877076b8f6712867f8af7b80",
+        "trajectory_file_sha256": "89f5a33eac08ae9e289b4be8c38872660593eacc6e8656b29cd185afbacb1dc7",
+        "trusted_grade_status": "candidate_failure",
+        "trusted_reward": 0.0
+      },
+      {
+        "action_logprobs_aligned_and_finite": true,
+        "action_tokens": 1631,
+        "changed_files": 0,
+        "grade_sha256": "86f72904f446b5480a42414975edd50d8149313f1cddb1f0ac7db72d682f30f2",
+        "grader_identity": "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096",
+        "patch_calls": 4,
+        "sample_index": 55,
+        "scope_rejections": 4,
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "856f7c4e6de127bec7c3504dc3c9168cf80a2a2cfa4640f8422846853f580d54",
+        "trajectory_file_sha256": "03b3c3eaf3d5990ade9b4b0db46b4f9ea043582ff943add8f6f4d055d7f145c7",
+        "trusted_grade_status": "candidate_failure",
+        "trusted_reward": 0.0
+      }
+    ],
+    "scope_guard_rejections": 35,
+    "split": "train",
+    "task_id": "pydantic-14138-direct-builtin-scalar-union-schema",
+    "total_action_tokens": 18263,
+    "total_tool_turns": 128,
+    "trusted_grades": 8,
+    "trusted_rewards": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "unique_grader_identities": [
+      "548a5cd34b3774079e9f8fbb3ccd2bcc7f3063514824d41d18aa63bbd0c9a096"
+    ],
+    "untrusted_grades": 0
+  }
+}
