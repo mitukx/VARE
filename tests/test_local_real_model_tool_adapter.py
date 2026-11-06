@@ -172,6 +172,27 @@ def test_overlapping_oversized_reads_return_next_unseen_page(tmp_path, monkeypat
     assert overlapping["requested_start_line"] == 10
     assert overlapping["auto_paged"] is True
     assert already_read["already_read"] is True
+    assert already_read["content_replayed"] is True
+    assert (already_read["start_line"], already_read["end_line"]) == (10, 29)
+    assert "10: value_9 = 9" in already_read["content"]
+    compacted = runner["compact_action_summary"](
+        [
+            {
+                "turn": 5,
+                "action": {
+                    "tool": "read_file",
+                    "arguments": {
+                        "path": "pydantic/example.py",
+                        "start_line": 10,
+                        "end_line": 61,
+                    },
+                },
+                "tool_result": already_read,
+            }
+        ]
+    )
+    assert "Last visible source page" in compacted
+    assert "10: value_9 = 9" in compacted
     assert narrow_reread["start_line"] == 10
     assert narrow_reread["end_line"] == 15
 

@@ -36,9 +36,9 @@ def find_experiment_root() -> Path:
 ROOT = find_experiment_root()
 WORK = ROOT / "work/vare-rsi-qwen3-4b-mlx-20261106"
 OUTPUTS = ROOT / "outputs/vare-rsi-heldout-qualification-v2-20261105"
-RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-007"
-ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v16-pydantic-14138-read-coverage.json"
-RUN_LOCK_PATH = OUTPUTS / "real-model-run-v24-14138-read-coverage-grpo-group.lock.json"
+RUN_DIR = OUTPUTS / "runs/vare-pydantic-qwen3-4b-train14138-attempt-008"
+ASSIGNMENT_PATH = OUTPUTS / "train-dev-assignment-v17-pydantic-14138-context-replay.json"
+RUN_LOCK_PATH = OUTPUTS / "real-model-run-v25-14138-context-replay-grpo-group.lock.json"
 MODEL_PATH = WORK / "model"
 MODEL_MANIFEST_PATH = WORK / "model-manifest.json"
 INTEGRATION = ROOT / "work/VARE-rsi-integration-20261105"
@@ -52,7 +52,7 @@ BASE_SEED = 20261106
 TEMPERATURE = 0.8
 GROUP_SIZE = 8
 NEW_ROLLOUT_COUNT = 8
-NEW_ROLLOUT_START_INDEX = 26
+NEW_ROLLOUT_START_INDEX = 34
 MAX_TURNS = 16
 MAX_TOTAL_TOKENS = 4096
 MAX_ACTION_TOKENS = 512
@@ -105,8 +105,9 @@ TOOL_HELP = (
     "20 lines, the reader tracks lines already returned from that file and gives the next "
     "contiguous unread page, even when the new request overlaps or widens an earlier one. "
     "Use the actual returned start_line/end_line and next_start_line; do not request already "
-    "seen lines again. A fully read range returns an already-read notice. Requests of 20 or "
-    "fewer lines may be reread for patch context.\n"
+    "seen lines again. If an oversized range is fully read already, the first 20 lines are "
+    "replayed with an already-read marker so source context survives compaction. Requests of "
+    "20 or fewer lines may be reread for patch context.\n"
     "apply_patch arguments must be a JSON object with path and patch string fields. For example: "
     "{\"tool\":\"apply_patch\",\"arguments\":{\"path\":\"pydantic/example.py\","
     "\"patch\":\"--- a/pydantic/example.py\\n+++ b/pydantic/example.py\\n"
@@ -981,14 +982,30 @@ def execute_tool(
                     None,
                 )
                 if page_start is None:
-                    return {
-                        "error": "this requested range has already been read; use the existing context or choose unread lines",
-                        "requested_start_line": requested_start,
-                        "requested_end_line": requested_end,
-                        "next_start_line": None,
-                        "already_read": True,
-                        "already_paged": True,
-                    }
+                    replay_end = min(
+                        requested_last,
+                        requested_start + READ_FILE_PAGE_LINES - 1,
+                    )
+                    replay = read_source(
+                        directory,
+                        {
+                            "path": requested_path,
+                            "start_line": requested_start,
+                            "end_line": replay_end,
+                        },
+                        allowed,
+                    )
+                    replay.update(
+                        {
+                            "requested_start_line": requested_start,
+                            "requested_end_line": requested_end,
+                            "auto_paged": False,
+                            "already_read": True,
+                            "already_paged": True,
+                            "content_replayed": True,
+                        }
+                    )
+                    return bounded_result(replay, max_chars=3200)
                 page_end = min(requested_last, page_start + READ_FILE_PAGE_LINES - 1)
                 next_covered = next(
                     (
@@ -1162,8 +1179,9 @@ def make_agent_messages(
 
 
 def compact_action_summary(turns: list[dict[str, Any]]) -> str:
-    """Summarize earlier tool events without carrying their full outputs forward."""
+    """Summarize prior tool events while retaining the latest source page."""
     rows: list[str] = []
+    last_source_page: str | None = None
     for row in turns:
         action = row.get("action") or {}
         tool = action.get("tool", "invalid_action") if isinstance(action, dict) else "invalid_action"
@@ -1178,6 +1196,11 @@ def compact_action_summary(turns: list[dict[str, Any]]) -> str:
             )
             rows.append(f"turn {row.get('turn')}: searched {query!r}; locations={locations or 'none'}")
         elif tool == "read_file":
+            if isinstance(result, dict) and result.get("content"):
+                last_source_page = (
+                    f"{result.get('path')}:{result.get('start_line')}-{result.get('end_line')}\n"
+                    + str(result["content"])[:1250]
+                )
             if isinstance(result, dict) and (
                 result.get("already_paged") or result.get("already_read")
             ):
@@ -1219,6 +1242,8 @@ def compact_action_summary(turns: list[dict[str, Any]]) -> str:
         else:
             rows.append(f"turn {row.get('turn')}: {tool} completed")
     summary = "\n".join(rows)
+    if last_source_page:
+        summary = summary[-450:] + "\nLast visible source page:\n" + last_source_page
     return summary[-1800:]
 
 
