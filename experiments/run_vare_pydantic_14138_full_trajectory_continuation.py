@@ -96,8 +96,13 @@ TASK_ARM_DIRS = {
         ROOT / "work/fresh-train-dev/task-arms-v3/pydantic-13995/baseline",
     "pydantic-14213-use-entry-points-api-plugin-loader":
         ROOT / "work/fresh-train-dev/task-arms-v11/pydantic-14213/baseline",
+    "pydantic-14115-deferred-model-copy-and-unpickle":
+        ROOT / "work/fresh-train-dev/task-arms-v13/pydantic-14115/baseline",
 }
-TASK_ENV_LOCK_OVERRIDES = {}
+TASK_ENV_LOCK_OVERRIDES = {
+    "pydantic-14115-deferred-model-copy-and-unpickle":
+        OUTPUTS / "environment/environment-lock-pydantic-14115-v2.json",
+}
 
 SYSTEM_PROMPT = (
     "You are an autonomous coding agent in a clean constrained checkout. Implement the "
