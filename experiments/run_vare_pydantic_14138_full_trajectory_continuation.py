@@ -77,7 +77,7 @@ MAX_PROMPT_TOKENS = 4096
 MAX_WALL_SECONDS = 900
 READ_FILE_PAGE_LINES = 20
 TASK_SCOPE_GUARD_TASK_ID = "pydantic-14138-direct-builtin-scalar-union-schema"
-TOOL_ADAPTER_VERSION = "mlx-local-coding-agent-tool-adapter-v7-union-loop-scope"
+TOOL_ADAPTER_VERSION = "mlx-local-coding-agent-tool-adapter-v8-exact-replacement"
 DEV_TEMPERATURE = 0.0
 LORA = {"num_layers": 8, "rank": 8, "scale": 20.0, "dropout": 0.0}
 OPTIMIZER_CONFIG = {"name": "mlx.optimizers.Adam", "learning_rate": 1e-5}
@@ -110,11 +110,15 @@ SYSTEM_PROMPT = (
     "arguments value is always an object, never a string. Read only short relevant source "
     "windows. Never patch source lines you have not read. Use standard unified diff syntax "
     "only, with exact file headers and accurate @@ hunk counts; never use context-diff syntax. "
-    "If apply_patch fails, inspect its error and the source context, then submit a different "
-    "smaller diff. After a successful patch, compile_file and show_changes before finishing. "
+    "Prefer replace_text for narrow edits: copy exact old_text from read_file and give the "
+    "complete replacement as new_text. It applies only when old_text matches exactly once. "
+    "Use apply_patch only when a literal replacement is unsuitable. If apply_patch fails, "
+    "switch to replace_text with exact source text instead of resending a diff. After a "
+    "successful edit, compile_file and show_changes before finishing. "
     "Do not claim changes you did not make. On every turn return exactly one JSON object with "
     "keys tool and arguments, no Markdown or prose. Use one tool action per assistant turn. "
-    "Available tools: search_code, read_file, apply_patch, compile_file, show_changes, finish. "
+    "Available tools: search_code, read_file, replace_text, apply_patch, compile_file, "
+    "show_changes, finish. "
     "Do not create files, access tests, or use external services."
 )
 
@@ -145,9 +149,15 @@ TOOL_HELP = (
     "Do not use hunk as the argument key or context-diff syntax such as 235c235. JSON-escape "
     "newlines normally and leave apostrophes unescaped. Escape every double quote that appears "
     "inside the patch string.\n"
+    "replace_text arguments must be a JSON object with path, old_text, and new_text string "
+    "fields. Copy source text from a read_file response, including indentation and newlines, "
+    "but omit the displayed line-number prefix on each line. old_text must be non-empty and "
+    "occur exactly once; if it does not, read a "
+    "narrower source window and choose a more distinctive exact span. new_text replaces only "
+    "that exact span. The tool never creates files or changes paths outside the task scope.\n"
     "compile_file: path must be editable. show_changes: no arguments. finish: summarize only "
-    "the actual change. If a patch fails, inspect its error and source context, then write a "
-    "different minimal unified diff instead of resending it."
+    "the actual change. If apply_patch fails, switch to replace_text with a different exact "
+    "source span instead of resending a diff."
 )
 
 
@@ -854,6 +864,42 @@ def apply_source_patch(directory: Path, patch: str, allowed: set[str]) -> dict[s
     }
 
 
+def replace_source_text(
+    directory: Path, args: dict[str, Any], allowed: set[str]
+) -> dict[str, Any]:
+    """Apply one exact, unique source replacement inside the task's allowlist."""
+    relative = args.get("path")
+    old_text = args.get("old_text")
+    new_text = args.get("new_text")
+    if not isinstance(relative, str) or relative not in allowed:
+        raise ValueError("replace_text accepts only the exact task editable source path")
+    if not isinstance(old_text, str) or not old_text:
+        raise ValueError("replace_text requires non-empty old_text copied from source")
+    if not isinstance(new_text, str):
+        raise ValueError("replace_text requires new_text as a string")
+    if old_text == new_text:
+        raise ValueError("replace_text would not change the source")
+    if len(old_text.encode("utf-8")) > 32_000 or len(new_text.encode("utf-8")) > 32_000:
+        raise ValueError("replace_text spans are limited to 32 KB each")
+
+    path = safe_source_path(directory, relative)
+    source = path.read_text(encoding="utf-8")
+    match_count = source.count(old_text)
+    if match_count != 1:
+        raise ValueError(
+            "replace_text requires old_text to match exactly once; "
+            f"found {match_count} matches"
+        )
+
+    updated = source.replace(old_text, new_text, 1)
+    path.write_text(updated, encoding="utf-8")
+    return {
+        "applied": True,
+        "changed_files": changed_files(directory, allowed),
+        "source_hashes": {item: sha256_file(directory / item) for item in sorted(allowed)},
+    }
+
+
 def validate_pydantic_union_patch_scope(
     directory: Path, baseline: Path, patch: str
 ) -> None:
@@ -1191,6 +1237,11 @@ def execute_tool(
                 else:
                     result["next_start_line"] = None
             return bounded_result(result, max_chars=3200)
+        if name == "replace_text":
+            result = replace_source_text(directory, args, allowed)
+            if result.get("applied"):
+                cursors.clear()
+            return bounded_result(result)
         if name == "apply_patch":
             path, patch, normalizations = normalize_patch_arguments(args, allowed)
             if task_id == TASK_SCOPE_GUARD_TASK_ID:
@@ -1381,6 +1432,19 @@ def compact_action_summary(turns: list[dict[str, Any]]) -> str:
             else:
                 error = str(result.get("error", "patch not applied"))[:120] if isinstance(result, dict) else "patch not applied"
                 rows.append(f"turn {row.get('turn')}: patch not applied; {error}")
+        elif tool == "replace_text":
+            if isinstance(result, dict) and result.get("applied"):
+                rows.append(
+                    f"turn {row.get('turn')}: exact source replacement applied; "
+                    f"changed={result.get('changed_files', [])}"
+                )
+            else:
+                error = (
+                    str(result.get("error", "replacement not applied"))[:120]
+                    if isinstance(result, dict)
+                    else "replacement not applied"
+                )
+                rows.append(f"turn {row.get('turn')}: exact source replacement not applied; {error}")
         elif tool == "compile_file":
             rows.append(f"turn {row.get('turn')}: compile {args.get('path')} -> {bool(result.get('compiled'))}")
         elif tool == "show_changes":

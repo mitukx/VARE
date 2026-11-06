@@ -236,3 +236,60 @@ def test_patch_normalization_adds_missing_terminal_newline(tmp_path, monkeypatch
     assert path == "pydantic/example.py"
     assert patch.endswith("\n")
     assert "patch_final_newline_added" in normalizations
+
+
+def test_replace_text_applies_only_an_exact_unique_source_span(tmp_path, monkeypatch):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+    workspace = tmp_path / "candidate"
+    source = workspace / "pydantic" / "example.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("def load():\n    return old_value\n")
+    allowed = {"pydantic/example.py"}
+
+    result = runner["execute_tool"](
+        workspace,
+        workspace,
+        allowed,
+        {
+            "tool": "replace_text",
+            "arguments": {
+                "path": "pydantic/example.py",
+                "old_text": "    return old_value",
+                "new_text": "    return new_value",
+            },
+        },
+    )
+
+    assert result["applied"] is True
+    assert result["changed_files"] == ["pydantic/example.py"]
+    assert source.read_text() == "def load():\n    return new_value\n"
+
+
+def test_replace_text_rejects_missing_or_ambiguous_spans_without_writing(
+    tmp_path, monkeypatch
+):
+    runner = _runner_namespace(tmp_path, monkeypatch)
+    workspace = tmp_path / "candidate"
+    source = workspace / "pydantic" / "example.py"
+    source.parent.mkdir(parents=True)
+    original = "value = 1\nvalue = 1\n"
+    source.write_text(original)
+    allowed = {"pydantic/example.py"}
+
+    result = runner["execute_tool"](
+        workspace,
+        workspace,
+        allowed,
+        {
+            "tool": "replace_text",
+            "arguments": {
+                "path": "pydantic/example.py",
+                "old_text": "value = 1",
+                "new_text": "value = 2",
+            },
+        },
+    )
+
+    assert "exactly once" in result["error"]
+    assert "found 2 matches" in result["error"]
+    assert source.read_text() == original
