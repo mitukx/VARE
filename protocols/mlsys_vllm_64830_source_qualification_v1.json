@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-vllm-64830-source-qualification-v1",
+  "frozen_at_utc": "2026-11-06T16:01:32Z",
+  "protocol_status": "frozen_before_candidate_source_or_test_access; qualification_only",
+  "purpose": "Qualify the already selected vLLM #64830 candidate at source level to address the documented shortage of prospective Train/Development tasks. This protocol does not authorize a model or agent rollout, task assignment, training, or any Held-Out access, and does not change a frozen readiness gate.",
+  "candidate": {
+    "task_id": "vllm-64830-v1-runner-unsupported-feature-checks",
+    "repository": "vllm-project/vllm",
+    "pull_request": 64830,
+    "url": "https://github.com/vllm-project/vllm/pull/64830",
+    "license_at_metadata_capture": "Apache-2.0",
+    "task_family": "v1_model_runner_unsupported_feature_checks",
+    "merge_base_sha": "17550580e932f15e772185847382d3ae4211f5ec",
+    "head_sha": "9800451ab0e78104971592315e5b26546c5e9993",
+    "merge_commit_sha": "1944a235a2d5be8e2ebf63a9c70ff3b3ccb85e49",
+    "changed_paths_from_metadata_review": [
+      "tests/test_config.py",
+      "tests/v1/spec_decode/test_custom_speculator.py",
+      "vllm/config/vllm.py"
+    ]
+  },
+  "selection_and_exposure": {
+    "selection_protocol": "protocols/mlsys_fresh_development_candidate_selection_v3.json",
+    "selection_protocol_sha256": "7b0e88d37ed11380bf7d590dfb4484fc63535aa985d72dfb2fe1086c28183148",
+    "selection_result": "results/mlsys-fresh-development-candidate-selection-v3/selection.json",
+    "selection_result_sha256": "34dd94a43ea5b8224149fa7edf5351889e77de87bc3c81f04a6c3ac73e6f5735",
+    "selection_rank_sha256": "211fd7bf59305bd56caf1ab0e0667424de95b0e9aea35133bd1bf658a4c0d140",
+    "family_review": "results/mlsys-fresh-development-task-family-overlap-v5-correction-001/review.json",
+    "family_review_sha256": "ca3c3c459aea260e2b1737f0ab034c2033bf0e3e19b4a397ae9abc32e6b98986",
+    "family_review_result": "NO_DIRECT_IDENTITY_OR_FAMILY_OVERLAP_FOUND",
+    "pretraining_exposure": "UNKNOWN",
+    "model_or_agent_prompt_exposure_before_this_protocol": false,
+    "heldout_identity_fields_extracted": false,
+    "heldout_assets_opened": false
+  },
+  "frozen_readiness_gate": {
+    "path": "protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+    "sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+    "status": "NO_GO",
+    "eligible_heldout_tasks": 0,
+    "required_heldout_tasks": 15,
+    "effect_of_this_protocol": "none; qualification cannot change the gate or authorize training or rollout"
+  },
+  "authorized_work": {
+    "fetch_candidate_public_source_and_upstream_test_content": true,
+    "verify_pr_metadata_license_merge_base_and_changed_paths": true,
+    "inspect_only_the_pinned_candidate_diff_and_targeted_test_requirements": true,
+    "run_source_level_baseline_wrong_mutant_and_upstream_fixed_qualification": true,
+    "maximum_wall_seconds_per_arm": 600,
+    "maximum_memory_bytes_per_arm": 8589934592,
+    "maximum_concurrent_arms": 1,
+    "maximum_paid_compute_or_api_spend_usd": 0,
+    "accelerator_use": false,
+    "development_split_assignment": false,
+    "agent_or_model_inference": false,
+    "training": false,
+    "heldout_access": false
+  },
+  "pretest_freeze_requirement": "After inspecting the pinned PR diff and selecting only the precise upstream regression test(s), create and commit an immutable addendum containing exact source/test hashes, baseline/fixed/mutant construction, test selectors, commands, isolation profile, and stop rules. Do not execute any candidate task test before that addendum is committed.",
+  "qualification_gate": "Count this candidate as QUALIFIED_SOURCE_LEVEL only if the exact baseline fails at the intended regression assertion, an independently constructed wrong mutant is rejected by the same targeted assertion, the exact upstream-fixed source passes, all source/test hashes match, and all arms run in the same isolated CPU-only environment with network disabled. Otherwise preserve the result as NOT_QUALIFIED or UNSUPPORTED.",
+  "isolation_requirements": {
+    "source": "arm-specific immutable workspace; candidate source is the only writable project tree",
+    "trusted_test": "separate read-only mount not visible through the candidate source tree",
+    "network": "disabled during each test arm",
+    "model_or_agent": "none",
+    "grader_feedback_to_model": false
+  },
+  "stop_rules": [
+    "Verify all referenced frozen input hashes and the candidate metadata before source/test access; stop on any mismatch.",
+    "Do not access or enumerate Held-Out identities, task prompts, source, tests, or graders.",
+    "Do not expose candidate task content to any model or agent.",
+    "Run only test selectors frozen in the committed pretest addendum; no broad suite or unbounded dependency installation.",
+    "Stop an arm at 600 seconds, 8 GiB, any accelerator requirement, any network requirement during tests, or any isolation failure.",
+    "Do not retry a failed or unsupported arm without a new hash-bound addendum committed before retry."
+  ],
+  "claim_boundary": "A successful result is source-level task and grader qualification only. It does not establish coding-agent capability, model freshness, a Train/Development assignment, RL readiness, held-out readiness, or learning improvement."
+}
