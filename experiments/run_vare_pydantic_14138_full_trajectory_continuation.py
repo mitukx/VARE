@@ -1654,7 +1654,10 @@ def grade_candidate(
         state = json.loads(state_result.stdout) if state_result.returncode == 0 else {}
     except Exception:
         state = {}
-    selector_pattern = re.escape(task["selector"]) + r"(?:\[[^\]\r\n]*\])?"
+    selector_pattern = (
+        re.escape(task["selector"])
+        + r"(?:\[[^\]\r\n]*\])?(?:\s+-\s+[^\r\n]*)?"
+    )
     selector_failure = re.search(
         rf"(?m)^(?:FAILED|ERROR)\s+{selector_pattern}\s*$", log_text
     ) is not None
