@@ -19,7 +19,7 @@ def _run(tmp_path: Path, task_id: str, proposer: str, kind: str):
     return controller, summary
 
 
-def _assert_grading_result_or_unavailable(controller, summary) -> None:
+def _assert_grading_result_or_unavailable(controller, summary) -> bool:
     records = controller.store.read_journal()
     first_public = records[0].get("public") or {}
     if first_public.get("classification") == ISOLATION_UNVERIFIED:
@@ -31,8 +31,8 @@ def _assert_grading_result_or_unavailable(controller, summary) -> None:
             or row["verification"].get("classification") == ISOLATION_UNVERIFIED
             for row in records
         )
-        return
-    assert summary["verified"] is True
+        return False
+    return True
 
 
 def test_diagnostic_policy_recovers_after_a_rejected_hypothesis(tmp_path: Path):
@@ -42,8 +42,8 @@ def test_diagnostic_policy_recovers_after_a_rejected_hypothesis(tmp_path: Path):
         "descent_sign_debug_v1",
     ):
         controller, summary = _run(tmp_path, task_id, "diagnostic", "diagnostic_policy")
-        _assert_grading_result_or_unavailable(controller, summary)
-        if not summary["verified"]:
+        grade_available = _assert_grading_result_or_unavailable(controller, summary)
+        if not grade_available:
             assert summary["counts_as_autonomous_model_success"] is False
             assert summary["success_class"] == "not_verified"
             continue
@@ -64,8 +64,8 @@ def test_first_hypothesis_control_fails_closed(tmp_path: Path):
         "first-hypothesis",
         "single_attempt_control",
     )
-    _assert_grading_result_or_unavailable(controller, summary)
-    if not summary["verified"]:
+    grade_available = _assert_grading_result_or_unavailable(controller, summary)
+    if not grade_available:
         assert summary["success_class"] == "single_attempt_control"
         return
     assert summary["verified"] is False
@@ -75,8 +75,8 @@ def test_first_hypothesis_control_fails_closed(tmp_path: Path):
 
 def test_oracle_control_is_not_labeled_as_agent_success(tmp_path: Path):
     controller, summary = _run(tmp_path, "grad_accum_scale_v1", "oracle", "oracle_control")
-    _assert_grading_result_or_unavailable(controller, summary)
-    if not summary["verified"]:
+    grade_available = _assert_grading_result_or_unavailable(controller, summary)
+    if not grade_available:
         assert summary["oracle_calibration_passed"] is False
         assert summary["success_class"] == "oracle_control"
         assert summary["counts_as_autonomous_model_success"] is False
