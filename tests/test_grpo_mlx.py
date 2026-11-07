@@ -98,6 +98,108 @@ def test_group_validation():
     assert set(g) == {("a", "c0"), ("a", "c1"), ("b", "c0")}  # behavior policy is part of the group key
 
 
+def test_full_trajectory_action_gradient_matches_analytical_cpu_fixture():
+    """Every conditioned action receives the terminal GRPO advantage.
+
+    The two-turn categorical policy is analytic, so this checks the exact
+    action rows the optimizer iterates without importing MLX or updating a
+    pretrained model.
+    """
+    theta = 0.23
+    features = {0: 0.4, 3: 1.2, 4: -0.7}
+
+    def probability(theta_value, context):
+        score = theta_value * features[context]
+        return 1.0 / (1.0 + math.exp(-score))
+
+    def action_segment(prompt, completion):
+        context = prompt[-1]
+        action = int(completion[0] == 1)
+        p = probability(theta, context)
+        logp = math.log(p if action else 1.0 - p)
+        return G.TrajectorySegment(
+            prompt_ids=prompt,
+            completion_ids=completion,
+            sampling_behavior_logprobs=[logp],
+            behavior_logprobs=[logp],
+        )
+
+    samples = [
+        G.Sample(
+            instance_id="analytic-multiturn",
+            behavior_checkpoint_id="c0",
+            behavior_step=0,
+            prompt_ids=[0],
+            completion_ids=[1],
+            reward=1.0,
+            verifier="trusted-fixture-v1",
+            sample_index=0,
+            trajectory_segments=[
+                action_segment([0], [1]),
+                action_segment([0, 1, 3], [1]),
+            ],
+        ),
+        G.Sample(
+            instance_id="analytic-multiturn",
+            behavior_checkpoint_id="c0",
+            behavior_step=0,
+            prompt_ids=[0],
+            completion_ids=[2],
+            reward=0.0,
+            verifier="trusted-fixture-v1",
+            sample_index=1,
+            trajectory_segments=[
+                action_segment([0], [2]),
+                action_segment([0, 2, 4], [2]),
+            ],
+        ),
+    ]
+    groups = G.group_samples(samples, group_size=2)
+    advantages, informative = G.group_advantages([row.reward for row in groups[("analytic-multiturn", "c0")]])
+    assert informative
+    work = list(zip(samples, advantages, strict=True))
+    action_rows = list(G._training_action_segments(work))
+    assert len(action_rows) == 4
+    n_tokens = sum(len(segment.completion_ids) for _, _, segment in action_rows)
+    assert n_tokens == 4
+
+    def objective(theta_value, rows):
+        total = 0.0
+        for _, advantage, segment in rows:
+            context = segment.prompt_ids[-1]
+            action = int(segment.completion_ids[0] == 1)
+            p = probability(theta_value, context)
+            total -= advantage * math.log(p if action else 1.0 - p)
+        return total / n_tokens
+
+    analytic_gradient = 0.0
+    for _, advantage, segment in action_rows:
+        context = segment.prompt_ids[-1]
+        action = int(segment.completion_ids[0] == 1)
+        analytic_gradient -= (
+            advantage * features[context] * (action - probability(theta, context)) / n_tokens
+        )
+    step = 1e-6
+    finite_difference = (
+        objective(theta + step, action_rows) - objective(theta - step, action_rows)
+    ) / (2.0 * step)
+    assert analytic_gradient == pytest.approx(finite_difference, abs=1e-9)
+
+    first_actions = [
+        row
+        for row in action_rows
+        if row[2] is row[0].trajectory_segments[0]
+    ]
+    first_action_gradient = sum(
+        -advantage
+        * features[segment.prompt_ids[-1]]
+        * (int(segment.completion_ids[0] == 1) - probability(theta, segment.prompt_ids[-1]))
+        / n_tokens
+        for _, advantage, segment in first_actions
+    )
+    assert abs(analytic_gradient - first_action_gradient) > 1e-3
+
+
 def test_policy_lag_rules():
     on = [S("a", 0, [3], 1, ckpt="c5", step=5)]
     assert G.check_policy_lag(on, policy_checkpoint_id="c5", policy_step=5, max_policy_lag=0) == 0
