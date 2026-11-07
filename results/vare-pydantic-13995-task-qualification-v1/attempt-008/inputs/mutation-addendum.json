@@ -1,0 +1,52 @@
+{
+  "authorization": {
+    "candidate_or_model_inference": false,
+    "development_evaluation": false,
+    "heldout_access": false,
+    "human_test_arms": true,
+    "task_assignment": false,
+    "training_or_optimizer_update": false
+  },
+  "candidate_id": "pydantic/pydantic#13995",
+  "cause": "Attempts 004 and 007 confirmed trusted baseline failure and fixed pass, while the selected scalar serializer mutants also passed. This mutation directly returns None for a JsonValue, providing an unambiguous negative control for the same frozen serialization selector.",
+  "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+  "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+  "frozen_at_utc": "2026-11-06T04:14:46+00:00",
+  "new_mutant": {
+    "file_count": 108,
+    "hash_record_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-13995-qualification-attempt-008/mutant-v4-hashes.json",
+    "hash_record_sha256": "5e940f21a387071cc5445003066f34c1a384ad6a698db5cb7495634b121589ba",
+    "mutation": "Replace JsonValue serialization with a plain serializer that returns None for every value.",
+    "name": "mutant-v4",
+    "source_sha256": "876ffcf45fa1a282b38f15e48f84c96b9d39742b699deb0c1fddbd3f5e9aaff2",
+    "test_sha256": "8cbbfbd64f72551f083ee6d628b477ac5826b9e465e61c26988eab5b5923b990",
+    "tree_sha256": "6c8f4404d0ade64e2fbd2ab5212a0e4761dea5d1df379b7827fa194c51c5397c"
+  },
+  "parent_task_definition_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-definition-pydantic-13995-v1.json",
+  "parent_task_definition_sha256": "d3824a232fc7f2d94a1c3a5669b8a339d850139707b29c30283aae006124ff17",
+  "prior_attempt_004_summary_sha256": "60a80a448fe4eb87527b27a7771b0e2787010bf99c92e51b39294557898aa4a2",
+  "prior_attempt_007_summary_sha256": "e57b35737b2ecdc4d53a453597ad851e1038a3fdc07042b3cd7993f9ac72d3f2",
+  "protocol_id": "vare-rsi-pydantic-13995-mutant-addendum-v5",
+  "retry_scope": {
+    "arms": [
+      "baseline",
+      "mutant-v4",
+      "fixed"
+    ],
+    "attempt_count": 1,
+    "container_name_prefix": "vare13995-qual008-",
+    "same_selector": "tests/test_types.py::test_json_value_inf_nan_serialization",
+    "timeout_seconds_per_arm": 180
+  },
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_ATTEMPT",
+  "unchanged": [
+    "task definition",
+    "target test and selector",
+    "baseline arm",
+    "fixed arm",
+    "pinned offline grader image",
+    "pinned task environment",
+    "held-out NO-GO gate"
+  ]
+}

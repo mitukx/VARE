@@ -1,0 +1,80 @@
+{
+  "assignment_sha256": "510c297a8660752aed9c628eeb040b6f09ede2b26ac9e9d2a57dda88605c61ee",
+  "attempt_run_directory_absent": true,
+  "checked_at_utc": "2026-11-06T01:21:14Z",
+  "development_prompts_exposed": false,
+  "disk_free_bytes": 52186066944,
+  "environment_binding_sha256": "053a8e542ada5a4b1dc59a6736094b4f13a89acac39903159d2455b83c98396a",
+  "exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "duplicate_push_ci": {
+      "run_id": 42141140873,
+      "run_number": 2473,
+      "status": "success"
+    },
+    "head_sha": "f0883a70a564693a70eca84205bf01140562007e",
+    "pull_request": 199,
+    "required_workflows": [
+      {
+        "name": "ci",
+        "run_id": 42141148590,
+        "run_number": 2474,
+        "status": "success"
+      },
+      {
+        "name": "cpu-evidence",
+        "run_id": 42141148506,
+        "run_number": 935,
+        "status": "success"
+      },
+      {
+        "name": "e2e-system-cpu",
+        "run_id": 42141148608,
+        "run_number": 461,
+        "status": "success"
+      }
+    ],
+    "verified_at_utc": "2026-11-06T01:17:56Z"
+  },
+  "heldout_access": false,
+  "integration_head_sha": "f0883a70a564693a70eca84205bf01140562007e",
+  "new_group_prompt_exposed": false,
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "no_go_gate_unchanged": true,
+  "pinned_grader_images_verified": true,
+  "pretrained_model_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+  "protocol_sha256": "ab7c64fac5c433771d51267dbb33909020ef4139d4e336e22271cfb7c9fd3b73",
+  "qualified_train_development_only": true,
+  "resource_state": {
+    "memory_pressure_free_pct": 54.0,
+    "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 54%",
+    "swap_output": "vm.swapusage: total = 3072.00M  used = 2188.62M  free = 883.38M  (encrypted)",
+    "swap_used_bytes": 2294934405
+  },
+  "run_lock_sha256": "1a57273526c9aaa063b025f189c5435069f197ad6c70998a576daef9d0fbddc9",
+  "runtime": {
+    "device": "Device(gpu, 0)",
+    "metal_available": true,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "versions": {
+      "huggingface-hub": "2.4.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.0",
+      "numpy": "2.5.4"
+    }
+  },
+  "schema": "vare_pre_exposure_frozen_input_preflight_v1",
+  "status": "PASS",
+  "train_sample_indices": [
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41
+  ]
+}

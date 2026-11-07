@@ -1,0 +1,357 @@
+{
+  "current_runner_sha256": "b4d92beab2231e16de35654026320bf26fc1627ed74328d80e604f8602696dd4",
+  "current_tool_adapter_version": "mlx-local-coding-agent-tool-adapter-v15-parseable-ranked-context",
+  "mode": "no_model_inference_replay_of_attempt005_actions",
+  "outputs": [
+    {
+      "context_chars": 1780,
+      "context_sha256": "e8b3f7e300caa04674277f2c9781a931e0fb541345186c02c72b55978df7d329",
+      "context_symbol": "MockValSer",
+      "preview_present": false,
+      "result_keys": [
+        "matches",
+        "next_step_hint",
+        "ranked_declaration_context",
+        "symbol_hints",
+        "symbol_hints_total",
+        "symbol_hints_truncated",
+        "truncated"
+      ],
+      "search_loop_redirect": null,
+      "tool": "search_code",
+      "tool_error": null,
+      "turn": 1
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "content",
+        "content_truncated",
+        "navigation_stop",
+        "next_step_hint",
+        "path",
+        "requested_end_line",
+        "requested_start_line"
+      ],
+      "search_loop_redirect": null,
+      "tool": "read_file",
+      "tool_error": null,
+      "turn": 2
+    },
+    {
+      "context_chars": 1780,
+      "context_sha256": "e8b3f7e300caa04674277f2c9781a931e0fb541345186c02c72b55978df7d329",
+      "context_symbol": "MockValSer",
+      "preview_present": false,
+      "result_keys": [
+        "matches",
+        "next_step_hint",
+        "ranked_declaration_context",
+        "symbol_hints",
+        "symbol_hints_total",
+        "symbol_hints_truncated",
+        "truncated"
+      ],
+      "search_loop_redirect": null,
+      "tool": "search_code",
+      "tool_error": null,
+      "turn": 3
+    },
+    {
+      "context_chars": 1780,
+      "context_sha256": "e8b3f7e300caa04674277f2c9781a931e0fb541345186c02c72b55978df7d329",
+      "context_symbol": "MockValSer",
+      "preview_present": false,
+      "result_keys": [
+        "matches",
+        "next_step_hint",
+        "ranked_declaration_context",
+        "search_loop_redirect",
+        "symbol_hints",
+        "symbol_hints_total",
+        "symbol_hints_truncated",
+        "truncated"
+      ],
+      "search_loop_redirect": {
+        "alternatives": [
+          "Read the first task-ranked symbol hint with read_file.",
+          "Search again only after using the returned source context."
+        ],
+        "reason": "repeated_related_searches_returned_no_matches",
+        "related_empty_searches": 3
+      },
+      "tool": "search_code",
+      "tool_error": null,
+      "turn": 4
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "already_paged",
+        "already_read",
+        "auto_paged",
+        "content",
+        "content_replayed",
+        "content_truncated",
+        "end_line",
+        "next_start_line",
+        "path",
+        "requested_end_line",
+        "requested_start_line",
+        "source_sha256",
+        "start_line",
+        "total_lines",
+        "truncation_reasons"
+      ],
+      "search_loop_redirect": null,
+      "tool": "read_file",
+      "tool_error": null,
+      "turn": 5
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "applied",
+        "argument_normalizations",
+        "error",
+        "path"
+      ],
+      "search_loop_redirect": null,
+      "tool": "apply_patch",
+      "tool_error": "error: corrupt patch at <stdin>:16\n",
+      "turn": 6
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "error"
+      ],
+      "search_loop_redirect": null,
+      "tool": "replace_text",
+      "tool_error": "ValueError: replace_text requires old_text to match exactly once; found 0 matches",
+      "turn": 7
+    },
+    {
+      "context_chars": 1780,
+      "context_sha256": "e8b3f7e300caa04674277f2c9781a931e0fb541345186c02c72b55978df7d329",
+      "context_symbol": "MockValSer",
+      "preview_present": false,
+      "result_keys": [
+        "matches",
+        "next_step_hint",
+        "ranked_declaration_context",
+        "search_loop_redirect",
+        "symbol_hints",
+        "symbol_hints_total",
+        "symbol_hints_truncated"
+      ],
+      "search_loop_redirect": {
+        "alternatives": [
+          "Use the included ranked declaration context before another search.",
+          "Search another task concept if the included declaration is not sufficient."
+        ],
+        "executed": false,
+        "query": "def rebuild(self, *, parent_namespace_depth: int = 5) -> ValSer | None:",
+        "reason": "repeated_related_searches_returned_no_matches",
+        "redirected": true
+      },
+      "tool": "search_code",
+      "tool_error": null,
+      "turn": 8
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "already_paged",
+        "already_read",
+        "auto_paged",
+        "content",
+        "content_replayed",
+        "content_truncated",
+        "end_line",
+        "next_start_line",
+        "path",
+        "requested_end_line",
+        "requested_start_line",
+        "source_sha256",
+        "start_line",
+        "total_lines",
+        "truncation_reasons"
+      ],
+      "search_loop_redirect": null,
+      "tool": "read_file",
+      "tool_error": null,
+      "turn": 9
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "auto_paged",
+        "content",
+        "content_truncated",
+        "end_line",
+        "next_start_line",
+        "path",
+        "requested_end_line",
+        "requested_start_line",
+        "source_sha256",
+        "start_line",
+        "total_lines",
+        "truncation_reasons"
+      ],
+      "search_loop_redirect": null,
+      "tool": "read_file",
+      "tool_error": null,
+      "turn": 10
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "error"
+      ],
+      "search_loop_redirect": null,
+      "tool": "replace_text",
+      "tool_error": "ValueError: replace_text requires old_text to match exactly once; found 0 matches",
+      "turn": 11
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "already_paged",
+        "already_read",
+        "auto_paged",
+        "content",
+        "content_replayed",
+        "content_truncated",
+        "end_line",
+        "next_start_line",
+        "path",
+        "requested_end_line",
+        "requested_start_line",
+        "source_sha256",
+        "start_line",
+        "total_lines",
+        "truncation_reasons"
+      ],
+      "search_loop_redirect": null,
+      "tool": "read_file",
+      "tool_error": null,
+      "turn": 12
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "applied",
+        "argument_normalizations",
+        "error",
+        "path"
+      ],
+      "search_loop_redirect": null,
+      "tool": "apply_patch",
+      "tool_error": "error: patch failed: pydantic/_internal/_mock_val_ser.py:85\nerror: pydantic/_internal/_mock_val_ser.py: patch does not apply\n",
+      "turn": 13
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "error"
+      ],
+      "search_loop_redirect": null,
+      "tool": "replace_text",
+      "tool_error": "ValueError: replace_text requires old_text to match exactly once; found 2 matches",
+      "turn": 14
+    },
+    {
+      "context_chars": 0,
+      "context_sha256": null,
+      "context_symbol": null,
+      "preview_present": false,
+      "result_keys": [
+        "auto_paged",
+        "content",
+        "content_truncated",
+        "end_line",
+        "next_start_line",
+        "path",
+        "requested_end_line",
+        "requested_start_line",
+        "source_sha256",
+        "start_line",
+        "total_lines",
+        "truncation_reasons"
+      ],
+      "search_loop_redirect": null,
+      "tool": "read_file",
+      "tool_error": null,
+      "turn": 15
+    },
+    {
+      "context_chars": 1780,
+      "context_sha256": "e8b3f7e300caa04674277f2c9781a931e0fb541345186c02c72b55978df7d329",
+      "context_symbol": "MockValSer",
+      "preview_present": false,
+      "result_keys": [
+        "matches",
+        "matches_total",
+        "matches_truncated",
+        "next_step_hint",
+        "ranked_declaration_context",
+        "truncated"
+      ],
+      "search_loop_redirect": null,
+      "tool": "search_code",
+      "tool_error": null,
+      "turn": 16
+    }
+  ],
+  "prior_search_outputs_with_escaped_preview": [
+    4,
+    8
+  ],
+  "prior_trajectory_path": "results/vare-agent-navigation-diagnostic-v1/attempt-005/rollout-001/trajectory.json",
+  "prior_trajectory_sha256": "fba57cc4aa9865cb250a0745b881a1eaef51e6a1f57f3a865ff356b82c7977b9",
+  "replayed_search_outputs_with_escaped_preview": [],
+  "schema": "vare_navigation_controller_deterministic_replay_v2",
+  "turns_replayed": 16,
+  "turns_with_full_ranked_declaration_context": [
+    1,
+    3,
+    4,
+    8,
+    16
+  ],
+  "turns_with_search_loop_redirect": [
+    4,
+    8
+  ]
+}

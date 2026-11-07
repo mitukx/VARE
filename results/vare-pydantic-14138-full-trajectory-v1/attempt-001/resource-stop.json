@@ -1,0 +1,74 @@
+{
+  "artifacts": {
+    "abort": {
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
+      "sha256": "5acc10f1992028bbcc56776704bf059a6837d4a582dc75321836dbd221c097c2"
+    },
+    "fatal_error": {
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/fatal-error.json",
+      "sha256": "594f9489f963605925e3db856836396012370f73930940822693ef258dda6354"
+    },
+    "partial_trajectory": {
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/training/pydantic-14138-direct-builtin-scalar-union-schema/sample-00/trajectory.json",
+      "sha256": "b7700fe8c14b403ff7514035f2ef94f9a42b36bb2d8c477da924dcd09fded0aa",
+      "trajectory_sha256": "b9ff775cc18cfe6f4f74d8bd6f6caff4d45f00dec6f5c171bb00db9cf953c12e"
+    },
+    "run_meta": {
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/run_meta.json",
+      "sha256": "4b81192ae1bd1ada17a0b098e4ece4b7117eb68ea9c3b9f98c993e9dd8fd3361"
+    }
+  },
+  "assignment_sha256": "833496050f524bd1530820a7eca70c43d3e3ff77b077826a0a035c65b83f56b4",
+  "attempt": 1,
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14138-full-trajectory-v10",
+  "heldout_access": false,
+  "learning": {
+    "checkpoint_created": false,
+    "development_exposed": false,
+    "optimizer_updates": 0
+  },
+  "model": {
+    "files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "prompt_variant_sha256": "937359384f7a494cc9f4e6788d7b8b5eda67f21fc1f6b30898a1c7c4d4e43fa4",
+  "protocol_sha256": "82b675796a093beb44d7e9d2ee84da6129adc9dd39f563da6fabe5619b1cee9f",
+  "resource_stop": {
+    "free_memory_floor_pct": 15.0,
+    "free_memory_pct_after_model_load": 42.0,
+    "free_memory_pct_at_start": 52.0,
+    "free_memory_pct_at_stop": 34.0,
+    "frozen_swap_growth_allowance_bytes": 0,
+    "reason": "swap_growth",
+    "swap_growth_bytes": 7277117,
+    "swap_used_bytes_at_start": 986122813,
+    "swap_used_bytes_at_stop": 993399930
+  },
+  "run_lock_sha256": "9d033771dc98b04e3b1e50e2d9582e5d4be22c1f28b525872c4682afe5935759",
+  "runtime": {
+    "device": "Device(gpu, 0)",
+    "metal_available": true,
+    "mlx_module_version": "0.32.4",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "versions": {
+      "huggingface-hub": "2.4.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.0",
+      "numpy": "2.5.4"
+    }
+  },
+  "schema": "vare_real_model_resource_stop_v1",
+  "source_head_sha": "9081b28aa1915174fd3eb590923dfd9aaa814b64",
+  "status": "ABORTED_BEFORE_INDEPENDENT_GRADING",
+  "task_split": "train",
+  "train_prompt_exposure": {
+    "completed_rollout": false,
+    "independent_grade_produced": false,
+    "sample_index": 0,
+    "tool_turns": 3
+  },
+  "training_task_id": "pydantic-14138-direct-builtin-scalar-union-schema"
+}

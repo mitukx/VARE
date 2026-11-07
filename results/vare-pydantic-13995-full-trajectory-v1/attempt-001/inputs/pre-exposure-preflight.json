@@ -1,0 +1,108 @@
+{
+  "assignment_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/train-dev-assignment-v20-pydantic-13995-full-trajectory.json",
+  "assignment_sha256": "cbaf0a7d42257d2aae2921da174cb837315ae183b70245ac93d214b20b8b488f",
+  "checks": {
+    "MLX_Metal_and_runtime_versions_match": true,
+    "assignment_index_guard": true,
+    "baseline_source_and_grader_tests_match": true,
+    "candidate_visible_prompt_hashes_match_without_exposure": true,
+    "disjoint_train_dev_families_and_paths": true,
+    "frozen_no_go_hash_unchanged": true,
+    "local_model_manifest_and_tree_match": true,
+    "memory_swap_and_disk_preflight_passed": true,
+    "pinned_grader_images_match": true,
+    "run_directory_absent": true,
+    "runner_grpo_and_container_hashes_bound": true,
+    "task_qualification_hashes_match": true
+  },
+  "environment_binding_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/train-dev-assignment-environment-binding-addendum-v20-13995-full-trajectory.json",
+  "environment_binding_sha256": "9de25fa380f963bdff5be74bb03cae3284ba2c5f225feea0b6ef7f9016bf4005",
+  "exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "duplicate_push_ci": {
+      "run_id": 42162273212,
+      "run_number": 2485,
+      "status": "success",
+      "url": "https://github.com/mitukx/VARE/actions/runs/42162273212"
+    },
+    "head_sha": "3e96be20502566bdb44658eb7195efccdc5882ce",
+    "pull_request": 199,
+    "required_workflows": [
+      {
+        "name": "ci",
+        "run_id": 42162279848,
+        "run_number": 2486,
+        "status": "success",
+        "url": "https://github.com/mitukx/VARE/actions/runs/42162279848"
+      },
+      {
+        "name": "cpu-evidence",
+        "run_id": 42162279822,
+        "run_number": 941,
+        "status": "success",
+        "url": "https://github.com/mitukx/VARE/actions/runs/42162279822"
+      },
+      {
+        "name": "e2e-system-cpu",
+        "run_id": 42162279924,
+        "run_number": 467,
+        "status": "success",
+        "url": "https://github.com/mitukx/VARE/actions/runs/42162279924"
+      }
+    ],
+    "verified_at_utc": "2026-11-06T04:35:56Z"
+  },
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_eligibility_count": 0,
+  "heldout_evaluation": false,
+  "integration_head_sha": "3e96be20502566bdb44658eb7195efccdc5882ce",
+  "limitations": [
+    "Train/Development only; held-out NO-GO remains frozen.",
+    "Preflight does not expose a model prompt or demonstrate learning."
+  ],
+  "model_prompt_exposed": false,
+  "observed_runtime": {
+    "architecture": "arm64",
+    "device": "Device(gpu, 0)",
+    "disk_free_bytes": 52028411904,
+    "memory_pressure_free_pct": 63.0,
+    "metal_available": true,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "swap_used_bytes": 2202659717,
+    "versions": {
+      "huggingface-hub": "2.4.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.0",
+      "numpy": "2.5.4"
+    }
+  },
+  "passed": true,
+  "protocol_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/vare-rsi-fresh-train-dev-real-model-grpo-v14-pydantic-13995-full-trajectory.json",
+  "protocol_sha256": "bf8f994f608cf8a3b2db64c48f094ec4aacf75435a4122e10f29a2021de40cce",
+  "recorded_at_utc": "2026-11-06T04:39:32Z",
+  "run_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/real-model-run-v28-13995-full-trajectory.lock.json",
+  "run_lock_sha256": "c8f43d2ce16b34cd2cd9eeffc26936465dfec1f102786d4e8e9df9ea1cd60925",
+  "schema": "vare_pre_exposure_preflight_v1",
+  "verified_task_workspaces": [
+    {
+      "baseline_test_and_image": "verified",
+      "prompt_hash_matches": true,
+      "split": "train",
+      "task_id": "pydantic-13995-jsonvalue-python-inf-nan-serialization"
+    },
+    {
+      "baseline_test_and_image": "verified",
+      "prompt_hash_matches": true,
+      "split": "development",
+      "task_id": "pydantic-13997-explicit-json-schema-by-alias-override"
+    },
+    {
+      "baseline_test_and_image": "verified",
+      "prompt_hash_matches": true,
+      "split": "development",
+      "task_id": "pydantic-14103-ignore-internal-dataclass-extras"
+    }
+  ]
+}

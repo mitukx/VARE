@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import dataclasses
 import os
 import signal
 import sqlite3
@@ -11,6 +12,7 @@ import subprocess
 import sys
 import textwrap
 import time
+import types
 from pathlib import Path
 
 import pytest
@@ -116,6 +118,179 @@ def test_full_controller_metrics_on_fixture(tmp_path):
     agg = result["aggregate"]
     assert agg["episodes"] == 2 and agg["completion_rate"] == 1.0 and agg["final_success_rate"] == 1.0
     assert agg["synthetic"] is True
+
+
+def test_tool_runtime_read_resets_guard_and_search_stays_task_scoped(tmp_path):
+    source_path = "src/allowed.py"
+    source = "class NeedleToken:\n    pass\n"
+    workspace = tmp_path / "candidate"
+    file_path = workspace / source_path
+    file_path.parent.mkdir(parents=True)
+    file_path.write_text(source, encoding="utf-8")
+    lh.git_snapshot(workspace)
+    task = lh.EpisodeTask(
+        task_id="guard-scope",
+        repository="local-fixture",
+        split="train",
+        issue="Inspect and update the allowlisted source file.",
+        readable_files=(source_path,),
+        editable_files=(source_path,),
+        target_files=(source_path,),
+    )
+    runtime = lh.ToolRuntime(
+        workspace,
+        task,
+        public_tests=None,
+        base_hashes={source_path: hashlib.sha256(source.encode()).hexdigest()},
+    )
+    for _ in range(3):
+        runtime.search_guard.observe("missing cache factory", 0, source_path)
+    assert runtime.search_guard.intercept("missing cache factory", source_path) is not None
+
+    read = runtime.execute(
+        "read_file",
+        {"path": source_path, "start_line": 1, "end_line": 2},
+        public_passed=None,
+        finish_gate=False,
+    )
+    assert "NeedleToken" in read["content"]
+    assert runtime.search_guard.intercept("missing cache factory", source_path) is None
+
+    outside = runtime.execute(
+        "search_text",
+        {"query": "NeedleToken", "path": "../private.py"},
+        public_passed=None,
+        finish_gate=False,
+    )
+    assert "allowlisted" in outside["error"]
+    useful = runtime.execute(
+        "search_text",
+        {"query": "NeedleToken", "path": source_path},
+        public_passed=None,
+        finish_gate=False,
+    )
+    assert useful["match_count"] == 1
+    assert useful["matches"][0]["path"] == source_path
+
+
+def test_mlx_policy_keeps_exact_prompt_and_completion_token_ids(monkeypatch):
+    events = [
+        types.SimpleNamespace(text="A", token=10, generation_tokens=1, finish_reason=None),
+        types.SimpleNamespace(text="B", token=11, generation_tokens=2, finish_reason="stop"),
+    ]
+    sampler_arguments = {}
+
+    def stream_generate(_model, _tokenizer, prompt_ids, *, max_tokens, sampler):
+        assert prompt_ids == [101, 102]
+        assert max_tokens == 8
+        assert sampler == "sampler"
+        yield from events
+
+    def make_sampler(**kwargs):
+        sampler_arguments.update(kwargs)
+        return "sampler"
+
+    mlx_lm = types.ModuleType("mlx_lm")
+    mlx_lm.__path__ = []
+    mlx_lm.stream_generate = stream_generate
+    sample_utils = types.ModuleType("mlx_lm.sample_utils")
+    sample_utils.make_sampler = make_sampler
+    monkeypatch.setitem(sys.modules, "mlx_lm", mlx_lm)
+    monkeypatch.setitem(sys.modules, "mlx_lm.sample_utils", sample_utils)
+
+    policy = lh.TraceableMLXPolicy.__new__(lh.TraceableMLXPolicy)
+    policy._mx = types.SimpleNamespace(random=types.SimpleNamespace(seed=lambda _seed: None))
+    policy.model = object()
+    policy.tokenizer = types.SimpleNamespace(
+        apply_chat_template=lambda _messages, **_kwargs: [101, 102],
+    )
+    policy.max_prompt_tokens = 32
+    generation = policy.generate(
+        [{"role": "user", "content": "task"}], max_tokens=8,
+        temperature=0.7, top_p=1.0, seed=4,
+    )
+
+    assert generation.text == "AB"
+    assert generation.prompt_ids == [101, 102]
+    assert generation.completion_ids == [10, 11]
+    assert generation.prompt_tokens == 2 and generation.completion_tokens == 2
+    assert generation.sampling_temperature == 0.7 and generation.sampling_top_p == 1.0
+    assert sampler_arguments == {"temp": 0.7, "top_p": 1.0, "min_p": 0.0, "top_k": 0}
+
+
+def test_verified_grpo_group_extracts_only_shared_initial_action(tmp_path):
+    task = dataclasses.replace(
+        lh.fixture_task(), synthetic=False, source_revision="d" * 40,
+        workspace_patch_sha256="e" * 64,
+    )
+    script = list(lh.FIXTURE_SCRIPT)
+    bad_script = list(script)
+    bad_script[5] = lh._call(
+        "replace_text", path="calc/ops.py", old_text="return a - b",
+        new_text="return a * b", expected_source_sha256=lh.FIXTURE_OPS_SHA256,
+    )
+
+    class TracePolicy(lh.ScriptedPolicy):
+        synthetic = False
+
+        def generate(self, messages, *, max_tokens, temperature, top_p, seed, task=None):
+            sample_seed = seed // 4096
+            self.calls += 1
+            index = sum(message["role"] == "assistant" for message in messages)
+            selected = bad_script if sample_seed == 1 else script
+            text = selected[index] if index < len(selected) else "I have nothing further."
+            if len(text.split()) > max_tokens:
+                text = " ".join(text.split()[:max_tokens])
+            return lh.TraceGeneration(
+                text, 2, 2, 0.0, "stop",
+                prompt_ids=[101, 102], completion_ids=[200, 300 + sample_seed],
+                sampling_temperature=temperature, sampling_top_p=top_p,
+            )
+
+    policy = TracePolicy(script, policy_id="trace-policy")
+    arm = lh.PolicyArm("base", policy, PolicyCheckpoint("base", 0, policy.checkpoint_sha256()))
+    controller = dataclasses.replace(lh.CONTROLLER_PRESETS["full"], name="grpo-train", temperature=0.7)
+    grader = FakeGrader()
+    root = tmp_path / "grpo-group"
+    harness = lh.EpisodeHarness(
+        root, arm, controller, factories={task.task_id: lh.write_fixture},
+        public_tests={task.task_id: lh.fixture_public_tests},
+        grader_for=lambda _task: grader,
+    )
+    ids = harness.enroll_grpo_group(
+        [lh.EpisodeSpec(task, seed) for seed in (0, 1)], group_id="train:fixture:group-0",
+    )
+    harness.run()
+
+    metrics = lh.run_metrics(root)
+    assert [episode["seed"] for episode in metrics["episodes"]] == [0, 1]
+    assert [episode["final_success"] for episode in metrics["episodes"]] == [True, False]
+    store = TrajectoryStore(root / "trajectories.sqlite", audit_only=True)
+    samples = lh.grpo_samples_from_verified_group(store, "train:fixture:group-0")
+    assert len(samples) == 2
+    assert [sample.reward for sample in samples] == [1.0, 0.0]
+    assert [sample.sample_index for sample in samples] == [0, 1]
+    assert samples[0].prompt_ids == samples[1].prompt_ids == [101, 102]
+    assert samples[0].completion_ids != samples[1].completion_ids
+    assert samples[0].behavior_checkpoint_id == samples[1].behavior_checkpoint_id
+    assert all(sample.behavior_logprobs is None for sample in samples)
+    assert set(ids) == {row["id"] for row in store.group("train:fixture:group-0")}
+
+
+def test_grpo_group_rejects_truncated_sampler_before_enrollment(tmp_path):
+    task = dataclasses.replace(lh.fixture_task(), synthetic=False)
+    arm = stub_arm()
+    controller = dataclasses.replace(
+        lh.CONTROLLER_PRESETS["full"], name="truncated", temperature=0.7, top_p=0.9,
+    )
+    harness = lh.EpisodeHarness(
+        tmp_path / "truncated", arm, controller, factories={task.task_id: lh.write_fixture},
+    )
+    with pytest.raises(ValueError, match="top_p == 1.0"):
+        harness.enroll_grpo_group(
+            [lh.EpisodeSpec(task, seed) for seed in (0, 1)], group_id="train:fixture:truncated",
+        )
+    assert harness.store.group("train:fixture:truncated") == []
 
 
 def test_budget_stop_requires_public_and_trusted_grade_for_success(tmp_path):
@@ -515,12 +690,14 @@ def test_resume_after_kill_has_no_duplicated_or_lost_steps(tmp_path, stage, inde
 
 def test_resume_waits_for_expired_verification_lease(tmp_path):
     run = tmp_path / "verify-recovery"
-    initial = harness(run, lease_seconds=0.35, worker_id="worker-before-crash")
+    initial = harness(run, worker_id="worker-before-crash")
     initial.run()  # Finish execution but leave verification queued.
     abandoned = initial.store.claim("verify", "worker-crashed", lease_seconds=0.35)
     assert abandoned is not None
 
-    resumed = harness(run, grader=FakeGrader(), lease_seconds=0.35, worker_id="worker-after-crash")
+    # Keep the deliberately abandoned lease short, but give the resumed worker
+    # a normal lease so CI load cannot expire it while recording its result.
+    resumed = harness(run, grader=FakeGrader(), worker_id="worker-after-crash")
     started = time.monotonic()
     resumed.run(wait_for_expired=True, poll_seconds=0.01)
     elapsed = time.monotonic() - started

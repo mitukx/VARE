@@ -1,0 +1,36 @@
+{
+  "arms": {
+    "baseline": {
+      "attempted": true,
+      "container_launched": false,
+      "grade_status": "untrusted_no_reward",
+      "grader_command_sha256": "3037beed7ca987601aeacb7525c1c3cbfd20448aa19e25cfb29c52a6adf882e8",
+      "grader_log_sha256": "a3b4e3f0251daac6b02ef290bd838fb4207bb5e5e433bd540da9def3d63dcfd7",
+      "reward": null,
+      "wrapper_error_class": "RuntimeError"
+    },
+    "fixed": {
+      "attempted": false,
+      "grade_status": "not_run",
+      "reward": null
+    },
+    "mutant-v3": {
+      "attempted": false,
+      "grade_status": "not_run",
+      "reward": null
+    }
+  },
+  "attempt": 6,
+  "candidate_or_model_prompt_exposure": false,
+  "development_evaluation": false,
+  "freeze_sha256": "8ba5e9170e3baae257c2f9a72890862d75cfa1ae370b709a40e8be27bc1e59e0",
+  "heldout_access": false,
+  "qualification_adapter_sha256": "6c87c7098e86c5863474f16670461b61f10ed17108e0a1400466f7c3464b5726",
+  "raw_grader_logs_and_commands_private": true,
+  "schema": "vare_pydantic_task_qualification_attempt_v1",
+  "source_head_sha": "c2f21919df0baec0a208a18fec64a4040feffef8",
+  "status": "UNTRUSTED_GRADER_LAUNCH_FAILURE",
+  "stop_reason": "The docker run request collided with a stopped container name from an earlier attempt; the pinned grader container did not launch. No grade or reward was assigned. A new run lock uses unique attempt-specific container names.",
+  "task_id": "pydantic-13995-jsonvalue-python-inf-nan-serialization",
+  "training_or_optimizer_update": false
+}

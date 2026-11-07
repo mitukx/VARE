@@ -1,0 +1,15 @@
+{
+  "base_model_id": "mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "lora": {
+    "dropout": 0.0,
+    "num_layers": 8,
+    "rank": 8,
+    "scale": 20.0
+  },
+  "optimizer": {
+    "learning_rate": 1e-05,
+    "name": "mlx.optimizers.Adam"
+  },
+  "policy_checkpoint_id": "mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b:trainable-initial:1454f0400439bda28f6a",
+  "trainable_parameters_sha256": "1454f0400439bda28f6a0d4736ccfc9c7400c252acc5612b1dbdcfbe6d7fa724"
+}

@@ -1,0 +1,11 @@
+{
+  "assignment_sha256": "b542bb0e25473a33e0b900ccb002b04fbb2095ce2ecc73d80e6e49837a48e19a",
+  "candidate_prompt_exposed": false,
+  "corrective_action": "Bind the assignment contract digest to the final v16 protocol contract, then recompute protocol, assignment, environment binding, and run-lock digests before preflight.",
+  "environment_binding_sha256": "e2468b9a8e6582c066276454dd90010af8531d092a6c430d1efb31ee61e1e968",
+  "first_freeze_at_utc": "2026-11-06T00:22:55Z",
+  "preserved_rejected_freeze_dir": "outputs/vare-rsi-heldout-qualification-v2-20261105/preflight-rejected-freeze-v16-agent-contract",
+  "protocol_sha256": "e6006a2c724a8f61496a592a05d74aa8cdfe7299df3f0e5e14b19bcf596d3cc7",
+  "reason": "Pre-exposure freeze self-check found authorization.agent_tool_contract_sha256 still bound to the v15 contract after the protocol had been upgraded to the v16 coverage-aware read contract. No candidate or model prompt was exposed.",
+  "run_lock_sha256": "ef270c7a424749387a11ec1a456f6f1383828acdcd356038166ce897679e1e1b"
+}

@@ -7,6 +7,7 @@ them loads a pretrained model.
 from __future__ import annotations
 
 import importlib.util
+import json
 import math
 
 import pytest
@@ -23,6 +24,42 @@ def S(iid, idx, comp, reward, *, ckpt="c0", step=0, prompt=(1, 2), verifier="v1"
 
 
 # ------------------------------------------------------------ pure python
+@pytest.mark.parametrize(("kwargs", "message"), [
+    ({"clip_eps_low": -0.1}, "clip_eps_low"),
+    ({"clip_eps_low": 1.0}, "clip_eps_low"),
+    ({"clip_eps_high": math.nan}, "clip_eps_high"),
+    ({"clip_eps_high": -0.1}, "clip_eps_high"),
+    ({"temperature": 0.0}, "temperature"),
+    ({"temperature": -1.0}, "temperature"),
+    ({"temperature": math.nan}, "temperature"),
+    ({"temperature": True}, "temperature"),
+    ({"normalize_std": 1}, "normalize_std"),
+    ({"max_policy_lag": -1}, "max_policy_lag"),
+    ({"max_policy_lag": True}, "max_policy_lag"),
+    ({"max_grad_norm": -0.1}, "max_grad_norm"),
+    ({"max_grad_norm": math.inf}, "max_grad_norm"),
+    ({"max_grad_norm": True}, "max_grad_norm"),
+    ({"group_size": 0}, "group_size"),
+    ({"group_size": True}, "group_size"),
+])
+def test_grpo_config_rejects_invalid_values(kwargs, message):
+    with pytest.raises(ValueError, match=message):
+        G.GRPOConfig(**kwargs)
+
+
+def test_grpo_config_accepts_valid_boundaries():
+    cfg = G.GRPOConfig(
+        clip_eps_low=0.0,
+        clip_eps_high=0.0,
+        normalize_std=False,
+        temperature=0.01,
+        max_policy_lag=0,
+        max_grad_norm=0.0,
+        group_size=2,
+    )
+    assert cfg.to_dict()["group_size"] == 2
+
+
 def test_group_advantages_normalized_and_centered():
     adv, inf = G.group_advantages([1, 0, 0, 0])
     std = math.sqrt(0.1875)
@@ -52,8 +89,115 @@ def test_group_validation():
         G.group_samples([S("a", 0, [3], 1, prompt=(1, 2)), S("a", 1, [4], 0, prompt=(1, 3))])
     with pytest.raises(G.GroupError, match="finite numbers"):
         G.group_advantages([1.0, math.nan])
+    invalid_logprobs = [S("a", 0, [3], 1), S("a", 1, [4], 0)]
+    invalid_logprobs[0].behavior_logprobs = [0.1]
+    invalid_logprobs[1].behavior_logprobs = [-0.5]
+    with pytest.raises(G.GroupError, match="finite nonpositive numbers"):
+        G.group_samples(invalid_logprobs)
     g = G.group_samples([S("a", 0, [3], 1), S("a", 0, [3], 1, ckpt="c1"), S("b", 0, [3], 0)])
     assert set(g) == {("a", "c0"), ("a", "c1"), ("b", "c0")}  # behavior policy is part of the group key
+
+
+def test_full_trajectory_action_gradient_matches_analytical_cpu_fixture():
+    """Every conditioned action receives the terminal GRPO advantage.
+
+    The two-turn categorical policy is analytic, so this checks the exact
+    action rows the optimizer iterates without importing MLX or updating a
+    pretrained model.
+    """
+    theta = 0.23
+    features = {0: 0.4, 3: 1.2, 4: -0.7}
+
+    def probability(theta_value, context):
+        score = theta_value * features[context]
+        return 1.0 / (1.0 + math.exp(-score))
+
+    def action_segment(prompt, completion):
+        context = prompt[-1]
+        action = int(completion[0] == 1)
+        p = probability(theta, context)
+        logp = math.log(p if action else 1.0 - p)
+        return G.TrajectorySegment(
+            prompt_ids=prompt,
+            completion_ids=completion,
+            sampling_behavior_logprobs=[logp],
+            behavior_logprobs=[logp],
+        )
+
+    samples = [
+        G.Sample(
+            instance_id="analytic-multiturn",
+            behavior_checkpoint_id="c0",
+            behavior_step=0,
+            prompt_ids=[0],
+            completion_ids=[1],
+            reward=1.0,
+            verifier="trusted-fixture-v1",
+            sample_index=0,
+            trajectory_segments=[
+                action_segment([0], [1]),
+                action_segment([0, 1, 3], [1]),
+            ],
+        ),
+        G.Sample(
+            instance_id="analytic-multiturn",
+            behavior_checkpoint_id="c0",
+            behavior_step=0,
+            prompt_ids=[0],
+            completion_ids=[2],
+            reward=0.0,
+            verifier="trusted-fixture-v1",
+            sample_index=1,
+            trajectory_segments=[
+                action_segment([0], [2]),
+                action_segment([0, 2, 4], [2]),
+            ],
+        ),
+    ]
+    groups = G.group_samples(samples, group_size=2)
+    advantages, informative = G.group_advantages([row.reward for row in groups[("analytic-multiturn", "c0")]])
+    assert informative
+    work = list(zip(samples, advantages, strict=True))
+    action_rows = list(G._training_action_segments(work))
+    assert len(action_rows) == 4
+    n_tokens = sum(len(segment.completion_ids) for _, _, segment in action_rows)
+    assert n_tokens == 4
+
+    def objective(theta_value, rows):
+        total = 0.0
+        for _, advantage, segment in rows:
+            context = segment.prompt_ids[-1]
+            action = int(segment.completion_ids[0] == 1)
+            p = probability(theta_value, context)
+            total -= advantage * math.log(p if action else 1.0 - p)
+        return total / n_tokens
+
+    analytic_gradient = 0.0
+    for _, advantage, segment in action_rows:
+        context = segment.prompt_ids[-1]
+        action = int(segment.completion_ids[0] == 1)
+        analytic_gradient -= (
+            advantage * features[context] * (action - probability(theta, context)) / n_tokens
+        )
+    step = 1e-6
+    finite_difference = (
+        objective(theta + step, action_rows) - objective(theta - step, action_rows)
+    ) / (2.0 * step)
+    assert analytic_gradient == pytest.approx(finite_difference, abs=1e-9)
+
+    first_actions = [
+        row
+        for row in action_rows
+        if row[2] is row[0].trajectory_segments[0]
+    ]
+    first_action_gradient = sum(
+        -advantage
+        * features[segment.prompt_ids[-1]]
+        * (int(segment.completion_ids[0] == 1) - probability(theta, segment.prompt_ids[-1]))
+        / n_tokens
+        for _, advantage, segment in first_actions
+    )
+    assert abs(analytic_gradient - first_action_gradient) > 1e-3
 
 
 def test_policy_lag_rules():
@@ -66,6 +210,16 @@ def test_policy_lag_rules():
     assert G.check_policy_lag(on, policy_checkpoint_id="c6", policy_step=6, max_policy_lag=1) == 1
     with pytest.raises(G.StalePolicyError, match="future"):
         G.check_policy_lag(on, policy_checkpoint_id="c4", policy_step=4, max_policy_lag=3)
+
+
+def test_lag_zero_behavior_logprob_guard_fails_closed():
+    assert G.check_on_policy_log_ratio(0, 0.0) is None
+    assert G.check_on_policy_log_ratio(0, G.ON_POLICY_LOG_RATIO_TOLERANCE) is None
+    assert G.check_on_policy_log_ratio(1, 0.5) is None  # off-policy ratios remain active
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior log-probabilities"):
+        G.check_on_policy_log_ratio(0, 0.5)
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior log-probabilities"):
+        G.check_on_policy_log_ratio(0, math.nan)
 
 
 # -------------------------------------------------------------- toy models
@@ -184,6 +338,67 @@ def _samples_with_lp(model, samples, temperature=1.0):
 
 
 @needs_mlx
+def test_full_trajectory_grpo_credits_later_actions_with_distinct_contexts():
+    import mlx.optimizers as optim
+
+    m = _bigram()
+    prompt0 = [0]
+    completion0 = [3]
+    later_prompt_good = [0, 3, 1]
+    later_prompt_bad = [0, 3, 2]
+
+    samples = [
+        G.Sample(
+            instance_id="task",
+            behavior_checkpoint_id="c0",
+            behavior_step=0,
+            prompt_ids=prompt0,
+            completion_ids=completion0,
+            reward=1.0,
+            verifier="v1",
+            sample_index=0,
+            trajectory_segments=[
+                G.TrajectorySegment(prompt_ids=prompt0, completion_ids=completion0),
+                G.TrajectorySegment(prompt_ids=later_prompt_good, completion_ids=[4]),
+            ],
+        ),
+        G.Sample(
+            instance_id="task",
+            behavior_checkpoint_id="c0",
+            behavior_step=0,
+            prompt_ids=prompt0,
+            completion_ids=completion0,
+            reward=0.0,
+            verifier="v1",
+            sample_index=1,
+            trajectory_segments=[
+                G.TrajectorySegment(prompt_ids=prompt0, completion_ids=completion0),
+                G.TrajectorySegment(prompt_ids=later_prompt_bad, completion_ids=[5]),
+            ],
+        ),
+    ]
+    G.compute_behavior_logprobs(m, samples, temperature=1.0)
+    before_good = G.forward_logprobs(m, samples[0], temperature=1.0)[1]
+    before_bad = G.forward_logprobs(m, samples[1], temperature=1.0)[1]
+    record = G.train_step(
+        m,
+        optim.SGD(learning_rate=0.2),
+        samples,
+        G.GRPOConfig(max_grad_norm=None, group_size=2),
+        policy_checkpoint_id="c0",
+        policy_step=0,
+    )
+    after_good = G.forward_logprobs(m, samples[0], temperature=1.0)[1]
+    after_bad = G.forward_logprobs(m, samples[1], temperature=1.0)[1]
+
+    assert record["update_applied"] and record["params_changed"]
+    assert record["n_trained_action_segments"] == 4
+    assert record["n_tokens"] == 4
+    assert after_good > before_good
+    assert after_bad < before_bad
+
+
+@needs_mlx
 def test_on_policy_gradient_matches_float64_reference():
     """On-policy (rho == 1) gradient == -(1/N) sum_i A_i sum_t grad log pi."""
     import numpy as np
@@ -204,7 +419,7 @@ def test_on_policy_gradient_matches_float64_reference():
             work += list(zip(g, adv))
     n = sum(len(s.completion_ids) for s, _ in work)
     assert n == 6  # group b is zero-variance: excluded from the token denominator
-    grads, diag = G.policy_gradient(m, work, cfg, n_tokens=n)
+    grads, diag = G.policy_gradient(m, work, cfg, n_tokens=n, policy_step=0)
     assert diag["ratio_mean"] == pytest.approx(1.0, abs=1e-6) and diag["clip_fraction"] == 0.0
     ref = np.zeros_like(W)
     for s, a in work:
@@ -289,6 +504,47 @@ def test_stale_policy_ratio_and_rejection():
     rec1 = G.train_step(m, opt, samples, lagged, policy_checkpoint_id="c1", policy_step=1)
     assert rec1["max_observed_lag"] == 1
     assert rec1["ratio_max"] > 1.2 and rec1["clip_fraction"] > 0  # importance ratio is live and clipped
+
+
+@needs_mlx
+def test_lag_zero_behavior_logprob_mismatch_aborts_before_optimizer_update():
+    import mlx.optimizers as optim
+
+    m = _bigram()
+    samples = _samples_with_lp(m, [S("a", 0, [3], 1), S("a", 1, [4], 0)])
+    samples[0].behavior_logprobs[0] -= 0.5
+    before = G.trainable_digest(m)
+    optimizer = optim.Adam(learning_rate=0.1)
+
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior log-probabilities"):
+        G.train_step(m, optimizer, samples, G.GRPOConfig(group_size=2),
+                     policy_checkpoint_id="c0", policy_step=0)
+
+    assert G.trainable_digest(m) == before
+    assert int(optimizer.state["step"].item()) == 0
+
+
+@needs_mlx
+def test_mixed_lag_batch_checks_each_lag_zero_sample_before_update():
+    import mlx.optimizers as optim
+
+    m = _bigram()
+    samples = _samples_with_lp(m, [
+        S("current", 0, [3], 1, ckpt="c2", step=2),
+        S("current", 1, [4], 0, ckpt="c2", step=2),
+        S("stale", 0, [3], 1, ckpt="c1", step=1),
+        S("stale", 1, [4], 0, ckpt="c1", step=1),
+    ])
+    samples[0].behavior_logprobs[0] -= 0.5
+    before = G.trainable_digest(m)
+    optimizer = optim.Adam(learning_rate=0.1)
+
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior log-probabilities"):
+        G.train_step(m, optimizer, samples, G.GRPOConfig(max_policy_lag=1, group_size=2),
+                     policy_checkpoint_id="c2", policy_step=2)
+
+    assert G.trainable_digest(m) == before
+    assert int(optimizer.state["step"].item()) == 0
 
 
 def test_informative_samples_selects_mixed_groups_only():
@@ -410,13 +666,14 @@ def test_checkpoint_roundtrip_is_bit_identical(tmp_path):
     b = _lora_qwen3()
     ob = optim.Adam(learning_rate=1e-2)
     run(b, ob, 0)
-    man = G.save_checkpoint(tmp_path / "ck", b, ob, step=1, base_seed=42, extra={"data_cursor": 1})
+    man = G.save_checkpoint(tmp_path / "ck", b, ob, base_model_id="toy/qwen3@fixed-test",
+                            step=1, base_seed=42, extra={"data_cursor": 1})
     del b, ob
 
     c = _lora_qwen3(lora_seed=5)  # different LoRA init: must be fully overwritten by the checkpoint
     oc = optim.Adam(learning_rate=1e-2)
     mx.random.seed(999)
-    got = G.load_checkpoint(tmp_path / "ck", c, oc)
+    got = G.load_checkpoint(tmp_path / "ck", c, oc, base_model_id="toy/qwen3@fixed-test")
     assert got["step"] == 1 and got["extra"] == {"data_cursor": 1} and got == man
     assert float(mx.random.uniform(shape=(1,)).item()) == expect_next  # RNG schedule restored
     assert int(oc.state["step"].item()) == 1
@@ -429,7 +686,114 @@ def test_checkpoint_roundtrip_is_bit_identical(tmp_path):
     raw[-1] ^= 0xFF
     f.write_bytes(bytes(raw))
     with pytest.raises(ValueError, match="hash mismatch"):
-        G.load_checkpoint(tmp_path / "ck", _lora_qwen3(), optim.Adam(learning_rate=1e-2))
+        G.load_checkpoint(tmp_path / "ck", _lora_qwen3(), optim.Adam(learning_rate=1e-2),
+                          base_model_id="toy/qwen3@fixed-test")
+
+
+@needs_mlx
+def test_checkpoint_rejects_different_base_model_identity(tmp_path):
+    import mlx.optimizers as optim
+
+    source = _qwen3(seed=0)
+    G.make_lora_policy(source, num_layers=2, rank=4, scale=10.0, seed=3)
+    target = _qwen3(seed=1)
+    G.make_lora_policy(target, num_layers=2, rank=4, scale=10.0, seed=3)
+    from mlx.utils import tree_flatten
+
+    source_base = {key: value for key, value in tree_flatten(source.parameters()) if "lora_" not in key}
+    target_base = {key: value for key, value in tree_flatten(target.parameters()) if "lora_" not in key}
+    assert any((source_base[key] != target_base[key]).any().item() for key in source_base)
+    source_optimizer = optim.Adam(learning_rate=1e-2)
+    target_optimizer = optim.Adam(learning_rate=1e-2)
+    samples = _samples_with_lp(source, [S("task", 0, [3], 1, ckpt="source"),
+                                        S("task", 1, [4], 0, ckpt="source")])
+    G.train_step(source, source_optimizer, samples, G.GRPOConfig(),
+                 policy_checkpoint_id="source", policy_step=0)
+    path = tmp_path / "checkpoint"
+    G.save_checkpoint(path, source, source_optimizer, base_model_id="toy/qwen3@revision-a",
+                      step=1, base_seed=7)
+
+    before = G.trainable_digest(target)
+    with pytest.raises(ValueError, match="base model identity mismatch"):
+        G.load_checkpoint(path, target, target_optimizer, base_model_id="toy/qwen3@revision-b")
+    assert G.trainable_digest(target) == before
+
+
+@needs_mlx
+def test_checkpoint_rejects_inconsistent_optimizer_manifest_without_partial_restore(tmp_path):
+    import mlx.optimizers as optim
+
+    source = _bigram(seed=0)
+    source_optimizer = optim.Adam(learning_rate=0.1)
+    samples = _samples_with_lp(source, [S("task", 0, [3], 1), S("task", 1, [4], 0)])
+    G.train_step(source, source_optimizer, samples, G.GRPOConfig(group_size=2),
+                 policy_checkpoint_id="c0", policy_step=0)
+    path = tmp_path / "checkpoint"
+    G.save_checkpoint(path, source, source_optimizer, base_model_id="toy/bigram@v1", step=1,
+                      base_seed=7)
+
+    manifest_path = path / "checkpoint.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["optimizer_step"] = 2
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    target = _bigram(seed=1)
+    target_optimizer = optim.Adam(learning_rate=0.1)
+    model_before = G.trainable_digest(target)
+    optimizer_step_before = int(target_optimizer.state["step"].item())
+    with pytest.raises(ValueError, match="update count"):
+        G.load_checkpoint(path, target, target_optimizer, base_model_id="toy/bigram@v1")
+
+    assert G.trainable_digest(target) == model_before
+    assert int(target_optimizer.state["step"].item()) == optimizer_step_before
+
+
+@needs_mlx
+def test_checkpoint_rejects_different_optimizer_without_partial_restore(tmp_path):
+    import mlx.optimizers as optim
+
+    source = _bigram(seed=0)
+    source_optimizer = optim.Adam(learning_rate=0.1)
+    samples = _samples_with_lp(source, [S("task", 0, [3], 1), S("task", 1, [4], 0)])
+    G.train_step(source, source_optimizer, samples, G.GRPOConfig(group_size=2),
+                 policy_checkpoint_id="c0", policy_step=0)
+    path = tmp_path / "checkpoint"
+    G.save_checkpoint(path, source, source_optimizer, base_model_id="toy/bigram@v1", step=1,
+                      base_seed=7)
+
+    target = _bigram(seed=1)
+    target_optimizer = optim.SGD(learning_rate=0.1)
+    model_before = G.trainable_digest(target)
+    optimizer_step_before = int(target_optimizer.state["step"].item())
+    with pytest.raises(ValueError, match="optimizer identity mismatch"):
+        G.load_checkpoint(path, target, target_optimizer, base_model_id="toy/bigram@v1")
+
+    assert G.trainable_digest(target) == model_before
+    assert int(target_optimizer.state["step"].item()) == optimizer_step_before
+
+
+@needs_mlx
+def test_checkpoint_rejects_optimizer_configuration_mismatch_without_partial_restore(tmp_path):
+    import mlx.optimizers as optim
+
+    source = _bigram(seed=0)
+    source_optimizer = optim.Adam(learning_rate=0.1, eps=1e-8)
+    samples = _samples_with_lp(source, [S("task", 0, [3], 1), S("task", 1, [4], 0)])
+    G.train_step(source, source_optimizer, samples, G.GRPOConfig(group_size=2),
+                 policy_checkpoint_id="c0", policy_step=0)
+    path = tmp_path / "checkpoint"
+    G.save_checkpoint(path, source, source_optimizer, base_model_id="toy/bigram@v1", step=1,
+                      base_seed=7)
+
+    target = _bigram(seed=1)
+    target_optimizer = optim.Adam(learning_rate=0.1, eps=1e-6)
+    model_before = G.trainable_digest(target)
+    optimizer_step_before = int(target_optimizer.state["step"].item())
+    with pytest.raises(ValueError, match="optimizer identity mismatch"):
+        G.load_checkpoint(path, target, target_optimizer, base_model_id="toy/bigram@v1")
+
+    assert G.trainable_digest(target) == model_before
+    assert int(target_optimizer.state["step"].item()) == optimizer_step_before
 
 
 @needs_mlx
@@ -443,11 +807,11 @@ def test_checkpoint_update_count_matches_optimizer_and_destinations_are_immutabl
                  policy_checkpoint_id="c0", policy_step=0)
     path = tmp_path / "checkpoint-1"
     with pytest.raises(ValueError, match="does not match optimizer step"):
-        G.save_checkpoint(path, model, optimizer, step=2, base_seed=7)
+        G.save_checkpoint(path, model, optimizer, base_model_id="toy/bigram@v1", step=2, base_seed=7)
     assert not path.exists()
-    G.save_checkpoint(path, model, optimizer, step=1, base_seed=7)
+    G.save_checkpoint(path, model, optimizer, base_model_id="toy/bigram@v1", step=1, base_seed=7)
     with pytest.raises(FileExistsError, match="already exists"):
-        G.save_checkpoint(path, model, optimizer, step=1, base_seed=7)
+        G.save_checkpoint(path, model, optimizer, base_model_id="toy/bigram@v1", step=1, base_seed=7)
 
 
 # ---------------------------------------------------------------- C1 Option A: exact-ratio sampling
@@ -501,8 +865,9 @@ def test_after_sample_hook_does_not_change_gradient_and_runs_per_microbatch():
     adv, _ = G.group_advantages([s.reward for s in samples])
     work = list(zip(samples, adv))
     calls = []
-    plain, d0 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6)
-    hooked, d1 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6, after_sample=lambda: calls.append(1))
+    plain, d0 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6, policy_step=0)
+    hooked, d1 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6, policy_step=0,
+                                   after_sample=lambda: calls.append(1))
     assert len(calls) == len(work) and d0 == d1
     assert np.array_equal(np.asarray(plain["table"]["weight"]), np.asarray(hooked["table"]["weight"]))
 

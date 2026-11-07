@@ -1,0 +1,24 @@
+{
+  "arms": {
+    "baseline": {
+      "source_sha256": "8408e04a58e82211b1dc0569229baac3948fb6d04d35e181493aea48c9cd8899",
+      "test_sha256": "3bb4c6450f9f79401d4f93426648cf0ff945de4e6f934a1ac8dcda139e56ba8c",
+      "tree_sha256": "aeb07a2f9c0862ab2240f76d4e602be95eb36cb4651d52a55f8ee3d1cd85ceb9"
+    },
+    "fixed": {
+      "source_sha256": "42eb42a853c5465b1059bb26e4dbff53a4997c5d1437cb36b5f25e4d3c144944",
+      "test_sha256": "3bb4c6450f9f79401d4f93426648cf0ff945de4e6f934a1ac8dcda139e56ba8c",
+      "tree_sha256": "88b863803579861c81cae4943f21c782603894124e94f44c8d71736673bb5430"
+    },
+    "mutant": {
+      "source_sha256": "dcc2f6b5aa76bd405446129468474ac20fcd8d8c5549be32f5b155e60e5e3903",
+      "test_sha256": "3bb4c6450f9f79401d4f93426648cf0ff945de4e6f934a1ac8dcda139e56ba8c",
+      "tree_sha256": "020cf78b2731183d6937916b1318c352be6cff10aec67f35396b1e4123d94862"
+    }
+  },
+  "first_parent_sha": "5740091dcd08e4a92940ceae841434a83331cb09",
+  "merge_sha": "5a97398b92fa508a5db40ce70b2307be2a676946",
+  "only_arm_content_difference": "pydantic/plugin/_loader.py",
+  "schema": "vare_pydantic_prepared_task_arm_hashes_v1",
+  "task_id": "pydantic-14213-use-entry-points-api-plugin-loader"
+}

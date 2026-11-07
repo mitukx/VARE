@@ -1,0 +1,19 @@
+{
+  "execution_launcher_path": "results/vare-agent-navigation-diagnostic-v1/attempt-006/run-diagnostic.py",
+  "execution_launcher_sha256": "baa24bc69f1c0a0c2c13232c641226b81eece0a0164f95a02d8045aa71cce3bf",
+  "frozen_before_model_prompt_exposure": true,
+  "gate_status": "NO_GO unchanged; 0/15 eligible unique held-out tasks; no held-out access.",
+  "metric_definition": {
+    "edit_tool_calls": "actions whose tool is replace_text or apply_patch",
+    "valid_edit_calls": "such calls with tool_result.applied is true"
+  },
+  "preflight_path": "results/vare-agent-navigation-diagnostic-v1/attempt-006/preflight.json",
+  "preflight_sha256": "309db1b7048b52e55ae568b2c5f8399da198a2c39a94551276729b56313041f0",
+  "preflight_status": "passed; no model loaded and no new prompt exposed",
+  "prior_result_integrity_addendum_path": "results/vare-agent-navigation-diagnostic-v1/attempt-005/result-integrity-addendum-001.json",
+  "prior_result_integrity_addendum_sha256": "75d2a10fd259cd9359d286239763344cb69b8d0fd4ce5e56149f3ffc39cbfb09",
+  "protocol_path": "results/vare-agent-navigation-diagnostic-v1/attempt-006/protocol.json",
+  "protocol_sha256": "1604515913e389bd1f47468c974b480ab260368f8d13347363bc3a24bf475c7b",
+  "schema": "vare_agent_navigation_protocol_addendum_v1",
+  "scope": "One inference-only sample on the previously exposed diagnostic task. No training, optimizer update, checkpoint, Development or held-out evaluation."
+}

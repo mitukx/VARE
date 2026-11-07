@@ -1,0 +1,25 @@
+{
+  "candidate_id": "pydantic/pydantic#14213",
+  "editable_source_path": "pydantic/plugin/_loader.py",
+  "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+  "grader_image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+  "prompt_and_raw_grader_command_omitted": true,
+  "qualification_rule": "Exact first-parent baseline and the frozen targeted wrong-group mutant fail the exact upstream selector; exact merged source passes; failures are test failures with complete offline container evidence, no timeout or OOM.",
+  "schema": "vare_pydantic_task_qualification_contract_public_v1",
+  "selector": "tests/test_plugin_loader.py::test_loader",
+  "source_identity": {
+    "first_parent_baseline_sha": "5740091dcd08e4a92940ceae841434a83331cb09",
+    "first_parent_path_audit_sha256": "36e837a29c5ea4f5f2a4c42ce290df63ed3300a44a1ccda4413d0dc72001407a",
+    "head_sha": "ef2cb073d6be2ef360d2aedcd5afca0983af2507",
+    "license_spdx": "MIT",
+    "merge_sha": "5a97398b92fa508a5db40ce70b2307be2a676946",
+    "repository": "pydantic/pydantic"
+  },
+  "split_assignment": "UNASSIGNED",
+  "status": "FROZEN_BEFORE_THREE_ARM_EXECUTION",
+  "task_family": "plugin_entry_point_discovery",
+  "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+  "test_path": "tests/test_plugin_loader.py",
+  "test_sha256": "3bb4c6450f9f79401d4f93426648cf0ff945de4e6f934a1ac8dcda139e56ba8c",
+  "timeout_seconds_per_arm": 180
+}

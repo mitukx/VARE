@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-successor-task-inventory-blinded-heldout-proposal-v1",
+  "status": "PROPOSAL_NOT_APPROVED_NOT_AUTHORIZED",
+  "created_at_utc": "2026-11-06T19:04:18Z",
+  "purpose": "Provide an independently reviewable route to a valid Train/Development inventory and a future blinded Held-Out readiness decision without changing or bypassing the frozen v2 NO-GO lock.",
+  "predecessor_readiness_lock": {
+    "path": "protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+    "sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7b5b1c991ce4",
+    "decision": "NO_GO",
+    "eligible_unique_heldout_tasks": 0,
+    "required_unique_heldout_tasks": 15,
+    "this_proposal_changes_predecessor": false
+  },
+  "authorization_boundary": {
+    "proposal_approval_authorizes_candidate_discovery": false,
+    "task_qualification_authorizes_split_assignment": false,
+    "train_or_development_qualification_increments_heldout_count": false,
+    "heldout_eligibility_authorizes_training": false,
+    "successor_go_requires_separate_signed_decision": true,
+    "model_rollout_or_training_authorized_now": false,
+    "heldout_asset_access_authorized_now": false
+  },
+  "task_roles": {
+    "train": "May be used for model exposure and learning only after explicit assignment and separate training authorization.",
+    "development": "May be used for matched policy comparison and tuning only after explicit assignment; never reclassified as Held-Out.",
+    "heldout": "Custodian-controlled evaluation assets remain invisible to model operators, prompt construction, training, and Development selection until an approved independent evaluation event."
+  },
+  "identity_and_deduplication": {
+    "candidate_identity_fields": [
+      "upstream repository canonical URL",
+      "immutable source revision",
+      "upstream change identifier",
+      "task-family identity",
+      "normalized acceptance contract"
+    ],
+    "family_review_inputs": [
+      "changed source paths and patch fingerprint",
+      "test paths and normalized test behavior fingerprint",
+      "task intent and acceptance-condition fingerprint",
+      "upstream issue/PR ancestry and related backports"
+    ],
+    "deduplication_rule": "Treat same-task variants, backports, cherry-picks, patch-equivalent changes, and tasks with materially overlapping acceptance contracts as one family. Exclude a family if any member was previously exposed, assigned, rolled out, graded with feedback, or used in a training/Development run.",
+    "uncertain_family_disposition": "exclude pending independent review",
+    "heldout_identities_or_assets_listed": false
+  },
+  "provenance_and_qualification": {
+    "required_hashes": [
+      "source repository URL, commit, and relevant source blobs",
+      "task patch and clean baseline tree",
+      "public test files and exact selectors",
+      "trusted grader code, configuration, and dependency image digest",
+      "candidate source/test/grader arm manifests",
+      "task definition and acceptance contract"
+    ],
+    "qualification_arms": [
+      "baseline fails at the intended assertion",
+      "independently authored wrong mutant fails the same assertion",
+      "fixed candidate passes the exact selector"
+    ],
+    "environment_rule": "Run only pre-frozen selectors in an isolated CPU-only or explicitly task-compatible image with network disabled. A missing dependency or isolation failure is UNSUPPORTED, never a task negative or qualification pass.",
+    "trusted_grading": "Bind an independently maintained grader result to the candidate patch digest and immutable trajectory head; no model receives hidden expected output or heldout feedback."
+  },
+  "split_and_exposure_controls": {
+    "assignment_order": [
+      "freeze a metadata-only inventory and exposure exclusions",
+      "an independent custodian qualifies source/tests/graders and reviews task families inside a sealed evaluator environment; model operators and prompt authors receive no task content",
+      "the custodian assigns Train, Development, or Held-Out and commits the assignment before any content is exposed to model operators",
+      "publish only assignment counts and a cryptographic commitment; retain identities and split secrets with the custodian",
+      "only then permit explicitly authorized Train or Development content to the designated model/prompt team"
+    ],
+    "heldout_split": "An independent custodian assigns eligible families before any model exposure using a precommitted secret-seeded procedure; the public record contains a commitment and counts, not task identities or prompts.",
+    "leakage_rule": "No source, tests, grader, prompt, task-family fingerprint, or intermediate result from Held-Out may enter Train, Development, prompt design, or model context. Remove contaminated family members from all splits.",
+    "heldout_custodian": "A named evaluator independent of model training owns Held-Out source, tests, graders, allocation secret, and evaluation execution. Policy operators receive only aggregate approved metrics after the frozen comparison closes.",
+    "content_review_segregation": "Any person who reviews candidate source, tests, task text, or grader inputs for qualification and family deduplication is excluded from model/prompt construction and training unless the task is assigned Train or Development and that exposure is explicitly authorized. Held-Out qualification remains custodian-only.",
+    "exposure_registry": "Maintain a private, append-only registry of candidate identity, task-family key, model/prompt exposure, grading feedback, run IDs, and split. The public protocol publishes only the registry digest and exclusion counts."
+  },
+  "successor_readiness_decision": {
+    "successor_lock_version": "mlsys-actual-model-update-readiness-v3",
+    "minimum_unique_eligible_heldout_tasks": 15,
+    "counting_rule": "Count only independently source-qualified, grader-qualified, non-exposed, non-duplicated task families assigned Held-Out before model exposure. Train and Development tasks count as zero.",
+    "required_decision_fields": [
+      "frozen inventory and exposure-registry hashes",
+      "qualified Train/Development/Held-Out counts",
+      "unique task-family count and deduplication review hash",
+      "grader and environment provenance",
+      "heldout custodian attestation",
+      "independent approval and timestamp",
+      "explicit GO or NO_GO and claim boundary"
+    ],
+    "go_effect": "A successor GO permits only the separately specified experiment. It does not itself authorize model inference, training, or deployment; those require explicit run authorization and matched Development evaluation.",
+    "predecessor_lock_rewrite": false
+  },
+  "evaluation_metrics_for_future_protocol": [
+    "task success under independent trusted grading",
+    "trusted reward distribution and between-sample variance",
+    "valid submitted patch rate",
+    "time to first useful source read and first valid edit",
+    "wasted and false-intercepted searches",
+    "tool and token budgets",
+    "latency"
+  ],
+  "current_scope": {
+    "candidate_selection_v3_substitution_allowed": false,
+    "vllm_64830_status": "selected but UNASSIGNED; source qualification UNSUPPORTED in the current offline image",
+    "new_candidate_selected": false,
+    "heldout_access_or_enumeration": false,
+    "training_or_rollout": false,
+    "next_required_action": "Obtain independent protocol approval for a new metadata-only selection inventory or prepare a pinned compatible offline CPU image under its own authorized, hash-bound addendum. Then source-qualify tasks, review families, assign splits before exposure, and request explicit training authorization separately."
+  }
+}

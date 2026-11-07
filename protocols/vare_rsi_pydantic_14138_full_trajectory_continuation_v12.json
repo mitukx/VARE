@@ -1,0 +1,239 @@
+{
+  "agent_tool_contract": {
+    "max_action_tokens": 512,
+    "observed_output_handling": [
+      "recover malformed or truncated apply_patch JSON only",
+      "alias hunk to patch",
+      "infer path only when exactly one editable source path is allowlisted",
+      "add unified file headers only for a bare hunk",
+      "recount unified hunk line counts before git apply validation"
+    ],
+    "safety": "Every normalized patch remains subject to exact allowlist checks and git apply --check before mutation; grader and held-out files remain unavailable to the policy.",
+    "system_prompt_sha256": "67a0c5b47b1c179c468320cba23c0c23a43720de019741078bcc1d3b07836237",
+    "tool_help_sha256": "f1706b455619d01c3885dc29dd5a1e43c89044223c5cbe5c15a6cd105d452e22",
+    "version": "mlx-local-coding-agent-tool-adapter-v2"
+  },
+  "basis": "Prospective, user-authorized continuation after the prior #14138 group retained five complete independently graded trajectories with reward zero and stopped on sample 6 after a 184,612,291-byte swap increase while free memory remained 35%. Raw traces show seven of eight malformed apply_patch outputs hit the 384-token action limit and ended incomplete, one completed patch body contained unescaped double quotes, and several complete hunks had incorrect line counts. Freeze the narrow local tool-adapter correction, the explicit patch schema, a 512-token action cap, and fresh sample indices 7\u201314 before further prompts. Exclude all prior indices 0\u20136; keep Development sealed until a valid optimizer update and leave held-out NO-GO unchanged.",
+  "continuation_of_partial_exposure": {
+    "abort_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
+    "abort_sha256": "5acc10f1992028bbcc56776704bf059a6837d4a582dc75321836dbd221c097c2",
+    "additional_excluded_partial_sample": {
+      "attempt": 2,
+      "completed_rollout": false,
+      "independent_grade_produced": false,
+      "resource_stop": {
+        "allowed_growth_bytes": 67108864,
+        "baseline_swap_used_bytes": 985011322,
+        "observed_growth_bytes": 184612291,
+        "reason": "swap_growth_exceeded_allowance",
+        "state": {
+          "memory_pressure_free_pct": 35.0,
+          "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 35%",
+          "swap_output": "vm.swapusage: total = 2048.00M  used = 1115.44M  free = 932.56M  (encrypted)",
+          "swap_used_bytes": 1169623613
+        }
+      },
+      "sample_index": 6,
+      "tool_turns": 13,
+      "trajectory_artifact_sha256": "50715f691929178003a9b59783564c80c23dc7c7b9a85d8e2eb69e04fd3c332c",
+      "trajectory_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-002/samples/sample-06/trajectory.json"
+    },
+    "completed_rollout": false,
+    "continuation_attempt_summary_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-002/summary.json",
+    "continuation_attempt_summary_sha256": "472435f4f96c7d1d24e378a65f0764d5a3bf4cb08b842f932ae0269cb67de642",
+    "independent_grade_produced": false,
+    "optimizer_updates": 0,
+    "partial_tool_turns": 3,
+    "prior_run_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/real-model-run-v18-14138-full-trajectory-grpo-group.lock.json",
+    "prior_run_lock_sha256": "9d033771dc98b04e3b1e50e2d9582e5d4be22c1f28b525872c4682afe5935759",
+    "resource_stop_reason": "swap growth of 7277117 bytes exceeded the frozen zero-byte allowance while system-wide memory free remained 34 percent",
+    "sample_index": 0,
+    "trajectory_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/training/pydantic-14138-direct-builtin-scalar-union-schema/sample-00/trajectory.json",
+    "trajectory_sha256": "b7700fe8c14b403ff7514035f2ef94f9a42b36bb2d8c477da924dcd09fded0aa"
+  },
+  "evaluation": {
+    "arms": [
+      "unchanged pretrained policy",
+      "one-update candidate policy"
+    ],
+    "attempts_per_policy_per_task": 1,
+    "decode": "deterministic greedy",
+    "development_is_heldout": false,
+    "max_action_tokens": 512,
+    "max_generated_tokens": 4096,
+    "max_prompt_tokens": 4096,
+    "max_tool_turns": 16,
+    "max_wall_seconds_per_attempt": 900,
+    "no_evaluation_if_update_preconditions_fail": true,
+    "same_prompt_source_tools_and_budgets": true,
+    "task_ids": [
+      "pydantic-13997-explicit-json-schema-by-alias-override",
+      "pydantic-14103-ignore-internal-dataclass-extras"
+    ]
+  },
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14138-full-trajectory-tool-adapter-v12",
+  "frozen_at_utc": "2026-11-05T21:23:42Z",
+  "limitations": [
+    "All assigned tasks are in pydantic/pydantic; cross-repository generalization is not measured.",
+    "This protocol tests a full-trajectory terminal-credit implementation path; no successful update or task improvement is presumed.",
+    "Even if one update and matched Development comparison complete, this is not evidence of recursive improvement or a completed Long-Horizon RL system.",
+    "The previous #14195 task and its 24 exposures remain preserved and excluded from the new group.",
+    "The earlier partial sample 0 is preserved and excluded from training; this continuation uses indices 1\u20138 and raises the cumulative task exposure cap to 9.",
+    "Prior sample indices 0\u20136 remain excluded: index 0 stopped after three turns, indices 1\u20135 completed with trusted reward zero, and index 6 stopped after 13 turns without grading.",
+    "The next group uses fresh indices 7\u201314 and raises the cumulative task exposure cap to 15. Only the prior traces informed the narrow JSON and patch argument adapter correction; no grader output or Development task is exposed to the policy.",
+    "A 256 MiB system swap-growth allowance covers the previously observed 176 MiB increase while the free-memory floor remains 15%; the run stops if either limit is exceeded."
+  ],
+  "no_go_gate": {
+    "heldout_access": false,
+    "heldout_assignment": false,
+    "heldout_evaluation": false,
+    "path": "work/VARE-rsi-integration-20261105/protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+    "sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+    "status": "NO_GO remains frozen and unchanged"
+  },
+  "preserved_negative_results": [
+    {
+      "optimizer_updates": 0,
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14195-attempt-001/group-adjudicated-summary-v1.json",
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rollouts": 8,
+      "sha256": "9c068a0c7caf9f26e701b1772bae4a31eb0118ade1bae69dd1d498ac722f4d08"
+    },
+    {
+      "optimizer_updates": 0,
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14195-attempt-002/group-adjudicated-summary-v1.json",
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rollouts": 8,
+      "sha256": "c7216c57d35d0a808ee240fec46de6ad5e0890bb84094f8029d53a650a2750b7"
+    },
+    {
+      "optimizer_updates": 0,
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14195-attempt-003/training-rollout-summary.json",
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rollouts": 8,
+      "sha256": "30833b415e86709723a9ce2aaa304b27a664af68383abfc2dd30da0d33b34053"
+    },
+    {
+      "attempted_rollouts": 1,
+      "completed_rollouts": 0,
+      "optimizer_updates": 0,
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
+      "reason": "resource_stop_after_three_tool_turns_before_independent_grading",
+      "rewards": [],
+      "sha256": "5acc10f1992028bbcc56776704bf059a6837d4a582dc75321836dbd221c097c2",
+      "trajectory_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/training/pydantic-14138-direct-builtin-scalar-union-schema/sample-00/trajectory.json",
+      "trajectory_sha256": "b7700fe8c14b403ff7514035f2ef94f9a42b36bb2d8c477da924dcd09fded0aa"
+    },
+    {
+      "all_completed_rewards_zero": true,
+      "attempted_rollouts": 6,
+      "completed_rollouts": 5,
+      "optimizer_updates": 0,
+      "partial_sample_index": 6,
+      "partial_sample_reward": null,
+      "path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-002/summary.json",
+      "sha256": "472435f4f96c7d1d24e378a65f0764d5a3bf4cb08b842f932ae0269cb67de642"
+    }
+  ],
+  "protocol_id": "vare-rsi-fresh-train-dev-real-model-grpo-v6-14138-tool-adapter-recovery",
+  "resources": {
+    "abort_if_free_memory_below_floor": true,
+    "abort_if_swap_growth_exceeds_allowance": true,
+    "memory_free_floor_pct": 15.0,
+    "minimum_disk_free_bytes": 8589934592,
+    "swap_growth_allowed_bytes": 268435456
+  },
+  "rollout_budget": {
+    "max_action_tokens": 512,
+    "max_generated_tokens": 4096,
+    "max_prompt_tokens": 4096,
+    "max_tool_turns": 16,
+    "max_wall_seconds_per_attempt": 900
+  },
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_CONTINUATION_GROUP_PROMPT_EXPOSURE",
+  "task_allocation": {
+    "development": {
+      "access_before_a_valid_optimizer_update": false,
+      "evaluation_only_after_valid_update": true,
+      "membership_source_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/train-dev-assignment-v9-pydantic-14195-tool-contract-v3.json",
+      "membership_source_sha256": "a9d28c84937fb56e92d6836337808e6a1dc795a7a2ca17e0c8e1771475c269a0",
+      "task_ids": [
+        "pydantic-13997-explicit-json-schema-by-alias-override",
+        "pydantic-14103-ignore-internal-dataclass-extras"
+      ]
+    },
+    "train": {
+      "previous_assignment_role": "train, previously model-exposed; fresh sample indices reserved",
+      "prior_candidate_or_model_prompt_exposure": true,
+      "prompt_variant_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-prompt-variant-pydantic-14138-v1.json",
+      "prompt_variant_sha256": "937359384f7a494cc9f4e6788d7b8b5eda67f21fc1f6b30898a1c7c4d4e43fa4",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14138/attempt-001/summary.json",
+      "qualification_summary_sha256": "94c5c4e9bb43c5afa2f77133607ee977a5060ce391753f7cee5c8580025b3df1",
+      "task_definition_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-definition-pydantic-14138-v1.json",
+      "task_definition_sha256": "0a31f22b210fb8baad40fc5c78d0734a5eb4f9d26beb3e075a40bd1afb74d926",
+      "task_id": "pydantic-14138-direct-builtin-scalar-union-schema"
+    }
+  },
+  "training": {
+    "credit_assignment": "full_trajectory_terminal_reward",
+    "cumulative_task_exposure_cap": 15,
+    "group_size": 8,
+    "new_rollouts_max": 8,
+    "objective": "One fresh on-policy GRPO sample per complete coding-agent trajectory for indices 7\u201314. Exclude all prior indices 0\u20136, including two partial and five independently graded zero-reward trajectories. Preserve every action segment and behavior log-probability; apply independent terminal reward across all generated action tokens only if the complete eight-sample group is valid and has reward variance.",
+    "optimizer_updates_max": 1,
+    "prior_rollouts_for_this_task": 7,
+    "sample_indices": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "sampling": {
+      "distribution": "untruncated softmax(logits / temperature)",
+      "min_p": 0.0,
+      "temperature": 0.8,
+      "top_k": 0,
+      "top_p": 1.0
+    },
+    "update_only_if": [
+      "all eight trajectories have valid independently trusted rewards",
+      "the group has reward variance",
+      "every trained action token has finite sampling-time and differentiable same-policy log-probabilities matching within 1e-6",
+      "gradient is finite and nonzero",
+      "the parameter delta is finite and nonzero",
+      "checkpoint save and fresh reload pass"
+    ]
+  }
+}

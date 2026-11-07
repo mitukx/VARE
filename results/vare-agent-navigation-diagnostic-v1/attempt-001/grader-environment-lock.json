@@ -1,0 +1,50 @@
+{
+  "base_image_id": "sha256:b1219d7cb06a6b30b21e2b9a24c77c594eeb39f170e0371ed81b36a0a3fa5806",
+  "build": {
+    "base_environment_lock_sha256": "427cd9cd0e6d59e766bcaeef4b961c6c2dddecd32ac3771cf24bea03f0221313",
+    "change": "Built on pinned pydantic-core 2.50.4 image; added only the frozen dirty-equals 0.9.0 wheel required by tests/test_config.py. The original 2.50.0 task image is unchanged.",
+    "command": "docker --context colima build --pull=false --network=none --tag vare/pydantic-14115-navdiag-grader:v1 <context>",
+    "dockerfile_sha256": "a5755f8eb99e5c03b16e77401e8ad94f9efaf48b4489668f61d70a7af8723e90",
+    "wheel": {
+      "filename": "dirty_equals-0.9.0-py3-none-any.whl",
+      "package": "dirty-equals",
+      "sha256": "ff4d027f5cfa1b69573af00f7ba9043ea652dbdce3fe5cbe828e478c7346db9c",
+      "version": "0.9.0"
+    }
+  },
+  "caps": {
+    "cpus": 2,
+    "memory_bytes": 3040333824,
+    "memory_swap_bytes": 3040333824,
+    "no_network": true,
+    "pids": 128,
+    "read_only_root": true,
+    "timeout_seconds_per_arm": 180
+  },
+  "frozen_at_utc": "2026-11-06T11:30:57+00:00",
+  "image_id": "sha256:fcf86e9268cfd5bbc6a38e5e22569d70cc048378dbb1d4f55bc9241cff61c940",
+  "installed_versions": {
+    "dirty_equals": "0.9.0",
+    "pydantic": "2.14.3",
+    "pydantic_core": "2.50.4",
+    "pytest": "8.4.2"
+  },
+  "network": "none during image build, preflight, and grading",
+  "platform": "linux/arm64",
+  "protocol_id": "vare-pydantic-14115-navigation-diagnostic-grader-v1",
+  "runtime": "Python 3.12 CPU",
+  "schema": "vare_diagnostic_grader_environment_lock_v1",
+  "source_environment_mismatch": {
+    "observed_error": "Pydantic import requires pydantic-core 2.50.4; pinned image provides 2.50.0.",
+    "original_environment_lock_sha256": "63854ce64cd785c2021de71e529fe1c5cdeb0fc6bed8113ea8c163e2afc1c07a",
+    "original_image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+    "original_lock_modified": false
+  },
+  "status": "FROZEN_BEFORE_THREE_ARM_GRADER_VALIDATION_AND_MODEL_PROMPT_EXPOSURE",
+  "task": {
+    "candidate_feedback": false,
+    "selector": "tests/test_config.py::test_copy_defer_build_mocks",
+    "task_id": "pydantic-14115-deferred-model-copy-and-unpickle",
+    "test_sha256": "e48c8d12d47548829e6b243a7704f60cc82aac4bdc9bba38d0eecd0feec2effa"
+  }
+}

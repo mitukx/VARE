@@ -1,0 +1,94 @@
+{
+  "assignment_sha256": "2e6dccc6edffa57db28f7e48dce7ee746987ea13154425117bd405b659d85381",
+  "development_prompt_exposed_to_model": false,
+  "device": "Device(gpu, 0)",
+  "disk_free_bytes": 52146388992,
+  "exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "duplicate_push_ci": {
+      "run_id": 42150541601,
+      "run_number": 2477,
+      "status": "success"
+    },
+    "head_sha": "a6c6050c4fbb2e2631c00a3e7919c46d1c09cca0",
+    "pull_request": 199,
+    "required_workflows": [
+      {
+        "name": "ci",
+        "run_id": 42150549491,
+        "run_number": 2478,
+        "status": "success"
+      },
+      {
+        "name": "cpu-evidence",
+        "run_id": 42150549462,
+        "run_number": 937,
+        "status": "success"
+      },
+      {
+        "name": "e2e-system-cpu",
+        "run_id": 42150549599,
+        "run_number": 463,
+        "status": "success"
+      }
+    ],
+    "verified_at_utc": "2026-11-06T02:41:07Z"
+  },
+  "heldout_access": false,
+  "integration_head_sha": "a6c6050c4fbb2e2631c00a3e7919c46d1c09cca0",
+  "machine": "arm64",
+  "memory_state": {
+    "memory_pressure_free_pct": 61.0,
+    "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 61%",
+    "swap_output": "vm.swapusage: total = 3072.00M  used = 2100.62M  free = 971.38M  (encrypted)",
+    "swap_used_bytes": 2202659717
+  },
+  "metal_available": true,
+  "model_files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+  "model_manifest_sha256": "956513b153d2b4ef16953c226e455fe43aea90cd09ecb7b212d2ccaa0b2c994a",
+  "new_group_prompt_exposed": false,
+  "new_sample_indices": [
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55
+  ],
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "pinned_task_environments_verified": true,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "protocol_sha256": "dd57729a408fba7abd837f7b3d439c80b7869115cc153cf567ab9ffae00e9361",
+  "python": "3.12.12",
+  "records": [
+    {
+      "qualification_passed": true,
+      "split": "train",
+      "task_id": "pydantic-14138-direct-builtin-scalar-union-schema"
+    },
+    {
+      "qualification_passed": true,
+      "split": "development",
+      "task_id": "pydantic-13997-explicit-json-schema-by-alias-override"
+    },
+    {
+      "qualification_passed": true,
+      "split": "development",
+      "task_id": "pydantic-14103-ignore-internal-dataclass-extras"
+    }
+  ],
+  "run_lock_sha256": "512683265ecc1c20870fe7966c00051da8dc0891369e4650c72237b43cc362a4",
+  "run_output_dir_absent": true,
+  "runtime_versions": {
+    "huggingface-hub": "2.4.0",
+    "mlx": "0.32.4",
+    "mlx-lm": "0.32.0",
+    "numpy": "2.5.4"
+  },
+  "schema": "vare_pre_exposure_preflight_v1",
+  "status": "passed",
+  "verified_at_utc": "2026-11-06T02:41:34Z"
+}

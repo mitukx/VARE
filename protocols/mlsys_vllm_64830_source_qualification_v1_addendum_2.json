@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-vllm-64830-source-qualification-v1-addendum-2",
+  "parent_protocol": "protocols/mlsys_vllm_64830_source_qualification_v1.json",
+  "parent_protocol_sha256": "f54a7c6e0c142429090dd0ba15dd1ca0be1566690f8bf66a19f47fe70b0b3c79",
+  "previous_addendum": "protocols/mlsys_vllm_64830_source_qualification_v1_addendum_1.json",
+  "previous_addendum_sha256": "8d7d481f7082409854b0c45d0a558ea91cc7e0b82f2ea57d75d8b364471b589e",
+  "created_at_utc": "2026-11-06T19:04:18Z",
+  "purpose": "Freeze exact source/test inputs, regression selectors, wrong-mutant construction, and the bounded test-arm commands before any candidate test. Package-only preflight shows the available offline arm cannot execute the selectors without adding prohibited dependencies, so no test arm is started.",
+  "selection_integrity": {
+    "selection_protocol": "protocols/mlsys_fresh_development_candidate_selection_v3.json",
+    "selection_protocol_sha256": "7b0e88d37ed11380bf7d590dfb4484fc63535aa985d72dfb2fe1086c28183148",
+    "selection_result": "results/mlsys-fresh-development-candidate-selection-v3/selection.json",
+    "selection_result_sha256": "34dd94a43ea5b8224149fa7edf5351889e77de87bc3c81f04a6c3ac73e6f5735",
+    "frozen_input_snapshot_commit": "7b517b0c15805bf1d600cfd02c96df937be130fb",
+    "frozen_inputs_verified_at_snapshot": true,
+    "frozen_input_sha256": {
+      "protocols/mlsys_fresh_development_candidate_discovery_v4.json": "937bbbac984ca92c993c15dc1b973d80d8a58834ce9d8303135ef7e8f1fbee1a",
+      "results/mlsys-fresh-development-candidate-discovery-v4/candidate-pool.json": "8c2fd7e519723e27f8b2b5274d03c340d32c5e552191869ddc23f63f46bd0370",
+      "results/mlsys-fresh-development-candidate-discovery-v4/screen.json": "1b435a74a8f99f184f717c6248bf6674cab4b29986d2da581fa5e4e09728d528",
+      "protocols/mlsys_fresh_development_candidate_selection_v1.json": "19254086ccd3093ed5a85518f4d49088fa9323b171e8ed190e0dd13f5d37ae10",
+      "results/mlsys-fresh-development-candidate-selection-v1/selection.json": "2ba539e52536e37ef47cd3df41171ab6ce1a5368c07ecee0022835e3e1e4cc3d",
+      "results/mlsys-fresh-development-candidate-selection-v1/task-family-overlap-review-v1.json": "6a2f6bcff7bf58a2d02d0a1f83c23e43fd3f2a5449d683dbbfc495de97df9bb0",
+      "protocols/mlsys_fresh_development_candidate_selection_v2.json": "e728ebc6dd5fddf930b3d11bab093eab1b601fb3fa596cfbbb55e001dae28359",
+      "results/mlsys-fresh-development-candidate-selection-v2/selection.json": "fdf5c2977f8eba36bc31b72057c2eca66923ec2dd1a77a396f30377dcaee5bd8",
+      "research/flagship/state.json": "68446809c772dd787fea0a3d2e7da6787f3bb93d58e8b344302f17e3c3f034f0",
+      "scripts/select_mlsys_fresh_development_candidate_v1.py": "f54f8a07e258c176a2e36e6cb89f8e44014c989ae9834d3a0ec989f2694fb1b8"
+    },
+    "candidate_substitution_authorized": false,
+    "selected_identity": "vllm-project/vllm#64830",
+    "candidate_task_tests_executed_during_selection": false
+  },
+  "candidate_identity": {
+    "repository": "vllm-project/vllm",
+    "pull_request": 64830,
+    "head_sha": "9800451ab0e78104971592315e5b26546c5e9993",
+    "head_parent_sha": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "corrected_baseline_sha": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "verified_common_ancestor_sha": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+    "historical_selection_merge_base_sha": "17550580e932f15e772185847382d3ae4211f5ec",
+    "historical_merge_base_disposition": "The value 17550580... is the later squash merge's first parent, not the selected PR head's baseline. Preserve the original metadata deviation and the correction in addendum 1; do not rewrite either record.",
+    "changed_paths": [
+      "tests/test_config.py",
+      "tests/v1/spec_decode/test_custom_speculator.py",
+      "vllm/config/vllm.py"
+    ],
+    "baseline_file_sha256": {
+      "vllm/config/vllm.py": "e14afda305e9fdb3ceb9ff77f58e71db62da35de287d30490177364a52452738",
+      "tests/test_config.py": "f75334976fa49e345e3a63ce3d5cd51878e1ace798c26edc3cfd29f89d8be3a9",
+      "tests/v1/spec_decode/test_custom_speculator.py": "8b313791b65817b7f5330da5ea44ec13cbed65bb7ea138747c09ba0ba5b929a8"
+    },
+    "fixed_file_sha256": {
+      "vllm/config/vllm.py": "9761b7dfbe0704a6136ca05147e3996e372d5c17fa64e5c224f1950ef40a873e",
+      "tests/test_config.py": "5e319fa174857ea617e6aff6b0cf46d0c18a9c2649eb492c8fb819978812b16e",
+      "tests/v1/spec_decode/test_custom_speculator.py": "42902c4605bae4b4c001dbfe40579e5b5a04e3bacaf13dc898a16e8dc5edcf33"
+    }
+  },
+  "qualification_design": {
+    "selectors": [
+      "tests/test_config.py::test_v1_model_runner_rejects_v2_only_config",
+      "tests/v1/spec_decode/test_custom_speculator.py::test_custom_speculator"
+    ],
+    "command": "python -m pytest -q tests/test_config.py::test_v1_model_runner_rejects_v2_only_config tests/v1/spec_decode/test_custom_speculator.py::test_custom_speculator",
+    "arms": {
+      "baseline": {
+        "checkout": "d90e35cffa21729ac55bb0477a0d64f5127dbcda",
+        "expected": "The selected V1 unsupported-feature regression assertion fails for the candidate behavior absent from the baseline."
+      },
+      "wrong_mutant": {
+        "starting_checkout": "9800451ab0e78104971592315e5b26546c5e9993",
+        "mutation": "Delete exactly the V1 guard block `if self.watermark_config is not None: unsupported.append(\"watermarking\")` from vllm/config/vllm.py, preserving all other bytes.",
+        "mutated_source_sha256": "ea86b9e8b0b6bd5d6f81d5c9bf64f520134ca870c1a927e018fea3fcefd13384",
+        "mutation_diff_sha256": "82d1f0f8936da8ac4416ccefe9660e38bad48575c27b60576f3cab5776a0c81b",
+        "expected": "The watermarking parameter case of test_v1_model_runner_rejects_v2_only_config fails its expected-feature assertion."
+      },
+      "fixed": {
+        "checkout": "9800451ab0e78104971592315e5b26546c5e9993",
+        "expected": "Both frozen selectors pass."
+      }
+    },
+    "isolation": {
+      "network": "disabled",
+      "accelerators": "disabled; CPU only",
+      "model_or_agent": "none",
+      "candidate_source": "immutable arm-specific checkout; no network mount",
+      "trusted_test": "read-only test view, not writable by the candidate",
+      "maximum_wall_seconds_per_arm": 600,
+      "maximum_memory_bytes_per_arm": 8589934592,
+      "retries": 0,
+      "dependency_installation": "prohibited for this attempt"
+    }
+  },
+  "pretest_environment": {
+    "host": "Apple Silicon M1 Pro, arm64, CPU-only test arm",
+    "runtime": "Colima Docker context, arm64 Linux",
+    "image": "vare/fresh-qualification-transformers:0.3",
+    "image_id": "sha256:d93a01090a15c8c9ce47d7e08c6bc935f1abb83683f6318dff866a07f08f8ff2",
+    "probe": "Package-presence only; no candidate source mounted and no candidate test imported or executed. Container used --network none, --read-only, unprivileged UID, dropped capabilities, no-new-privileges, 8 GiB memory cap, and 2 CPU cap.",
+    "python": "3.12.15",
+    "packages_present": {
+      "pytest": true,
+      "torch": true,
+      "transformers": true
+    },
+    "required_packages_missing": {
+      "vllm": true,
+      "msgspec": true,
+      "triton": true
+    },
+    "test_arm_started": false
+  },
+  "process_deviation": {
+    "preserve_addendum_1_deviation": true,
+    "description": "The original metadata and patch fetches were batched, so candidate patch content was accessed before the baseline discrepancy had been resolved. Addendum 1 records the deviation and corrects the baseline. This addendum binds exact source/test hashes but does not erase that history.",
+    "candidate_test_execution": false,
+    "heldout_access": false,
+    "model_or_agent_exposure": false
+  },
+  "decision": {
+    "qualification_status": "UNSUPPORTED",
+    "reason": "The inspected pre-existing arm64 offline image lacks msgspec and Triton and does not include the candidate vLLM package. Network access and arbitrary dependency installation are prohibited, and the frozen preflight identifies no compatible prebuilt CPU-only arm. Running the selectors would therefore be a dependency-failure result, not task evidence.",
+    "baseline_arm": "NOT_RUN",
+    "wrong_mutant_arm": "NOT_RUN",
+    "fixed_arm": "NOT_RUN",
+    "candidate_test_count": 0,
+    "source_level_qualification": false,
+    "split_assignment": "UNASSIGNED",
+    "training_authorized": false,
+    "model_inference_authorized": false,
+    "heldout_access": false,
+    "frozen_no_go_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7b5b1c991ce4",
+    "frozen_no_go_modified": false
+  }
+}

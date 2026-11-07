@@ -1,0 +1,17 @@
+
+==================================== ERRORS ====================================
+____________________ ERROR collecting tests/test_config.py _____________________
+tests/test_config.py:17: in <module>
+    from pydantic import (
+pydantic/__init__.py:8: in <module>
+    _ensure_pydantic_core_version()
+pydantic/version.py:94: in _ensure_pydantic_core_version
+    raise SystemError(
+E   SystemError: The installed pydantic-core version (2.50.4) is incompatible with the current pydantic version, which requires 2.50.0. If you encounter this error, make sure that you haven't upgraded pydantic-core manually.
+=========================== short test summary info ============================
+ERROR tests/test_config.py - SystemError: The installed pydantic-core version...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 error in 0.10s
+QUAL_MEMORY_PEAK_BYTES=42393600
+ERROR: found no collectors for /workspace/tests/test_config.py::test_copy_defer_build_mocks
+

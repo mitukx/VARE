@@ -1,0 +1,60 @@
+{
+  "arms": [
+    {
+      "arm": "baseline",
+      "container_status": "exited",
+      "exit_code": 4,
+      "expected_exit_code": 1,
+      "grade_status": "infrastructure_or_contract_failure",
+      "log_sha256": "ee71a2f997ec3f888c56ee82b1f865c8f93fc78708161b2b531ba82f502022e4",
+      "oom_killed": false,
+      "pytest_collection_or_fixture_error": true,
+      "pytest_failure_summary_present": false,
+      "pytest_pass_summary_present": false,
+      "reward": 0,
+      "timed_out": false,
+      "wall_seconds": 0.643
+    },
+    {
+      "arm": "fixed",
+      "container_status": "exited",
+      "exit_code": 4,
+      "expected_exit_code": 0,
+      "grade_status": "infrastructure_or_contract_failure",
+      "log_sha256": "e746791c0a89941393f69e8906e9c632d58ff52a7d7a617942fcc54056954161",
+      "oom_killed": false,
+      "pytest_collection_or_fixture_error": true,
+      "pytest_failure_summary_present": false,
+      "pytest_pass_summary_present": false,
+      "reward": 0,
+      "timed_out": false,
+      "wall_seconds": 0.604
+    },
+    {
+      "arm": "mutant",
+      "container_status": "exited",
+      "exit_code": 4,
+      "expected_exit_code": 1,
+      "grade_status": "infrastructure_or_contract_failure",
+      "log_sha256": "2a8ed23097c76b2f1b707bb2d61bcf1f4f71d6ef4959ec0d9c3d3bb023c0f56a",
+      "oom_killed": false,
+      "pytest_collection_or_fixture_error": true,
+      "pytest_failure_summary_present": false,
+      "pytest_pass_summary_present": false,
+      "reward": 0,
+      "timed_out": false,
+      "wall_seconds": 0.617
+    }
+  ],
+  "completed_at_utc": "2026-11-06T06:09:19.539929Z",
+  "development_evaluation": false,
+  "freeze_sha256": "7111794c1e1b2c1bd08657d6a95b37f61916fbfde3a2dab157446da5c76691e4",
+  "heldout_access": false,
+  "model_exposure": false,
+  "prompt_exposure": false,
+  "schema": "vare_pydantic_task_qualification_result_v1",
+  "status": "NOT_QUALIFIED_OR_UNTRUSTED",
+  "task_definition_sha256": "046c73a16a204d0bfb3b92902c70c53c23638789327dd0b47bcdca36da69f7fb",
+  "task_id": "pydantic-14115-deferred-model-copy-and-unpickle",
+  "training_or_optimizer_update": false
+}

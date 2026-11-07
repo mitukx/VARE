@@ -1,0 +1,273 @@
+{
+  "assignment_sha256": "f035d43e5809f368c9e1828544092f2eaca5c4f117e53c6ba02b566807cd11ca",
+  "credit_assignment": {
+    "claim_boundary": "This is not completed Long-Horizon RL.",
+    "configured": "full_trajectory_terminal_reward",
+    "update_executed": false
+  },
+  "development_evaluation": {
+    "matched_budget_comparison": null,
+    "performed": false,
+    "reason": "valid variable-reward optimizer update did not occur",
+    "sealed_task_count": 2
+  },
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14213-full-trajectory-v15",
+  "grpo_mlx_sha256": "597528e82e88e5666ff855a89f81dd6e4847c20f21aa48eb604f1661a36f7044",
+  "heldout": {
+    "access": false,
+    "assignment": false,
+    "eligible_tasks": 0,
+    "evaluation": false,
+    "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7b5b1c991ce4"
+  },
+  "integration_head_sha": "aad9c0466ebe0d5488d2dbfd7f0e9ac146541fcd",
+  "model": {
+    "architecture": "Apple M1 Pro, 32 GiB unified memory",
+    "device": "Device(gpu, 0)",
+    "files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "initial_trainable_parameters_sha256": "1454f0400439bda28f6a0d4736ccfc9c7400c252acc5612b1dbdcfbe6d7fa724",
+    "metal_available": true,
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.0",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "optimizer": {
+    "checkpoint_reload_verified": false,
+    "checkpoint_saved": false,
+    "parameter_delta": "not measured; constant-reward guard skipped optimization",
+    "reason": "no_variable_trusted_rewards",
+    "update_applied": false,
+    "updates": 0
+  },
+  "public_redactions": [
+    "Development task identities/prompts",
+    "grader selector and commands",
+    "raw grader output",
+    "absolute workstation paths"
+  ],
+  "rollouts": {
+    "edit_tool_actions_attempted": 28,
+    "finite_sampling_behavior_logprob_entries": 12485,
+    "n": 8,
+    "per_sample": [
+      {
+        "behavior_logprob_count": 1111,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 1111,
+        "generated_token_ids": 1111,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "91609dc995a9483516f243e25bc2b9e8d5830d3a3b5123855908723c2335e372",
+        "grader_record_sha256": "16876180fc4580dbdb0e64c58a8612ef901ea0c49584ac3a6f9f7a27f6ed9ee8",
+        "reward": 0.0,
+        "sample_index": 0,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+        "tool_counts": {
+          "apply_patch": 2,
+          "read_file": 9,
+          "search_code": 5
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "ee4163df685760bc443a0414821406eff8da539548751b82e7da28bc44afc7d7",
+        "trajectory_file_sha256": "b3d9bfc3817978408ffd145206c03fcf51e7e4c44f9379d920b704470115689a"
+      },
+      {
+        "behavior_logprob_count": 2361,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 2361,
+        "generated_token_ids": 2361,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "c79b013cd5d8ea7aab5678e142084b7b915f52295dbbea35f2119dff686e257c",
+        "grader_record_sha256": "30926a2f6bdcd734e24aeb7a0993dfd7324d4b6bb9428e5a5a20eb7cda925685",
+        "reward": 0.0,
+        "sample_index": 1,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+        "tool_counts": {
+          "apply_patch": 5,
+          "read_file": 7,
+          "search_code": 4
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "991f2549086f258a9b629dad39d6c8ad1b88a56657a73cbf38f4e6930e92ffcd",
+        "trajectory_file_sha256": "90b9ded61dc33c27b042e60309a83308b7ce37a838b75d536c8eb7c0358e1c86"
+      },
+      {
+        "behavior_logprob_count": 1431,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 1431,
+        "generated_token_ids": 1431,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "fa1781582c58a89a70bf2d48a10ff70400787cc34b4b1e8ea029940d5000426b",
+        "grader_record_sha256": "5e5531d033384e02eb2534f9452c1a9662890d5cdfc70092c9528c157a0bc5f5",
+        "reward": 0.0,
+        "sample_index": 2,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+        "tool_counts": {
+          "apply_patch": 3,
+          "read_file": 9,
+          "search_code": 4
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "57202c16e07a727317942631cd22d4ea6c06ad58d8d3adf77159c0881affa780",
+        "trajectory_file_sha256": "9ba7b2fa3f0143fc09dfa138a16803793dec671e02f6564076edfc79406ec0d7"
+      },
+      {
+        "behavior_logprob_count": 1363,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 1363,
+        "generated_token_ids": 1363,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "9ab07e48ecd2eb0eeb8ffc1cb866f95764231296169f3daac283cd542ec19d6f",
+        "grader_record_sha256": "faba1d48dae6fa26e1e3e5c597e26ff1eecaad954caa1c14bbdfc28423c625e2",
+        "reward": 0.0,
+        "sample_index": 3,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+        "tool_counts": {
+          "apply_patch": 4,
+          "read_file": 10,
+          "search_code": 2
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "a9422ce9c820a5f9420ef6f9c7624e15bff6e8a50564375328ae428a14e7d4ad",
+        "trajectory_file_sha256": "e5cb2988a50657ca889da71770f5d77f9048baf20d66e19b020d7b76df0876f5"
+      },
+      {
+        "behavior_logprob_count": 1192,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 1192,
+        "generated_token_ids": 1192,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "6c7b7eebd7e47c75be2de10a6b8ba805044e69e29c1f4d188a81f702e94abc90",
+        "grader_record_sha256": "057d14dc32de7b1495d028da28293eb669258a5aa86914b35084fba5cce4f96e",
+        "reward": 0.0,
+        "sample_index": 4,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+        "tool_counts": {
+          "apply_patch": 3,
+          "read_file": 9,
+          "search_code": 4
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "cad8aa987d82586a7673bc4f808686a6b38877691ed0df99652d023e7bac7d1e",
+        "trajectory_file_sha256": "ca41e6c450233895b8a9cf58e10f9524d81c6dbb503de59e68c5a4e7a1973f21"
+      },
+      {
+        "behavior_logprob_count": 1855,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 1855,
+        "generated_token_ids": 1855,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "0f9437dfd1558602e33d16fb04cfd25d0507c1e75a20698bf0cd38d7e4dd1f3e",
+        "grader_record_sha256": "cfd129422d0eee0e964ed4d6ca07b7ebc0238870713d2607bfd9f10e3e295577",
+        "reward": 0.0,
+        "sample_index": 5,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+        "tool_counts": {
+          "apply_patch": 5,
+          "read_file": 8,
+          "search_code": 3
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "6d80d9afd3151b57768401f6d4172eb9c576529f2f191b558462ded5952493bf",
+        "trajectory_file_sha256": "f775d16cadcf2b8ba9d03690ecefd6f812872c027ba2c4ebc5203e4ed33ccffb"
+      },
+      {
+        "behavior_logprob_count": 1637,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 1637,
+        "generated_token_ids": 1637,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "5ae3fd37472b8f6d21850ab9d9368f5e473872e8ef3d11cddac021b4316c6751",
+        "grader_record_sha256": "8ec735cc8fbe040755feb5ed25df6b8cea0ce031750512a74db0b4a9aee7fc11",
+        "reward": 0.0,
+        "sample_index": 6,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+        "tool_counts": {
+          "apply_patch": 3,
+          "read_file": 9,
+          "search_code": 4
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "ad612c1dd16bc8fde7394d1bab8bbe1cbff56e45a8edd7842a817e917e158366",
+        "trajectory_file_sha256": "bf98eaa9394454cc76352b31947499b89a2d059100ce32d5b495c59662e432c9"
+      },
+      {
+        "behavior_logprob_count": 1535,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 1535,
+        "generated_token_ids": 1535,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "73d2c170353e547c8b4ac97cb52c2e41b0515e80718874cf59412443b7d7264b",
+        "grader_record_sha256": "3f1325494fa4539ee1d04f2789162d97c77123b553c748a265bfa39772ba3e11",
+        "reward": 0.0,
+        "sample_index": 7,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+        "tool_counts": {
+          "apply_patch": 3,
+          "read_file": 9,
+          "search_code": 4
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "e0a0cc423c2c14cb8cfdce42d006e20cc647e405fd68b9b3a8f42748c72055d8",
+        "trajectory_file_sha256": "a9f9c0d5a22c3f641acdbaeb96bcb92b6fd07eb955e8a33562071fb101b40c9f"
+      }
+    ],
+    "reward_counts": {
+      "0": 8,
+      "1": 0
+    },
+    "rewards": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "sampling_behavior_logprob_entries": 12485,
+    "source_file_changes": 0,
+    "tool_action_counts": {
+      "apply_patch": 28,
+      "read_file": 70,
+      "search_code": 30
+    },
+    "total_generated_token_ids": 12485,
+    "total_tool_turns": 128
+  },
+  "run_lock_sha256": "eda6e4549f882f68fabef1680550e38a4b2658fd0aa04fd689d521b9577fd8ca",
+  "run_started_at_utc": "2026-11-06T05:34:27Z",
+  "schema": "vare_public_real_model_train_dev_result_v1",
+  "source_runner_sha256": "2a56eb56b8039d158c87a2a91464a31abca5c23942509cf5dc5fe1c9f6c8d669",
+  "split": "train",
+  "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+  "trusted_grading": {
+    "candidate_feedback": false,
+    "grade_status_counts": {
+      "candidate_failure": 8
+    },
+    "grader_record_sha256": [
+      "16876180fc4580dbdb0e64c58a8612ef901ea0c49584ac3a6f9f7a27f6ed9ee8",
+      "30926a2f6bdcd734e24aeb7a0993dfd7324d4b6bb9428e5a5a20eb7cda925685",
+      "5e5531d033384e02eb2534f9452c1a9662890d5cdfc70092c9528c157a0bc5f5",
+      "faba1d48dae6fa26e1e3e5c597e26ff1eecaad954caa1c14bbdfc28423c625e2",
+      "057d14dc32de7b1495d028da28293eb669258a5aa86914b35084fba5cce4f96e",
+      "cfd129422d0eee0e964ed4d6ca07b7ebc0238870713d2607bfd9f10e3e295577",
+      "8ec735cc8fbe040755feb5ed25df6b8cea0ce031750512a74db0b4a9aee7fc11",
+      "3f1325494fa4539ee1d04f2789162d97c77123b553c748a265bfa39772ba3e11"
+    ],
+    "independent": true,
+    "oom_killed": 0,
+    "pinned_offline_container": true,
+    "timeouts": 0
+  }
+}

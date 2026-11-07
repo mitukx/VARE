@@ -1,0 +1,335 @@
+{
+  "assignment_manifest_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/train-dev-assignment-v17-pydantic-14138-context-replay.json",
+  "assignment_manifest_sha256": "510c297a8660752aed9c628eeb040b6f09ede2b26ac9e9d2a57dda88605c61ee",
+  "experiment_protocol_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/vare-rsi-fresh-train-dev-real-model-grpo-v11-14138-context-replay.json",
+  "experiment_protocol_sha256": "ab7c64fac5c433771d51267dbb33909020ef4139d4e336e22271cfb7c9fd3b73",
+  "frozen_at_utc": "2026-11-06T01:20:42Z",
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_evaluation": false,
+  "model_or_agent_exposure_before_freeze": true,
+  "new_group_prompt_exposure_before_freeze": false,
+  "no_go_gate_path": "work/VARE-rsi-integration-20261105/protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "preflight_rebinding_history": [
+    {
+      "assignment_sha256": "7e2d96c8abf0ef04416badd079bd31d05fe503f0f138db07e262456ce70202af",
+      "binding_sha256": "0c3f7df90dbc3004c010e89a85a489cf5fffbfb7d2c926f73f3a9c07652f0ec2",
+      "candidate_prompt_exposed": false,
+      "corrected_freeze_at_utc": "2026-11-05T23:34:54Z",
+      "corrective_action": "Recompute candidate-visible prompt hashes for Train and both Development records under the same v4 system/tool prompt, then update assignment, binding, protocol, and run lock hashes.",
+      "first_freeze_at_utc": "2026-11-05T23:31:32Z",
+      "protocol_sha256": "b280d6c132ce2f60324c2f47410b0dea2e3d3abd526d763c0f86d693c333be24",
+      "reason": "Frozen-input preflight detected that changing the shared tool help also changes the candidate-visible Development prompt hashes. Development text remained unexposed; the first v15 draft was rejected before any model prompt. Rebind the exact v4 candidate-visible prompt digests and freeze again.",
+      "run_lock_sha256": "d2d054b4e319d7e47a32f91ee9fecf7b16892cc6d9d2c8310e036d8b499aa398"
+    },
+    {
+      "assignment_sha256": "b542bb0e25473a33e0b900ccb002b04fbb2095ce2ecc73d80e6e49837a48e19a",
+      "binding_sha256": "e2468b9a8e6582c066276454dd90010af8531d092a6c430d1efb31ee61e1e968",
+      "candidate_prompt_exposed": false,
+      "corrected_freeze_at_utc": "2026-11-06T00:24:10Z",
+      "corrective_action": "Bind the assignment contract digest to the final v16 protocol contract, then recompute protocol, assignment, environment binding, and run-lock digests before preflight.",
+      "first_freeze_at_utc": "2026-11-06T00:22:55Z",
+      "protocol_sha256": "e6006a2c724a8f61496a592a05d74aa8cdfe7299df3f0e5e14b19bcf596d3cc7",
+      "reason": "Pre-exposure freeze self-check found authorization.agent_tool_contract_sha256 still bound to the v15 contract after the protocol had been upgraded to the v16 coverage-aware read contract. No candidate or model prompt was exposed.",
+      "rejected_freeze_record_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/preflight-rejected-freeze-v16-agent-contract/rejection-record.json",
+      "run_lock_sha256": "ef270c7a424749387a11ec1a456f6f1383828acdcd356038166ce897679e1e1b"
+    },
+    {
+      "actual_runtime_interpreter_path": "work/vare-mlx-runtime-20261105/bin/python",
+      "candidate_prompt_exposed": false,
+      "corrected_freeze_at_utc": "2026-11-06T01:19:25Z",
+      "correction_addendum_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/preflight-rejected-freeze-v17-host-python/rejection-correction-addendum.json",
+      "correction_addendum_sha256": "30a9c26c08e34b9f307e30adb830cae58ff414c5aac4f5279867c04a70ff3c8b",
+      "corrective_action": "Run all MLX version/device and frozen-input checks with the existing pinned 20261105 interpreter; preserve both the host-Python rejection and this path-resolution addendum.",
+      "first_freeze_at_utc": "2026-11-06T01:17:56Z",
+      "interpreter_path_resolution_attempt_exit_code": 127,
+      "python_process_started": false,
+      "reason": "Read-only pre-exposure preflight attempted to resolve MLX package versions using host Python 3.9 instead of the frozen MLX Python 3.12 environment; importlib.metadata raised PackageNotFoundError: mlx.",
+      "rejected_assignment_sha256": "3110481767488ba84c61bdbc6fcc223d5872fa711590338d315d2bd7669a5c2a",
+      "rejected_binding_sha256": "5b6837c1df4ca1f133c8b4dced4673eaab9beda662e22ccc461a9e5f3ae35d60",
+      "rejected_freeze_record_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/preflight-rejected-freeze-v17-host-python/rejection-record.json",
+      "rejected_protocol_sha256": "64b0332de56c44a5be5a593ed151759dc2d93e8b49ebae5a935ff4a6105559f3",
+      "rejected_run_lock_sha256": "f933ad4927cf98abdcfccf1a1ec45551b13a51282af9f06978de8fae1297f225"
+    }
+  ],
+  "prior_attempt_summary_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-007/summary.json",
+  "prior_attempt_summary_sha256": "c180bf1604e01d592a91dd411cea3cf47c72e9f35d75577f843fa05202d25b61",
+  "prior_completed_zero_reward_rollouts": [
+    {
+      "grade_sha256": "c8dc50dcf9c4fbbe0bb2bdd630904136d42a34071e8a002599b88b4e25124347",
+      "reward": 0,
+      "sample_index": 1,
+      "trajectory_artifact_sha256": "cb7a09066933872896f1983769d2c5e5ccccbefbc7396fc0e9007ec58d6e4738"
+    },
+    {
+      "grade_sha256": "e936452e1f0a90c09aea2b0996ff193f37fa863e47c69228fde160862984b89e",
+      "reward": 0,
+      "sample_index": 2,
+      "trajectory_artifact_sha256": "06aee76d79529be2aeacca6e837e9464d0f10b53c62790b98adcfe64d1a295e8"
+    },
+    {
+      "grade_sha256": "2926b371e563683420f7a9900be5510da64700f6badc445c88dc4f805c4be12f",
+      "reward": 0,
+      "sample_index": 3,
+      "trajectory_artifact_sha256": "e1a9af9df4e86fc8a076f9cbab7ecb76e5c5508d7ef260d52fddf3721dddf196"
+    },
+    {
+      "grade_sha256": "22a409aac0fa54bbec01bb62a066574cdcfaa56d660c48da23f4ec7c0aac42ac",
+      "reward": 0,
+      "sample_index": 4,
+      "trajectory_artifact_sha256": "812f082881286bb03c4a3c0c7c96b341cd842d03b1ed5f48ee9adc5c116297e8"
+    },
+    {
+      "grade_sha256": "212ab08bc9431665243a36ce7295422a2e8196fbf424cc9a16d93b9509e1b162",
+      "reward": 0,
+      "sample_index": 5,
+      "trajectory_artifact_sha256": "72b426f6f4afedbb2a2f09d8fd2c0abad69417e49b9d159f07a1926c09fe6a6b"
+    },
+    {
+      "grade_sha256": "1effdb7e5da2edad111d2c48d8ce30ce96f86cf1c1861be793728f24b9b2d7a0",
+      "reward": 0,
+      "sample_index": 7,
+      "trajectory_artifact_sha256": "658da68ab5e5518cabc5d1424d6038218591948b2e6f4fa034d54c0b20199955"
+    },
+    {
+      "grade_sha256": "4305ef716fab755547453d4f85a4ad7a61fa3ffa404c2933a4df8b88fabfb482",
+      "reward": 0,
+      "sample_index": 10,
+      "trajectory_artifact_sha256": "d39a3bce61b522a240bcecbf6353f3ad682c2f0ff2407cc60ec17de2ce5ecabf"
+    },
+    {
+      "grade_sha256": "45558a418f3a8079e070a681a07f8c0a96963e82d9c0c1f9e4d07e656d0006b4",
+      "reward": 0,
+      "sample_index": 11,
+      "trajectory_artifact_sha256": "85c771421aadd9c036d626e346426be78433e9eb85a38b2a44e1c998a7381758"
+    },
+    {
+      "grade_sha256": "dcf0f270965585699f823cbb7af1a6931aa746637d296d48a2dae8da4aa993f5",
+      "reward": 0,
+      "sample_index": 12,
+      "trajectory_artifact_sha256": "a3e0d9215cbdc902075c537c547901ed2690a45b49da068921f48f2f63724302"
+    },
+    {
+      "grade_sha256": "c38a06fbd280233fd7476e8e2b07c5ddef6a9153d57a3f1a2810c548b77dde98",
+      "reward": 0,
+      "sample_index": 13,
+      "trajectory_artifact_sha256": "6c024305a312129fea33cc81a91109159e5fa565960926d939aa2d9781f202c4"
+    },
+    {
+      "grade_sha256": "2ae512a961f4f4643f086a7665d207566ea5d9ffd13c2dac4c7c32d885415340",
+      "reward": 0,
+      "sample_index": 14,
+      "trajectory_artifact_sha256": "a38702e470a20945036f2ef4251a1fea9f88c2ec65280d5a7e0afd6293753b71"
+    },
+    {
+      "grade_sha256": "d65662bebf9f484bfe30eb560a2e62bfa70a5b1195cb21bcc5636104c6c92d3e",
+      "reward": 0,
+      "sample_index": 15,
+      "trajectory_artifact_sha256": "c9a014beb7796460830ea6e95b870b5bc8b3fa2d68f61f72fcafc09b22512f46"
+    },
+    {
+      "grade_sha256": "15433bef00b5ccdb3b50597c372edbe70653f5ccdf10ec48db1f76520498b7f6",
+      "reward": 0,
+      "sample_index": 16,
+      "trajectory_artifact_sha256": "a056f45adbb34fe107aca2621ba91f659f7b765f4aafea45cbfa6146f8811a57"
+    },
+    {
+      "grade_sha256": "bfeadd50e828dc67dc7562a3b28e8156e9928b2032e411e6e01caa99d3029761",
+      "reward": 0,
+      "sample_index": 17,
+      "trajectory_artifact_sha256": "042d96e35790cc6e0e00e0b1f7a3efc290fa32184887d86dc6bce7b0f19b3946"
+    },
+    {
+      "grade_sha256": "33b8cec6e3f5b36727cba3099fc19a3d17213604f46791a4b804f1107460c95b",
+      "reward": 0,
+      "sample_index": 18,
+      "trajectory_artifact_sha256": "ccc679c5036f421db40b2dd7bb7b6800f946398a62bf7ec4f804e6ba11d39a98"
+    },
+    {
+      "grade_sha256": "78bd073212855cb0d35fd2a7ae8ac03b6a2ea2e64baaf3828e1a401f574be3ce",
+      "reward": 0,
+      "sample_index": 19,
+      "trajectory_artifact_sha256": "831a4888971971ac8ca45f932958b9a4b9547ca55e9fd1043ae3ed139db34d23"
+    },
+    {
+      "grade_sha256": "82aa81d7eebec722fe1aee0fd167db45272522f2829dbe3d0a9d422d51fb11e7",
+      "reward": 0,
+      "sample_index": 20,
+      "trajectory_artifact_sha256": "a0d9dbde7a8498d02972659a2f36fb4bb0c11d6abb326784cde4cd48d23c740f"
+    },
+    {
+      "grade_sha256": "963d03817076b6f10cf69345406a9d4babd7d29144921827721b4c195cec511d",
+      "reward": 0,
+      "sample_index": 21,
+      "trajectory_artifact_sha256": "daadf758656c5a5ea4999fb7a4f081710f1b47f7c498b79ff6fbc058738b5239"
+    },
+    {
+      "grade_sha256": "386a2707fe2766998e3323f5be9b84df7e9d318087b732c4342c87e46409f7db",
+      "reward": 0,
+      "sample_index": 22,
+      "trajectory_artifact_sha256": "34c1dfefb1515cbfe0d490a81655a0e746868caacdbbf70edac329723785fa83"
+    },
+    {
+      "grade_sha256": "f0624f9a96dbaefe39448a626d7f8ffc9d1c9415ff37d2f878fcd0556a58eb77",
+      "reward": 0,
+      "sample_index": 23,
+      "trajectory_artifact_sha256": "3f6181732ea760425b1c373f304c4139639a1bd4b783a70303fe651d90fc24a1"
+    },
+    {
+      "grade_sha256": "3b12f3e5a455c3ac77e6ef7f46ce7b259415eafe704e73c56b5a6f26929f12c5",
+      "reward": 0,
+      "sample_index": 24,
+      "trajectory_artifact_sha256": "f7930f48755bb8b530c9d62476b15ed62f5bb89f684710168947000faa3fd788"
+    },
+    {
+      "grade_sha256": "1d20ff1d48f0113b73e7f95bd48ceeba559144caaaa90faa695427d848491268",
+      "reward": 0,
+      "sample_index": 25,
+      "trajectory_artifact_sha256": "0ae8f4ec33c6b04bff9bf762c2577c9b0e4f8c31e4a70b52696ef725f9e3fb7c"
+    },
+    {
+      "grade_sha256": "e1b2cc2f2ad7f54e4c6edf0ee964ae40d6312cd003858a148986f94c0c2b822f",
+      "reward": 0,
+      "sample_index": 26,
+      "trajectory_artifact_sha256": "019a39a52bda2ff920ea0a330a551afeda54897133b5dd3425997e65976877f0"
+    },
+    {
+      "grade_sha256": "57dbbc0b9c7a843cf785312bf71ac10bd50f8a109fe095b6a2ab3ecca814ceed",
+      "reward": 0,
+      "sample_index": 27,
+      "trajectory_artifact_sha256": "00685881d4c4c093b17de9044cd28dc9191ddccd89ae72d3b1130f8eeb9a44d5"
+    },
+    {
+      "grade_sha256": "4322f844b07faf7de37d06dc5dee3d08451d48c8cd62c45a07ff5db91a3abacc",
+      "reward": 0,
+      "sample_index": 28,
+      "trajectory_artifact_sha256": "2160c0aaa3a347cbbf830a7526eba6989d247d0c1d4c497d3dfae2f3c32efa86"
+    },
+    {
+      "grade_sha256": "d5a44de931f335e3d7c4a6555eba5ab6dd91f1503d682f317f8534a0822b6880",
+      "reward": 0,
+      "sample_index": 29,
+      "trajectory_artifact_sha256": "e2b238e58f2a354e2742024b16e3fc1a84a1cb47e52845aaf7359f0d6714a67c"
+    },
+    {
+      "grade_sha256": "1a2e06c7dfc31112ae55e80e83857f511546cb0f32e8cd07b1e8b59eda0bfe36",
+      "reward": 0,
+      "sample_index": 30,
+      "trajectory_artifact_sha256": "92e3c5d6dd4fae4cd330c0146ea6449c9e5421e1583a4361a72893ba7fa051c0"
+    },
+    {
+      "grade_sha256": "8b6d9fc242caff2d04351c3eb1c95623b02fd9f93750ab73bd31e270e91d21f7",
+      "reward": 0,
+      "sample_index": 31,
+      "trajectory_artifact_sha256": "ce3de9a9a87bef0a6f81723272ed4e86803494bdd9f578a2c9e57bdaa8529234"
+    },
+    {
+      "grade_sha256": "2e6778aab3ac7483833ca3e17d513bb9ef90408112a13ce162d3b92d304c6dba",
+      "reward": 0,
+      "sample_index": 32,
+      "trajectory_artifact_sha256": "bb96f4ad58be0fc09c38625f0f73c6d4d3ea2ea789cc0f087ce30869aaa6472b"
+    },
+    {
+      "grade_sha256": "3e6618258d070ae5c8dd754515824cf043680eecf2bc29f9130ba3a3e0b5e60a",
+      "reward": 0,
+      "sample_index": 33,
+      "trajectory_artifact_sha256": "6e56251f69622bc610e43b84fe8c6decd3d613f74128e52e95b6e9ade980a071"
+    }
+  ],
+  "prior_partial_exposure": {
+    "abort_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
+    "abort_sha256": "5acc10f1992028bbcc56776704bf059a6837d4a582dc75321836dbd221c097c2",
+    "completed_rollout": false,
+    "independent_grade_produced": false,
+    "optimizer_updates": 0,
+    "partial_tool_turns": 3,
+    "prior_run_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/real-model-run-v18-14138-full-trajectory-grpo-group.lock.json",
+    "prior_run_lock_sha256": "9d033771dc98b04e3b1e50e2d9582e5d4be22c1f28b525872c4682afe5935759",
+    "resource_stop_reason": "swap growth of 7277117 bytes exceeded the frozen zero-byte allowance while system-wide memory free remained 34 percent",
+    "sample_index": 0,
+    "trajectory_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/training/pydantic-14138-direct-builtin-scalar-union-schema/sample-00/trajectory.json",
+    "trajectory_sha256": "b7700fe8c14b403ff7514035f2ef94f9a42b36bb2d8c477da924dcd09fded0aa"
+  },
+  "prior_partial_exposures": [
+    {
+      "attempt": 1,
+      "independent_grade_produced": false,
+      "optimizer_updates": 0,
+      "resource_stop_reason": "7,277,117 bytes swap growth exceeded zero-byte allowance while free memory was 34 percent",
+      "sample_index": 0,
+      "tool_turns": 3,
+      "trajectory_artifact_sha256": "b7700fe8c14b403ff7514035f2ef94f9a42b36bb2d8c477da924dcd09fded0aa",
+      "trajectory_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/training/pydantic-14138-direct-builtin-scalar-union-schema/sample-00/trajectory.json"
+    },
+    {
+      "attempt": 2,
+      "independent_grade_produced": false,
+      "optimizer_updates": 0,
+      "resource_stop_reason": "184,612,291 bytes swap growth exceeded 67,108,864-byte allowance while free memory was 35 percent",
+      "sample_index": 6,
+      "tool_turns": 13,
+      "trajectory_artifact_sha256": "50715f691929178003a9b59783564c80c23dc7c7b9a85d8e2eb69e04fd3c332c",
+      "trajectory_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-002/samples/sample-06/trajectory.json"
+    },
+    {
+      "attempt": 3,
+      "independent_grade_produced": false,
+      "optimizer_updates": 0,
+      "resource_stop_reason": "324,922,245 bytes swap growth exceeded the 268,435,456-byte allowance while free memory was 34 percent; sample stopped after nine tool turns",
+      "sample_index": 8,
+      "tool_turns": 9,
+      "trajectory_artifact_sha256": "6542e74769ce939dc1dcf20274880cd7e6bd8457c41e62bc84c1ebe6ecd5837e",
+      "trajectory_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-003/samples/sample-08/trajectory.json"
+    },
+    {
+      "attempt": 4,
+      "independent_grade_produced": false,
+      "optimizer_updates": 0,
+      "resource_stop_reason": "842,331,587 bytes system-wide swap growth exceeded the 536,870,912-byte allowance by 305,460,675 bytes while memory-pressure free remained 36 percent; sample stopped after two turns and 15 generated tokens",
+      "sample_index": 9,
+      "tool_turns": 2,
+      "trajectory_artifact_sha256": "5b1583ef2ab1f022091194dc41dfa312d0d0adefb28ead8aae71f73db861c95c",
+      "trajectory_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-004/samples/sample-09/trajectory.json"
+    }
+  ],
+  "protocol_id": "vare-rsi-fresh-train-dev-real-model-grpo-v11-14138-context-replay",
+  "qualification_bindings": [
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14138/attempt-001/summary.json",
+      "qualification_summary_sha256": "94c5c4e9bb43c5afa2f77133607ee977a5060ce391753f7cee5c8580025b3df1",
+      "task_id": "pydantic-14138-direct-builtin-scalar-union-schema"
+    },
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-13997-v1.json",
+      "environment_lock_sha256": "96f4cbcf61ff6c22bcb8cf28ea38731ebd441d5f66ab5eefd5210299725b7a6a",
+      "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-13997/attempt-001/summary.json",
+      "qualification_summary_sha256": "62cb54f6b4a569e0ebbf87e80c1d1351304324905e5669a1c2aaafe6ecf74b1c",
+      "task_id": "pydantic-13997-explicit-json-schema-by-alias-override"
+    },
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14103/attempt-001/summary.json",
+      "qualification_summary_sha256": "4edcd9e7205622b26c6c8989823db10012cd5096ed3e127c9b6a1a3bc77d0a2c",
+      "task_id": "pydantic-14103-ignore-internal-dataclass-extras"
+    }
+  ],
+  "sample_index_allocation_changed": true,
+  "schema_version": 1,
+  "task_assignment_changed": false,
+  "task_membership": {
+    "development": [
+      "pydantic-13997-explicit-json-schema-by-alias-override",
+      "pydantic-14103-ignore-internal-dataclass-extras"
+    ],
+    "train": [
+      "pydantic-14138-direct-builtin-scalar-union-schema"
+    ]
+  }
+}

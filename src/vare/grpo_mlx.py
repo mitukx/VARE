@@ -13,8 +13,10 @@ rollout groups:
   excluded from the loss denominator, so it changes neither the gradient nor
   the normalization of the other groups. A step with no informative group
   applies no optimizer update.
-* Log-probabilities are computed on completion tokens only (prompt and padding
-  are masked out) from ``logits / temperature``.
+* Log-probabilities are computed on policy-generated completion tokens only
+  (prompt and padding are masked out) from ``logits / temperature``. A Sample
+  may contain multiple independently conditioned trajectory segments; the same
+  group-relative terminal advantage is then applied to every action segment.
 * The objective is the PPO/GRPO clipped surrogate
   ``min(rho * A, clip(rho, 1 - eps_low, 1 + eps_high) * A)`` with
   ``rho = exp(logp_current - logp_behavior)``, averaged over all completion
@@ -36,7 +38,8 @@ rollout groups:
   is divided by the step-wide token count, the accumulated gradient equals the
   full-batch gradient.
 
-Checkpoints hold the trainable (LoRA) parameters and the full optimizer state.
+Checkpoints hold the trainable (LoRA) parameters and the full optimizer state,
+and require the pinned identity of the frozen base model on save and reload.
 MLX 0.32 exposes no setter for its global RNG key, so randomness is instead
 derived from an explicit ``(base_seed, step)`` schedule (``reseed``) that is
 stored in the checkpoint and re-applied on load; with LoRA dropout 0 the update
@@ -54,7 +57,7 @@ import shutil
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 SCHEMA = "vare.learning_pipeline.grpo_step/v1"
-CHECKPOINT_SCHEMA = "vare.learning_pipeline.grpo_checkpoint/v1"
+CHECKPOINT_SCHEMA = "vare.learning_pipeline.grpo_checkpoint/v3"
 
 
 class StalePolicyError(ValueError):
@@ -72,6 +75,7 @@ class TruncatedSamplingError(ValueError):
 # The exact-ratio objective models behavior log-probs as log_softmax(logits / T)
 # over the full vocabulary, so sampling must not truncate the distribution.
 EXACT_RATIO_TOP_P = 1.0
+ON_POLICY_LOG_RATIO_TOLERANCE = 1e-6
 
 
 def check_exact_ratio_sampling(*, temperature: float, top_p: float, top_k: int = 0, min_p: float = 0.0) -> None:
@@ -108,8 +112,65 @@ class GRPOConfig:
     max_grad_norm: float | None = 1.0
     group_size: int | None = None  # if set, every group must have exactly this many samples
 
+    def __post_init__(self) -> None:
+        for name in ("clip_eps_low", "clip_eps_high", "temperature"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise ValueError(f"{name} must be a finite number")
+            try:
+                finite = math.isfinite(value)
+            except OverflowError:
+                finite = False
+            if not finite:
+                raise ValueError(f"{name} must be a finite number")
+
+        if not 0 <= self.clip_eps_low < 1:
+            raise ValueError("clip_eps_low must be in [0, 1)")
+        if self.clip_eps_high < 0:
+            raise ValueError("clip_eps_high must be nonnegative")
+        if self.temperature <= 0:
+            raise ValueError("temperature must be positive")
+        if not isinstance(self.normalize_std, bool):
+            raise ValueError("normalize_std must be a bool")
+        if (
+            isinstance(self.max_policy_lag, bool)
+            or not isinstance(self.max_policy_lag, int)
+            or self.max_policy_lag < 0
+        ):
+            raise ValueError("max_policy_lag must be a nonnegative integer")
+        if self.max_grad_norm is not None:
+            value = self.max_grad_norm
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise ValueError(
+                    "max_grad_norm must be a finite nonnegative number or None"
+                )
+            try:
+                finite = math.isfinite(value)
+            except OverflowError:
+                finite = False
+            if not finite or value < 0:
+                raise ValueError(
+                    "max_grad_norm must be a finite nonnegative number or None"
+                )
+        if self.group_size is not None and (
+            isinstance(self.group_size, bool)
+            or not isinstance(self.group_size, int)
+            or self.group_size < 1
+        ):
+            raise ValueError("group_size must be a positive integer or None")
+
     def to_dict(self) -> dict[str, Any]:
         return {k: getattr(self, k) for k in self.__dataclass_fields__}
+
+
+@dataclass
+class TrajectorySegment:
+    """One policy-generated action with its actual conditioning context."""
+
+    prompt_ids: list[int]
+    completion_ids: list[int]
+    sampling_behavior_logprobs: list[float] | None = None
+    behavior_logprobs: list[float] | None = None
 
 
 @dataclass
@@ -124,6 +185,10 @@ class Sample:
     sample_index: int = 0
     behavior_logprobs: list[float] | None = None
     meta: dict[str, Any] = field(default_factory=dict)
+    # When present, terminal reward is assigned to every policy action token
+    # across these independently conditioned turns. The first segment must
+    # match prompt_ids/completion_ids for backward-compatible grouping.
+    trajectory_segments: list[TrajectorySegment] | None = None
 
     @property
     def group_key(self) -> tuple[str, str]:
@@ -163,18 +228,58 @@ def group_samples(samples: Iterable[Sample], *, group_size: int | None = None) -
             raise GroupError(f"mixed verifier versions in group {key}")
         if len({s.behavior_step for s in g}) != 1:
             raise GroupError(f"mixed behavior steps in group {key}")
+        if len({s.trajectory_segments is not None for s in g}) != 1:
+            raise GroupError(f"mixed single-sequence and trajectory samples in group {key}")
         if group_size is not None and len(g) != group_size:
             raise GroupError(f"partial group {key}: {len(g)} != {group_size}")
         for s in g:
-            if not s.completion_ids:
-                raise GroupError(f"empty completion in group {key}")
-            if not s.prompt_ids or any(type(token) is not int for token in (*s.prompt_ids, *s.completion_ids)):
-                raise GroupError(f"prompt and completion tokens must be integer IDs in group {key}")
-            if s.behavior_logprobs is not None:
-                if len(s.behavior_logprobs) != len(s.completion_ids):
-                    raise GroupError(f"behavior log-probability length mismatch in group {key}")
-                if any(not math.isfinite(value) for value in s.behavior_logprobs):
-                    raise GroupError(f"behavior log-probabilities must be finite in group {key}")
+            segments: Sequence[
+                tuple[
+                    Sequence[int],
+                    Sequence[int],
+                    Sequence[float] | None,
+                    Sequence[float] | None,
+                ]
+            ]
+            if s.trajectory_segments is None:
+                segments = ((s.prompt_ids, s.completion_ids, s.behavior_logprobs, None),)
+            else:
+                segments = tuple(
+                    (
+                        segment.prompt_ids,
+                        segment.completion_ids,
+                        segment.sampling_behavior_logprobs,
+                        segment.behavior_logprobs,
+                    )
+                    for segment in s.trajectory_segments
+                )
+            if not segments:
+                raise GroupError(f"empty trajectory in group {key}")
+            if s.trajectory_segments is not None and (
+                segments[0][0] != s.prompt_ids
+                or segments[0][1] != s.completion_ids
+            ):
+                raise GroupError(f"first trajectory segment differs from the sample action in group {key}")
+            for prompt_ids, completion_ids, sampling_logprobs, behavior_logprobs in segments:
+                if not completion_ids:
+                    raise GroupError(f"empty completion in group {key}")
+                if not prompt_ids or any(
+                    type(token) is not int for token in (*prompt_ids, *completion_ids)
+                ):
+                    raise GroupError(f"prompt and completion tokens must be integer IDs in group {key}")
+                for values in (sampling_logprobs, behavior_logprobs):
+                    if values is None:
+                        continue
+                    if len(values) != len(completion_ids):
+                        raise GroupError(f"behavior log-probability length mismatch in group {key}")
+                    if any(
+                        isinstance(value, bool) or not isinstance(value, (int, float))
+                        or not math.isfinite(value) or value > 0
+                        for value in values
+                    ):
+                        raise GroupError(
+                            f"behavior log-probabilities must be finite nonpositive numbers in group {key}"
+                        )
     return groups
 
 
@@ -192,6 +297,27 @@ def check_policy_lag(samples: Iterable[Sample], *, policy_checkpoint_id: str, po
             raise StalePolicyError(f"policy lag {lag} > max_policy_lag {max_policy_lag}")
         worst = max(worst, lag)
     return worst
+
+
+def check_on_policy_log_ratio(policy_lag: int, max_abs_log_ratio: float) -> None:
+    """Fail closed when a lag-zero sample's behavior log-probs mismatch.
+
+    A checkpoint ID is caller-supplied provenance, not proof that the stored
+    behavior log-probabilities came from that checkpoint. The differentiated
+    current-policy pass must reproduce each lag-zero sample's stored
+    probabilities within floating-point tolerance before any optimizer state
+    can change. Stale samples retain the configured importance-ratio behavior.
+    """
+    if policy_lag != 0:
+        return
+    if (isinstance(max_abs_log_ratio, bool) or not isinstance(max_abs_log_ratio, (int, float))
+            or not math.isfinite(max_abs_log_ratio) or max_abs_log_ratio < 0
+            or max_abs_log_ratio > ON_POLICY_LOG_RATIO_TOLERANCE):
+        raise StalePolicyError(
+            "lag-zero behavior log-probabilities do not match the current policy: "
+            f"max_abs_log_ratio={max_abs_log_ratio!r}, "
+            f"tolerance={ON_POLICY_LOG_RATIO_TOLERANCE}"
+        )
 
 
 # ---------------------------------------------------------------- tensors
@@ -271,7 +397,7 @@ def clipped_surrogate(logp, behavior_logp, advantages, mask, *, eps_low: float, 
     return loss, stats
 
 
-def sample_tensors(s: Sample, pad_id: int):
+def sample_tensors(s: Sample | TrajectorySegment, pad_id: int):
     tokens, mask = build_batch([(s.prompt_ids, s.completion_ids)], pad_id)
     start = len(s.prompt_ids) - 1
     return tokens, mask[:, start:], start
@@ -286,16 +412,37 @@ def informative_samples(samples: Sequence[Sample], cfg: GRPOConfig) -> list[Samp
     return out
 
 
+def _sample_segments(sample: Sample) -> Sequence[Sample | TrajectorySegment]:
+    return sample.trajectory_segments if sample.trajectory_segments is not None else (sample,)
+
+
+def _training_action_segments(
+    work: Sequence[tuple[Sample, float]],
+) -> Iterable[tuple[Sample, float, Sample | TrajectorySegment]]:
+    """Yield the exact action contexts and terminal advantages consumed by GRPO.
+
+    Keeping this enumeration shared by validation, token normalization, and
+    gradient accumulation makes it harder for a multi-turn sample to validate
+    as a full trajectory but train only its first action.
+    """
+    for sample, advantage in work:
+        for segment in _sample_segments(sample):
+            yield sample, advantage, segment
+
+
 def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -> list[float]:
     """Plain (untraced) forward log-probs of ``s``'s completion tokens. Not used
     for the ratio: on Metal/bf16 it can differ from the differentiated forward
     by ~0.1 nats on single tokens (see ``compute_behavior_logprobs``)."""
     import mlx.core as mx
 
-    tokens, _, start = sample_tensors(s, pad_id)
-    lp = token_logprobs(model, tokens, temperature=temperature, start=start)
-    mx.eval(lp)
-    return [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
+    result: list[float] = []
+    for segment in _sample_segments(s):
+        tokens, _, start = sample_tensors(segment, pad_id)
+        lp = token_logprobs(model, tokens, temperature=temperature, start=start)
+        mx.eval(lp)
+        result.extend(float(x) for x in lp[0, : len(segment.completion_ids)].tolist())
+    return result
 
 
 def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig | None = None, *,
@@ -316,27 +463,39 @@ def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig 
         cfg = GRPOConfig(temperature=temperature)
     value_and_grad = _value_and_grad(model, cfg, n_tokens=1)
     for s in samples:
-        tokens, mask, start = sample_tensors(s, pad_id)
-        zeros = mx.zeros(mask.shape, dtype=mx.float32)
-        (_, (_, lp)), g = value_and_grad(tokens, mask, start, mx.zeros((1,), dtype=mx.float32), zeros)
-        mx.eval(lp, g)
-        del g
-        s.behavior_logprobs = [float(x) for x in lp[0, : len(s.completion_ids)].tolist()]
-        if after_sample is not None:
-            after_sample()
+        for index, segment in enumerate(_sample_segments(s)):
+            tokens, mask, start = sample_tensors(segment, pad_id)
+            zeros = mx.zeros(mask.shape, dtype=mx.float32)
+            (_, (_, lp)), g = value_and_grad(tokens, mask, start, mx.zeros((1,), dtype=mx.float32), zeros)
+            mx.eval(lp, g)
+            del g
+            values = [float(x) for x in lp[0, : len(segment.completion_ids)].tolist()]
+            if s.trajectory_segments is not None:
+                segment.behavior_logprobs = values
+                if index == 0:
+                    s.behavior_logprobs = values
+            else:
+                s.behavior_logprobs = values
+            if after_sample is not None:
+                after_sample()
 
 
 # ------------------------------------------------------------------ update
-def trainable_digest(model) -> str:
+def _trainable_digest_from_flat(items: Iterable[tuple[str, Any]]) -> str:
     import mlx.core as mx
     import numpy as np
-    from mlx.utils import tree_flatten
 
     h = hashlib.sha256()
-    for k, v in sorted(tree_flatten(model.trainable_parameters())):
+    for k, v in sorted(items):
         h.update(k.encode())
         h.update(np.asarray(v.astype(mx.float32)).tobytes())
     return h.hexdigest()
+
+
+def trainable_digest(model) -> str:
+    from mlx.utils import tree_flatten
+
+    return _trainable_digest_from_flat(tree_flatten(model.trainable_parameters()))
 
 
 def _value_and_grad(model, cfg: GRPOConfig, *, n_tokens: int):
@@ -353,7 +512,8 @@ def _value_and_grad(model, cfg: GRPOConfig, *, n_tokens: int):
 
 
 def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig, *, n_tokens: int,
-                    pad_id: int = 0, after_sample: Callable[[], None] | None = None) -> tuple[Any, dict[str, float]]:
+                    policy_step: int, pad_id: int = 0,
+                    after_sample: Callable[[], None] | None = None) -> tuple[Any, dict[str, float]]:
     """Gradient of the step loss w.r.t. trainable parameters, accumulated one
     sample at a time; equals the gradient of the full-batch token-mean loss.
 
@@ -366,14 +526,23 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
     value_and_grad = _value_and_grad(model, cfg, n_tokens=n_tokens)
     grads: Any = None
     loss_total = clipped = ratio_sum = kl_sum = ratio_max = max_lr = 0.0
-    for s, a in work:
-        if s.behavior_logprobs is None:
+    for s, a, segment in _training_action_segments(work):
+        behavior_logprobs = (
+            segment.behavior_logprobs
+            if s.trajectory_segments is not None
+            else s.behavior_logprobs
+        )
+        if behavior_logprobs is None:
             raise ValueError("missing behavior log-probs")
-        tokens, mask, start = sample_tensors(s, pad_id)
-        blp = mx.array([s.behavior_logprobs], dtype=mx.float32)
-        (loss, (st, _lp)), g = value_and_grad(tokens, mask, start, mx.array([a], dtype=mx.float32), blp)
+        tokens, mask, start = sample_tensors(segment, pad_id)
+        blp = mx.array([behavior_logprobs], dtype=mx.float32)
+        (loss, (st, _lp)), g = value_and_grad(
+            tokens, mask, start, mx.array([a], dtype=mx.float32), blp
+        )
+        mx.eval(loss, st, g)
+        check_on_policy_log_ratio(policy_step - s.behavior_step, float(st["max_abs_log_ratio"]))
         grads = g if grads is None else tree_map(lambda x, y: x + y, grads, g)
-        mx.eval(loss, st, grads)
+        mx.eval(grads)
         loss_total += float(loss)
         clipped += float(st["clipped_tokens"])
         ratio_sum += float(st["ratio_sum"])
@@ -411,17 +580,30 @@ def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, 
         "max_observed_lag": lag, "config": cfg.to_dict(), "groups": group_rows,
         "n_groups": len(group_rows), "n_informative_groups": sum(r["informative"] for r in group_rows),
         "n_samples": len(samples), "n_trained_samples": len(work),
+        "n_trained_action_segments": sum(1 for _ in _training_action_segments(work)),
+        "credit_assignment": (
+            "full_trajectory_terminal_reward"
+            if samples and samples[0].trajectory_segments is not None
+            else "single_sequence_terminal_reward"
+        ),
     }
-    for s, _ in work:  # zero-advantage samples need no log-probs
-        if s.behavior_logprobs is None or len(s.behavior_logprobs) != len(s.completion_ids):
+    action_segments = list(_training_action_segments(work))
+    for s, _, segment in action_segments:  # zero-advantage samples need no log-probs
+        behavior_logprobs = (
+            segment.behavior_logprobs
+            if s.trajectory_segments is not None
+            else s.behavior_logprobs
+        )
+        if behavior_logprobs is None or len(behavior_logprobs) != len(segment.completion_ids):
             raise ValueError(f"missing behavior log-probs for {s.instance_id}#{s.sample_index}")
-    n_tokens = sum(len(s.completion_ids) for s, _ in work)
+    n_tokens = sum(len(segment.completion_ids) for _, _, segment in action_segments)
     record["n_tokens"] = n_tokens
     if not work:
         record.update(update_applied=False, reason="no_informative_group")
         return record
 
-    grads, diag = policy_gradient(model, work, cfg, n_tokens=n_tokens, pad_id=pad_id, after_sample=after_sample)
+    grads, diag = policy_gradient(model, work, cfg, n_tokens=n_tokens, policy_step=policy_step, pad_id=pad_id,
+                                  after_sample=after_sample)
     grad_norm = None
     if cfg.max_grad_norm is not None:
         grads, gn = optim.clip_grad_norm(grads, cfg.max_grad_norm)
@@ -459,19 +641,45 @@ def reseed(base_seed: int, step: int) -> int:
     return seed
 
 
-def save_checkpoint(path: Path, model, optimizer, *, step: int, base_seed: int,
+def _validate_base_model_id(base_model_id: str) -> str:
+    if (not isinstance(base_model_id, str) or not base_model_id.strip()
+            or len(base_model_id) > 512):
+        raise ValueError("base_model_id must be a nonempty string of at most 512 characters")
+    return base_model_id
+
+
+def _optimizer_identity(optimizer) -> dict[str, Any]:
+    optimizer_type = type(optimizer)
+    configuration = {
+        key: value for key, value in vars(optimizer).items()
+        if not key.startswith("_") and key != "state"
+    }
+    try:
+        normalized_configuration = json.loads(json.dumps(configuration, sort_keys=True, allow_nan=False))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("optimizer configuration is not JSON-serializable") from exc
+    return {
+        "class": f"{optimizer_type.__module__}.{optimizer_type.__qualname__}",
+        "configuration": normalized_configuration,
+    }
+
+
+def save_checkpoint(path: Path, model, optimizer, *, base_model_id: str, step: int, base_seed: int,
                     extra: Mapping[str, Any] | None = None) -> dict[str, Any]:
     """Atomically write adapters, optimizer state and the RNG schedule to
-    ``path``. ``step`` is the number of completed updates."""
+    ``path``. ``base_model_id`` binds adapters to their frozen base model;
+    ``step`` is the number of completed updates."""
     import mlx.core as mx
     from mlx.utils import tree_flatten
 
+    base_model_id = _validate_base_model_id(base_model_id)
     path = Path(path)
     if path.exists():
         raise FileExistsError(f"checkpoint destination already exists: {path}")
     optimizer_step = int(optimizer.state["step"].item())
     if type(step) is not int or step < 0 or optimizer_step != step:
         raise ValueError(f"checkpoint step {step!r} does not match optimizer step {optimizer_step}")
+    optimizer_identity = _optimizer_identity(optimizer)
     tmp = path.with_name(path.name + ".tmp")
     if tmp.exists():
         shutil.rmtree(tmp)
@@ -483,7 +691,9 @@ def save_checkpoint(path: Path, model, optimizer, *, step: int, base_seed: int,
     mx.save_safetensors(str(tmp / "adapters.safetensors"), adapters)
     mx.save_safetensors(str(tmp / "optimizer.safetensors"), opt)
     files = {n: _sha256(tmp / n) for n in ("adapters.safetensors", "optimizer.safetensors")}
-    manifest = {"schema": CHECKPOINT_SCHEMA, "step": step, "optimizer_step": optimizer_step, "files": files,
+    manifest = {"schema": CHECKPOINT_SCHEMA, "base_model_id": base_model_id,
+                "optimizer_identity": optimizer_identity,
+                "step": step, "optimizer_step": optimizer_step, "files": files,
                 "rng": {"base_seed": base_seed, "step": step, "derivation": "sha256(f'{base_seed}:{step}')[:8]"},
                 "trainable_digest": trainable_digest(model), "extra": dict(extra or {})}
     with (tmp / "checkpoint.json").open("w", encoding="utf-8") as stream:
@@ -512,38 +722,90 @@ def save_checkpoint(path: Path, model, optimizer, *, step: int, base_seed: int,
     return manifest
 
 
-def load_checkpoint(path: Path, model, optimizer) -> dict[str, Any]:
+def load_checkpoint(path: Path, model, optimizer, *, base_model_id: str) -> dict[str, Any]:
     """Restore a checkpoint written by ``save_checkpoint``; verifies hashes,
-    the exact trainable key set and the restored parameter digest."""
+    base model identity, exact trainable key set and restored parameter digest.
+
+    Validate every persisted state component before mutating the model or optimizer,
+    so an internally inconsistent checkpoint cannot leave a partial restore behind.
+    """
     import mlx.core as mx
     from mlx.utils import tree_flatten, tree_unflatten
 
+    base_model_id = _validate_base_model_id(base_model_id)
     path = Path(path)
     manifest = json.loads((path / "checkpoint.json").read_text())
+    if not isinstance(manifest, dict):
+        raise ValueError("checkpoint manifest must be an object")
     if manifest.get("schema") != CHECKPOINT_SCHEMA:
         raise ValueError("unknown checkpoint schema")
-    if set(manifest.get("files", {})) != {"adapters.safetensors", "optimizer.safetensors"}:
+    if manifest.get("base_model_id") != base_model_id:
+        raise ValueError("checkpoint base model identity mismatch")
+    if manifest.get("optimizer_identity") != _optimizer_identity(optimizer):
+        raise ValueError("checkpoint optimizer identity mismatch")
+    files = manifest.get("files")
+    if not isinstance(files, dict) or set(files) != {"adapters.safetensors", "optimizer.safetensors"}:
         raise ValueError("checkpoint file set is incomplete or unexpected")
     allowed_files = {"checkpoint.json", "adapters.safetensors", "optimizer.safetensors"}
     actual_files = {item.name for item in path.iterdir()}
     if actual_files != allowed_files or any(not (path / name).is_file() for name in allowed_files):
         raise ValueError("checkpoint directory contains missing or unexpected files")
-    for name, digest in manifest["files"].items():
+    for name, digest in files.items():
         if _sha256(path / name) != digest:
             raise ValueError(f"checkpoint file hash mismatch: {name}")
+
     adapters = mx.load(str(path / "adapters.safetensors"))
-    expected = {k for k, _ in tree_flatten(model.trainable_parameters())}
-    if set(adapters) != expected:
+    expected = dict(tree_flatten(model.trainable_parameters()))
+    if set(adapters) != set(expected):
         raise ValueError("checkpoint trainable keys differ from model")
-    model.load_weights(list(adapters.items()), strict=False)
-    optimizer.state = tree_unflatten(list(mx.load(str(path / "optimizer.safetensors")).items()))
-    mx.eval(model.parameters(), optimizer.state)
-    optimizer_step = int(optimizer.state["step"].item())
-    if manifest.get("optimizer_step") != optimizer_step or manifest.get("step") != optimizer_step:
+
+    for key, value in adapters.items():
+        if not isinstance(value, mx.array):
+            raise ValueError(f"checkpoint parameter is not an MLX array: {key}")
+        target = expected[key]
+        if value.shape != target.shape or value.dtype != target.dtype:
+            raise ValueError(f"checkpoint parameter shape or dtype differs from model: {key}")
+
+    optimizer_arrays = mx.load(str(path / "optimizer.safetensors"))
+    if not optimizer_arrays or any(not isinstance(value, mx.array) for value in optimizer_arrays.values()):
+        raise ValueError("checkpoint optimizer state contains invalid values")
+    restored_optimizer_state = tree_unflatten(list(optimizer_arrays.items()))
+    try:
+        optimizer_step = int(restored_optimizer_state["step"].item())
+    except (KeyError, AttributeError, TypeError, ValueError) as exc:
+        raise ValueError("checkpoint optimizer state has no valid step") from exc
+
+    step = manifest.get("step")
+    manifest_optimizer_step = manifest.get("optimizer_step")
+    if (type(step) is not int or step < 0 or type(manifest_optimizer_step) is not int
+            or manifest_optimizer_step != optimizer_step or step != optimizer_step):
         raise ValueError("checkpoint update count differs from restored optimizer state")
-    reseed(manifest["rng"]["base_seed"], manifest["rng"]["step"])
-    if trainable_digest(model) != manifest["trainable_digest"]:
+
+    rng = manifest.get("rng")
+    if (not isinstance(rng, dict) or type(rng.get("base_seed")) is not int
+            or rng.get("step") != step
+            or rng.get("derivation") != "sha256(f'{base_seed}:{step}')[:8]"):
+        raise ValueError("checkpoint RNG state is invalid")
+    expected_digest = manifest.get("trainable_digest")
+    if not isinstance(expected_digest, str) or _trainable_digest_from_flat(adapters.items()) != expected_digest:
         raise ValueError("restored parameters do not match checkpoint digest")
+
+    mx.eval(adapters, restored_optimizer_state)
+    original_parameters = dict(tree_flatten(model.trainable_parameters()))
+    original_optimizer_state = optimizer.state
+    try:
+        model.load_weights(list(adapters.items()), strict=False)
+        optimizer.state = restored_optimizer_state
+        mx.eval(model.parameters(), optimizer.state)
+        if trainable_digest(model) != expected_digest:
+            raise ValueError("restored parameters do not match checkpoint digest")
+    except Exception:
+        model.load_weights(list(original_parameters.items()), strict=False)
+        optimizer.state = original_optimizer_state
+        mx.eval(model.parameters(), optimizer.state)
+        raise
+
+    reseed(rng["base_seed"], rng["step"])
     return manifest
 
 

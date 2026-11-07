@@ -1,0 +1,264 @@
+{
+  "assignment_sha256": "4dfa322e1b7e248b6f296bae00905a09eab3b269c0142ca590e35302087c06ca",
+  "credit_assignment": {
+    "claim_boundary": "This is not completed Long-Horizon RL.",
+    "configured": "full_trajectory_terminal_reward",
+    "update_executed": false
+  },
+  "development_evaluation": {
+    "matched_budget_comparison": null,
+    "performed": false,
+    "reason": "valid variable-reward optimizer update did not occur",
+    "sealed_task_count": 2
+  },
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-13994-full-trajectory-v18",
+  "grpo_mlx_sha256": "597528e82e88e5666ff855a89f81dd6e4847c20f21aa48eb604f1661a36f7044",
+  "heldout": {
+    "access": false,
+    "assignment": false,
+    "eligible_tasks": 0,
+    "evaluation": false,
+    "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7b5b1c991ce4"
+  },
+  "integration_head_sha": "6dad7b9abaa706425312747e324ad4822d501b0e",
+  "model": {
+    "architecture": "Apple M1 Pro, 32 GiB unified memory",
+    "device": "Device(gpu, 0)",
+    "files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "initial_trainable_parameters_sha256": "1454f0400439bda28f6a0d4736ccfc9c7400c252acc5612b1dbdcfbe6d7fa724",
+    "metal_available": true,
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.0",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "optimizer": {
+    "checkpoint_reload_verified": false,
+    "checkpoint_saved": false,
+    "parameter_delta": "not measured; constant-reward guard skipped optimization",
+    "reason": "no_variable_trusted_rewards",
+    "update_applied": false,
+    "updates": 0
+  },
+  "public_redactions": [
+    "Development task identities/prompts",
+    "grader selector and commands",
+    "raw grader output",
+    "absolute workstation paths"
+  ],
+  "rollouts": {
+    "edit_tool_actions_attempted": 0,
+    "finite_sampling_behavior_logprob_entries": 3964,
+    "n": 8,
+    "per_sample": [
+      {
+        "behavior_logprob_count": 407,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 407,
+        "generated_token_ids": 407,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "7e8c7d6380c73daff8169c60bf18c6fadda124bcdf07025d6b593cb7acaa6fd0",
+        "grader_record_sha256": "86ecef60eee46077318485c748021ca9952a0caeec4bb4e32b41b93825342a70",
+        "reward": 0.0,
+        "sample_index": 0,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+        "tool_counts": {
+          "read_file": 8,
+          "search_code": 8
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "d7539cec3619240b683428ce538b546466ff8bfb7862d49c14ba357389f104a1",
+        "trajectory_file_sha256": "5bc0ccec62adffe0ced5dd81e8681d8219557650013905dba97020ef51aaae5d"
+      },
+      {
+        "behavior_logprob_count": 524,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 524,
+        "generated_token_ids": 524,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "1b3c45d58dc87216a0932bc9b84fe649e7b62d158eda41e978bca2ee37f1419e",
+        "grader_record_sha256": "be6b9d46450751a0805ce30fa984a46ff3fa7175b75a2861cb187403e2b361f4",
+        "reward": 0.0,
+        "sample_index": 1,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+        "tool_counts": {
+          "read_file": 14,
+          "search_code": 2
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "55d40f922ce96de563c6da85d2ab17334d2cc118b28259ed6c9d2de153d4cc8a",
+        "trajectory_file_sha256": "d7f4c31fd46ed31cee9d7e6a40db8b09f357c891164469fa24140aab8bad576d"
+      },
+      {
+        "behavior_logprob_count": 524,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 524,
+        "generated_token_ids": 524,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "dc88d960d77c2b160ad8ff6a662bbe0244ae2cb770c7a505ba0ff04cddbc2372",
+        "grader_record_sha256": "4c27e07d337322444b93697019dc30d9cfd41804b1c324e85705adfbdb5d647e",
+        "reward": 0.0,
+        "sample_index": 2,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+        "tool_counts": {
+          "read_file": 14,
+          "search_code": 2
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "8d6ee5f37143f95f3f821f45d700110e36602c6ce07e78e40ea804e0d25f766b",
+        "trajectory_file_sha256": "9fb19e9cde87fbbe009a97f83fb8293ebf45055bc1c9639a66c7463545c610b7"
+      },
+      {
+        "behavior_logprob_count": 542,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 542,
+        "generated_token_ids": 542,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "46f989c6cd86ee8486ae218963d43f025345346d479e419444043eb1c467f1a9",
+        "grader_record_sha256": "e2814bc4b691446fde44b450eb89420cf89f4ef8f06a285df413cb02938bcf6a",
+        "reward": 0.0,
+        "sample_index": 3,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+        "tool_counts": {
+          "read_file": 15,
+          "search_code": 1
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "ca1e21ffd4cefd889c444a3af74acac8964c0ca05f96c84ed82a6f976e07eb68",
+        "trajectory_file_sha256": "a566db880e0f6615ac870d8c7d8e7eba9e17fedeb5d34f4460b247706d7d8e7b"
+      },
+      {
+        "behavior_logprob_count": 495,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 495,
+        "generated_token_ids": 495,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "8e9e5604844db57acbf096dd746df2c04df906d72b913bc541df1d5f7de4be79",
+        "grader_record_sha256": "b39bea8739bb840914d98bfcc702eebcdc6f500e194cf21406b8709ee002636e",
+        "reward": 0.0,
+        "sample_index": 4,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+        "tool_counts": {
+          "read_file": 13,
+          "search_code": 3
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "b153537c42da5eaa752592dbac75d7488fc41382012057f506cd92bfebcd2fd4",
+        "trajectory_file_sha256": "8d613f03b9cc24bb8fd5fb3420c32068029542306db5426db775c56371c80256"
+      },
+      {
+        "behavior_logprob_count": 542,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 542,
+        "generated_token_ids": 542,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "d892737254c6f3fff67a7719645c96712bfa2191c99e6b42b29922c007eb06fc",
+        "grader_record_sha256": "05260af86bcfd744b494e1eaf294cb22b8ed78f6ac551ff05e637e69a21a0a19",
+        "reward": 0.0,
+        "sample_index": 5,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+        "tool_counts": {
+          "read_file": 15,
+          "search_code": 1
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "8cba2fa9e7e5655225193225af3f36b6f40ee4ea3664119b1fb93c2dc23870aa",
+        "trajectory_file_sha256": "ee17f8aa833183944e42d551443b5b97967926b965b74106c59031bf133fe83a"
+      },
+      {
+        "behavior_logprob_count": 462,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 462,
+        "generated_token_ids": 462,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "e402e2219aeb6b8b0442235471fec3e60e698e7725dae9d3fdacf606450319d6",
+        "grader_record_sha256": "9b247261cf722167740e2a67ece83fdb148ce1faf9d7ea800f0fec48f31abfea",
+        "reward": 0.0,
+        "sample_index": 6,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+        "tool_counts": {
+          "read_file": 10,
+          "search_code": 6
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "117dc17d9bbedd893d70d944b8fd4fd3c64243b541492d7276ede9399ee2c285",
+        "trajectory_file_sha256": "7c740705192857e936e6a13e65ede9fd3c7710b6737f391603e02de7021a749b"
+      },
+      {
+        "behavior_logprob_count": 468,
+        "changed_files": [],
+        "finite_behavior_logprob_count": 468,
+        "generated_token_ids": 468,
+        "grade_status": "candidate_failure",
+        "grader_log_sha256": "eb81f89270954ef590c4688b883943f3cadf906b9b15fc65de997462a9d74990",
+        "grader_record_sha256": "0356f5c17183c0c227745fc8a85aec45948e61c6638694b324e7ce68560e95f2",
+        "reward": 0.0,
+        "sample_index": 7,
+        "stop_reason": "turn_budget_exhausted",
+        "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+        "tool_counts": {
+          "read_file": 11,
+          "search_code": 5
+        },
+        "tool_turns": 16,
+        "trajectory_embedded_sha256": "200bde42baf1a6d2a011c6f0633483f84d676110d1a28b7cb3990e3c0c2bef4b",
+        "trajectory_file_sha256": "58b4dbce405385142f4d807de1d2a80c5433f95837d7f6ee0dcb5541870b0b64"
+      }
+    ],
+    "reward_counts": {
+      "0": 8,
+      "1": 0
+    },
+    "rewards": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "sampling_behavior_logprob_entries": 3964,
+    "source_file_changes": 0,
+    "tool_action_counts": {
+      "read_file": 100,
+      "search_code": 28
+    },
+    "total_generated_token_ids": 3964,
+    "total_tool_turns": 128
+  },
+  "run_lock_sha256": "79260dca5cbe0ed7e414f3281bb40024d0ade4d4a87a2779344fd04d30f1ab7a",
+  "run_started_at_utc": "2026-11-06T07:56:29Z",
+  "schema": "vare_public_real_model_train_dev_result_v1",
+  "source_runner_sha256": "c7c15243589e109b993d6b4fe935aa83877940350ecc7a927596167ac719e801",
+  "split": "train",
+  "task_id": "pydantic-13994-generic-model-cross-module-pickling",
+  "trusted_grading": {
+    "candidate_feedback": false,
+    "grade_status_counts": {
+      "candidate_failure": 8
+    },
+    "grader_record_sha256": [
+      "86ecef60eee46077318485c748021ca9952a0caeec4bb4e32b41b93825342a70",
+      "be6b9d46450751a0805ce30fa984a46ff3fa7175b75a2861cb187403e2b361f4",
+      "4c27e07d337322444b93697019dc30d9cfd41804b1c324e85705adfbdb5d647e",
+      "e2814bc4b691446fde44b450eb89420cf89f4ef8f06a285df413cb02938bcf6a",
+      "b39bea8739bb840914d98bfcc702eebcdc6f500e194cf21406b8709ee002636e",
+      "05260af86bcfd744b494e1eaf294cb22b8ed78f6ac551ff05e637e69a21a0a19",
+      "9b247261cf722167740e2a67ece83fdb148ce1faf9d7ea800f0fec48f31abfea",
+      "0356f5c17183c0c227745fc8a85aec45948e61c6638694b324e7ce68560e95f2"
+    ],
+    "independent": true,
+    "oom_killed": 0,
+    "pinned_offline_container": true,
+    "timeouts": 0
+  }
+}

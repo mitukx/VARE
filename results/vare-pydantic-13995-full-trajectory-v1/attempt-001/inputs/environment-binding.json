@@ -1,0 +1,64 @@
+{
+  "assignment_manifest_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/train-dev-assignment-v20-pydantic-13995-full-trajectory.json",
+  "assignment_manifest_sha256": "cbaf0a7d42257d2aae2921da174cb837315ae183b70245ac93d214b20b8b488f",
+  "experiment_protocol_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/vare-rsi-fresh-train-dev-real-model-grpo-v14-pydantic-13995-full-trajectory.json",
+  "experiment_protocol_sha256": "bf8f994f608cf8a3b2db64c48f094ec4aacf75435a4122e10f29a2021de40cce",
+  "frozen_at_utc": "2026-11-06T04:38:21Z",
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_evaluation": false,
+  "model_or_agent_exposure_before_freeze": false,
+  "new_group_prompt_exposure_before_freeze": false,
+  "no_go_gate_path": "work/VARE-rsi-integration-20261105/protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "preflight_rebinding_history": [],
+  "prior_attempt_summary_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-14138-full-trajectory-v1/attempt-010/summary.json",
+  "prior_attempt_summary_sha256": "e736ad38fd0f9ef1c041087a8bd6dc20244ac75357fc2d8c1d629e15f7833e09",
+  "prior_completed_zero_reward_rollouts": 0,
+  "prior_partial_exposure": false,
+  "prior_partial_exposures": [],
+  "protocol_id": "vare-pydantic-train-dev-environment-binding-v20-13995-full-trajectory",
+  "qualification_bindings": [
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "qualification_summary_path": "work/VARE-rsi-integration-20261105/results/vare-pydantic-13995-task-qualification-v1/attempt-008/summary.json",
+      "qualification_summary_sha256": "28b172d00ef05f0a4aa8a162ef7d0b422178f90418ac24d6ccec82115ca8096d",
+      "task_id": "pydantic-13995-jsonvalue-python-inf-nan-serialization"
+    },
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-13997-v1.json",
+      "environment_lock_sha256": "96f4cbcf61ff6c22bcb8cf28ea38731ebd441d5f66ab5eefd5210299725b7a6a",
+      "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-13997/attempt-001/summary.json",
+      "qualification_summary_sha256": "62cb54f6b4a569e0ebbf87e80c1d1351304324905e5669a1c2aaafe6ecf74b1c",
+      "task_id": "pydantic-13997-explicit-json-schema-by-alias-override"
+    },
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14103/attempt-001/summary.json",
+      "qualification_summary_sha256": "4edcd9e7205622b26c6c8989823db10012cd5096ed3e127c9b6a1a3bc77d0a2c",
+      "task_id": "pydantic-14103-ignore-internal-dataclass-extras"
+    }
+  ],
+  "sample_index_allocation_changed": true,
+  "schema_version": 1,
+  "task_assignment_changed": true,
+  "task_membership": [
+    {
+      "split": "train",
+      "task_id": "pydantic-13995-jsonvalue-python-inf-nan-serialization"
+    },
+    {
+      "split": "development",
+      "task_id": "pydantic-13997-explicit-json-schema-by-alias-override"
+    },
+    {
+      "split": "development",
+      "task_id": "pydantic-14103-ignore-internal-dataclass-extras"
+    }
+  ]
+}

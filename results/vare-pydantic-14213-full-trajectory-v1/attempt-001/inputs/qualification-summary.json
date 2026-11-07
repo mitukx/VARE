@@ -1,0 +1,40 @@
+{
+  "arms": [
+    {
+      "arm": "baseline",
+      "exit_code": 1,
+      "grade_status": "candidate_failure",
+      "oom_killed": false,
+      "reward": 0.0,
+      "timed_out": false,
+      "wall_seconds": 0.685
+    },
+    {
+      "arm": "mutant",
+      "exit_code": 1,
+      "grade_status": "candidate_failure",
+      "oom_killed": false,
+      "reward": 0.0,
+      "timed_out": false,
+      "wall_seconds": 0.646
+    },
+    {
+      "arm": "fixed",
+      "exit_code": 0,
+      "grade_status": "pass",
+      "oom_killed": false,
+      "reward": 1.0,
+      "timed_out": false,
+      "wall_seconds": 0.619
+    }
+  ],
+  "candidate_or_model_prompt_exposure_before_run": false,
+  "heldout_access": false,
+  "pinned_grader_image_id": null,
+  "qualification_pass": true,
+  "schema": "vare_public_train_task_qualification_v1",
+  "selector_and_test_source_omitted": true,
+  "status": "QUALIFIED_FOR_PROSPECTIVE_TRAIN_ASSIGNMENT",
+  "task_id": "pydantic-14213-use-entry-points-api-plugin-loader",
+  "training_or_optimizer_update_during_qualification": false
+}

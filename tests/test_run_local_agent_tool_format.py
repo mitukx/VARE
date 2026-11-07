@@ -33,6 +33,7 @@ from scripts.run_local_agent import (
     refresh_public_tests_after_edit,
     run_public_tests,
     resolve_allowed_path,
+    resolve_search_guard_path,
     tools_for,
 )
 from scripts.run_local_agent import candidate_source_diff, snapshot_allowed_sources
@@ -433,6 +434,24 @@ def test_list_symbols_schema_and_ast_index_ground_request_model_fields():
     assert request['methods'] == ['validate_tools']
 
 
+def test_list_symbols_ignores_natural_language_stop_words_and_splits_identifiers():
+    source = (
+        'class CacheFactory:\n'
+        '    def build_cache(self):\n'
+        '        return {}\n'
+        '\n'
+        'class CacheStore:\n'
+        '    pass\n'
+    )
+
+    result = list_python_symbols(source, query='Where is cache factory?')
+
+    assert result['total_symbols'] == 2
+    assert [item['name'] for item in result['symbols']] == [
+        'CacheFactory', 'CacheFactory.build_cache',
+    ]
+
+
 def test_search_loop_guard_redirects_exact_recorded_repeated_empty_queries():
     root = Path(__file__).resolve().parents[1]
     attempt = json.loads((root / (
@@ -468,6 +487,72 @@ def test_search_loop_guard_redirects_exact_recorded_repeated_empty_queries():
     assert third_miss['related_empty_searches'] == 3
     assert any('list_symbols' in item for item in third_miss['alternatives'])
     assert guard.intercept('tool_use with another longer query') is not None
+
+
+def test_single_file_global_search_scope_stops_historical_14115_loop():
+    import gzip
+
+    root = Path(__file__).resolve().parents[1]
+    trace_path = root / (
+        'results/vare-pydantic-14115-full-trajectory-v1/attempt-001/'
+        'tool-traces.jsonl.gz'
+    )
+    task_path = 'pydantic/_internal/_mock_val_ser.py'
+    allowed = {task_path}
+    search_path = resolve_search_guard_path(None, allowed)
+    assert search_path == task_path
+    assert resolve_search_guard_path(None, allowed | {'pydantic/main.py'}) is None
+
+    guard = SearchLoopGuard(empty_search_limit=3)
+    searches = executed = intercepted = redirects = 0
+    with gzip.open(trace_path, 'rt', encoding='utf-8') as stream:
+        for line in stream:
+            row = json.loads(line)
+            if row.get('sample_index') != 0:
+                continue
+            action = row.get('action') or {}
+            if action.get('tool') == 'read_file':
+                guard.reset()
+                continue
+            if action.get('tool') != 'search_code':
+                continue
+            searches += 1
+            query = action.get('arguments', {}).get('query', '')
+            assert not (row.get('tool_result') or {}).get('matches')
+            if guard.intercept(query, search_path) is not None:
+                intercepted += 1
+                continue
+            executed += 1
+            if guard.observe(query, 0, search_path) is not None:
+                redirects += 1
+
+    assert searches == 15
+    assert executed == 6
+    assert intercepted == 9
+    assert redirects == 1
+
+
+def test_search_loop_guard_allows_unrelated_query_in_same_file():
+    path = "src/cache.py"
+    guard = SearchLoopGuard(empty_search_limit=2)
+    guard.observe("missing cache factory", 0, path)
+    hint = guard.observe("missing cache factory", 0, path)
+
+    assert hint is not None
+    assert guard.intercept("serialize request headers", path) is None
+    assert guard.observe("serialize request headers", 0, path) is None
+    assert guard.intercept("serialize request headers", path) is None
+    assert guard.intercept("missing cache factory", path) is None
+
+
+def test_search_guard_path_inference_respects_single_and_multiple_file_allowlists():
+    first = "pkg/cache.py"
+    second = "pkg/codec.py"
+
+    assert resolve_search_guard_path(None, {first}) == first
+    assert resolve_search_guard_path(None, {first, second}) is None
+    assert resolve_search_guard_path(second, {first, second}) == second
+    assert resolve_search_guard_path("pkg/private.py", {first, second}) is None
 
 
 def test_search_loop_guard_resets_after_new_source_context_or_positive_result():

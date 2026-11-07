@@ -173,7 +173,8 @@ def main() -> int:
         trained_model, trained_tokenizer = runner.load_policy(seed=seed)
         optimizer = optim.Adam(learning_rate=runner.OPTIMIZER_CONFIG["learning_rate"])
         manifest = grpo_mlx.load_checkpoint(
-            run / "checkpoints/update-0001", trained_model, optimizer)
+            run / "checkpoints/update-0001", trained_model, optimizer,
+            base_model_id=runner.BASE_MODEL_ID)
         if int(manifest["step"]) != 1 or int(optimizer.state["step"].item()) != 1:
             raise RuntimeError("loaded update-1 checkpoint is not at optimizer step 1")
         if grpo_mlx.trainable_digest(trained_model) != state["trainable_parameters_sha256"]:

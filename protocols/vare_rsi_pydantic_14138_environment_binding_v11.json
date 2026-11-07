@@ -1,0 +1,66 @@
+{
+  "assignment_manifest_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/train-dev-assignment-v11-pydantic-14138-resource-recovery.json",
+  "assignment_manifest_sha256": "cb27e1d6fa462b42e2ede6f7382c87fb8aa5a28ff734ee38ed95c368db48ec69",
+  "experiment_protocol_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/vare-rsi-fresh-train-dev-real-model-grpo-v5-14138-resource-recovery-continuation.json",
+  "experiment_protocol_sha256": "743a85f3704c137e05d58e3e09bd01e323e9ce046c1b4a5400d342374259a2cb",
+  "frozen_at_utc": "2026-11-05T20:43:17Z",
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_evaluation": false,
+  "model_or_agent_exposure_before_freeze": true,
+  "new_group_prompt_exposure_before_freeze": false,
+  "no_go_gate_path": "work/VARE-rsi-integration-20261105/protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "prior_partial_exposure": {
+    "abort_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
+    "abort_sha256": "5acc10f1992028bbcc56776704bf059a6837d4a582dc75321836dbd221c097c2",
+    "completed_rollout": false,
+    "independent_grade_produced": false,
+    "optimizer_updates": 0,
+    "partial_tool_turns": 3,
+    "prior_run_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/real-model-run-v18-14138-full-trajectory-grpo-group.lock.json",
+    "prior_run_lock_sha256": "9d033771dc98b04e3b1e50e2d9582e5d4be22c1f28b525872c4682afe5935759",
+    "resource_stop_reason": "swap growth of 7277117 bytes exceeded the frozen zero-byte allowance while system-wide memory free remained 34 percent",
+    "sample_index": 0,
+    "trajectory_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/training/pydantic-14138-direct-builtin-scalar-union-schema/sample-00/trajectory.json",
+    "trajectory_sha256": "b7700fe8c14b403ff7514035f2ef94f9a42b36bb2d8c477da924dcd09fded0aa"
+  },
+  "protocol_id": "vare-rsi-assignment-environment-binding-addendum-v11-14138-resource-recovery",
+  "qualification_bindings": [
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14138/attempt-001/summary.json",
+      "qualification_summary_sha256": "94c5c4e9bb43c5afa2f77133607ee977a5060ce391753f7cee5c8580025b3df1",
+      "task_id": "pydantic-14138-direct-builtin-scalar-union-schema"
+    },
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-13997-v1.json",
+      "environment_lock_sha256": "96f4cbcf61ff6c22bcb8cf28ea38731ebd441d5f66ab5eefd5210299725b7a6a",
+      "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-13997/attempt-001/summary.json",
+      "qualification_summary_sha256": "62cb54f6b4a569e0ebbf87e80c1d1351304324905e5669a1c2aaafe6ecf74b1c",
+      "task_id": "pydantic-13997-explicit-json-schema-by-alias-override"
+    },
+    {
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14103/attempt-001/summary.json",
+      "qualification_summary_sha256": "4edcd9e7205622b26c6c8989823db10012cd5096ed3e127c9b6a1a3bc77d0a2c",
+      "task_id": "pydantic-14103-ignore-internal-dataclass-extras"
+    }
+  ],
+  "schema_version": 1,
+  "task_assignment_changed": false,
+  "task_membership": {
+    "development": [
+      "pydantic-13997-explicit-json-schema-by-alias-override",
+      "pydantic-14103-ignore-internal-dataclass-extras"
+    ],
+    "train": [
+      "pydantic-14138-direct-builtin-scalar-union-schema"
+    ]
+  }
+}

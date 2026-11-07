@@ -1,0 +1,96 @@
+{
+  "assignment_sha256": "cbaf0a7d42257d2aae2921da174cb837315ae183b70245ac93d214b20b8b488f",
+  "credit_assignment": "full_trajectory_terminal_reward path configured; no optimization step occurred, so this run does not demonstrate Long-Horizon RL.",
+  "evaluation": {
+    "attempted": false,
+    "development_tasks": [
+      "pydantic-13997-explicit-json-schema-by-alias-override",
+      "pydantic-14103-ignore-internal-dataclass-extras"
+    ],
+    "reason": "no valid optimizer update; Development prompts remained sealed"
+  },
+  "exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "cpu_evidence_run_id": 42162279822,
+    "optimizer_recovery_run_id": 42162279924,
+    "pr_run_id": 42162279848,
+    "push_run_id": 42162273212
+  },
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-13995-full-trajectory-v14",
+  "heldout": {
+    "access": false,
+    "assignment": false,
+    "eligible_tasks": 0,
+    "evaluation": false,
+    "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4"
+  },
+  "identified_blocker": {
+    "category": "agent_source_discovery_loop",
+    "evidence": "All eight rollouts issued one exact search that returned no matches, then used the remaining 15 tool turns reading consecutive 20-line pages from the start of the same file. Every rollout reached the turn budget without patching."
+  },
+  "integration_head_sha": "3e96be20502566bdb44658eb7195efccdc5882ce",
+  "model": {
+    "hardware": "Apple M1 Pro, 32 GiB",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "runtime": "MLX Metal",
+    "versions": {
+      "huggingface-hub": "2.4.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.0",
+      "numpy": "2.5.4"
+    }
+  },
+  "optimizer": {
+    "checkpoint_reloaded": false,
+    "checkpoint_saved": false,
+    "optimizer_updates": 0,
+    "parameters_changed": false,
+    "reason": "no_variable_trusted_rewards",
+    "update_applied": false
+  },
+  "pre_exposure_preflight_sha256": "fef43e76db1254790c884467951056d36b1d9d445e7889db8e1de060d9f42fc5",
+  "raw_grader_logs_and_commands": "retained privately; only hashes and sanitized trusted grades are in this package",
+  "run_lock_sha256": "c8f43d2ce16b34cd2cd9eeffc26936465dfec1f102786d4e8e9df9ea1cd60925",
+  "runner_exit_code": 2,
+  "schema": "vare_real_model_train_dev_result_v1",
+  "training": {
+    "all_action_segment_token_logprob_pairs_finite_and_length_matched": true,
+    "patch_submissions": 0,
+    "rollouts": 8,
+    "same_policy_logprob_recomputation_and_ratio_check": "not run because the frozen GRPO rule stops before optimizer work when rewards have zero variance",
+    "sample_artifact_sha256": "caf7611c0a0573538b2a14ab193b358e2c6caeb37cf8507f2601cdefce52fe55",
+    "sample_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "search_no_match_count": 8,
+    "search_queries": {
+      "class JsonValue": 8
+    },
+    "source_changes": 0,
+    "split": "train",
+    "stop_reason_counts": {
+      "turn_budget_exhausted": 8
+    },
+    "task_id": "pydantic-13995-jsonvalue-python-inf-nan-serialization",
+    "tool_action_counts": {
+      "read_file": 120,
+      "search_code": 8
+    },
+    "total_action_tokens": 3764,
+    "total_tool_turns": 128,
+    "trusted_grade_counts": {
+      "candidate_failure_reward_0": 8,
+      "pass_reward_1": 0,
+      "untrusted": 0
+    }
+  }
+}

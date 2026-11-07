@@ -1,0 +1,318 @@
+{
+  "assignment_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/train-dev-assignment-v11-pydantic-14138-resource-recovery.json",
+  "assignment_sha256": "cb27e1d6fa462b42e2ede6f7382c87fb8aa5a28ff734ee38ed95c368db48ec69",
+  "behavior_log_probability_capture": {
+    "comparison_tolerance": 1e-06,
+    "grpo_ratio": "Recompute same-policy differentiable MLX forward behavior log-probabilities for every retained trajectory action segment and compare to sampling-time values before mutation.",
+    "sampling_time": "For each generated action token, transform mlx-lm raw GenerationResponse.logprobs via log_softmax(raw_logprobs / temperature) and select the sampled token.",
+    "validity": "Every policy-generated action segment must retain prompt/completion token IDs and finite sampling-time log-probabilities; before optimizer mutation, all differentiable same-policy values must match within tolerance."
+  },
+  "budget_accounting": {
+    "authorized_train_rollout_max": 9,
+    "first_new_sample_index": 1,
+    "group_size": 8,
+    "last_new_sample_index": 8,
+    "prior_train_rollouts_attempted": 1,
+    "remaining_train_rollouts": 8
+  },
+  "candidate_environment": "Exact first-parent production baseline. The candidate sees only its assigned task prompt and editable source path through the allowlisted coding tools. No tests, selector, PR identity, patch, Development task, shell, or network is exposed. Independent graders run in pinned offline containers.",
+  "candidate_tool_allowlist": [
+    "search_code",
+    "read_file",
+    "apply_patch",
+    "compile_file",
+    "show_changes",
+    "finish"
+  ],
+  "context_compaction": {
+    "full_tool_trace_and_all_prompt_token_ids_preserved": true,
+    "per_tool_result_character_cap": 3200,
+    "prior_summary_character_cap": 1800,
+    "read_file_content_character_cap": 2600,
+    "read_file_max_lines": 20,
+    "strategy": "frozen task prompt plus compact metadata for prior tool turns plus latest full action/result exchange"
+  },
+  "credit_assignment": "full_trajectory_terminal_reward",
+  "decision_rules": {
+    "constant_rewards": "No optimizer update and no Development evaluation; retain all eight full trajectories and independent grades.",
+    "failed_gradient_or_zero_delta": "No checkpoint qualification or Development comparison.",
+    "invalid_behavior_logs": "Abort update before optimizer mutation.",
+    "valid_update": "Apply one full-trajectory GRPO update, save adapter/checkpoint, reload in a fresh policy instance, verify digests and optimizer step, then run matched unchanged-versus-updated Development evaluation."
+  },
+  "development_tasks": [
+    {
+      "baseline_revision": "900e8991b7bf066a0d44346636c43b371608d8cf",
+      "candidate_id": "pydantic/pydantic#13997",
+      "editable_source_paths": [
+        "pydantic/json_schema.py",
+        "pydantic/main.py",
+        "pydantic/type_adapter.py"
+      ],
+      "fixed_revision": "44d5e1e8fc8198ecd0083a00a05e099aba0423ab",
+      "hidden_grader_selector_sha256": "d5bac63008426eef0961c1a73e35d967920c567030db4d3e231c3ef94d614a57",
+      "license_spdx": "MIT",
+      "prompt_sha256": "d8c8a4127005d4d38baefc07422344a9a7526714f9e909ac154d109730b7b0d8",
+      "qualification_passed": true,
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-13997/attempt-001/summary.json",
+      "qualification_summary_sha256": "62cb54f6b4a569e0ebbf87e80c1d1351304324905e5669a1c2aaafe6ecf74b1c",
+      "repository": "pydantic/pydantic",
+      "reward_source": "independent exact-upstream test in pinned offline environment; binary terminal reward; hidden from candidate",
+      "split": "development",
+      "task_definition_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-definition-pydantic-13997-v2.json",
+      "task_definition_sha256": "84c3382100e0aa4fb0086fa98323eac0b86b480707f5b5642b7d78cda3391c60",
+      "task_family": "json_schema_explicit_alias_overrides_config",
+      "task_id": "pydantic-13997-explicit-json-schema-by-alias-override"
+    },
+    {
+      "baseline_revision": "62791e66a9f8f118e465ed760c9e2ede9ae3055e",
+      "candidate_id": "pydantic/pydantic#14103",
+      "editable_source_paths": [
+        "pydantic/dataclasses.py"
+      ],
+      "environment_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+      "fixed_revision": "b26913fe6bbdefb6a75b00f6cb64fc7c059aba48",
+      "hidden_grader_selector_sha256": "860356784ecfd41f6eee04934cdaa71e17287acd81fcd1b8ae91960b4f7fb2e4",
+      "identity_audit_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-identity-audit-pydantic-14103-v2.json",
+      "identity_audit_sha256": "2a9bfc2e767ce83cce4920f34c327ecc0170dc6f05f5003838f666e614fac48b",
+      "license_spdx": "MIT",
+      "prompt_sha256": "b99fe3611146d4954a5918e71987d03cdaeba4e5f259c3bcbbe4a78254dc6266",
+      "qualification_passed": true,
+      "qualification_protocol_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/source-test-qualification-protocol-v7-pydantic-dev-14103.json",
+      "qualification_protocol_sha256": "796a0064adffd1c082de435f6df4f3644683181d9fa9e7eaf0156be23db00bc9",
+      "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14103/attempt-001/summary.json",
+      "qualification_summary_sha256": "4edcd9e7205622b26c6c8989823db10012cd5096ed3e127c9b6a1a3bc77d0a2c",
+      "repository": "pydantic/pydantic",
+      "reward_source": "exact upstream pytest selector in pinned offline container; binary terminal reward; hidden from candidate",
+      "split": "development",
+      "task_definition_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-definition-pydantic-14103-v1.json",
+      "task_definition_sha256": "e2288214ffd0d819b4f309055731f82a7e35dd019b7f23d2fb07767f32745b7b",
+      "task_family": "pydantic_dataclass_internal_attribute_extra_filter",
+      "task_id": "pydantic-14103-ignore-internal-dataclass-extras"
+    }
+  ],
+  "environment_binding_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/train-dev-assignment-environment-binding-addendum-v11-14138-resource-recovery.json",
+  "environment_binding_sha256": "9417d2bfaba4391ebba27c0d0016cfe49dd9c285da69e7f4452e340e5fdbabc9",
+  "evaluation": {
+    "decode": "deterministic greedy",
+    "max_action_tokens": 384,
+    "max_attempts_per_policy_per_task": 1,
+    "max_generated_tokens": 4096,
+    "max_prompt_tokens": 4096,
+    "max_tool_turns": 16,
+    "max_wall_seconds": 900,
+    "temperature": 0.0
+  },
+  "exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "head_sha": "98546d12023ce6fcb4850827865b66857c43999d",
+    "pull_request": 199,
+    "required_workflows": [
+      {
+        "name": "ci",
+        "run_id": 42106501690,
+        "run_number": 2446,
+        "status": "success"
+      },
+      {
+        "name": "cpu-evidence",
+        "run_id": 42106501838,
+        "run_number": 921,
+        "status": "success"
+      },
+      {
+        "name": "e2e-system-cpu",
+        "run_id": 42106501661,
+        "run_number": 450,
+        "status": "success"
+      }
+    ],
+    "verified_at_utc": "2026-11-05T20:59:37Z"
+  },
+  "expected_initial_trainable_parameters_sha256": "1454f0400439bda28f6a0d4736ccfc9c7400c252acc5612b1dbdcfbe6d7fa724",
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14138-full-trajectory-resource-recovery-v11",
+  "external_repository_writes": false,
+  "frozen_at_utc": "2026-11-05T20:59:37Z",
+  "grpo": {
+    "clip_eps_high": 0.2,
+    "clip_eps_low": 0.2,
+    "credit_assignment": "full_trajectory_terminal_reward",
+    "group_size": 8,
+    "max_grad_norm": 1.0,
+    "max_policy_lag": 0,
+    "normalize_std": true,
+    "optimizer_updates_max": 1,
+    "temperature": 0.8
+  },
+  "lora": {
+    "dropout": 0.0,
+    "num_layers": 8,
+    "rank": 8,
+    "scale": 20.0
+  },
+  "model": {
+    "base_model_id": "mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "manifest_path": "work/vare-rsi-qwen3-4b-mlx-20261106/model-manifest.json",
+    "manifest_sha256": "956513b153d2b4ef16953c226e455fe43aea90cd09ecb7b212d2ccaa0b2c994a",
+    "parameter_format": "MLX quantized pretrained base plus LoRA adapter",
+    "path": "work/vare-rsi-qwen3-4b-mlx-20261106/model",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "no_go_gate": {
+    "heldout_access": false,
+    "heldout_assignment": false,
+    "heldout_evaluation": false,
+    "path": "work/VARE-rsi-integration-20261105/protocols/mlsys_actual_model_update_no_go_v2.lock.json",
+    "sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+    "status": "NO_GO remains frozen and unchanged"
+  },
+  "no_go_separation": "User-authorized prospective Train/Development run after exact-head CI. No held-out assignment, access, evaluation, or status change.",
+  "optimizer": {
+    "learning_rate": 1e-05,
+    "name": "mlx.optimizers.Adam"
+  },
+  "prior_group_adjudication_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
+  "prior_group_adjudication_sha256": "5acc10f1992028bbcc56776704bf059a6837d4a582dc75321836dbd221c097c2",
+  "prior_group_adjudications": [
+    {
+      "completed_rollouts": 0,
+      "development_evaluations": 0,
+      "independent_grades": 0,
+      "optimizer_updates": 0,
+      "partial_sample_indices": [
+        0
+      ],
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
+      "rollouts": 1,
+      "sha256": "5acc10f1992028bbcc56776704bf059a6837d4a582dc75321836dbd221c097c2",
+      "summary": "Partial sample retained as an incomplete resource-stop outcome and excluded from the continuation GRPO group."
+    }
+  ],
+  "promotion": false,
+  "protocol_id": "vare-rsi-fresh-train-dev-real-model-grpo-v5-14138-resource-recovery-continuation",
+  "protocol_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/vare-rsi-fresh-train-dev-real-model-grpo-v5-14138-resource-recovery-continuation.json",
+  "protocol_sha256": "743a85f3704c137e05d58e3e09bd01e323e9ce046c1b4a5400d342374259a2cb",
+  "resources": {
+    "abort_on_memory_pressure_or_swap_growth": true,
+    "memory_free_floor_pct": 15.0,
+    "minimum_disk_free_bytes": 8589934592,
+    "swap_growth_allowed_bytes": 67108864
+  },
+  "rollout": {
+    "max_action_tokens": 384,
+    "max_generated_tokens": 4096,
+    "max_prompt_tokens": 4096,
+    "max_rollouts": 8,
+    "max_tool_turns": 16,
+    "max_wall_seconds": 900
+  },
+  "run_output_dir": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-002",
+  "runtime": {
+    "architecture": "arm64",
+    "backend": "MLX Metal on Apple Silicon",
+    "device": "M1 Pro, 32 GiB unified memory",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "versions": {
+      "huggingface-hub": "2.4.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.0",
+      "numpy": "2.5.4"
+    }
+  },
+  "sampling": {
+    "distribution": "untruncated softmax(logits / temperature)",
+    "min_p": 0.0,
+    "temperature": 0.8,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "schema_version": 1,
+  "source_code": {
+    "container_runner_path": "work/container_pytest_runner.py",
+    "container_runner_sha256": "3a042ce2416844538b4d0c81f48a76131486bdc6c290005c5e0d0ab29556b0b4",
+    "grpo_mlx_path": "work/VARE-rsi-integration-20261105/src/vare/grpo_mlx.py",
+    "grpo_mlx_sha256": "597528e82e88e5666ff855a89f81dd6e4847c20f21aa48eb604f1661a36f7044",
+    "integration_head_sha": "98546d12023ce6fcb4850827865b66857c43999d",
+    "runner_path": "work/VARE-rsi-integration-20261105/experiments/run_vare_pydantic_14138_full_trajectory_continuation.py",
+    "runner_sha256": "f33a4d44628dba67d153945fae6d70d2d296b9d10d842caa78c4a562d120523b"
+  },
+  "status": "FROZEN_BEFORE_CONTINUATION_GROUP_PROMPT_EXPOSURE",
+  "supersedes_run_lock": {
+    "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/real-model-run-v18-14138-full-trajectory-grpo-group.lock.json",
+    "reason": "The prior run stopped after three tool turns on sample index 0 when background swap growth exceeded the zero-byte guard; it produced no complete trajectory, independent grade, optimizer update, checkpoint, or Development evaluation. This continuation excludes sample 0, uses fresh indices 1\u20138, and allows bounded swap growth while retaining the 15% free-memory floor.",
+    "sha256": "9d033771dc98b04e3b1e50e2d9582e5d4be22c1f28b525872c4682afe5935759"
+  },
+  "system_prompt_sha256": "67a0c5b47b1c179c468320cba23c0c23a43720de019741078bcc1d3b07836237",
+  "task_environments": {
+    "pydantic-13997-explicit-json-schema-by-alias-override": {
+      "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-13997-v1.json",
+      "sha256": "96f4cbcf61ff6c22bcb8cf28ea38731ebd441d5f66ab5eefd5210299725b7a6a"
+    },
+    "pydantic-14103-ignore-internal-dataclass-extras": {
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77"
+    },
+    "pydantic-14138-direct-builtin-scalar-union-schema": {
+      "image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+      "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-train-dev-common-v1.json",
+      "sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77"
+    }
+  },
+  "tool_help_sha256": "86e1fd0f331b479fe0123d1d11b6144961be4b95b294058244059d7e847b665b",
+  "training_task": {
+    "baseline_revision": "77fad186682d0c22cad713e34ca9b8b830362ed0",
+    "candidate_id": "pydantic/pydantic#14138",
+    "editable_source_paths": [
+      "pydantic/_internal/_generate_schema.py"
+    ],
+    "excluded_sample_indices": [
+      0
+    ],
+    "fixed_revision": "e2be23619bccf605e97d89097477da69e9808886",
+    "hidden_grader_selector_sha256": "f51a852904de8be46f6ce55e8421256c8cbd668f11fa429b7788b026f3c7c13a",
+    "license_spdx": "MIT",
+    "new_sample_indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "prior_partial_exposure": {
+      "abort_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/abort.json",
+      "abort_sha256": "5acc10f1992028bbcc56776704bf059a6837d4a582dc75321836dbd221c097c2",
+      "completed_rollout": false,
+      "independent_grade_produced": false,
+      "optimizer_updates": 0,
+      "partial_tool_turns": 3,
+      "prior_run_lock_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/real-model-run-v18-14138-full-trajectory-grpo-group.lock.json",
+      "prior_run_lock_sha256": "9d033771dc98b04e3b1e50e2d9582e5d4be22c1f28b525872c4682afe5935759",
+      "resource_stop_reason": "swap growth of 7277117 bytes exceeded the frozen zero-byte allowance while system-wide memory free remained 34 percent",
+      "sample_index": 0,
+      "trajectory_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/vare-pydantic-qwen3-4b-train14138-attempt-001/training/pydantic-14138-direct-builtin-scalar-union-schema/sample-00/trajectory.json",
+      "trajectory_sha256": "b7700fe8c14b403ff7514035f2ef94f9a42b36bb2d8c477da924dcd09fded0aa"
+    },
+    "prompt_sha256": "194edd0d39ca8c24fb57f7bf35eada41b7023899533ef888a10bfc1928173f98",
+    "prompt_variant_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-prompt-variant-pydantic-14138-v1.json",
+    "prompt_variant_sha256": "937359384f7a494cc9f4e6788d7b8b5eda67f21fc1f6b30898a1c7c4d4e43fa4",
+    "qualification_passed": true,
+    "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14138/attempt-001/summary.json",
+    "qualification_summary_sha256": "94c5c4e9bb43c5afa2f77133607ee977a5060ce391753f7cee5c8580025b3df1",
+    "repository": "pydantic/pydantic",
+    "reward_source": "independent exact-upstream test in pinned offline environment; binary terminal reward; hidden from candidate",
+    "split": "train",
+    "task_definition_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-definition-pydantic-14138-v1.json",
+    "task_definition_sha256": "0a31f22b210fb8baad40fc5c78d0734a5eb4f9d26beb3e075a40bd1afb74d926",
+    "task_family": "builtin_scalar_union_schema_direct_construction",
+    "task_id": "pydantic-14138-direct-builtin-scalar-union-schema"
+  }
+}

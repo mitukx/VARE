@@ -1,0 +1,42 @@
+{
+  "active_environment_lock": {
+    "image_id": "sha256:45a9aef24ebb016a6ffd69ddc7bf1928463f21a0d92db85ba9db8ce686bec253",
+    "path": "outputs/vare-rsi-heldout-qualification-v2-20261105/environment/environment-lock-pydantic-14115-v2.json",
+    "pydantic_core_version": "2.50.0",
+    "sha256": "63854ce64cd785c2021de71e529fe1c5cdeb0fc6bed8113ea8c163e2afc1c07a",
+    "source_overlay_required": true
+  },
+  "addendum_id": "environment-addendum-002",
+  "corrected_finding": "The standalone image preflight imported the base site-packages Pydantic distribution without the candidate source overlay. The task baseline version.py requires pydantic-core 2.50.0; the frozen task image provides 2.50.0 and is compatible when the candidate source is mounted.",
+  "frozen_at_utc": "2026-11-06T11:33:07+00:00",
+  "gate_modified": false,
+  "invalid_preflight_preserved": {
+    "attempt_path": "results/vare-agent-navigation-diagnostic-v1/attempt-001/grader-preflight-baseline/grader.log",
+    "candidate_source_required_pydantic_core": "2.50.0",
+    "model_exposure": false,
+    "preflight_image_pydantic_core": "2.50.4",
+    "wrong_candidate_environment_image_id": "sha256:fcf86e9268cfd5bbc6a38e5e22569d70cc048378dbb1d4f55bc9241cff61c940"
+  },
+  "protocol_id": "vare-pydantic-14115-navigation-diagnostic-v1",
+  "schema": "vare_agent_navigation_diagnostic_environment_addendum_v1",
+  "source_test_arm_validation": {
+    "actual_statuses": [
+      "candidate_failure",
+      "pass",
+      "candidate_failure"
+    ],
+    "all_outcomes_matched": true,
+    "expected_statuses": [
+      "candidate_failure",
+      "pass",
+      "candidate_failure"
+    ],
+    "heldout_access": false,
+    "model_prompt_exposure": false,
+    "summary_path": "results/vare-agent-navigation-diagnostic-v1/attempt-001/grader-preflight-summary.json",
+    "summary_sha256": "c34972679fe4775652d7a2c4258204f3d2e732161b74b7062db9b86ea6552234"
+  },
+  "status": "FROZEN_BEFORE_MODEL_PROMPT_EXPOSURE",
+  "supersedes_addendum_path": "results/vare-agent-navigation-diagnostic-v1/attempt-001/environment-addendum.json",
+  "supersedes_addendum_sha256": "f3436d98ed5185b36e8e6beba436e1fdfffea157a9868f268943157b3a74f602"
+}

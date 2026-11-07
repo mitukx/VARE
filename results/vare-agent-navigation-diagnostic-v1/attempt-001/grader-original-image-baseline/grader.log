@@ -1,0 +1,54 @@
+F
+=================================== FAILURES ===================================
+______________________ test_copy_defer_build_mocks[copy] _______________________
+
+copy_func = <function copy at 0xfe15395aaac0>
+
+    @pytest.mark.parametrize('copy_func', [copy.copy, copy.deepcopy])
+    def test_copy_defer_build_mocks(copy_func: Callable[[Any], Any]) -> None:
+        """https://github.com/pydantic/pydantic/issues/14089"""
+    
+        class M(BaseModel, defer_build=True):
+            a: int
+    
+        validator, serializer = M.__pydantic_validator__, M.__pydantic_serializer__
+    
+>       assert isinstance(copy_func(validator), MockValSer)
+                          ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_config.py:896: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.12/copy.py:97: in copy
+    return _reconstruct(x, None, *rv)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = <pydantic._internal._mock_val_ser.MockValSer object at 0xfe1537ef8900>
+memo = None, func = <function __newobj__ at 0xfe15395d5e40>
+args = (<class 'pydantic._internal._mock_val_ser.MockValSer'>,)
+state = (None, {'_attempt_rebuild': <function set_model_mocks.<locals>.attempt_rebuild_fn.<locals>.handler at 0xfe15381363e0>,...erenced types, then call `M.model_rebuild()`.', '_val_or_ser': <class 'pydantic_core._pydantic_core.SchemaValidator'>})
+listiter = None, dictiter = None
+
+    def _reconstruct(x, memo, func, args,
+                     state=None, listiter=None, dictiter=None,
+                     *, deepcopy=deepcopy):
+        deep = memo is not None
+        if deep and args:
+            args = (deepcopy(arg, memo) for arg in args)
+        y = func(*args)
+        if deep:
+            memo[id(x)] = y
+    
+        if state is not None:
+            if deep:
+                state = deepcopy(state, memo)
+>           if hasattr(y, '__setstate__'):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           RecursionError: maximum recursion depth exceeded
+
+/usr/local/lib/python3.12/copy.py:260: RecursionError
+=========================== short test summary info ============================
+FAILED tests/test_config.py::test_copy_defer_build_mocks[copy] - RecursionErr...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 2 warnings in 0.23s
+QUAL_MEMORY_PEAK_BYTES=49229824

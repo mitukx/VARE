@@ -236,6 +236,11 @@ INVENTORY_V6_SOURCES = INVENTORY_V5_SOURCES | frozenset({
 INVENTORY_V7_SOURCES = INVENTORY_V6_SOURCES | frozenset({
     "src/vare/agent_navigation.py",
 })
+# RSI runtime preflight adds one package module to the full continuation
+# snapshot. Keep v1-v7 frozen so existing campaign evidence remains auditable.
+INVENTORY_V8_SOURCES = INVENTORY_V7_SOURCES | frozenset({
+    "src/vare/rsi_cli.py",
+})
 # Exact-match registry; a campaign is identified by its complete source set.
 SOURCE_INVENTORIES = {
     "v1-pinned": LEGACY_EXPECTED_SOURCES,
@@ -245,11 +250,12 @@ SOURCE_INVENTORIES = {
     "v5": INVENTORY_V5_SOURCES,
     "v6": INVENTORY_V6_SOURCES,
     "v7": INVENTORY_V7_SOURCES,
+    "v8": INVENTORY_V8_SOURCES,
 }
-CURRENT_SOURCE_INVENTORY = "v7"
+CURRENT_SOURCE_INVENTORY = "v8"
 EXPECTED_SOURCES = SOURCE_INVENTORIES[CURRENT_SOURCE_INVENTORY]
 # Versions whose campaigns record the recovery endpoint at the resumed-round end.
-EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5", "v6", "v7"})
+EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5", "v6", "v7", "v8"})
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.

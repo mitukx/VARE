@@ -1,0 +1,105 @@
+{
+  "exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "duplicate_push_ci": {
+      "run_id": 42181659115,
+      "run_number": 2497,
+      "status": "success",
+      "url": "https://github.com/mitukx/VARE/actions/runs/42181659115"
+    },
+    "head_sha": "6dad7b9abaa706425312747e324ad4822d501b0e",
+    "runs": [
+      {
+        "name": "ci",
+        "run_id": 42181665946,
+        "run_number": 2498,
+        "status": "success",
+        "url": "https://github.com/mitukx/VARE/actions/runs/42181665946"
+      },
+      {
+        "name": "cpu-evidence",
+        "run_id": 42181665936,
+        "run_number": 947,
+        "status": "success",
+        "url": "https://github.com/mitukx/VARE/actions/runs/42181665936"
+      },
+      {
+        "name": "e2e-system-cpu",
+        "run_id": 42181665932,
+        "run_number": 473,
+        "status": "success",
+        "url": "https://github.com/mitukx/VARE/actions/runs/42181665932"
+      }
+    ]
+  },
+  "files": [
+    {
+      "artifact": "run metadata",
+      "sha256": "0f6ea6d8738e7ab56203c536ae5e3d748337e9f8713a277f97a93363819cd2b7"
+    },
+    {
+      "artifact": "base policy",
+      "sha256": "3002eedefb191520041627558524959ef5c74d1717c5cdeb7f727ae4f7fef098"
+    },
+    {
+      "artifact": "training rollout summary",
+      "sha256": "d9a2df44b2373fb890714a0937b17dceaa3b5fc92ab653df80d79d0c09b38ff5"
+    },
+    {
+      "artifact": "training update",
+      "sha256": "b299630aeb4d16270a6fe871208b0963734cbc580d2cd07282cef4db2118ffd3"
+    },
+    {
+      "artifact": "frozen assignment manifest",
+      "sha256": "4dfa322e1b7e248b6f296bae00905a09eab3b269c0142ca590e35302087c06ca"
+    },
+    {
+      "artifact": "frozen environment binding",
+      "sha256": "9ac38032fda848ac275c7225f395ddd023cd69681c267bea39860d8697cf4d9d"
+    },
+    {
+      "artifact": "frozen run lock",
+      "sha256": "79260dca5cbe0ed7e414f3281bb40024d0ade4d4a87a2779344fd04d30f1ab7a"
+    },
+    {
+      "artifact": "frozen protocol",
+      "sha256": "c4bc3feb5722d73e3662943caccb886f4f7f98c9931a6754d7ba333935f95071"
+    },
+    {
+      "artifact": "qualified Train task definition",
+      "sha256": "565925ea3bf4a4ba7292aae1afb65dbbc79ff1519937e8815065d3076070011e"
+    },
+    {
+      "artifact": "qualified Train task prompt record",
+      "sha256": "e9a909528a406dc01210c89b0d6104eeac20b86d89e3e22d791891764e18b1c7"
+    },
+    {
+      "artifact": "qualified Train qualification summary",
+      "sha256": "2048b21064877c0fa9778ff42da64382580e2f5a96beca896a9b1ac2bc418353"
+    },
+    {
+      "artifact": "model file manifest",
+      "sha256": "956513b153d2b4ef16953c226e455fe43aea90cd09ecb7b212d2ccaa0b2c994a"
+    },
+    {
+      "artifact": "rejected pre-exposure freeze v31 (hash only)",
+      "sha256": "d4c9d7cd96068bf415b9875590554fbd8ceb5b120bfdb1c1b56b359c85863da7"
+    },
+    {
+      "artifact": "frozen held-out NO-GO gate",
+      "sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4"
+    }
+  ],
+  "frozen_no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "heldout_access": false,
+  "integration_head_sha": "6dad7b9abaa706425312747e324ad4822d501b0e",
+  "redactions": [
+    "Development task identities and prompts",
+    "grader selectors and commands",
+    "raw grader output",
+    "absolute workstation paths"
+  ],
+  "schema": "vare_public_frozen_input_hash_manifest_v1",
+  "source_experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-13994-full-trajectory-v18"
+}

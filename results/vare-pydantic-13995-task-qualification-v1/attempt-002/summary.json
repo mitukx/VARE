@@ -1,0 +1,54 @@
+{
+  "arms": {
+    "baseline": {
+      "attempted": true,
+      "completion_marker_present": true,
+      "container_status": "exited",
+      "exact_selector_failure_present": false,
+      "exit_code": 1,
+      "grade_status": "untrusted_no_reward",
+      "grader_command_sha256": "c578a05a580eae9ab96128b5bcbcab001ed6400369e90c3e150f2c7d3f3c112e",
+      "grader_log_sha256": "c59f1bb48e539c5965e78254b0877065443b491bca8d5dbd68ff2681659e943c",
+      "oom_killed": false,
+      "pytest_failure_summary_present": true,
+      "pytest_pass_summary_present": false,
+      "timed_out": false
+    },
+    "fixed": {
+      "attempted": false
+    },
+    "mutant-v2": {
+      "attempted": false
+    }
+  },
+  "attempt": 2,
+  "candidate_or_model_prompt_exposure": false,
+  "development_evaluation": false,
+  "environment_lock_sha256": "234f31687a40e8389be01e8edb776bfef07ead5038d84afee74f16b80e499f77",
+  "grader_adapter_correction": "Allow the exact frozen selector to be followed by pytest summary detail while keeping the selector anchored and exact.",
+  "grader_identity": "e65379335d834fba9f84c481c6be7226236894582b740e9632c1aaa904e64185",
+  "grader_image_id": "sha256:41bbdf376038f43cfddb2392714fd66ba325feaaaaf63a3a295a23efacc59886",
+  "heldout_access": false,
+  "mutant_v2_hash_record_sha256": "65ddb66609ee39b32caccf3493d179b8fd03b5a643a6ad9506834fc28de51f31",
+  "mutation_addendum_sha256": "f2136cd8d0361e21b501012a408977ec50c502d3ae0f939a12dd3db237f7cd51",
+  "pre_exposure_exact_head_ci": {
+    "checks_passed": 20,
+    "checks_total": 20,
+    "head_sha": "0de3b031be756840d4120332685846fc3e2c0212",
+    "runs": [
+      42154804218,
+      42154809965,
+      42154810075,
+      42154810237
+    ]
+  },
+  "raw_grader_logs_private": true,
+  "runner_sha256": "eb63a2faf0cea29e0adfc47c49daaa087f9d6a6aebecacfffb3115af3d85052b",
+  "schema": "vare_pydantic_task_qualification_attempt_v1",
+  "source_head_sha": "0de3b031be756840d4120332685846fc3e2c0212",
+  "status": "UNTRUSTED_GRADER_EVIDENCE_TASK_NOT_QUALIFIED",
+  "stop_reason": "The grader completed the baseline arm and emitted a failing pytest summary, but its exact-selector parser rejected the summary line because pytest appended its reason text. The result was not assigned a reward; remaining arms were not run.",
+  "task_definition_sha256": "d3824a232fc7f2d94a1c3a5669b8a339d850139707b29c30283aae006124ff17",
+  "task_id": "pydantic-13995-jsonvalue-python-inf-nan-serialization",
+  "training_or_optimizer_update": false
+}

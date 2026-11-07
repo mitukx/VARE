@@ -1,0 +1,67 @@
+{
+  "preserved": [
+    {
+      "attempt": "scope_identity_v1",
+      "status": "failed_before_test_arms",
+      "reason": "merge commit comparison included unrelated paths; no tests/model access",
+      "record_sha256": "4ffe7e8529e7b9f28aa49899b0ac69fc6a14684d54b5552886ce592cf92b73aa"
+    },
+    {
+      "attempt": "scope_identity_v2",
+      "status": "failed_before_test_arms",
+      "reason": "merge commit parent had empty tree diff; no tests/model access",
+      "record_sha256": "75ee69eb92d4b7f08c525ea6727994ff8aed0c99ef2e9843b80887bf0976ffe5"
+    },
+    {
+      "attempt": "arm_export_001",
+      "status": "failed_before_tests",
+      "reason": "host tarfile API rejected the filter argument; no source arm tested",
+      "record_sha256": "d551870cd85145773a3db0704b1eaa958a209491f7579ce61c16759af0d4dcfb"
+    },
+    {
+      "attempt": "environment_build_001",
+      "status": "failed_before_tests",
+      "reason": "pip rejected the temporary wheel filename; wheel bytes/hash were verified",
+      "record_sha256": "79a70a9539028862c335c1d7dbb1435160fb5ece8c672a0f1ec0afc0f633cfb8"
+    },
+    {
+      "attempt": "runner_001",
+      "status": "failed_before_pytest",
+      "reason": "selector list was nested in argv; TypeError before collection",
+      "record_sha256": "a47f7c04afa82ee5b84fd0935415887a0706173a32a6905e6d3357e7361b503d"
+    },
+    {
+      "attempt": "runner_002",
+      "status": "rejected_before_execution",
+      "reason": "static review found literal repr expression; no pytest invocation",
+      "record_sha256": "1034eaf1a180b4998922b6ed7d1a55969c0ed09f1ba901b38a3da6e0acc325c9"
+    },
+    {
+      "attempt": "runner_003",
+      "status": "rejected_before_execution",
+      "reason": "container snippet used invalid one-line try/except; no pytest invocation",
+      "record_sha256": "32388e48f47eeeaf634737417f1c0b78de1464ab1bcfa4044e3b3e4b4318c4b5"
+    },
+    {
+      "attempt": "qualification_attempt_001",
+      "status": "invalid_runner_before_pytest",
+      "reason": "TypeError in container runner; zero test items",
+      "identical_traceback_sha256": "da08c12f4d7349cb63f49078a4a47163c06f4dfd39eb874f205ecd97eaf04fd2"
+    },
+    {
+      "attempt": "qualification_attempt_002",
+      "status": "invalid_environment_before_test_collection",
+      "reason": "core version mismatch; zero test items collected",
+      "record_sha256": "0a10827364457a2f3c0f97b0f4d3829ad269c2bd692be0c980a55b9bff5d6da0"
+    },
+    {
+      "attempt": "environment_import_probe_001",
+      "status": "preflight_script_error",
+      "reason": "private helper name was absent in this source revision; no tests invoked",
+      "record_sha256": "2aff8b84fd1170d2f18dbc6f4985b11c166217642e069f55aa0bf97062d3aa70"
+    }
+  ],
+  "test_arms_executed_in_rejected_attempts": 0,
+  "final_import_preflight_passed": true,
+  "final_qualification_logs_present": true
+}

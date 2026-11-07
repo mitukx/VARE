@@ -1,0 +1,87 @@
+{
+  "assignment_sha256": "96fdc44d612de50da212cfb60b103f7b13fdfe5cbb398e4411763557bd4e2c42",
+  "attempt": 4,
+  "authorized_new_sample_indices": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "checkpoint_reload_verified": false,
+  "checkpoint_written": false,
+  "completed_sample_indices": [],
+  "development_evaluations": 0,
+  "experiment_id": "vare-pydantic-train-dev-qwen3-4b-grpo-14138-interface-recovery-v13",
+  "exposed_sample_indices": [
+    9
+  ],
+  "heldout_access": false,
+  "heldout_assignment": false,
+  "heldout_evaluation": false,
+  "integration_head_sha": "7bfaf53f689e157b05a49f16279cdb317401eb1b",
+  "model": {
+    "files_tree_sha256": "940de8af18f1d9ce2afe4f2aeeb07dd8b03b4b628d1ff9a302354ec0aeeade22",
+    "id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "optimizer_updates": 0,
+  "partial_sample": {
+    "generated_tokens": 15,
+    "sample_index": 9,
+    "source_diff": "",
+    "tool_turns": 2,
+    "trajectory_artifact_sha256": "5b1583ef2ab1f022091194dc41dfa312d0d0adefb28ead8aae71f73db861c95c",
+    "trajectory_file_sha256": "158193c7c97bbf8364c2ef24431712449b242ed9de48a51b275a00870b4908b8",
+    "trusted_grade_produced": false
+  },
+  "partial_sample_indices": [
+    9
+  ],
+  "post_stop_state": {
+    "memory_pressure_free_pct": 52.0,
+    "swap_output": "vm.swapusage: total = 3072.00M  used = 2220.62M  free = 851.38M  (encrypted)",
+    "swap_used_bytes": 2328488837
+  },
+  "resource_attribution": "The guard uses system-wide memory and swap measurements. No per-process causal attribution is made in this record.",
+  "resource_baseline": {
+    "memory_pressure_free_pct": 48.0,
+    "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 48%",
+    "swap_output": "vm.swapusage: total = 2048.00M  used = 1417.31M  free = 630.69M  (encrypted)",
+    "swap_used_bytes": 1486157250
+  },
+  "resource_stop": {
+    "allowed_growth_bytes": 536870912,
+    "baseline_swap_used_bytes": 1486157250,
+    "excess_bytes": 305460675,
+    "generated_tokens": 15,
+    "graded": false,
+    "memory_pressure_free_pct": 36.0,
+    "observed_growth_bytes": 842331587,
+    "reason": "swap_growth_exceeded_allowance",
+    "sample_index": 9,
+    "stop_reason": "resource_stop",
+    "swap_output": "vm.swapusage: total = 3072.00M  used = 2220.62M  free = 851.38M  (encrypted)",
+    "tool_turns": 2
+  },
+  "run_lock_sha256": "8c47d63ce19dde16a4657cc270a5b684c53f6b0985079bac6fcb4826ae94b28c",
+  "runtime": {
+    "device": "Device(gpu, 0)",
+    "metal_available": true,
+    "mlx_module_version": "0.32.4",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "versions": {
+      "huggingface-hub": "2.4.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.0",
+      "numpy": "2.5.4"
+    }
+  },
+  "schema": "vare_real_model_train_dev_attempt_summary_v1",
+  "status": "resource_stop_before_independent_grading"
+}

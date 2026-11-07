@@ -1,0 +1,19 @@
+{
+  "base_task_definition_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/task-definition-pydantic-14138-v1.json",
+  "base_task_definition_sha256": "0a31f22b210fb8baad40fc5c78d0734a5eb4f9d26beb3e075a40bd1afb74d926",
+  "changes_editable_paths": false,
+  "changes_grader_contract": false,
+  "changes_qualification_result": false,
+  "development_access": false,
+  "frozen_at_utc": "2026-11-06T01:45:21Z",
+  "heldout_access": false,
+  "no_go_gate_sha256": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+  "prompt_refinement_basis": "Attempt008 completed eight real MLX trajectories with trusted reward zero. Context replay worked, but samples 35-38 read far beyond the target method, sample39 emitted an invalid action, and samples34/40/41 submitted patches that failed to apply. This prospective clarification narrows reads to the requested method and places the fast path at the loop fallback without exposing grader outputs, tests, selectors, expected values, or upstream patches.",
+  "qualification_summary_path": "outputs/vare-rsi-heldout-qualification-v2-20261105/runs/pydantic-14138/attempt-001/summary.json",
+  "qualification_summary_sha256": "94c5c4e9bb43c5afa2f77133607ee977a5060ce391753f7cee5c8580025b3df1",
+  "schema": "vare_train_task_prompt_variant_v1",
+  "status": "FROZEN_BEFORE_CONTINUATION_GROUP_PROMPT_EXPOSURE",
+  "task_id": "pydantic-14138-direct-builtin-scalar-union-schema",
+  "task_prompt": "Within pydantic/_internal/_generate_schema.py, optimize GenerateSchema._union_schema for supported built-in scalar unions to reduce general per-member schema dispatch. Implement the direct scalar-schema path while constructing union members, before the general self.generate_schema(arg) fallback. Use existing core_schema primitive constructors for supported built-in scalar types; preserve union member order and tags. Keep null and missing sentinel handling unchanged, and use self.generate_schema for unsupported members. The edit belongs inside the for arg in args loop: add the supported simple built-in scalar cases after the NoneType and MISSING cases and immediately before the existing final else that calls self.generate_schema(arg). Do not change the later if not choices / elif len(choices) union-combination block; those branches are already the result assembly and should stay unchanged. For source reading, inspect only this method. It ends at return s, immediately before the next method definition. Stop there; do not read neighboring methods. Use the exact editable path and at most the two adjacent 20-line windows needed to see the loop and method end. Start with this exact nested JSON tool call: {\"tool\":\"search_code\",\"arguments\":{\"query\":\"_union_schema\"}}. Read only short relevant source windows using the returned start_line/end_line and next_start_line. Every tool action must contain an arguments object; do not use a string or a paths member. Make the smallest source-only change. apply_patch must use valid unified diff syntax, exact file headers, and accurate hunk counts; do not use context-diff notation. If a patch fails, inspect the returned error and actual source lines, then submit a different minimal patch. After a successful patch, compile_file and show_changes before finish; do not claim changes that are not present.",
+  "variant_id": "pydantic-14138-train-v3-scope-directed-context-replay"
+}

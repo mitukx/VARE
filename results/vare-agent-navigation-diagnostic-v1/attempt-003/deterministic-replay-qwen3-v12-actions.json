@@ -1,0 +1,318 @@
+{
+  "historical_trajectory_sha256": "11cdde33a8b7ed0160023025ea025bbd9e68b10d7ef6e455188ada2624b9f296",
+  "replay_mode": "replayed recorded Qwen3-4B actions against v13 controller; no model inference",
+  "result_counts": {
+    "navigation_redirects": 1,
+    "navigation_stop_turns": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      16
+    ],
+    "recorded_turns": 16,
+    "source_reads_intercepted": 8
+  },
+  "results": [
+    {
+      "navigation_redirect": null,
+      "navigation_stop": null,
+      "next_step_hint": "No literal match. Read the most relevant declaration first from symbol_hints; hints are task-ranked. Do not search again until reading it, and do not page consecutively from line 1.",
+      "requested": {
+        "query": "defer_build"
+      },
+      "returned_range": null,
+      "tool": "search_code",
+      "turn": 1
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": null,
+      "next_step_hint": null,
+      "requested": {
+        "end_line": 114,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 76
+      },
+      "returned_range": [
+        76,
+        95
+      ],
+      "tool": "read_file",
+      "turn": 2
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": null,
+      "next_step_hint": null,
+      "requested": {
+        "end_line": 132,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 96
+      },
+      "returned_range": [
+        96,
+        115
+      ],
+      "tool": "read_file",
+      "turn": 3
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": {
+        "end_line": 114,
+        "reason": "task_ranked_declaration_read_complete",
+        "start_line": 76,
+        "symbol": "MockValSer"
+      },
+      "next_step_hint": "The task-ranked declaration was read in full. Stop broad sequential pagination; search for another task concept or make a focused edit.",
+      "requested": {
+        "end_line": 162,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 116
+      },
+      "returned_range": [
+        null,
+        null
+      ],
+      "tool": "read_file",
+      "turn": 4
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": {
+        "end_line": 114,
+        "reason": "task_ranked_declaration_read_complete",
+        "start_line": 76,
+        "symbol": "MockValSer"
+      },
+      "next_step_hint": "The task-ranked declaration was read in full. Stop broad sequential pagination; search for another task concept or make a focused edit.",
+      "requested": {
+        "end_line": 182,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 136
+      },
+      "returned_range": [
+        null,
+        null
+      ],
+      "tool": "read_file",
+      "turn": 5
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": {
+        "end_line": 114,
+        "reason": "task_ranked_declaration_read_complete",
+        "start_line": 76,
+        "symbol": "MockValSer"
+      },
+      "next_step_hint": "The task-ranked declaration was read in full. Stop broad sequential pagination; search for another task concept or make a focused edit.",
+      "requested": {
+        "end_line": 202,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 156
+      },
+      "returned_range": [
+        null,
+        null
+      ],
+      "tool": "read_file",
+      "turn": 6
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": {
+        "end_line": 114,
+        "reason": "task_ranked_declaration_read_complete",
+        "start_line": 76,
+        "symbol": "MockValSer"
+      },
+      "next_step_hint": "The task-ranked declaration was read in full. Stop broad sequential pagination; search for another task concept or make a focused edit.",
+      "requested": {
+        "end_line": 222,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 176
+      },
+      "returned_range": [
+        null,
+        null
+      ],
+      "tool": "read_file",
+      "turn": 7
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": {
+        "end_line": 114,
+        "reason": "task_ranked_declaration_read_complete",
+        "start_line": 76,
+        "symbol": "MockValSer"
+      },
+      "next_step_hint": "The task-ranked declaration was read in full. Stop broad sequential pagination; search for another task concept or make a focused edit.",
+      "requested": {
+        "end_line": 242,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 196
+      },
+      "returned_range": [
+        null,
+        null
+      ],
+      "tool": "read_file",
+      "turn": 8
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": {
+        "end_line": 114,
+        "reason": "task_ranked_declaration_read_complete",
+        "start_line": 76,
+        "symbol": "MockValSer"
+      },
+      "next_step_hint": "The task-ranked declaration was read in full. Stop broad sequential pagination; search for another task concept or make a focused edit.",
+      "requested": {
+        "end_line": 262,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 216
+      },
+      "returned_range": [
+        null,
+        null
+      ],
+      "tool": "read_file",
+      "turn": 9
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": {
+        "end_line": 114,
+        "reason": "task_ranked_declaration_read_complete",
+        "start_line": 76,
+        "symbol": "MockValSer"
+      },
+      "next_step_hint": "The task-ranked declaration was read in full. Stop broad sequential pagination; search for another task concept or make a focused edit.",
+      "requested": {
+        "end_line": 282,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 236
+      },
+      "returned_range": [
+        null,
+        null
+      ],
+      "tool": "read_file",
+      "turn": 10
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": null,
+      "next_step_hint": null,
+      "requested": {
+        "query": "attempt_rebuild_fn"
+      },
+      "returned_range": null,
+      "tool": "search_code",
+      "turn": 11
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": null,
+      "next_step_hint": null,
+      "requested": {
+        "end_line": 220,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 170
+      },
+      "returned_range": [
+        170,
+        189
+      ],
+      "tool": "read_file",
+      "turn": 12
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": null,
+      "next_step_hint": null,
+      "requested": {
+        "end_line": 240,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 190
+      },
+      "returned_range": [
+        190,
+        209
+      ],
+      "tool": "read_file",
+      "turn": 13
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": null,
+      "next_step_hint": null,
+      "requested": {
+        "end_line": 230,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 180
+      },
+      "returned_range": [
+        210,
+        229
+      ],
+      "tool": "read_file",
+      "turn": 14
+    },
+    {
+      "navigation_redirect": {
+        "focus_end_line": 194,
+        "focus_start_line": 156,
+        "matched_line": 170,
+        "reason": "read_window_around_search_match",
+        "requested_end_line": 250,
+        "requested_start_line": 200,
+        "symbol": "set_model_mocks"
+      },
+      "navigation_stop": null,
+      "next_step_hint": null,
+      "requested": {
+        "end_line": 250,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 200
+      },
+      "returned_range": [
+        156,
+        175
+      ],
+      "tool": "read_file",
+      "turn": 15
+    },
+    {
+      "navigation_redirect": null,
+      "navigation_stop": {
+        "end_line": 194,
+        "reason": "task_ranked_declaration_read_complete",
+        "start_line": 156,
+        "symbol": "set_model_mocks"
+      },
+      "next_step_hint": "The task-ranked declaration was read in full. Stop broad sequential pagination; search for another task concept or make a focused edit.",
+      "requested": {
+        "end_line": 270,
+        "path": "pydantic/_internal/_mock_val_ser.py",
+        "start_line": 220
+      },
+      "returned_range": [
+        null,
+        null
+      ],
+      "tool": "read_file",
+      "turn": 16
+    }
+  ],
+  "runner_sha256": "7c52a0b089e0cdfeb2d475023fcc3e93c6bf2f47c13c5b15c222281cfae917f1",
+  "schema": "vare_deterministic_replay_result_v1",
+  "source_sha256": "56a6ec20e81e9e841088cf8db05325f6e63b8ad8094ae3cda5754a698ec0d293"
+}

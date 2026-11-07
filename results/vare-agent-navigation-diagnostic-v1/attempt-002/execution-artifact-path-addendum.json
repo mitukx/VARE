@@ -1,0 +1,17 @@
+{
+  "accepted_trusted_grade_path": "results/vare-agent-navigation-diagnostic-v1/attempt-002/rollout-001/rollout-001/trusted-grade-proper/grade.json",
+  "accepted_trusted_grade_sha256": "bb011b96e99a1960418e2714e7d3ef12a1c31b0fb15f679e4ee750a2ec117705",
+  "actual_output_directory": "results/vare-agent-navigation-diagnostic-v1/attempt-002/rollout-001/rollout-001",
+  "invalid_grader_attempts_retained": [
+    "results/vare-agent-navigation-diagnostic-v1/attempt-002/rollout-001/rollout-001/trusted-grade",
+    "results/vare-agent-navigation-diagnostic-v1/attempt-002/rollout-001/rollout-001/trusted-grade-corrected"
+  ],
+  "note": "The rollout invocation appended an extra rollout-001 directory to the frozen output directory. The frozen protocol was not changed; raw trajectory and all grader invocation attempts remain in the recorded actual directory below.",
+  "protocol_id": "vare-pydantic-14115-navigation-diagnostic-v2-qwen3-controller-fix",
+  "protocol_output_directory": "results/vare-agent-navigation-diagnostic-v1/attempt-002/rollout-001",
+  "protocol_sha256": "400276da48066c7a32755bfffad462b8cf8e9ebe3f200f5f67d39c2f6ba3ab35",
+  "schema": "vare_diagnostic_artifact_location_addendum_v1",
+  "status": "EXECUTION_ARTIFACTS_PRESERVED",
+  "summary_path": "results/vare-agent-navigation-diagnostic-v1/attempt-002/rollout-001/rollout-001/summary.json",
+  "trajectory_path": "results/vare-agent-navigation-diagnostic-v1/attempt-002/rollout-001/rollout-001/trajectory.json"
+}
