@@ -4,6 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from vare.research_lab.isolation import isolation_summary
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -60,8 +62,13 @@ def test_cli_run_status_report_and_resume(tmp_path: Path):
     ])
     assert resumed.returncode == 0, resumed.stderr
     summary = json.loads(resumed.stdout)
-    assert summary["verified"] is True
-    assert summary["success_class"] == "diagnostic_policy"
+    if not isolation_summary()["attestation_ok"]:
+        assert summary["verified"] is False
+        assert summary["success_class"] == "not_verified"
+        assert summary["status"] == "stopped"
+    else:
+        assert summary["verified"] is True
+        assert summary["success_class"] == "diagnostic_policy"
     report = _run([
         "research", "report",
         "--task", "descent_sign_debug_v1",
@@ -76,8 +83,12 @@ def test_cli_run_status_report_and_resume(tmp_path: Path):
         "--run-id", "cli-descent",
         "--run-root", str(run_root),
     ])
-    assert fresh.returncode == 0, fresh.stderr
-    assert json.loads(fresh.stdout)["passed"] is True
+    if not isolation_summary()["attestation_ok"]:
+        assert fresh.returncode == 1
+        assert json.loads(fresh.stdout)["classification"] == "isolation_unverified"
+    else:
+        assert fresh.returncode == 0, fresh.stderr
+        assert json.loads(fresh.stdout)["passed"] is True
     source = run_root / "cli-descent" / "workspace" / "experiment.py"
     source.write_text(source.read_text(encoding="utf-8") + "\n# stale\n", encoding="utf-8")
     evaluated = _run([

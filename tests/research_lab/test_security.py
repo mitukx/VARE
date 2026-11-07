@@ -71,7 +71,12 @@ def test_forged_workspace_report_does_not_pass(tmp_path: Path):
     (workspace / "result.json").write_text('{"passed": true, "max_abs_error": 0}\n', encoding="utf-8")
     result = grade(task, workspace)
     assert result["passed"] is False
-    assert result["classification"] == "fail_correctness"
+    if result["classification"] == "isolation_unverified":
+        assert result["correctness_evaluated"] is False
+        assert result["correctness_passed"] is None
+    else:
+        assert result["classification"] == "fail_correctness"
+        assert result["correctness_evaluated"] is True
 
 
 def test_timeout_is_not_a_correctness_failure(tmp_path: Path):
@@ -144,7 +149,11 @@ def test_candidate_cannot_import_grader_package(tmp_path: Path):
     )
     result = grade(task, workspace)
     assert result["passed"] is False
-    assert result["correctness_passed"] is False
+    if result["classification"] == "isolation_unverified":
+        assert result["correctness_evaluated"] is False
+        assert result["correctness_passed"] is None
+    else:
+        assert result["correctness_passed"] is False
 
 
 def test_memory_budget_is_post_hoc_vmhwm_and_is_not_applied(tmp_path: Path):
@@ -156,6 +165,12 @@ def test_memory_budget_is_post_hoc_vmhwm_and_is_not_applied(tmp_path: Path):
         limits=_limits(memory_mb=1, wall_time_s=5, cpu_time_s=5),
     )
     assert execution.memory_limit_applied is False
+    if not Path("/proc").is_dir():
+        # VmHWM is Linux-only. A missing measurement is reported as unknown;
+        # the runner does not invent a resident-set estimate on other hosts.
+        assert execution.peak_rss_kb is None
+        assert execution.classification == "ok"
+        return
     assert execution.peak_rss_kb is not None
     assert execution.peak_rss_kb > 1024
     assert execution.returncode == 0
@@ -265,4 +280,9 @@ def test_worker_can_open_a_socket_and_a_wrong_answer_still_fails(tmp_path: Path)
     )
     result = grade(task, workspace)
     assert result["passed"] is False
-    assert result["classification"] == "fail_correctness"
+    if result["classification"] == "isolation_unverified":
+        assert result["correctness_evaluated"] is False
+        assert result["correctness_passed"] is None
+    else:
+        assert result["classification"] == "fail_correctness"
+        assert result["correctness_evaluated"] is True

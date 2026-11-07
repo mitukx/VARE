@@ -5,6 +5,7 @@ import pytest
 
 from vare.research_lab.controller import create_run
 from vare.research_lab.export_adapter import ExportError, export_run
+from vare.research_lab.isolation import isolation_summary
 from vare.research_lab.spec import load_catalog, suite_manifest
 from vare.research_lab.store import _atomic_json
 
@@ -31,7 +32,11 @@ def test_export_does_not_authorize_training(tmp_path: Path):
     assert payload["held_out_split_accessed"] is False
     assert payload["counts_as_autonomous_model_success"] is False
     assert "reward" not in payload
-    assert payload["actions"][-1]["verification_passed"] is True
+    if not isolation_summary()["attestation_ok"]:
+        assert payload["actions"][-1]["verification_passed"] is None
+        assert payload["actions"][-1]["verification_classification"] is None
+    else:
+        assert payload["actions"][-1]["verification_passed"] is True
 
 
 def test_export_rejects_a_forged_reward_and_frozen_ids(tmp_path: Path):

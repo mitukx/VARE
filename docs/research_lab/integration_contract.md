@@ -28,3 +28,26 @@ Eligible inputs are ResearchGym runs whose task id is one of the
 that candidate. It does not mean the trajectory is training data, that a
 model produced it, or that the same-user worker was an OS sandbox. The
 worker does not apply a hard address-space limit or a network namespace.
+
+## Existing OSS task interface
+
+ResearchGym v1's `ResearchTask` is deliberately limited to the three calibrated
+CPU experiment tasks in its own catalog. Do not convert an upstream coding task
+into one of those task types or let a task manifest supply executable grader
+code.
+
+For an existing repository task, use VARE's `EngineeringTaskSpec` as the task
+manifest and `AgentTaskContract` as the agent-facing boundary. The manifest
+binds the immutable repository revision, evaluator command, protected paths,
+resource limits, editable-file metadata, and split label. `load_agent_task`
+exposes only the prompt and editable-file allowlist to the coding agent; it
+does not expose evaluator files. The task-specific existing grader remains the
+owner of source preparation and trusted scoring (for example,
+`mlsys_repo_task`, `mlxlm_1912_repo_task`, or `transformers_repo_task`) and must
+continue to enforce its own pinned protocol and implementation hashes.
+
+This is an interface and ownership boundary, not a new task qualification or
+assignment. A `Development` label does not grant rollout or training
+authorization. The frozen model-update gate and task-allocation controls remain
+authoritative, and no ResearchGym qualification export is converted into an
+RL reward by this contract.

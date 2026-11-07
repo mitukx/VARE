@@ -72,7 +72,7 @@
 
 ## テスト
 
-`python -m pytest tests/research_lab -q` は、このブランチでは 34 件である。#196 時点の 31 件に、校正不一致メッセージが課題名と時間境界を含むこと、メモリ予算が `VmHWM` の事後記録であり子プロセスへ rlimit をかけないこと、子プロセスが呼び出し元と同じネットワーク名前空間を共有すること、の 3 件が加わっている。範囲は、3課題の校正、等価実装、パストラバーサル、シンボリックリンク、偽造 JSON、無限ループのタイムアウト、壊れたワーカー出力、時計の差し替え、採点パッケージの import 失敗、シェルと network アクションの拒否、アドレス空間 rlimit を子プロセスにかけていないこと、ワーカーがソケットを開けても誤答は不合格のままであること、固定の 2 倍が A/A ノイズ内なら不合格になること、2 倍未満でもノイズを超える短縮は合格になること、診断ポリシー、最初の仮説の失敗、オラクルのラベル、ジャーナルの重複防止、末尾の壊れた行、キャンセル、CLI の再開、提出後のワークスペース改変が `stale_source` になること、報酬フィールドと凍結プロトコル ID のエクスポート拒否。
+この節の 34 件は #198/#201 時点の件数である（#196の31件に3件追加）。#200 の隔離攻撃テスト7件と、本統合ブランチの既存OSS task contract回帰1件を加えた現行コレクションは42件。分類は3課題の校正、等価実装、パストラバーサル、シンボリックリンク、偽造JSON、無限ループtimeout、壊れたworker出力、grader改ざん、隔離backend不在、grader import拒否、memory/network残存リスク、計測ノイズゲート、controller、resume、CLI、reward-free exportである。ローカルmacOSでは隔離が未確認のため、採点が必要なテストは誤答判定ではなく `isolation_unverified` を確かめる。Linuxの隔離graderでbaseline/known-good/wrong-mutantを実行した証拠はCI結果を参照する。
 
 ## 再現
 
@@ -83,6 +83,29 @@ PYTHONPATH=src python -m vare research run --task descent_sign_debug_v1 --run-id
 ```
 
 `artifacts/` は git の対象外である。残した記録は `docs/research_lab/records/`。
+
+## 2026-11-07 統合時の回帰とOSS task境界
+
+#202 が記した 34 件は #198/#201 の時点の件数である。#200 の隔離攻撃回帰を
+含めた `tests/research_lab` は 41 件を収集し、既存の
+`EngineeringTaskSpec` → `AgentTaskContract` 経路を検査する1件を加えて42件となる。
+OSS課題用の別grader/loaderは作らず、このmanifest・agent contractと各課題の
+hash-lock済みgrader (`mlsys_repo_task`、`mlxlm_1912_repo_task`、
+`transformers_repo_task`) を再利用する。これはインターフェース確認であり、
+新規課題の選定・資格審査・split割当ではない。
+
+この時点の実行環境は Apple arm64 の macOS で、`bwrap` がなく Docker daemon も
+接続できなかった。そのため統合時の校正は全9ケース（3課題×baseline/known-good/
+incorrect）が `isolation_unverified` となり、候補コードを採点実行していない。結果は
+[`integration-preflight-20261107.json`](records/integration-preflight-20261107.json) に保存した。
+known-goodの不合格も候補の誤答とは分類せず、未評価のまま保持する。これは
+ResearchGymの隔離fail-closed結果であり、正解修正の再確認にはLinux exact-head CI
+で attested bubblewrap 実行が必要である。隔離を回避する同一ユーザー実行や
+報酬化は行わない。
+
+ResearchGymから出すexportは依然としてrewardを含まず、Train/Developmentへの
+自動投入、optimizer更新、model rollout、Held-Out利用を許可しない。v2の0/15
+NO-GOと#64830 UNSUPPORTEDの状態は不変である。
 
 ## 統合
 

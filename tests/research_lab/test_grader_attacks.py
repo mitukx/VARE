@@ -20,6 +20,17 @@ def _baseline(tmp_path: Path, task_id: str = "grad_accum_scale_v1") -> tuple[obj
     return task, workspace
 
 
+def _assert_wrong_candidate_is_not_accepted(result: dict[str, object]) -> None:
+    assert result["passed"] is False
+    if result["classification"] == "isolation_unverified":
+        assert result["correctness_evaluated"] is False
+        assert result["correctness_passed"] is None
+        return
+    assert result["classification"] == "fail_correctness"
+    assert result["correctness_evaluated"] is True
+    assert result["correctness_passed"] is False
+
+
 def test_metric_file_edit_does_not_pass(tmp_path: Path):
     # result.json forgery is covered by test_security.py. This case is the
     # separate metrics file the grader must also ignore.
@@ -29,8 +40,7 @@ def test_metric_file_edit_does_not_pass(tmp_path: Path):
         encoding="utf-8",
     )
     result = grade(task, workspace)
-    assert result["passed"] is False
-    assert result["classification"] == "fail_correctness"
+    _assert_wrong_candidate_is_not_accepted(result)
     assert "not a trusted security sandbox" in NOT_A_TRUSTED_SANDBOX
 
 
@@ -42,9 +52,7 @@ def test_mock_substitution_is_scored_from_values(tmp_path: Path):
         encoding="utf-8",
     )
     result = grade(task, workspace)
-    assert result["passed"] is False
-    assert result["correctness_passed"] is False
-    assert result["classification"] == "fail_correctness"
+    _assert_wrong_candidate_is_not_accepted(result)
 
 
 def test_hidden_reference_read_does_not_pass(tmp_path: Path):

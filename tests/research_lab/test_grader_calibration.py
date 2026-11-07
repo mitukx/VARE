@@ -60,6 +60,21 @@ def _expectation_mismatches(payload: dict[str, Any]) -> list[str]:
 def test_calibration_distinguishes_baseline_known_good_and_incorrect(tmp_path: Path):
     payload = run_calibration(tmp_path / "work")
     mismatches = _expectation_mismatches(payload)
+    cases = [
+        case
+        for row in payload["tasks"]
+        for case in row["cases"].values()
+    ]
+    if any(case["classification"] == "isolation_unverified" for case in cases):
+        # macOS and unsupported Linux hosts must not fall back to the legacy
+        # same-user worker. Preserve the result as an isolation failure, not a
+        # candidate correctness failure or a calibration pass.
+        assert payload["expectations_met"] is False
+        assert all(case["classification"] == "isolation_unverified" for case in cases)
+        assert all(case["passed"] is False for case in cases)
+        assert all(case["correctness_evaluated"] is False for case in cases)
+        assert all(case["performance_evaluated"] is False for case in cases)
+        return
     assert payload["expectations_met"] is True, (
         "calibration expectations failed:\n" + "\n".join(mismatches)
     )
@@ -120,5 +135,10 @@ def test_behavior_equivalent_gradient_passes_without_source_match(tmp_path: Path
     assert EQUIVALENT_ACCUM.strip() != known.strip()
     (workspace / "accum.py").write_text(EQUIVALENT_ACCUM, encoding="utf-8")
     result = grade(task, workspace)
+    if result["classification"] == "isolation_unverified":
+        assert result["passed"] is False
+        assert result["correctness_evaluated"] is False
+        assert result["correctness_passed"] is None
+        return
     assert result["passed"] is True
     assert result["classification"] == "pass"
