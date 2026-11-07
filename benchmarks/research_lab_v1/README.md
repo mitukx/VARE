@@ -17,9 +17,12 @@ Hidden seeds and acceptance thresholds live in `src/vare/research_lab/evaluation
 Task JSON only carries the public seed. The worker process does not receive
 expected values and does not get the repository on `PYTHONPATH`.
 
-The worker is a same-user subprocess. It is not a trusted OS sandbox: there is
-no address-space cap and no network namespace. A passing grade does not mean
-those effects were prevented.
+Hidden grading runs only after the bubblewrap probe in
+`vare.research_lab.isolation` is denied. That probe is not a trusted security
+sandbox. An unavailable or unverified probe fails closed and does not fall
+back to a same-user process group. `run_bounded` is that process group: no
+hard address-space cap and no network namespace. A passing grade does not
+mean a trusted sandbox enforced those limits.
 
 This suite does not establish model capability, GPU scaling, or permission to train.
 Measurements retained with this pack were taken on a CPU guest, not on Apple
