@@ -56,6 +56,193 @@ def test_group_validation():
     assert set(g) == {("a", "c0"), ("a", "c1"), ("b", "c0")}  # behavior policy is part of the group key
 
 
+def _trajectory_sample(index, reward, *, malformed_first_action=False):
+    first_action = [1] if index == 0 else [2]
+    first_prompt = [99] if malformed_first_action else [10]
+    return G.Sample(
+        instance_id="two-turn-task",
+        behavior_checkpoint_id="policy-0",
+        behavior_step=0,
+        prompt_ids=[10],
+        completion_ids=first_action,
+        reward=reward,
+        verifier="verifier-0",
+        sample_index=index,
+        trajectory_segments=[
+            G.TrajectorySegment(
+                prompt_ids=first_prompt,
+                completion_ids=first_action,
+            ),
+            G.TrajectorySegment(
+                prompt_ids=[10, first_action[0], 30 + index],
+                completion_ids=first_action,
+            ),
+        ],
+    )
+
+
+def test_full_trajectory_terminal_gradient_covers_independent_action_contexts():
+    samples = [_trajectory_sample(0, 1.0), _trajectory_sample(1, 0.0)]
+    group = G.group_samples(samples, group_size=2)[("two-turn-task", "policy-0")]
+    advantages, informative = G.group_advantages([sample.reward for sample in group])
+    assert informative
+    work = list(zip(group, advantages))
+    action_rows = list(G._training_action_segments(work))
+    assert len(action_rows) == 4
+    n_action_tokens = sum(len(segment.completion_ids) for _, _, segment in action_rows)
+    assert n_action_tokens == 4
+
+    def objective(theta):
+        total = 0.0
+        for _, advantage, segment in action_rows:
+            feature = 1.0 if len(segment.prompt_ids) == 1 else 2.0
+            probability = 1.0 / (1.0 + math.exp(-theta * feature))
+            action_is_one = segment.completion_ids[0] == 1
+            log_probability = (
+                math.log(probability)
+                if action_is_one
+                else math.log1p(-probability)
+            )
+            total -= advantage * log_probability / n_action_tokens
+        return total
+
+    theta = 0.0
+    probability = 0.5
+    analytic_gradient = -sum(
+        advantage
+        * (1.0 if len(segment.prompt_ids) == 1 else 2.0)
+        * ((1.0 if segment.completion_ids[0] == 1 else 0.0) - probability)
+        / n_action_tokens
+        for _, advantage, segment in action_rows
+    )
+    epsilon = 1e-5
+    finite_difference = (objective(theta + epsilon) - objective(theta - epsilon)) / (2 * epsilon)
+    later_turn_gradient = -sum(
+        advantage
+        * 2.0
+        * ((1.0 if segment.completion_ids[0] == 1 else 0.0) - probability)
+        / n_action_tokens
+        for sample, advantage, segment in action_rows
+        if segment is sample.trajectory_segments[1]
+    )
+
+    assert analytic_gradient == pytest.approx(finite_difference, abs=1e-8)
+    assert analytic_gradient == pytest.approx(-0.75, abs=1e-12)
+    assert later_turn_gradient == pytest.approx(-0.5, abs=1e-12)
+
+
+def test_trajectory_group_rejects_mixed_single_turn_and_malformed_segments():
+    trajectory = _trajectory_sample(0, 1.0)
+    plain = S("two-turn-task", 1, [2], 0.0, ckpt="policy-0", prompt=(10,), verifier="verifier-0")
+    with pytest.raises(G.GroupError, match="mixed single-sequence and trajectory"):
+        G.group_samples([trajectory, plain])
+
+    with pytest.raises(G.GroupError, match="first trajectory segment"):
+        G.group_samples([_trajectory_sample(0, 1.0, malformed_first_action=True)])
+
+    empty = _trajectory_sample(0, 1.0)
+    empty.trajectory_segments = []
+    with pytest.raises(G.GroupError, match="empty trajectory"):
+        G.group_samples([empty])
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("completion_ids", [], "empty completion"),
+        ("behavior_logprobs", [0.1], "finite nonpositive"),
+        ("behavior_logprobs", [], "length mismatch"),
+    ],
+)
+def test_trajectory_segment_rejects_invalid_actions_and_behavior_scores(field, value, message):
+    sample = _trajectory_sample(0, 1.0)
+    setattr(sample.trajectory_segments[1], field, value)
+
+    with pytest.raises(G.GroupError, match=message):
+        G.group_samples([sample])
+
+
+def test_trajectory_rejects_divergent_legacy_first_segment_behavior_scores():
+    sample = _trajectory_sample(0, 1.0)
+    sample.behavior_logprobs = [-0.2]
+    sample.trajectory_segments[0].behavior_logprobs = [-0.3]
+
+    with pytest.raises(G.GroupError, match="first segment behavior log-probabilities differ"):
+        G.group_samples([sample])
+
+
+def test_credit_assignment_record_names_single_full_and_mixed_batches():
+    trajectory = _trajectory_sample(0, 1.0)
+    plain = S("other-task", 0, [2], 0.0)
+
+    assert G._credit_assignment([]) == "no_samples"
+    assert G._credit_assignment([plain]) == "single_sequence_terminal_reward"
+    assert G._credit_assignment([trajectory]) == "full_trajectory_terminal_reward"
+    assert G._credit_assignment([plain, trajectory]) == (
+        "mixed_single_sequence_and_full_trajectory_terminal_reward"
+    )
+
+
+@needs_mlx
+def test_full_trajectory_mlx_step_trains_and_counts_all_action_tokens():
+    import mlx.core as mx
+    import mlx.optimizers as optim
+    import numpy as np
+
+    model = _bigram(V=64, seed=17)
+    samples = [_trajectory_sample(0, 1.0), _trajectory_sample(1, 0.0)]
+    config = G.GRPOConfig(group_size=2)
+    G.compute_behavior_logprobs(model, samples, config)
+    grouped = G.group_samples(samples, group_size=2)[("two-turn-task", "policy-0")]
+    advantages, informative = G.group_advantages([sample.reward for sample in grouped])
+    assert informative
+    work = list(zip(grouped, advantages))
+    action_rows = list(G._training_action_segments(work))
+    n_tokens = sum(len(segment.completion_ids) for _, _, segment in action_rows)
+    gradients, diagnostics = G.policy_gradient(model, work, config, n_tokens=n_tokens)
+
+    # Independently sum the categorical score-function gradient over each
+    # segment's context and action tokens, including the later-turn contexts.
+    weights = np.asarray(model.table.weight, dtype=np.float64)
+    expected = np.zeros_like(weights)
+    for _, advantage, segment in action_rows:
+        sequence = segment.prompt_ids + segment.completion_ids
+        for token_index in range(len(segment.prompt_ids) - 1, len(sequence) - 1):
+            input_id, target_id = sequence[token_index : token_index + 2]
+            logits = weights[input_id] / config.temperature
+            probabilities = np.exp(logits - np.max(logits))
+            probabilities /= probabilities.sum()
+            score = np.eye(weights.shape[1], dtype=np.float64)[target_id] - probabilities
+            expected[input_id] -= advantage * score / (n_tokens * config.temperature)
+
+    assert diagnostics["ratio_mean"] == pytest.approx(1.0, abs=1e-6)
+    assert np.asarray(gradients["table"]["weight"]) == pytest.approx(expected, abs=1e-6)
+    assert np.any(np.abs(expected[[30, 31]]) > 0)
+
+    optimizer = optim.Adam(learning_rate=0.05)
+    before = G.trainable_digest(model)
+    later_context_before = np.asarray(model.table.weight)[[30, 31]].copy()
+
+    record = G.train_step(
+        model,
+        optimizer,
+        samples,
+        config,
+        policy_checkpoint_id="policy-0",
+        policy_step=0,
+    )
+    mx.eval(model.parameters(), optimizer.state)
+
+    assert record["update_applied"] is True
+    assert record["n_trained_action_segments"] == 4
+    assert record["n_tokens"] == 4
+    assert record["credit_assignment"] == "full_trajectory_terminal_reward"
+    assert record["params_changed"] is True
+    assert G.trainable_digest(model) != before
+    later_context_after = np.asarray(model.table.weight)[[30, 31]]
+    assert not np.array_equal(later_context_after, later_context_before)
+
+
 def test_policy_lag_rules():
     on = [S("a", 0, [3], 1, ckpt="c5", step=5)]
     assert G.check_policy_lag(on, policy_checkpoint_id="c5", policy_step=5, max_policy_lag=0) == 0
