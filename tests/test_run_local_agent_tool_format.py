@@ -512,6 +512,22 @@ def test_sequential_read_guide_resets_on_gaps_large_pages_and_source_changes():
         start_line=181, end_line=200, task_text='CacheFactory',
     ) is None
 
+    # A path change starts a fresh sequence even when line numbers are adjacent.
+    guide.reset()
+    assert guide.observe(
+        path='cache.py', source=source, source_sha256='e' * 64,
+        start_line=1, end_line=20, task_text='CacheFactory',
+    ) is None
+    for start in (21, 41):
+        assert guide.observe(
+            path='other.py', source=source, source_sha256='e' * 64,
+            start_line=start, end_line=start + 19, task_text='CacheFactory',
+        ) is None
+    assert guide.observe(
+        path='other.py', source=source, source_sha256='e' * 64,
+        start_line=61, end_line=80, task_text='CacheFactory',
+    ) is not None
+
 
 def test_sequential_read_guide_does_not_execute_or_suggest_unparseable_source():
     guide = SequentialReadGuide(page_threshold=2)
