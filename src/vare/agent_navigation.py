@@ -121,6 +121,156 @@ class SearchLoopGuard:
         }
 
 
+class SequentialReadGuide:
+    """Offer a compact AST map after repeated small, contiguous source reads.
+
+    Some agents spend their tool budget paging through a Python file from line
+    one without locating a declaration. This guide is advisory: it never
+    suppresses a read or changes the returned source page.
+    """
+
+    def __init__(
+        self, *, page_threshold: int = 4, max_page_lines: int = 40,
+        max_symbols: int = 6,
+    ) -> None:
+        if type(page_threshold) is not int or page_threshold < 2:
+            raise ValueError("page_threshold must be an integer of at least two")
+        if type(max_page_lines) is not int or max_page_lines < 1:
+            raise ValueError("max_page_lines must be a positive integer")
+        if type(max_symbols) is not int or not 1 <= max_symbols <= 12:
+            raise ValueError("max_symbols must be between one and twelve")
+        self.page_threshold = page_threshold
+        self.max_page_lines = max_page_lines
+        self.max_symbols = max_symbols
+        self.reset()
+
+    def reset(self) -> None:
+        """Forget a page sequence after another tool or source change."""
+        self._path: str | None = None
+        self._source_sha256: str | None = None
+        self._last_end_line: int | None = None
+        self._page_count = 0
+        self._hinted = False
+
+    @staticmethod
+    def _terms(text: str) -> set[str]:
+        split = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text)
+        return {
+            part.lower()
+            for token in _QUERY_WORD.findall(split)
+            for part in token.split("_")
+            if len(part) > 2 and part.lower() not in _GENERIC_QUERY_WORDS
+        }
+
+    def _outline(
+        self, source: str, *, task_text: str, after_line: int,
+    ) -> list[dict[str, Any]]:
+        if len(source.encode("utf-8")) > 1_000_000:
+            return []
+        try:
+            indexed = list_python_symbols(source, limit=60, max_limit=60)
+        except (RecursionError, ValueError):
+            return []
+        symbols = indexed.get("symbols", [])
+        if not symbols:
+            return []
+        terms = self._terms(task_text)
+
+        def symbol_terms(symbol: dict[str, Any]) -> set[str]:
+            fields = symbol.get("fields", [])
+            searchable = [
+                str(symbol.get("name", "")),
+                *[str(item) for item in symbol.get("methods", [])],
+                *[str(field.get("name", "")) for field in fields],
+                *[str(field.get("annotation") or "") for field in fields],
+                *[str(item) for item in symbol.get("bases", [])],
+                *[str(item) for item in symbol.get("parameters", [])],
+                str(symbol.get("returns") or ""),
+            ]
+            return self._terms(" ".join(searchable))
+
+        ranked = [
+            (len(terms & symbol_terms(symbol)), symbol)
+            for symbol in symbols
+        ]
+        relevant = [item for item in ranked if item[0] > 0]
+        if relevant:
+            ordered = [
+                symbol for _score, symbol in sorted(
+                    relevant,
+                    key=lambda item: (-item[0], item[1].get("line", 0), item[1].get("name", "")),
+                )
+            ]
+        else:
+            ordered = sorted(
+                symbols,
+                key=lambda item: (
+                    item.get("line", 0) < after_line,
+                    abs(item.get("line", 0) - after_line),
+                    item.get("line", 0),
+                ),
+            )
+        return [
+            {
+                "kind": symbol.get("kind"),
+                "name": symbol.get("name"),
+                "line": symbol.get("line"),
+                "end_line": symbol.get("end_line"),
+            }
+            for symbol in ordered[:self.max_symbols]
+        ]
+
+    def observe(
+        self, *, path: str, source: str, source_sha256: str,
+        start_line: int, end_line: int, char_offset: int = 0,
+        task_text: str,
+    ) -> dict[str, Any] | None:
+        """Return a task-oriented declaration map once a scan pattern appears."""
+        if (
+            not isinstance(path, str) or not path.endswith(".py")
+            or not isinstance(source, str)
+            or not isinstance(source_sha256, str)
+            or type(start_line) is not int or type(end_line) is not int
+            or start_line < 1 or end_line < start_line
+            or type(char_offset) is not int or char_offset != 0
+            or end_line - start_line + 1 > self.max_page_lines
+        ):
+            self.reset()
+            return None
+
+        contiguous = (
+            self._path == path
+            and self._source_sha256 == source_sha256
+            and self._last_end_line is not None
+            and start_line == self._last_end_line + 1
+        )
+        if contiguous:
+            self._page_count += 1
+        else:
+            self._path = path
+            self._source_sha256 = source_sha256
+            self._page_count = 1
+            self._hinted = False
+        self._last_end_line = end_line
+        if self._hinted or self._page_count < self.page_threshold:
+            return None
+
+        outline = self._outline(source, task_text=task_text, after_line=end_line)
+        if not outline:
+            self._hinted = True
+            return None
+        self._hinted = True
+        return {
+            "type": "sequential_source_scan",
+            "consecutive_pages": self._page_count,
+            "message": (
+                "Several consecutive source pages have been read. These AST-indexed "
+                "declarations may help you jump to the relevant implementation."
+            ),
+            "declarations": outline,
+        }
+
+
 def _unparse(node: ast.AST | None) -> str | None:
     if node is None:
         return None
