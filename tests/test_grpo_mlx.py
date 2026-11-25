@@ -1188,6 +1188,8 @@ def test_checkpoint_rejects_fractional_optimizer_step_before_mutation(tmp_path):
     state_path = path / "optimizer.safetensors"
     arrays = mx.load(str(state_path))
     arrays["step"] = mx.array(1.5, dtype=mx.float32)
+    # MLX loads lazily; evaluate before overwriting the source file.
+    mx.eval(arrays)
     mx.save_safetensors(str(state_path), arrays)
     manifest_path = path / "checkpoint.json"
     manifest = json.loads(manifest_path.read_text())
