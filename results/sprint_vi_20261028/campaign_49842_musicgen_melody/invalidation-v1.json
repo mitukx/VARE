@@ -1,0 +1,15 @@
+{
+  "model_inference_run": false,
+  "model_tokens": 0,
+  "pretraining_exposure": "UNKNOWN",
+  "prior_evidence": "work/VARE/results/sprint_ii_20261027/external_coding_dev/musicgen_melody_cached_position_v1/campaign-protocol.json",
+  "qualification_controls_validated": {
+    "baseline": "public FAIL / hidden FAIL",
+    "known_fix": "public PASS / hidden PASS",
+    "stdout_early_exit_spoof": "public FAIL / hidden FAIL",
+    "wrong_mutant": "public FAIL / hidden FAIL"
+  },
+  "reason": "This is not a fresh Development family: Sprint II already created and ran the same MusicGen Melody cached-position family under work/VARE/results/sprint_ii_20261027/external_coding_dev/musicgen_melody_cached_position_v1. The newly prepared source copy and qualification controls are retained but receive no task-family or model-result credit.",
+  "status": "INVALIDATED_BEFORE_MODEL_INFERENCE",
+  "task_id": "transformers-49842-musicgen-melody-long-cache-position-v1"
+}

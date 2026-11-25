@@ -1,0 +1,87 @@
+{
+  "captured_at_utc": "2026-10-27T18:06:09Z",
+  "integrity_note": "Append-only final-state snapshot after v2. Prior PR ledger and post-audit records remain unchanged.",
+  "main_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "repository": "mitukx/VARE",
+  "schema_version": 1,
+  "summary": {
+    "closed_prs": 0,
+    "draft_prs": 9,
+    "merged_prs": 0,
+    "open_prs": 18,
+    "updated_prs": 2
+  },
+  "updates": [
+    {
+      "base_sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+      "checks": {
+        "ci": {
+          "run_id": 40554669721,
+          "status": "success"
+        },
+        "cpu-evidence": {
+          "run_id": 40554669903,
+          "status": "success"
+        },
+        "e2e-system-cpu": {
+          "run_id": 40554669884,
+          "status": "success"
+        }
+      },
+      "dependency": "#132 is closed unmerged; #133 remains stacked and is not mainline-integrated",
+      "draft": false,
+      "e2e": {
+        "campaign_harness_commit": "a65d59e5704b84a934a49385551a8d2311a01575",
+        "continuation_duration_seconds": 200.16,
+        "continuation_tests_passed": 95,
+        "grpo_cpu_duration_seconds": 23.47,
+        "grpo_cpu_regression_passed": 4,
+        "immutable_runtime_commit": "d251cc678fbc9940f3de460904d5d23a1967b3ce",
+        "source_hash_validation_weakened": false
+      },
+      "earlier_failures": {
+        "run_40547856230": "60 inventory-gate test failures when runtime-only d251 harness was used",
+        "run_40550065213": "cancelled at 15m24s job timeout",
+        "run_40553026570": "94 passed, one stale V3 diagnostic assertion failed"
+      },
+      "head_sha": "e8ab4705b84d82cd79e2883c391083087e82b4e8",
+      "merge_state": "CLEAN",
+      "pr_number": 133,
+      "review": {
+        "independent_approval": false,
+        "review_decision": "REVIEW_REQUIRED",
+        "unresolved_current_threads": 2
+      },
+      "url": "https://github.com/mitukx/VARE/pull/133"
+    },
+    {
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "checks": {
+        "ci": {
+          "run_id": 40550367521,
+          "status": "success"
+        },
+        "cpu-evidence": {
+          "run_id": 40550367254,
+          "status": "success"
+        }
+      },
+      "draft": true,
+      "evidence_bundle": {
+        "both_event_chains_verified": true,
+        "lossless_compressed_originals": 2,
+        "prior_exposure_disqualification_verified": true,
+        "verified_files": 187
+      },
+      "head_sha": "5b06daa8ad5dc8ac8e02162d52befb92636bedb4",
+      "merge_state": "BLOCKED",
+      "pr_number": 142,
+      "review": {
+        "independent_approval": false,
+        "review_decision": "REVIEW_REQUIRED",
+        "unresolved_current_threads": 0
+      },
+      "url": "https://github.com/mitukx/VARE/pull/142"
+    }
+  ]
+}

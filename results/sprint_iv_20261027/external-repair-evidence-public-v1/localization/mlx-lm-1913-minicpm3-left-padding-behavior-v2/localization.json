@@ -1,0 +1,22 @@
+{
+  "algorithm": "task_prompt_lexical_windows_v1",
+  "base_revision": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+  "content": "    def __init__(self, args: ModelArgs):\n        super().__init__()\n        self.args = args\n        self.hidden_size = args.hidden_size\n        self.num_hidden_layers = args.num_hidden_layers\n\n        self.self_attn = Attention(args)\n        self.mlp = MLP(args)\n        self.input_layernorm = nn.RMSNorm(args.hidden_size, eps=args.rms_norm_eps)\n        self.post_attention_layernorm = nn.RMSNorm(\n            args.hidden_size, eps=args.rms_norm_eps\n        )\n\n        self.scale_depth = args.scale_depth\n        self.num_hidden_layers = args.num_hidden_layers\n\n    def __call__(\n        self,\n        x: mx.array,\n        mask: Optional[mx.array] = None,\n        cache: Optional[Any] = None,\n    ) -> mx.array:\n        r = self.self_attn(self.input_layernorm(x), mask, cache)\n        h = x + r * (self.scale_depth / (self.num_hidden_layers**0.5))\n        r = self.mlp(self.post_attention_layernorm(h))\n        out = h + r * (self.scale_depth / (self.num_hidden_layers**0.5))\n        return out\n\n\nclass MiniCPM3Model(nn.Module):\n    def __init__(self, args: ModelArgs):\n        super().__init__()\n        self.args = args\n        self.vocab_size = args.vocab_size\n        assert self.vocab_size > 0\n\n        self.embed_tokens = nn.Embedding(args.vocab_size, args.hidden_size)\n        self.layers = [DecoderLayer(args) for _ in range(args.num_hidden_layers)]\n        self.norm = nn.RMSNorm(args.hidden_size, eps=args.rms_norm_eps)\n\n    def __call__(\n        self,\n        inputs: mx.array,\n        mask: mx.array = None,\n        cache=None,\n    ):\n        h = self.embed_tokens(inputs) * self.args.scale_emb\n\n        if mask is None:\n            mask = create_attention_mask(h, cache)\n\n        if cache is None:\n            cache = [None] * len(self.layers)\n\n        for layer, c in zip(self.layers, cache):\n            h = layer(h, mask, c)\n\n        return self.norm(h)\n\n\nclass Model(nn.Module):\n    def __init__(self, args: ModelArgs):\n        super().__init__()\n        self.args = args\n        self.model_type = args.model_type\n        self.model = MiniCPM3Model(args)\n\n        if not self.args.tie_word_embeddings:\n            self.lm_head = nn.Linear(args.hidden_size, args.vocab_size, bias=False)\n\n    def __call__(\n        self,\n        inputs: mx.array,\n        mask: mx.array = None,\n        cache=None,\n    ):\n        out = self.model(inputs, mask, cache)\n\n        if not self.args.tie_word_embeddings:\n            out = self.lm_head(out / (self.args.hidden_size / self.args.dim_model_base))\n",
+  "content_sha256": "57115ce60321bb06167908edb9e95dc2bcb1e8a3f2cf67a490572bdea55e7788",
+  "end_line": 243,
+  "known_fix_or_grader_read": false,
+  "lexical_overlap_score": 41,
+  "path": "mlx_lm/models/minicpm3.py",
+  "prompt_terms_sha256": "e40aecf2958a3ff70d66ac6b8e9efe616086d25b80e87a6dac3a91cb1f508f34",
+  "schema_version": 1,
+  "selection_inputs": [
+    "task_prompt",
+    "candidate_source",
+    "editable_path_from_task_metadata"
+  ],
+  "source_sha256": "7cae4617eb0b6c86004c80767875d490f7166c6b2042fa8b895d2f99538f1e1a",
+  "start_line": 164,
+  "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2",
+  "task_prompt_sha256": "2176d5722660c4a2a97be1ae05cb3310aecf85dda0b30cb6b43db4830c171d70",
+  "window_lines": 80
+}

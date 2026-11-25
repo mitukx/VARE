@@ -1,0 +1,47 @@
+[
+  {
+    "command": [
+      "/tmp/vare-sprint-vii-mlx/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "/tmp/vare-sprint-vii-trl-baseline/tests/experimental/test_cpo_trainer.py::TestCPOTrainer::test_fully_truncated_completion_examples_dropped"
+    ],
+    "control": "baseline",
+    "cwd": "/tmp/vare-sprint-vii-trl-baseline",
+    "elapsed_seconds": 16.929,
+    "exit_code": 1,
+    "expected": "FAIL",
+    "test_sha256": "0fce4be3537a8f6324968f3660aed6d44407d6da95bc6f772caaa713ccce3f43"
+  },
+  {
+    "command": [
+      "/tmp/vare-sprint-vii-mlx/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "/tmp/vare-sprint-vii-trl-fixed/tests/experimental/test_cpo_trainer.py::TestCPOTrainer::test_fully_truncated_completion_examples_dropped"
+    ],
+    "control": "fixed",
+    "cwd": "/tmp/vare-sprint-vii-trl-fixed",
+    "elapsed_seconds": 13.194,
+    "exit_code": 0,
+    "expected": "PASS",
+    "test_sha256": "0fce4be3537a8f6324968f3660aed6d44407d6da95bc6f772caaa713ccce3f43"
+  },
+  {
+    "command": [
+      "/tmp/vare-sprint-vii-mlx/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "/tmp/vare-sprint-vii-trl-mutant/tests/experimental/test_cpo_trainer.py::TestCPOTrainer::test_fully_truncated_completion_examples_dropped"
+    ],
+    "control": "wrong_mutant",
+    "cwd": "/tmp/vare-sprint-vii-trl-mutant",
+    "elapsed_seconds": 13.277,
+    "exit_code": 1,
+    "expected": "FAIL",
+    "test_sha256": "0fce4be3537a8f6324968f3660aed6d44407d6da95bc6f772caaa713ccce3f43"
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "base_revision": "c0d024fbc873ab0325e1b40fc1bd69069609de65",
+  "baseline_target_sha256": "0c3b4a8e87341561d9995e0b5fd608db94178ec00d57af43ab91244588a053db",
+  "candidate_git_history": "absent",
+  "candidate_network": "none during grading",
+  "candidate_visible_source_files": [
+    "src/transformers/core_model_loading.py"
+  ],
+  "container_image": "localhost:5000/vare/transformers-50001-grader@sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+  "fixed_revision": "46db8379cc5f6b9fa3fcda047ddcd9836227e968",
+  "fixed_revision_kind": "PR head",
+  "fixed_target_sha256": "7ca6ff32c13b91beed0b13e17030f4c95bcbe0265da7762cefe111576627ad2c",
+  "hidden_evaluator_sha256": "9cfa7c5886de20018638cbbcec97612779e8bb962c615e3d2789086404226e4f",
+  "known_fix_source": "copied target file only from pinned PR head",
+  "pretraining_exposure": "UNKNOWN",
+  "prior_vare_model_exposure": "No matching PR, path, function, or task identifier found before qualification; public pretraining exposure UNKNOWN.",
+  "public_test_sha256": "ff8b7b618682928d989b08b3de542d07a2d333e8704083d1ce7cebc4da1dda12",
+  "repository": "huggingface/transformers",
+  "schema_version": 1,
+  "source_path": "src/transformers/core_model_loading.py",
+  "split": "development",
+  "status": "qualification_pending",
+  "task_id": "transformers-49772-reverse-capture-literal-semantics-v1",
+  "upstream_pr": "https://github.com/huggingface/transformers/pull/49772",
+  "wrong_mutant": "drops escaped-dot metadata from captured group; violates literal-match negative case"
+}

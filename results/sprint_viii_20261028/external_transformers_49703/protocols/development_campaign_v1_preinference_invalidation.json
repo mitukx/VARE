@@ -1,0 +1,11 @@
+{
+  "development_task_consumed": false,
+  "model_inference_started": false,
+  "preservation": "The v1 protocol and its sidecar remain unchanged.",
+  "protocol_path": "results/sprint_viii_20261028/external_transformers_49703/protocols/development_campaign_v1.json",
+  "protocol_sha256": "1e6c6940815dd9bd7937b5017dfc5f1e3ce2f030ba368ded5322884d35c4ff40",
+  "reason": "Runner/controller contract review found that the model instruction required run_public_tests even when no public-test tool was exposed. The task has no public regression suite. This makes v1 operationally inconsistent; the controller guidance is corrected and a versioned v2 protocol will be frozen. No model prompt was sent.",
+  "record_id": "transformers-49703-campaign-protocol-v1-preinference-invalidation",
+  "recorded_at_utc": "2026-10-28T06:03:45.982326+00:00",
+  "status": "INVALIDATED_BEFORE_MODEL_INFERENCE"
+}

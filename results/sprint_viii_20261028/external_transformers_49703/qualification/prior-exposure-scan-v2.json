@@ -1,0 +1,19 @@
+{
+  "interpretation": "This bounded artifact scan found no earlier VARE record for Transformers issue 49698, PR 49703, Mask2Former, or input_projections. It does not establish absence from model pretraining; exposure remains UNKNOWN. Development only, never held-out.",
+  "matching_lines": [],
+  "record_id": "transformers-49703-prior-exposure-scan-v2",
+  "recorded_utc": "2026-10-28T05:54:59Z",
+  "search_pattern": "Mask2Former|input_projections|/issues/49698|/pull/49703|#49698|#49703|\"49698\"|\"49703\"",
+  "search_roots": [
+    "results/sprint_ii_20261027",
+    "results/sprint_iii_20261027",
+    "results/sprint_iv_20261027",
+    "results/sprint_vii_20261028",
+    "protocols",
+    "benchmarks",
+    "data",
+    "experiments"
+  ],
+  "status": "NO_SOURCE_OR_TASK_FAMILY_OVERLAP",
+  "supersedes": "prior-exposure-scan-v1 (numeric substring false positives)"
+}

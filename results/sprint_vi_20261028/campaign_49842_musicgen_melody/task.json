@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "editable_files": [
+      "src/transformers/models/musicgen_melody/modeling_musicgen_melody.py",
+      "test_public.py"
+    ],
+    "split": "development"
+  },
+  "prompt": "Repair long-cache incremental positional embedding behavior in the MusicGen Melody implementation. Preserve existing in-range semantics and restrict edits to the specified source file.",
+  "source": {
+    "base_revision": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+    "calibration_revision": "3a3c3ff20527981fd3934da91526ddd62fed5c49",
+    "prior_exposure": "UNKNOWN_PRETRAINING; no prior VARE model exposure found in the searched task/evidence records",
+    "repository": "huggingface/transformers",
+    "target_path": "src/transformers/models/musicgen_melody/modeling_musicgen_melody.py",
+    "upstream_pr": "https://github.com/huggingface/transformers/pull/49842"
+  },
+  "task_id": "transformers-49842-musicgen-melody-long-cache-position-v1"
+}

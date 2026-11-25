@@ -1,0 +1,182 @@
+{
+  "agent_stop_reason": "turn_budget_exhausted",
+  "applied_edits": false,
+  "attempt_status": "COMPLETED",
+  "backend": "MLX Metal",
+  "candidate_changed": false,
+  "candidate_diff_bytes": 0,
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate_sha256": "41a52900b1761949b02d3bb13975fcbad9a69edb4b7f5fc23eec7b6c39d3568d",
+  "created_utc": "2026-10-28T02:21:42.919794+00:00",
+  "duplicate_search_rejections": 10,
+  "elapsed_seconds": 362.222,
+  "experiment": "one-attempt external Development pilot; no capability claim",
+  "failure_classification": [
+    "source_localization",
+    "repeated_action_selection"
+  ],
+  "generated_tokens": 144,
+  "generation_protocol": "schema_slots_v8",
+  "generation_turns": 14,
+  "heldout": false,
+  "independent_grader": "NOT_RUN_NO_CANDIDATE_PATCH",
+  "maximum_generation_stage_prompt_tokens": 4919,
+  "minimum_available_memory_bytes": 6296272896,
+  "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+  "peak_process_tree_rss_bytes": 4381933568,
+  "protocol_sha256": "3c4ac0ee5040abb88b18f2262ee248a8165eb8af75210e64ab858a9b9766ef86",
+  "public_tests": "NOT_RUN; none exposed",
+  "raw_files": {
+    "agent.json": "5dfa9336ec3c32528b5694a11c98751adc9074a5d103949ee99d1b6dea9cf02c",
+    "candidate.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "command.json": "241f59a7ebc301c3b1e2cc7cf514f48ba8fc50b62ba3588c0cc167367a65a44d",
+    "events.jsonl": "6a2961c05918d916bf9f4e9d1c689347bddba3bb397d30f45bed773eeb3b22e6",
+    "preflight-samples.jsonl": "d95d7a7be7c4fdea90dcd80a91ea8b15fd75d8a0a55f3b70c29bbfd7bd061b0d",
+    "runner-result.json": "5fe6d94fb1a453f39d6c7aef49b66c7684d80d1e53fe3db16f395b679cbf7585",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "f00bd10a8361f46872479aa757d49c713872e6f2e2ceb70c75ee4a6b91cff98c"
+  },
+  "resource_abort": null,
+  "seed": 20261028,
+  "snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+  "source_edit_attempts": 0,
+  "source_reads": 2,
+  "source_searches": 11,
+  "split": "development",
+  "sum_generation_stage_prompt_tokens": 98665,
+  "swap_growth_bytes": 0,
+  "task_id": "trl-7913-cpo-truncated-completion-development-v1",
+  "tool_call_count": 14,
+  "tool_calls": [
+    {
+      "arguments": {},
+      "error": null,
+      "name": "list_files",
+      "result_status": null,
+      "turn": 1
+    },
+    {
+      "arguments": {
+        "end": 100,
+        "path": "trl/experimental/cpo/cpo_trainer.py",
+        "start": 1
+      },
+      "error": null,
+      "name": "read_lines",
+      "result_status": "read_complete",
+      "turn": 2
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "ok",
+      "turn": 3
+    },
+    {
+      "arguments": {
+        "end": 100,
+        "path": "trl/experimental/cpo/cpo_trainer.py",
+        "start": 1
+      },
+      "error": null,
+      "name": "read_lines",
+      "result_status": "read_complete",
+      "turn": 4
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 5
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 6
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 7
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 8
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 9
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 10
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 11
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 12
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 13
+    },
+    {
+      "arguments": {
+        "query": "\"dataset preparation CPOTrainer\""
+      },
+      "error": null,
+      "name": "search_source",
+      "result_status": "duplicate_query",
+      "turn": 14
+    }
+  ],
+  "tool_interface": "lease_bound_transactional_navigation_v1",
+  "valid_schema_action_count": 14
+}

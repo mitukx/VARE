@@ -1,0 +1,4013 @@
+{
+  "schema_version": 1,
+  "captured_at_utc": "2026-10-28T08:14:20.242499+00:00",
+  "repository": "https://github.com/mitukx/VARE",
+  "main_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "open_count": 18,
+  "draft_count": 9,
+  "merged_during_audit": 0,
+  "closed_during_audit": 0,
+  "source": "GitHub live GraphQL pull request nodes plus gh pr view file lists",
+  "prs": [
+    {
+      "number": 99,
+      "title": "Calibrate isolated MLX-LM 1971 Development task",
+      "url": "https://github.com/mitukx/VARE/pull/99",
+      "draft": true,
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/mlxlm-1971-isolation",
+        "sha": "762a5a65598756014d957a206ba1548cb19a348f"
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_threads": {
+        "total": 16,
+        "unresolved": 2
+      },
+      "ci_contexts": {
+        "SUCCESS": 20
+      },
+      "changed_file_count": 98,
+      "changed_files": [
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/Dockerfile",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/baseline-python-manifest-v6.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/expected-output-v1.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/expected-output-v2.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter.py",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter_v2.py",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter_v3.py",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter_v4.py",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v1.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v2.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v2.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v3.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v3.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v4.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v4.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v5.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v5.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v6.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v6.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v7.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v7.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v8.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v8.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v9.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v9.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/task.md",
+        "docs/current-gaps.md",
+        "docs/experiments.md",
+        "docs/mlsys-repository-task-mlxlm-1971-v2-report.md",
+        "docs/mlsys-repository-task-mlxlm-1971-v3-report.md",
+        "docs/mlsys-repository-task-mlxlm-1971-v4-report.md",
+        "docs/mlsys-repository-task-mlxlm-1971-v5-report.md",
+        "docs/mlsys-repository-task-mlxlm-1971-v8-report.md",
+        "docs/mlsys-repository-task-mlxlm-1971-v9-report.md",
+        "docs/mlxlm-1971-historical-implementation-hash-audit-v1.md",
+        "docs/mlxlm-1971-historical-implementation-hash-audit-v2.md",
+        "docs/mlxlm-1971-historical-implementation-hash-audit-v3.md",
+        "docs/mlxlm-1971-isolated-task-v1-report.md",
+        "results/mlxlm-1971-historical-implementation-audit-v1/SHA256SUMS",
+        "results/mlxlm-1971-historical-implementation-audit-v1/audit.json",
+        "results/mlxlm-1971-historical-implementation-audit-v2/SHA256SUMS",
+        "results/mlxlm-1971-historical-implementation-audit-v2/audit.json",
+        "results/mlxlm-1971-historical-implementation-audit-v3/SHA256SUMS",
+        "results/mlxlm-1971-historical-implementation-audit-v3/audit.json",
+        "results/mlxlm-1971-isolated-v1/run-1/SHA256SUMS",
+        "results/mlxlm-1971-isolated-v1/run-1/calibration.json",
+        "results/mlxlm-1971-isolated-v2/run-1/SHA256SUMS",
+        "results/mlxlm-1971-isolated-v2/run-1/calibration.json",
+        "results/mlxlm-1971-isolated-v3/run-1/SHA256SUMS",
+        "results/mlxlm-1971-isolated-v3/run-1/calibration.json",
+        "results/mlxlm-1971-isolated-v4/run-1/SHA256SUMS",
+        "results/mlxlm-1971-isolated-v4/run-1/calibration.json",
+        "results/mlxlm-1971-isolated-v5/run-1/SHA256SUMS",
+        "results/mlxlm-1971-isolated-v5/run-1/calibration.json",
+        "results/mlxlm-1971-isolated-v6/attempt-1/SHA256SUMS",
+        "results/mlxlm-1971-isolated-v6/attempt-1/failure.json",
+        "results/mlxlm-1971-isolated-v7/run-1/SHA256SUMS",
+        "results/mlxlm-1971-isolated-v7/run-1/calibration.json",
+        "results/mlxlm-1971-isolated-v8/run-1/SHA256SUMS",
+        "results/mlxlm-1971-isolated-v8/run-1/calibration.json",
+        "results/mlxlm-1971-isolated-v9/run-1/SHA256SUMS",
+        "results/mlxlm-1971-isolated-v9/run-1/calibration.json",
+        "scripts/attest_mlxlm_1971_v9_current_git.py",
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/audit_mlxlm_1971_historical_implementation_hashes.py",
+        "scripts/benchmark_trajectory_runtime.py",
+        "scripts/generate_mlxlm_1971_v2_goldens.py",
+        "scripts/run_mlxlm_1971_calibration.py",
+        "scripts/run_mlxlm_1971_calibration_v2.py",
+        "scripts/run_mlxlm_1971_calibration_v3.py",
+        "scripts/run_mlxlm_1971_calibration_v4.py",
+        "scripts/run_mlxlm_1971_calibration_v5.py",
+        "scripts/run_mlxlm_1971_calibration_v6.py",
+        "scripts/run_mlxlm_1971_calibration_v7.py",
+        "scripts/run_mlxlm_1971_calibration_v8.py",
+        "scripts/run_mlxlm_1971_calibration_v9.py",
+        "src/vare/mlxlm_1971_repo_task.py",
+        "src/vare/mlxlm_1971_repo_task_v2.py",
+        "src/vare/mlxlm_1971_repo_task_v3.py",
+        "src/vare/mlxlm_1971_repo_task_v4.py",
+        "src/vare/mlxlm_1971_repo_task_v6.py",
+        "src/vare/mlxlm_1971_repo_task_v7.py",
+        "src/vare/mlxlm_1971_repo_task_v9.py",
+        "tests/test_attest_mlxlm_1971_v9_current_git.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_mlxlm_1971_calibration_v5.py",
+        "tests/test_mlxlm_1971_calibration_v6.py",
+        "tests/test_mlxlm_1971_calibration_v7.py",
+        "tests/test_mlxlm_1971_calibration_v8.py",
+        "tests/test_mlxlm_1971_calibration_v9.py",
+        "tests/test_mlxlm_1971_historical_implementation_hash_audit.py",
+        "tests/test_mlxlm_1971_repo_task.py",
+        "tests/test_mlxlm_1971_repo_task_v2.py",
+        "tests/test_mlxlm_1971_repo_task_v3.py",
+        "tests/test_mlxlm_1971_repo_task_v4.py",
+        "tests/test_mlxlm_1971_repo_task_v6.py",
+        "tests/test_mlxlm_1971_repo_task_v7.py",
+        "tests/test_mlxlm_1971_repo_task_v9.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Draft calibration/evidence PR; 2 unresolved review threads, despite green CI.",
+      "next_action": "Resolve the threads and obtain independent approval; do not merge its historical calibration bundle without review.",
+      "latest_head_checks": {
+        "count": 20,
+        "states": {
+          "pass": 20
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410636",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410426",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410438",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634493/job/120723410205",
+            "name": "actual-optimizer-and-recovery",
+            "state": "SUCCESS",
+            "workflow": "e2e-system-cpu"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410458",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410419",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410215",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410430",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410545",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634545/job/120723410415",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044634472/job/120723410092",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400339",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400371",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400358",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400244",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400361",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400335",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400282",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400383",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40044631769/job/120723400637",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 108,
+      "title": "Add dual-Python HF Coding Development protocol v2",
+      "url": "https://github.com/mitukx/VARE/pull/108",
+      "draft": true,
+      "base": {
+        "branch": "codex/fresh-hf-dev-candidates-v1",
+        "sha": "ab8d7c0b55d5b1c28365f2f002509ce3a37df501",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/hf-coding-dev-inference-v2-dual-python",
+        "sha": "710dbc0d28aa33a78521a29f067c9a9493f6c56d"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 0,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 19
+      },
+      "changed_file_count": 9,
+      "changed_files": [
+        "experiments/hf_coding_dev_inference_v1/protocol-v2.json",
+        "experiments/hf_coding_dev_inference_v1/protocol-v2.lock.json",
+        "requirements/hf-coding-dev-v1-host-grader.txt",
+        "results/hf-coding-dev-inference-v2/dual-python-validation-v2/dry-run-v2-final.json",
+        "results/hf-coding-dev-inference-v2/dual-python-validation-v2/sha256-manifest-v2.json",
+        "results/hf-coding-dev-inference-v2/dual-python-validation-v2/validation-summary-v2.json",
+        "scripts/dry_run_hf_coding_dev_v2_dual_python.py",
+        "scripts/preflight_hf_coding_dev_v1_host_grader.py",
+        "tests/test_hf_coding_dev_v2_dual_python_dry_run.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Draft dual-Python protocol stacked on a historical candidate branch; no unresolved threads, green CI.",
+      "next_action": "Preserve as protocol history; extract only if a current mainline consumer is identified.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166307",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161388/job/119625165975",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166311",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166328",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166292",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166194",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166496",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166252",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166346",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718161387/job/119625166246",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123230",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123290",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123403",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123191",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123189",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625122902",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123186",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123254",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39718147796/job/119625123303",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 114,
+      "title": "Preserve attested MLX-LM calibration evidence on publication failure",
+      "url": "https://github.com/mitukx/VARE/pull/114",
+      "draft": true,
+      "base": {
+        "branch": "codex/mlxlm-1971-isolation",
+        "sha": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc",
+        "open_pr_dependency": 99
+      },
+      "head": {
+        "branch": "codex/mlxlm-1971-attested-calibration",
+        "sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 5,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 19
+      },
+      "changed_file_count": 5,
+      "changed_files": [
+        "docs/mlxlm-1971-attested-operator.md",
+        "scripts/audit_mlxlm_1971_historical_implementation_hashes.py",
+        "scripts/run_attested_mlxlm_1971_v9_calibration.py",
+        "tests/test_attest_mlxlm_1971_v9_current_git.py",
+        "tests/test_run_attested_mlxlm_1971_v9_calibration.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Draft attested calibration evidence, stacked on #99 lineage; 5 threads resolved, green CI.",
+      "next_action": "Keep dependent on its source lineage; review before integration.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728165",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695727932",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036070134/job/120695728375",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728191",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728111",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728109",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728086",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728333",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728160",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036069988/job/120695728125",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711195",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711092",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711071",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711214",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711037",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695710908",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711175",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711147",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40036064950/job/120695711094",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 117,
+      "title": "Isolate MLX-LM source snapshots before trusted export",
+      "url": "https://github.com/mitukx/VARE/pull/117",
+      "draft": true,
+      "base": {
+        "branch": "codex/mlxlm-1971-attested-calibration",
+        "sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+        "open_pr_dependency": 114
+      },
+      "head": {
+        "branch": "codex/mlxlm-1971-v10-operator",
+        "sha": "6709aed996ce5ec315cf7a87930350dca6c0ee20"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 9,
+        "unresolved": 4
+      },
+      "ci_contexts": {
+        "SUCCESS": 19
+      },
+      "changed_file_count": 90,
+      "changed_files": [
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v10.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v10.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v11.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v11.lock.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v12.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v12.lock.json",
+        "docs/mlxlm-1971-v10-operator.md",
+        "docs/mlxlm-1971-v11-operator.md",
+        "docs/mlxlm-1971-v12-operator.md",
+        "results/mlxlm-1971-v12-public-export-smoke-report.md",
+        "results/mlxlm-1971-v12-public-export-smoke-report.sha256",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/SHA256SUMS.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/protocol.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/raw/environment-preflight.txt",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/raw/environment.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/raw/export.stderr.txt",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/raw/export.stdout.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/raw/protocol.sha256",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/raw/resource-usage.txt",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/raw/source-fetch.log",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/result.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/FETCH_HEAD",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/HEAD",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/config",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/description",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/applypatch-msg.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/commit-msg.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/fsmonitor-watchman.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/post-update.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/pre-applypatch.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/pre-commit.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/pre-merge-commit.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/pre-push.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/pre-rebase.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/pre-receive.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/prepare-commit-msg.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/push-to-checkout.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/sendemail-validate.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/hooks/update.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/info/exclude",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/objects/pack/pack-0d5d5e615a457fe12e2b82fe7efba450d0e7cf8d.idx",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/objects/pack/pack-0d5d5e615a457fe12e2b82fe7efba450d0e7cf8d.pack",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/objects/pack/pack-0d5d5e615a457fe12e2b82fe7efba450d0e7cf8d.rev",
+        "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git/shallow",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/SHA256SUMS.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/protocol.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/raw/environment-preflight.txt",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/raw/environment.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/raw/export.stderr.txt",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/raw/export.stdout.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/raw/protocol.sha256",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/raw/resource-usage.txt",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/raw/source-fetch.log",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/result.json",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/FETCH_HEAD",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/HEAD",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/config",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/description",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/applypatch-msg.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/commit-msg.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/fsmonitor-watchman.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/post-update.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/pre-applypatch.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/pre-commit.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/pre-merge-commit.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/pre-push.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/pre-rebase.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/pre-receive.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/prepare-commit-msg.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/push-to-checkout.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/sendemail-validate.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/hooks/update.sample",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/info/exclude",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/objects/pack/pack-0d5d5e615a457fe12e2b82fe7efba450d0e7cf8d.idx",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/objects/pack/pack-0d5d5e615a457fe12e2b82fe7efba450d0e7cf8d.pack",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/objects/pack/pack-0d5d5e615a457fe12e2b82fe7efba450d0e7cf8d.rev",
+        "results/mlxlm-1971-v12-public-export-smoke-v2/run-1/source-mirror.git/shallow",
+        "results/mlxlm-1971-v12-real-source-snapshot-v1/SHA256SUMS",
+        "results/mlxlm-1971-v12-real-source-snapshot-v1/SHA256SUMS.addendum",
+        "results/mlxlm-1971-v12-real-source-snapshot-v1/experiment.json",
+        "results/mlxlm-1971-v12-real-source-snapshot-v1/protocol.json",
+        "results/mlxlm-1971-v12-real-source-snapshot-v1/raw/git-operations.log",
+        "results/mlxlm-1971-v12-real-source-snapshot-v1/resource-measurement-erratum.json",
+        "results/mlxlm-1971-v12-source-git-filter-boundary-v1/SHA256SUMS",
+        "results/mlxlm-1971-v12-source-git-filter-boundary-v1/experiment.json",
+        "results/mlxlm-1971-v12-source-git-filter-boundary-v1/raw/source-git-boundary-pytest.log",
+        "scripts/run_mlxlm_1971_v11_operator.py",
+        "scripts/run_mlxlm_1971_v12_operator.py",
+        "tests/test_run_mlxlm_1971_v11_operator.py",
+        "tests/test_run_mlxlm_1971_v12_operator.py"
+      ],
+      "disposition": "FIX",
+      "rationale": "Draft operator changes stacked on #114 with 4 unresolved review threads.",
+      "next_action": "Resolve the 4 threads and audit source snapshot/export boundary before integration.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796963",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796906",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700972/job/120726796859",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796973",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796652",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796930",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796941",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796905",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796956",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045700961/job/120726796960",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781774",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781977",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781844",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781903",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781863",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781920",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781872",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781627",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045696069/job/120726781798",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 118,
+      "title": "Extract hash-checked structured edit library without changing frozen agent runtime",
+      "url": "https://github.com/mitukx/VARE/pull/118",
+      "draft": true,
+      "base": {
+        "branch": "codex/transformers-49752-repo-task",
+        "sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/structured-edit-core-standalone",
+        "sha": "552d6f61187926d78719aad8c4c7ec9e8663c242"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 7,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 20
+      },
+      "changed_file_count": 4,
+      "changed_files": [
+        "docs/structured-edit-core-standalone.md",
+        "scripts/audit_e2e_rl_continuation.py",
+        "src/vare/agent_structured_edit.py",
+        "tests/test_agent_structured_edit.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Draft standalone edit library remains stacked on an old Transformers task branch.",
+      "next_action": "Rebase/extract only the library and tests to main if it remains needed; current parent is not an open mainline dependency.",
+      "latest_head_checks": {
+        "count": 20,
+        "states": {
+          "pass": 20
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857119",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857271",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334856799",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857080",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768390/job/120334856914",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768430/job/120334857163",
+            "name": "actual-optimizer-and-recovery",
+            "state": "SUCCESS",
+            "workflow": "e2e-system-cpu"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857025",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857365",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857102",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857415",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929768392/job/120334857338",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334834965",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835128",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835056",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835121",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835117",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835145",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334834948",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835084",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/39929761807/job/120334835240",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 120,
+      "title": "Record real-model coding-agent feasibility and tool-boundary fixes",
+      "url": "https://github.com/mitukx/VARE/pull/120",
+      "draft": false,
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/fresh-task-qualification-mlx-lm-1910",
+        "sha": "8aacae54d0f8893580a77cb8bb831e7621a2403a"
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_threads": {
+        "total": 2,
+        "unresolved": 2
+      },
+      "ci_contexts": {
+        "SUCCESS": 20
+      },
+      "changed_file_count": 100,
+      "changed_files": [
+        ".gitignore",
+        "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/TASK.md",
+        "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/task.json",
+        "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/qwen3_coder.py",
+        "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/test_public.py",
+        "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_qwen3_coder/Dockerfile",
+        "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_qwen3_coder/grader.in",
+        "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_qwen3_coder/grader.lock.txt",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v1.lock.json",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v1.sha256",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v2.lock.json",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v2.sha256",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v3.lock.json",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v3.sha256",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v4.lock.json",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v4.sha256",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v5.lock.json",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v5.sha256",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v6.lock.json",
+        "protocols/mlsys_repo_task_mlx_lm_1910_v6.sha256",
+        "protocols/tracked_large_blob_allowlist_v1.txt",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v1/calibration-attempt-1.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v1/mlx-agent-requirements.lock.txt",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v1/model-manifest.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v1/protocol.lock.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v1/protocol.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/bundle-manifest.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/bundle-manifest.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/packaging-addendum.md",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/protocol.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/protocol.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/report.md",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/report.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/evidence-manifest.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/evidence-manifest.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/agent-stderr.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/agent-stdout.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/agent.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/attempt-summary.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/grader.stderr.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/grader.stdout.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/independent-grade/grade.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/independent-grade/raw/oracle.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/independent-grade/raw/upstream-test.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/process/resource-monitor.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/process/stderr.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/process/stdout.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/workspace-git-metadata.tar",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/workspace/qwen3_coder.py",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/greedy/workspace/test_public.py",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/preflight.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/protocol.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/protocol.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/agent-stderr.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/agent-stdout.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/agent.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/attempt-summary.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/grader.stderr.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/grader.stdout.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/independent-grade/grade.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/independent-grade/raw/oracle.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/independent-grade/raw/upstream-test.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/process/resource-monitor.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/process/stderr.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/process/stdout.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/workspace-git-metadata.tar",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/workspace/qwen3_coder.py",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/sampled/workspace/test_public.py",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/summary.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/workspace-git-archive-map.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/workspace-git-archive-map.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/bundle-manifest.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/bundle-manifest.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/packaging-addendum.md",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/preparation/validation-attempt-1.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/preparation/validation-attempt-1.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/protocol.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/protocol.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/report.md",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/report.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/evidence-manifest.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/evidence-manifest.sha256",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/agent-stderr.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/agent-stdout.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/agent.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/attempt-summary.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/grader.stderr.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/grader.stdout.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/independent-grade/grade.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/independent-grade/raw/oracle.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/independent-grade/raw/upstream-test.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/process/resource-monitor.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/process/stderr.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/process/stdout.log",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/workspace-git-metadata.tar",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/workspace/qwen3_coder.py",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/greedy/workspace/test_public.py",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/preflight.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/protocol.json",
+        "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1/protocol.sha256"
+      ],
+      "disposition": "FIX",
+      "rationale": "Main-based PR has 2 unresolved P1 evaluator-completion-forgery findings; green CI is insufficient.",
+      "next_action": "Separate candidate output from trusted grader completion and add adversarial regression controls before reward-path use.",
+      "latest_head_checks": {
+        "count": 20,
+        "states": {
+          "pass": 20
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290061",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466717/job/122156289479",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466741/job/122156290007",
+            "name": "actual-optimizer-and-recovery",
+            "state": "SUCCESS",
+            "workflow": "e2e-system-cpu"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290153",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290059",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156289986",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156289910",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290075",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290077",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156289758",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494466746/job/122156290180",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262823",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262921",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262783",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262873",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262473",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156263031",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156263076",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262925",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40494458703/job/122156262917",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 121,
+      "title": "Add independent source replay for Transformers fusion registration",
+      "url": "https://github.com/mitukx/VARE/pull/121",
+      "draft": false,
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/transformers-49412-qualification",
+        "sha": "a937f4ad6eacb63d679952f7a05d39d04afab59a"
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_threads": {
+        "total": 1,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 19
+      },
+      "changed_file_count": 52,
+      "changed_files": [
+        "protocols/transformers_49412_source_replay_v2.json",
+        "protocols/transformers_49412_source_replay_v3.json",
+        "results/transformers-49412-source-replay-v2/README.md",
+        "results/transformers-49412-source-replay-v2/SHA256SUMS",
+        "results/transformers-49412-source-replay-v2/evidence-manifest.json",
+        "results/transformers-49412-source-replay-v2/freeze.json",
+        "results/transformers-49412-source-replay-v2/raw/baseline.json",
+        "results/transformers-49412-source-replay-v2/raw/baseline.stderr",
+        "results/transformers-49412-source-replay-v2/raw/baseline.stdout",
+        "results/transformers-49412-source-replay-v2/raw/fixed.json",
+        "results/transformers-49412-source-replay-v2/raw/fixed.stderr",
+        "results/transformers-49412-source-replay-v2/raw/fixed.stdout",
+        "results/transformers-49412-source-replay-v2/raw/mutant-allow-conflict.json",
+        "results/transformers-49412-source-replay-v2/raw/mutant-allow-conflict.stderr",
+        "results/transformers-49412-source-replay-v2/raw/mutant-allow-conflict.stdout",
+        "results/transformers-49412-source-replay-v2/raw/mutant-clear-unrelated-mappings.json",
+        "results/transformers-49412-source-replay-v2/raw/mutant-clear-unrelated-mappings.stderr",
+        "results/transformers-49412-source-replay-v2/raw/mutant-clear-unrelated-mappings.stdout",
+        "results/transformers-49412-source-replay-v2/raw/mutant-no-deduplication.json",
+        "results/transformers-49412-source-replay-v2/raw/mutant-no-deduplication.stderr",
+        "results/transformers-49412-source-replay-v2/raw/mutant-no-deduplication.stdout",
+        "results/transformers-49412-source-replay-v2/raw/preflight-bind-mount-private-tmp.json",
+        "results/transformers-49412-source-replay-v2/raw/preflight-bind-mount-shared-path.json",
+        "results/transformers-49412-source-replay-v2/summary.json",
+        "results/transformers-49412-source-replay-v2/summary.md",
+        "results/transformers-49412-source-replay-v3/README.md",
+        "results/transformers-49412-source-replay-v3/SHA256SUMS",
+        "results/transformers-49412-source-replay-v3/evidence-manifest.json",
+        "results/transformers-49412-source-replay-v3/freeze.json",
+        "results/transformers-49412-source-replay-v3/raw/baseline.json",
+        "results/transformers-49412-source-replay-v3/raw/baseline.stderr",
+        "results/transformers-49412-source-replay-v3/raw/baseline.stdout",
+        "results/transformers-49412-source-replay-v3/raw/control-first-call-error.json",
+        "results/transformers-49412-source-replay-v3/raw/control-first-call-error.stderr",
+        "results/transformers-49412-source-replay-v3/raw/control-first-call-error.stdout",
+        "results/transformers-49412-source-replay-v3/raw/fixed.json",
+        "results/transformers-49412-source-replay-v3/raw/fixed.stderr",
+        "results/transformers-49412-source-replay-v3/raw/fixed.stdout",
+        "results/transformers-49412-source-replay-v3/raw/mutant-allow-conflict.json",
+        "results/transformers-49412-source-replay-v3/raw/mutant-allow-conflict.stderr",
+        "results/transformers-49412-source-replay-v3/raw/mutant-allow-conflict.stdout",
+        "results/transformers-49412-source-replay-v3/raw/mutant-clear-unrelated-mappings.json",
+        "results/transformers-49412-source-replay-v3/raw/mutant-clear-unrelated-mappings.stderr",
+        "results/transformers-49412-source-replay-v3/raw/mutant-clear-unrelated-mappings.stdout",
+        "results/transformers-49412-source-replay-v3/raw/mutant-no-deduplication.json",
+        "results/transformers-49412-source-replay-v3/raw/mutant-no-deduplication.stderr",
+        "results/transformers-49412-source-replay-v3/raw/mutant-no-deduplication.stdout",
+        "results/transformers-49412-source-replay-v3/summary.json",
+        "results/transformers-49412-source-replay-v3/summary.md",
+        "scripts/reproduce_transformers_49412_source_replay_v2.py",
+        "scripts/reproduce_transformers_49412_source_replay_v3.py",
+        "tests/test_transformers_49412_source_replay_v3.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Main-based source-replay contribution; CI green, no unresolved threads, but required independent approval absent.",
+      "next_action": "Request eligible independent review; merge only after required approval.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183645",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183882",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183883",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820733/job/120727183265",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183833",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183906",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183969",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183873",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183820",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045820755/job/120727183916",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171649",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171671",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171612",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171731",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171434",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171710",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171714",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171599",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40045817025/job/120727171650",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 122,
+      "title": "Close installed-repair leakage and record the 7B teacher NO-GO",
+      "url": "https://github.com/mitukx/VARE/pull/122",
+      "draft": false,
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/flagship-teacher-gate",
+        "sha": "37b31519818b5dfbf245075cc541d6c8a38b4099"
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_threads": {
+        "total": 0,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 28
+      },
+      "changed_file_count": 74,
+      "changed_files": [
+        "README.md",
+        "benchmarks/flagship_development_v1/Dockerfile",
+        "benchmarks/flagship_development_v1/Dockerfile.portable",
+        "benchmarks/flagship_development_v1/Dockerfile.record-integrity",
+        "benchmarks/flagship_development_v1/UPSTREAM-LICENSE",
+        "benchmarks/flagship_development_v1/gptq.md",
+        "benchmarks/flagship_development_v1/gptq_adapter.py",
+        "benchmarks/flagship_development_v1/probe_image_assets.py",
+        "benchmarks/flagship_development_v1/sanitize_installed_assets.py",
+        "benchmarks/flagship_development_v1/thinking.md",
+        "benchmarks/flagship_development_v1/thinking_adapter.py",
+        "docs/flagship-verified-agent-v1-report.md",
+        "protocols/flagship_cached_mistral_teacher_v1.json",
+        "protocols/flagship_dependency_leakage_v1.json",
+        "protocols/flagship_development_qualification_v1.json",
+        "protocols/flagship_development_qualification_v1.sha256",
+        "protocols/flagship_image_record_consistency_v1.json",
+        "protocols/flagship_installed_asset_isolation_v1.json",
+        "results/flagship-cached-mistral-teacher-v1/archive-index.json",
+        "results/flagship-cached-mistral-teacher-v1/run-1.tar.gz",
+        "results/flagship-cached-mistral-teacher-v1/summary.json",
+        "results/flagship-cached-mistral-teacher-v1/trajectories.jsonl",
+        "results/flagship-dependency-leakage-v1/archive-index.json",
+        "results/flagship-dependency-leakage-v1/build.log",
+        "results/flagship-dependency-leakage-v1/eligibility-decision.json",
+        "results/flagship-dependency-leakage-v1/local-registry-push.log",
+        "results/flagship-dependency-leakage-v1/portable-build.log",
+        "results/flagship-dependency-leakage-v1/portable-push.log",
+        "results/flagship-dependency-leakage-v1/raw-results.tar.gz",
+        "results/flagship-dependency-leakage-v1/record-consistency-failure.json",
+        "results/flagship-dependency-leakage-v1/record-integrity-build.log",
+        "results/flagship-dependency-leakage-v1/record-integrity-push.log",
+        "results/flagship-dependency-leakage-v1/summary.json",
+        "results/flagship-development-qualification-v1/exposure-search.json",
+        "results/flagship-development-qualification-v1/focused-tests.txt",
+        "results/flagship-development-qualification-v1/monitor/resource-monitor.json",
+        "results/flagship-development-qualification-v1/monitor/stderr.log",
+        "results/flagship-development-qualification-v1/monitor/stdout.log",
+        "results/flagship-development-qualification-v1/null-after.txt",
+        "results/flagship-development-qualification-v1/null-before.txt",
+        "results/flagship-development-qualification-v1/null-probe-notes.json",
+        "results/flagship-development-qualification-v1/null-probe.py.txt",
+        "results/flagship-development-qualification-v1/pr-audit.json",
+        "results/flagship-development-qualification-v1/pr-source-review.json",
+        "results/flagship-development-qualification-v1/run-1/gptq-groups/baseline.json",
+        "results/flagship-development-qualification-v1/run-1/gptq-groups/eight-bit-reference.json",
+        "results/flagship-development-qualification-v1/run-1/gptq-groups/four-groups-reference.json",
+        "results/flagship-development-qualification-v1/run-1/gptq-groups/known-fix.json",
+        "results/flagship-development-qualification-v1/run-1/gptq-groups/single-group-reference.json",
+        "results/flagship-development-qualification-v1/run-1/gptq-groups/two-groups-reference.json",
+        "results/flagship-development-qualification-v1/run-1/gptq-groups/wrong-group-slice.json",
+        "results/flagship-development-qualification-v1/run-1/gptq-groups/wrong-local-error-index.json",
+        "results/flagship-development-qualification-v1/run-1/image-inspect.json",
+        "results/flagship-development-qualification-v1/run-1/summary.json",
+        "results/flagship-development-qualification-v1/run-1/thinking-markers/baseline.json",
+        "results/flagship-development-qualification-v1/run-1/thinking-markers/known-fix.json",
+        "results/flagship-development-qualification-v1/run-1/thinking-markers/wrong-always-angle.json",
+        "results/flagship-development-qualification-v1/run-1/thinking-markers/wrong-existing-mode.json",
+        "results/flagship-study-v1-audit.json",
+        "results/flagship-study-v1-manifest.json",
+        "results/flagship-study-v1-optimized-audit.json",
+        "results/flagship-study-validation-v1/host-postrun.json",
+        "results/flagship-study-validation-v1/inference-environment.txt",
+        "results/flagship-study-validation-v1/pytest.log",
+        "results/flagship-study-validation-v1/ruff.log",
+        "scripts/audit_flagship_results_v1.py",
+        "scripts/probe_flagship_compiled_repair_v1.py",
+        "scripts/qualify_flagship_development_v1.py",
+        "scripts/replay_flagship_dependency_leakage_v1.py",
+        "scripts/run_flagship_teacher_v1.py",
+        "tests/test_flagship_development_v1.py",
+        "tests/test_flagship_image_sanitizer.py",
+        "tests/test_flagship_results_v1.py",
+        "tests/test_flagship_teacher_v1.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Main-based teacher NO-GO/evidence PR; CI green, independent approval still required.",
+      "next_action": "Keep conclusions bounded to the recorded feasibility gate; obtain approval before merge.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183367",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183124",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183099",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183181",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807182946",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183167",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183122",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183238",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40071977502/job/120807183125",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467077",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799466908",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467052",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431251/job/120799467276",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799466995",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799466994",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467060",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467018",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799467088",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40069431227/job/120799466986",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 126,
+      "title": "Measure verifier-version-aware GRPO under drift and crashes",
+      "url": "https://github.com/mitukx/VARE/pull/126",
+      "draft": false,
+      "base": {
+        "branch": "codex/real-agent-interface-v1",
+        "sha": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/verifier-consistent-async-grpo-v1",
+        "sha": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 10,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 20
+      },
+      "changed_file_count": 58,
+      "changed_files": [
+        "benchmarks/verifier_consistent_async_grpo_v1/protocol.json",
+        "benchmarks/verifier_consistent_async_grpo_v2/README.md",
+        "benchmarks/verifier_consistent_async_grpo_v2/protocol.json",
+        "benchmarks/verifier_consistent_async_grpo_v3/README.md",
+        "benchmarks/verifier_consistent_async_grpo_v3/protocol.json",
+        "benchmarks/verifier_consistent_async_grpo_v4/README.md",
+        "benchmarks/verifier_consistent_async_grpo_v4/protocol.json",
+        "benchmarks/verifier_consistent_async_grpo_v5/README.md",
+        "benchmarks/verifier_consistent_async_grpo_v5/protocol.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/README.md",
+        "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v2.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v3.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4-runner-v2.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v5.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction.md",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-82106-corrected-failed-SHA256.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-82106-corrected-failure.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-82106-replay-order-v2-SHA256.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-recovery-correction-v2.md",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-recovery-correction.md",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-recovery-results-v6.md",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v2.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/crash-test-portability-v3.md",
+        "benchmarks/verifier_consistent_async_grpo_v6/final-independent-audit-v6-correction-v4.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/final-independent-audit-v6-correction-v5.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/final-independent-audit-v6-correction-v6.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/final-independent-audit-v6.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v1.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v2.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/pilot-artifact-index-v2.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/pilot-artifact-index-v3.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/pilot-artifact-index-v4.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/pilot-artifact-index-v5.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/pilot-audit-v2.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/pilot-gate-audit-82106-correction-v4.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/pilot-gate-audit-82106-correction-v5.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/pilot-gate-audit-82106-correction-v6.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/protocol.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/runner-output-safety-correction-v1.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/seed-82106-SHA256.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/seed-82107-SHA256.json",
+        "benchmarks/verifier_consistent_async_grpo_v6/sigkill-summary-v2.json",
+        "results/verifier_consistent_async_grpo_v6/audit-82106-first-attempt-failure.json",
+        "results/verifier_consistent_async_grpo_v6/crash-82106/first-attempt-failure.json",
+        "scripts/audit_verifier_consistent_async_grpo.py",
+        "scripts/benchmark_verifier_consistent_async_grpo.py",
+        "scripts/benchmark_verifier_consistent_grpo_sigkill.py",
+        "src/vare/engine.py",
+        "src/vare/promotion.py",
+        "tests/test_checkpoint_bound_promotion.py",
+        "tests/test_verifier_consistent_async_grpo_audit_safety.py",
+        "tests/test_verifier_consistent_async_grpo_controls.py",
+        "tests/test_verifier_consistent_async_grpo_crash_eval.py",
+        "tests/test_verifier_consistent_async_grpo_output_safety.py"
+      ],
+      "disposition": "EXTRACT",
+      "rationale": "Unique verifier-version-aware async GRPO evidence, but stacked on the historical real-agent-interface branch.",
+      "next_action": "Preserve experiment; extract independently useful systems code only after auditing exact parent delta.",
+      "latest_head_checks": {
+        "count": 20,
+        "states": {
+          "pass": 20
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631154/job/120915477725",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478248",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478298",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631238/job/120915477876",
+            "name": "actual-optimizer-and-recovery",
+            "state": "SUCCESS",
+            "workflow": "e2e-system-cpu"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915477994",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478179",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478183",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478129",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478150",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478221",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108631173/job/120915478270",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468418",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468504",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468124",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468439",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468413",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468323",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468346",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468545",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40108627793/job/120915468443",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 131,
+      "title": "Measure deterministic edit replay and recovery; pin E2E inventories",
+      "url": "https://github.com/mitukx/VARE/pull/131",
+      "draft": true,
+      "base": {
+        "branch": "codex/mlx-core-development-agent-feasibility-v1",
+        "sha": "071352981ad2e6bb1601ae50f935600f28aba8fc",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/hash-bound-agent-edit-v1",
+        "sha": "139de5381989531691673be08e906233dd00468c"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 0,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 20
+      },
+      "changed_file_count": 100,
+      "changed_files": [
+        ".github/workflows/ci.yml",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-1996-nested-parameter-tags/TASK.md",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-1996-nested-parameter-tags/evaluator/test_hidden.py",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-1996-nested-parameter-tags/protocol.lock.json",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-1996-nested-parameter-tags/protocol.lock.json.sha256",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-1996-nested-parameter-tags/task.json",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-2004-jamba-moe-routing/TASK.md",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-2004-jamba-moe-routing/evaluator/test_hidden.py",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-2004-jamba-moe-routing/protocol.lock.json",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-2004-jamba-moe-routing/protocol.lock.json.sha256",
+        "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-2004-jamba-moe-routing/task.json",
+        "docs/agent-edit-interface-systems-only-v1-report.md",
+        "protocols/agent_edit_interface_development_v1.json",
+        "protocols/agent_edit_interface_development_v1.json.sha256",
+        "protocols/agent_edit_interface_systems_only_v1.json",
+        "protocols/agent_edit_interface_systems_only_v1.json.sha256",
+        "protocols/archive/agent_edit_interface_systems_only_v1_pre-run.json",
+        "protocols/archive/agent_edit_interface_systems_only_v1_pre-run.json.sha256",
+        "pyproject.toml",
+        "results/agent-edit-interface-v1/format-calibration-pinned-v1.json",
+        "results/agent-edit-interface-v1/format-calibration.json",
+        "results/agent-edit-interface-v1/model-run-v1/manifest.json",
+        "results/agent-edit-interface-v1/model-run-v1/pilot-mlxlm-2004-lease-bound/resources.jsonl",
+        "results/agent-edit-interface-v1/model-run-v1/pilot-mlxlm-2004-lease-bound/setup-failure-attempt-1.json",
+        "results/agent-edit-interface-v1/model-run-v1/pilot-mlxlm-2004-lease-bound/setup-failure-attempt-2.json",
+        "results/agent-edit-interface-v1/model-run-v1/pilot-mlxlm-2004-lease-bound/setup-failure-attempt-3.json",
+        "results/agent-edit-interface-v1/model-run-v1/pilot-mlxlm-2004-lease-bound/stderr.log",
+        "results/agent-edit-interface-v1/model-run-v1/pilot-mlxlm-2004-lease-bound/stdout.log",
+        "results/agent-edit-interface-v1/model-run-v1/preflight-attempt-2/pip-freeze.txt",
+        "results/agent-edit-interface-v1/model-run-v1/preflight-attempt-2/setup-failure.json",
+        "results/agent-edit-interface-v1/model-run-v1/preflight-attempt-3/environment-preflight.json",
+        "results/agent-edit-interface-v1/model-run-v1/preflight-attempt-3/pip-freeze.txt",
+        "results/agent-edit-interface-v1/model-run-v1/preflight-attempt-4/environment-preflight.json",
+        "results/agent-edit-interface-v1/model-run-v1/preflight-attempt-4/pip-freeze.txt",
+        "results/agent-edit-interface-v1/model-run-v1/preflight/setup-failure-attempt-1.json",
+        "results/agent-edit-interface-v1/systems-only-v1-evidence-manifest.json",
+        "results/agent-edit-interface-v1/systems-only-v1-evidence-manifest.json.sha256",
+        "results/agent-edit-interface-v1/systems-only-v1-launch-failure.json",
+        "results/agent-edit-interface-v1/systems-only-v1-launch-failure.json.sha256",
+        "results/agent-edit-interface-v1/systems-only-v1/all-cell-results.json",
+        "results/agent-edit-interface-v1/systems-only-v1/artifact-manifest-v2.json",
+        "results/agent-edit-interface-v1/systems-only-v1/artifact-manifest-v2.json.sha256",
+        "results/agent-edit-interface-v1/systems-only-v1/artifact-manifest.json",
+        "results/agent-edit-interface-v1/systems-only-v1/artifact-manifest.json.sha256",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/1-mlxlm-2004-jamba-moe-routing-lease_bound_lines_v1/cell-result.json",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/1-mlxlm-2004-jamba-moe-routing-lease_bound_lines_v1/events.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/1-mlxlm-2004-jamba-moe-routing-lease_bound_lines_v1/trusted-grade.stderr.log",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/1-mlxlm-2004-jamba-moe-routing-lease_bound_lines_v1/trusted-grade.stdout.log",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/2-mlxlm-2004-jamba-moe-routing-legacy_structured_replace/cell-result.json",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/2-mlxlm-2004-jamba-moe-routing-legacy_structured_replace/events.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/2-mlxlm-2004-jamba-moe-routing-legacy_structured_replace/trusted-grade.stderr.log",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/2-mlxlm-2004-jamba-moe-routing-legacy_structured_replace/trusted-grade.stdout.log",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/3-mlxlm-1996-nested-parameter-tags-lease_bound_lines_v1/cell-result.json",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/3-mlxlm-1996-nested-parameter-tags-lease_bound_lines_v1/events.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/3-mlxlm-1996-nested-parameter-tags-lease_bound_lines_v1/trusted-grade.stderr.log",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/3-mlxlm-1996-nested-parameter-tags-lease_bound_lines_v1/trusted-grade.stdout.log",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/4-mlxlm-1996-nested-parameter-tags-legacy_structured_replace/cell-result.json",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/4-mlxlm-1996-nested-parameter-tags-legacy_structured_replace/events.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/4-mlxlm-1996-nested-parameter-tags-legacy_structured_replace/trusted-grade.stderr.log",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/4-mlxlm-1996-nested-parameter-tags-legacy_structured_replace/trusted-grade.stdout.log",
+        "results/agent-edit-interface-v1/systems-only-v1/asynchronous/mode-summary.json",
+        "results/agent-edit-interface-v1/systems-only-v1/independent-audit-v2.json",
+        "results/agent-edit-interface-v1/systems-only-v1/independent-audit.json",
+        "results/agent-edit-interface-v1/systems-only-v1/recovery-after-commit-before-grade/events.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/recovery-after-commit-before-grade/recovery.json",
+        "results/agent-edit-interface-v1/systems-only-v1/recovery-after-commit-before-grade/trusted-grade.stderr.log",
+        "results/agent-edit-interface-v1/systems-only-v1/recovery-after-commit-before-grade/trusted-grade.stdout.log",
+        "results/agent-edit-interface-v1/systems-only-v1/resources.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/1-mlxlm-2004-jamba-moe-routing-lease_bound_lines_v1/cell-result.json",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/1-mlxlm-2004-jamba-moe-routing-lease_bound_lines_v1/events.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/1-mlxlm-2004-jamba-moe-routing-lease_bound_lines_v1/trusted-grade.stderr.log",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/1-mlxlm-2004-jamba-moe-routing-lease_bound_lines_v1/trusted-grade.stdout.log",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/2-mlxlm-2004-jamba-moe-routing-legacy_structured_replace/cell-result.json",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/2-mlxlm-2004-jamba-moe-routing-legacy_structured_replace/events.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/2-mlxlm-2004-jamba-moe-routing-legacy_structured_replace/trusted-grade.stderr.log",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/2-mlxlm-2004-jamba-moe-routing-legacy_structured_replace/trusted-grade.stdout.log",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/3-mlxlm-1996-nested-parameter-tags-lease_bound_lines_v1/cell-result.json",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/3-mlxlm-1996-nested-parameter-tags-lease_bound_lines_v1/events.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/3-mlxlm-1996-nested-parameter-tags-lease_bound_lines_v1/trusted-grade.stderr.log",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/3-mlxlm-1996-nested-parameter-tags-lease_bound_lines_v1/trusted-grade.stdout.log",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/4-mlxlm-1996-nested-parameter-tags-legacy_structured_replace/cell-result.json",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/4-mlxlm-1996-nested-parameter-tags-legacy_structured_replace/events.jsonl",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/4-mlxlm-1996-nested-parameter-tags-legacy_structured_replace/trusted-grade.stderr.log",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/4-mlxlm-1996-nested-parameter-tags-legacy_structured_replace/trusted-grade.stdout.log",
+        "results/agent-edit-interface-v1/systems-only-v1/synchronous/mode-summary.json",
+        "results/agent-edit-interface-v1/systems-only-v1/tokenizer.stderr.log",
+        "results/agent-edit-interface-v1/task-qualification/control-reassessment-v1.json",
+        "results/agent-edit-interface-v1/task-qualification/exposure-audit-v1.json",
+        "results/agent-edit-interface-v1/task-qualification/exposure-audit-v2.json",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-baseline-attempt-2/result.json",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-baseline-attempt-2/stderr.log",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-baseline-attempt-2/stdout.log",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-baseline-attempt-2/time.log",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-baseline-attempt-3/result.json",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-baseline-attempt-3/stderr.log",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-baseline-attempt-3/stdout.log",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-baseline-attempt-3/time.log",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-fix-attempt-2/result.json",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-fix-attempt-2/stderr.log",
+        "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-fix-attempt-2/stdout.log"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Draft hash-bound edit/recovery evidence stacked on an older MLX feasibility branch.",
+      "next_action": "Keep historical inventory fixed; extract reusable recovery tests only after a main-based audit.",
+      "latest_head_checks": {
+        "count": 20,
+        "states": {
+          "pass": 20
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475653/job/121533450644",
+            "name": "actual-optimizer-and-recovery",
+            "state": "SUCCESS",
+            "workflow": "e2e-system-cpu"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451621",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475567/job/121533450709",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451248",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451677",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451704",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451638",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451586",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451594",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451689",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311475762/job/121533451693",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421477",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421161",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421447",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421528",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421421",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421585",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421498",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421495",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40311466993/job/121533421725",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 133,
+      "title": "Add bounded source navigation for repair agents",
+      "url": "https://github.com/mitukx/VARE/pull/133",
+      "draft": false,
+      "base": {
+        "branch": "codex/mlx-pr4748-qwen3-pilot-v1",
+        "sha": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/source-navigation-v1",
+        "sha": "e8ab4705b84d82cd79e2883c391083087e82b4e8"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 2,
+        "unresolved": 2
+      },
+      "ci_contexts": {
+        "SUCCESS": 20
+      },
+      "changed_file_count": 8,
+      "changed_files": [
+        ".github/workflows/e2e-system-cpu.yml",
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/benchmark_e2e_rl_continuation.py",
+        "scripts/run_local_agent.py",
+        "src/vare/agent_task_contract.py",
+        "src/vare/source_navigation_v1.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_source_navigation_v1.py"
+      ],
+      "disposition": "FIX",
+      "rationale": "Source navigation contribution has 2 unresolved P2 threads and depends on closed #132 lineage.",
+      "next_action": "Resolve index-output budget and transient index-rebuild recovery findings; extract stable code from main.",
+      "latest_head_checks": {
+        "count": 20,
+        "states": {
+          "pass": 20
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669721/job/122367402473",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669721/job/122367403142",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669721/job/122367402651",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669903/job/122367403141",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669884/job/122367402599",
+            "name": "actual-optimizer-and-recovery",
+            "state": "SUCCESS",
+            "workflow": "e2e-system-cpu"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669721/job/122367402749",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669721/job/122367402136",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669721/job/122367402591",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669721/job/122367402759",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669721/job/122367402694",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554669721/job/122367402877",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554662104/job/122367374948",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554662104/job/122367375322",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554662104/job/122367375501",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554662104/job/122367375572",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554662104/job/122367375243",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554662104/job/122367375216",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554662104/job/122367375224",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554662104/job/122367375482",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40554662104/job/122367375267",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 135,
+      "title": "Add process-creation boundary preflight for 47468 v4",
+      "url": "https://github.com/mitukx/VARE/pull/135",
+      "draft": true,
+      "base": {
+        "branch": "codex/transformers-47468-qualification-v1",
+        "sha": "d8636def094cd83a2010980570a5c4804725166a",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/transformers-47468-qualification-v4",
+        "sha": "b258c69fc0295e421eab3aaae965d70b693cd1e6"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 0,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 19
+      },
+      "changed_file_count": 13,
+      "changed_files": [
+        ".gitignore",
+        "results/transformers-47468-development-qualification-v4/README.md",
+        "results/transformers-47468-development-qualification-v4/environment/observed-host-pip-freeze.txt",
+        "results/transformers-47468-development-qualification-v4/environment/observed-overlay-pip-freeze.txt",
+        "results/transformers-47468-development-qualification-v4/locks/host-pip-freeze.txt",
+        "results/transformers-47468-development-qualification-v4/locks/overlay-pip-freeze.txt",
+        "results/transformers-47468-development-qualification-v4/protocol/candidate-prompt.md",
+        "results/transformers-47468-development-qualification-v4/protocol/exposure-scan.json",
+        "results/transformers-47468-development-qualification-v4/protocol/protocol-v4.json",
+        "results/transformers-47468-development-qualification-v4/protocol/protocol-v4.lock.json",
+        "results/transformers-47468-development-qualification-v4/records/runtime-inventory-observation-v3.json",
+        "scripts/run_transformers_47468_qualification_v4.py",
+        "tests/test_transformers_47468_qualification_v4.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Draft process-boundary preflight stacked on a prior Transformers qualification branch.",
+      "next_action": "Retain as qualification evidence; extract only a narrowly reusable preflight after parent audit.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374088",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374227",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080550/job/121237373814",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374166",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374195",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374119",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374089",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374201",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374224",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216080560/job/121237374107",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363207",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363183",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363298",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363081",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363308",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363008",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363178",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363218",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40216077244/job/121237363198",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 136,
+      "title": "Harden source navigation syntax checks",
+      "url": "https://github.com/mitukx/VARE/pull/136",
+      "draft": false,
+      "base": {
+        "branch": "codex/source-navigation-v1",
+        "sha": "a65d59e5704b84a934a49385551a8d2311a01575",
+        "open_pr_dependency": 133
+      },
+      "head": {
+        "branch": "codex/navigation-symlink-fix-v1",
+        "sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 0,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 19
+      },
+      "changed_file_count": 3,
+      "changed_files": [
+        "scripts/run_local_agent.py",
+        "tests/test_agent_syntax_tool_v1.py",
+        "tests/test_source_navigation_v1.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Navigation syntax hardening is stacked on #133 ancestry; CI green, no unresolved threads.",
+      "next_action": "Preserve dependency/source identity; integrate after #133 review findings are resolved or extract minimal change.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202983",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230203029",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708887/job/121230202797",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202995",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202985",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230203053",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230203017",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202833",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202969",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213708876/job/121230202981",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174281",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174398",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174380",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174406",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174351",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174389",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174521",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174472",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40213698740/job/121230174140",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 137,
+      "title": "Fix source-navigation review findings",
+      "url": "https://github.com/mitukx/VARE/pull/137",
+      "draft": false,
+      "base": {
+        "branch": "codex/navigation-symlink-fix-v1",
+        "sha": "eaf3fd58ddd6fdf67f6d17d2f25a67955784a84f",
+        "open_pr_dependency": 136
+      },
+      "head": {
+        "branch": "codex/navigation-integrity-fixes-v1",
+        "sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 0,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 28,
+        "FAILURE": 1
+      },
+      "changed_file_count": 8,
+      "changed_files": [
+        "scripts/audit_e2e_rl_continuation.py",
+        "scripts/benchmark_e2e_rl_continuation.py",
+        "scripts/run_local_agent.py",
+        "src/vare/agent_task_contract.py",
+        "src/vare/source_navigation_v1.py",
+        "tests/test_e2e_rl_continuation.py",
+        "tests/test_run_local_agent_tool_format.py",
+        "tests/test_source_navigation_v1.py"
+      ],
+      "disposition": "FIX",
+      "rationale": "Navigation integrity fix has 1 failing check context and is stacked on #136; no unresolved threads.",
+      "next_action": "Inspect and repair the failed exact-head check, then independently review the stack before extraction.",
+      "latest_head_checks": {
+        "count": 20,
+        "states": {
+          "pass": 20
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115769",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115831",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284302/job/121526115801",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284144/job/121526115125",
+            "name": "actual-optimizer-and-recovery",
+            "state": "SUCCESS",
+            "workflow": "e2e-system-cpu"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115316",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115841",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115807",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115736",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115823",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115578",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309284221/job/121526115550",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096713",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096575",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096491",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096436",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096466",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096463",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096492",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096088",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40309278733/job/121526096659",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 139,
+      "title": "Fix navigation regressions and measure fresh Development agent failures",
+      "url": "https://github.com/mitukx/VARE/pull/139",
+      "draft": true,
+      "base": {
+        "branch": "codex/navigation-integrity-fixes-v1",
+        "sha": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1",
+        "open_pr_dependency": 137
+      },
+      "head": {
+        "branch": "codex/development-navigation-campaign-v1",
+        "sha": "cac34bc5ec2f5580582e5a49825ae3b4a6e5147f"
+      },
+      "merge_state": "CLEAN",
+      "review_decision": null,
+      "review_threads": {
+        "total": 0,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 20
+      },
+      "changed_file_count": 100,
+      "changed_files": [
+        ".github/workflows/ci.yml",
+        "benchmarks/corrected_template_agent_v1/UPSTREAM_LICENSE",
+        "benchmarks/corrected_template_agent_v1/campaign-protocol.json",
+        "benchmarks/corrected_template_agent_v1/checkpoint-shards-baseline.py.txt",
+        "benchmarks/corrected_template_agent_v1/checkpoint-shards-incorrect-mutant.py.txt",
+        "benchmarks/corrected_template_agent_v1/checkpoint-shards-upstream-fixed.py.txt",
+        "benchmarks/corrected_template_agent_v1/gqa-repeat-baseline.py.txt",
+        "benchmarks/corrected_template_agent_v1/gqa-repeat-incorrect-mutant.py.txt",
+        "benchmarks/corrected_template_agent_v1/gqa-repeat-upstream-fixed.py.txt",
+        "benchmarks/corrected_template_agent_v1/qualification-protocol-v2.json",
+        "benchmarks/corrected_template_agent_v1/qualification-protocol.json",
+        "benchmarks/corrected_template_agent_v1/qwen25-corrected-tokenizer-config.json",
+        "benchmarks/corrected_template_agent_v1/tasks.json",
+        "benchmarks/corrected_template_agent_v2/campaign-protocol-v2.json",
+        "benchmarks/corrected_template_agent_v2/ema-bias-baseline.py.txt",
+        "benchmarks/corrected_template_agent_v2/ema-bias-incorrect-mutant.py.txt",
+        "benchmarks/corrected_template_agent_v2/ema-bias-known-fix.py.txt",
+        "benchmarks/corrected_template_agent_v2/label-smooth-baseline.py.txt",
+        "benchmarks/corrected_template_agent_v2/label-smooth-incorrect-mutant.py.txt",
+        "benchmarks/corrected_template_agent_v2/label-smooth-known-fix.py.txt",
+        "benchmarks/corrected_template_agent_v2/qualification-protocol.json",
+        "benchmarks/corrected_template_agent_v2/qwen25-corrected-tokenizer-config.json",
+        "benchmarks/corrected_template_agent_v2/tasks.json",
+        "benchmarks/corrected_template_agent_v3/campaign-protocol-v3.json",
+        "benchmarks/corrected_template_agent_v3/campaign-protocol-v4.json",
+        "benchmarks/corrected_template_agent_v3/isolation-protocol.json",
+        "benchmarks/corrected_template_agent_v3/qualification-protocol.json",
+        "benchmarks/vare_development_repair_v1/campaign-cpu-protocol.json",
+        "benchmarks/vare_development_repair_v1/campaign-cpu-v2-protocol.json",
+        "benchmarks/vare_development_repair_v1/campaign-protocol.json",
+        "benchmarks/vare_development_repair_v1/campaign-qwen3-cpu-protocol.json",
+        "benchmarks/vare_development_repair_v1/manifest-baseline.py.txt",
+        "benchmarks/vare_development_repair_v1/navigation-baseline.py.txt",
+        "benchmarks/vare_development_repair_v1/qualification-protocol.json",
+        "docs/vare-development-repair-v1-report.md",
+        "docs/xai-flagship-research-and-pr-consolidation-20261027.md",
+        "pyproject.toml",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/agent-record.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/events.jsonl",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/grading/process.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/grading/stderr.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/grading/stdout.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/preflight.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/process.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/result.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/stderr.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/stdout.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/task/task.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-01-checkpoint-shards-original/workspace/mlx_lm/utils.py",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/agent-record.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/events.jsonl",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/grading/process.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/grading/stderr.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/grading/stdout.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/preflight.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/process.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/result.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/stderr.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/stdout.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/task/task.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-02-gqa-repeat-corrected/workspace/gqa_repeat.py",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/agent-record.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/events.jsonl",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/grading/process.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/grading/stderr.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/grading/stdout.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/preflight.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/process.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/result.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/stderr.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/stdout.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/task/task.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-03-gqa-repeat-original/workspace/gqa_repeat.py",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/agent-record.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/events.jsonl",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/grading/process.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/grading/stderr.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/grading/stdout.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/preflight.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/process.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/result.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/stderr.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/stdout.log",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/task/task.json",
+        "results/corrected-template-agent-v1/model-run-1/cell-04-checkpoint-shards-corrected/workspace/mlx_lm/utils.py",
+        "results/corrected-template-agent-v1/model-run-1/protocol.json",
+        "results/corrected-template-agent-v1/model-run-1/summary.json",
+        "results/corrected-template-agent-v1/model-run-1/workspace-vcs.json",
+        "results/corrected-template-agent-v1/qualification-run-1/checkpoint-shards/baseline.json",
+        "results/corrected-template-agent-v1/qualification-run-1/checkpoint-shards/incorrect-mutant.json",
+        "results/corrected-template-agent-v1/qualification-run-1/checkpoint-shards/known-fix.json",
+        "results/corrected-template-agent-v1/qualification-run-1/gqa-repeat/baseline.json",
+        "results/corrected-template-agent-v1/qualification-run-1/gqa-repeat/incorrect-mutant.json",
+        "results/corrected-template-agent-v1/qualification-run-1/gqa-repeat/known-fix.json",
+        "results/corrected-template-agent-v1/qualification-run-1/summary.json",
+        "results/corrected-template-agent-v1/qualification-run-2/checkpoint-shards/baseline.json",
+        "results/corrected-template-agent-v1/qualification-run-2/checkpoint-shards/incorrect-mutant.json",
+        "results/corrected-template-agent-v1/qualification-run-2/checkpoint-shards/known-fix.json",
+        "results/corrected-template-agent-v1/qualification-run-2/gqa-repeat/baseline.json",
+        "results/corrected-template-agent-v1/qualification-run-2/gqa-repeat/incorrect-mutant.json"
+      ],
+      "disposition": "EXTRACT",
+      "rationale": "Draft controller and experiment changes are stacked on #137; CI green, but runtime/evidence scope is mixed.",
+      "next_action": "Keep experimental results immutable; extract only validated controller/runtime changes into focused main-based integration.",
+      "latest_head_checks": {
+        "count": 20,
+        "states": {
+          "pass": 20
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014919/job/122665298397",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014919/job/122665298507",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014842/job/122665298103",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014836/job/122665297967",
+            "name": "actual-optimizer-and-recovery",
+            "state": "SUCCESS",
+            "workflow": "e2e-system-cpu"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014919/job/122665298450",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014919/job/122665298187",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014919/job/122665298490",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014919/job/122665298480",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014919/job/122665298526",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014919/job/122665298423",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643014919/job/122665298364",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643007861/job/122665274789",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643007861/job/122665274816",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643007861/job/122665274827",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643007861/job/122665274878",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643007861/job/122665274888",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643007861/job/122665274587",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643007861/job/122665274872",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643007861/job/122665274810",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40643007861/job/122665274898",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 140,
+      "title": "Reject empty coding-agent evidence manifests",
+      "url": "https://github.com/mitukx/VARE/pull/140",
+      "draft": false,
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/evidence-manifest-integrity-v1",
+        "sha": "34f972eb2a300711f36fd81a72b6948528dfebad"
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_threads": {
+        "total": 1,
+        "unresolved": 1
+      },
+      "ci_contexts": {
+        "SUCCESS": 19
+      },
+      "changed_file_count": 2,
+      "changed_files": [
+        "scripts/verify_coding_agent_evidence_manifest_v1.py",
+        "tests/test_coding_agent_evidence_manifest.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "The exact head contains the maintainer-described fix for unsafe live-path/archive fallback and duplicate JSON keys; the P2 thread remains unresolved for independent verification, and required approval is absent.",
+      "next_action": "An independent reviewer should verify the symlinked-file/ancestor and duplicate-key regressions, then resolve the thread and approve if satisfied.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392020",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392041",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716577/job/122113391859",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392044",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392003",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392173",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113391990",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113392018",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113391894",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481716612/job/122113391609",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372672",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372705",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372577",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372733",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372392",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372701",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372748",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372665",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40481710700/job/122113372639",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 142,
+      "title": "Publish verified external repair campaign evidence",
+      "url": "https://github.com/mitukx/VARE/pull/142",
+      "draft": true,
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/sprint-iv-evidence-public-v1",
+        "sha": "2251087c41f17220a547f4459be698d34711534b"
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_threads": {
+        "total": 0,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 19
+      },
+      "changed_file_count": 100,
+      "changed_files": [
+        "docs/sprint-iv-external-coding-agent-results-20261027.md",
+        "docs/sprint-vi-research-and-integration-results-20261028.md",
+        "docs/sprint-vii-from-valid-tool-calls-to-verified-repairs-20261028.md",
+        "docs/vare-sprint-viii-research-report-20261028.md",
+        "results/sprint_iv_20261027/exposure-disposition-append-v1.json",
+        "results/sprint_iv_20261027/exposure-disposition-append-v1.sha256",
+        "results/sprint_iv_20261027/exposure-disposition-append-v2.json",
+        "results/sprint_iv_20261027/exposure-disposition-append-v2.json.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/README.md",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/SHA256SUMS",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/01-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-432/attempt-summary.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/01-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-432/candidate.diff",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/01-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-432/command.normalized.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/01-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-432/events.jsonl",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/01-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-432/resource-monitor.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/01-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-432/stderr.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/02-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-432/attempt-summary.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/02-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-432/candidate.diff",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/02-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-432/command.normalized.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/02-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-432/events.jsonl",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/02-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-432/resource-monitor.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/02-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-432/stderr.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/03-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-431/attempt-summary.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/03-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-431/candidate.diff",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/03-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-431/command.normalized.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/03-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-431/events.jsonl",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/03-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-431/resource-monitor.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/03-mlx-lm-1926-falcon-h1-uncached-behavior-v2-autonomous-seed-431/stderr.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/04-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-431/attempt-summary.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/04-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-431/candidate.diff",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/04-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-431/command.normalized.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/04-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-431/events.jsonl",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/04-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-431/resource-monitor.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/04-mlx-lm-1926-falcon-h1-uncached-behavior-v2-localized-seed-431/stderr.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/05-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-431/attempt-summary.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/05-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-431/candidate.diff",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/05-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-431/command.normalized.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/05-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-431/events.jsonl",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/05-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-431/resource-monitor.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/05-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-431/stderr.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/06-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-431/attempt-summary.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/06-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-431/candidate.diff",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/06-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-431/command.normalized.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/06-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-431/events.jsonl",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/06-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-431/resource-monitor.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/06-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-431/stderr.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/07-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-432/attempt-summary.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/07-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-432/candidate.diff",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/07-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-432/command.normalized.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/07-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-432/events.jsonl",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/07-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-432/resource-monitor.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/07-mlx-lm-1913-minicpm3-left-padding-behavior-v2-autonomous-seed-432/stderr.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/08-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-432/attempt-summary.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/08-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-432/candidate.diff",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/08-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-432/command.normalized.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/08-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-432/events.jsonl",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/08-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-432/resource-monitor.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/attempts/08-mlx-lm-1913-minicpm3-left-padding-behavior-v2-localized-seed-432/stderr.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/campaign-reconciliation-v2.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/localization/mlx-lm-1913-minicpm3-left-padding-behavior-v2/localization.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/localization/mlx-lm-1926-falcon-h1-uncached-behavior-v2/localization.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/model-snapshot-manifest.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/prelaunch-integrity-audit-v1.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/protocol-v1-invalidated.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/protocol.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/protocol.sha256",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/qualification-controls-summary.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/tasks/mlx-lm-1913-minicpm3-left-padding-behavior-v2/TASK.md",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/tasks/mlx-lm-1913-minicpm3-left-padding-behavior-v2/task.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/tasks/mlx-lm-1913-minicpm3-left-padding-behavior-v2/test_public.py",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/tasks/mlx-lm-1926-falcon-h1-uncached-behavior-v2/TASK.md",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/tasks/mlx-lm-1926-falcon-h1-uncached-behavior-v2/task.json",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/tasks/mlx-lm-1926-falcon-h1-uncached-behavior-v2/test_public.py",
+        "results/sprint_iv_20261027/external-repair-evidence-public-v1/verify_evidence.py",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/README.md",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/SHA256SUMS",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/adapter-manifest.json",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/data/train.jsonl",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/execution-preflight-v2.json",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/execution-protocol-v2.json",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/resources.jsonl",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/run_sft_supervised.py",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/train.stderr.log",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/train.stdout.redacted.log",
+        "results/sprint_iv_20261027/mlsys-sft-train-only-v1/training-audit-v2.json",
+        "results/sprint_vi_20261028/README.md",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/agent.json",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/attempt-assessment.json",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/candidate.diff",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/command.json",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/events.jsonl",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/monitor-wrapper.stderr.log",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/monitor-wrapper.stdout.log",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/resource-monitor.json",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/stderr.log",
+        "results/sprint_vi_20261028/campaign_49696/attempts/01-A_autonomous/stdout.log",
+        "results/sprint_vi_20261028/campaign_49696/attempts/02-B_source_read_gate/agent.json",
+        "results/sprint_vi_20261028/campaign_49696/attempts/02-B_source_read_gate/attempt-assessment.json",
+        "results/sprint_vi_20261028/campaign_49696/attempts/02-B_source_read_gate/candidate.diff",
+        "results/sprint_vi_20261028/campaign_49696/attempts/02-B_source_read_gate/command.json"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Draft evidence PR has an explicit independent source-split audit blocker and review-required state.",
+      "next_action": "Append only clearly separated evidence; retain Draft until the Falcon-H1 split audit and required review are complete.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646023977/job/122674917398",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646023977/job/122674917451",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646023977/job/122674917401",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646024024/job/122674916945",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646023977/job/122674917363",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646023977/job/122674917358",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646023977/job/122674917287",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646023977/job/122674917471",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646023977/job/122674916902",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646023977/job/122674917339",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646018227/job/122674898209",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646018227/job/122674898145",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646018227/job/122674898172",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646018227/job/122674898200",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646018227/job/122674897946",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646018227/job/122674898135",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646018227/job/122674898159",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646018227/job/122674898204",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40646018227/job/122674898072",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    },
+    {
+      "number": 143,
+      "title": "Export candidate diffs from pinned workspaces",
+      "url": "https://github.com/mitukx/VARE/pull/143",
+      "draft": false,
+      "base": {
+        "branch": "main",
+        "sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+        "open_pr_dependency": null
+      },
+      "head": {
+        "branch": "codex/external-diff-export-main-v1",
+        "sha": "6266ec0a10920ae9ef95ccb528145ef14a452e39"
+      },
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "review_threads": {
+        "total": 0,
+        "unresolved": 0
+      },
+      "ci_contexts": {
+        "SUCCESS": 19
+      },
+      "changed_file_count": 4,
+      "changed_files": [
+        "scripts/pinned_workspace_git.py",
+        "scripts/run_local_agent.py",
+        "scripts/verify_agent_workspace.py",
+        "tests/test_run_local_agent_tool_format.py"
+      ],
+      "disposition": "HOLD",
+      "rationale": "Main-based candidate-diff export; exact-head CI green but independent approval is required.",
+      "next_action": "Request eligible reviewer; merge only after approval and full diff/source-integrity review.",
+      "latest_head_checks": {
+        "count": 19,
+        "states": {
+          "pass": 19
+        },
+        "checks": [
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394224",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394004",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394319",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147393978",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147393899",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491829961/job/122147393111",
+            "name": "calibrated-cpu-tasks",
+            "state": "SUCCESS",
+            "workflow": "cpu-evidence"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394105",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394128",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394178",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491830035/job/122147394041",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375208",
+            "name": "test (3.12)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375251",
+            "name": "test (3.13)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375367",
+            "name": "lint",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375249",
+            "name": "test (3.11)",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375333",
+            "name": "typecheck",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375334",
+            "name": "rvl-inference-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375314",
+            "name": "blob-budget",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375383",
+            "name": "seeded-summary-cpu",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          },
+          {
+            "bucket": "pass",
+            "link": "https://github.com/mitukx/VARE/actions/runs/40491824592/job/122147375042",
+            "name": "math500-grader",
+            "state": "SUCCESS",
+            "workflow": "ci"
+          }
+        ],
+        "error": null
+      },
+      "ci_rollup_note": "latest gh pr checks view; historical statusCheckRollup may include superseded runs"
+    }
+  ],
+  "check_source": "gh pr checks for current PR heads; GraphQL review thread counts and exact branch SHAs"
+}

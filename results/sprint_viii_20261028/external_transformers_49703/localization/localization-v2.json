@@ -1,0 +1,22 @@
+{
+  "algorithm": "task_prompt_ast_entity_window_v1",
+  "base_revision": "HEAD",
+  "content": "\n        return outputs_mask, attention_mask\n\n\nclass Mask2FormerTransformerModule(nn.Module):\n    \"\"\"\n    The Mask2Former's transformer module.\n    \"\"\"\n\n    def __init__(self, in_features: int, config: Mask2FormerConfig):\n        super().__init__()\n        hidden_dim = config.hidden_dim\n        self.num_feature_levels = 3\n        self.position_embedder = Mask2FormerSinePositionEmbedding(\n            num_position_features=hidden_dim // 2, normalize=True\n        )\n        self.queries_embedder = nn.Embedding(config.num_queries, hidden_dim)\n        self.queries_features = nn.Embedding(config.num_queries, hidden_dim)\n        self.input_projections = []\n\n        for _ in range(self.num_feature_levels):\n            if in_features != hidden_dim or config.enforce_input_projection:\n                self.input_projections.append(nn.Conv2d(in_features, hidden_dim, kernel_size=1))\n            else:\n                self.input_projections.append(nn.Sequential())\n\n        self.decoder = Mask2FormerMaskedAttentionDecoder(config=config)\n        self.level_embed = nn.Embedding(self.num_feature_levels, hidden_dim)\n\n    def forward(\n        self,\n        multi_scale_features: list[Tensor],\n        mask_features: Tensor,\n        output_hidden_states: bool = False,\n        output_attentions: bool = False,\n    ) -> Mask2FormerMaskedAttentionDecoderOutput:\n        multi_stage_features = []\n        multi_stage_positional_embeddings = []\n        size_list = []\n\n        for i in range(self.num_feature_levels):\n            size_list.append(multi_scale_features[i].shape[-2:])\n            multi_stage_positional_embeddings.append(\n                self.position_embedder(\n                    multi_scale_features[i].shape, multi_scale_features[i].device, multi_scale_features[i].dtype, None\n                ).flatten(2)\n            )\n            multi_stage_features.append(\n                self.input_projections[i](multi_scale_features[i]).flatten(2)\n                + self.level_embed.weight[i][None, :, None]\n            )\n\n            # Permute  NxCxHW to HWxNxC\n            multi_stage_positional_embeddings[-1] = multi_stage_positional_embeddings[-1].permute(2, 0, 1)\n            multi_stage_features[-1] = multi_stage_features[-1].permute(2, 0, 1)\n\n        _, batch_size, _ = multi_stage_features[0].shape\n\n        # [num_queries, batch_size, num_channels]\n        query_embeddings = self.queries_embedder.weight.unsqueeze(1).repeat(1, batch_size, 1)\n        query_features = self.queries_features.weight.unsqueeze(1).repeat(1, batch_size, 1)\n\n        decoder_output = self.decoder(\n            inputs_embeds=query_features,\n            multi_stage_positional_embeddings=multi_stage_positional_embeddings,\n            pixel_embeddings=mask_features,\n            encoder_hidden_states=multi_stage_features,\n            query_position_embeddings=query_embeddings,\n            feature_size_list=size_list,\n            output_hidden_states=output_hidden_states,\n            output_attentions=output_attentions,\n            return_dict=True,\n        )\n\n        return decoder_output\n\n\n@auto_docstring\nclass Mask2FormerPreTrainedModel(PreTrainedModel):\n    config: Mask2FormerConfig\n",
+  "content_sha256": "731e97c7a4769a11c2cf9c3b8595e901f1ac0f9c3d1d6a846c42cc9543f47ec9",
+  "end_line": 2140,
+  "known_fix_or_grader_read": false,
+  "matched_entity": "Mask2FormerTransformerModule",
+  "matched_node_kind": "ClassDef",
+  "path": "src/transformers/models/mask2former/modeling_mask2former.py",
+  "schema_version": 2,
+  "selection_inputs": [
+    "task_prompt_inline_code_entities",
+    "candidate_source_ast",
+    "editable_path_from_task_metadata"
+  ],
+  "source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+  "start_line": 2061,
+  "task_id": "transformers-49703-mask2former-projection-registration-development-v2",
+  "task_prompt_sha256": "3207c75dedcfb78676aa6d8b3edbe721eb35ab3ed5767884ee7dcc35683456f3",
+  "window_lines": 80
+}

@@ -1,0 +1,116 @@
+{
+  "change_control": "Only the canonical-diff command now explicitly includes --exit-code; fixture bytes, expected outcomes, grader, edit operation, and resource gates are unchanged. Earlier failures remain immutable.",
+  "cheapest_falsification": "One synthetic clamp source read/edit plus a non-executing grader check; any failure of the conjunctive E0 conditions is NO-GO.",
+  "code_paths": {
+    "agent_runner": "scripts/run_local_agent.py",
+    "e0_test": "tests/test_sprint_vii_e0.py",
+    "function_edit": "src/vare/agent_function_edit_v1.py",
+    "function_edit_test": "tests/test_agent_function_edit_v2.py",
+    "grader": "scripts/sprint_vii_e0_grader.py",
+    "runner": "scripts/run_sprint_vii_e0.py",
+    "schema_slot_test": "tests/test_schema_slot_protocol.py",
+    "schema_slots": "src/vare/schema_slot_protocol.py",
+    "transactional_edit": "src/vare/agent_edit_v2.py"
+  },
+  "code_sha256": {
+    "agent_runner": "3ba2ce0114927893d02a3e366276c9ea3ded6051858429971e75b25c1d6414cb",
+    "e0_test": "f48d5d84ddbbe8448bed4c64fd46ac0937a5fb1c84dc53981ce029e5b852fc72",
+    "function_edit": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+    "function_edit_test": "572dbbeece49c3f9619e964196e78e6adf093c1470868c308d6f065abbdb9b7f",
+    "grader": "fd94406bef984ef74489f39aa72d40126c1ba7db5ac4b76d9ceb99b7c23b7d22",
+    "runner": "be5525cd816380e7bad7dc7e5665868951e0a89c1752b497efa1f6671bda49aa",
+    "schema_slot_test": "6c9aaaec6ea792a368432f403caa8e0f570ca058498eb9e5c527201f163ea8c0",
+    "schema_slots": "d677e475460a9d9d9492cd74ef9c209bd78bdb2e950a8a02225cc82ce9b7dbaa",
+    "transactional_edit": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0"
+  },
+  "decision_consequence": {
+    "if_fail": "repair the minimal interface/evaluator boundary and rerun only after a new protocol version; no external task or Coding RL claim",
+    "if_pass": "permit a separately frozen synthetic model-tool compatibility feasibility test only if an exact local model/backend is already available within current resource guard; no external task is automatically authorized"
+  },
+  "falsifiable_hypothesis": "The current hash-bound function-body edit path can read a pinned source function, atomically apply an exact line-array repair, produce a canonical candidate diff, and receive an independently verifiable grade while rejecting wrong, malformed, stale, symlinked, and spoofing inputs.",
+  "fixture_id": "vare-sprint-vii-e0-clamp-v1",
+  "frozen_at_utc": "2026-10-28T01:23:33.198931Z",
+  "go_criterion": "Baseline grades FAIL; the exact known repair grades PASS; incorrect mutant grades FAIL; actual edit changes tracked bytes under the leased source hash; canonical Git diff and base identity verify; invalid line array, stale lease, symlink, grader spoof, and mismatched grader hash are rejected without unintended writes or candidate execution.",
+  "independent_grader": {
+    "accepted_module_shape": "exactly one undecorated top-level function clamp(value), one return statement, and expression nodes from the grader allowlist",
+    "execution_boundary": "candidate code is parsed and evaluated only by an explicit restricted AST interpreter; no import, exec, eval, compile, pytest, or candidate subprocess",
+    "frozen_cases": [
+      {
+        "expected": 0,
+        "input": -7
+      },
+      {
+        "expected": 0,
+        "input": -1
+      },
+      {
+        "expected": 0,
+        "input": 0
+      },
+      {
+        "expected": 1,
+        "input": 1
+      },
+      {
+        "expected": 7,
+        "input": 7
+      }
+    ],
+    "spoof_mutant": "top-level pathlib import/write followed by the known-fix function; must be rejected and marker must not exist",
+    "wrong_mutant": "return max(1, value)"
+  },
+  "negative_controls": [
+    "invalid body_lines containing a physical newline",
+    "stale whole-file hash after read",
+    "candidate.py symlink",
+    "wrong semantic mutant",
+    "grader spoof source",
+    "candidate source hash mismatch"
+  ],
+  "no_go_criterion": "Any primary condition fails, the trusted grader source hash changes, workspace identity is ambiguous, or execution exceeds the fixed 60-second / 5-MiB artifact budget.",
+  "primary_outcome": "All declared controls in e0-result.json pass; no partial success counts as E0 completion.",
+  "protocol_id": "vare.sprint-vii.e0-edit-acceptance.v3",
+  "purpose": "Deterministic controller/evaluator acceptance only; not a repository task and not a capability result.",
+  "reproduction": "python scripts/run_sprint_vii_e0.py --protocol results/sprint_vii_20261028/protocols/e0_v1.json --output results/sprint_vii_20261028/e0_run_01",
+  "resource_budget": {
+    "containers": "none",
+    "host_swap_growth": "no model allocation; record system state before/after; stop on unexpected pressure",
+    "maximum_result_artifact_bytes": 5242880,
+    "models": "none",
+    "network": "none during E0 execution",
+    "stop_rule": "stop immediately on any workspace identity failure, grader hash change, symlink-policy failure, or elapsed wall clock above 60 seconds",
+    "wall_clock_seconds": 60
+  },
+  "scope": {
+    "body_lines": [
+      "    return max(0, value)"
+    ],
+    "branch": "codex/development-navigation-campaign-v1",
+    "candidate_hidden_from_workspace": [
+      "grader implementation",
+      "expected outputs",
+      "known fix source"
+    ],
+    "candidate_visible_files": [
+      "candidate.py containing baseline clamp(value) -> value"
+    ],
+    "model_inference": "NOT_RUN",
+    "repository_worktree_head": "cde7e56f9f7664a7fd30b99f2295975e063ed37a",
+    "source_edit_calls": [
+      "list_functions",
+      "read_function",
+      "replace_function_body_transactional"
+    ],
+    "task_family": "synthetic-only fixture; no external Development or held-out family consumed",
+    "working_tree": "pre-existing dirty and untracked files retained; code_sha256 pins every runtime and test input used by this E0 run"
+  },
+  "source": {
+    "baseline_sha256": "aba6e4174fa8d05b0359fd2c736c686c6a1fbb5784f7a62808495acdeea7ade2",
+    "baseline_utf8": "def clamp(value):\\n    return value\\n",
+    "known_fix_sha256": "ab83f3ea53bd1431ce25833f369737955ece4f6e8566a687e4e68ba4c4499d1f",
+    "known_fix_utf8": "def clamp(value):\\n    return max(0, value)\\n",
+    "wrong_mutant_sha256": "ac72c16ad1dd02791b5bb39c2f19463e319f008043ff03a942d66b0304dc091c",
+    "wrong_mutant_utf8": "def clamp(value):\\n    return max(1, value)\\n"
+  },
+  "supersedes_execution_attempt": "results/sprint_vii_20261028/e0_run_02 (retained FAIL; canonical-diff condition assumed a nonzero status without passing Git --exit-code)"
+}

@@ -1,0 +1,48 @@
+{
+  "attempts": [
+    {
+      "artifact_manifest_sha256": "c9dc20239c5e86c905083454d97f4def6e950642180bdabeaf2a3ea1f68e81db",
+      "assessment_protocol_sha256": "d499905c3a7dd7f233e03b0594690357d0170739a9c2f45b1e9c04deb7f23d8a",
+      "assessment_sha256": "595593d764c3fd35df641726a0258590fbb2f3969836119230707403917cbda3",
+      "attempt_directory": "v1.1r1-01-A_autonomous-seed-2028",
+      "candidate_source_sha256_after_actual": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+      "candidate_source_sha256_before": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+      "candidate_unchanged": true,
+      "canonical_raw_diff_bytes": 0,
+      "canonical_raw_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "changed_files_actual": [],
+      "command_protocol_sha256": "dc1cf0c8da9ebbf6d70b42b66379dee37c9b45c28b0c901ffd70aa683dd6a515",
+      "command_sha256": "3d6ecd4456efcd67bb002b79a4c7f011e46708eda0e8f3a787675aea175ce4b4",
+      "interpretation": "Raw workspace source is unchanged and the Git diff is empty. The legacy .strip()-based diff artifact is not a candidate patch. Any grade result derived from that artifact is excluded; hidden grading is not evidence of a repair.",
+      "legacy_assessment_candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "legacy_assessment_grade_status": null,
+      "target_path": "src/transformers/data/data_collator.py"
+    },
+    {
+      "artifact_manifest_sha256": "0af07c2393e98573cfe1989cd66c09e4485b22a6b057add6787dc73a5bbfb4d9",
+      "assessment_protocol_sha256": "43ee32b7233e7f95c46883788a3713575d386719d1f26b7961bb8719d701b87c",
+      "assessment_sha256": "d68622043cebdacd705d2ca8dd78591762243b5813401750fa96a661e114cb6a",
+      "attempt_directory": "v1.2r1-01-B_progress_guard-seed-2028",
+      "candidate_source_sha256_after_actual": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+      "candidate_source_sha256_before": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+      "candidate_unchanged": true,
+      "canonical_raw_diff_bytes": 0,
+      "canonical_raw_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "changed_files_actual": [],
+      "command_protocol_sha256": "43ee32b7233e7f95c46883788a3713575d386719d1f26b7961bb8719d701b87c",
+      "command_sha256": "d9dd9fc25d71503c5a053ffe9a82ede543d059b4d21753e233a2037625004458",
+      "interpretation": "Raw workspace source is unchanged and the Git diff is empty. The legacy .strip()-based diff artifact is not a candidate patch. Any grade result derived from that artifact is excluded; hidden grading is not evidence of a repair.",
+      "legacy_assessment_candidate_diff_sha256": "6b2b1785721b1fd42e23c9a9c70e35fb2d8bdf58522fa35e08422fd35ae54d83",
+      "legacy_assessment_grade_status": "FAIL",
+      "target_path": "src/transformers/data/data_collator.py"
+    }
+  ],
+  "campaign_id": "sprint-vi-transformers-49900-numpy-label-dtype-v1",
+  "claim_limit": "Neither #49900 attempt is a verified repair; no candidate changed the source; independent candidate repair grading is NOT_RUN_NO_PATCH after raw-byte reconciliation.",
+  "preservation": "No historical files were edited, deleted, or re-scored; this addendum excludes unsupported candidate-grader outcomes.",
+  "record_type": "append_only_evidence_integrity_reconciliation",
+  "recorded_at_utc": "2026-10-27T16:50:26.191314+00:00",
+  "root_cause": "Legacy git() helper strips stdout, losing meaningful final-newline bytes. Attempt B then formed a nonempty synthetic diff for an unchanged workspace and invoked the grader on the unchanged candidate.",
+  "schema_version": 1,
+  "source_protocol_sha256": "a2afafb1f3216ddc15787542915bf6e62e96be846e2cea74efab31a7da8d1eeb"
+}

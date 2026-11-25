@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "editable_files": [
+      "src/transformers/models/mask2former/modeling_mask2former.py"
+    ],
+    "split": "development",
+    "task_family": "transformers-49698-mask2former-module-registration"
+  },
+  "prompt": "Fix the initialization of Mask2Former transformer input projection layers. When projections are created, they must be registered as child modules so their weights participate in model state dictionaries and optimizers and follow module device transfers. Preserve both the projection path and the identity path, and do not change public signatures. Find the responsible source, make the smallest repair, and confirm syntax before finishing for independent verification.",
+  "source": {
+    "base_revision": "HEAD"
+  },
+  "task_id": "transformers-49703-mask2former-projection-registration-development-v1"
+}

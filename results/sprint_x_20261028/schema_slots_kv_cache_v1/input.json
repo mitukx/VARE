@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "fixture_path": "src/fixture.py",
+  "fixture_source": "VALUE = 17\ndef combine(left, right):\n    return left + right\n",
+  "read_start": 1,
+  "read_end": 3,
+  "messages": [
+    {
+      "role": "system",
+      "content": "This is a synthetic controller performance fixture. Do not edit source. Use only the available read_lines tool, then finish. The fixture and history are artificial and do not represent an upstream task."
+    },
+    {
+      "role": "user",
+      "content": "Synthetic inert history for context-length measurement:\n"
+    }
+  ],
+  "second_turn_message": "The synthetic source read completed. Finish now with a concise statement that you inspected the fixture; do not request another tool."
+}

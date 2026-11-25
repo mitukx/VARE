@@ -1,0 +1,95 @@
+{
+  "accepted_tools": [
+    {
+      "applied": null,
+      "finished": null,
+      "name": "read_function",
+      "result_status": "read_complete",
+      "turn": 1
+    },
+    {
+      "applied": true,
+      "finished": null,
+      "name": "replace_function_body_transactional",
+      "result_status": "edit_applied",
+      "turn": 2
+    },
+    {
+      "applied": null,
+      "finished": true,
+      "name": "finish",
+      "result_status": null,
+      "turn": 3
+    }
+  ],
+  "applied_edits": 1,
+  "attempt": {
+    "arm": "B_source_localized",
+    "seed": 432,
+    "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+  },
+  "edit_attempts": 1,
+  "event_chain": {
+    "event_count": 11,
+    "failures": [],
+    "last_event_sha256": "7807feb72b07005719a446c447b744aea478ba8c5927f53075e2e14f63816a41",
+    "last_event_type": "tool_result",
+    "valid": true
+  },
+  "finish_tool_succeeded": true,
+  "generated_tokens": 237,
+  "independent_grade": {
+    "hidden_pass": false,
+    "hidden_test_sha256": "dc2b1b01f89d6a2f2a7f0fd89f351bf13ba25daaf008bfedf9c5d1c6a8385e3a",
+    "public_pass": true,
+    "target_sha256": "f736d45e4eb10c74448048687801d4dc58af89d252a904b01e2642ae146c50cd"
+  },
+  "input_tokens": 6177,
+  "outputs": [
+    {
+      "complete_json_boundary": true,
+      "prompt_tokens": 1601,
+      "raw_output_sha256": "666e6036c7d8e9320f54d6de19420eb222bce522d42f2046dc830c464d8daea3",
+      "strict_parser_accepted": true,
+      "tokens": 49,
+      "turn": 1
+    },
+    {
+      "complete_json_boundary": true,
+      "prompt_tokens": 1999,
+      "raw_output_sha256": "03ddee1a7c0ed37478af00d1a74be6b15ace0205275338663eca5042550c0eb8",
+      "strict_parser_accepted": true,
+      "tokens": 136,
+      "turn": 2
+    },
+    {
+      "complete_json_boundary": true,
+      "prompt_tokens": 2577,
+      "raw_output_sha256": "d693f9f404a8c35a5affd0576969e7e364e02a6fe7c1dce994d3c5e27be227a9",
+      "strict_parser_accepted": true,
+      "tokens": 52,
+      "turn": 3
+    }
+  ],
+  "peak_process_rss_mib": 6365.891,
+  "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+  "provenance_valid": true,
+  "repair_interpretation": "edited_and_public_pass_but_hidden_grade_failed",
+  "resource_monitor": {
+    "abort_reason": null,
+    "elapsed_seconds": 68.729,
+    "free_swap_mib_after": 425.12,
+    "free_swap_mib_before": 425.12,
+    "returncode": 1,
+    "status": "process_failed",
+    "swap_growth_mib": 0.0
+  },
+  "runner_finalization_failure": {
+    "classification": "external task base SHA is absent from the VARE Git object database; final git diff failed after interaction",
+    "stderr_sha256": "8a4e71f83dd6a0c72b6dcc24e05cce406d4b2dbda544675e60624d7f78a7f690",
+    "subprocess_returncode": 1
+  },
+  "source_reads": 1,
+  "strict_parser_accepted_outputs": 3,
+  "verified_correct_repair": false
+}

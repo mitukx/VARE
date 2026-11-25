@@ -1,0 +1,77 @@
+{
+  "candidate_workspace_commit": "80efcba045c3a7b228630caecb6fe214548506ca",
+  "created_at_utc": "2026-10-27T15:33:36.695450+00:00",
+  "grader_sha256": "08102d74a6b29c4ff951782ea99074c2ef231da3ca569cf50584e98d41e3a68d",
+  "hidden_test_sha256": "b3789cf3d9c68be8978e5d426ed500fb62c7bdc634eae43fd4a8ae4122957c12",
+  "image": "vare-transformers-candidate-v2@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "public_test_sha256": "e334e03c328fd6fff1a5e21fa401de7f5128a6edb98ec6c24c6073476302a3d7",
+  "records": [
+    {
+      "arm": "baseline",
+      "candidate_target_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+      "grader_result": {
+        "message": "unsupported dtype predicate in torch_default_data_collator",
+        "stage": "candidate_scope",
+        "status": "FAIL"
+      },
+      "grader_returncode": 1,
+      "grader_stderr": "",
+      "grader_stdout": "{\"message\": \"unsupported dtype predicate in torch_default_data_collator\", \"stage\": \"candidate_scope\", \"status\": \"FAIL\"}\n",
+      "public_result": {
+        "elapsed_seconds": 2.524,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_numpy_integer_scalar_labels_keep_integer_dtype_in_each_output_mode\nTraceback (most recent call last):\n  File \"<string>\", line 26, in <module>\n  File \"/workspace/test_public.py\", line 22, in test_numpy_integer_scalar_labels_keep_integer_dtype_in_each_output_mode\n    assert batch[\"labels\"].dtype == expected_dtype\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": ""
+      }
+    },
+    {
+      "arm": "known_fix",
+      "candidate_target_sha256": "7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6",
+      "grader_result": {
+        "message": "candidate scope and four safe dtype predicates verified",
+        "runtime_output": "VARE_HIDDEN_SEMANTICS_PASS\n",
+        "source_sha256": "7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6",
+        "stage": "complete",
+        "status": "PASS"
+      },
+      "grader_returncode": 0,
+      "grader_stderr": "",
+      "grader_stdout": "{\"message\": \"candidate scope and four safe dtype predicates verified\", \"runtime_output\": \"VARE_HIDDEN_SEMANTICS_PASS\\n\", \"source_sha256\": \"7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6\", \"stage\": \"complete\", \"status\": \"PASS\"}\n",
+      "public_result": {
+        "elapsed_seconds": 2.576,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "1 public test(s) passed\n"
+      }
+    },
+    {
+      "arm": "wrong_mutant",
+      "candidate_target_sha256": "555746c4fb41ece40083a875ac9cd5493f86b75d383d5da625f66db22c14bf07",
+      "grader_result": {
+        "message": "candidate scope and four safe dtype predicates verified",
+        "runtime_output": "Traceback (most recent call last):\n  File \"/grader/semantic_test.py\", line 22, in <module>\n    check(return_tensors, \"label\", scalar_type(1), integer_dtype)\n  File \"/grader/semantic_test.py\", line 12, in check\n    assert output[\"labels\"].dtype == dtype, (\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: pt/label: expected torch.int64, got torch.float32\n",
+        "source_sha256": "555746c4fb41ece40083a875ac9cd5493f86b75d383d5da625f66db22c14bf07",
+        "stage": "runtime",
+        "status": "FAIL"
+      },
+      "grader_returncode": 1,
+      "grader_stderr": "",
+      "grader_stdout": "{\"message\": \"candidate scope and four safe dtype predicates verified\", \"runtime_output\": \"Traceback (most recent call last):\\n  File \\\"/grader/semantic_test.py\\\", line 22, in <module>\\n    check(return_tensors, \\\"label\\\", scalar_type(1), integer_dtype)\\n  File \\\"/grader/semantic_test.py\\\", line 12, in check\\n    assert output[\\\"labels\\\"].dtype == dtype, (\\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\nAssertionError: pt/label: expected torch.int64, got torch.float32\\n\", \"source_sha256\": \"555746c4fb41ece40083a875ac9cd5493f86b75d383d5da625f66db22c14bf07\", \"stage\": \"runtime\", \"status\": \"FAIL\"}\n",
+      "public_result": {
+        "elapsed_seconds": 2.579,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "FAILED: test_numpy_integer_scalar_labels_keep_integer_dtype_in_each_output_mode\nTraceback (most recent call last):\n  File \"<string>\", line 26, in <module>\n  File \"/workspace/test_public.py\", line 22, in test_numpy_integer_scalar_labels_keep_integer_dtype_in_each_output_mode\n    assert batch[\"labels\"].dtype == expected_dtype\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": ""
+      }
+    }
+  ],
+  "restored_candidate_target_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+  "schema_version": 3,
+  "task_id": "transformers-49900-numpy-integer-label-dtype-v1"
+}

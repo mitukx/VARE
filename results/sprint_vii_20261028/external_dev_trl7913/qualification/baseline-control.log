@@ -1,0 +1,54 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ TestCPOTrainer.test_fully_truncated_completion_examples_dropped ________
+
+self = <tests.experimental.test_cpo_trainer.TestCPOTrainer object at 0x7045ca86b0>
+
+    def test_fully_truncated_completion_examples_dropped(self):
+        """An example whose prompt alone fills `max_length` loses every completion token in truncation, so it's dropped
+        during dataset preparation."""
+        dataset = Dataset.from_dict(
+            {
+                "prompt": ["Hi", "This is a very long prompt that fills up the whole max_length budget on its own"],
+                "chosen": [" there", " yes"],
+                "rejected": [" bye", " no"],
+            }
+        )
+    
+        training_args = CPOConfig(
+            output_dir=self.tmp_dir,
+            max_length=6,
+            report_to="none",
+        )
+        trainer = CPOTrainer(
+            model="trl-internal-testing/tiny-Qwen2ForCausalLM-2.5", args=training_args, train_dataset=dataset
+        )
+    
+        # Only the short-prompt example survives.
+>       assert len(trainer.train_dataset) == 1
+E       AssertionError: assert 2 == 1
+E        +  where 2 = len(Dataset({\n    features: ['prompt', 'chosen', 'rejected', 'chosen_input_ids', 'chosen_attention_mask', 'chosen_labels',...ut_ids', 'rejected_attention_mask', 'rejected_labels', 'prompt_input_ids', 'prompt_attention_mask'],\n    num_rows: 2\n}))
+E        +    where Dataset({\n    features: ['prompt', 'chosen', 'rejected', 'chosen_input_ids', 'chosen_attention_mask', 'chosen_labels',...ut_ids', 'rejected_attention_mask', 'rejected_labels', 'prompt_input_ids', 'prompt_attention_mask'],\n    num_rows: 2\n}) = <trl.experimental.cpo.cpo_trainer.CPOTrainer object at 0x7045da7f20>.train_dataset
+
+/tmp/vare-sprint-vii-trl-baseline/tests/experimental/test_cpo_trainer.py:153: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Loading weights:   0%|          | 0/27 [00:00<?, ?it/s]Loading weights: 100%|██████████| 27/27 [00:00<00:00, 11811.24it/s]
+Loading weights:   0%|          | 0/190 [00:00<?, ?it/s]Loading weights: 100%|██████████| 190/190 [00:00<00:00, 8676.58it/s]
+[transformers] The tied weights mapping and config for this model specifies to tie shared.weight to lm_head.weight, but both are present in the checkpoints with different values, so we will NOT tie them. You should update the config with `tie_word_embeddings=False` to silence this warning.
+----------------------------- Captured stderr call -----------------------------
+Loading weights:   0%|          | 0/27 [00:00<?, ?it/s]Loading weights: 100%|██████████| 27/27 [00:00<00:00, 9397.25it/s]
+Map:   0%|          | 0/2 [00:00<?, ? examples/s]Map: 100%|██████████| 2/2 [00:00<00:00, 233.51 examples/s]
+Map:   0%|          | 0/2 [00:00<?, ? examples/s]Map: 100%|██████████| 2/2 [00:00<00:00, 1204.05 examples/s]
+Map:   0%|          | 0/2 [00:00<?, ? examples/s]Map: 100%|██████████| 2/2 [00:00<00:00, 253.71 examples/s]
+------------------------------ Captured log call -------------------------------
+WARNING  trl.experimental.cpo.cpo_trainer:cpo_trainer.py:319 When using DPODataCollatorWithPadding, you should set `remove_unused_columns=False` in your TrainingArguments we have set it for you, but you should do it yourself in the future.
+WARNING  trl.experimental.cpo.cpo_trainer:logging.py:83 The prompt alone fills `max_length`, so truncation leaves an empty completion. Consider increasing `max_length` or filtering out long prompts.
+=============================== warnings summary ===============================
+../../../tmp/vare-sprint-vii-trl-baseline/tests/experimental/test_cpo_trainer.py:20
+  /tmp/vare-sprint-vii-trl-baseline/tests/experimental/test_cpo_trainer.py:20: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+    from trl.experimental.cpo import CPOConfig, CPOTrainer
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../tmp/vare-sprint-vii-trl-baseline/tests/experimental/test_cpo_trainer.py::TestCPOTrainer::test_fully_truncated_completion_examples_dropped
+1 failed, 1 warning in 12.25s

@@ -1,0 +1,276 @@
+{
+  "aggregate": {
+    "accepted_tool_calls": 8,
+    "attempts": 4,
+    "completed_two_turn_interactions": 4,
+    "confidence_interval": "not estimated: two repetitions on one synthetic fixture are not independent task families",
+    "external_development_families": 0,
+    "independently_verified_repairs": 0,
+    "mean_pairwise_prefill_seconds_reduction_percent": 61.192,
+    "mean_pairwise_prefill_token_reduction_percent": 64.449,
+    "mean_pairwise_wall_reduction_percent": 60.155,
+    "mean_v10_wall_seconds": 27.852653,
+    "mean_v9_wall_seconds": 69.959769,
+    "model_load_seconds": 0.876835,
+    "resource_summary": {
+      "abort_reason": null,
+      "final_disk_free_bytes": 43176636416,
+      "final_free_swap_bytes": 1571291136,
+      "final_swap_used_bytes": 576192512,
+      "initial_available_memory_bytes": 14693138432,
+      "initial_disk_free_bytes": 43195408384,
+      "initial_free_swap_bytes": 1571291136,
+      "initial_swap_used_bytes": 576192512,
+      "limits": {
+        "max_agent_wall_seconds": 600,
+        "max_outer_wall_seconds": 750,
+        "max_process_tree_rss_bytes": 10737418240,
+        "max_swap_growth_bytes": 33554432,
+        "minimum_available_memory_bytes": 2147483648,
+        "minimum_disk_free_bytes": 17179869184,
+        "minimum_free_swap_bytes": 536870912,
+        "sample_interval_seconds": 1
+      },
+      "maximum_swap_growth_bytes": 0,
+      "minimum_host_available_memory_bytes": 7998767104,
+      "outer_elapsed_seconds": 200.22,
+      "peak_process_tree_rss_bytes": 4734435328,
+      "returncode": 0,
+      "status": "COMPLETED"
+    },
+    "unique_synthetic_families": 1
+  },
+  "attempts": [
+    {
+      "amortized_prefill_tokens": 18669,
+      "arm": "schema_slots_v9",
+      "attempt_index": 1,
+      "cache_fallback_reasons": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cache_restore_seconds": 0.0,
+      "cached_prefix_tokens_per_stage": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "full_prompt_tokens_across_stages": 18669,
+      "max_metal_stage_peak_bytes": 5284799576,
+      "measured_prefill_seconds": 66.96668,
+      "outcome": "two_turn_tool_interaction_complete",
+      "prefill_tokens_from_generation": 18669,
+      "shared_prefix_build_seconds": 0.0,
+      "shared_prefix_tokens_built_once_per_turn": 0,
+      "source_read_arguments": {
+        "end": 3,
+        "path": "src/fixture.py",
+        "start": 1
+      },
+      "source_read_status": "read_complete",
+      "tool_calls": [
+        {
+          "generated_tokens": 8,
+          "name": "read_lines",
+          "parse_status": "complete_tool_call",
+          "prompt_tokens": 12341
+        },
+        {
+          "generated_tokens": 17,
+          "name": "finish",
+          "parse_status": "complete_tool_call",
+          "prompt_tokens": 6328
+        }
+      ],
+      "wall_seconds": 67.97674
+    },
+    {
+      "amortized_prefill_tokens": 6637,
+      "arm": "schema_slots_v10",
+      "attempt_index": 2,
+      "cache_fallback_reasons": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cache_restore_seconds": 0.000832,
+      "cached_prefix_tokens_per_stage": [
+        2980,
+        2980,
+        2980,
+        2980,
+        3092,
+        3092
+      ],
+      "full_prompt_tokens_across_stages": 18669,
+      "max_metal_stage_peak_bytes": 6219100308,
+      "measured_prefill_seconds": 3.064066,
+      "outcome": "two_turn_tool_interaction_complete",
+      "prefill_tokens_from_generation": 565,
+      "shared_prefix_build_seconds": 23.707845,
+      "shared_prefix_tokens_built_once_per_turn": 6072,
+      "source_read_arguments": {
+        "end": 3,
+        "path": "src/fixture.py",
+        "start": 1
+      },
+      "source_read_status": "read_complete",
+      "tool_calls": [
+        {
+          "generated_tokens": 8,
+          "name": "read_lines",
+          "parse_status": "complete_tool_call",
+          "prompt_tokens": 12341
+        },
+        {
+          "generated_tokens": 17,
+          "name": "finish",
+          "parse_status": "complete_tool_call",
+          "prompt_tokens": 6328
+        }
+      ],
+      "wall_seconds": 27.867637
+    },
+    {
+      "amortized_prefill_tokens": 6637,
+      "arm": "schema_slots_v10",
+      "attempt_index": 3,
+      "cache_fallback_reasons": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cache_restore_seconds": 0.000752,
+      "cached_prefix_tokens_per_stage": [
+        2980,
+        2980,
+        2980,
+        2980,
+        3092,
+        3092
+      ],
+      "full_prompt_tokens_across_stages": 18669,
+      "max_metal_stage_peak_bytes": 6219100308,
+      "measured_prefill_seconds": 2.998361,
+      "outcome": "two_turn_tool_interaction_complete",
+      "prefill_tokens_from_generation": 565,
+      "shared_prefix_build_seconds": 23.710457,
+      "shared_prefix_tokens_built_once_per_turn": 6072,
+      "source_read_arguments": {
+        "end": 3,
+        "path": "src/fixture.py",
+        "start": 1
+      },
+      "source_read_status": "read_complete",
+      "tool_calls": [
+        {
+          "generated_tokens": 8,
+          "name": "read_lines",
+          "parse_status": "complete_tool_call",
+          "prompt_tokens": 12341
+        },
+        {
+          "generated_tokens": 17,
+          "name": "finish",
+          "parse_status": "complete_tool_call",
+          "prompt_tokens": 6328
+        }
+      ],
+      "wall_seconds": 27.83767
+    },
+    {
+      "amortized_prefill_tokens": 18669,
+      "arm": "schema_slots_v9",
+      "attempt_index": 4,
+      "cache_fallback_reasons": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cache_restore_seconds": 0.0,
+      "cached_prefix_tokens_per_stage": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "full_prompt_tokens_across_stages": 18669,
+      "max_metal_stage_peak_bytes": 5284799576,
+      "measured_prefill_seconds": 70.964268,
+      "outcome": "two_turn_tool_interaction_complete",
+      "prefill_tokens_from_generation": 18669,
+      "shared_prefix_build_seconds": 0.0,
+      "shared_prefix_tokens_built_once_per_turn": 0,
+      "source_read_arguments": {
+        "end": 3,
+        "path": "src/fixture.py",
+        "start": 1
+      },
+      "source_read_status": "read_complete",
+      "tool_calls": [
+        {
+          "generated_tokens": 8,
+          "name": "read_lines",
+          "parse_status": "complete_tool_call",
+          "prompt_tokens": 12341
+        },
+        {
+          "generated_tokens": 17,
+          "name": "finish",
+          "parse_status": "complete_tool_call",
+          "prompt_tokens": 6328
+        }
+      ],
+      "wall_seconds": 71.942799
+    }
+  ],
+  "interpretation": "Exact strict tool outputs and generated token IDs matched in both pairs; the shared-prefix arm reduced measured prefill work and wall time on this synthetic long-context interaction. No external repair or general coding-capability conclusion follows.",
+  "paired_results": [
+    {
+      "measured_prefill_reduction_percent": 60.022,
+      "prefill_token_reduction_percent": 64.449,
+      "raw_output_and_generated_token_ids_equal": true,
+      "replicate": 1,
+      "v10_amortized_prefill_tokens": 6637,
+      "v10_measured_prefill_seconds": 26.771911,
+      "v10_wall_seconds": 27.867637,
+      "v9_amortized_prefill_tokens": 18669,
+      "v9_measured_prefill_seconds": 66.96668,
+      "v9_wall_seconds": 67.97674,
+      "wall_time_reduction_percent": 59.004
+    },
+    {
+      "measured_prefill_reduction_percent": 62.363,
+      "prefill_token_reduction_percent": 64.449,
+      "raw_output_and_generated_token_ids_equal": true,
+      "replicate": 2,
+      "v10_amortized_prefill_tokens": 6637,
+      "v10_measured_prefill_seconds": 26.708818,
+      "v10_wall_seconds": 27.83767,
+      "v9_amortized_prefill_tokens": 18669,
+      "v9_measured_prefill_seconds": 70.964268,
+      "v9_wall_seconds": 71.942799,
+      "wall_time_reduction_percent": 61.306
+    }
+  ],
+  "protocol_id": "vare_sprint_x_schema_slots_kv_cache_v2",
+  "status": "ANALYSIS_VALIDATED"
+}

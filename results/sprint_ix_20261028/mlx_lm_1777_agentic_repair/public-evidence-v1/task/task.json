@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "editable_files": [
+      "mlx_lm/generate.py",
+      "test_public.py"
+    ],
+    "family_id": "mlx-lm-prefill-history-dev-01",
+    "split": "development"
+  },
+  "prompt": "Repair MLX-LM generation so every configured logits processor receives the complete token history for the prompt, including tokens already consumed by chunked prompt prefill. Subsequent generated-token steps must retain that prompt history and append generated tokens in order. Preserve existing cache and prefill behavior. Edit only mlx_lm/generate.py. Run the provided public smoke checks after editing, then finish with a concise explanation.",
+  "source": {
+    "base_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+    "calibration_revision": null
+  },
+  "task_id": "mlx-lm-prefill-history-dev-01"
+}

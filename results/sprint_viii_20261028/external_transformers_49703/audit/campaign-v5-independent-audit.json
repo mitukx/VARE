@@ -1,0 +1,328 @@
+{
+  "arms": {
+    "autonomous_navigation": {
+      "backend": "MLX Metal",
+      "controller_finalized": false,
+      "controller_hashes_match": true,
+      "duplicate_search_calls": 7,
+      "edit_applied": false,
+      "edit_attempts": false,
+      "failure_class": "source localization/navigation; repeated one no-hit query despite duplicate-query feedback; wall-time exhaustion; no edit.",
+      "first_edit_turn": null,
+      "generated_tokens": 95,
+      "independent_grade": {
+        "append_call_count": 2,
+        "candidate_execution": "never_imported_or_executed",
+        "container_expression": null,
+        "reason": "projection_container_is_not_an_empty_module_list",
+        "source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+        "status": "FAIL"
+      },
+      "minimum_host_available_memory_bytes_during_attempt": 6242500608,
+      "mlx_peak_memory_bytes": 5352465576,
+      "model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "model_explicitly_finished": false,
+      "model_inference_started": true,
+      "model_revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "peak_process_tree_rss_bytes": 4641210368,
+      "public_test_runs": 0,
+      "public_tests": "not configured",
+      "resource_abort": null,
+      "runtime_snapshot_audit_exit_code": 0,
+      "search_calls": 8,
+      "source_read_ranges": [
+        {
+          "end": 100,
+          "start": 1
+        }
+      ],
+      "status": "COMPLETED",
+      "stop_reason": "wall_time_exhausted",
+      "strict_schema_valid_tool_calls": 10,
+      "swap_growth_bytes": 0,
+      "tool_calls": 10,
+      "tool_trajectory": [
+        {
+          "applied": null,
+          "arguments": {
+            "query": "Mask2FormerTransformerModule initialization"
+          },
+          "output_bytes": 461,
+          "read_range": null,
+          "result_status": "ok",
+          "tool": "search_source",
+          "turn": 1
+        },
+        {
+          "applied": null,
+          "arguments": {},
+          "output_bytes": null,
+          "read_range": null,
+          "result_status": "file_list",
+          "tool": "list_files",
+          "turn": 2
+        },
+        {
+          "applied": null,
+          "arguments": {
+            "end": 100,
+            "path": "src/transformers/models/mask2former/modeling_mask2former.py",
+            "start": 1
+          },
+          "output_bytes": null,
+          "read_range": {
+            "end": 100,
+            "start": 1
+          },
+          "result_status": "read_complete",
+          "tool": "read_lines",
+          "turn": 3
+        },
+        {
+          "applied": null,
+          "arguments": {
+            "query": "Mask2FormerTransformerModule initialization"
+          },
+          "output_bytes": 418,
+          "read_range": null,
+          "result_status": "duplicate_query",
+          "tool": "search_source",
+          "turn": 4
+        },
+        {
+          "applied": null,
+          "arguments": {
+            "query": "Mask2FormerTransformerModule initialization"
+          },
+          "output_bytes": 418,
+          "read_range": null,
+          "result_status": "duplicate_query",
+          "tool": "search_source",
+          "turn": 5
+        },
+        {
+          "applied": null,
+          "arguments": {
+            "query": "Mask2FormerTransformerModule initialization"
+          },
+          "output_bytes": 418,
+          "read_range": null,
+          "result_status": "duplicate_query",
+          "tool": "search_source",
+          "turn": 6
+        },
+        {
+          "applied": null,
+          "arguments": {
+            "query": "Mask2FormerTransformerModule initialization"
+          },
+          "output_bytes": 418,
+          "read_range": null,
+          "result_status": "duplicate_query",
+          "tool": "search_source",
+          "turn": 7
+        },
+        {
+          "applied": null,
+          "arguments": {
+            "query": "Mask2FormerTransformerModule initialization"
+          },
+          "output_bytes": 418,
+          "read_range": null,
+          "result_status": "duplicate_query",
+          "tool": "search_source",
+          "turn": 8
+        },
+        {
+          "applied": null,
+          "arguments": {
+            "query": "Mask2FormerTransformerModule initialization"
+          },
+          "output_bytes": 418,
+          "read_range": null,
+          "result_status": "duplicate_query",
+          "tool": "search_source",
+          "turn": 9
+        },
+        {
+          "applied": null,
+          "arguments": {
+            "query": "Mask2FormerTransformerModule initialization"
+          },
+          "output_bytes": 418,
+          "read_range": null,
+          "result_status": "duplicate_query",
+          "tool": "search_source",
+          "turn": 10
+        }
+      ],
+      "unique_queries": [
+        "Mask2FormerTransformerModule initialization"
+      ],
+      "valid_source_reads": 1,
+      "verified_repair": false,
+      "wall_seconds": 251.001
+    },
+    "source_localized": {
+      "failure_class": "runner interface mismatch before model load: --navigation-guidance v2 is rejected for lease_bound_transactional_localized_v1.",
+      "independent_grade_on_unchanged_baseline": {
+        "append_call_count": 2,
+        "candidate_execution": "never_imported_or_executed",
+        "container_expression": null,
+        "reason": "projection_container_is_not_an_empty_module_list",
+        "source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+        "status": "FAIL"
+      },
+      "model_inference_started": false,
+      "model_prompt_rendered": false,
+      "model_weights_loaded": false,
+      "process_exit_code": 2,
+      "runtime_snapshot_audit_exit_code": 1,
+      "status": "RUNNER_FAILED",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "task_exposure_marker_written": true,
+      "task_prompt_in_command": true,
+      "verified_repair": false,
+      "wall_seconds": 1.18
+    }
+  },
+  "calibration": {
+    "baseline": {
+      "append_call_count": 2,
+      "container_expression": null,
+      "reason": "projection_container_is_not_an_empty_module_list",
+      "source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+      "status": "FAIL"
+    },
+    "incorrect_mutant_module_dict": {
+      "append_call_count": 2,
+      "container_expression": "nn.ModuleDict",
+      "reason": "projection_container_is_not_an_empty_module_list",
+      "source_sha256": "99174f6a2c7069d9b703416480ba7b98a0c19eb005f96464a9d1e5925024f513",
+      "status": "FAIL"
+    },
+    "known_fix": {
+      "append_call_count": 2,
+      "candidate_execution": "never_imported_or_executed",
+      "container_expression": "nn.ModuleList",
+      "reason": "projection_modules_registered_in_both_branches",
+      "source_sha256": "929838b2bc993c420859aa0722f2f93738517f4609da61de479d618f6a3a8eb8",
+      "status": "PASS"
+    }
+  },
+  "campaign_orchestration_returned": "COMPLETED",
+  "campaign_runner_sha256": "8001a4469d09c3155af5d20a6830a1533f442e2a0e2862ebc7bb6ad4f224b6d2",
+  "created_at_utc": "2026-10-28T06:18:39.778965+00:00",
+  "heldout": false,
+  "model_checkpoint": {
+    "backend": "MLX Metal",
+    "files_sha256": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "README.md": "900637f68349b42803bd0779765ef87bd8ad54e4eba57991336911b3b1655e97",
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+      "model.safetensors.index.json": "23cd562592dd96686d2e799eb02e4b578a4038b6045eaefe860d270cc060e24f",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "quantization": "4-bit MLX community checkpoint",
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "tokenizer_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+  },
+  "pretraining_exposure": "UNKNOWN",
+  "prior_vare_overlap": false,
+  "protocol_id": "vare.sprint-viii.transformers-49703-development.v5",
+  "protocol_preinference_invalidations": [
+    {
+      "development_task_consumed": false,
+      "model_inference_started": false,
+      "protocol_sha256": "1e6c6940815dd9bd7937b5017dfc5f1e3ce2f030ba368ded5322884d35c4ff40",
+      "record_sha256": "085ce35726a77ce04f5a0442ffc7eb1dd0a8fcaacc7a92463fb1be9cc557a579",
+      "status": "INVALIDATED_BEFORE_MODEL_INFERENCE"
+    },
+    {
+      "development_task_consumed": false,
+      "model_inference_started": false,
+      "protocol_sha256": "c7d218d855b302311fe32961917371cec3615e12ec81ec1772dc417721ae65aa",
+      "record_sha256": "8d9e0798ca3f334b307366e79dee6525ae3bd6e5bf0c30f0f6b454621897959a",
+      "status": "RUNNER_FAILED_BEFORE_MODEL_INFERENCE"
+    },
+    {
+      "development_task_consumed": false,
+      "model_inference_started": false,
+      "protocol_sha256": "e8d387ae86c33c5eeb2100665c15fe4a12912a4164024ae71560035790ac1ad0",
+      "record_sha256": "18f895d383094ec59325e3588af58d957b08e4a1dd3d51f90e8070fee58846ef",
+      "status": "RUNNER_FAILED_BEFORE_MODEL_INFERENCE"
+    },
+    {
+      "development_task_consumed": false,
+      "model_inference_started": false,
+      "protocol_sha256": "103320a4127db8dad9ac841b78758d1738758dbc295ebec0e408b85e1daccc40",
+      "record_sha256": "83676c36d9e4dad44873602f23ae6f1249efeb285ede91f0bc8d5378b529561d",
+      "status": "RUNNER_REJECTED_BEFORE_MODEL_INFERENCE"
+    }
+  ],
+  "protocol_sha256": "4295dddbbd70648ef003b6246aed4e502d057864463128591ee6ae69c43232a4",
+  "raw_trajectory_sha256": {
+    "agent_json": "51b63f133de774f5e48189aeb8577975d0068200a8bbdfb34f4da61b4d94a0aa",
+    "autonomous_attempt_result": "1d5e92ede67e6b6de6205d2c27d39d2b19f6fcaf175a46228b9f32a71a181705",
+    "campaign_summary": "90494ac4f2b728539f2042c7110e217a267f5cf17868a1e37dfff11bac5d0014",
+    "candidate_patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "events_jsonl": "ddcc7dfd4cb41add18d442b36abfea86dd0d5bb028bbc81b6ab03729f7e92cf5",
+    "localized_attempt_result": "f42fd65167eddf94adcbbc19f544782f078f64a98d69aa1f178a74a1fc49b7fb",
+    "task_exposure_jsonl": "8e231a0a0bf82eedc2396cf186ff3ef4cb930121d0521b71d8b5d700a77fb99b"
+  },
+  "record_id": "sprint-viii-transformers-49703-campaign-v5-independent-audit",
+  "research_comparison_status": "PARTIAL_LOCALIZED_ARM_RUNNER_FAILURE",
+  "resource_preflight_only": {
+    "model_inference_started": false,
+    "preflight": {
+      "candidate_baseline_verified": true,
+      "failures": [],
+      "localization_record_verified": true,
+      "model_inference_started": false,
+      "model_snapshot_verified": true,
+      "protocol_sha256": "4295dddbbd70648ef003b6246aed4e502d057864463128591ee6ae69c43232a4",
+      "resource_snapshot": {
+        "available_memory_bytes": 12311805952,
+        "disk_free_bytes": 43899736064,
+        "memory_total_bytes": 34359738368,
+        "process_tree_rss_bytes": 0,
+        "swap_free_bytes": 1435828224,
+        "swap_total_bytes": 3221225472,
+        "swap_used_bytes": 1785397248,
+        "timestamp_utc": "2026-10-28T06:09:48Z"
+      },
+      "task_contract_verified": true,
+      "timestamp_utc": "2026-10-28T06:09:48Z"
+    },
+    "protocol_sha256": "4295dddbbd70648ef003b6246aed4e502d057864463128591ee6ae69c43232a4",
+    "status": "PREFLIGHT_ONLY_NO_MODEL_INFERENCE",
+    "task_consumed": false,
+    "task_family_denominator": 1
+  },
+  "root_causes_and_next_decision": [
+    "The autonomous arm had a schema-valid interface but repeated the same source query seven times after its first no-hit query and read lines 1-100 rather than the localized class region.",
+    "A prospective duplicate-query guard that makes the search tool unavailable after a duplicate is a falsifiable next controller intervention; it must be evaluated on a new, independently qualified Development family because this family is consumed.",
+    "The localized arm should omit navigation-guidance v2 from CLI arguments; no same-family rerun is authorized by this record."
+  ],
+  "split": "development",
+  "status_interpretation": "The runner marks orchestration COMPLETED when every arm produced a result row. This does not mean all arms ran inference; the localized arm is explicitly RUNNER_FAILED and no paired capability comparison is valid.",
+  "task_family": "transformers-49698-mask2former-module-registration",
+  "task_family_denominator": 1,
+  "task_id": "transformers-49703-mask2former-projection-registration-development-v2",
+  "task_level_outcome": {
+    "independent_correct_repairs": 0,
+    "independent_task_families_with_success": 0,
+    "paired_controller_comparison_valid": false,
+    "resource_aborts": 0,
+    "runner_failures_before_model_inference": 1,
+    "valid_model_attempts": 1
+  },
+  "upstream": "https://github.com/huggingface/transformers/pull/49703"
+}

@@ -1,0 +1,90 @@
+{
+  "abort_reason": null,
+  "agent_outcome": null,
+  "agent_record_sha256": null,
+  "agent_stop_reason": null,
+  "arm": {
+    "arm_id": "source_localized",
+    "available_tools": [
+      "read_lines",
+      "replace_lines_transactional",
+      "check_syntax",
+      "finish"
+    ],
+    "localization_record": "localization/localization-v2.json",
+    "localization_record_sha256": "8b55fd90cd471589dddccc23473d7cec5466bd35c24e6bc645b7b758888ccef3",
+    "rationale": "Information-advantaged control for measuring source localization value; not an equal-information pure controller comparison.",
+    "task_information": "Same task prompt plus an 80-line class excerpt selected by the frozen task-independent AST entity-window localizer. No known fix/grader was read.",
+    "tool_interface": "lease_bound_transactional_localized_v1"
+  },
+  "candidate_changed": false,
+  "candidate_changed_paths": [],
+  "candidate_patch_bytes": 0,
+  "candidate_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate_scope_ok": false,
+  "candidate_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+  "controller_interventions": null,
+  "controller_source_hashes_match_protocol": false,
+  "edit_applied": null,
+  "edit_attempted": null,
+  "exit_code": 2,
+  "generated_tokens": null,
+  "independent_grade": {
+    "argv": [
+      "/tmp/vare-sprint-vii-mlx/bin/python",
+      "-I",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/sprint_viii_transformers_49703_grader_v1.py",
+      "--workspace-root",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_viii_20261028/external_transformers_49703/campaign_v5/attempts/source_localized/workspace",
+      "--source",
+      "src/transformers/models/mask2former/modeling_mask2former.py"
+    ],
+    "grader_sha256": "9bf4074e31dc40d7134efa033fb030eb0fa1cf9ff72f0c348c9ef7023c7ad9b2",
+    "receipt": {
+      "append_call_count": 2,
+      "candidate_execution": "never_imported_or_executed",
+      "container_expression": null,
+      "reason": "projection_container_is_not_an_empty_module_list",
+      "source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+      "status": "FAIL"
+    },
+    "returncode": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "ec349e0c97771890331ef25962949de05d444b0d5e987def3d932ceb6f79d21f"
+  },
+  "model_explicitly_finished": null,
+  "peak_process_tree_rss_bytes": 8060928,
+  "protocol_sha256": "4295dddbbd70648ef003b6246aed4e502d057864463128591ee6ae69c43232a4",
+  "public_test_result": null,
+  "public_test_runs": null,
+  "resource_after": {
+    "available_memory_bytes": 13511671808,
+    "disk_free_bytes": 43897356288,
+    "memory_total_bytes": 34359738368,
+    "process_tree_rss_bytes": 0,
+    "swap_free_bytes": 1435828224,
+    "swap_total_bytes": 3221225472,
+    "swap_used_bytes": 1785397248,
+    "timestamp_utc": "2026-10-28T06:14:09Z"
+  },
+  "resource_before": {
+    "available_memory_bytes": 13526515712,
+    "disk_free_bytes": 43897311232,
+    "memory_total_bytes": 34359738368,
+    "process_tree_rss_bytes": 0,
+    "swap_free_bytes": 1435828224,
+    "swap_total_bytes": 3221225472,
+    "swap_used_bytes": 1785397248,
+    "timestamp_utc": "2026-10-28T06:14:08Z"
+  },
+  "runtime_snapshot_audit": null,
+  "runtime_snapshot_audit_exit_code": 1,
+  "source_search_count": 0,
+  "status": "RUNNER_FAILED",
+  "tool_call_count": 0,
+  "tool_names": [],
+  "unique_source_search_queries": [],
+  "valid_source_read_count": 0,
+  "verified_repair": false,
+  "wall_seconds": 1.18
+}

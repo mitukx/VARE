@@ -1,0 +1,43 @@
+{
+  "baseline_sha256": "06d5969991802b48b819484fa620862a074a77e04667870b3711ae9ceac6ce14",
+  "campaign_grader_sha256": "3b21281365d038de4e68c225cf6f66c2db284462038332302382606ab09b227f",
+  "candidate_base_commit": "bbfe86e1e8a1f078b41a3422257997dd56eb860b",
+  "grading_boundary": "Public tests used a local random-initialized tiny T5 with the pinned Transformers baseline package in an offline Docker worker. Independent hidden tests used a separately authored batch-2 runtime path from an inline grader script. Candidate code was executed only inside a network-disabled, read-only Docker container bounded to 2 GiB RAM, one CPU, 32 PIDs, and the frozen timeout. The synthetic one-commit workspace contains the full upstream baseline tree, no remotes/history, exact source provenance, and only target-file candidate changes are accepted.",
+  "hidden": {
+    "elapsed_seconds": 4.819,
+    "isolation": "network-disabled read-only workspace mount; 2 GiB RAM, 1 CPU, 32 PIDs",
+    "passed": false,
+    "returncode": 1,
+    "stderr": "",
+    "stdout": "{\"error\": \"RuntimeError: index -100 is out of bounds for dimension 1 with size 40\", \"passed\": false}\n"
+  },
+  "hidden_runtime_script_sha256": "caf8a5be9926392f2e0aee0049c67a0bc7c361042c7a894356948226e320eff8",
+  "image": "vare-transformers-candidate-v2@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+  "public": {
+    "elapsed_seconds": 4.569,
+    "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+    "passed": false,
+    "returncode": 1,
+    "stderr": "FAILED: test_encoder_no_repeat_ngram_without_input_ids_completes_and_warns\nTraceback (most recent call last):\n  File \"<string>\", line 26, in <module>\n  File \"/workspace/test_public.py\", line 53, in test_encoder_no_repeat_ngram_without_input_ids_completes_and_warns\n    assert _warning_contains(caught, \"Passing `encoder_no_repeat_ngram_size` requires some form of `input_ids`\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\nFAILED: test_encoder_repetition_penalty_without_input_ids_completes_and_warns\nTraceback (most recent call last):\n  File \"<string>\", line 26, in <module>\n  File \"/workspace/test_public.py\", line 40, in test_encoder_repetition_penalty_without_input_ids_completes_and_warns\n    output = model.generate(encoder_outputs=encoder_outputs, encoder_repetition_penalty=1.5, max_new_tokens=3, min_new_tokens=3)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/torch/utils/_contextlib.py\", line 120, in decorate_context\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/src/transformers/generation/utils.py\", line 2989, in generate\n    result = decoding_method(\n             ^^^^^^^^^^^^^^^^\n  File \"/workspace/src/transformers/generation/utils.py\", line 3232, in _sample\n    next_token_scores = logits_processor(input_ids, next_token_logits)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/src/transformers/generation/logits_process.py\", line 96, in __call__\n    scores = processor(input_ids, scores)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/src/transformers/generation/logits_process.py\", line 480, in __call__\n    score = torch.gather(scores, 1, encoder_input_ids)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: index -100 is out of bounds for dimension 1 with size 32\n",
+    "stdout": ""
+  },
+  "public_test_sha256": "b9197596d639b144f88f009fd2ec1f813c7d812244abe9776785caec8da9f384",
+  "qualified_correct_repair": false,
+  "schema_version": 3,
+  "split": "development",
+  "target_path": "src/transformers/generation/utils.py",
+  "target_sha256": "06d5969991802b48b819484fa620862a074a77e04667870b3711ae9ceac6ce14",
+  "task_id": "transformers-49696-encoder-sentinel-logits-processors-runtime-v1",
+  "upstream_base_revision": "09a71e5b32a747dbc7805599457e67c956ef212f",
+  "upstream_fixed_revision": "ef1c61d3386d25275e4b8579ab2abf6ef4cf3c60",
+  "workspace_integrity": {
+    "baseline_source_sha256": "06d5969991802b48b819484fa620862a074a77e04667870b3711ae9ceac6ce14",
+    "changed_paths": [],
+    "history_commit_count": 1,
+    "inventory_matches_git": true,
+    "remote_count": 0,
+    "staged_paths": [],
+    "tracked_file_count": 6624,
+    "tracked_file_list_sha256": "9f016bb77758c33eee5f97cb8eaa13794e2309e96dfc21106d8fdfe4db25a0f3"
+  }
+}

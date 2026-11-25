@@ -1,0 +1,55 @@
+{
+  "all_shared_prefixes_exact": true,
+  "context_limit_tokens": 8192,
+  "expanded_messages_sha256": "36246781cf0639b165054b2513a018f53eda6e2efe301cf933c0b4318281cef1",
+  "max_prompt_tokens": 3191,
+  "note": "No model weights were loaded and no generation was performed.",
+  "stage_records": [
+    {
+      "prefix_exact": true,
+      "prompt_tokens": 3026,
+      "shared_prefix_tokens": 2980,
+      "stage": "tool_choice",
+      "turn": "read_lines"
+    },
+    {
+      "prefix_exact": true,
+      "prompt_tokens": 3082,
+      "shared_prefix_tokens": 2980,
+      "stage": "argument:path",
+      "turn": "read_lines"
+    },
+    {
+      "prefix_exact": true,
+      "prompt_tokens": 3103,
+      "shared_prefix_tokens": 2980,
+      "stage": "argument:start",
+      "turn": "read_lines"
+    },
+    {
+      "prefix_exact": true,
+      "prompt_tokens": 3130,
+      "shared_prefix_tokens": 2980,
+      "stage": "argument:end",
+      "turn": "read_lines"
+    },
+    {
+      "prefix_exact": true,
+      "prompt_tokens": 3137,
+      "shared_prefix_tokens": 3092,
+      "stage": "tool_choice",
+      "turn": "finish"
+    },
+    {
+      "prefix_exact": true,
+      "prompt_tokens": 3191,
+      "shared_prefix_tokens": 3092,
+      "stage": "argument:summary",
+      "turn": "finish"
+    }
+  ],
+  "status": "OFFLINE_TOKENIZER_PREFLIGHT_ONLY",
+  "tokenizer_class": "Qwen2Tokenizer",
+  "tokenizer_config_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+  "tokenizer_json_sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"
+}

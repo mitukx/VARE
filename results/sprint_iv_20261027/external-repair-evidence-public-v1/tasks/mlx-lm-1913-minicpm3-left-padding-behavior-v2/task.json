@@ -1,0 +1,15 @@
+{
+  "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2",
+  "prompt": "Regression: batched generation with left-padded prompts does not consistently respect padding for some inputs. Investigate MiniCPM3Model.__call__ in mlx_lm/models/minicpm3.py and repair the default attention-mask behavior for cached batched generation. Preserve single-prompt generation and existing cache behavior.",
+  "metadata": {
+    "editable_files": [
+      "mlx_lm/models/minicpm3.py",
+      "test_public.py"
+    ],
+    "split": "development"
+  },
+  "source": {
+    "base_revision": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+    "calibration_revision": "b4844fd8072b1fc241ce3bb5f81526346b80370f"
+  }
+}

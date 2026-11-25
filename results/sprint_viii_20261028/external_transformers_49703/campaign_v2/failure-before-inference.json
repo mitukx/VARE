@@ -1,0 +1,12 @@
+{
+  "development_task_consumed": false,
+  "evidence": "campaign_v2/preflight.json shows the model preflight passed and model_inference_started=false; task-exposure.jsonl does not exist; failure occurred while constructing argv before process launch.",
+  "exception": "KeyError: user_instruction",
+  "model_inference_started": false,
+  "preservation": "Do not overwrite campaign_v2 or protocol v2. The recorded partial output remains intact.",
+  "protocol_sha256": "c7d218d855b302311fe32961917371cec3615e12ec81ec1772dc417721ae65aa",
+  "record_id": "transformers-49703-campaign-v2-preinference-runner-failure",
+  "recorded_at_utc": "2026-10-28T06:05:42.276591+00:00",
+  "root_cause": "Campaign driver accessed protocol[\"user_instruction\"] while the frozen protocol stores the exact instruction under protocol[\"task\"][\"user_instruction\"].",
+  "status": "RUNNER_FAILED_BEFORE_MODEL_INFERENCE"
+}

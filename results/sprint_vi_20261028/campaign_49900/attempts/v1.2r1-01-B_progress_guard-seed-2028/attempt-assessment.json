@@ -1,0 +1,63 @@
+{
+  "abort_reason": null,
+  "accepted_tool_names": [
+    "search_source",
+    "read_lines"
+  ],
+  "agent_finished": false,
+  "agent_json_sha256": "9d719032f0a1bce520df36a0388a4a6a59954710100b733aa9b000fd30496bd8",
+  "agent_process_returncode": 0,
+  "applied_edits": 0,
+  "attempt": {
+    "arm": "B_progress_guard",
+    "ordinal": 1,
+    "seed": 2028
+  },
+  "candidate_changed_files": [],
+  "candidate_diff_sha256": "6b2b1785721b1fd42e23c9a9c70e35fb2d8bdf58522fa35e08422fd35ae54d83",
+  "candidate_scope_valid": true,
+  "candidate_target_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+  "completed_agent_attempt": false,
+  "edit_attempts": 0,
+  "event_journal_sha256": "e25578b415356da7cc416dc6176a523c1628cb0ab556802b1891e9d0ac2cc5a8",
+  "failure_class": "editing_or_patch_application",
+  "generated_model_outputs": 3,
+  "generated_tokens": 541,
+  "independent_grade": {
+    "grader_returncode": 1,
+    "grader_sha256": "08102d74a6b29c4ff951782ea99074c2ef231da3ca569cf50584e98d41e3a68d",
+    "hidden_test_sha256": "b3789cf3d9c68be8978e5d426ed500fb62c7bdc634eae43fd4a8ae4122957c12",
+    "message": "unsupported dtype predicate in torch_default_data_collator",
+    "stage": "candidate_scope",
+    "status": "FAIL"
+  },
+  "model_and_controller_identity_match": true,
+  "monitor_record_sha256": "191f67294f3c9d971c8a12b7f8cf22e2d9a3e9051c628d451d5f58c643221dc8",
+  "monitor_status": "completed",
+  "navigation_repeat_rejections": 0,
+  "post_attempt_public_test": {
+    "elapsed_seconds": 0.092,
+    "error": "IsolationError: could not confirm Docker container cleanup",
+    "passed": false
+  },
+  "prompt_tokens_total_across_turns": 13206,
+  "protocol_sha256": "43ee32b7233e7f95c46883788a3713575d386719d1f26b7961bb8719d701b87c",
+  "public_test_tool_calls": 0,
+  "public_tool_test_passes": 0,
+  "resources": {
+    "elapsed_seconds": 147.655,
+    "free_swap_mib_after": 1098.12,
+    "free_swap_mib_before": 1098.12,
+    "minimum_memory_free_percent_seen": 34,
+    "peak_process_rss_mib": 1157.484,
+    "swap_growth_mib": 0.0
+  },
+  "schema_version": 1,
+  "source_read_calls": 1,
+  "source_search_calls": 1,
+  "successful_source_reads": 1,
+  "successful_source_searches": 1,
+  "tool_result_count": 2,
+  "unique_source_search_actions": 1,
+  "verified_repair": false
+}

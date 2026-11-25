@@ -1,0 +1,231 @@
+{
+  "amendments": [
+    {
+      "amendment_id": "launcher-path-reference-fix",
+      "experimental_budgets_or_arms_changed": false,
+      "model_tokens_generated_before_amendment": 0,
+      "reason": "Initial execution wrapper referenced the shared user instruction under generation settings instead of matched_design; the run stopped after preflight but before command construction, model load, or inference. Corrected the key path and added unique run IDs for append-only retries.",
+      "task_exposure_before_amendment": false
+    },
+    {
+      "amendment_id": "binary-source-artifact-writer-fix",
+      "inference_design_changed": false,
+      "model_attempts_completed_before_amendment": 1,
+      "model_tokens_generated_before_amendment": 541,
+      "reason": "The arm A model run completed but the research wrapper failed while JSON-serializing candidate source bytes. This correction writes source bytes and raw unified diff in native formats and allows unique run IDs. The model inference command, arms, task, seed, tool interface, budgets, and resource gates remain identical.",
+      "task_exposure_before_amendment": true
+    }
+  ],
+  "arms": {
+    "A_autonomous": {
+      "candidate_workspace": {
+        "candidate_git_head": "80efcba045c3a7b228630caecb6fe214548506ca",
+        "candidate_git_tree": "37ba7ee73cdd58cc55f8bee2dfebeed0317939b5",
+        "clean_worktree": true,
+        "commit_count": 1,
+        "contains_hidden_test": false,
+        "contains_task_evaluator": false,
+        "public_test_sha256": "e334e03c328fd6fff1a5e21fa401de7f5128a6edb98ec6c24c6073476302a3d7",
+        "remotes": [],
+        "source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+        "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/sprint-vi-transformers-49900-numpy-label-dtype-v1/candidate-workspaces/autonomous"
+      },
+      "guard": "none"
+    },
+    "B_progress_guard": {
+      "candidate_workspace": {
+        "candidate_git_head": "80efcba045c3a7b228630caecb6fe214548506ca",
+        "candidate_git_tree": "37ba7ee73cdd58cc55f8bee2dfebeed0317939b5",
+        "clean_worktree": true,
+        "commit_count": 1,
+        "contains_hidden_test": false,
+        "contains_task_evaluator": false,
+        "public_test_sha256": "e334e03c328fd6fff1a5e21fa401de7f5128a6edb98ec6c24c6073476302a3d7",
+        "remotes": [],
+        "source_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+        "workspace": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/sprint-vi-transformers-49900-numpy-label-dtype-v1/candidate-workspaces/guarded"
+      },
+      "guard": "reject_duplicate_successful_navigation_v1"
+    }
+  },
+  "cheapest_falsification": "A paired bounded model run where the guard does not reduce duplicate successful navigation, or where the reduction does not increase unique source reads, applied edits, or verified correctness.",
+  "controller": {
+    "generation_protocol": "schema_slots_v6",
+    "model_outputs_unmodified": true,
+    "navigation_guard_protocol": "reject_duplicate_successful_navigation_v1",
+    "source_commit": "4c48b8eb71055bdd5d48c879e227526d43112efe",
+    "source_files_sha256": {
+      "scripts/run_local_agent.py": "3b3f0ee3574b5242c01b95ed8b312901eadaff773aa4dc2aa9e22fbd763ef0cf",
+      "src/vare/action_progress_guard_v1.py": "bebc00eff5faaa3651b1a86c9389008eddd0589c2d9f44b74a50b56156e96fa4",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+      "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+      "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+      "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+      "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+      "src/vare/schema_slot_protocol.py": "53ff6ced0fedb264355ad57db76e3e0b6216a933f51e4f6ccaf72b6fef84f2d7",
+      "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+      "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+    },
+    "source_read_before_edit_required": true,
+    "tool_interface": "lease_bound_transactional_navigation_v1"
+  },
+  "decision_rule": "Positive Development feasibility result can justify a separately preregistered larger Development campaign. Any model learning remains NO-GO without the historical independent 15-family eligibility gate and valid training groups. One-task paired results do not support generalization or held-out claims.",
+  "execution_harness": {
+    "campaign_runner_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/sprint-vi-transformers-49900-numpy-label-dtype-v1/run_campaign_v1.py",
+    "campaign_runner_sha256": "5bf737569d5e61873d9674db9481e4b955642aa523bc2e3f661fc2592af44f1a",
+    "monitor_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/sprint-vi-transformers-49900-numpy-label-dtype-v1/run_monitored_attempt_v1.py",
+    "monitor_sha256": "5435a260b67a19c34fbd28a5c8d8f411a665a97354eb0f9d81995ae1307c259d",
+    "runner_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE-progress-guard/scripts/run_local_agent.py",
+    "runner_sha256": "3b3f0ee3574b5242c01b95ed8b312901eadaff773aa4dc2aa9e22fbd763ef0cf"
+  },
+  "generation": {
+    "backend": "mlx",
+    "do_sample": true,
+    "edit_format": "structured_replace",
+    "environment": {
+      "DOCKER_CONTEXT": "colima",
+      "HF_HUB_OFFLINE": "1",
+      "TOKENIZERS_PARALLELISM": "false",
+      "TRANSFORMERS_OFFLINE": "1"
+    },
+    "generation_protocol": "schema_slots_v6",
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 1,
+    "max_public_test_runs": 2,
+    "max_total_new_tokens": 2048,
+    "max_turns": 12,
+    "mlx_device": "cpu",
+    "navigation_guidance": "v1",
+    "navigation_progress_guard_by_arm": {
+      "A_autonomous": "none",
+      "B_progress_guard": "reject_duplicate_successful_navigation_v1"
+    },
+    "public_test_image": "vare-transformers-candidate-v2@sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "public_test_memory_mib": 1024,
+    "public_test_timeout_s": 180,
+    "require_source_read_before_edit": true,
+    "retention": [
+      "raw model outputs",
+      "rendered prompt hashes and source identities",
+      "event journal",
+      "stdout/stderr",
+      "candidate diff/source",
+      "public results",
+      "independent grader receipt",
+      "resource samples"
+    ],
+    "seed": 2028,
+    "temperature": 0.2,
+    "tokenizer_override": null,
+    "tool_interface": "lease_bound_transactional_navigation_v1",
+    "top_k": 20,
+    "top_p": 0.95,
+    "wall_seconds": 1800
+  },
+  "hypothesis": "At matched model, task, seed, token/tool budgets and verifier, rejecting exact repeats of already-successful list/search/read actions with an explicit progress reminder will reduce repeated navigation and improve progress toward an edit or an independently correct repair on this Development task.",
+  "matched_design": {
+    "arm_order": [
+      "A_autonomous",
+      "B_progress_guard"
+    ],
+    "attempts_per_arm": 1,
+    "both_arms_same_instruction": true,
+    "independent_process_and_fresh_candidate_workspace_per_arm": true,
+    "initial_user_instruction": "Repair the task using the available source navigation, lease-bound edit, and public test tools. Apply a minimal source change, inspect test feedback, and finish only when the public tests pass.",
+    "paired_task_family": "transformers-49900-numpy-integer-label-dtype-v1",
+    "seed": 2028
+  },
+  "model": {
+    "MLX_version": "0.32.4",
+    "backend": "MLX",
+    "chat_template": "original cached snapshot",
+    "device": "CPU",
+    "mlx_lm_version": "0.32.2",
+    "model_package_versions_recorded_in_attempt": true,
+    "quantization": "4-bit",
+    "repository": "mlx-community/Qwen2.5-Coder-14B-Instruct-4bit",
+    "snapshot_commit": "29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "snapshot_manifest_path": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/outputs/sprint-vi-transformers-49900-numpy-label-dtype-v1/model-snapshot-manifest.json",
+    "snapshot_manifest_sha256": "d116c3ac0f51a5cf5565d6f577dbee53cb23b65cd824b252113435b74bbc977f",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-14B-Instruct-4bit/snapshots/29efdbab55a161237ab1e432a3abaf6c7ae2b477",
+    "tokenizer_config_override": null
+  },
+  "model_manifest_sha256": "d116c3ac0f51a5cf5565d6f577dbee53cb23b65cd824b252113435b74bbc977f",
+  "parent_protocol_sha256": "dc1cf0c8da9ebbf6d70b42b66379dee37c9b45c28b0c901ffd70aa683dd6a515",
+  "primary_outcome": "Independent hidden-grader correct repair per task family at one attempt per arm; success requires a completed model attempt, source-scope compliance, public tests passing, and exact pinned hidden-grader PASS.",
+  "protocol_id": "sprint_vi_49900_qwen25coder14b_navigation_guard_paired_v1_2",
+  "protocol_revision": "1.2",
+  "protocol_sha256": "43ee32b7233e7f95c46883788a3713575d386719d1f26b7961bb8719d701b87c",
+  "registered_at_utc": "2026-10-27T15:49:09.822937+00:00",
+  "resource_preflight_at_freeze": {
+    "disk_free_gib": 48.74,
+    "free_swap_mib": 1098.12,
+    "memory_free_percent": 76,
+    "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 76%",
+    "passed": true,
+    "required_disk_free_gib": 20,
+    "required_free_swap_mib": 700,
+    "required_memory_free_percent": 60,
+    "swap_output": "vm.swapusage: total = 2048.00M  used = 949.88M  free = 1098.12M  (encrypted)",
+    "timestamp_utc": "2026-10-27T15:40:32.723753+00:00"
+  },
+  "resources": {
+    "abort_without_retry": true,
+    "do_not_close_apps_or_modify_historical_resource_caps": true,
+    "free_swap_before_each_attempt_mib_min": 700,
+    "maximum_process_rss_mib": 16384,
+    "maximum_swap_growth_per_attempt_mib": 512,
+    "maximum_wall_seconds": 1800,
+    "memory_free_percent_before_each_attempt_min": 60,
+    "minimum_free_disk_gib_before_campaign": 20,
+    "minimum_free_swap_during_attempt_mib": 180,
+    "minimum_memory_free_percent_during_attempt": 25,
+    "poll_interval_seconds": 2
+  },
+  "schema_version": 1,
+  "secondary_outcomes": [
+    "accepted tool calls and exact duplicate navigation rejections",
+    "unique searches and reads",
+    "applied source edits",
+    "public-test outcomes",
+    "tokens and prompt tokens",
+    "wall time",
+    "peak process RSS",
+    "swap growth and memory pressure",
+    "failure category"
+  ],
+  "statistical_unit": "task family (n=1); no significance or general capability claim will be made.",
+  "stopping_rule": "Run exactly one attempt per arm; stop each arm at the frozen token, turn, wall, RSS, swap, or memory-pressure cap. No retries or prompt changes. Run independent grading on any candidate change; do not count resource-aborted or unfinished attempts as completed repairs.",
+  "task": {
+    "baseline_sha256": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+    "candidate_baseline_commit": "80efcba045c3a7b228630caecb6fe214548506ca",
+    "candidate_tree": "37ba7ee73cdd58cc55f8bee2dfebeed0317939b5",
+    "grader_sha256": "08102d74a6b29c4ff951782ea99074c2ef231da3ca569cf50584e98d41e3a68d",
+    "hidden_test_sha256": "b3789cf3d9c68be8978e5d426ed500fb62c7bdc634eae43fd4a8ae4122957c12",
+    "known_fix_revision": "54bec9ef72c1f9ed5bf0ea3096c5a1641583f1bd",
+    "known_fix_sha256": "7f2eb94b8871a22de78433dda79767e2d08df6a1f6f6b39c3494a1e6b6d2c1a6",
+    "pretraining_exposure": "UNKNOWN",
+    "prior_VARE_model_attempt_found": false,
+    "protocol_lock_sha256": "4f74338df7cda3cfb57af3788fe4c018ac8b01e7dbe5e82692ade482c998e32f",
+    "public_test_sha256": "e334e03c328fd6fff1a5e21fa401de7f5128a6edb98ec6c24c6073476302a3d7",
+    "qualification_sha256": "0af81b57573a81e0189f525733e6fddd90e7dd32002ea17a0ced3ad6c35fdb35",
+    "researcher_public_fix_exposure": true,
+    "source_revision": "50a952d06c8f593b5a0cea5dc8040fad9761ea67",
+    "split": "development",
+    "target_path": "src/transformers/data/data_collator.py",
+    "task_id": "transformers-49900-numpy-integer-label-dtype-v1",
+    "upstream_pr": 49900
+  },
+  "task_lock_sha256": "4f74338df7cda3cfb57af3788fe4c018ac8b01e7dbe5e82692ade482c998e32f",
+  "verifier": {
+    "baseline_hash_pinned": "6f458e446656c90198045ecfb8d53a8bb95377ef5ec9526b2e4e15160d115055",
+    "candidate_scope": "only src/transformers/data/data_collator.py may differ from task baseline",
+    "completion_requires_agent_finish_and_completed_resource_monitor": true,
+    "grader_command": "python task/evaluator/grade-v2.py CANDIDATE_WORKSPACE task/evaluator/semantic_hidden.py",
+    "hidden_test_hash_pinned": "b3789cf3d9c68be8978e5d426ed500fb62c7bdc634eae43fd4a8ae4122957c12",
+    "resource_abort_never_counted_as_completed_repair": true
+  }
+}

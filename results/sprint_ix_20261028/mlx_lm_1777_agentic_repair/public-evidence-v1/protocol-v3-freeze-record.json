@@ -1,0 +1,43 @@
+{
+  "commands": [
+    {
+      "arm": "A_autonomous",
+      "command_sha256": "a412953570912a09db379ebe85375129ada478f37da70a1b7fc4eec1720594dd",
+      "executable": "/tmp/vare-sprint-vii-mlx/bin/python"
+    },
+    {
+      "arm": "B_progress_aware",
+      "command_sha256": "066f4e14263ca7eec2f0400ff5bbad11a9b112fe53e33f1226b75de3c3e37b33",
+      "executable": "/tmp/vare-sprint-vii-mlx/bin/python"
+    },
+    {
+      "arm": "C_localized",
+      "command_sha256": "2a27724dde80252edbb756c0961894b10baa353be6701cb74d2ce67f8b3a6594",
+      "executable": "/tmp/vare-sprint-vii-mlx/bin/python"
+    }
+  ],
+  "created_at_utc": "2026-10-28T07:57:26.495637+00:00",
+  "generation_started": false,
+  "model_process_started": false,
+  "model_weights_loaded": false,
+  "protocol_sha256": "b2cb492c07dd7a52ad5d6edc878841f8898d43c0a86e9f199b160aa5ede4a57e",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "supersedes_protocol_sha256": "3d488de73ecca6f26df417fa3ca927847e3639c2e79ac0a1940467c927ff09bd",
+  "validation": {
+    "A_B_C_command_construction": true,
+    "candidate_baselines": true,
+    "controller_sources": true,
+    "localized_guidance_contract": true,
+    "model_checkpoint": true,
+    "python_executable": true,
+    "python_probe": true,
+    "resource_preflight": {
+      "minimum_available_memory": true,
+      "minimum_disk_free": true,
+      "minimum_free_swap": true
+    },
+    "v2_integrity": true,
+    "v3_asset_hashes": true
+  }
+}

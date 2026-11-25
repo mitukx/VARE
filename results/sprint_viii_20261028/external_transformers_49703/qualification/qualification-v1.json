@@ -1,0 +1,102 @@
+{
+  "candidate_isolation": {
+    "candidate_local_base_commit": "b777cad66493cba609c0b948b3997bad2e218ae2",
+    "candidate_template_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+    "candidate_visible_source_files": [
+      "src/transformers/models/mask2former/modeling_mask2former.py"
+    ],
+    "git_upstream_history_in_candidate_workspace": false,
+    "grader_or_hidden_test_in_candidate_workspace": false,
+    "known_fix_in_candidate_workspace": false,
+    "unexpected_tracked_paths": []
+  },
+  "created_utc": "2026-10-28T05:54:22Z",
+  "exposure": {
+    "development_consumed_at": "not yet; exposure is recorded only when the model attempt starts",
+    "heldout_allocation": false,
+    "limitation": "A recently merged public upstream fix may still be present in model pretraining; no absence claim is made.",
+    "pretraining_exposure": "UNKNOWN",
+    "prior_vare_task_family_overlap": false
+  },
+  "independent_grader": {
+    "actual_upstream_class_runtime_controls": {
+      "baseline": {
+        "identity_container_length": 3,
+        "identity_container_type": "list",
+        "identity_projection_parameter_count": 0,
+        "projected_container_length": 3,
+        "projected_container_type": "list",
+        "projected_named_parameter_count": 0,
+        "projected_state_dict_parameter_count": 0,
+        "projected_total_model_parameter_count": 2792,
+        "torch_version": "2.9.1",
+        "trusted_upstream_class_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc"
+      },
+      "known_fix": {
+        "identity_container_length": 3,
+        "identity_container_type": "ModuleList",
+        "identity_projection_parameter_count": 0,
+        "projected_container_length": 3,
+        "projected_container_type": "ModuleList",
+        "projected_named_parameter_count": 6,
+        "projected_state_dict_parameter_count": 6,
+        "projected_total_model_parameter_count": 4424,
+        "torch_version": "2.9.1",
+        "trusted_upstream_class_source_sha256": "929838b2bc993c420859aa0722f2f93738517f4609da61de479d618f6a3a8eb8"
+      }
+    },
+    "calibration": {
+      "baseline": {
+        "append_call_count": 2,
+        "container_expression": null,
+        "reason": "projection_container_is_not_an_empty_module_list",
+        "source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+        "status": "FAIL"
+      },
+      "incorrect_mutant_module_dict": {
+        "append_call_count": 2,
+        "container_expression": "nn.ModuleDict",
+        "reason": "projection_container_is_not_an_empty_module_list",
+        "source_sha256": "99174f6a2c7069d9b703416480ba7b98a0c19eb005f96464a9d1e5925024f513",
+        "status": "FAIL"
+      },
+      "known_fix": {
+        "append_call_count": 2,
+        "candidate_execution": "never_imported_or_executed",
+        "container_expression": "nn.ModuleList",
+        "reason": "projection_modules_registered_in_both_branches",
+        "source_sha256": "929838b2bc993c420859aa0722f2f93738517f4609da61de479d618f6a3a8eb8",
+        "status": "PASS"
+      }
+    },
+    "entrypoint": "scripts/sprint_viii_transformers_49703_grader_v1.py",
+    "execution_boundary": "AST-only; candidate source is never imported or executed by grader",
+    "source_sha256": "9bf4074e31dc40d7134efa033fb030eb0fa1cf9ff72f0c348c9ef7023c7ad9b2"
+  },
+  "qualification_decision": "GO_FOR_ONE_PRE-REGISTERED_DEVELOPMENT_CAMPAIGN",
+  "qualification_rule": "baseline FAIL, exact upstream fix PASS, wrong ModuleDict mutant FAIL; actual base class loses all projection parameters, fixed class registers 6 projected state/parameter keys and preserves the 3-level identity path.",
+  "record_id": "transformers-49703-development-task-qualification-v1",
+  "runtime": {
+    "model_backend": "MLX Metal; model generation not run during qualification",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "torch": "2.9.1",
+    "transformers": "5.21.0"
+  },
+  "split": "development",
+  "status": "QUALIFIED_DEVELOPMENT_NOT_HELDOUT",
+  "task_family": "transformers-49698-mask2former-module-registration",
+  "task_id": "transformers-49703-mask2former-projection-registration-development-v1",
+  "upstream": {
+    "baseline_revision": "8e40ad7bc7019ba19ae8b0e7d98e60376d0fac2a",
+    "baseline_source_sha256": "6d69697d35325a576618b7e5f0d08aeb51705625ed0c22a753c1314a36df74bc",
+    "fix_diff": "self.input_projections = [] -> nn.ModuleList()",
+    "fix_revision": "094669a133c54bafd2975c11a325140bc93b3459",
+    "fix_source_sha256": "929838b2bc993c420859aa0722f2f93738517f4609da61de479d618f6a3a8eb8",
+    "issue": "https://github.com/huggingface/transformers/issues/49698",
+    "merge_commit": "f348d3dcfa9317bed603e01b8ca22b11fe59615c",
+    "pull_request": "https://github.com/huggingface/transformers/pull/49703",
+    "repository": "huggingface/transformers",
+    "target_path": "src/transformers/models/mask2former/modeling_mask2former.py"
+  }
+}

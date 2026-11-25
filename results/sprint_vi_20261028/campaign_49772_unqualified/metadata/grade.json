@@ -1,0 +1,39 @@
+{
+  "base_revision": "c0d024fbc873ab0325e1b40fc1bd69069609de65",
+  "candidate_isolation": "agent-visible workspace excluded evaluator directory and hidden test; grader copied workspace after generation",
+  "expected_pass": false,
+  "hidden": {
+    "hidden_test_sha256": "9cfa7c5886de20018638cbbcec97612779e8bb962c615e3d2789086404226e4f",
+    "isolation": "separate-post-generation-read-only-workspace-network-none",
+    "passed": false,
+    "returncode": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 4, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/workspace/test_hidden.py\", line 1, in <module>\n    from transformers.core_model_loading import WeightRenaming\nModuleNotFoundError: No module named 'transformers'\n",
+    "stderr_sha256": "807422b5e958acde37aaf7efb7e704e2cfb5491bf7dbae2c55b6376a78f9adfc",
+    "stdout": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "hidden_test_sha256": "9cfa7c5886de20018638cbbcec97612779e8bb962c615e3d2789086404226e4f",
+  "image": "localhost:5000/vare/transformers-50001-grader@sha256:308024d337b0e9327a3edb1de5d931f9e382f6e1340a949f9134397b598bf1c1",
+  "public": {
+    "elapsed_seconds": 0.201,
+    "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+    "passed": false,
+    "returncode": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 4, in <module>\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/workspace/test_public.py\", line 1, in <module>\n    from transformers.core_model_loading import process_target_pattern\nModuleNotFoundError: No module named 'transformers'\n",
+    "stdout": ""
+  },
+  "public_test_sha256": "ff8b7b618682928d989b08b3de542d07a2d333e8704083d1ce7cebc4da1dda12",
+  "qualified_outcome": true,
+  "schema_version": 1,
+  "split": "development",
+  "state": "baseline",
+  "target_path": "src/transformers/core_model_loading.py",
+  "target_sha256": "0c3b4a8e87341561d9995e0b5fd608db94178ec00d57af43ab91244588a053db",
+  "task_id": "transformers-49772-reverse-capture-literal-semantics-v1",
+  "task_input_hashes": {
+    "TASK.md": "45762af24a7921404a8d48bbf1f4619b4beec7a809bee79661e5bb38a4241775",
+    "protocol.lock.json": "ae5ecb6d971ba6a2c35e1c879ec217d4cee0256cb17cbadf7a7713d29e0e64a4",
+    "task.json": "03255c40780284195f64ec69299993a3f8df1a04b9c49db1d14078edaf5aa138",
+    "test_public.py": "ff8b7b618682928d989b08b3de542d07a2d333e8704083d1ce7cebc4da1dda12"
+  }
+}

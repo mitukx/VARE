@@ -1,0 +1,123 @@
+{
+  "cheapest_falsification": "A single v9/v10 pair with a tool-output/token mismatch, failed strict parsing, non-exact prefix, cache fallback, or no amortized prefill reduction falsifies the mechanism; the frozen campaign runs two pairs for repeatability.",
+  "claim_boundary": "This is a model-coupled inference/controller performance and exact-output microbenchmark on synthetic fixture data. It is not a real code repair, external task success, coding-capability estimate, training result, held-out evaluation, RL result, or long-horizon completion result.",
+  "created_utc": "2026-10-28T10:49:21.987668+00:00",
+  "decision_rule": {
+    "GO_for_v10_performance_use": "All four attempts complete; both paired raw-output/token-ID comparisons are exact; all v10 stages reuse the exact prefix without fallback; v10 amortized prefill tokens are at least 20% lower in both paired repeats; paired median total wall time is not more than 10% slower; no resource abort.",
+    "NO_GO": "Any correctness mismatch, incomplete strict tool interaction, cache fallback, resource abort, or failure to meet the prefill reduction rule. No rerun under this protocol."
+  },
+  "design": {
+    "arms": [
+      "schema_slots_v9",
+      "schema_slots_v10"
+    ],
+    "independent_grader": "not applicable; no repair claim; strict parser plus actual lease-bound source read and finish interaction only",
+    "max_context_tokens": 8192,
+    "max_generated_tokens_per_tool_turn": 128,
+    "order": [
+      "v9",
+      "v10",
+      "v10",
+      "v9"
+    ],
+    "paired_repetitions": 2,
+    "pairing": "same synthetic messages and fixture; same deterministic per-replicate lease; one model load and one process; ABBA order",
+    "public_tests": "not run or present",
+    "sampling": {
+      "do_sample": false,
+      "seed": "not applicable to greedy decode; fixed order and same weights",
+      "temperature": 0.0,
+      "top_k": 0,
+      "top_p": 1.0
+    },
+    "tool_interface": "lease_bound_exact_text_transactional_v1",
+    "tools_per_turn": [
+      "read_lines",
+      "finish"
+    ],
+    "turns_per_attempt": 2
+  },
+  "falsifiable_hypothesis": "Across two paired repeats, v10 will complete the same strict read_lines then finish interaction as v9 with byte-identical raw actions and generated token IDs, exact shared-prefix reuse at every stage, at least 20% fewer amortized prefill tokens including one shared-prefix build per turn, and median total wall time no more than 10% slower.",
+  "implementation": {
+    "controller_source_hashes": {
+      "schema_slots_v10": {
+        "scripts/run_local_agent.py": "a1b4798f4cb9658df2da613669fd90702ddad128648dd024c151ee06425f03ac",
+        "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+        "src/vare/agent_edit_v2.py": "62abef0be0a200eac69ed62b15aca34a99a5a7b6b983128333fb49c8fa8a2123",
+        "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+        "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+        "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+        "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+        "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+        "src/vare/schema_slot_protocol.py": "bf794eb0edce4b114dfd7945513286bee1383ca13d3afd4a35ce39edf5e2715f",
+        "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+        "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+      },
+      "schema_slots_v9": {
+        "scripts/run_local_agent.py": "a1b4798f4cb9658df2da613669fd90702ddad128648dd024c151ee06425f03ac",
+        "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+        "src/vare/agent_edit_v2.py": "62abef0be0a200eac69ed62b15aca34a99a5a7b6b983128333fb49c8fa8a2123",
+        "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+        "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+        "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+        "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+        "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+        "src/vare/schema_slot_protocol.py": "bf794eb0edce4b114dfd7945513286bee1383ca13d3afd4a35ce39edf5e2715f",
+        "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+        "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+      }
+    },
+    "repository_commit": "18afc60910ceb3ef5572fb2c7eadeff551bf9510",
+    "script_hashes": {
+      "reproduction/preflight_tokenizer.py": "8f8e0d4e3c8e096e276f0b21e2902708b20072f64928d674f376230026d5768f",
+      "reproduction/run_guarded.py": "ad37458cba494207538e41a60cff38441ecea1fa8860f1df2fbf17c88789b56e",
+      "reproduction/run_microbenchmark.py": "c9c19a3f49b46e025c294e227bc103d7aac3062ad990bd0ea29e3d41ceee5b0c"
+    },
+    "tokenizer_preflight_result": "All six choice/argument prompts tested have the exact v10 shared-prefix token prefix; maximum prompt length 3191/8192.",
+    "tokenizer_preflight_sha256": "e4ee10c86ecf6df7ac958004e78679dff398b9cbc23de876ec63bbbd14bc1dd5"
+  },
+  "model": {
+    "backend": "MLX Metal",
+    "chat_template_sha256": "d5495a1e5db0611132a97e46a65dbb64a642a499421228b9c8b93229097fa9a4",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "python": "3.12.12",
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "snapshot_id": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_manifest_sha256": "cfb7c3e9fa85de8bc3ee643aafe06ce124b346fe1ba3b835c9fbcc77a4d2f50a",
+    "tokenizer_class": "Qwen2Tokenizer",
+    "tokenizer_config_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+    "tokenizer_json_sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+    "weights_sha256": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e"
+  },
+  "primary_outcome": "Pairwise equality of raw model outputs and generated token IDs plus successful strict read_lines parsing, real fixture read, and strict finish parsing in all four attempts.",
+  "protocol_id": "vare_sprint_x_schema_slots_kv_cache_v1",
+  "research_question": "For identical deterministic Qwen2.5-Coder-7B tool interactions, does v10 shared-prefix KV reuse preserve strict tool outputs while lowering prompt prefill work compared with v9?",
+  "resources": {
+    "max_agent_wall_seconds": 600,
+    "max_outer_wall_seconds": 750,
+    "max_process_tree_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 2147483648,
+    "minimum_disk_free_bytes": 17179869184,
+    "minimum_free_swap_bytes": 536870912,
+    "sample_interval_seconds": 1
+  },
+  "secondary_outcomes": [
+    "Amortized prefill tokens (sum of MLX prefill input tokens plus one cached shared prefix per turn)",
+    "Measured prompt-prefill seconds including shared-prefix cache construction",
+    "Cache restore/build time",
+    "Per-attempt and per-turn wall time",
+    "Peak process-tree RSS, MLX active/peak memory, host available memory, swap growth, disk free"
+  ],
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "stopping_rule": "Execute exactly four attempts in the frozen ABBA order. Stop immediately at any declared resource limit or runtime/correctness failure. Do not rerun or replace a failed attempt under this protocol.",
+  "task_and_exposure": {
+    "expanded_messages_sha256": "36246781cf0639b165054b2513a018f53eda6e2efe301cf933c0b4318281cef1",
+    "fresh_external_development_families_used": 0,
+    "input_sha256": "0dda649ee3829f8cb87a2158106a3a8876f62b25938e30a779cc5e712cd0e75b",
+    "prior_exposure": "Model has prior synthetic VARE controller/tool exposure. This new synthetic fixture does not establish pretraining non-exposure. No candidate source task or held-out task is used.",
+    "reserved_heldout_tasks_used": 0,
+    "task_type": "synthetic tool-interaction fixture; not an external repository repair task"
+  }
+}

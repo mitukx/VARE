@@ -1,0 +1,84 @@
+{
+  "audit_id": "sprint-vii-model-compat-postrun-integrity-audit-v1",
+  "audits": [
+    {
+      "arm": "lease_bound_function_edit_v1",
+      "attempt_result_sha256": "aee9d213d46a530cbb738c5aafa6264ee567ee1e09aee3dd53acbc1919e4a57a",
+      "candidate_source_sha256_expected": "219279f1e4495941e95206fe032a3f5aebd446b18593f78b74a03c8e696e508a",
+      "candidate_source_sha256_recomputed": "219279f1e4495941e95206fe032a3f5aebd446b18593f78b74a03c8e696e508a",
+      "canonical_diff_bytes": 176,
+      "canonical_diff_sha256": "245693fd9b9e222691fcbd5a39fda88d238b86d7987e35a1eca428072a025225",
+      "canonical_diff_utf8": "diff --git a/subject.py b/subject.py\nindex 36f0df8..4d6ae29 100644\n--- a/subject.py\n+++ b/subject.py\n@@ -1,2 +1,2 @@\n def shift(value):\n-    return value\n+    return value + 2\n",
+      "changed_paths_recomputed": [
+        "subject.py"
+      ],
+      "diff_command": [
+        "git",
+        "-C",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/model_compat_run_02/attempts/lease_bound_function_edit_v1/workspace",
+        "diff",
+        "--no-ext-diff",
+        "--no-textconv",
+        "--binary",
+        "HEAD",
+        "--",
+        "subject.py"
+      ],
+      "diff_returncode": 0,
+      "grade_candidate_sha_matches": true,
+      "independent_grade_receipt": {
+        "candidate_execution": "never_imported_or_executed",
+        "reason": "exact_frozen_shift_contract",
+        "source_sha256": "219279f1e4495941e95206fe032a3f5aebd446b18593f78b74a03c8e696e508a",
+        "status": "PASS"
+      },
+      "original_wrapper_diff_bytes": 0,
+      "original_wrapper_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_hash_matches": true,
+      "verified_synthetic_repair_recorded": true,
+      "wrapper_diff_failure_reproduced": true
+    },
+    {
+      "arm": "lease_bound_function_edit_v2",
+      "attempt_result_sha256": "0b8f7fd93a3992bca86be14433ea8197a385799f0db72d165cbedd4cd933da7b",
+      "candidate_source_sha256_expected": "219279f1e4495941e95206fe032a3f5aebd446b18593f78b74a03c8e696e508a",
+      "candidate_source_sha256_recomputed": "219279f1e4495941e95206fe032a3f5aebd446b18593f78b74a03c8e696e508a",
+      "canonical_diff_bytes": 176,
+      "canonical_diff_sha256": "245693fd9b9e222691fcbd5a39fda88d238b86d7987e35a1eca428072a025225",
+      "canonical_diff_utf8": "diff --git a/subject.py b/subject.py\nindex 36f0df8..4d6ae29 100644\n--- a/subject.py\n+++ b/subject.py\n@@ -1,2 +1,2 @@\n def shift(value):\n-    return value\n+    return value + 2\n",
+      "changed_paths_recomputed": [
+        "subject.py"
+      ],
+      "diff_command": [
+        "git",
+        "-C",
+        "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/results/sprint_vii_20261028/model_compat_run_02/attempts/lease_bound_function_edit_v2/workspace",
+        "diff",
+        "--no-ext-diff",
+        "--no-textconv",
+        "--binary",
+        "HEAD",
+        "--",
+        "subject.py"
+      ],
+      "diff_returncode": 0,
+      "grade_candidate_sha_matches": true,
+      "independent_grade_receipt": {
+        "candidate_execution": "never_imported_or_executed",
+        "reason": "exact_frozen_shift_contract",
+        "source_sha256": "219279f1e4495941e95206fe032a3f5aebd446b18593f78b74a03c8e696e508a",
+        "status": "PASS"
+      },
+      "original_wrapper_diff_bytes": 0,
+      "original_wrapper_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_hash_matches": true,
+      "verified_synthetic_repair_recorded": true,
+      "wrapper_diff_failure_reproduced": true
+    }
+  ],
+  "limitations": [
+    "This audit reconstructs the Git diff and verifies preserved hashes; it does not change or rescore the frozen model outcome.",
+    "No public test or external task was run."
+  ],
+  "protocol_sha256": "27796d62cd20a5764ba5191804df499c8a161b61d87afe55ad46378442490303"
+}

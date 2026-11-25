@@ -1,0 +1,15 @@
+{
+  "task_id": "transformers-50001-token-classification-lazy-import-v1",
+  "prompt": "Repair the eager legacy tokenizer dependency in `transformers.pipelines.token_classification`. Importing the pipeline module should not import `transformers.models.bert.tokenization_bert_legacy`; constructing `TokenClassificationPipeline` must still initialize its `BasicTokenizer`. Preserve unrelated source behavior and edit only the named source file.",
+  "metadata": {
+    "editable_files": [
+      "src/transformers/pipelines/token_classification.py",
+      "test_public.py"
+    ],
+    "split": "development"
+  },
+  "source": {
+    "base_revision": "6317971aa31593f77b5335e806009dc2f1e94617",
+    "calibration_revision": "f39ea9ea753d55371b98676b107b5d39d7399d0e"
+  }
+}

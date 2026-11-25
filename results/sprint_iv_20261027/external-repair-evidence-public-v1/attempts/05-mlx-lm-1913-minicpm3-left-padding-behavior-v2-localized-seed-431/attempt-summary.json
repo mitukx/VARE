@@ -1,0 +1,119 @@
+{
+  "accepted_tools": [
+    {
+      "applied": null,
+      "finished": null,
+      "name": "read_function",
+      "result_status": "read_complete",
+      "turn": 1
+    },
+    {
+      "applied": true,
+      "finished": null,
+      "name": "replace_function_body_transactional",
+      "result_status": "edit_applied",
+      "turn": 2
+    },
+    {
+      "applied": null,
+      "finished": null,
+      "name": "run_public_tests",
+      "result_status": null,
+      "turn": 3
+    }
+  ],
+  "applied_edits": 1,
+  "attempt": {
+    "arm": "B_source_localized",
+    "seed": 431,
+    "task_id": "mlx-lm-1913-minicpm3-left-padding-behavior-v2"
+  },
+  "edit_attempts": 1,
+  "event_chain": {
+    "event_count": 14,
+    "failures": [],
+    "last_event_sha256": "6b9a9e2a28acd3bd3232763f3cebb43b846b599cd75ca1c12111f003918b75c7",
+    "last_event_type": "model_output_completed",
+    "valid": true
+  },
+  "finish_tool_succeeded": false,
+  "generated_tokens": 1749,
+  "independent_grade": {
+    "hidden_pass": false,
+    "hidden_test_sha256": "dc2b1b01f89d6a2f2a7f0fd89f351bf13ba25daaf008bfedf9c5d1c6a8385e3a",
+    "public_pass": true,
+    "target_sha256": "f736d45e4eb10c74448048687801d4dc58af89d252a904b01e2642ae146c50cd"
+  },
+  "input_tokens": 15931,
+  "outputs": [
+    {
+      "complete_json_boundary": true,
+      "prompt_tokens": 1601,
+      "raw_output_sha256": "666e6036c7d8e9320f54d6de19420eb222bce522d42f2046dc830c464d8daea3",
+      "strict_parser_accepted": true,
+      "tokens": 49,
+      "turn": 1
+    },
+    {
+      "complete_json_boundary": true,
+      "prompt_tokens": 2000,
+      "raw_output_sha256": "c2c44a679d1782daa33caf7af1ae5996086214722e5d552978d006b651480ba4",
+      "strict_parser_accepted": true,
+      "tokens": 148,
+      "turn": 2
+    },
+    {
+      "complete_json_boundary": true,
+      "prompt_tokens": 2580,
+      "raw_output_sha256": "c18e8aa92d23a566fce449943a6be10c5b9b4810a756b81f03072c0151cbe362",
+      "strict_parser_accepted": true,
+      "tokens": 16,
+      "turn": 3
+    },
+    {
+      "complete_json_boundary": false,
+      "prompt_tokens": 2669,
+      "raw_output_sha256": "79d52dbc6f9b84d8d8c7e09a3c91b3bd447abe3d605faae52a378e1818f17bb2",
+      "strict_parser_accepted": false,
+      "tokens": 512,
+      "turn": 4
+    },
+    {
+      "complete_json_boundary": false,
+      "prompt_tokens": 3250,
+      "raw_output_sha256": "9681c3daea0b6d743923a34c267caec6ab6edf292b3367b2b6a1bbfe122674a7",
+      "strict_parser_accepted": false,
+      "tokens": 512,
+      "turn": 5
+    },
+    {
+      "complete_json_boundary": false,
+      "prompt_tokens": 3831,
+      "raw_output_sha256": "9681c3daea0b6d743923a34c267caec6ab6edf292b3367b2b6a1bbfe122674a7",
+      "strict_parser_accepted": false,
+      "tokens": 512,
+      "turn": 6
+    }
+  ],
+  "peak_process_rss_mib": 5263.25,
+  "protocol_sha256": "b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308",
+  "provenance_valid": true,
+  "repair_interpretation": "edited_and_public_pass_but_hidden_grade_failed",
+  "resource_monitor": {
+    "abort_reason": null,
+    "elapsed_seconds": 356.664,
+    "free_swap_mib_after": 425.12,
+    "free_swap_mib_before": 425.12,
+    "returncode": 1,
+    "status": "process_failed",
+    "swap_growth_mib": 0.0
+  },
+  "runner_finalization_failure": {
+    "classification": "external task base SHA is absent from the VARE Git object database; final git diff failed after interaction",
+    "stderr_sha256": "33e24d09547598b9bd8c097ba6a091faf90cc9354e88a571a30321501c0c3996",
+    "subprocess_returncode": 1
+  },
+  "source_reads": 1,
+  "strict_parser_accepted_outputs": 3,
+  "verified_correct_repair": false
+}

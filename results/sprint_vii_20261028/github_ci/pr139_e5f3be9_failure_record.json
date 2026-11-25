@@ -1,0 +1,44 @@
+{
+  "schema": "vare.sprint-vii.github-ci-failure-record.v1",
+  "recorded_utc": "2026-10-28T02:42:00Z",
+  "pull_request": 139,
+  "head_sha": "e5f3be9c9168e1701a9fe21c273e087b7244575a",
+  "workflow_runs": [40621687002, 40621693507],
+  "status_at_recording": "failed test matrix; other runs on this head still in progress",
+  "failed_jobs": [
+    {
+      "job_id": 122597001548,
+      "python": "3.12",
+      "run_url": "https://github.com/mitukx/VARE/actions/runs/40621693507/job/122597001548",
+      "pytest_summary": "2 failed, 1828 passed, 112 skipped",
+      "failures": [
+        {
+          "test": "tests/test_agent_syntax_tool_v1.py::test_controller_identity_tracks_edit_format_module_drift",
+          "cause": "The temporary source tree did not create agent_function_edit_v1.py, which controller_source_hashes now hashes for every interface; after adding that fixture, local rerun exposed the three always-imported agent_json_eos modules, which were then added too."
+        },
+        {
+          "test": "tests/test_separated_grading.py::test_local_agent_parses_engineering_task_without_loading_weights",
+          "cause": "The temporary candidate workspace had no Git HEAD, so fail-closed candidate diff baseline validation correctly stopped before the intended offline-environment assertion. The test fixture now creates a local baseline commit whose tracked add.py bytes match the candidate input."
+        }
+      ]
+    },
+    {
+      "job_id": 122597001510,
+      "python": "3.13",
+      "run_url": "https://github.com/mitukx/VARE/actions/runs/40621693507/job/122597001510",
+      "pytest_summary": "2 failed, 1818 passed, 122 skipped",
+      "failures": [
+        "tests/test_agent_syntax_tool_v1.py::test_controller_identity_tracks_edit_format_module_drift",
+        "tests/test_separated_grading.py::test_local_agent_parses_engineering_task_without_loading_weights"
+      ]
+    }
+  ],
+  "fix_commit": "e1be20cbf67d4d60a3e180172e9598d4bc0d1862",
+  "fix_summary": "Expanded the controller-hash test fixture to include every startup-hashed module and gave both temporary candidate workspaces a real local HEAD commit matching their visible source bytes. No production source validation was weakened.",
+  "local_regression": {
+    "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_agent_syntax_tool_v1.py::test_controller_identity_tracks_edit_format_module_drift tests/test_separated_grading.py::test_local_agent_parses_engineering_task_without_loading_weights",
+    "result": "2 passed",
+    "ruff": "passed",
+    "git_diff_check": "passed"
+  }
+}

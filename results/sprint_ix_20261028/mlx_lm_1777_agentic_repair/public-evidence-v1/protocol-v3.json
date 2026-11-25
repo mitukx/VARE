@@ -1,0 +1,382 @@
+{
+  "arms": {
+    "A_autonomous": {
+      "generation_protocol": "schema_slots_v8",
+      "interface": "lease_bound_transactional_navigation_v1",
+      "navigation_guidance": "v2",
+      "no_progress_guard": false,
+      "purpose": "Matched no-guard navigation baseline.",
+      "source_localization": null
+    },
+    "B_progress_aware": {
+      "generation_protocol": "schema_slots_v8",
+      "interface": "lease_bound_transactional_navigation_v1",
+      "navigation_guidance": "v2",
+      "no_progress_guard": true,
+      "purpose": "Only planned A/B controller difference is one-turn suppression of an immediately repeated source action.",
+      "source_localization": null
+    },
+    "C_localized": {
+      "generation_protocol": "schema_slots_v8",
+      "interface": "lease_bound_transactional_localized_v1",
+      "navigation_guidance": "v1_default",
+      "no_progress_guard": true,
+      "purpose": "Diagnostic information-advantaged localization arm; not a matched-information comparison with A/B.",
+      "source_localization": {
+        "algorithm": "task_prompt_lexical_windows_v1",
+        "path": "localization-v3.json",
+        "sha256": "962ca365306d7d865c903c153294d40cd6a5638c13eb97ae9d2f4d85f808f08b",
+        "window_lines": 80
+      }
+    }
+  },
+  "asset_hashes": {
+    "attempts-v2/A_autonomous/invocation.json": "6c66aa7cf4a173739de800653fa69f68b23b2f4f5507d4237b7e7fa23af366a1",
+    "attempts-v2/A_autonomous/launcher-failure.json": "6be41577999eb988aeb7f1a6b6c71c76f7606a3592f79137cc3c837b2e459010",
+    "attempts-v2/A_autonomous/preflight.json": "489c9108175cf66f2bf004a4acf4b3333e2b74c830b11191f5775647fb67ef50",
+    "attempts-v2/A_autonomous/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "attempts-v2/A_autonomous/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "attempts-v2/B_progress_aware.not-run.json": "ca672db4f286bf9e2b221b15d26d18a43b534e139d95ef71b5550fced27006e0",
+    "attempts-v2/C_localized.not-run.json": "6693555100a7f4f7e4bc33b8cc81cef7447609e68abc04ed3080910b2ec09a2d",
+    "campaign-summary-v2-preinference-failure.json": "cc423bc616325d9cb96306f1b05092b80b13e93544da5c1fe24e0e25219d5ac3",
+    "engineering-regression-tests.json": "8dfccb2d7e51528332f1f48200681cc6cbc599e699f4c563688db6f2d242b42a",
+    "engineering-regression-tests.log": "f44028678abab7de7b821dd54ebb0dce44673fa1d7844a2420539138bef70a89",
+    "localization-v3.json": "962ca365306d7d865c903c153294d40cd6a5638c13eb97ae9d2f4d85f808f08b",
+    "model-snapshot-manifest.json": "2e4938113fe11974eb51852c5bda954552cddeb1d2e10f9c7bae961e713e9692",
+    "preflight/failure-001-public-test-not-in-task-manifest.json": "8340c9cf614355059d29a8151ce481d2549312d3e9e97793b4d1394d0024289f",
+    "preflight/v2-command-contracts/failure-001-wrong-source-hash-key.json": "c1f4f3bea1db58f36f6e711ce8b75d9185eec76f568a8fc3ce95573450727fa9",
+    "preflight/v2-command-contracts/failure-002-freeze-key-name.json": "17fa5afbf03bfbf172b4f8c31e15ded0b9a198044db8168e0c914f86484018e0",
+    "preflight/v2-command-contracts/report.json": "5fb25f774712435970d30f20090cecbc9a710fdb1379cc58e355bf90fde370a8",
+    "preflight/v3-launcher-contracts/report.json": "3d5325303a9ad0aaafc8fc39f351bab2cfd7323d0b34d01c8f6783fbc0b6a424",
+    "preflight/valid_invocation_contracts_v2/A_autonomous/events.jsonl": "9a19a082719d07ea7ef7ff716ed4e4f167a3c11a9673f6dd99ff047a4142116a",
+    "preflight/valid_invocation_contracts_v3/C_localized/events.jsonl": "fa4c929a2eb1de44adef86e69334dfc5b48302b5015f0bef62830da4cccc0ed2",
+    "preflight/valid_invocation_contracts_v4/A_autonomous/events.jsonl": "8979811f75c31623c2149f644de68a6ce6c5f98461c430a2b827ee801446e7c2",
+    "preflight/valid_invocation_contracts_v4/B_progress_aware/events.jsonl": "fea58c33e1d05dfca271d6e9b8773a89c0bcd1dfb8a6a078341838f635b747ea",
+    "preflight/valid_invocation_contracts_v4/C_localized/events.jsonl": "3e535a601c52cfbc4ef0a6e4187697ad2239390f38fcdd975aae7d63a74dd251",
+    "preflight/validated-arm-contracts-v1.json": "805e094c519575bcf94e4b4c442f515d68602bb4974a933f9bf28ad858937196",
+    "prior-exposure-scan.json": "d755fc6ee7db590770a05784eff267752c9e341f0b1795b2ba1b4b3e9ea7c44a",
+    "protocol-v1-invalidation-complete.json": "54b4328ca1868fca1c10e96b45b2a68e220c59e07e74210d78d6b979788c2664",
+    "protocol-v1-invalidation.json": "87479382bc6b3a197b5792f5666a0c6ca45354a69b1c287778de629b7f4ed93d",
+    "protocol-v2-invalidation.json": "5b7945549745b690387d6ea3b4bcb4844a4df72105a580ba5e994970c46f4149",
+    "qualification-controls-v2.json": "24b7ee2f90292742b32d74b5c6dbff84e9bb98f073c32dc77d6491da6c0d4a86",
+    "qualification-controls-v2/UPSTREAM_LICENSE": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+    "qualification-controls-v2/baseline/mlx_lm/generate.py": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2",
+    "qualification-controls-v2/fixed/mlx_lm/generate.py": "c68732942b6a4653f8c303897d4ef85954fef4c2373b08e7c163baabe77a9599",
+    "qualification-controls-v2/mutant/mlx_lm/generate.py": "ef1c4cac3cd7bac55ef82c0267c15ee5b97f4bbdc4f628d531550fbc6c9635d3",
+    "reproduction/freeze-protocol-v2.py": "77367aa76eec36a433e16d814c82144a440110ba2679dffc6fa8dde892500e44",
+    "reproduction/freeze-protocol-v3.py": "791689be7d9b6dd7ad1d2e1fe6aded366211eda8c853dbdaf0f64ff84b802380",
+    "reproduction/preflight-arm-contracts.py": "2a3a41d70eadac059817208fb0430af5c0fab4c9edf6b56c75d0565ec11aa85a",
+    "reproduction/preflight-v2-runner.py": "5bc84e7ac359506ccbb106310efac48246101fa2a17c5c370c8fb505d31dad5b",
+    "reproduction/preflight-v3-runner.py": "54be7a358aa87248d695a605a88bf9392c17a294d2e495f6cc3036ff076cfbb1",
+    "reproduction/prepare-task.py": "ed8d4d2782f406b23fabe53f348a40093b227066f95237ebed6044faa3420a97",
+    "reproduction/run-agent-campaign-v2.py": "4780c2df6937ea367eef80682bffc4cf75cd8446c6e5201995869fd3f95b40d8",
+    "reproduction/run-agent-campaign-v3.py": "1d8ab527579e4a4fda6717f686ce6f0b9e0a3829955f5e58005a7be035800014",
+    "reproduction/run-agent-campaign.py": "e9c04ce3d534123c6fa87e1b2c20489af4e9908fa42d0112def9603eba87fc93",
+    "reproduction/run-qualification-controls.py": "3f7e59ee271bc19a67d336b4ed8a67b169bea3ded8964975fe6303817f1295c6",
+    "reproduction/scan-prior-exposure.py": "9340dad552703f680ba2de44018bcdeb66de8581b8bd34c40b86cdaaf8e1c803",
+    "task-source-qualification-v3.json": "4e1a11bdb2b138c39c105b872e865a9e08b8dacc7b06b7ba59633423194838ea",
+    "task/TASK.md": "4c457b4a5c1ef8c9571f2a75f5097e11b8ffc16aef0e0a2677802a64a0277d8b",
+    "task/evaluator/grade_hidden.py": "7894fa2811de5f42ddec0b3f1fa3e78cd3ae5a541c00b8282cabd3d64f550420",
+    "task/task.json": "cc210638970a5b6060f9bafa21b5b14a55dd63f05ccaa17f8747c8817b1bac06",
+    "task/test_public.py": "9f7d24301714a8c44e419add1d124a74f19774ed102caefe0acf5fcc4c8eb5f9",
+    "upstream-pr-1777-live.json": "7a2863f5a6a27c39d9f849e08eb200d9905a51bbcd8be0df4950e78182c135af"
+  },
+  "attempt_order": [
+    {
+      "arm": "A_autonomous",
+      "ordinal": 1,
+      "seed": 20261028
+    },
+    {
+      "arm": "B_progress_aware",
+      "ordinal": 2,
+      "seed": 20261028
+    },
+    {
+      "arm": "C_localized",
+      "ordinal": 3,
+      "seed": 20261028
+    }
+  ],
+  "budgets": {
+    "agent_wall_seconds": 240,
+    "attempts_per_arm": 1,
+    "edit_format": "structured_replace",
+    "generation_protocol": "schema_slots_v8",
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 384,
+    "max_no_tool_retries": 1,
+    "max_public_test_runs": 2,
+    "max_total_new_tokens": 1536,
+    "max_turns": 12,
+    "public_test_memory_mib": 1024,
+    "public_test_timeout_seconds": 90,
+    "task_family_denominator": 1
+  },
+  "candidate_workspace_baseline_commits": {
+    "A_autonomous": "6cae71c4c2d13bdef51a3abe9de7e8274ce75178",
+    "B_progress_aware": "6cae71c4c2d13bdef51a3abe9de7e8274ce75178",
+    "C_localized": "6cae71c4c2d13bdef51a3abe9de7e8274ce75178"
+  },
+  "candidate_workspaces": {
+    "A_autonomous": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/sprint-ix-mlx1777-candidates/A_autonomous",
+    "B_progress_aware": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/sprint-ix-mlx1777-candidates/B_progress_aware",
+    "C_localized": "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/sprint-ix-mlx1777-candidates/C_localized"
+  },
+  "cheapest_falsification": "One matched Development task-family attempt in A and B with all source, public and hidden grader controls frozen; C is a separate information-advantaged localization diagnostic.",
+  "claim_boundary": "This is a one-family Development feasibility experiment. No general coding capability, held-out improvement, Coding RL, model learning, Long-Horizon RL or RSI claim follows.",
+  "controller_source_hashes_by_arm": {
+    "A_autonomous": {
+      "scripts/run_local_agent.py": "24f971d63306b9cdab56fddbb7ad8b5ed4ea1024cf0e604c885fb1bb93e1f179",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+      "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+      "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+      "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+      "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+      "src/vare/schema_slot_protocol.py": "9eecc781ceecad58e6a5dc2903db2ae54782fdf614ff583d5a619881d048267c",
+      "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+      "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+    },
+    "B_progress_aware": {
+      "scripts/run_local_agent.py": "24f971d63306b9cdab56fddbb7ad8b5ed4ea1024cf0e604c885fb1bb93e1f179",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+      "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+      "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+      "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+      "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+      "src/vare/schema_slot_protocol.py": "9eecc781ceecad58e6a5dc2903db2ae54782fdf614ff583d5a619881d048267c",
+      "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+      "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+    },
+    "C_localized": {
+      "scripts/run_local_agent.py": "24f971d63306b9cdab56fddbb7ad8b5ed4ea1024cf0e604c885fb1bb93e1f179",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+      "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+      "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+      "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+      "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+      "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+      "src/vare/schema_slot_protocol.py": "9eecc781ceecad58e6a5dc2903db2ae54782fdf614ff583d5a619881d048267c"
+    }
+  },
+  "decision_if_negative": "Inspect raw trajectories by failure class and stop expanding this intervention if the guard is inactive or does not change tool behavior; choose a different task-independent intervention prospectively.",
+  "decision_if_positive": "Retain the existing task-independent duplicate-navigation guard for a larger, independently qualified multi-family Development cohort; do not infer Coding RL improvement or generalization.",
+  "experiment_id": "mlx-lm-prefill-history-development-repair-a-b-c-20261028-v3",
+  "exposure_and_leakage": "The task prompt omits upstream issue and PR identifiers. Candidate tools can access only the baseline source. Public tests are tool-only; hidden grader is mounted only after inference in a separate grader container. Upstream source history and known fix are not in candidate workspaces. Upstream public-model pretraining exposure remains UNKNOWN.",
+  "falsifiable_hypothesis": "With the same cached Qwen2.5-Coder-7B model, task, deterministic decoding, budget, tools and verifier, suppressing an immediately repeated source-navigation action for one turn (B) will reduce unproductive repeated navigation relative to the same transactional navigation controller without the guard (A), and may increase independently verified repairs. A single family can falsify feasibility but cannot support a population claim.",
+  "frozen_at_utc": "2026-10-28T07:57:23.975775+00:00",
+  "grading": {
+    "controls": {
+      "baseline": "FAIL",
+      "incorrect_mutant": "FAIL",
+      "known_fix": "PASS"
+    },
+    "hidden": "separate post-run pinned offline Docker container; read-only candidate and grader mounts; candidate receives no grader source",
+    "image": "localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388",
+    "public": "fixed task test_public.py through run_public_tests in pinned offline Docker image",
+    "success_requires": [
+      "normal agent finish",
+      "source file changed",
+      "only allowlisted source changes",
+      "public tests pass",
+      "independent hidden grader passes",
+      "event chain valid",
+      "no resource abort"
+    ]
+  },
+  "heldout_evaluation": {
+    "reason": "task is Development; exposure and reserved split conditions exclude it from held-out evaluation.",
+    "status": "NO_GO"
+  },
+  "invalidation_records": [
+    "protocol-v1-invalidation.json",
+    "protocol-v1-invalidation-complete.json",
+    "protocol-v2-invalidation.json",
+    "campaign-summary-v2-preinference-failure.json"
+  ],
+  "long_horizon": {
+    "reason": "this campaign measures bounded model-tool trajectories; no checkpoint/recovery fault injection.",
+    "status": "NOT_RUN"
+  },
+  "model": {
+    "backend": "MLX Metal",
+    "chat_template": "original cached snapshot; no correction or override",
+    "chat_template_sha256": "d5495a1e5db0611132a97e46a65dbb64a642a499421228b9c8b93229097fa9a4",
+    "download_during_run": false,
+    "files_sha256": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "README.md": "900637f68349b42803bd0779765ef87bd8ad54e4eba57991336911b3b1655e97",
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+      "model.safetensors.index.json": "23cd562592dd96686d2e799eb02e4b578a4038b6045eaefe860d270cc060e24f",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "pretraining_exposure": "UNKNOWN",
+    "quantization": "4-bit",
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "snapshot_commit": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-Coder-7B-Instruct-4bit/snapshots/019cc73c45c770444708a6dd8690c66243cc5c80",
+    "tokenizer_json_sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+    "tokenizer_sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+  },
+  "primary_metric": "Independent correct repair per Development task family under one attempt per arm; n=1 family, descriptive only.",
+  "prior_exposure_scan": "prior-exposure-scan.json",
+  "protocol_id": "vare-sprint-ix-progress-aware-coding-agent-v3",
+  "protocol_sha256": "b2cb492c07dd7a52ad5d6edc878841f8898d43c0a86e9f199b160aa5ede4a57e",
+  "qualification_controls": "qualification-controls-v2.json",
+  "resource_abort_rule": "Stop the active model process on any min available-memory/free-swap/disk, max host swap-growth/process RSS/wall-time breach; keep all partial logs, do not grade after resource abort, and do not launch any remaining arm. No retries and no post-freeze cap changes.",
+  "resource_preflight_at_freeze": {
+    "available_memory_bytes": 10668228608,
+    "captured_at_utc": "2026-10-28T07:51:56.543771+00:00",
+    "checks": {
+      "available_memory": true,
+      "disk_free": true,
+      "free_swap": true
+    },
+    "disk_free_bytes": 47142502400,
+    "memory_pressure_output": "The system has 34359738368 (2097152 pages with a page size of 16384).\n\nStats: \nPages free: 6010 \nPages purgeable: 9584 \nPages purged: 5111453 \n\nSwap I/O:\nSwapins: 180613 \nSwapouts: 314644 \n\nPage Q counts:\nPages active: 646269 \nPages inactive: 642694 \nPages speculative: 2427 \nPages throttled: 0 \nPages wired down: 196720 \n\nCompressor Stats:\nPages used by compressor: 550875 \nPages decompressed: 53165364 \nPages compressed: 61331705 \n\nFile I/O:\nPageins: 70380330 \nPageouts: 12786 \n\nSystem-wide memory free percentage: 63%\n",
+    "swap_free_bytes": 1546125312,
+    "swap_total_bytes": 2147483648,
+    "swap_used_bytes": 601358336,
+    "total_memory_bytes": 34359738368
+  },
+  "resource_preflight_at_freeze_v2": {
+    "available_memory_bytes": 11075715072,
+    "captured_at_utc": "2026-10-28T07:55:15.328519+00:00",
+    "checks": {
+      "minimum_available_memory": true,
+      "minimum_disk_free": true,
+      "minimum_free_swap": true
+    },
+    "disk_free_bytes": 47121100800,
+    "swap_free_bytes": 1546125312,
+    "swap_total_bytes": 2147483648,
+    "swap_used_bytes": 601358336,
+    "total_memory_bytes": 34359738368
+  },
+  "resource_preflight_at_freeze_v3": {
+    "available_memory_bytes": 11018764288,
+    "captured_at_utc": "2026-10-28T07:57:23.975529+00:00",
+    "checks": {
+      "minimum_available_memory": true,
+      "minimum_disk_free": true,
+      "minimum_free_swap": true
+    },
+    "disk_free_bytes": 47113490432,
+    "memory_total_bytes": 34359738368,
+    "swap_free_bytes": 1546125312,
+    "swap_total_bytes": 2147483648,
+    "swap_used_bytes": 601358336
+  },
+  "resources": {
+    "agent_wall_seconds": 240,
+    "max_outer_wall_seconds": 300,
+    "max_process_tree_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 2147483648,
+    "minimum_disk_free_bytes": 17179869184,
+    "minimum_free_swap_bytes": 536870912,
+    "sample_interval_seconds": 1.0
+  },
+  "rsi": {
+    "reason": "this is a single prospective controller intervention, not an autonomous research loop.",
+    "status": "NOT_RUN"
+  },
+  "runtime": {
+    "campaign_runner_sha256": "1d8ab527579e4a4fda6717f686ce6f0b9e0a3829955f5e58005a7be035800014",
+    "execution_python": "/tmp/vare-sprint-vii-mlx/bin/python",
+    "host": "Apple MacBook Pro M1 Pro, 32 GiB unified memory",
+    "machine": "arm64",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "python": "3.12.12",
+    "runner_branch": "codex/development-navigation-campaign-v1",
+    "runner_is_mainline": false,
+    "runner_repository_head": "cac34bc5ec2f5580582e5a49825ae3b4a6e5147f",
+    "runner_source": "verified Draft PR #139 head; exact head used by this worktree",
+    "transformers": "5.21.0"
+  },
+  "runtime_source_hashes": {
+    "scripts/localize_task_source_v1.py": "e32bd46791b779da1fdeae9a62f55c92724639fbd76c789bce3be65c304884ef",
+    "scripts/run_local_agent.py": "24f971d63306b9cdab56fddbb7ad8b5ed4ea1024cf0e604c885fb1bb93e1f179",
+    "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+    "src/vare/agent_edit_v2.py": "f23e9a898605ce8d8b4be428d7b830eba3879f3e02e001e27404ac58a0bab8b0",
+    "src/vare/agent_function_edit_v1.py": "aabda9272eeaacba057fb5b5ecd7c3670f86dbce2719e8532ec27042bb1e52a0",
+    "src/vare/agent_json_eos_v1.py": "3ee59e2c6cb790a6d073796de0acdaa366fb362154ede2447fc031f3af89d0ad",
+    "src/vare/agent_json_eos_v2.py": "2fdf56f4b14a9b5fb71af1aa3b664ba5fb873bc08f74bcd6bcd28fd62086d7df",
+    "src/vare/agent_json_eos_v3.py": "5c883bb25b0a10f77f1a47212f396a12042085fed9ab0d2af9a3ec691ed1ead3",
+    "src/vare/agent_runtime_snapshot_v1.py": "0b5e942da81e5b9a34ebbd5f382bf6af09df634774886d308e2396e89ea0f514",
+    "src/vare/agent_task_contract.py": "d7eba7eef2313b1f505933ad606880371699e61dae1690fba15c5fe94c8d34d0",
+    "src/vare/schema_slot_protocol.py": "9eecc781ceecad58e6a5dc2903db2ae54782fdf614ff583d5a619881d048267c",
+    "src/vare/source_navigation_v1.py": "a7b189a1313483db22100b9863b8024357c0784bc176553afc5f14e222ea4b79",
+    "src/vare/source_navigation_v2.py": "2a6ebbe6db7a113ab5bef8c95c032c3a29bb5907afe732c9b1078d4919ea3d0b"
+  },
+  "sampling": {
+    "do_sample": false,
+    "seed": 20261028,
+    "temperature": 0.0,
+    "top_k": 0,
+    "top_p": 1.0
+  },
+  "schema_version": 1,
+  "secondary_metrics": [
+    "strict schema action calls",
+    "source search/read behavior",
+    "duplicate navigation actions",
+    "edit attempts",
+    "applied edits",
+    "public test result",
+    "hidden grader result",
+    "generated tokens",
+    "wall time",
+    "process tree RSS",
+    "host swap growth",
+    "completion and failure class"
+  ],
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "stopping_rule": "One attempt per A/B/C arm, sequentially; resource violation or preflight rejection stops remaining arms; no retries, prompt revisions, budget changes or post-hoc rescoring.",
+  "supersedes_protocol_sha256": "3d488de73ecca6f26df417fa3ca927847e3639c2e79ac0a1940467c927ff09bd",
+  "supersession_reason": "V2's Python invocation failed before child process start because the launcher used the Python version string instead of the executable path. V3 now uses runtime.execution_python and includes an executable version probe; all arm commands were constructed and validated before inference.",
+  "task": {
+    "baseline_source_sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2",
+    "candidate_baseline_sha256": "502aad32fd59ce04cfca7f6e9f1e6b059570e25f64e866291fe4e56cba6a48d2",
+    "candidate_instruction": "Inspect the source and repair the task within the stated allowlist. Run public checks after editing, then finish.",
+    "candidate_visible_files": [
+      "mlx_lm/generate.py"
+    ],
+    "candidate_workspace_upstream_git_history_exposed": false,
+    "editable_source": "mlx_lm/generate.py",
+    "family_denominator": 1,
+    "family_id": "mlx-lm-prefill-history-dev-01",
+    "incorrect_mutant_source_sha256": "ef1c4cac3cd7bac55ef82c0267c15ee5b97f4bbdc4f628d531550fbc6c9635d3",
+    "instruction": "Inspect the source and repair the task within the stated allowlist. Run public checks after editing, then finish.",
+    "known_fix_source_sha256": "c68732942b6a4653f8c303897d4ef85954fef4c2373b08e7c163baabe77a9599",
+    "pretraining_exposure": "UNKNOWN",
+    "prior_vare_exposure_scan": "NO_PRIOR_VARE_MATCH_FOUND",
+    "qualification": "baseline fail; known upstream fix pass; intentionally incorrect mutant fail; six hidden dynamic cases plus two public smoke tests; pinned no-network MLX CPU container",
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "runner_only_public_test": "test_public.py",
+    "split": "development",
+    "task_id": "mlx-lm-prefill-history-dev-01",
+    "task_prompt_sha256": "4c457b4a5c1ef8c9571f2a75f5097e11b8ffc16aef0e0a2677802a64a0277d8b",
+    "upstream_base_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+    "upstream_fix_revision": "fa6cb55e7e3b21861263df0fc5d235552670dda7",
+    "upstream_issue": "https://github.com/ml-explore/mlx-lm/issues/1773",
+    "upstream_pr_head": "b4998c75d48c025103633ab45d95384b2e5a22d8",
+    "upstream_pull_request": "https://github.com/ml-explore/mlx-lm/pull/1777"
+  },
+  "training": {
+    "reason": "one Development family only; no eligible Train set, no 15-family held-out eligibility, and no trained policy evaluation.",
+    "status": "NO_GO"
+  }
+}

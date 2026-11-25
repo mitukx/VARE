@@ -1,0 +1,145 @@
+# Sprint IV — 外部コード修復の実験結果
+
+**基準日:** 2026-10-27  
+**VARE main:** `f3ab90a36e8724441b6b9555255f8f75a0a4d529`  
+**実験実装の基点:** PR [#139](https://github.com/mitukx/VARE/pull/139) head `087914fb9fc127302ab632cc665f9b7352b0c47c`  
+**凍結 protocol v2:** SHA-256 `b208be82c3f864b701c4d35286fb417b4e219c6b492d496b2bad7b2b147a3308`
+
+## 追補：Held-out と Development の系列重複（統合前の要是正事項）
+
+Sprint IV の成功タスク `mlx-lm-1926-falcon-h1-uncached-behavior-v2`（上流 MLX-LM [#1926](https://github.com/ml-explore/mlx-lm/pull/1926)、`FalconH1Model.__call__`）は、この実験では **Development** として実行された。一方、先行する VARE [PR #129](https://github.com/mitukx/VARE/pull/129) の凍結 allocation と `docs/mlsys-heldout-task-qualification-pilot-v1-report.md` は、同じ上流 #1926、同じ `falcon_h1.py` の uncached forward/cache/gradient 修正を `mlxlm-1926-falcon-cache-gradient` として **reserved held-out** に割り当て、source/grader certificate を取得していた。この系列重複は Sprint IV の事前分割監査で検出されなかった。
+
+**過去の held-out にモデル推論を実施していない、という従来の記述は修正を要する。** モデルは今回 #1926 の修正課題に実際に接触しており、この上流系列は今後の blind held-out 評価から除外する必要がある。以前の 10/15 source/grader certificate は認定当時の歴史的記録として保存し、本件の exposure を反映した将来の適格数は別途再計算する。少なくとも #1926 の1系列は未使用 held-out として数えられない。全体の model-eligible count はもともと確定していない。
+
+一方、**Falcon-H1 の2試行が隔離された hidden grader に合格したという観測自体は維持される**。正確な解釈は「2つの seed で同じ既割当上流系列の Development repair が成功した」であり、独立 blind held-out に対する汎化能力の証明ではない。凍結済み protocol、全8試行の raw trajectory、grader result は変更しない。
+
+MiniCPM3 #1913 と先行 held-out 候補 #1925 の family-level overlap も監査対象とした。#1925 は過去の readiness report ですでに重複により除外されており、今回の比較でもMiniCPM3部分は同じ修正系列と判断した（追補参照）。
+
+この追補は実験後の provenance 訂正であり、**元の結果を遡及的に変更するものではない**。公開bundleのhash、元のtask JSONのsplitラベル、採点値はいずれも保持し、別途 prospective exposure/disposition 記録と独立レビューを完了するまで、このPRはDraftのままとする。
+
+## 追補：prospective exposure disposition v1
+
+2026-10-27 に append-only reconciliation を作成した（[`exposure-disposition-append-v1.json`](../results/sprint_iv_20261027/exposure-disposition-append-v1.json)、SHA-256 `3018268f0e14ccf75e52234e1f84aa4a90db10cdb993b3f897870b288cdfd66c`）。元のPR #129 allocationとreadiness recordは変更せず、今後の blind held-out 利用だけを更新する。
+
+- #1926 は Sprint IV の Falcon-H1 Development 試行が同じ `FalconH1Model.__call__` cache initialization / gradient 修正系列に接触したため、過去の source/grader certificateは保持しつつ、将来の untouched held-out countから除外する。
+- #1913 と #1925 の MiniCPM3 部分は同じ `mlx_lm/models/minicpm3.py::MiniCPM3Model.__call__` の cache-derived attention-mask / left-padding 修正を対象とする。#1913 の Sprint IV outcomeは public pass 2 / independent hidden pass 0。#1925 は前の readiness recordでも #1921 overlapにより認定10件へ数えておらず、今回も複合task全体を独立blind familyに数えない。Phixtral側だけは Sprint IV の許可sourceに含まれず未露出だが、利用には別taskとしての再認定が必要。
+- したがって、過去の source/grader-certified unique 10件から #1926 の1系列を除いた prospective source/grader-certified countは **9/15**、残り6件。外部pretraining exposureは未監査のため、完全な model-eligible held-out 総数は引き続き **UNKNOWN** で、held-out inferenceは不許可。
+
+このrecordはsplitの遡及変更ではなく、過去の認定値と今後の候補eligibilityを分離した追補である。Sprint IVのraw trajectories、task files、hidden grader outcomesは書き換えていない。
+
+## 新しく得た結果
+
+Qwen2.5-Coder-14B-Instruct-4bit を MLX CPU で使い、外部 MLX-LM の新しい Development task family を2件、各4回、計8回実行した。source-localized 条件では Falcon-H1 の `__call__` に2回、モデル自身がレイヤーごとの空 cache 初期化を加え、双方が公開テストと独立 hidden grader を通過した。2回は同一task family内のseed違いであり、独立修復数は2件ではなく **成功したtask family 1/2** と報告する。
+
+自律ナビゲーション条件は4回とも編集に至らなかった。MiniCPM3 task は source-localized で2回編集され、公開テストを通過したが、独立hidden testを2回とも失敗した。この対照により公開テストだけでは誤修復を受け入れることがわかった。広いcoding能力や学習後の改善を主張する標本数ではない。
+
+## 実験計画と修正履歴
+
+最初のv1 cohortは、候補可視の `TASK.md` / `task.json` に既知の修正操作が含まれると事前実行監査で判明したため、**推論前に無効化**した。protocol hashは `3909cb938df4d87c09060afa6f56dbd3a4c5b392dd7b3d5deedc9d35f50cf98f`、起動したモデル試行は0件。旧protocolや監査記録は書き換えず、異なるtask IDと行動記述のv2を作成してから実行した。
+
+v2の主指標は固定4試行/ task family（2 arms × 2 seeds）で「独立graderに合格した修復を1件以上含むDevelopment task familyの割合」。比較は自律ナビゲーションAと、凍結lexical localizationで関数を提示するB。両条件とも同じモデル、サンプリング設定、編集lease、テストgraderを使った。seedは431/432、temperature 0.2、top-p 0.95、top-k 20、1ターン512生成token、1試行2048生成token、12ターン、8192 context token、900秒上限。結果を見てから課題・予算・判定基準は変更していない。
+
+| Task family / task ID | Upstream base revision | Known-fix revision | 対象 |
+|---|---|---|---|
+| [MLX-LM #1926](https://github.com/ml-explore/mlx-lm/pull/1926), `mlx-lm-1926-falcon-h1-uncached-behavior-v2` | `87b7b583a697537aa68f47130b40884700b5f55f` | `ebba55f5176fe451b94f04212e975f052a6d96e0` | `mlx_lm/models/falcon_h1.py`, `FalconH1Model.__call__` |
+| [MLX-LM #1913](https://github.com/ml-explore/mlx-lm/pull/1913), `mlx-lm-1913-minicpm3-left-padding-behavior-v2` | `c69d1288440a0dc4e6401fc417098b07598dccd5` | `b4844fd8072b1fc241ce3bb5f81526346b80370f` | `mlx_lm/models/minicpm3.py`, `MiniCPM3Model.__call__` |
+
+両課題とも候補workspaceにはbaselineとpublic testだけを置き、hidden graderを候補プロセスから隔離した。別Docker workspaceでのbaseline / known-fix / incorrect-mutant controlsを実施した。MLX-LM PR #1926 taskはbaselineがpublic/hidden fail、known fixがpass、mutantがfail。PR #1913 taskはbaselineとmutantがpublic smokeを通る一方hidden fail、known fixだけpublic/hidden passであり、public testの弱さも検出した。モデル事前学習でこれらのソースや修正に接触していないとは言えない。VAREの過去task記録には一致する試行がなく、pretraining exposureは不明である。凍結protocolのsynthetic prerequisiteはこの評価とは別に、実モデルの4/4 tool call受理とsynthetic public/hidden passを要求しており、外部repair数には加算していない。
+
+## モデルと計算資源
+
+- **Checkpoint:** `mlx-community/Qwen2.5-Coder-14B-Instruct-4bit`
+- **Snapshot:** `29efdbab55a161237ab1e432a3abaf6c7ae2b477`、4-bit
+- **Backend:** MLX 0.32.4 / mlx-lm 0.32.2、Apple M1 Pro CPU、Python 3.12.12。既存cacheを使用し、重みは取得・変更・Git追加していない。
+- **Tokenizer:** tokenizer JSON SHA-256 `a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf`、config SHA-256 `7e88129d9769a0b14b1587a7d5e829fe93ac0e1511636471fdfc0811951418e6`。
+- **Grader:** Docker 29.5.2 / Colima / `vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7`。network none、read-only root、1 CPU、2 GiB grader memory、32 pids。
+- **凍結済み資源上限:** 試行900秒、process RSS 8192 MiB、swap growth 160 MiB、開始free swap 380 MiB以上、試行中free swap 220 MiB以上。実開始free swapは425.12 MiB。上限を引き上げていない。
+
+8試行すべてresource abortは0。最大経過時間368.436秒、最大process RSS 6835.828 MiB（約6.68 GiB）、swap増加0 MiB、最小free swap 425.12 MiB。合計wall timeは1792.547秒、prompt token 138,422、generated token 9,223。並列で大規模モデルを実行していない。
+
+## 全試行
+
+`parse` は出力のうちstrict tool-call parserが受理した数、`read/edit` は読取数/実際に適用された編集数。grader欄はpublic/hiddenの順。token欄はprompt/generated。
+
+| Task family / PR | Arm | Seed | Parse | read/edit | finish | Grader | Wall秒 | Peak RSS MiB | Tokens in/out |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Falcon-H1 / #1926 | Autonomous | 432 | 3/6 | 1/0 | no | 未採点 | 310.064 | 2998.594 | 27140/1641 |
+| Falcon-H1 / #1926 | Localized | 432 | 3/3 | 1/1 | yes | pass/pass | 66.434 | 6835.828 | 5917/280 |
+| Falcon-H1 / #1926 | Autonomous | 431 | 2/5 | 1/0 | no | 未採点 | 233.545 | 5877.094 | 17713/1607 |
+| Falcon-H1 / #1926 | Localized | 431 | 3/3 | 1/1 | yes | pass/pass | 84.633 | 4037.766 | 5933/295 |
+| MiniCPM3 / #1913 | Localized | 431 | 3/6 | 1/1 | no | pass/fail | 356.664 | 5263.250 | 15931/1749 |
+| MiniCPM3 / #1913 | Autonomous | 431 | 5/8 | 2/0 | no | 未採点 | 368.436 | 3740.938 | 33527/1724 |
+| MiniCPM3 / #1913 | Autonomous | 432 | 4/7 | 2/0 | no | 未採点 | 304.042 | 1456.328 | 26084/1690 |
+| MiniCPM3 / #1913 | Localized | 432 | 3/3 | 1/1 | yes | pass/fail | 68.729 | 6365.891 | 6177/237 |
+
+全体で41出力中26（63.4%）をstrict parserが受理し、tool call 26件、function read 10件、適用編集4件、tool-level finish 3件だった。Autonomousは4/4編集0、Localizedは4/4編集が適用され3/4でfinish。独立graderのpublic passは4件、hidden passは2件、正しい修復は2試行だがFalcon-H1の1 familyに集中した。
+
+1/2 familiesの比率に対する二項Clopper–Pearson 95%区間は約0.013–0.987。paired arm比較も2 familyのみ（FalconでLocalizedのみ成功、MiniCPM3は両arm失敗）なので有意なモデル間・controller間差は結論できない。これは独立に採点された修復の成立を示す実行可能性証拠であり、広いbenchmark能力の推定ではない。
+
+## Runner障害と回帰修正
+
+全8 subprocessはモデル/ツール相互作用の後、最終記録を書き出す際に非0終了した。runnerが `git diff <external-base-sha>` を呼び、外部task revisionがVARE側Git object databaseに存在しないため失敗し、`agent.json` と `run_finished` eventが作られなかった。これはresource abortではない。各イベントhash chainは検証済みで、2件のFalcon試行では適用編集、tool-level `finish`, 別workspaceでのpublic/hidden PASSがそろう。MiniCPM3はhidden failのため修復として数えない。
+
+回帰修正は、推論前に候補可視ソースの正確なbytesを保存し、最終patchをそのbytesとの差分で生成する。既知のexternal revisionをVARE Gitに偽装・追加せず、source hash / edit lease / grader validationは変更しない。実際に失敗したPR #139コード経路に対する独立PRは [#141](https://github.com/mitukx/VARE/pull/141)、commit `52d257e80f503306d04af255203fef9396b4d304`。changed/unchanged sourceをGit metadataなしで出力するregression testsを含み、関係suiteは105 passed、Ruff / `git diff --check`もpassした。PR #141は#139をbaseに積まれており、mainには未統合。v2のモデルを再実行していない。
+
+公開証拠bundleは `results/sprint_iv_20261027/external-repair-evidence-public-v1/` にあり、8つのraw hash-chained event journal、候補diff、resource samples、正規化したcommands、grader control summaries、protocol、task/public test、manifest verifierを収録する。hidden test source、hidden grader、hidden stdout/stderr、candidate workspaces、model weightsは公開bundleに含めない。未編集の生記録は元のローカル実験treeに残す。
+
+## SFT・GRPO・long-horizon・RSI
+
+**Train split限定のSFTを実行した。** これは外部Development campaignとは別の学習実行で、MLSys v1の固定Train 5 taskから作ったknown-fixパッチ5例だけを使った。このVARE packはupstream historical defectsではなく、著者作成の小さなutility課題である。base checkpointは以前に同じTrain splitを0/5で試行済みで、その失敗を学習データに利用した。Development試行、held-out task、hidden test/graderは含めていない。モデルは `Qwen/Qwen2.5-0.5B-Instruct` revision `7ae557604adf67be50417f59c2c2f167def9a775`、MLX 0.32.4 / mlx-lm 0.32.2、Apple Metal。LoRA rank 8、最終4 transformer layers、Adam、learning rate `1e-5`、seed `20261027`、20 updates、最大系列長2,048。
+
+20/20 updateを完了し、学習lossはstep 1の0.628からstep 20の0.150へ低下した。最終adapterの28個のLoRA-B tensorは全て非ゼロ（405,504個の非ゼロ要素）で、重みSHA-256は `d3865fdcfcc14deadf05663285fa166d21b19c19104b13657690dd997205eb03`。これは実際にoptimizerがモデルadapterを更新した証拠だが、5つの訓練例上のlossであり、能力改善の証拠ではない。独立no-update比較、独立採点、held-out評価は行っていない。MLX-LM標準CLIはoptimizer stateを保存しないため、optimizer state checkpointもない。
+
+学習は18.25秒、最大process RSS 1,220.77 MiB、空きswap 433.12→441.12 MiBで完了し、中断なし。protocol SHA-256は `2243ee5bf6273140172e015fdee9c5d2671749c61b4393bf49ea0f3fa14e9e9d`。凍結protocol、5件の学習JSONL、20 step log、resource samples、adapter hashを `results/sprint_iv_20261027/mlsys-sft-train-only-v1/` に収録する。adapter重み自体は通常Gitには含めず、ローカル実験成果として保管する。
+
+GRPOは**未実施**。モデル生成の信頼できる非定数報酬群がなく、MLSys hidden graderの候補名前空間分離にも既知の問題が残るため、今回はSFTと称してRLを実行していない。15-family held-out要件を変更せず、held-out taskを消費していない。Model-coupled asynchronous RLとRSI benchmark loopも未実施。
+
+Model-coupled asynchronous RL、optimizer recoveryとの接続、独立したlong-horizon fault injection、agent提案のRSI benchmark loopも**未実施**。今回の完了は1つのbounded coding episodeに限られ、504-round synthetic systems結果の再現や延長ではない。
+
+## PRと統合状態
+
+mainは `f3ab90a36e8724441b6b9555255f8f75a0a4d529` のまま。PR #139はDraft、head `087914fb…`、base PR #137の `6d95bd91…`。#139の最初のcheck run `40408880544` でPython 3.13が失敗したが、同じheadのrerun `40408886276` では3.11/3.12/3.13を含む全checksがpassした。人間のapprovalは記録されていない。
+
+PR #141は外部revision差分出力だけのfocused child PR（head `a7b55730d930367389d012c82018790a7f6d6617`、base #139 head `087914fb9fc127302ab632cc665f9b7352b0c47c`）。初回head `52d257e80f503306d04af255203fef9396b4d304` は19/19 checks成功だったが、自動reviewがGit evidence consumer向け`diff --git`形式の維持（P1）と最終改行なし行の表現（P2）を指摘した。`a7b55730` は候補workspace内のpinned Git baseからcanonical diffを生成し、`parse_diff()`と`verify_workspace()`で完全一致を確認する回帰ケースと、4種類のterminal-newline組合せを追加した。関連ローカルsuiteは109 passed、Ruff / `git diff --check` pass。head `a7b55730` のlive snapshotでは19 checks中9 SUCCESS / 10 IN_PROGRESS / 0 FAILURE。レビューthreadは未解決のままで再review待ち。#139依存と必須reviewも残り、mainには未統合。
+
+公開用の実験レポート・trajectory bundleは、mainをbaseとする別PR [#142](https://github.com/mitukx/VARE/pull/142) に分けた。前回の#142 head `bf897359f7944dd15f82809571d2a90f97a7def9` は19/19 checks成功後に、SFT evidenceと本報告を含む `c15fb45addd1a03774160bd1d50c799cc0eea65f`、さらにreview修正記録を含む `927f6b2c700a69714032153ce705cc81f9393319` へ更新した。head `927f6b2` のlive snapshotでは19 checks中9 SUCCESS / 10 IN_PROGRESS / 0 FAILURE。GitHubは`REVIEW_REQUIRED`で、人間approvalはまだない。PR #140 head `a548daa1797b0d6a7a9b865f2eebb18b8ca71fc5` のCIはpassだが、symlink/archive fallbackに関するautomated P2 threadは未解決のまま独立review待ち。PR #120のgrader-completion spoofing P1も既存blockerである。
+
+今回のPR変更履歴は開始時16 openから18 openへ増加し、#141（runner修正）と#142（実験証拠）の2件を作成した。close 0、merge 0、既存PRのDraft解除0。Draft数は8のまま。mainは`f3ab90a36e8724441b6b9555255f8f75a0a4d529`のままで、PR reviewやdependency gateを飛び越えた統合はない。
+
+## 判定と次の実験
+
+| 項目 | 判定 | 根拠 |
+|---|---|---|
+| 外部モデルのbounded tool trajectory | RUN | 8/8でhash-chain有効、14Bが41 model outputを生成 |
+| Qwen 14Bが外部編集を適用 | RUN | localized 4/4 edits applied、autonomous 0/4 |
+| 独立検証済み外部repair | RUN / 小規模 | Falcon-H1 2成功試行、1/2 task family |
+| 自律ナビゲーション | NO-GO / controller改良必要 | 4/4で編集前に同種のnavigationを反復 |
+| Train-only SFT | RUN | Qwen2.5-0.5B、5 oracle examples、20 LoRA updates。訓練lossは低下したが独立能力評価なし |
+| GRPO | NOT_RUN | 信頼できるnonconstant reward groupsなし。grader境界も未適格 |
+| held-out improvement | NOT_RUN | 未使用・15 family要件維持 |
+| model-coupled long-horizon RL | NOT_RUN | 今回実行していない |
+| RSI research automation | NOT_RUN | agent-proposed benchmark iteration未実施 |
+| runner export fix | PARTIAL | PR #141に実装・109 tests pass、最新headのCIと再review待ち、#139依存、main未統合 |
+| PR close / merge | 0 / 0 | review・dependency gateを維持 |
+
+**次の最優先実験:** PR #141の#139依存とreviewを解消し、修正runnerで未使用のMLX/Transformers Development task familyを少なくとも6件、同じ14B checkpointで事前登録してautonomous/localizedを同seed・同tool budgetで比較する。各runはrunner終了と`run_finished` eventまで確認してから別graderに渡す。今回のDevelopment task IDは再利用しない。次の学習段階は、optimizer stateを保存できる実装と独立Train-family評価を用意した後に行う。今回のSFTはTrain splitの実更新を証明したが、Coding RL/held-out性能向上は未証明である。
+
+## 検証
+
+公開bundle内から:
+
+```sh
+python3 verify_evidence.py
+shasum -a 256 -c SHA256SUMS
+```
+
+このコマンドは固定protocol、raw event hash chain、公開bundleファイルを検証し、モデルを実行しない。
+
+
+## 追補：prospective exposure disposition v2 — MLX-LM #1955
+
+公開追補 v1 の後に、ローカルで保持していた別の負のDevelopment実験 MLX-LM [#1955](https://github.com/ml-explore/mlx-lm/pull/1955) も過去のモデル接触として確認した。元のv1記録と全ての実験ファイルは変更せず、新しいappend-only record [exposure-disposition-append-v2.json](../results/sprint_iv_20261027/exposure-disposition-append-v2.json)（SHA-256 `b2da5a3d7ee4e09b0d0cae890b4fbf3d1edc2a5a950c5ec3a7811b80c51b3ed5`）に追加した。対象は `mlx_lm/utils.py::dequantize_model` のexpert別NVFP4 global scale適用で、baseline `c39139d70f0798834fc721c28a1aa8e1374ea33c`、known fix `33fdd163aac1d60b7364763cfa1fb568aa3dd84c`、protocol SHA-256 `dee0e4682faa057bc84618c6c01ebb9a225fdf27acbc0e365e959b980ba41ef8`。
+
+Qwen2.5-Coder-14B-Instruct-4bit（snapshot `29efdbab55a161237ab1e432a3abaf6c7ae2b477`、MLX CPU）は自律armで `list_functions` と `read_function` を受理させ、3回目に1024 tokenの不正・未完了ツール出力を生成した。編集試行は0、source bytesは不変、public/independent graderは未実行。224.46秒後、process RSS peak 3365.28 MiB、swap空き908.69→385.12 MiB（最大増加523.57 MiB）で、凍結済み増加上限332.69 MiBに達したためresource abortした。source-localized armはautonomous armの後に実行予定だった。先行するpre-inference snapshot時点では空きswap 908.69 MiBでpreflight passだったが、autonomous armのresource abort後は385.12 MiBまで低下し凍結下限512 MiBを下回ったため、2本目のmodel processは起動せずNOT_RUN。このため新規修復としては数えず、2アームpaired experimentとも扱わない。
+
+PR #1955のtask prompt / target sourceにモデルが接触済みなので、この修正familyは今後のblind held-outから除外する。これは既存15 family allocationの外にある追加Development taskであり、v1で訂正したsource/grader-certified **9/15**をさらに減らす根拠にはしない。モデル事前学習の露出は不明のままである。
