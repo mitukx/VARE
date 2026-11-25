@@ -399,7 +399,8 @@ def main() -> int:
         checkpoint = runner.checkpoint_path(run, "update-0001")
         meta = details["run_meta"]
         manifest = grpo_mlx.save_checkpoint(
-            checkpoint, model, optimizer, step=1, base_seed=int(lock["seed"]),
+            checkpoint, model, optimizer, base_model_id=runner.BASE_MODEL_ID,
+            step=1, base_seed=int(lock["seed"]),
             extra={"experiment_id": meta["experiment_id"], "model_revision": runner.MODEL_REVISION,
                    "policy_checkpoint_id_before": policy_id, "task_hashes": meta["task_hashes"],
                    "optimizer": runner.OPTIMIZER_CONFIG, "lora": runner.LORA_CONFIG,
