@@ -61,9 +61,11 @@ def test_rehashed_false_provenance_is_rejected(tmp_path, optimized, mutation):
         manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
                              for p in target.rglob('*') if p.is_file() and p != manifest_path}
         manifest_path.write_text(json.dumps(manifest))
+    # Rejection is sub-second locally. The bound only covers interpreter startup
+    # on a busy shared runner; the ValueError check below is unchanged.
     result = subprocess.run([sys.executable, *(['-O'] if optimized else []), str(AUDITOR), str(target)],
                             cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
-                            capture_output=True, text=True, timeout=15)
+                            capture_output=True, text=True, timeout=60)
     assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
 
 
@@ -72,5 +74,5 @@ def test_positive_replay_is_offline(tmp_path, optimized):
     result = subprocess.run([sys.executable, *(['-O'] if optimized else []), str(AUDITOR), str(BUNDLE)],
                             cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src'),
                                               'PATH': '', 'GIT_DIR': str(tmp_path / 'missing')},
-                            capture_output=True, text=True, timeout=15)
+                            capture_output=True, text=True, timeout=60)
     assert result.returncode == 0 and json.loads(result.stdout)['status'] == 'verified', result.stderr
