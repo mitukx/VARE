@@ -1,0 +1,16 @@
+# Python 3.12, Linux CPU; synthetic objective and trajectory contract tests.
+# Runtime versions match the retained MLX study environment, with mlx-cpu
+# replacing the platform-specific Metal backend. No model download is needed.
+pytest==8.4.2
+mlx==0.32.2
+mlx-cpu==0.32.2
+mlx-lm==0.32.2
+numpy==2.5.4
+transformers==5.20.2
+huggingface-hub==2.2.0
+tokenizers==0.23.3
+sentencepiece==0.2.2
+safetensors==0.8.0
+protobuf==7.36.2
+pyyaml==6.0.3
+jinja2==3.1.6

@@ -199,7 +199,8 @@ def test_full_trajectory_mlx_step_trains_and_counts_all_action_tokens():
     work = list(zip(grouped, advantages))
     action_rows = list(G._training_action_segments(work))
     n_tokens = sum(len(segment.completion_ids) for _, _, segment in action_rows)
-    gradients, diagnostics = G.policy_gradient(model, work, config, n_tokens=n_tokens)
+    gradients, diagnostics = G.policy_gradient(model, work, config, n_tokens=n_tokens,
+                                               policy_checkpoint_id="policy-0", policy_step=0)
 
     # Independently sum the categorical score-function gradient over each
     # segment's context and action tokens, including the later-turn contexts.
@@ -391,7 +392,7 @@ def test_on_policy_gradient_matches_float64_reference():
             work += list(zip(g, adv))
     n = sum(len(s.completion_ids) for s, _ in work)
     assert n == 6  # group b is zero-variance: excluded from the token denominator
-    grads, diag = G.policy_gradient(m, work, cfg, n_tokens=n)
+    grads, diag = G.policy_gradient(m, work, cfg, n_tokens=n, policy_checkpoint_id="c0", policy_step=0)
     assert diag["ratio_mean"] == pytest.approx(1.0, abs=1e-6) and diag["clip_fraction"] == 0.0
     ref = np.zeros_like(W)
     for s, a in work:
@@ -536,6 +537,147 @@ def test_on_policy_ratio_is_exactly_one_through_the_update_path():
 def test_behavior_logprobs_require_cfg_or_temperature():
     with pytest.raises(ValueError):
         G.compute_behavior_logprobs(_bigram(), [S("a", 0, [3], 1)])
+
+
+def _recorded_trajectory_group():
+    samples = [_trajectory_sample(0, 1.0), _trajectory_sample(1, 0.0)]
+    for sample in samples:
+        sample.meta.update(behavior_logprob_source="sampling_distribution", behavior_group_size=2,
+                           behavior_temperature=0.7, behavior_top_p=1.0)
+        for index, segment in enumerate(sample.trajectory_segments):
+            segment.behavior_logprobs = [-0.3 - 0.1 * index] * len(segment.completion_ids)
+        sample.behavior_logprobs = list(sample.trajectory_segments[0].behavior_logprobs)
+    return samples
+
+
+def test_recorded_sampling_scores_are_not_rescored_or_overwritten(monkeypatch):
+    import copy
+
+    samples = _recorded_trajectory_group()
+    before = copy.deepcopy(samples)
+
+    def unexpected_forward(*args, **kwargs):
+        raise AssertionError("recorded sampling scores must not be regenerated")
+
+    monkeypatch.setattr(G, "_value_and_grad", unexpected_forward)
+    G.compute_behavior_logprobs(object(), samples, G.GRPOConfig(temperature=0.7))
+    assert samples == before
+
+
+def test_recorded_group_completeness_is_checked_at_use_time():
+    samples = _recorded_trajectory_group()
+    with pytest.raises(G.GroupError, match="recorded trajectory group"):
+        G.group_samples(samples[:1])  # cfg.group_size defaults to None.
+    samples[1].sample_index = 2
+    with pytest.raises(G.GroupError, match="recorded trajectory group"):
+        G.group_samples(samples)
+
+
+def test_recorded_missing_scores_and_temperature_mismatch_fail_before_forward():
+    samples = _recorded_trajectory_group()
+    with pytest.raises(G.TruncatedSamplingError, match="temperature differs"):
+        G.compute_behavior_logprobs(object(), samples, G.GRPOConfig(temperature=1.0))
+    with pytest.raises(G.TruncatedSamplingError, match="temperature differs"):
+        G.train_step(object(), object(), samples, G.GRPOConfig(temperature=1.0),
+                     policy_checkpoint_id="policy-0", policy_step=0)
+    samples[1].trajectory_segments[1].behavior_logprobs = None
+    with pytest.raises(G.GroupError, match="sampling behavior log-probs are missing"):
+        G.compute_behavior_logprobs(object(), samples, G.GRPOConfig(temperature=0.7))
+
+
+@pytest.mark.parametrize("lag", [0, 1])
+@pytest.mark.parametrize("value", [math.nan, math.inf, -math.inf, -0.1, True])
+def test_nonfinite_or_invalid_log_ratio_is_rejected_at_every_lag(lag, value):
+    with pytest.raises(G.StalePolicyError, match="finite and nonnegative"):
+        G.check_on_policy_log_ratio(lag, value)
+
+
+@pytest.mark.parametrize("value", [math.nan, math.inf, -math.inf, 0.1, True])
+def test_legacy_behavior_scores_have_the_same_numeric_contract(value):
+    sample = S("a", 0, [3], 1)
+    sample.behavior_logprobs = [value]
+    with pytest.raises(G.GroupError, match="finite nonpositive"):
+        G.group_samples([sample])
+
+
+@pytest.mark.parametrize(
+    "checkpoint,step,lag,message",
+    [("other", 0, 0, "checkpoint"), ("next", 1, 0, "policy lag"),
+     ("policy-0", 0, 1, "future")],
+)
+def test_direct_gradient_cannot_bypass_checkpoint_or_lag(checkpoint, step, lag, message):
+    sample = _trajectory_sample(0, 1.0)
+    if message == "future":
+        sample.behavior_step = 1
+    with pytest.raises(G.StalePolicyError, match=message):
+        G.policy_gradient(object(), [(sample, 1.0)], G.GRPOConfig(max_policy_lag=lag),
+                          n_tokens=2, policy_checkpoint_id=checkpoint, policy_step=step)
+
+
+@needs_mlx
+@pytest.mark.parametrize("include_stale", [False, True])
+def test_later_action_score_mismatch_rejects_before_any_optimizer_update(include_stale):
+    import copy
+    import mlx.optimizers as optim
+
+    model = _bigram(64)
+    samples = [_trajectory_sample(0, 1.0), _trajectory_sample(1, 0.0)]
+    for sample in samples:
+        sample.behavior_checkpoint_id = "current"
+        sample.behavior_step = 1
+    if include_stale:
+        old = copy.deepcopy(samples)
+        for sample in old:
+            sample.instance_id = "stale-task"
+            sample.behavior_checkpoint_id = "previous"
+            sample.behavior_step = 0
+        samples.extend(old)
+    cfg = G.GRPOConfig(max_policy_lag=int(include_stale))
+    G.compute_behavior_logprobs(model, samples, cfg)
+    samples[1].trajectory_segments[1].behavior_logprobs[0] -= 0.5
+    optimizer = optim.Adam(learning_rate=0.1)
+    before = G.trainable_digest(model)
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior"):
+        G.train_step(model, optimizer, samples, cfg, policy_checkpoint_id="current", policy_step=1)
+    assert G.trainable_digest(model) == before
+    assert int(optimizer.state["step"].item()) == 0
+
+
+@needs_mlx
+def test_missing_behavior_scores_are_staged_until_all_actions_succeed():
+    model = _bigram(64)
+    samples = [_trajectory_sample(0, 1.0), _trajectory_sample(1, 0.0)]
+    count = 0
+
+    def fail_after_second_action():
+        nonlocal count
+        count += 1
+        if count == 2:
+            raise RuntimeError("interrupted score collection")
+
+    with pytest.raises(RuntimeError, match="interrupted score collection"):
+        G.compute_behavior_logprobs(model, samples, G.GRPOConfig(), after_sample=fail_after_second_action)
+    assert all(sample.behavior_logprobs is None for sample in samples)
+    assert all(segment.behavior_logprobs is None
+               for sample in samples for segment in sample.trajectory_segments)
+
+
+@needs_mlx
+def test_nonfinite_gradient_is_rejected_before_optimizer(monkeypatch):
+    import mlx.core as mx
+    import mlx.optimizers as optim
+
+    model = _bigram()
+    samples = _samples_with_lp(model, [S("a", 0, [3], 1), S("a", 1, [4], 0)])
+    optimizer = optim.Adam(learning_rate=0.1)
+    before = G.trainable_digest(model)
+    monkeypatch.setattr(G, "policy_gradient", lambda *a, **kw: (
+        {"table": {"weight": mx.full(model.table.weight.shape, float("nan"))}}, {"loss": 0.0},
+    ))
+    with pytest.raises(FloatingPointError, match="non-finite GRPO gradient"):
+        G.train_step(model, optimizer, samples, G.GRPOConfig(), policy_checkpoint_id="c0", policy_step=0)
+    assert G.trainable_digest(model) == before
+    assert int(optimizer.state["step"].item()) == 0
 
 
 @needs_mlx
@@ -688,8 +830,10 @@ def test_after_sample_hook_does_not_change_gradient_and_runs_per_microbatch():
     adv, _ = G.group_advantages([s.reward for s in samples])
     work = list(zip(samples, adv))
     calls = []
-    plain, d0 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6)
-    hooked, d1 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6, after_sample=lambda: calls.append(1))
+    plain, d0 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6,
+                                  policy_checkpoint_id="c0", policy_step=0)
+    hooked, d1 = G.policy_gradient(m, work, G.GRPOConfig(), n_tokens=6,
+                                   policy_checkpoint_id="c0", policy_step=0, after_sample=lambda: calls.append(1))
     assert len(calls) == len(work) and d0 == d1
     assert np.array_equal(np.asarray(plain["table"]["weight"]), np.asarray(hooked["table"]["weight"]))
 

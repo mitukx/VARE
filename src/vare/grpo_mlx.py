@@ -25,9 +25,11 @@ rollout groups:
 * By default the update is strictly on-policy: every sample must come from the
   checkpoint being updated (``max_policy_lag = 0``), so ``rho == 1`` at the
   update point and the gradient equals the REINFORCE-with-group-baseline
-  gradient. Behavior log-probs come from the same traced (differentiated)
-  computation as the update, so ``rho == 1`` holds numerically, not only in
-  exact arithmetic; ``max_abs_log_ratio`` is reported per step. Stale samples raise ``StalePolicyError`` instead of being reused.
+  gradient. Recorded sampling log-probs are preserved. Each lag-zero action
+  must agree with the differentiated current-policy pass within the declared
+  tolerance before an optimizer update; a numerical mismatch is rejected,
+  never repaired by replacing the recorded denominator. Legacy samples without
+  scores may be scored from their exact behavior checkpoint by the caller.
 * Sampling decision (Option A, exact ratio): the behavior distribution must be
   the untruncated temperature softmax ``softmax(logits / T)`` with ``T > 0``,
   ``top_p == 1`` (no top-k / min-p), because that is the distribution the
@@ -75,6 +77,7 @@ class TruncatedSamplingError(ValueError):
 # The exact-ratio objective models behavior log-probs as log_softmax(logits / T)
 # over the full vocabulary, so sampling must not truncate the distribution.
 EXACT_RATIO_TOP_P = 1.0
+ON_POLICY_LOG_RATIO_TOLERANCE = 1e-6
 
 
 def check_exact_ratio_sampling(*, temperature: float, top_p: float, top_k: int = 0, min_p: float = 0.0) -> None:
@@ -192,6 +195,16 @@ def group_advantages(rewards: Sequence[float], *, normalize_std: bool = True) ->
     return centered, True
 
 
+def _validate_behavior_scores(values: list[float] | None, count: int, key: Any) -> None:
+    if values is None:
+        return
+    if len(values) != count:
+        raise GroupError(f"behavior log-probability length mismatch in group {key}")
+    if any(isinstance(value, bool) or not isinstance(value, (int, float))
+           or not math.isfinite(value) or value > 0 for value in values):
+        raise GroupError(f"behavior log-probabilities must be finite nonpositive numbers in group {key}")
+
+
 def group_samples(samples: Iterable[Sample], *, group_size: int | None = None) -> dict[tuple[str, str], list[Sample]]:
     groups: dict[tuple[str, str], list[Sample]] = {}
     for s in samples:
@@ -200,6 +213,15 @@ def group_samples(samples: Iterable[Sample], *, group_size: int | None = None) -
         idx = [s.sample_index for s in g]
         if len(set(idx)) != len(idx):
             raise GroupError(f"duplicate sample_index in group {key}")
+        if any(s.meta.get("behavior_logprob_source") == "sampling_distribution" for s in g):
+            sizes = [s.meta.get("behavior_group_size") for s in g]
+            if (any(s.meta.get("behavior_logprob_source") != "sampling_distribution" for s in g)
+                    or any(type(size) is not int or size < 2 for size in sizes)
+                    or any(size != sizes[0] for size in sizes)
+                    or len(g) != sizes[0]
+                    or any(type(index) is not int for index in idx)
+                    or sorted(idx) != list(range(len(g)))):
+                raise GroupError(f"partial or inconsistent recorded trajectory group {key}")
         if len({tuple(s.prompt_ids) for s in g}) != 1:
             raise GroupError(f"mixed prompts in group {key}")
         if len({s.verifier for s in g}) != 1:
@@ -220,10 +242,7 @@ def group_samples(samples: Iterable[Sample], *, group_size: int | None = None) -
             ):
                 raise GroupError(f"first trajectory segment differs from the sample action in group {key}")
             if s.trajectory_segments is not None and s.behavior_logprobs is not None:
-                if len(s.behavior_logprobs) != len(s.completion_ids):
-                    raise GroupError(f"behavior log-probability length mismatch in group {key}")
-                if any(not math.isfinite(value) for value in s.behavior_logprobs):
-                    raise GroupError(f"behavior log-probabilities must be finite in group {key}")
+                _validate_behavior_scores(s.behavior_logprobs, len(s.completion_ids), key)
                 if (
                     segments[0].behavior_logprobs is not None
                     and s.behavior_logprobs != segments[0].behavior_logprobs
@@ -233,36 +252,24 @@ def group_samples(samples: Iterable[Sample], *, group_size: int | None = None) -
                 if not segment.completion_ids:
                     raise GroupError(f"empty completion in group {key}")
                 if not segment.prompt_ids or any(
-                    type(token) is not int for token in (*segment.prompt_ids, *segment.completion_ids)
+                    type(token) is not int or token < 0
+                    for token in (*segment.prompt_ids, *segment.completion_ids)
                 ):
                     raise GroupError(f"prompt and completion tokens must be integer IDs in group {key}")
-                if isinstance(segment, TrajectorySegment):
-                    logprobs = segment.behavior_logprobs
-                    if logprobs is not None:
-                        if len(logprobs) != len(segment.completion_ids):
-                            raise GroupError(f"behavior log-probability length mismatch in group {key}")
-                        if any(
-                            isinstance(value, bool)
-                            or not isinstance(value, (int, float))
-                            or not math.isfinite(value)
-                            or value > 0
-                            for value in logprobs
-                        ):
-                            raise GroupError(
-                                f"behavior log-probabilities must be finite nonpositive numbers in group {key}"
-                            )
-                elif segment.behavior_logprobs is not None:
-                    if len(segment.behavior_logprobs) != len(segment.completion_ids):
-                        raise GroupError(f"behavior log-probability length mismatch in group {key}")
-                    if any(not math.isfinite(value) for value in segment.behavior_logprobs):
-                        raise GroupError(f"behavior log-probabilities must be finite in group {key}")
+                _validate_behavior_scores(segment.behavior_logprobs, len(segment.completion_ids), key)
     return groups
 
 
 def check_policy_lag(samples: Iterable[Sample], *, policy_checkpoint_id: str, policy_step: int,
                      max_policy_lag: int) -> int:
+    if (type(policy_step) is not int or policy_step < 0
+            or type(max_policy_lag) is not int or max_policy_lag < 0
+            or not isinstance(policy_checkpoint_id, str) or not policy_checkpoint_id):
+        raise StalePolicyError("current checkpoint, policy step, and maximum lag must be valid")
     worst = 0
     for s in samples:
+        if type(s.behavior_step) is not int or s.behavior_step < 0:
+            raise StalePolicyError("behavior step must be a nonnegative integer")
         lag = policy_step - s.behavior_step
         if lag < 0:
             raise StalePolicyError(f"sample from future step {s.behavior_step} > {policy_step}")
@@ -273,6 +280,49 @@ def check_policy_lag(samples: Iterable[Sample], *, policy_checkpoint_id: str, po
             raise StalePolicyError(f"policy lag {lag} > max_policy_lag {max_policy_lag}")
         worst = max(worst, lag)
     return worst
+
+
+def check_on_policy_log_ratio(policy_lag: int, max_abs_log_ratio: float) -> None:
+    """Reject invalid ratios at every lag, and mismatched lag-zero scores.
+
+    Checkpoint labels alone do not establish the sampling distribution. This
+    check uses each action segment's differentiated current-policy scores.
+    Numerical differences in a real backend require a separate investigation;
+    they do not authorize replacing recorded sampling log-probabilities.
+    """
+    if type(policy_lag) is not int or policy_lag < 0:
+        raise StalePolicyError("policy lag must be a nonnegative integer")
+    if (isinstance(max_abs_log_ratio, bool) or not isinstance(max_abs_log_ratio, (int, float))
+            or not math.isfinite(max_abs_log_ratio) or max_abs_log_ratio < 0):
+        raise StalePolicyError("behavior log-ratio must be finite and nonnegative")
+    if policy_lag == 0 and max_abs_log_ratio > ON_POLICY_LOG_RATIO_TOLERANCE:
+        raise StalePolicyError(
+            "lag-zero behavior log-probabilities do not match the current policy: "
+            f"max_abs_log_ratio={max_abs_log_ratio!r}, tolerance={ON_POLICY_LOG_RATIO_TOLERANCE}"
+        )
+
+
+def _check_behavior_sampling(samples: Iterable[Sample], cfg: GRPOConfig) -> None:
+    """Bind a recorded collector's sampler to the distribution in the loss."""
+    check_exact_ratio_sampling(temperature=cfg.temperature, top_p=1.0)
+    for sample in samples:
+        if ("behavior_temperature" not in sample.meta
+                and "behavior_top_p" not in sample.meta
+                and sample.meta.get("behavior_logprob_source") != "sampling_distribution"):
+            continue  # Legacy manually constructed samples have no collector metadata.
+        temperature, top_p = sample.meta.get("behavior_temperature"), sample.meta.get("behavior_top_p")
+        if not isinstance(temperature, (int, float)) or not isinstance(top_p, (int, float)):
+            raise TruncatedSamplingError("recorded behavior sampler metadata is missing or nonnumeric")
+        check_exact_ratio_sampling(
+            temperature=temperature, top_p=top_p,
+            top_k=sample.meta.get("behavior_top_k", 0), min_p=sample.meta.get("behavior_min_p", 0.0),
+        )
+        if temperature != cfg.temperature:
+            raise TruncatedSamplingError("recorded behavior temperature differs from the GRPO loss")
+        if sample.meta.get("behavior_logprob_source") == "sampling_distribution" and any(
+            segment.behavior_logprobs is None for segment in _sample_segments(sample)
+        ):
+            raise GroupError("recorded sampling behavior log-probs are missing")
 
 
 # ---------------------------------------------------------------- tensors
@@ -387,37 +437,50 @@ def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -
 def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig | None = None, *,
                               temperature: float | None = None, pad_id: int = 0,
                               after_sample: Callable[[], None] | None = None) -> None:
-    """Fill behavior log-probs for every action segment with current parameters.
+    """Fill missing legacy scores without replacing recorded behavior scores.
 
-    The exact traced computation that ``policy_gradient`` differentiates makes
-    a lag-0 ratio exactly 1. Call before any update that uses these samples,
-    under the same execution context (e.g. gradient checkpointing) as the
-    update. Measured on the 4B MLX bf16 model, an untraced forward differs from
-    the differentiated one by up to 0.13 nats per token; the traced pass is
-    deterministic, so the gradients it also produces are discarded."""
-    import mlx.core as mx
-
+    The caller must own the exact behavior checkpoint while scoring missing
+    values. Recorded sampling scores are retained and checked in the update
+    path, not replaced with current-policy scores to force a ratio of one.
+    A historical 4B bf16 run found forward-path differences up to 0.13 nats;
+    that observation does not justify silently changing a sampled denominator.
+    Missing values are staged so a later failure cannot leave a partial fill.
+    """
     if cfg is None:
         if temperature is None:
             raise ValueError("pass cfg or temperature")
         cfg = GRPOConfig(temperature=temperature)
-    value_and_grad = _value_and_grad(model, cfg, n_tokens=1)
-    for s in samples:
-        for index, segment in enumerate(_sample_segments(s)):
+    samples = list(samples)
+    group_samples(samples, group_size=cfg.group_size)
+    _check_behavior_sampling(samples, cfg)
+    missing = [(s, index, segment) for s in samples
+               for index, segment in enumerate(_sample_segments(s))
+               if segment.behavior_logprobs is None]
+    staged: list[tuple[Sample | TrajectorySegment, list[float]]] = []
+    if missing:
+        import mlx.core as mx
+
+        value_and_grad = _value_and_grad(model, cfg, n_tokens=1)
+        for s, index, segment in missing:
+            # The legacy first-action mirror is also a recorded value.
+            if index == 0 and isinstance(segment, TrajectorySegment) and s.behavior_logprobs is not None:
+                staged.append((segment, list(s.behavior_logprobs)))
+                continue
             tokens, mask, start = sample_tensors(segment, pad_id)
             zeros = mx.zeros(mask.shape, dtype=mx.float32)
             (_, (_, lp)), g = value_and_grad(tokens, mask, start, mx.zeros((1,), dtype=mx.float32), zeros)
             mx.eval(lp, g)
-            del g
             values = [float(x) for x in lp[0, : len(segment.completion_ids)].tolist()]
-            if isinstance(segment, TrajectorySegment):
-                segment.behavior_logprobs = values
-                if index == 0:
-                    s.behavior_logprobs = values
-            else:
-                s.behavior_logprobs = values
+            _validate_behavior_scores(values, len(segment.completion_ids), s.group_key)
+            staged.append((segment, values))
             if after_sample is not None:
                 after_sample()
+    for segment, values in staged:
+        segment.behavior_logprobs = values
+    for s in samples:
+        if s.trajectory_segments is not None and s.behavior_logprobs is None:
+            first = s.trajectory_segments[0].behavior_logprobs
+            s.behavior_logprobs = list(first) if first is not None else None
 
 
 # ------------------------------------------------------------------ update
@@ -447,7 +510,8 @@ def _value_and_grad(model, cfg: GRPOConfig, *, n_tokens: int):
 
 
 def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig, *, n_tokens: int,
-                    pad_id: int = 0, after_sample: Callable[[], None] | None = None) -> tuple[Any, dict[str, float]]:
+                    policy_checkpoint_id: str, policy_step: int, pad_id: int = 0,
+                    after_sample: Callable[[], None] | None = None) -> tuple[Any, dict[str, float]]:
     """Gradient of the step loss, accumulated one action segment at a time.
 
     For trajectories, each segment receives its episode's terminal advantage.
@@ -456,6 +520,13 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
     ``after_sample`` (optional) runs after each microbatch is evaluated, e.g. to
     release MLX's buffer cache or check a resource limit; it cannot change the
     gradient, and an exception from it aborts the step before any update."""
+    samples = [sample for sample, _ in work]
+    group_samples(samples, group_size=cfg.group_size)
+    check_policy_lag(samples, policy_checkpoint_id=policy_checkpoint_id,
+                     policy_step=policy_step, max_policy_lag=cfg.max_policy_lag)
+    _check_behavior_sampling(samples, cfg)
+    if type(n_tokens) is not int or n_tokens <= 0:
+        raise ValueError("n_tokens must be a positive integer")
     import mlx.core as mx
     from mlx.utils import tree_map
 
@@ -472,8 +543,12 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
         tokens, mask, start = sample_tensors(segment, pad_id)
         blp = mx.array([behavior_logprobs], dtype=mx.float32)
         (loss, (st, _lp)), g = value_and_grad(tokens, mask, start, mx.array([a], dtype=mx.float32), blp)
+        mx.eval(loss, st, g)
+        check_on_policy_log_ratio(policy_step - s.behavior_step, float(st["max_abs_log_ratio"]))
+        if not math.isfinite(float(loss)) or any(not math.isfinite(float(value)) for value in st.values()):
+            raise FloatingPointError("non-finite GRPO loss or importance-ratio diagnostics")
         grads = g if grads is None else tree_map(lambda x, y: x + y, grads, g)
-        mx.eval(loss, st, grads)
+        mx.eval(grads)
         loss_total += float(loss)
         clipped += float(st["clipped_tokens"])
         ratio_sum += float(st["ratio_sum"])
@@ -491,12 +566,10 @@ def policy_gradient(model, work: Sequence[tuple[Sample, float]], cfg: GRPOConfig
 def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, policy_checkpoint_id: str,
                policy_step: int, pad_id: int = 0, after_sample: Callable[[], None] | None = None) -> dict[str, Any]:
     """One GRPO update on whole groups. Returns a JSON-serializable record."""
-    import mlx.core as mx
-    import mlx.optimizers as optim
-
     groups = group_samples(samples, group_size=cfg.group_size)
     lag = check_policy_lag(samples, policy_checkpoint_id=policy_checkpoint_id, policy_step=policy_step,
                            max_policy_lag=cfg.max_policy_lag)
+    _check_behavior_sampling(samples, cfg)
     work: list[tuple[Sample, float]] = []
     group_rows = []
     for key in sorted(groups):
@@ -528,11 +601,23 @@ def train_step(model, optimizer, samples: Sequence[Sample], cfg: GRPOConfig, *, 
         record.update(update_applied=False, reason="no_informative_group")
         return record
 
-    grads, diag = policy_gradient(model, work, cfg, n_tokens=n_tokens, pad_id=pad_id, after_sample=after_sample)
+    import mlx.core as mx
+    import mlx.optimizers as optim
+    from mlx.utils import tree_flatten
+
+    grads, diag = policy_gradient(
+        model, work, cfg, n_tokens=n_tokens, policy_checkpoint_id=policy_checkpoint_id,
+        policy_step=policy_step, pad_id=pad_id, after_sample=after_sample,
+    )
+    if any(not bool(mx.all(mx.isfinite(value)).item()) for _, value in tree_flatten(grads)):
+        raise FloatingPointError("non-finite GRPO gradient")
     grad_norm = None
     if cfg.max_grad_norm is not None:
         grads, gn = optim.clip_grad_norm(grads, cfg.max_grad_norm)
         grad_norm = float(gn)
+        if (not math.isfinite(grad_norm)
+                or any(not bool(mx.all(mx.isfinite(value)).item()) for _, value in tree_flatten(grads))):
+            raise FloatingPointError("non-finite clipped GRPO gradient")
     before = trainable_digest(model)
     optimizer.update(model, grads)
     mx.eval(model.parameters(), optimizer.state)

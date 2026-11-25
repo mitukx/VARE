@@ -1,0 +1,38 @@
+{
+  "baseline_commit": "287621875c08c22419810e021f9180f0d830b259",
+  "baseline_source_sha256": "09410c9cafe7a4b62af8eca0462254ece6177d4bc42f72323c148a4ddc5c188f",
+  "expected_regression_reproduced": true,
+  "fixture": {
+    "action_segments": 4,
+    "group_size": 2,
+    "later_action_logprob_perturbation": -0.5,
+    "seed": 0
+  },
+  "observations": {
+    "baseline": {
+      "mismatched_lag_zero_rejected": false,
+      "optimizer_step": 1,
+      "parameters_changed": true,
+      "recorded_scores_overwritten": true,
+      "rejection": null
+    },
+    "patched": {
+      "mismatched_lag_zero_rejected": true,
+      "optimizer_step": 0,
+      "parameters_changed": false,
+      "recorded_scores_overwritten": false,
+      "rejection": "lag-zero behavior log-probabilities do not match the current policy: max_abs_log_ratio=0.5, tolerance=1e-06"
+    }
+  },
+  "patched_source_sha256": "7207f60f273186ba508115bf11b595e791dd957de55bcdee32b92765ba41ffff",
+  "reproducer_sha256": "ed0997b8547e14fb8cf753f7fe676a8be6b8f40ed920ccd2816d459c3079a486",
+  "runtime": {
+    "device": "Device(cpu, 0)",
+    "machine": "x86_64",
+    "mlx": "0.32.2",
+    "platform": "Linux",
+    "python": "3.12.14"
+  },
+  "schema": "vare_grpo_trajectory_guard_replay_v1",
+  "scope": "synthetic forced-action defect replay; no model capability claim"
+}
