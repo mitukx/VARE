@@ -931,3 +931,98 @@ def test_after_sample_stop_aborts_step_before_any_update():
         G.train_step(m, opt, samples, G.GRPOConfig(group_size=2), policy_checkpoint_id="c0", policy_step=0,
                      after_sample=stop)
     assert G.trainable_digest(m) == before
+
+
+def test_native_scoring_requires_explicit_recorded_lag_zero_contract():
+    with pytest.raises(ValueError, match="unknown GRPO sampling score mode"):
+        G.GRPOConfig(sampling_score_mode="unknown")
+    with pytest.raises(ValueError, match="restricted to lag-zero"):
+        G.GRPOConfig(sampling_score_mode=G.NATIVE_SAMPLER_SCORE_MODE, max_policy_lag=1)
+    assert "sampling_score_mode" not in G.GRPOConfig().to_dict()
+    cfg = G.GRPOConfig(sampling_score_mode=G.NATIVE_SAMPLER_SCORE_MODE, temperature=0.7)
+    assert cfg.to_dict()["sampling_score_mode"] == G.NATIVE_SAMPLER_SCORE_MODE
+    samples = [_trajectory_sample(0, 1.0), _trajectory_sample(1, 0.0)]
+    with pytest.raises(G.GroupError, match="recorded sampling-distribution"):
+        G.compute_behavior_logprobs(object(), samples, cfg)
+
+
+@needs_mlx
+@pytest.mark.parametrize("dtype_name", ["float32", "bfloat16"])
+def test_native_scoring_matches_captured_sampler_and_preserves_gradient_guard(dtype_name):
+    import copy
+
+    import mlx.core as mx
+    import mlx.optimizers as optim
+    import numpy as np
+
+    from scripts.long_horizon_eval import _sampling_token_logprob
+
+    dtype = getattr(mx, dtype_name)
+    temperature = 0.7
+    model = _bigram(64, seed=17)
+    # Give each action row a varied, nontrivial distribution. The low-precision
+    # sampler centering and multiplication then differ from the legacy FP32 path.
+    model.table.weight = (model.table.weight * 3.0 + 0.23).astype(dtype)
+    mx.eval(model.parameters())
+    samples = [_trajectory_sample(0, 1.0), _trajectory_sample(1, 0.0)]
+    work = [(samples[0], 1.0), (samples[1], -1.0)]
+    expected_gradient = np.zeros((64, 64), dtype=np.float64)
+    for sample, advantage in work:
+        sample.meta.update(
+            behavior_logprob_source="sampling_distribution", behavior_group_size=2,
+            behavior_temperature=temperature, behavior_top_p=1.0,
+        )
+        for segment in sample.trajectory_segments:
+            assert len(segment.completion_ids) == 1
+            previous = segment.prompt_ids[-1]
+            target = segment.completion_ids[0]
+            native_logits = model(mx.array([[previous]]))[0, 0]
+            upstream = native_logits - mx.logsumexp(native_logits)
+            # Capture through the collector's independent one-vector score.
+            captured = _sampling_token_logprob(upstream, target, temperature, mx)
+            segment.behavior_logprobs = [captured]
+            scaled = np.asarray((upstream * (1.0 / temperature)).astype(mx.float32), dtype=np.float64)
+            probs = np.exp(_np_logsoftmax(scaled))
+            assert captured == pytest.approx(math.log(probs[target]), abs=1e-6)
+            # Reference derivative ignoring floating-point rounding, as in MLX
+            # differentiation. BF16 gradients are compared at dtype-scale error.
+            expected_gradient[previous] -= (
+                advantage / (4 * temperature) * (np.eye(64)[target] - probs)
+            )
+        sample.behavior_logprobs = list(sample.trajectory_segments[0].behavior_logprobs)
+
+    cfg = G.GRPOConfig(group_size=2, temperature=temperature,
+                       sampling_score_mode=G.NATIVE_SAMPLER_SCORE_MODE, max_grad_norm=None)
+    before = copy.deepcopy(samples)
+    model_before = G.trainable_digest(model)
+    legacy = G.audit_on_policy_sampling_alignment(
+        model, samples, G.GRPOConfig(group_size=2, temperature=temperature),
+        policy_checkpoint_id="policy-0", policy_step=0,
+    )
+    if dtype_name == "bfloat16":
+        assert legacy["metrics"]["sampled_vs_differentiated"]["max"] > 1e-6
+
+    report = G.audit_on_policy_sampling_alignment(
+        model, samples, cfg, policy_checkpoint_id="policy-0", policy_step=0,
+    )
+    assert report["sampling_score_mode"] == G.NATIVE_SAMPLER_SCORE_MODE
+    assert not report["would_reject_lag_zero_update"]
+    grads, diag = G.policy_gradient(
+        model, work, cfg, n_tokens=4, policy_checkpoint_id="policy-0", policy_step=0,
+    )
+    actual = np.asarray(grads["table"]["weight"].astype(mx.float32))
+    assert np.isfinite(actual).all() and np.abs(actual).max() > 1e-3
+    atol = 0.02 if dtype_name == "bfloat16" else 1e-5
+    assert actual == pytest.approx(expected_gradient, abs=atol)
+    assert diag["max_abs_log_ratio"] <= G.ON_POLICY_LOG_RATIO_TOLERANCE
+    assert samples == before
+    assert G.trainable_digest(model) == model_before
+
+    # A later-action denominator perturbation must still abort before Adam.
+    samples[1].trajectory_segments[1].behavior_logprobs[0] -= 0.5
+    optimizer = optim.Adam(learning_rate=1e-3)
+    with pytest.raises(G.StalePolicyError, match="lag-zero behavior"):
+        G.train_step(model, optimizer, samples, cfg,
+                     policy_checkpoint_id="policy-0", policy_step=0)
+    assert G.trainable_digest(model) == model_before
+    assert int(optimizer.state["step"].item()) == 0

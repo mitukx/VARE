@@ -14,7 +14,9 @@ rollout groups:
   the normalization of the other groups. A step with no informative group
   applies no optimizer update.
 * Log-probabilities are computed on completion tokens only (prompt and padding
-  are masked out) from ``logits / temperature``.
+  are masked out). The legacy FP32 softmax is the default. An explicit
+  MLX-LM-native score mode models the collector's finite-precision sampler
+  arithmetic for recorded, lag-zero groups.
 * A multi-turn sample may contain independently conditioned action segments.
   Its terminal group advantage is applied to every policy-generated token;
   tool observations are context in the next segment's prompt, never targets.
@@ -78,6 +80,8 @@ class TruncatedSamplingError(ValueError):
 # over the full vocabulary, so sampling must not truncate the distribution.
 EXACT_RATIO_TOP_P = 1.0
 ON_POLICY_LOG_RATIO_TOLERANCE = 1e-6
+LEGACY_SCORE_MODE = "legacy_fp32"
+NATIVE_SAMPLER_SCORE_MODE = "mlx_lm_native_v1"
 
 
 def check_exact_ratio_sampling(*, temperature: float, top_p: float, top_k: int = 0, min_p: float = 0.0) -> None:
@@ -113,9 +117,20 @@ class GRPOConfig:
     max_policy_lag: int = 0
     max_grad_norm: float | None = 1.0
     group_size: int | None = None  # if set, every group must have exactly this many samples
+    sampling_score_mode: str = LEGACY_SCORE_MODE
+
+    def __post_init__(self) -> None:
+        if self.sampling_score_mode not in (LEGACY_SCORE_MODE, NATIVE_SAMPLER_SCORE_MODE):
+            raise ValueError("unknown GRPO sampling score mode")
+        if self.sampling_score_mode == NATIVE_SAMPLER_SCORE_MODE and self.max_policy_lag != 0:
+            raise ValueError("native sampler scoring is currently restricted to lag-zero groups")
 
     def to_dict(self) -> dict[str, Any]:
-        return {k: getattr(self, k) for k in self.__dataclass_fields__}
+        values = {k: getattr(self, k) for k in self.__dataclass_fields__}
+        # Preserve existing serialized configuration for legacy experiments.
+        if self.sampling_score_mode == LEGACY_SCORE_MODE:
+            values.pop("sampling_score_mode")
+        return values
 
 
 @dataclass
@@ -306,6 +321,9 @@ def _check_behavior_sampling(samples: Iterable[Sample], cfg: GRPOConfig) -> None
     """Bind a recorded collector's sampler to the distribution in the loss."""
     check_exact_ratio_sampling(temperature=cfg.temperature, top_p=1.0)
     for sample in samples:
+        if (cfg.sampling_score_mode == NATIVE_SAMPLER_SCORE_MODE
+                and sample.meta.get("behavior_logprob_source") != "sampling_distribution"):
+            raise GroupError("native sampler scoring requires recorded sampling-distribution scores")
         if ("behavior_temperature" not in sample.meta
                 and "behavior_top_p" not in sample.meta
                 and sample.meta.get("behavior_logprob_source") != "sampling_distribution"):
@@ -365,13 +383,29 @@ def _logits(model, inputs, start: int):
     return model(inputs)[:, start:]
 
 
-def token_logprobs(model, tokens, *, temperature: float = 1.0, start: int = 0):
-    """log pi(tokens[:, t+1] | tokens[:, :t+1]) for t >= start, float32 [B, L-1-start]."""
+def token_logprobs(model, tokens, *, temperature: float = 1.0, start: int = 0,
+                   sampling_score_mode: str = LEGACY_SCORE_MODE):
+    """Completion log-probs [B, L-1-start], with explicit numerical score semantics.
+
+    The native mode mirrors the MLX-LM 0.32.2 untruncated sampler used by
+    TraceableMLXPolicy: center in the model's output dtype, multiply by
+    reciprocal temperature in that dtype, promote to FP32, then normalize.
+    It does not bypass the differentiated lag-zero guard or replace any
+    behavior denominator. The legacy path is unchanged.
+    """
     import mlx.core as mx
 
-    logits = _logits(model, tokens[:, :-1], start).astype(mx.float32)
-    if temperature != 1.0:
-        logits = logits / temperature
+    logits = _logits(model, tokens[:, :-1], start)
+    if sampling_score_mode == NATIVE_SAMPLER_SCORE_MODE:
+        check_exact_ratio_sampling(temperature=temperature, top_p=1.0)
+        native_logprobs = logits - mx.logsumexp(logits, axis=-1, keepdims=True)
+        logits = (native_logprobs * (1.0 / temperature)).astype(mx.float32)
+    elif sampling_score_mode == LEGACY_SCORE_MODE:
+        logits = logits.astype(mx.float32)
+        if temperature != 1.0:
+            logits = logits / temperature
+    else:
+        raise ValueError("unknown GRPO sampling score mode")
     targets = tokens[:, 1 + start:]
     lse = mx.logsumexp(logits, axis=-1)
     picked = mx.take_along_axis(logits, targets[..., None], axis=-1)[..., 0]
@@ -417,7 +451,8 @@ def informative_samples(samples: Sequence[Sample], cfg: GRPOConfig) -> list[Samp
     return out
 
 
-def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -> list[float]:
+def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0,
+                     sampling_score_mode: str = LEGACY_SCORE_MODE) -> list[float]:
     """Plain forward log-probs for every policy action token in ``s``.
 
     Not used for the ratio: on Metal/bf16 it can differ from the differentiated
@@ -428,7 +463,8 @@ def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -
     result: list[float] = []
     for segment in _sample_segments(s):
         tokens, _, start = sample_tensors(segment, pad_id)
-        lp = token_logprobs(model, tokens, temperature=temperature, start=start)
+        lp = token_logprobs(model, tokens, temperature=temperature, start=start,
+                            sampling_score_mode=sampling_score_mode)
         mx.eval(lp)
         result.extend(float(x) for x in lp[0, : len(segment.completion_ids)].tolist())
     return result
@@ -510,7 +546,8 @@ def audit_on_policy_sampling_alignment(
     plain_to_traced: list[float] = []
     for _, segment in actions:
         tokens, mask, start = sample_tensors(segment, pad_id)
-        plain = token_logprobs(model, tokens, temperature=cfg.temperature, start=start)
+        plain = token_logprobs(model, tokens, temperature=cfg.temperature, start=start,
+                               sampling_score_mode=cfg.sampling_score_mode)
         zeros = mx.zeros(mask.shape, dtype=mx.float32)
         (_, (_, traced)), gradients = value_and_grad(
             tokens, mask, start, mx.zeros((1,), dtype=mx.float32), zeros,
@@ -539,6 +576,7 @@ def audit_on_policy_sampling_alignment(
         "policy_checkpoint_id": policy_checkpoint_id,
         "policy_step": policy_step,
         "temperature": cfg.temperature,
+        "sampling_score_mode": cfg.sampling_score_mode,
         "tolerance": tolerance,
         "n_groups": len(groups),
         "n_samples": len(samples),
@@ -619,7 +657,8 @@ def _value_and_grad(model, cfg: GRPOConfig, *, n_tokens: int):
     import mlx.nn as nn
 
     def loss_fn(tokens, mask, start, adv, blp):
-        lp = token_logprobs(model, tokens, temperature=cfg.temperature, start=start)
+        lp = token_logprobs(model, tokens, temperature=cfg.temperature, start=start,
+                            sampling_score_mode=cfg.sampling_score_mode)
         loss, stats = clipped_surrogate(lp, blp, adv, mask, eps_low=cfg.clip_eps_low, eps_high=cfg.clip_eps_high,
                                         n_tokens=float(n_tokens))
         return loss, (stats, lp)

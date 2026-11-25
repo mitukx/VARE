@@ -1,12 +1,7 @@
 name: grpo-pretrained-sampling-alignment
+# Historical v1 experiment is retained, including its q4 timeout.
+# Do not automatically repeat the frozen cohort on every PR update.
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'scripts/diagnose_grpo_pretrained_sampling.py'
-      - 'protocols/grpo_pretrained_sampling_alignment_v1.json'
-      - 'tests/test_grpo_pretrained_diagnostic.py'
-      - '.github/workflows/grpo-pretrained-sampling-alignment.yml'
   workflow_dispatch:
 permissions:
   contents: read

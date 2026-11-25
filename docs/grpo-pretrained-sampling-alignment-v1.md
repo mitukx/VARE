@@ -90,3 +90,30 @@ using the actual `TraceGeneration` dataclass. The model, protocol hash,
 contexts, seeds, precision arms, and tolerance are unchanged. This is a
 prospective repair to measurement plumbing, not a change to the acceptance
 criterion or a retry of any consumed task cohort.
+
+### Measured v1 disposition and prospective v2
+
+The repaired v1 run at `2a6a0b1fc4bf434d77a9e02288c88f2ccaa425f0`
+([workflow](https://github.com/mitukx/VARE/actions/runs/45593225709))
+measured BF16 (63/64 tokens above 1e-6, max 0.01474905 nat) and FP32
+(28/64, max 0.0000033378601 nat). The q4 arm stopped at the frozen
+480-second cap, without a completed group. Full measured arms preserved
+their parameter bytes. In these CPU measurements the cached-to-uncached
+native control and ordinary-to-differentiated legacy differences were zero.
+The normalization and temperature arithmetic discrepancy was sufficient to
+explain the measured differences. This does not establish Metal behavior.
+
+The historical workflow is manual-only now, not silently retried on every
+synchronize. Its original result and incomplete q4 arm remain unchanged.
+A prospective [v2 protocol](../protocols/grpo_pretrained_sampling_alignment_v2.json)
+uses fresh neutral prompts, two new seeds, at most 16 emitted tokens per
+arm, and only FP32/BF16 CPU. It tests the opt-in `mlx_lm_native_v1`
+differentiable score mode with the unchanged 1e-6 guard. This mode rejects
+legacy non-sampled inputs and nonzero configured policy lag. Legacy scoring
+and configuration serialization remain unchanged; no denominator is
+recomputed or overwritten. The captured-sampler synthetic regression checks
+finite/nonzero gradients against a categorical reference (BF16 tolerance
+reflects rounded arithmetic) and tests later-action corruption rejection.
+The new real-weight workflow records candidate alignment, legacy ordinary
+forward control on the same captured tokens, hashes, and pass/nonpass.
+No model update is authorized.
