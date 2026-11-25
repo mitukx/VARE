@@ -1,12 +1,6 @@
 name: grpo-metal-path-isolation-v4
+# Completed v4 cohort; explicit dispatch only.
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'scripts/diagnose_grpo_metal_path.py'
-      - 'tests/test_grpo_metal_path.py'
-      - 'protocols/grpo_metal_path_isolation_v4.json'
-      - '.github/workflows/grpo-metal-path-isolation-v4.yml'
   workflow_dispatch:
 permissions:
   contents: read

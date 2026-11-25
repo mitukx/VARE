@@ -29,3 +29,7 @@ causality for every layer, an upstream kernel bug, or a capability result.
 A promising path requires a fresh sampled-cohort diagnostic before any
 production score-mode change. The frozen protocol is
 [grpo_metal_path_isolation_v4.json](../protocols/grpo_metal_path_isolation_v4.json).
+
+## Measured outcome
+
+Both arms completed at `faad1de0acd7c20c24d187f89d5d93cdd91d3c8b`. BF16 explicit paths pass the two fixed-target score checks; FP32 has no complete passing path at 1e-6. See the [retained exact ZIPs and path table](../results/grpo-metal-path-isolation-v4/README.md). No generated trajectories or optimizer updates were run. The initial pre-measurement test error is preserved and automatic repeat is disabled.
