@@ -236,6 +236,29 @@ INVENTORY_V6_SOURCES = INVENTORY_V5_SOURCES | frozenset({
 INVENTORY_V7_SOURCES = INVENTORY_V6_SOURCES | frozenset({
     "src/vare/agent_navigation.py",
 })
+# ResearchGym is a separate CPU experiment package. Keep v1-v7 immutable so
+# continuation evidence retains the source set that produced it. These modules
+# are not GRPO, replay, or promotion code.
+INVENTORY_V8_SOURCES = INVENTORY_V7_SOURCES | frozenset({
+    "src/vare/research_lab/__init__.py",
+    "src/vare/research_lab/calibration.py",
+    "src/vare/research_lab/cli.py",
+    "src/vare/research_lab/controller.py",
+    "src/vare/research_lab/edits.py",
+    "src/vare/research_lab/evaluation.py",
+    "src/vare/research_lab/execute.py",
+    "src/vare/research_lab/export_adapter.py",
+    "src/vare/research_lab/paths.py",
+    "src/vare/research_lab/proposer.py",
+    "src/vare/research_lab/reference.py",
+    "src/vare/research_lab/spec.py",
+    "src/vare/research_lab/store.py",
+    "src/vare/research_lab/workspace.py",
+})
+# The bubblewrap grade adapter is a new runtime module. Keep v1-v8 immutable.
+INVENTORY_V9_SOURCES = INVENTORY_V8_SOURCES | frozenset({
+    "src/vare/research_lab/isolation.py",
+})
 # Exact-match registry; a campaign is identified by its complete source set.
 SOURCE_INVENTORIES = {
     "v1-pinned": LEGACY_EXPECTED_SOURCES,
@@ -245,11 +268,13 @@ SOURCE_INVENTORIES = {
     "v5": INVENTORY_V5_SOURCES,
     "v6": INVENTORY_V6_SOURCES,
     "v7": INVENTORY_V7_SOURCES,
+    "v8": INVENTORY_V8_SOURCES,
+    "v9": INVENTORY_V9_SOURCES,
 }
-CURRENT_SOURCE_INVENTORY = "v7"
+CURRENT_SOURCE_INVENTORY = "v9"
 EXPECTED_SOURCES = SOURCE_INVENTORIES[CURRENT_SOURCE_INVENTORY]
 # Versions whose campaigns record the recovery endpoint at the resumed-round end.
-EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5", "v6", "v7"})
+EXACT_RECOVERY_ENDPOINT_INVENTORIES = frozenset({"v3", "v4", "v5", "v6", "v7", "v8", "v9"})
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.

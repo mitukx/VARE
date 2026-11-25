@@ -33,3 +33,7 @@ output directory; keep blocked and incomplete outcomes. The provided
 workflow applies external download and measurement wall caps.
 
 Status: prospective, no v3 measurement claimed at authoring.
+
+## Completed v3 outcomes
+
+All three arms completed at the measured source. CPU q4 passed; both Metal arms failed numerical alignment. See the [original byte-exact archives and bounded outcome table](../results/grpo-pretrained-sampling-alignment-v3/README.md). No optimizer step was attempted. Automatic v3 repetition is disabled. This diagnostic is not a model training or Metal correctness claim.

@@ -11,6 +11,7 @@ def main():
               '  durable-export, durable-audit  retained recovery evidence\n'
               '  demo, rvl-inspect, rvl-plan experimental improvement controls\n'
               '  env-validate, env-verify, env-smoke, env-campaign environment experiments\n'
+              '  research                    ResearchGym tasks, runs, and reports\n'
               '  lock-protocol, score, manifest  protocol/evidence utilities\n'
               'Use COMMAND --help for arguments. Full control-plane commands need Python >=3.11.')
         return 0
@@ -18,6 +19,9 @@ def main():
         from .durable import main as selected
     elif command in {'run', 'audit'}:
         from .runner import main as selected
+    elif command == 'research':
+        from .research_lab.cli import main as research_main
+        return research_main(sys.argv[2:])
     else:
         from .cli import main as selected
     return selected()

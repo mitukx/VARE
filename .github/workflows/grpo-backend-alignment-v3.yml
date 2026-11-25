@@ -1,12 +1,6 @@
 name: grpo-backend-alignment-v3
+# Completed v3 cohort; new measurements require an explicit dispatch.
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'scripts/diagnose_grpo_backend_alignment.py'
-      - 'tests/test_grpo_backend_alignment.py'
-      - 'protocols/grpo_pretrained_sampling_alignment_v3.json'
-      - '.github/workflows/grpo-backend-alignment-v3.yml'
   workflow_dispatch:
 permissions:
   contents: read
