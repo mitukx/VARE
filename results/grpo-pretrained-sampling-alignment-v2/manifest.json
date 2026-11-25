@@ -1,0 +1,193 @@
+{
+  "schema": "vare.grpo.native_sampler_retained_evidence/v1",
+  "source_commit": "45dfb554b3e4d203a6af9c622411eba4f103a010",
+  "protocol_sha256": "848574edb5d1c07b83bf5bf7e46e20d5b2d3541bf3e41c5f0ace101c4bc909fb",
+  "workflow_run": "https://github.com/mitukx/VARE/actions/runs/45596218464",
+  "checks_at_measured_head": {
+    "passed": 24,
+    "total": 24
+  },
+  "retention": "Original GitHub artifact ZIPs retained byte-for-byte. ZIP and contained result SHA-256 verified against the workflow markers; Git blob IDs verified against the downloaded bytes.",
+  "records": [
+    {
+      "arm": "bf16",
+      "job": 139142861929,
+      "artifact": 15012938971,
+      "size": 3485,
+      "zip_sha256": "d28065f1d7ecfd3920d057a1d12557e7ac46be13e581c158195778ab897f896e",
+      "result_sha256": "de019a87c232d26fa7e17d22c962018bfb3aef31f4356a01c6e9839723f9ef86",
+      "blob": "b832fffd3f24b4211bbf84484c93bf6f45e57087",
+      "parameter_digest": "6670a5d906616a41961985048c337fd04466ea161823ba976da36f11c051da36",
+      "archive": "bf16.zip",
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45596218464/job/139142861929",
+      "artifact_url": "https://github.com/mitukx/VARE/actions/runs/45596218464/artifacts/15012938971",
+      "groups": [
+        {
+          "arm": "bf16",
+          "context": "short",
+          "legacy_sampled_vs_plain": {
+            "max": 0.003980875015258789,
+            "n_over_tolerance": 8,
+            "p50": 0.0005638599395751953,
+            "p95": 0.003980875015258789
+          },
+          "metrics": {
+            "forward_vs_differentiated": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            },
+            "sampled_vs_differentiated": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            },
+            "sampled_vs_forward": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            }
+          },
+          "tokens": 8,
+          "would_reject_if_selected": false
+        },
+        {
+          "arm": "bf16",
+          "context": "long",
+          "legacy_sampled_vs_plain": {
+            "max": 0.013680458068847656,
+            "n_over_tolerance": 8,
+            "p50": 0.0018057823181152344,
+            "p95": 0.013680458068847656
+          },
+          "metrics": {
+            "forward_vs_differentiated": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            },
+            "sampled_vs_differentiated": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            },
+            "sampled_vs_forward": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            }
+          },
+          "tokens": 8,
+          "would_reject_if_selected": false
+        }
+      ],
+      "final": {
+        "arm": "bf16",
+        "error": null,
+        "generated_tokens": 16,
+        "parameter_bytes_unchanged": true,
+        "protocol_sha256": "848574edb5d1c07b83bf5bf7e46e20d5b2d3541bf3e41c5f0ace101c4bc909fb",
+        "result_sha256": "de019a87c232d26fa7e17d22c962018bfb3aef31f4356a01c6e9839723f9ef86",
+        "source_commit": "45dfb554b3e4d203a6af9c622411eba4f103a010",
+        "status": "PASS",
+        "wall_seconds": 202.17713361
+      }
+    },
+    {
+      "arm": "fp32",
+      "job": 139142862500,
+      "artifact": 15014260957,
+      "size": 3445,
+      "zip_sha256": "cf4216cf927540daa929bc5afab8345723110140c2a4f15fbd896519fb32f0f5",
+      "result_sha256": "00a573b241a9425ea5c3ff8ddff5fd7b46559badf59d7583855f3193146c33c6",
+      "blob": "dcdfcb8a8d7d1127e4ea5cc882330c2720ca2b8b",
+      "parameter_digest": "04e19a6ca46384969a42baf94b435f6efde74ff679e03cc05a21f20ea4fd19f5",
+      "archive": "fp32.zip",
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45596218464/job/139142862500",
+      "artifact_url": "https://github.com/mitukx/VARE/actions/runs/45596218464/artifacts/15014260957",
+      "groups": [
+        {
+          "arm": "fp32",
+          "context": "short",
+          "legacy_sampled_vs_plain": {
+            "max": 0.0000022649765014648438,
+            "n_over_tolerance": 3,
+            "p50": 5.364418029785156e-7,
+            "p95": 0.0000022649765014648438
+          },
+          "metrics": {
+            "forward_vs_differentiated": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            },
+            "sampled_vs_differentiated": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            },
+            "sampled_vs_forward": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            }
+          },
+          "tokens": 8,
+          "would_reject_if_selected": false
+        },
+        {
+          "arm": "fp32",
+          "context": "long",
+          "legacy_sampled_vs_plain": {
+            "max": 0.000002384185791015625,
+            "n_over_tolerance": 4,
+            "p50": 6.556510925292969e-7,
+            "p95": 0.000002384185791015625
+          },
+          "metrics": {
+            "forward_vs_differentiated": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            },
+            "sampled_vs_differentiated": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            },
+            "sampled_vs_forward": {
+              "max": 0,
+              "n_over_tolerance": 0,
+              "p50": 0,
+              "p95": 0
+            }
+          },
+          "tokens": 8,
+          "would_reject_if_selected": false
+        }
+      ],
+      "final": {
+        "arm": "fp32",
+        "error": null,
+        "generated_tokens": 16,
+        "parameter_bytes_unchanged": true,
+        "protocol_sha256": "848574edb5d1c07b83bf5bf7e46e20d5b2d3541bf3e41c5f0ace101c4bc909fb",
+        "result_sha256": "00a573b241a9425ea5c3ff8ddff5fd7b46559badf59d7583855f3193146c33c6",
+        "source_commit": "45dfb554b3e4d203a6af9c622411eba4f103a010",
+        "status": "PASS",
+        "wall_seconds": 403.35144461
+      }
+    }
+  ]
+}

@@ -5,6 +5,39 @@ on:
 permissions:
   contents: read
 jobs:
+  grpo-mlx-objective-cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install the pinned MLX CPU test runtime
+        run: python -m pip install -e . -r requirements/grpo-trajectory-cpu-test.txt
+      - name: Require the numerical backend
+        run: |
+          python -c 'import mlx.core as mx; import mlx_lm; mx.set_default_device(mx.cpu); print(mx.default_device())'
+          python -m pip freeze > "${RUNNER_TEMP}/grpo-trajectory-environment.txt"
+      - name: Verify complete trajectories and real toy optimizer updates
+        run: >-
+          python -m pytest -ra tests/test_long_horizon_eval.py tests/test_grpo_mlx.py
+          --junitxml="${RUNNER_TEMP}/grpo-trajectory-tests.xml"
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+          HF_HUB_OFFLINE: '1'
+      - name: Reproduce the pinned behavior-probability defects
+        run: |
+          git fetch --no-tags --depth=1 origin 287621875c08c22419810e021f9180f0d830b259
+          python scripts/reproduce_grpo_trajectory_guards.py > "${RUNNER_TEMP}/grpo-trajectory-guards.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: grpo-trajectory-cpu-evidence
+          path: |
+            ${{ runner.temp }}/grpo-trajectory-environment.txt
+            ${{ runner.temp }}/grpo-trajectory-tests.xml
+            ${{ runner.temp }}/grpo-trajectory-guards.json
   seeded-summary-cpu:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -244,6 +277,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install ruff==0.15.12
+      - run: ruff check scripts/long_horizon_eval.py scripts/reproduce_grpo_trajectory_guards.py
       - run: ruff check src tests minigrpo selfimprove scripts/run_minigrpo.py scripts/run_selfimprove.py scripts/run_flagship.py scripts/reproduce_grpo_audit_independent_reproduction_v2.py scripts/validate_grpo_e2e_cpu.py scripts/audit_grpo_e2e_cpu.py scripts/benchmark_trajectory_runtime.py scripts/audit_trajectory_runtime.py scripts/validate_streamed_grpo_cpu.py scripts/audit_streamed_grpo_cpu.py scripts/benchmark_verifier_refresh_controls.py
   typecheck:
     runs-on: ubuntu-latest

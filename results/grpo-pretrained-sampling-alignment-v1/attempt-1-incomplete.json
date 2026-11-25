@@ -1,0 +1,60 @@
+{
+  "schema": "vare.grpo.pretrained_alignment_incomplete_attempt/v1",
+  "workflow_run": "https://github.com/mitukx/VARE/actions/runs/45592062144",
+  "source_commit": "a05054f40b45f22fa1aa1f12e796f34b328829f4",
+  "protocol_sha256": "8930266209d6e4e3e2619c88d1d7d21b8e559b167b2d7747fb383c8ef5a49937",
+  "classification": "Diagnostic serialization interface error before first completed group; no numerical conclusion.",
+  "records": [
+    {
+      "job_id": 139128512365,
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45592062144/job/139128512365",
+      "record": {
+        "arm": "bf16",
+        "error": "AttributeError: 'TraceGeneration' object has no attribute 'finish_reason'",
+        "generated_tokens": null,
+        "parameter_bytes_unchanged": false,
+        "process_peak_rss": 417684,
+        "protocol_sha256": "8930266209d6e4e3e2619c88d1d7d21b8e559b167b2d7747fb383c8ef5a49937",
+        "result_sha256": "1b09c514b4f8f4fdad3f52ef2d018f2177e3cdbf984cac286d8eba9d3a867ee9",
+        "rss_unit": "KiB",
+        "source_commit": "a05054f40b45f22fa1aa1f12e796f34b328829f4",
+        "status": "INCOMPLETE",
+        "wall_seconds": 5.998122707000007
+      }
+    },
+    {
+      "job_id": 139128512301,
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45592062144/job/139128512301",
+      "record": {
+        "arm": "fp32",
+        "error": "AttributeError: 'TraceGeneration' object has no attribute 'finish_reason'",
+        "generated_tokens": null,
+        "parameter_bytes_unchanged": false,
+        "process_peak_rss": 762368,
+        "protocol_sha256": "8930266209d6e4e3e2619c88d1d7d21b8e559b167b2d7747fb383c8ef5a49937",
+        "result_sha256": "84e4e6f02ea988e2b2f9d2f69553184dcd7e835be650c5fedd2e648d30dbd09c",
+        "rss_unit": "KiB",
+        "source_commit": "a05054f40b45f22fa1aa1f12e796f34b328829f4",
+        "status": "INCOMPLETE",
+        "wall_seconds": 10.14121773399998
+      }
+    },
+    {
+      "job_id": 139128512005,
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45592062144/job/139128512005",
+      "record": {
+        "arm": "q4",
+        "error": "AttributeError: 'TraceGeneration' object has no attribute 'finish_reason'",
+        "generated_tokens": null,
+        "parameter_bytes_unchanged": false,
+        "process_peak_rss": 416092,
+        "protocol_sha256": "8930266209d6e4e3e2619c88d1d7d21b8e559b167b2d7747fb383c8ef5a49937",
+        "result_sha256": "bf91b31a452a8662356f0fc1b3263ac564c53b813547842c8d78dcc1795df772",
+        "rss_unit": "KiB",
+        "source_commit": "a05054f40b45f22fa1aa1f12e796f34b328829f4",
+        "status": "INCOMPLETE",
+        "wall_seconds": 38.421561997
+      }
+    }
+  ]
+}
