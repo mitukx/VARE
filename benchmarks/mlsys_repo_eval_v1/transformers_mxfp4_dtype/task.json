@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "task_id": "transformers-mxfp4-target-dtype-train-01",
+  "split": "train",
+  "task_statement": "Repair MXFP4 conversion so gate_up_proj and down_proj outputs preserve the dtype of their initialized destination parameter while preserving decoded values and layout.",
+  "source": {
+    "repository": "https://github.com/huggingface/transformers",
+    "license": "Apache-2.0",
+    "baseline_revision": "b47ec788c4ea3051b207afd94281fb75594b0205",
+    "known_fix_revision": "676859711989dd9178fbbe8968e5a1f86d519712",
+    "editable_path": "src/transformers/integrations/mxfp4.py"
+  },
+  "task_relevant_source_paths": [
+    "src/transformers/integrations/mxfp4.py"
+  ],
+  "candidate_checkout": "Shallow sparse checkout pinned to the baseline and containing the editable source file. The known-fix revision, new regression test, grader, hidden cases, and grading output are outside the candidate checkout.",
+  "candidate_edit_allowlist": [
+    "src/transformers/integrations/mxfp4.py"
+  ],
+  "pretraining_exposure": "UNKNOWN",
+  "prior_candidate_exposure": "No VARE model or agent was assigned this task before the frozen confirmation calibration.",
+  "evidence_limit": "A restricted source-patch contract plus CPU tensor behavior; no claim of general coding capability or model improvement."
+}
