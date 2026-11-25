@@ -1,0 +1,202 @@
+{
+  "schema": "vare.grpo.backend_alignment_retained_evidence/v1",
+  "measured_commit": "639d7415664033dfba20bfefdc083d0324882ae3",
+  "protocol_sha256": "5e54f7d1bb2b3f8098ca0c7acab45c123e2c33e7c1e56057ab04bc10d7d3aba9",
+  "workflow_run": "https://github.com/mitukx/VARE/actions/runs/45599188226",
+  "measured_head_checks": {
+    "passed": 24,
+    "total": 24
+  },
+  "retention": "Original artifact ZIP bytes and contained JSON checked against the workflow SHA-256 digests; uploaded Git blob IDs checked against downloaded bytes.",
+  "records": [
+    {
+      "arm": "cpu-q4",
+      "job": 139153225963,
+      "artifact": 15014448454,
+      "blob": "38a26c5a1744f2b0c1e40209b1a285eede6fe01d",
+      "zip": "3841c0af320816b1f3abb32386240211460627d72799b072a7168083322594f1",
+      "result": "2c4beb9ff3a228ad011bb3cbc33ba714ee61cc3d518f0637a5701da9b064468e",
+      "param": "40b4ca223768d8d0958547dd0cc3c988696584abf587cd7c601681d62a40152e",
+      "status": "PASS",
+      "n_over": 0,
+      "size": 3035,
+      "archive": "cpu-q4.zip",
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45599188226/job/139153225963",
+      "artifact_url": "https://github.com/mitukx/VARE/actions/runs/45599188226/artifacts/15014448454",
+      "preflight": {
+        "arm": "cpu-q4",
+        "device": "Device(cpu, 0)",
+        "machine": "x86_64",
+        "mlx": "0.32.2",
+        "platform": "Linux-7.0.0-1020-azure-x86_64-with-glibc2.43",
+        "precision": "q4",
+        "protocol_sha256": "5e54f7d1bb2b3f8098ca0c7acab45c123e2c33e7c1e56057ab04bc10d7d3aba9",
+        "requested_device": "cpu",
+        "status": "READY"
+      },
+      "group": {
+        "arm": "cpu-q4",
+        "metrics": {
+          "forward_vs_differentiated": {
+            "max": 0,
+            "n_over_tolerance": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "sampled_vs_differentiated": {
+            "max": 0,
+            "n_over_tolerance": 0,
+            "p50": 0,
+            "p95": 0
+          },
+          "sampled_vs_forward": {
+            "max": 0,
+            "n_over_tolerance": 0,
+            "p50": 0,
+            "p95": 0
+          }
+        },
+        "quantized_modules": 211,
+        "tokens": 4,
+        "would_reject": false
+      },
+      "final": {
+        "arm": "cpu-q4",
+        "error": null,
+        "generated_tokens": 4,
+        "parameter_bytes_unchanged": true,
+        "protocol_sha256": "5e54f7d1bb2b3f8098ca0c7acab45c123e2c33e7c1e56057ab04bc10d7d3aba9",
+        "result_sha256": "2c4beb9ff3a228ad011bb3cbc33ba714ee61cc3d518f0637a5701da9b064468e",
+        "source_commit": "639d7415664033dfba20bfefdc083d0324882ae3",
+        "status": "PASS",
+        "wall_seconds": 380.079544935
+      }
+    },
+    {
+      "arm": "metal-bf16",
+      "job": 139153226372,
+      "artifact": 15014747726,
+      "blob": "5afe7e98b030797caad5ca40a6b8e48b5647d871",
+      "zip": "581e951197d52e43fd6f63e095d7e3aadb92b0a11a45fd64e6ef9d7fe3e8ef2a",
+      "result": "68e8727aeeec98ee73fd3ffbd48b07416cce85884591d27356df628a53d40ece",
+      "param": "6670a5d906616a41961985048c337fd04466ea161823ba976da36f11c051da36",
+      "status": "NO_GO_NUMERICAL_MISMATCH",
+      "n_over": 4,
+      "size": 3128,
+      "archive": "metal-bf16.zip",
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45599188226/job/139153226372",
+      "artifact_url": "https://github.com/mitukx/VARE/actions/runs/45599188226/artifacts/15014747726",
+      "preflight": {
+        "arm": "metal-bf16",
+        "device": "Device(gpu, 0)",
+        "machine": "arm64",
+        "mlx": "0.32.2",
+        "platform": "macOS-15.8.2-arm64-arm-64bit",
+        "precision": "bf16",
+        "protocol_sha256": "5e54f7d1bb2b3f8098ca0c7acab45c123e2c33e7c1e56057ab04bc10d7d3aba9",
+        "requested_device": "gpu",
+        "status": "READY"
+      },
+      "group": {
+        "arm": "metal-bf16",
+        "metrics": {
+          "forward_vs_differentiated": {
+            "max": 0.13482439517974854,
+            "n_over_tolerance": 4,
+            "p50": 0.0139426589012146,
+            "p95": 0.13482439517974854
+          },
+          "sampled_vs_differentiated": {
+            "max": 0.07882946729660034,
+            "n_over_tolerance": 4,
+            "p50": 0.008671104907989502,
+            "p95": 0.07882946729660034
+          },
+          "sampled_vs_forward": {
+            "max": 0.1297386884689331,
+            "n_over_tolerance": 4,
+            "p50": 0.005271553993225098,
+            "p95": 0.1297386884689331
+          }
+        },
+        "quantized_modules": 0,
+        "tokens": 4,
+        "would_reject": true
+      },
+      "final": {
+        "arm": "metal-bf16",
+        "error": null,
+        "generated_tokens": 4,
+        "parameter_bytes_unchanged": true,
+        "protocol_sha256": "5e54f7d1bb2b3f8098ca0c7acab45c123e2c33e7c1e56057ab04bc10d7d3aba9",
+        "result_sha256": "68e8727aeeec98ee73fd3ffbd48b07416cce85884591d27356df628a53d40ece",
+        "source_commit": "639d7415664033dfba20bfefdc083d0324882ae3",
+        "status": "NO_GO_NUMERICAL_MISMATCH",
+        "wall_seconds": 14.099196917
+      }
+    },
+    {
+      "arm": "metal-q4",
+      "job": 139153226378,
+      "artifact": 15014188367,
+      "blob": "495894f38b439437e855c0ddba9caa5c56d38408",
+      "zip": "e1200c0132fc80a06b1e677fe72de6ce147cbd860d8c16a0766f4bd88b0c6b95",
+      "result": "f1cef47ac27f4be5961e4d522559e48c2daa14a0a1a2eafe074570af99bb92fb",
+      "param": "84260919c71f4c9f323e20423a8e00fffb147f38c7a800e4379bd5e3cd077dfd",
+      "status": "NO_GO_NUMERICAL_MISMATCH",
+      "n_over": 4,
+      "size": 3129,
+      "archive": "metal-q4.zip",
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45599188226/job/139153226378",
+      "artifact_url": "https://github.com/mitukx/VARE/actions/runs/45599188226/artifacts/15014188367",
+      "preflight": {
+        "arm": "metal-q4",
+        "device": "Device(gpu, 0)",
+        "machine": "arm64",
+        "mlx": "0.32.2",
+        "platform": "macOS-15.8.2-arm64-arm-64bit",
+        "precision": "q4",
+        "protocol_sha256": "5e54f7d1bb2b3f8098ca0c7acab45c123e2c33e7c1e56057ab04bc10d7d3aba9",
+        "requested_device": "gpu",
+        "status": "READY"
+      },
+      "group": {
+        "arm": "metal-q4",
+        "metrics": {
+          "forward_vs_differentiated": {
+            "max": 0.13618206977844238,
+            "n_over_tolerance": 4,
+            "p50": 0.02065753936767578,
+            "p95": 0.13618206977844238
+          },
+          "sampled_vs_differentiated": {
+            "max": 0.13085639476776123,
+            "n_over_tolerance": 4,
+            "p50": 0.0179901123046875,
+            "p95": 0.13085639476776123
+          },
+          "sampled_vs_forward": {
+            "max": 0.07953834533691406,
+            "n_over_tolerance": 4,
+            "p50": 0.01052182912826538,
+            "p95": 0.07953834533691406
+          }
+        },
+        "quantized_modules": 211,
+        "tokens": 4,
+        "would_reject": true
+      },
+      "final": {
+        "arm": "metal-q4",
+        "error": null,
+        "generated_tokens": 4,
+        "parameter_bytes_unchanged": true,
+        "protocol_sha256": "5e54f7d1bb2b3f8098ca0c7acab45c123e2c33e7c1e56057ab04bc10d7d3aba9",
+        "result_sha256": "f1cef47ac27f4be5961e4d522559e48c2daa14a0a1a2eafe074570af99bb92fb",
+        "source_commit": "639d7415664033dfba20bfefdc083d0324882ae3",
+        "status": "NO_GO_NUMERICAL_MISMATCH",
+        "wall_seconds": 18.704563207999996
+      }
+    }
+  ]
+}

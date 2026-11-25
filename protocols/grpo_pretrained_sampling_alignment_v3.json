@@ -1,0 +1,89 @@
+{
+  "schema": "vare.grpo.pretrained_sampling_alignment/v3",
+  "purpose": "Prospective, read-only backend and quantization numerical alignment diagnostic. No task dataset, optimizer update, grader or held-out access.",
+  "model": {
+    "repo_id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "ee72e5415c002e8fc0566a191a07c0b2b708875a",
+    "weight_file": "model.safetensors",
+    "weight_sha256": "5af571cbf074e6d21a03528d2330792e532ca608f24ac70a143f6b369968ab8c",
+    "license": "Apache-2.0"
+  },
+  "arms": {
+    "cpu-q4": {
+      "device": "cpu",
+      "precision": "q4",
+      "system": "Linux",
+      "machines": [
+        "x86_64"
+      ]
+    },
+    "metal-bf16": {
+      "device": "gpu",
+      "precision": "bf16",
+      "system": "Darwin",
+      "machines": [
+        "arm64"
+      ]
+    },
+    "metal-q4": {
+      "device": "gpu",
+      "precision": "q4",
+      "system": "Darwin",
+      "machines": [
+        "arm64"
+      ]
+    }
+  },
+  "quantization": {
+    "bits": 4,
+    "group_size": 64,
+    "mode": "affine"
+  },
+  "adapter": {
+    "rank": 4,
+    "scale": 1,
+    "dropout": 0,
+    "keys": [
+      "self_attn.q_proj"
+    ],
+    "num_layers": 1,
+    "seed": 11,
+    "mode": "eval"
+  },
+  "temperature": 0.7,
+  "top_p": 1,
+  "seeds": [
+    71,
+    73
+  ],
+  "second_turn_seed_offset": 2000,
+  "max_new_tokens": 1,
+  "max_prompt_tokens": 128,
+  "max_sequence_tokens": 129,
+  "contexts": [
+    {
+      "id": "short",
+      "repetitions": 0
+    }
+  ],
+  "prompt_prefix": "Neutral numerical calibration: colors and shapes.",
+  "filler": " Gray circle.",
+  "observation": "A neutral observation: square.",
+  "tolerance": 0.000001,
+  "limits": {
+    "max_action_segments_per_group": 4,
+    "max_completion_tokens_per_group": 4,
+    "maximum_generated_tokens_per_arm": 4,
+    "maximum_wall_seconds_per_arm": 480,
+    "maximum_model_weight_bytes": 300000000
+  },
+  "outcome_rule": "For a measured arm, require one complete four-action group, finite recorded scores, unchanged pre/post full parameter hashes and differentiated error <=1e-6 nat. Record numerical nonpass explicitly. Unavailable device blocks before checkpoint download, never CPU fallback. A timeout is incomplete; do not reclassify v1 q4.",
+  "limitations": [
+    "Four sampled tokens per arm, short contexts only; a narrowly scoped numerical smoke.",
+    "Arms may sample different tokens. No performance/speed comparison or learning claim.",
+    "Metal availability is probed, not assumed on hosted virtual machines. Blocked arms have no numerical result.",
+    "V1 q4 timeout and v2 measured evidence stay unchanged."
+  ],
+  "prior_protocol_sha256": "848574edb5d1c07b83bf5bf7e46e20d5b2d3541bf3e41c5f0ace101c4bc909fb",
+  "sampling_score_mode": "mlx_lm_native_v1"
+}

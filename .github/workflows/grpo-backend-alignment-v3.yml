@@ -1,0 +1,76 @@
+name: grpo-backend-alignment-v3
+# Completed v3 cohort; new measurements require an explicit dispatch.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backend-diagnostic:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 14
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arm: cpu-q4
+            runner: ubuntu-latest
+          - arm: metal-bf16
+            runner: macos-15
+          - arm: metal-q4
+            runner: macos-15
+    env:
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      HF_HUB_DISABLE_IMPLICIT_TOKEN: '1'
+      HF_HUB_DISABLE_XET: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      ARM: ${{ matrix.arm }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install platform-specific pinned runtime
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == 'macOS' ]]; then
+            grep -v '^mlx-cpu==' requirements/grpo-trajectory-cpu-test.txt > "$RUNNER_TEMP/alignment-requirements.txt"
+          else
+            cp requirements/grpo-trajectory-cpu-test.txt "$RUNNER_TEMP/alignment-requirements.txt"
+          fi
+          python -m pip install -e . -r "$RUNNER_TEMP/alignment-requirements.txt"
+          python -m pip freeze > "$RUNNER_TEMP/alignment-environment.txt"
+      - name: Test backend-selection contract
+        run: python -m pytest -q tests/test_grpo_backend_alignment.py
+      - name: Probe actual backend before downloading weights
+        id: backend
+        shell: bash
+        run: |
+          python scripts/diagnose_grpo_backend_alignment.py preflight --arm "$ARM" --output "$RUNNER_TEMP/backend-preflight.json"
+          status=$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$RUNNER_TEMP/backend-preflight.json")
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+      - name: Download pinned checkpoint only on registered available backend
+        if: steps.backend.outputs.status == 'READY'
+        shell: bash
+        run: |
+          python -c 'import subprocess,sys; subprocess.run([sys.executable,*sys.argv[1:]], check=True, timeout=180)' \
+            scripts/diagnose_grpo_backend_alignment.py download --snapshot-path-file "$RUNNER_TEMP/snapshot-path.txt"
+      - name: Run bounded read-only diagnostic
+        if: steps.backend.outputs.status == 'READY'
+        env:
+          HF_HUB_OFFLINE: '1'
+        shell: bash
+        run: |
+          python -c 'import subprocess,sys; subprocess.run([sys.executable,*sys.argv[1:]], check=True, timeout=480)' \
+            scripts/diagnose_grpo_backend_alignment.py run --snapshot "$(cat "$RUNNER_TEMP/snapshot-path.txt")" \
+            --arm "$ARM" --output "$RUNNER_TEMP/alignment-result.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: backend-alignment-${{ matrix.arm }}
+          path: |
+            ${{ runner.temp }}/alignment-environment.txt
+            ${{ runner.temp }}/backend-preflight.json
+            ${{ runner.temp }}/alignment-result.json
