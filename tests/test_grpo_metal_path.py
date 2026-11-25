@@ -1,5 +1,6 @@
 """Contract and small analytic controls for the Metal diagnostic."""
 import importlib.util
+import math
 
 import pytest
 
@@ -40,5 +41,5 @@ def test_native_score_matches_categorical_reference_cpu():
     with mx.stream(mx.cpu):
         logits = mx.array([[[1.0, 2.0, 3.0]]])
         result = M.native_logprob(logits, 1, 0.7)
-        expected = mx.log_softmax(logits / 0.7, axis=-1)[..., 1]
-        assert abs(result.item() - expected.item()) <= 1e-6
+        expected = 2.0 / 0.7 - math.log(sum(math.exp(x / 0.7) for x in (1.0, 2.0, 3.0)))
+        assert abs(result.item() - expected) <= 1e-6
