@@ -12,9 +12,13 @@ def main():
               '  demo, rvl-inspect, rvl-plan experimental improvement controls\n'
               '  env-validate, env-verify, env-smoke, env-campaign environment experiments\n'
               '  research                    ResearchGym tasks, runs, and reports\n'
+              '  rsi preflight               read-only local runtime preflight\n'
               '  lock-protocol, score, manifest  protocol/evidence utilities\n'
               'Use COMMAND --help for arguments. Full control-plane commands need Python >=3.11.')
         return 0
+    if command == 'rsi':
+        from .rsi_cli import main as rsi_main
+        return rsi_main(sys.argv[2:])
     if command.startswith('durable-'):
         from .durable import main as selected
     elif command in {'run', 'audit'}:
