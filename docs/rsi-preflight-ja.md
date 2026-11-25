@@ -30,3 +30,23 @@ PYTHONPATH=src python -m vare rsi preflight \
 ## 判定の範囲
 
 `runtime_status: ready` はローカル実行要件だけを意味します。タスクの新規性・割当、grader の独立性、学習データの有効性、方策更新、独立評価は判定しません。JSON でもそれぞれ `not_assessed` または `not_run` と記録します。したがって、この結果だけでエージェント実行や学習を開始してよいとは判断できません。対象の固定 protocol とタスク別の安全・評価ゲートを別途満たす必要があります。
+
+## Integration with full-trajectory GRPO
+
+The runtime preflight and strict v3 checkpoint proposal is reconciled with
+the complete-action sampler-integrity candidate. The lag-zero guard,
+opt-in native sampler score mode, verified group admission, and original
+numerical artifacts are preserved. All current checkpoint callers in the
+active scripts and the full-trajectory regression supply a base model ID.
+Historical source snapshots and result artifacts remain unchanged.
+
+The v3 loader intentionally rejects v1/v2 checkpoints and validates base
+model identity, optimizer class/public configuration, file hashes,
+adapter keys/shapes/dtypes, integer update counts and RNG metadata before
+restoration. The ID is caller-provided; it is not proof of the base tensor
+bytes. These checks do not authenticate an untrusted manifest, establish
+arbitrary optimizer-state layout compatibility, or authorize training.
+Use the exact historical code to inspect legacy checkpoint evidence;
+do not relabel an old checkpoint as v3. No migration of historical
+checkpoints is performed here. The added scalar-step regression reseals
+a fractional optimizer step and requires refusal before model mutation.
