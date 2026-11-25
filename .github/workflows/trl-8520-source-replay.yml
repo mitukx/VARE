@@ -1,12 +1,6 @@
 name: trl-8520-source-replay
+# Completed pinned replay retained; explicit dispatch only.
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'protocols/trl_8520_environment_column_source_v1.json'
-      - 'scripts/reproduce_trl_8520_environment_column.py'
-      - 'tests/test_trl_8520_environment_column.py'
-      - '.github/workflows/trl-8520-source-replay.yml'
   workflow_dispatch:
 permissions:
   contents: read
