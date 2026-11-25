@@ -1,0 +1,7 @@
+# TRL environment-column source replay
+
+The public source intake in #208 includes [TRL #8520](https://github.com/huggingface/trl/pull/8520), a narrow correction to GRPO's signature-column contract. Losing the environment column may prevent a multi-environment trajectory from selecting the intended environment when unused-column filtering is enabled.
+
+This prospective [source-only protocol](../protocols/trl_8520_environment_column_source_v1.json) pins the actual upstream merge parent, fixed revision, trainer blob, upstream regression-file blob, and Apache-2.0 license blob. The runner retrieves and validates these exact bytes, then extracts only the small signature initialization method. It refuses arbitrary expressions and does not import the upstream module. A separate in-memory oracle checks environment-only rows, mixed environment routing, retention of existing prompt/image columns and preservation of an already initialized signature. Three wrong controls exercise distinct failure modes.
+
+The expected outcomes are baseline fail, known fix pass, all three mutants fail. This is a hypothesis until the pinned workflow completes. The oracle substitutes an in-memory column projection for Transformers Trainer; it does not execute the upstream full training test or certify an independent general-purpose grader. No task is allocated. Public pretraining exposure and complete historical family overlap are unknown. The frozen readiness decision and prior counts are unchanged. No model weights, inference, training, or held-out data are used.

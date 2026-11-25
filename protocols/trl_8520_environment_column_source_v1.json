@@ -1,0 +1,58 @@
+{
+  "schema": "vare.source_qualification.trl_environment_column/v1",
+  "purpose": "Source-level calibration of GRPO environment routing under signature-column removal; not an executable coding task or a blind evaluation allocation.",
+  "source": {
+    "repository": "huggingface/trl",
+    "pull_request": 8520,
+    "baseline_commit": "9890dffc6505d7eb28b91b605cd4731bde309476",
+    "fixed_commit": "fb47ddd078bec0eecb12d7a92359a37d370bda81",
+    "path": "trl/trainer/grpo_trainer.py",
+    "baseline_blob": "ec49c0ce640aa6c8a8f7c84ffb7abed6560bf431",
+    "fixed_blob": "0d2e2a97b94183fb396af0facb0a9ddd3ce9ae7d",
+    "license_path": "LICENSE",
+    "license_blob": "f577b7741dfb5c6af119f250971549dd7750acb9",
+    "license": "Apache-2.0",
+    "test_path": "tests/test_grpo_trainer.py",
+    "test_blob": "9811730c7eb9eebb2db538d8e3b39577d99cd308",
+    "upstream_test": "test_train_with_multiple_environments"
+  },
+  "methods": {
+    "class": "GRPOTrainer",
+    "name": "_set_signature_columns_if_needed",
+    "execution": "AST-extract method from exact known baseline/fix; restricted assignment and conditional only. No whole upstream module import or arbitrary candidate code execution."
+  },
+  "arms": [
+    "baseline",
+    "fixed",
+    "wrong_plural",
+    "drop_image",
+    "overwrite_existing"
+  ],
+  "expected": {
+    "baseline": false,
+    "fixed": true,
+    "wrong_plural": false,
+    "drop_image": false,
+    "overwrite_existing": false
+  },
+  "cases": [
+    "environment_only",
+    "mixed_environment_selection",
+    "preserve_prompt_and_image_columns",
+    "preserve_existing_signature"
+  ],
+  "limits": {
+    "max_source_bytes": 1000000,
+    "max_license_bytes": 30000,
+    "max_test_bytes": 1000000,
+    "download_timeout_seconds": 30,
+    "workflow_timeout_minutes": 3
+  },
+  "exposure": {
+    "allocation": "UNASSIGNED_SOURCE_ONLY",
+    "repository_number_search": "No matching PR in VARE metadata at intake #208; not a full historical audit.",
+    "pretraining": "UNKNOWN",
+    "blind_heldout": "NOT_ESTABLISHED"
+  },
+  "claim_boundary": "The projection oracle is independently specified but substitutes a small in-memory projection for Transformers Trainer data filtering; upstream model training test is not executed. No hidden grader, full integration, arbitrary candidate security, model inference, optimizer, or eligible task count claim."
+}
