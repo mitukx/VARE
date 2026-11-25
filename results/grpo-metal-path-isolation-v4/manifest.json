@@ -1,0 +1,483 @@
+{
+  "schema": "vare.grpo.metal_path_retained_evidence/v1",
+  "measured_commit": "faad1de0acd7c20c24d187f89d5d93cdd91d3c8b",
+  "protocol_sha256": "720b923c0199f407fdc2a1c70bc28c248da4b9f93aae75069ec475aab1e1723d",
+  "workflow_run": "https://github.com/mitukx/VARE/actions/runs/45604930140",
+  "first_attempt": {
+    "source_commit": "0180b864b6c86ba8c45cae6fd0382adde04a3cb0",
+    "workflow_run": "https://github.com/mitukx/VARE/actions/runs/45604533417",
+    "status": "BLOCKED_PRE_MEASUREMENT_TEST_API",
+    "reason": "CPU control used absent mx.log_softmax; no model loaded or measured"
+  },
+  "retention": "Original artifact ZIP and contained result SHA-256 checked against workflow markers; uploaded Git blob matches downloaded bytes.",
+  "records": [
+    {
+      "precision": "bf16",
+      "job": 139173267225,
+      "artifact": 15017820479,
+      "blob": "b0d42c840f3a367044616e7e3ed5006ff0faffd6",
+      "zip": "0993994e1038089a3de046b629b3c2cb448f4e8584620a85c5573235d610eefe",
+      "result": "bddb576fdbf8d52bbbd46ee0d6fd354a8efa000bf6587310cf73c5d7ceafb337",
+      "param": "6670a5d906616a41961985048c337fd04466ea161823ba976da36f11c051da36",
+      "passing": [
+        "explicit_selected",
+        "explicit_full"
+      ],
+      "size": 2841,
+      "archive": "bf16.zip",
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45604930140/job/139173267225",
+      "artifact_url": "https://github.com/mitukx/VARE/actions/runs/45604930140/artifacts/15017820479",
+      "preflight": {
+        "device": "Device(gpu, 0)",
+        "status": "READY"
+      },
+      "attention": [
+        {
+          "length": 16,
+          "precision": "bf16",
+          "results": {
+            "explicit": {
+              "gradient": {
+                "finite": true,
+                "l2": 0.01262479347832293,
+                "parameters": 1
+              },
+              "plain_vs_differentiated_max": 0
+            },
+            "stock": {
+              "gradient": {
+                "finite": true,
+                "l2": 0.012628647913821484,
+                "parameters": 1
+              },
+              "plain_vs_differentiated_max": 0.0078125
+            },
+            "stock_vs_explicit_plain_max": 0
+          }
+        },
+        {
+          "length": 48,
+          "precision": "bf16",
+          "results": {
+            "explicit": {
+              "gradient": {
+                "finite": true,
+                "l2": 0.005792668982648002,
+                "parameters": 1
+              },
+              "plain_vs_differentiated_max": 0
+            },
+            "stock": {
+              "gradient": {
+                "finite": true,
+                "l2": 0.0057913706959703175,
+                "parameters": 1
+              },
+              "plain_vs_differentiated_max": 0.015625
+            },
+            "stock_vs_explicit_plain_max": 0.0001220703125
+          }
+        }
+      ],
+      "paths": [
+        {
+          "cached_prefill_logprob": -5.97603702545166,
+          "cached_prefill_vs_differentiated_logits_max": 0.375,
+          "cached_prefill_vs_differentiated_max": 0.3551506996154785,
+          "context": "short",
+          "differentiated_logprob": -5.620886325836182,
+          "gradient": {
+            "finite": true,
+            "l2": 0.06374849977434378,
+            "parameters": 2
+          },
+          "mode": "stock_selected",
+          "plain_logprob": -5.97603702545166,
+          "plain_vs_differentiated_logits_max": 0.375,
+          "plain_vs_differentiated_max": 0.3551506996154785,
+          "prompt_length": 16,
+          "target_id": 51,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -5.97603702545166,
+          "cached_prefill_vs_differentiated_logits_max": 0.375,
+          "cached_prefill_vs_differentiated_max": 0.3551506996154785,
+          "context": "short",
+          "differentiated_logprob": -5.620886325836182,
+          "gradient": {
+            "finite": true,
+            "l2": 0.06375215930530817,
+            "parameters": 2
+          },
+          "mode": "stock_full",
+          "plain_logprob": -5.97603702545166,
+          "plain_vs_differentiated_logits_max": 0.375,
+          "plain_vs_differentiated_max": 0.3551506996154785,
+          "prompt_length": 16,
+          "target_id": 51,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -5.937077045440674,
+          "cached_prefill_vs_differentiated_logits_max": 0.125,
+          "cached_prefill_vs_differentiated_max": 0,
+          "context": "short",
+          "differentiated_logprob": -5.937077045440674,
+          "gradient": {
+            "finite": true,
+            "l2": 0.06496582432646167,
+            "parameters": 2
+          },
+          "mode": "explicit_selected",
+          "plain_logprob": -5.937077045440674,
+          "plain_vs_differentiated_logits_max": 0,
+          "plain_vs_differentiated_max": 0,
+          "prompt_length": 16,
+          "target_id": 51,
+          "within_tolerance": true
+        },
+        {
+          "cached_prefill_logprob": -5.937077045440674,
+          "cached_prefill_vs_differentiated_logits_max": 0,
+          "cached_prefill_vs_differentiated_max": 0,
+          "context": "short",
+          "differentiated_logprob": -5.937077045440674,
+          "gradient": {
+            "finite": true,
+            "l2": 0.06485247438408001,
+            "parameters": 2
+          },
+          "mode": "explicit_full",
+          "plain_logprob": -5.937077045440674,
+          "plain_vs_differentiated_logits_max": 0,
+          "plain_vs_differentiated_max": 0,
+          "prompt_length": 16,
+          "target_id": 51,
+          "within_tolerance": true
+        },
+        {
+          "cached_prefill_logprob": -20.19285774230957,
+          "cached_prefill_vs_differentiated_logits_max": 0.25,
+          "cached_prefill_vs_differentiated_max": 0.022403717041015625,
+          "context": "long",
+          "differentiated_logprob": -20.215261459350586,
+          "gradient": {
+            "finite": true,
+            "l2": 0.05190779888579713,
+            "parameters": 2
+          },
+          "mode": "stock_selected",
+          "plain_logprob": -20.19285774230957,
+          "plain_vs_differentiated_logits_max": 0.25,
+          "plain_vs_differentiated_max": 0.022403717041015625,
+          "prompt_length": 48,
+          "target_id": 117,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -20.19285774230957,
+          "cached_prefill_vs_differentiated_logits_max": 0.25,
+          "cached_prefill_vs_differentiated_max": 0.022403717041015625,
+          "context": "long",
+          "differentiated_logprob": -20.215261459350586,
+          "gradient": {
+            "finite": true,
+            "l2": 0.05190779888579713,
+            "parameters": 2
+          },
+          "mode": "stock_full",
+          "plain_logprob": -20.19285774230957,
+          "plain_vs_differentiated_logits_max": 0.25,
+          "plain_vs_differentiated_max": 0.022403717041015625,
+          "prompt_length": 48,
+          "target_id": 117,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -20.065471649169922,
+          "cached_prefill_vs_differentiated_logits_max": 0.125,
+          "cached_prefill_vs_differentiated_max": 0,
+          "context": "long",
+          "differentiated_logprob": -20.065471649169922,
+          "gradient": {
+            "finite": true,
+            "l2": 0.051666944739211275,
+            "parameters": 2
+          },
+          "mode": "explicit_selected",
+          "plain_logprob": -20.065471649169922,
+          "plain_vs_differentiated_logits_max": 0,
+          "plain_vs_differentiated_max": 0,
+          "prompt_length": 48,
+          "target_id": 117,
+          "within_tolerance": true
+        },
+        {
+          "cached_prefill_logprob": -20.065471649169922,
+          "cached_prefill_vs_differentiated_logits_max": 0,
+          "cached_prefill_vs_differentiated_max": 0,
+          "context": "long",
+          "differentiated_logprob": -20.065471649169922,
+          "gradient": {
+            "finite": true,
+            "l2": 0.051719349838938784,
+            "parameters": 2
+          },
+          "mode": "explicit_full",
+          "plain_logprob": -20.065471649169922,
+          "plain_vs_differentiated_logits_max": 0,
+          "plain_vs_differentiated_max": 0,
+          "prompt_length": 48,
+          "target_id": 117,
+          "within_tolerance": true
+        }
+      ],
+      "final": {
+        "error": null,
+        "parameter_bytes_unchanged": true,
+        "passing_paths": [
+          "explicit_selected",
+          "explicit_full"
+        ],
+        "precision": "bf16",
+        "protocol_sha256": "720b923c0199f407fdc2a1c70bc28c248da4b9f93aae75069ec475aab1e1723d",
+        "result_sha256": "bddb576fdbf8d52bbbd46ee0d6fd354a8efa000bf6587310cf73c5d7ceafb337",
+        "source_commit": "faad1de0acd7c20c24d187f89d5d93cdd91d3c8b",
+        "status": "MEASURED",
+        "wall_seconds": 8.192116417000022
+      }
+    },
+    {
+      "precision": "fp32",
+      "job": 139173268061,
+      "artifact": 15017845548,
+      "blob": "8e4fd4da62f06db2786a1498c7bef21fb0850624",
+      "zip": "b753353560341d49123ff43f4bb7395a92419843d0cfe4f2c32a12d036699d47",
+      "result": "efbb5014a906c2396fe5deaee6c4174f03bebe6f9670dc8307d307af777b5755",
+      "param": "04e19a6ca46384969a42baf94b435f6efde74ff679e03cc05a21f20ea4fd19f5",
+      "passing": [],
+      "size": 2960,
+      "archive": "fp32.zip",
+      "job_url": "https://github.com/mitukx/VARE/actions/runs/45604930140/job/139173268061",
+      "artifact_url": "https://github.com/mitukx/VARE/actions/runs/45604930140/artifacts/15017845548",
+      "preflight": {
+        "device": "Device(gpu, 0)",
+        "status": "READY"
+      },
+      "attention": [
+        {
+          "length": 16,
+          "precision": "fp32",
+          "results": {
+            "explicit": {
+              "gradient": {
+                "finite": true,
+                "l2": 0.012620163603820313,
+                "parameters": 1
+              },
+              "plain_vs_differentiated_max": 0
+            },
+            "stock": {
+              "gradient": {
+                "finite": true,
+                "l2": 0.012620163603820313,
+                "parameters": 1
+              },
+              "plain_vs_differentiated_max": 3.5762786865234375e-7
+            },
+            "stock_vs_explicit_plain_max": 3.5762786865234375e-7
+          }
+        },
+        {
+          "length": 48,
+          "precision": "fp32",
+          "results": {
+            "explicit": {
+              "gradient": {
+                "finite": true,
+                "l2": 0.005791844946659262,
+                "parameters": 1
+              },
+              "plain_vs_differentiated_max": 0
+            },
+            "stock": {
+              "gradient": {
+                "finite": true,
+                "l2": 0.005791844946659262,
+                "parameters": 1
+              },
+              "plain_vs_differentiated_max": 7.152557373046875e-7
+            },
+            "stock_vs_explicit_plain_max": 7.152557373046875e-7
+          }
+        }
+      ],
+      "paths": [
+        {
+          "cached_prefill_logprob": -5.819607734680176,
+          "cached_prefill_vs_differentiated_logits_max": 0.00005340576171875,
+          "cached_prefill_vs_differentiated_max": 0.00001621246337890625,
+          "context": "short",
+          "differentiated_logprob": -5.819623947143555,
+          "gradient": {
+            "finite": true,
+            "l2": 0.0656603370338124,
+            "parameters": 2
+          },
+          "mode": "stock_selected",
+          "plain_logprob": -5.819634437561035,
+          "plain_vs_differentiated_logits_max": 0.0000286102294921875,
+          "plain_vs_differentiated_max": 0.00001049041748046875,
+          "prompt_length": 16,
+          "target_id": 51,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -5.819607734680176,
+          "cached_prefill_vs_differentiated_logits_max": 0.0000438690185546875,
+          "cached_prefill_vs_differentiated_max": 0.000029087066650390625,
+          "context": "short",
+          "differentiated_logprob": -5.819636821746826,
+          "gradient": {
+            "finite": true,
+            "l2": 0.06566044695929005,
+            "parameters": 2
+          },
+          "mode": "stock_full",
+          "plain_logprob": -5.819607734680176,
+          "plain_vs_differentiated_logits_max": 0.0000438690185546875,
+          "plain_vs_differentiated_max": 0.000029087066650390625,
+          "prompt_length": 16,
+          "target_id": 51,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -5.819637298583984,
+          "cached_prefill_vs_differentiated_logits_max": 0.0000438690185546875,
+          "cached_prefill_vs_differentiated_max": 0.0000133514404296875,
+          "context": "short",
+          "differentiated_logprob": -5.819623947143555,
+          "gradient": {
+            "finite": true,
+            "l2": 0.0656603370338124,
+            "parameters": 2
+          },
+          "mode": "explicit_selected",
+          "plain_logprob": -5.81962776184082,
+          "plain_vs_differentiated_logits_max": 0.00000762939453125,
+          "plain_vs_differentiated_max": 0.000003814697265625,
+          "prompt_length": 16,
+          "target_id": 51,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -5.819637298583984,
+          "cached_prefill_vs_differentiated_logits_max": 0.0000095367431640625,
+          "cached_prefill_vs_differentiated_max": 4.76837158203125e-7,
+          "context": "short",
+          "differentiated_logprob": -5.819636821746826,
+          "gradient": {
+            "finite": true,
+            "l2": 0.06566044695929005,
+            "parameters": 2
+          },
+          "mode": "explicit_full",
+          "plain_logprob": -5.819637298583984,
+          "plain_vs_differentiated_logits_max": 0.0000095367431640625,
+          "plain_vs_differentiated_max": 4.76837158203125e-7,
+          "prompt_length": 16,
+          "target_id": 51,
+          "within_tolerance": true
+        },
+        {
+          "cached_prefill_logprob": -20.102033615112305,
+          "cached_prefill_vs_differentiated_logits_max": 0.0000438690185546875,
+          "cached_prefill_vs_differentiated_max": 0.0000057220458984375,
+          "context": "long",
+          "differentiated_logprob": -20.102039337158203,
+          "gradient": {
+            "finite": true,
+            "l2": 0.050853073239503783,
+            "parameters": 2
+          },
+          "mode": "stock_selected",
+          "plain_logprob": -20.102046966552734,
+          "plain_vs_differentiated_logits_max": 0.00002288818359375,
+          "plain_vs_differentiated_max": 0.00000762939453125,
+          "prompt_length": 48,
+          "target_id": 117,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -20.102033615112305,
+          "cached_prefill_vs_differentiated_logits_max": 0.0000438690185546875,
+          "cached_prefill_vs_differentiated_max": 0.00000762939453125,
+          "context": "long",
+          "differentiated_logprob": -20.102025985717773,
+          "gradient": {
+            "finite": true,
+            "l2": 0.0508534143363869,
+            "parameters": 2
+          },
+          "mode": "stock_full",
+          "plain_logprob": -20.102033615112305,
+          "plain_vs_differentiated_logits_max": 0.0000438690185546875,
+          "plain_vs_differentiated_max": 0.00000762939453125,
+          "prompt_length": 48,
+          "target_id": 117,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -20.10202407836914,
+          "cached_prefill_vs_differentiated_logits_max": 0.000041961669921875,
+          "cached_prefill_vs_differentiated_max": 0.0000152587890625,
+          "context": "long",
+          "differentiated_logprob": -20.102039337158203,
+          "gradient": {
+            "finite": true,
+            "l2": 0.050853073239503783,
+            "parameters": 2
+          },
+          "mode": "explicit_selected",
+          "plain_logprob": -20.10203742980957,
+          "plain_vs_differentiated_logits_max": 0.00000762939453125,
+          "plain_vs_differentiated_max": 0.0000019073486328125,
+          "prompt_length": 48,
+          "target_id": 117,
+          "within_tolerance": false
+        },
+        {
+          "cached_prefill_logprob": -20.10202407836914,
+          "cached_prefill_vs_differentiated_logits_max": 0.0000095367431640625,
+          "cached_prefill_vs_differentiated_max": 0.0000019073486328125,
+          "context": "long",
+          "differentiated_logprob": -20.102025985717773,
+          "gradient": {
+            "finite": true,
+            "l2": 0.0508534143363869,
+            "parameters": 2
+          },
+          "mode": "explicit_full",
+          "plain_logprob": -20.10202407836914,
+          "plain_vs_differentiated_logits_max": 0.0000095367431640625,
+          "plain_vs_differentiated_max": 0.0000019073486328125,
+          "prompt_length": 48,
+          "target_id": 117,
+          "within_tolerance": false
+        }
+      ],
+      "final": {
+        "error": null,
+        "parameter_bytes_unchanged": true,
+        "passing_paths": [],
+        "precision": "fp32",
+        "protocol_sha256": "720b923c0199f407fdc2a1c70bc28c248da4b9f93aae75069ec475aab1e1723d",
+        "result_sha256": "efbb5014a906c2396fe5deaee6c4174f03bebe6f9670dc8307d307af777b5755",
+        "source_commit": "faad1de0acd7c20c24d187f89d5d93cdd91d3c8b",
+        "status": "MEASURED",
+        "wall_seconds": 15.169483624999998
+      }
+    }
+  ]
+}

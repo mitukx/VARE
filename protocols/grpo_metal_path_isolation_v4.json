@@ -1,0 +1,152 @@
+{
+  "schema": "vare.grpo.metal_path_isolation/v4",
+  "prior_protocol_sha256": "5e54f7d1bb2b3f8098ca0c7acab45c123e2c33e7c1e56057ab04bc10d7d3aba9",
+  "hypothesis": "Metal forward/VJP numerical mismatch is attributable in part to the attention implementation or vocabulary projection shape, rather than sampler arithmetic alone.",
+  "cheaper_alternative": "First compare isolated seeded grouped-query attention forward and VJP on the same inputs, then use the small pinned real-weight model with fixed token IDs. No generated tasks, optimization, or new capability screen.",
+  "model": {
+    "repo_id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "ee72e5415c002e8fc0566a191a07c0b2b708875a",
+    "weight_file": "model.safetensors",
+    "weight_sha256": "5af571cbf074e6d21a03528d2330792e532ca608f24ac70a143f6b369968ab8c",
+    "license": "Apache-2.0"
+  },
+  "adapter": {
+    "rank": 4,
+    "scale": 1,
+    "dropout": 0,
+    "keys": [
+      "self_attn.q_proj"
+    ],
+    "num_layers": 1,
+    "seed": 11,
+    "mode": "eval"
+  },
+  "quantization": {
+    "bits": 4,
+    "group_size": 64,
+    "mode": "affine"
+  },
+  "max_prompt_tokens": 128,
+  "backend": {
+    "device": "gpu",
+    "system": "Darwin",
+    "machines": [
+      "arm64"
+    ]
+  },
+  "arms": [
+    "fp32",
+    "bf16"
+  ],
+  "temperature": 0.7,
+  "tolerance": 0.000001,
+  "attention_fixture": {
+    "seed": 1901,
+    "heads": 6,
+    "kv_heads": 2,
+    "head_dim": 64,
+    "lengths": [
+      16,
+      48
+    ]
+  },
+  "sequences": [
+    {
+      "id": "short",
+      "prompt_ids": [
+        1,
+        17,
+        42,
+        128,
+        5,
+        63,
+        88,
+        16,
+        90,
+        120,
+        4,
+        12,
+        21,
+        31,
+        15,
+        45
+      ],
+      "target_id": 51
+    },
+    {
+      "id": "long",
+      "prompt_ids": [
+        1,
+        44,
+        18,
+        92,
+        11,
+        87,
+        61,
+        9,
+        34,
+        51,
+        77,
+        5,
+        42,
+        60,
+        19,
+        23,
+        84,
+        102,
+        12,
+        37,
+        6,
+        9,
+        121,
+        29,
+        18,
+        47,
+        72,
+        13,
+        61,
+        32,
+        15,
+        41,
+        98,
+        105,
+        12,
+        57,
+        91,
+        77,
+        5,
+        64,
+        101,
+        42,
+        28,
+        39,
+        85,
+        27,
+        13,
+        63
+      ],
+      "target_id": 117
+    }
+  ],
+  "modes": [
+    "stock_selected",
+    "stock_full",
+    "explicit_selected",
+    "explicit_full"
+  ],
+  "maximum_model_weight_bytes": 300000000,
+  "limits": {
+    "maximum_wall_seconds_per_arm": 300,
+    "maximum_fixed_target_tokens_per_arm": 2,
+    "maximum_model_path_measurements_per_arm": 8,
+    "maximum_attention_probes_per_arm": 4,
+    "maximum_model_weight_bytes": 300000000
+  },
+  "outcome_rule": "Record all finite per-path forward versus differentiated and cached-prefill versus differentiated score differences at the unchanged 1e-6 nat threshold. A candidate path is a narrow alignment candidate only if both fixed contexts pass both differences with finite nonzero gradients, identical parameter bytes, and complete coverage. Record failures and blocked devices without fallback. The explicit attention intervention changes computation and is not a validated rollout or learning policy.",
+  "limitations": [
+    "No sampled action or generation is executed. Cached-prefill teacher-forced probabilities are not captured behavior denominators.",
+    "No training, task grading, optimizer, protected dataset or held-out access.",
+    "Stock vs explicit attention differ in arithmetic; report the cross-mode score delta. Do not claim semantically identical numerical kernels.",
+    "Short contexts, fixed two target tokens, one pinned model and one Metal host class per arm. q4 is not repeated in this diagnostic."
+  ]
+}
