@@ -482,11 +482,13 @@ def test_forced_action_fixture_reaches_mlx_update_and_checkpoint_continuation(tm
     assert json.dumps([dataclasses.asdict(sample) for sample in samples], sort_keys=True) == original_records
 
     destination = tmp_path / "checkpoint"
-    manifest = G.save_checkpoint(destination, model, optimizer, step=1, base_seed=71,
+    manifest = G.save_checkpoint(destination, model, optimizer, base_model_id="fixture/context-class@v1",
+                                 step=1, base_seed=71,
                                  extra={"fixture": "forced_actions", "completed_groups": 1})
     restored_model = ContextClassPolicy()
     restored_optimizer = optim.Adam(learning_rate=0.01)
-    restored_manifest = G.load_checkpoint(destination, restored_model, restored_optimizer)
+    restored_manifest = G.load_checkpoint(destination, restored_model, restored_optimizer,
+                                          base_model_id="fixture/context-class@v1")
     assert restored_manifest == manifest
     assert G.trainable_digest(restored_model) == G.trainable_digest(model)
     for name, value in tree_flatten(optimizer.state):

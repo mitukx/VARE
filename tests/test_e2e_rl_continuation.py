@@ -478,6 +478,8 @@ def test_historical_source_inventory_versions_stay_frozen():
         "v4":(98,"123b90fd2e899493f4dff524be7ae56f88e0937f5f30f1208b13cf04fc484d95"),
         "v5":(100,"d7fecdd126292481921ca31777df2a2a8b680c4926b40210b3867e604d810d7e"),
         "v6":(104,"c9b0da42f6919a95ba9b76ee31cb112b5e5285ac8514e24f87b5b5ac390243db"),
+        "v7":(105,"d150e2bebafd9b641fface03caa805267ab8b9a829692da211468e3e987bbcc6"),
+        "v8-rsi-preflight":(106,"b6038b02fbc86585a42ec8a5a4cb4be62586ddab9cb8376779861735dd030ab9"),
     }
     for version,(count,expected) in frozen.items():
         names=auditor.SOURCE_INVENTORIES[version]
@@ -486,7 +488,9 @@ def test_historical_source_inventory_versions_stay_frozen():
     assert len(set(auditor.SOURCE_INVENTORIES.values()))==len(auditor.SOURCE_INVENTORIES)
     assert auditor.EXPECTED_SOURCES==auditor.SOURCE_INVENTORIES[auditor.CURRENT_SOURCE_INVENTORY]
     # Inventories that predate exact recovery endpoints keep the interval check.
-    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={"v3","v4","v5","v6","v7","v8","v9"}
+    assert auditor.EXACT_RECOVERY_ENDPOINT_INVENTORIES=={
+        "v3","v4","v5","v6","v7","v8","v9","v8-rsi-preflight","v10",
+    }
 
 
 def test_v4_inventory_adds_only_reachable_learning_pipeline_modules():
@@ -584,8 +588,19 @@ def test_v9_adds_isolation_without_rewriting_v8():
     assert auditor.INVENTORY_V8_SOURCES<=auditor.INVENTORY_V9_SOURCES
 
 
-def test_v3_through_v9_source_inventories_are_accepted_by_version():
-    for version in ("v3","v4","v5","v6","v7","v8","v9"):
+def test_combined_inventory_preserves_both_branches():
+    rsi={"src/vare/rsi_cli.py"}
+    assert auditor.INVENTORY_V8_RSI_SOURCES==auditor.INVENTORY_V7_SOURCES | rsi
+    assert auditor.INVENTORY_V10_SOURCES==auditor.INVENTORY_V9_SOURCES | rsi
+    assert auditor.INVENTORY_V8_RSI_SOURCES<=auditor.INVENTORY_V10_SOURCES
+    assert auditor.INVENTORY_V9_SOURCES<=auditor.INVENTORY_V10_SOURCES
+    assert len(auditor.INVENTORY_V8_SOURCES)==119
+    assert len(auditor.INVENTORY_V9_SOURCES)==120
+    assert len(auditor.INVENTORY_V10_SOURCES)==121
+
+
+def test_v3_through_v10_source_inventories_are_accepted_by_version():
+    for version in ("v3","v4","v5","v6","v7","v8","v9","v8-rsi-preflight","v10"):
         names=auditor.SOURCE_INVENTORIES[version]
         assert auditor.source_inventory_version(set(names))==version
         auditor.validate_source_inventory(committed_manifest(names),set(names),True)

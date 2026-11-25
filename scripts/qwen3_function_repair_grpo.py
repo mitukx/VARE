@@ -39,6 +39,7 @@ from vare.isolated_candidate import _one_call  # noqa: E402
 
 MODEL_ID = "mlx-community/Qwen3-4B-Instruct-2507-4bit"
 MODEL_REVISION = "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+BASE_MODEL_ID = f"{MODEL_ID}@{MODEL_REVISION}"
 CONTAINER_IMAGE = "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
 SYSTEM_PROMPT = (
     "You are solving a bounded Python function-repair task. Return only Python source defining "
@@ -529,7 +530,7 @@ def checkpoint_state(run: Path, path: Path, *, seed: int) -> tuple[dict[str, Any
 
     model, tokenizer = load_policy(seed=seed)
     optimizer = optim.Adam(learning_rate=OPTIMIZER_CONFIG["learning_rate"])
-    manifest = grpo_mlx.load_checkpoint(path, model, optimizer)
+    manifest = grpo_mlx.load_checkpoint(path, model, optimizer, base_model_id=BASE_MODEL_ID)
     if int(manifest["step"]) != int(optimizer.state["step"].item()):
         raise RuntimeError("checkpoint and optimizer update counts differ")
     return manifest, model, optimizer, tokenizer
@@ -775,6 +776,7 @@ def phase_train(args: argparse.Namespace) -> int:
     policy_id = make_policy_id(model, 0)
     atomic_json(run / "base-policy.json", {"policy_checkpoint_id": policy_id,
                 "trainable_parameters_sha256": initial_digest,
+                "base_model_id": BASE_MODEL_ID,
                 "model_revision": MODEL_REVISION,
                 "model_path_sha256": sha256_json({"id": MODEL_ID, "revision": MODEL_REVISION})})
     dev_pre = development_evaluation(model, tokenizer, phase="pre", seed=args.seed,
@@ -838,7 +840,7 @@ def phase_train(args: argparse.Namespace) -> int:
     update["generation_count"] = len(samples)
     ckpt = checkpoint_path(run, "update-0001")
     manifest = grpo_mlx.save_checkpoint(
-        ckpt, model, optimizer, step=1, base_seed=args.seed,
+        ckpt, model, optimizer, base_model_id=BASE_MODEL_ID, step=1, base_seed=args.seed,
         extra={"experiment_id": meta["experiment_id"], "model_revision": MODEL_REVISION,
                "policy_checkpoint_id_before": policy_id, "task_hashes": meta["task_hashes"],
                "optimizer": OPTIMIZER_CONFIG, "lora": LORA_CONFIG,
@@ -968,7 +970,7 @@ def train_pending_on_checkpoint(run: Path, *, seed: int, checkpoint_name: str,
     model, tokenizer = load_policy(seed=seed)
     resource_guard(run, phase_started)
     optimizer = optim.Adam(learning_rate=OPTIMIZER_CONFIG["learning_rate"])
-    manifest = grpo_mlx.load_checkpoint(checkpoint, model, optimizer)
+    manifest = grpo_mlx.load_checkpoint(checkpoint, model, optimizer, base_model_id=BASE_MODEL_ID)
     if manifest["step"] != 1 or int(optimizer.state["step"].item()) != 1:
         raise RuntimeError("pending update must resume from optimizer step 1")
     samples = [deserialize_sample(row) for row in pending]
@@ -987,7 +989,8 @@ def train_pending_on_checkpoint(run: Path, *, seed: int, checkpoint_name: str,
     mx.eval(model.parameters(), optimizer.state)
     if update["update_applied"]:
         update_manifest = grpo_mlx.save_checkpoint(
-            checkpoint_path(run, checkpoint_name), model, optimizer, step=2, base_seed=seed,
+            checkpoint_path(run, checkpoint_name), model, optimizer, base_model_id=BASE_MODEL_ID,
+            step=2, base_seed=seed,
             extra={"experiment_id": json.loads((run / "run_meta.json").read_text(encoding="utf-8"))["experiment_id"],
                    "starting_checkpoint": "checkpoints/update-0001",
                    "pending_update_sha256": sha256_json(list(pending)),
@@ -1070,7 +1073,7 @@ def phase_resume(args: argparse.Namespace) -> int:
         selected_checkpoint = checkpoint_path(run, "recovered-update-0002")
     else:
         selected_checkpoint = checkpoint_path(run, "update-0001")
-    grpo_mlx.load_checkpoint(selected_checkpoint, model, post_optimizer)
+    grpo_mlx.load_checkpoint(selected_checkpoint, model, post_optimizer, base_model_id=BASE_MODEL_ID)
     adapter = run / "adapter-export"
     adapter_digest = export_adapter(selected_checkpoint, adapter)
     phase_started = time.monotonic()
