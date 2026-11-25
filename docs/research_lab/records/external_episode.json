@@ -1,0 +1,149 @@
+{
+  "actions": [
+    {
+      "action_type": "run_public",
+      "commands": [
+        "call experiment.fit_affine",
+        "call experiment.gradient_step"
+      ],
+      "failure_reason": "",
+      "hypothesis_id": "baseline",
+      "metrics": {
+        "diverged": true,
+        "gradient_step_abs_error": 0.6186894531734068,
+        "recomputed_mse": 1570316.5558856968
+      },
+      "peak_rss_kb": 11048,
+      "seq": 1,
+      "source_hashes": {
+        "experiment.py": "a2e9dc6195b91230cff020ed912a1660f12e63aacb466e89387f35302050bd99"
+      },
+      "status": "baseline",
+      "verification_classification": null,
+      "verification_metrics": null,
+      "verification_passed": null,
+      "wall_s": 0.023870844999919427
+    },
+    {
+      "action_type": "edit",
+      "commands": [
+        "call experiment.fit_affine",
+        "call experiment.gradient_step"
+      ],
+      "failure_reason": "public acceptance criteria were not met",
+      "hypothesis_id": "shrink_learning_rate",
+      "metrics": {
+        "diverged": false,
+        "gradient_step_abs_error": 0.6186894531734068,
+        "recomputed_mse": 162.69397418393197
+      },
+      "peak_rss_kb": 11072,
+      "seq": 2,
+      "source_hashes": {
+        "experiment.py": "5d970d4713d01d89a0de20c5e7d294c6fe420013d60e2b17d780e3815532b47e"
+      },
+      "status": "rejected",
+      "verification_classification": null,
+      "verification_metrics": null,
+      "verification_passed": null,
+      "wall_s": 0.02365548299985676
+    },
+    {
+      "action_type": "edit",
+      "commands": [
+        "call experiment.fit_affine",
+        "call experiment.gradient_step"
+      ],
+      "failure_reason": "public acceptance criteria were not met",
+      "hypothesis_id": "restore_descent_sign",
+      "metrics": {
+        "diverged": false,
+        "gradient_step_abs_error": 0.0,
+        "recomputed_mse": 0.18198104500475162
+      },
+      "peak_rss_kb": 11028,
+      "seq": 3,
+      "source_hashes": {
+        "experiment.py": "f28e53e1c6c7d0ea42768f86f02ccc9f122187dbfc92d855cc2da0ed01b740d6"
+      },
+      "status": "rejected",
+      "verification_classification": null,
+      "verification_metrics": null,
+      "verification_passed": null,
+      "wall_s": 0.023483332000068913
+    },
+    {
+      "action_type": "edit",
+      "commands": [
+        "call experiment.fit_affine",
+        "call experiment.gradient_step"
+      ],
+      "failure_reason": "",
+      "hypothesis_id": "restore_learning_rate",
+      "metrics": {
+        "diverged": false,
+        "gradient_step_abs_error": 0.0,
+        "recomputed_mse": 1.3722669133256646e-11
+      },
+      "peak_rss_kb": 10940,
+      "seq": 4,
+      "source_hashes": {
+        "experiment.py": "9b61c6cf38fd792d1effdce11136c54f0ae14c906f5ec75b1a7223e480c3075f"
+      },
+      "status": "supported",
+      "verification_classification": null,
+      "verification_metrics": null,
+      "verification_passed": null,
+      "wall_s": 0.023513696000009077
+    },
+    {
+      "action_type": "submit",
+      "commands": [
+        "call experiment.fit_affine",
+        "call experiment.gradient_step"
+      ],
+      "failure_reason": "",
+      "hypothesis_id": "submit",
+      "metrics": {
+        "max_param_abs_error": 1.852144345315665e-05,
+        "max_recomputed_mse": 1.0888440264189218e-10,
+        "max_step_abs_error": 0.0
+      },
+      "peak_rss_kb": 11020,
+      "seq": 5,
+      "source_hashes": {
+        "experiment.py": "9b61c6cf38fd792d1effdce11136c54f0ae14c906f5ec75b1a7223e480c3075f"
+      },
+      "status": "accepted",
+      "verification_classification": "pass",
+      "verification_metrics": {
+        "max_param_abs_error": 1.852144345315665e-05,
+        "max_recomputed_mse": 1.0888440264189218e-10,
+        "max_step_abs_error": 0.0
+      },
+      "verification_passed": true,
+      "wall_s": 0.023443606000000727
+    }
+  ],
+  "agent": "cursor-cloud-agent",
+  "counts_as_autonomous_model_success": false,
+  "export_schema": "vare.research_lab.qualification_export.v1",
+  "export_training_authorized": false,
+  "label": "external_agent_assisted",
+  "model_backed": false,
+  "note": "Actions were chosen after reading the previous measurement. This is not an in-repo model. The sign-only edit was rejected because the earlier learning-rate cut was still in the file; restoring the rate then passed the hidden grader.",
+  "schema": "vare.research_lab.external_episode.v1",
+  "summary_after_resume": {
+    "actions": 5,
+    "counts_as_autonomous_model_success": false,
+    "journal_sha256": "ecca9f38e123f639b65f2e299bd8c3b266e6776e5ec2bb4c2a2526b47b3ef7e4",
+    "model_backed": false,
+    "rejected_hypotheses": [
+      "shrink_learning_rate",
+      "restore_descent_sign"
+    ],
+    "status": "verified",
+    "success_class": "external_agent_assisted",
+    "verified": true
+  }
+}

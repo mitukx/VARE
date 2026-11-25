@@ -1,0 +1,13 @@
+{
+  "task_id": "grad_accum_scale_v1",
+  "task_type": "training_correctness",
+  "objective": "Fix microbatch gradient accumulation so the returned gradient matches the mean of per-microbatch gradients of mean(0.5 * squared error). The current accumulator scales itself on every microbatch. A correct result averages the microbatch gradients once. Empty input must raise ValueError. Do not edit anything outside accum.py.",
+  "editable_files": ["accum.py"],
+  "graded_functions": ["accumulated_gradient"],
+  "max_iterations": 8,
+  "does_not_establish": "Passing this task shows a numerical repair of a fixed accumulator. It does not show that a learned model improved, and it does not authorize training.",
+  "compute": {"wall_time_s": 20, "cpu_time_s": 15, "memory_mb": 1024, "max_output_bytes": 400000},
+  "budget": {"max_experiments": 8, "max_wall_s": 120},
+  "safety": {"network": "disallowed", "editable_only": true},
+  "reproducibility": {"public_seed": 11011}
+}

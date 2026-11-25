@@ -19,13 +19,14 @@ dev = ["pytest>=8.0"]
 vare = "vare.entrypoint:main"
 
 [tool.setuptools]
-packages = ["vare", "vare.environments", "vare.integrations", "vare.learning_pipeline", "minigrpo", "selfimprove"]
+packages = ["vare", "vare.environments", "vare.integrations", "vare.learning_pipeline", "vare.research_lab", "minigrpo", "selfimprove"]
 
 [tool.setuptools.package-dir]
 vare = "src/vare"
 "vare.environments" = "src/vare/environments"
 "vare.integrations" = "src/vare/integrations"
 "vare.learning_pipeline" = "src/vare/learning_pipeline"
+"vare.research_lab" = "src/vare/research_lab"
 minigrpo = "minigrpo"
 selfimprove = "selfimprove"
 

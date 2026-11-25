@@ -50,3 +50,10 @@ Use the exact historical code to inspect legacy checkpoint evidence;
 do not relabel an old checkpoint as v3. No migration of historical
 checkpoints is performed here. The added scalar-step regression reseals
 a fractional optimizer step and requires refusal before model mutation.
+
+## ResearchGym integration
+
+The merged ResearchGym v8/v9 continuation source sets are preserved. The
+RSI-only proposed v8 set is retained as `v8-rsi-preflight`; the combined
+current source inventory is v10 (ResearchGym v9 plus `src/vare/rsi_cli.py`).
+Both CLI routes remain available. Frozen artifacts are not rewritten.

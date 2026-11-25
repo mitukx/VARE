@@ -1,0 +1,13 @@
+{
+  "task_id": "descent_sign_debug_v1",
+  "task_type": "experiment_debug",
+  "objective": "Make fit_affine recover an affine relation y ~= a * x + b from raw series by gradient descent, and make gradient_step match one mean-reduced descent update. Training currently runs away from the fit. The grader recomputes mean squared error from the returned parameters on held-out series and does not trust reported loss. Empty series must still be rejected by the step function's existing checks only if you keep them; do not replace the update with a hardcoded parameter table.",
+  "editable_files": ["experiment.py"],
+  "graded_functions": ["fit_affine", "gradient_step"],
+  "max_iterations": 8,
+  "does_not_establish": "A passing debug run shows this CPU fit was repaired. It does not show model learning, checkpoint recovery, or an authorized training update.",
+  "compute": {"wall_time_s": 20, "cpu_time_s": 15, "memory_mb": 1024, "max_output_bytes": 400000},
+  "budget": {"max_experiments": 8, "max_wall_s": 120},
+  "safety": {"network": "disallowed", "editable_only": true},
+  "reproducibility": {"public_seed": 11011}
+}
