@@ -72,3 +72,21 @@ training or changes the frozen readiness decision.
 The protocol is prospective. See the workflow's exact-head logs and JSON
 artifacts for executed or failed arms. No result is asserted by this document
 until the corresponding evidence is retained.
+
+### Attempt 1: incomplete (retained)
+
+The [original run](https://github.com/mitukx/VARE/actions/runs/45592062144)
+resolved the checkpoint and passed its weight checksum on all three arms.
+All three then stopped before a completed group: the diagnostic read
+`TraceGeneration.finish_reason` although the inherited `Generation` field
+is `finish`. The resulting incomplete-attempt log records and artifact
+digests are retained in
+[attempt-1-incomplete.json](../results/grpo-pretrained-sampling-alignment-v1/attempt-1-incomplete.json).
+No measured alignment claim can be drawn from this attempt.
+
+The follow-up corrects only this interface error, validates collector token
+counts, sampler metadata, and finish status, and adds an offline regression
+using the actual `TraceGeneration` dataclass. The model, protocol hash,
+contexts, seeds, precision arms, and tolerance are unchanged. This is a
+prospective repair to measurement plumbing, not a change to the acceptance
+criterion or a retry of any consumed task cohort.

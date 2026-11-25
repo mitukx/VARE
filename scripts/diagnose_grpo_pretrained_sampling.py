@@ -165,6 +165,12 @@ def collect_group(policy, p, context, checkpoint):
             )
             if (not result.prompt_ids or not result.completion_ids
                     or result.sampling_behavior_logprobs is None
+                    or result.prompt_tokens != len(result.prompt_ids)
+                    or result.completion_tokens != len(result.completion_ids)
+                    or len(result.sampling_behavior_logprobs) != len(result.completion_ids)
+                    or result.sampling_temperature != p["temperature"]
+                    or result.sampling_top_p != p["top_p"]
+                    or result.finish not in ("stop", "length")
                     or len(result.completion_ids) > p["max_new_tokens"]):
                 raise ValueError("incomplete sampled diagnostic action")
             segments.append(G.TrajectorySegment(
@@ -177,7 +183,7 @@ def collect_group(policy, p, context, checkpoint):
                 "prompt_ids": result.prompt_ids,
                 "completion_ids": result.completion_ids,
                 "sampled_logprobs": result.sampling_behavior_logprobs,
-                "finish_reason": result.finish_reason,
+                "finish_reason": result.finish,
             })
             messages = messages + [
                 {"role": "assistant", "content": result.text},

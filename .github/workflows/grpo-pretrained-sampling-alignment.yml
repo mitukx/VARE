@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/diagnose_grpo_pretrained_sampling.py'
       - 'protocols/grpo_pretrained_sampling_alignment_v1.json'
+      - 'tests/test_grpo_pretrained_diagnostic.py'
       - '.github/workflows/grpo-pretrained-sampling-alignment.yml'
   workflow_dispatch:
 permissions:
@@ -34,6 +35,11 @@ jobs:
         run: |
           python -m pip install -e . -r requirements/grpo-trajectory-cpu-test.txt
           python -m pip freeze > "${RUNNER_TEMP}/alignment-environment.txt"
+      - name: Check the collector-to-diagnostic result contract
+        run: python -m pytest -q tests/test_grpo_pretrained_diagnostic.py
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+          HF_HUB_OFFLINE: '1'
       - name: Download and verify the pinned public checkpoint
         run: >-
           timeout 180s python scripts/diagnose_grpo_pretrained_sampling.py download
