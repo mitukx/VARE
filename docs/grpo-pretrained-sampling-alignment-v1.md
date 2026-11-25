@@ -117,3 +117,16 @@ reflects rounded arithmetic) and tests later-action corruption rejection.
 The new real-weight workflow records candidate alignment, legacy ordinary
 forward control on the same captured tokens, hashes, and pass/nonpass.
 No model update is authorized.
+
+### Measured v2 outcome (CPU, 2026-11-25)
+
+Both arms passed at `45dfb554b3e4d203a6af9c622411eba4f103a010`: BF16
+16/16 legacy plain-forward tokens above tolerance versus 0/16 candidate
+differentiated; FP32 7/16 versus 0/16. The candidate's maximum discrepancy
+was exactly zero in all four measured groups, with unchanged parameter
+bytes. The original artifact ZIPs and exact hashes are now retained in
+[the v2 evidence bundle](../results/grpo-pretrained-sampling-alignment-v2/README.md). All 24
+check-run entries succeeded on that measured head. This is bounded
+numerical integrity evidence, not a training result. To avoid repeated
+compute on documentation changes, v2 is now manual-only. Its measured
+source, protocol and outcome remain unchanged.

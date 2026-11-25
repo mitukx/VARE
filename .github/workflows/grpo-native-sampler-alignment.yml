@@ -1,13 +1,6 @@
 name: grpo-native-sampler-alignment
+# Completed v2 experiment; preserve its exact run, do not automatically repeat.
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'src/vare/grpo_mlx.py'
-      - 'tests/test_grpo_mlx.py'
-      - 'scripts/diagnose_grpo_native_sampler.py'
-      - 'protocols/grpo_pretrained_sampling_alignment_v2.json'
-      - '.github/workflows/grpo-native-sampler-alignment.yml'
   workflow_dispatch:
 permissions:
   contents: read
