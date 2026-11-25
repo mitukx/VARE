@@ -680,6 +680,83 @@ def test_nonfinite_gradient_is_rejected_before_optimizer(monkeypatch):
     assert int(optimizer.state["step"].item()) == 0
 
 
+
+def test_alignment_nearest_rank_summary_and_rejects_invalid_differences():
+    stats = G._alignment_metric([0.5, 0.0, 0.2], tolerance=0.25)
+    assert stats == {"max": 0.5, "p50": 0.2, "p95": 0.5, "n_over_tolerance": 1}
+    for values in ([], [0.1, math.nan], [-0.1]):
+        with pytest.raises(ValueError, match="finite nonnegative"):
+            G._alignment_metric(values, tolerance=1e-6)
+
+
+def test_alignment_rejects_incomplete_groups_mismatched_identity_and_budgets_before_forward():
+    samples = _recorded_trajectory_group()
+    cfg = G.GRPOConfig(temperature=0.7)
+    kwargs = {"policy_checkpoint_id": "policy-0", "policy_step": 0}
+    with pytest.raises(G.GroupError, match="recorded trajectory group"):
+        G.audit_on_policy_sampling_alignment(object(), samples[:1], cfg, **kwargs)
+    with pytest.raises(G.StalePolicyError, match="checkpoint"):
+        G.audit_on_policy_sampling_alignment(
+            object(), samples, cfg, policy_checkpoint_id="wrong", policy_step=0,
+        )
+    with pytest.raises(ValueError, match="budget"):
+        G.audit_on_policy_sampling_alignment(object(), samples, cfg, max_completion_tokens=3, **kwargs)
+    with pytest.raises(ValueError, match="budget"):
+        G.audit_on_policy_sampling_alignment(object(), samples, cfg, max_action_segments=3, **kwargs)
+    with pytest.raises(ValueError, match="budget"):
+        G.audit_on_policy_sampling_alignment(object(), samples, cfg, max_sequence_tokens=3, **kwargs)
+    with pytest.raises(ValueError, match="positive integers"):
+        G.audit_on_policy_sampling_alignment(object(), samples, cfg, max_completion_tokens=True, **kwargs)
+    with pytest.raises(ValueError, match="finite and nonnegative"):
+        G.audit_on_policy_sampling_alignment(object(), samples, cfg, tolerance=math.nan, **kwargs)
+    with pytest.raises(G.GroupError, match="sampled, not recomputed"):
+        G.audit_on_policy_sampling_alignment(
+            object(), [_trajectory_sample(0, 1.0), _trajectory_sample(1, 0.0)],
+            G.GRPOConfig(group_size=2), **kwargs,
+        )
+
+
+@needs_mlx
+def test_alignment_audits_later_turn_ratios_without_changing_model_or_samples():
+    import copy
+
+    model = _bigram(64, seed=17)
+    samples = [_trajectory_sample(0, 1.0), _trajectory_sample(1, 0.0)]
+    cfg = G.GRPOConfig(group_size=2)
+    G.compute_behavior_logprobs(model, samples, cfg)
+    for sample in samples:
+        sample.meta.update(
+            behavior_logprob_source="sampling_distribution",
+            behavior_group_size=2,
+            behavior_temperature=1.0,
+            behavior_top_p=1.0,
+        )
+    before_model = G.trainable_digest(model)
+    before_samples = copy.deepcopy(samples)
+    report = G.audit_on_policy_sampling_alignment(
+        model, samples, cfg, policy_checkpoint_id="policy-0", policy_step=0,
+    )
+    assert report["optimizer_updated"] is False
+    assert report["task_success_measured"] is False
+    assert report["would_reject_lag_zero_update"] is False
+    assert report["n_groups"] == 1
+    assert report["n_samples"] == 2
+    assert report["n_action_segments"] == 4
+    assert report["n_completion_tokens"] == 4
+    assert report["metrics"]["sampled_vs_differentiated"]["max"] <= 1e-6
+    assert G.trainable_digest(model) == before_model
+    assert samples == before_samples
+
+    samples[1].trajectory_segments[1].behavior_logprobs[0] -= 0.5
+    report = G.audit_on_policy_sampling_alignment(
+        model, samples, cfg, policy_checkpoint_id="policy-0", policy_step=0,
+    )
+    assert report["would_reject_lag_zero_update"] is True
+    assert report["metrics"]["sampled_vs_differentiated"]["n_over_tolerance"] == 1
+    assert report["metrics"]["sampled_vs_differentiated"]["max"] > 0.49
+    assert report["metrics"]["forward_vs_differentiated"]["max"] <= 1e-6
+    assert G.trainable_digest(model) == before_model
+
 @needs_mlx
 def test_lora_update_is_real_and_context_dependent():
     import mlx.core as mx

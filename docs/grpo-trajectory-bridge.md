@@ -136,6 +136,45 @@ retains the JUnit result plus resolved environment as run artifacts. The job
 uses offline model access and newly generated synthetic fixtures; no pretrained
 weights or task dataset are downloaded.
 
+### Read-only sampling-to-gradient alignment preflight
+
+The trainer rejects a lag-zero update if any generated action has a sampled
+versus differentiated log-probability difference above `1e-6`. Before a
+pretrained model update, run the following **read-only numerical audit** on
+an existing complete, verified Train group and the exact behavior checkpoint.
+It checks three discrepancies separately: sampling versus ordinary forward,
+sampling versus differentiated forward, and ordinary versus differentiated
+forward. No optimizer, task grading, checkpoint update or held-out access is
+performed. It refuses legacy recomputed scores, incomplete groups, stale
+policy labels, unsupported samplers and oversized diagnostics.
+
+```python
+from vare.grpo_mlx import GRPOConfig, audit_on_policy_sampling_alignment
+from scripts.long_horizon_eval import grpo_samples_from_verified_group
+
+# Load the exact behavior checkpoint/model and its registered trusted store
+# separately; keep the runtime mode identical to the intended update.
+# The caller is responsible for binding checkpoint bytes, not merely an ID.
+samples = grpo_samples_from_verified_group(store, group_id)
+report = audit_on_policy_sampling_alignment(
+    model, samples, GRPOConfig(group_size=len(samples), temperature=0.7),
+    policy_checkpoint_id=checkpoint_id, policy_step=checkpoint_step,
+    max_action_segments=32, max_completion_tokens=2048,
+)
+print(report)
+```
+
+The example intentionally leaves `store`, `model`, `group_id`,
+`checkpoint_id` and `checkpoint_step` to the caller; it is **not** a
+command that downloads a model or authorizes any new rollout. The report
+contains counts, conservative nearest-rank p50/p95/max absolute differences,
+and the would-reject decision, but no task contents or raw token sequences.
+A clean report on a seeded toy model does not establish agreement for a
+pretrained model or a reduced-precision/Metal backend. A rejected real-model
+report must be retained as evidence and investigated; do not loosen the
+trainer guard or overwrite the recorded denominators to make it pass.
+
+
 ### Pinned defect replay
 
 [`reproduce_grpo_trajectory_guards.py`](../scripts/reproduce_grpo_trajectory_guards.py)

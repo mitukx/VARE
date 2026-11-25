@@ -434,6 +434,124 @@ def forward_logprobs(model, s: Sample, *, temperature: float, pad_id: int = 0) -
     return result
 
 
+
+def _alignment_metric(values: Sequence[float], *, tolerance: float) -> dict[str, float | int]:
+    """Conservative nearest-rank quantiles for absolute log-probability differences."""
+    ordered = sorted(values)
+    if not ordered or any(not math.isfinite(value) or value < 0 for value in ordered):
+        raise ValueError("alignment differences must be finite nonnegative values")
+    return {
+        "max": ordered[-1],
+        "p50": ordered[math.ceil(len(ordered) * 0.50) - 1],
+        "p95": ordered[math.ceil(len(ordered) * 0.95) - 1],
+        "n_over_tolerance": sum(value > tolerance for value in ordered),
+    }
+
+
+def audit_on_policy_sampling_alignment(
+    model,
+    samples: Sequence[Sample],
+    cfg: GRPOConfig,
+    *,
+    policy_checkpoint_id: str,
+    policy_step: int,
+    max_action_segments: int = 32,
+    max_completion_tokens: int = 2048,
+    max_sequence_tokens: int = 8192,
+    pad_id: int = 0,
+    tolerance: float = ON_POLICY_LOG_RATIO_TOLERANCE,
+) -> dict[str, Any]:
+    """Read-only comparison of recorded sampling scores to both forward paths.
+
+    Uses the same differentiated forward as policy_gradient but never invokes
+    optimizer.update. No parameter, checkpoint, or sample is changed. Callers
+    must load the exact behavior checkpoint and preserve its runtime mode; the
+    checkpoint ID and step labels alone do not authenticate those bytes.
+
+    This is an integrity diagnostic, not authorization for training and not a
+    model/task-success evaluation. All members of every recorded group are
+    required even though the diagnostic does not use terminal rewards.
+    """
+    limits = {
+        "max_action_segments": max_action_segments,
+        "max_completion_tokens": max_completion_tokens,
+        "max_sequence_tokens": max_sequence_tokens,
+    }
+    if any(type(value) is not int or value <= 0 for value in limits.values()):
+        raise ValueError("alignment budgets must be positive integers")
+    if (isinstance(tolerance, bool) or not isinstance(tolerance, (int, float))
+            or not math.isfinite(tolerance) or tolerance < 0):
+        raise ValueError("alignment tolerance must be finite and nonnegative")
+
+    groups = group_samples(samples, group_size=cfg.group_size)
+    if not groups:
+        raise GroupError("alignment requires a complete nonempty group")
+    check_policy_lag(
+        samples, policy_checkpoint_id=policy_checkpoint_id,
+        policy_step=policy_step, max_policy_lag=0,
+    )
+    _check_behavior_sampling(samples, cfg)
+    if any(sample.meta.get("behavior_logprob_source") != "sampling_distribution" for sample in samples):
+        raise GroupError("alignment requires sampled, not recomputed, behavior log-probabilities")
+    actions = [(sample, segment) for sample in samples for segment in _sample_segments(sample)]
+    token_count = sum(len(segment.completion_ids) for _, segment in actions)
+    if (len(actions) > max_action_segments or token_count > max_completion_tokens
+            or any(len(segment.prompt_ids) + len(segment.completion_ids) > max_sequence_tokens
+                   for _, segment in actions)):
+        raise ValueError("alignment action, completion, or sequence budget exceeded")
+    if any(segment.behavior_logprobs is None for _, segment in actions):
+        raise GroupError("alignment requires recorded behavior scores for every action")
+
+    import mlx.core as mx
+
+    value_and_grad = _value_and_grad(model, cfg, n_tokens=1)
+    sample_to_plain: list[float] = []
+    sample_to_traced: list[float] = []
+    plain_to_traced: list[float] = []
+    for _, segment in actions:
+        tokens, mask, start = sample_tensors(segment, pad_id)
+        plain = token_logprobs(model, tokens, temperature=cfg.temperature, start=start)
+        zeros = mx.zeros(mask.shape, dtype=mx.float32)
+        (_, (_, traced)), gradients = value_and_grad(
+            tokens, mask, start, mx.zeros((1,), dtype=mx.float32), zeros,
+        )
+        mx.eval(plain, traced, gradients)
+        n = len(segment.completion_ids)
+        plain_values = [float(value) for value in plain[0, :n].tolist()]
+        traced_values = [float(value) for value in traced[0, :n].tolist()]
+        recorded_values = segment.behavior_logprobs
+        if recorded_values is None or len(plain_values) != n or len(traced_values) != n:
+            raise ValueError("alignment score vector length mismatch")
+        for recorded, forward, differentiated in zip(recorded_values, plain_values, traced_values):
+            if not all(math.isfinite(value) for value in (recorded, forward, differentiated)):
+                raise FloatingPointError("nonfinite on-policy alignment score")
+            sample_to_plain.append(abs(recorded - forward))
+            sample_to_traced.append(abs(recorded - differentiated))
+            plain_to_traced.append(abs(forward - differentiated))
+
+    metrics = {
+        "sampled_vs_forward": _alignment_metric(sample_to_plain, tolerance=tolerance),
+        "sampled_vs_differentiated": _alignment_metric(sample_to_traced, tolerance=tolerance),
+        "forward_vs_differentiated": _alignment_metric(plain_to_traced, tolerance=tolerance),
+    }
+    return {
+        "schema": "vare.grpo.sampling_alignment/v1",
+        "policy_checkpoint_id": policy_checkpoint_id,
+        "policy_step": policy_step,
+        "temperature": cfg.temperature,
+        "tolerance": tolerance,
+        "n_groups": len(groups),
+        "n_samples": len(samples),
+        "n_action_segments": len(actions),
+        "n_completion_tokens": token_count,
+        "model_training_mode": getattr(model, "training", None),
+        "limits": limits,
+        "metrics": metrics,
+        "would_reject_lag_zero_update": metrics["sampled_vs_differentiated"]["n_over_tolerance"] > 0,
+        "optimizer_updated": False,
+        "task_success_measured": False,
+    }
+
 def compute_behavior_logprobs(model, samples: Iterable[Sample], cfg: GRPOConfig | None = None, *,
                               temperature: float | None = None, pad_id: int = 0,
                               after_sample: Callable[[], None] | None = None) -> None:
