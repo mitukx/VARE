@@ -1,0 +1,70 @@
+{
+  "schema": "vare.grpo.pretrained_sampling_alignment/v2",
+  "purpose": "Prospective read-only candidate sampler-score arithmetic diagnostic; no task, grader, optimizer or held-out access.",
+  "model": {
+    "repo_id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "revision": "ee72e5415c002e8fc0566a191a07c0b2b708875a",
+    "weight_file": "model.safetensors",
+    "weight_sha256": "5af571cbf074e6d21a03528d2330792e532ca608f24ac70a143f6b369968ab8c",
+    "license": "Apache-2.0"
+  },
+  "arms": [
+    "fp32",
+    "bf16"
+  ],
+  "quantization": {
+    "bits": 4,
+    "group_size": 64,
+    "mode": "affine"
+  },
+  "adapter": {
+    "rank": 4,
+    "scale": 1,
+    "dropout": 0,
+    "keys": [
+      "self_attn.q_proj"
+    ],
+    "num_layers": 1,
+    "seed": 11,
+    "mode": "eval"
+  },
+  "temperature": 0.7,
+  "top_p": 1,
+  "seeds": [
+    41,
+    53
+  ],
+  "second_turn_seed_offset": 1000,
+  "max_new_tokens": 2,
+  "max_prompt_tokens": 256,
+  "max_sequence_tokens": 264,
+  "contexts": [
+    {
+      "id": "short",
+      "repetitions": 0
+    },
+    {
+      "id": "long",
+      "repetitions": 16
+    }
+  ],
+  "prompt_prefix": "Numerical probability calibration text. A sequence of colors follows.",
+  "filler": " Violet silver orange.",
+  "observation": "A neutral observation: orange and violet. Continue ordinary text.",
+  "tolerance": 0.000001,
+  "limits": {
+    "max_action_segments_per_group": 4,
+    "max_completion_tokens_per_group": 8,
+    "maximum_generated_tokens_per_arm": 16,
+    "maximum_wall_seconds_per_arm": 480,
+    "maximum_model_weight_bytes": 300000000
+  },
+  "outcome_rule": "Pass each measured arm only if both complete groups satisfy the unchanged differentiated 1e-6 guard, finite scores, and exact pre/post full parameter hashes. Baseline ordinary-forward differences on identical recorded tokens are diagnostic only. No training authorization.",
+  "limitations": [
+    "New task-free contexts and seeds; a prospective correctness test, not a paired comparison against the historical v1 cohort.",
+    "Only FP32 and BF16 CPU arms are included; q4 v1 timed out and is not reclassified or retried.",
+    "No optimizer or capability result; Metal, stale-policy ratios, large-model gradients, and longer contexts are unvalidated."
+  ],
+  "prior_protocol_sha256": "8930266209d6e4e3e2619c88d1d7d21b8e559b167b2d7747fb383c8ef5a49937",
+  "sampling_score_mode": "mlx_lm_native_v1"
+}
