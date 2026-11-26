@@ -22,7 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "src"))
 from pinned_workspace_git import pinned_git, read_regular_source  # noqa: E402
-from vare.agent_navigation import SearchLoopGuard, list_python_symbols  # noqa: E402
+from vare.agent_navigation import (  # noqa: E402
+    SearchLoopGuard, SequentialReadGuide, list_python_symbols,
+)
 from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submission, require_edit_format  # noqa: E402
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
@@ -39,7 +41,7 @@ CONTEXT_COMPACTION_NOTE = (
 )
 TOOLS = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List exact source paths available in this task workspace. Results are paginated; use next_offset as offset to continue.', 'parameters': {'type': 'object', 'properties': {'offset': {'type': 'integer', 'minimum': 0}}, 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns at most 180 lines. Pass inclusive start_line/end_line to inspect an exact range; a completed explicit range has no next_cursor even when later file lines exist. Follow next_cursor only when the returned page was truncated by a line or response limit. The result includes the resolved path and full-file SHA-256.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file with a hard 12,000-byte and 2,048-token response limit. By default, returns at most 180 lines. Pass inclusive start_line/end_line to inspect an exact range; a completed explicit range has no next_cursor even when later file lines exist. Follow next_cursor only when the returned page was truncated by a line or response limit. The result includes the resolved path and full-file SHA-256. After repeated small consecutive Python pages, it may include a short AST declaration navigation hint.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer', 'minimum': 1}, 'end_line': {'type': 'integer', 'minimum': 1}, 'char_offset': {'type': 'integer', 'minimum': 0}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a case-sensitive literal in allowed task source files, optionally restricted to one exact allowed path. Zero matches means the literal is absent; do not retry longer variants. Returns at most 80 matches in a hard 12,000-byte and 2,048-token response; use offset from next_offset to continue.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}, 'path': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}}, 'required': ['query'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'list_symbols', 'description': 'Parse one allowlisted Python source file without executing it. Return classes, functions, annotated class fields and method names matching a focused query; results are paginated.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'query': {'type': 'string'}, 'offset': {'type': 'integer', 'minimum': 0}, 'limit': {'type': 'integer', 'minimum': 1, 'maximum': 60}}, 'required': ['path', 'query'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a complete unified diff, not replacement source code. The patch must start with --- a/<exact allowed path> and +++ b/<exact allowed path>, then include @@ hunk headers and -old/+new lines. Keep it minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
@@ -1183,6 +1185,7 @@ def main() -> int:
     no_tool_retries = 0
     controller_retry_count = 0
     search_guard = SearchLoopGuard(empty_search_limit=3)
+    read_progress_guide = SequentialReadGuide()
     source_read_receipts: dict[str, tuple[str, str]] = {}
     edit_attempted = False
     edit_applied = False
@@ -1354,6 +1357,8 @@ def main() -> int:
             messages.append({'role': 'assistant', 'content': raw})
         calls_and_results: list[tuple[str, dict[str, Any], Any]] = []
         for match, name, arguments in parsed_calls:
+            if name != 'read_file':
+                read_progress_guide.reset()
             try:
                 if name == 'list_files':
                     result: Any = bounded_list_page(
@@ -1363,6 +1368,7 @@ def main() -> int:
                     raw_path = arguments.get('path', '')
                     path = resolve_allowed_path(raw_path, allowed)
                     if path is None:
+                        read_progress_guide.reset()
                         result = {'error': 'path is not allowed; use list_files to retrieve exact allowed paths'}
                     else:
                         source = read_regular_source(workspace, path)
@@ -1378,14 +1384,53 @@ def main() -> int:
                             while source_handle in source_read_receipts:
                                 source_handle = f'source-{secrets.token_hex(8)}'
                             source_identity['source_handle'] = source_handle
+                        page_start = arguments.get('start_line', 1)
+                        page_end = arguments.get('end_line')
+                        page_offset = arguments.get('char_offset', 0)
                         result = bounded_source_page(
                             text,
-                            start_line=arguments.get('start_line', 1),
-                            end_line=arguments.get('end_line'),
-                            char_offset=arguments.get('char_offset', 0),
+                            start_line=page_start,
+                            end_line=page_end,
+                            char_offset=page_offset,
                             source_identity=source_identity,
                             tokenizer=tokenizer,
                         )
+                        navigation_hint = read_progress_guide.observe(
+                            path=path,
+                            source=text,
+                            source_sha256=source_sha256,
+                            start_line=result['start_line'],
+                            end_line=result['end_line'],
+                            char_offset=page_offset,
+                            task_text=task_text,
+                        )
+                        if navigation_hint is not None:
+                            for count in range(
+                                len(navigation_hint['declarations']), -1, -1,
+                            ):
+                                candidate_result = {
+                                    **result,
+                                    'navigation_hint': {
+                                        **navigation_hint,
+                                        'declarations': navigation_hint['declarations'][:count],
+                                    },
+                                }
+                                if _tool_result_fits(
+                                    candidate_result, tokenizer,
+                                    max_bytes=MAX_TOOL_RESULT_BYTES,
+                                    max_tokens=MAX_TOOL_RESULT_TOKENS,
+                                ):
+                                    result = candidate_result
+                                    entry.setdefault('controller_interventions', []).append({
+                                        'type': 'sequential_read_navigation_hint',
+                                        'path': path,
+                                        'consecutive_pages': navigation_hint['consecutive_pages'],
+                                        'declarations': [
+                                            item['name']
+                                            for item in candidate_result['navigation_hint']['declarations']
+                                        ],
+                                    })
+                                    break
                         if source_handle is not None:
                             source_read_receipts[source_handle] = (path, source_sha256)
                         search_guard.reset()
@@ -1565,6 +1610,8 @@ def main() -> int:
                 if name == 'finish':
                     break
             except Exception as exc:
+                if name == 'read_file':
+                    read_progress_guide.reset()
                 result = bounded_tool_result(
                     {'error': f'{type(exc).__name__}: {exc}'}, tokenizer,
                 )

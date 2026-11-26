@@ -36,7 +36,9 @@ from scripts.run_local_agent import (
     tools_for,
 )
 from scripts.run_local_agent import candidate_source_diff, snapshot_allowed_sources
-from vare.agent_navigation import SearchLoopGuard, list_python_symbols
+from vare.agent_navigation import (
+    SearchLoopGuard, SequentialReadGuide, list_python_symbols,
+)
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
@@ -431,6 +433,113 @@ def test_list_symbols_schema_and_ast_index_ground_request_model_fields():
     assert request['line'] == 4
     assert {'name': 'tools', 'annotation': 'list[AnthropicTool]', 'line': 6} in request['fields']
     assert request['methods'] == ['validate_tools']
+
+
+def test_sequential_read_guide_surfaces_task_relevant_declarations_once():
+    source = (
+        'class NoiseCache:\n    pass\n'
+        + ''.join(f'# filler {line}\n' for line in range(3, 104))
+        + 'class CacheFactory:\n'
+        + '    def build_cache(self, config):\n'
+        + '        return Cache(config)\n'
+    )
+    guide = SequentialReadGuide(page_threshold=4)
+    task = 'Locate the CacheFactory declaration.'
+
+    for start in (1, 21, 41):
+        assert guide.observe(
+            path='cache.py', source=source, source_sha256='a' * 64,
+            start_line=start, end_line=start + 19, task_text=task,
+        ) is None
+    hint = guide.observe(
+        path='cache.py', source=source, source_sha256='a' * 64,
+        start_line=61, end_line=80, task_text=task,
+    )
+
+    assert hint is not None
+    assert hint['type'] == 'sequential_source_scan'
+    assert hint['consecutive_pages'] == 4
+    assert hint['declarations'][0] == {
+        'kind': 'class', 'name': 'CacheFactory', 'line': 104, 'end_line': 106,
+    }
+    assert guide.observe(
+        path='cache.py', source=source, source_sha256='a' * 64,
+        start_line=81, end_line=100, task_text=task,
+    ) is None
+
+
+def test_sequential_read_guide_resets_on_gaps_large_pages_and_source_changes():
+    source = (
+        'class CacheFactory:\n    pass\n'
+        + ''.join(f'# filler {line}\n' for line in range(3, 221))
+    )
+    guide = SequentialReadGuide(page_threshold=3)
+
+    # A gap breaks a scan; two later adjacent pages are still below threshold.
+    assert guide.observe(
+        path='cache.py', source=source, source_sha256='a' * 64,
+        start_line=1, end_line=20, task_text='CacheFactory',
+    ) is None
+    for start in (25, 45):
+        assert guide.observe(
+            path='cache.py', source=source, source_sha256='a' * 64,
+            start_line=start, end_line=start + 19, task_text='CacheFactory',
+        ) is None
+
+    # A changed source hash cannot inherit the old page sequence.
+    assert guide.observe(
+        path='cache.py', source=source, source_sha256='b' * 64,
+        start_line=65, end_line=84, task_text='CacheFactory',
+    ) is None
+    assert guide.observe(
+        path='cache.py', source=source, source_sha256='b' * 64,
+        start_line=85, end_line=104, task_text='CacheFactory',
+    ) is None
+    hint = guide.observe(
+        path='cache.py', source=source, source_sha256='b' * 64,
+        start_line=105, end_line=124, task_text='CacheFactory',
+    )
+    assert hint is not None
+
+    # A default-size page and a non-Python file never count as a narrow scan.
+    guide.reset()
+    assert guide.observe(
+        path='cache.py', source=source, source_sha256='c' * 64,
+        start_line=1, end_line=180, task_text='CacheFactory',
+    ) is None
+    assert guide.observe(
+        path='notes.txt', source=source, source_sha256='c' * 64,
+        start_line=181, end_line=200, task_text='CacheFactory',
+    ) is None
+
+    # A path change starts a fresh sequence even when line numbers are adjacent.
+    guide.reset()
+    assert guide.observe(
+        path='cache.py', source=source, source_sha256='e' * 64,
+        start_line=1, end_line=20, task_text='CacheFactory',
+    ) is None
+    for start in (21, 41):
+        assert guide.observe(
+            path='other.py', source=source, source_sha256='e' * 64,
+            start_line=start, end_line=start + 19, task_text='CacheFactory',
+        ) is None
+    assert guide.observe(
+        path='other.py', source=source, source_sha256='e' * 64,
+        start_line=61, end_line=80, task_text='CacheFactory',
+    ) is not None
+
+
+def test_sequential_read_guide_does_not_execute_or_suggest_unparseable_source():
+    guide = SequentialReadGuide(page_threshold=2)
+    source = 'class Broken(:\n' + ''.join(f'# filler {i}\n' for i in range(2, 21))
+    assert guide.observe(
+        path='broken.py', source=source, source_sha256='d' * 64,
+        start_line=1, end_line=10, task_text='broken class',
+    ) is None
+    assert guide.observe(
+        path='broken.py', source=source, source_sha256='d' * 64,
+        start_line=11, end_line=20, task_text='broken class',
+    ) is None
 
 
 def test_search_loop_guard_redirects_exact_recorded_repeated_empty_queries():
